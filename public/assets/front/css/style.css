@@ -2837,7 +2837,7 @@ html[dir="rtl"] .header-area .main-responsive-nav .main-responsive-menu.mean-con
     width: var(--size);
     height: var(--size);
     line-height: var(--size);
-    background-color: rgba(var(--color-primary-rgb), 0.2);
+    background-color: rgba(var(--color-black-rgb), 0.2);
     color: var(--color-primary);
     font-size: 16px;
     border-radius: 50%;
