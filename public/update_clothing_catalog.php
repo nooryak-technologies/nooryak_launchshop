@@ -50,7 +50,7 @@ if (!$enLangId) {
 }
 echo "<p>Resolved Language IDs - English: <strong>{$enLangId}</strong> | Arabic: <strong>" . ($arLangId ?? 'None') . "</strong></p>";
 
-// 3. Define the new categories (5 categories to fit the 5 Instagram slots)
+// 3. Define the new categories
 $categoriesData = [
     'dresses-gowns' => [
         'image' => 'cat_dresses.png',
@@ -80,11 +80,18 @@ $categoriesData = [
 ];
 
 // 4. Define the 8 premium clothing products
+// Added flash sale properties to the first 3 products
 $productsData = [
     [
         'category_slug' => 'dresses-gowns',
         'image_key' => 'maxi_dress',
         'price' => 49.00,
+        'flash' => 1,
+        'flash_amount' => 30, // 30% off
+        'start_date' => '2026-01-01',
+        'start_time' => '00:00',
+        'end_date' => '2030-12-31',
+        'end_time' => '23:59',
         'en' => [
             'title' => 'Elegant Floral Maxi Dress',
             'slug' => 'elegant-floral-maxi-dress',
@@ -102,6 +109,12 @@ $productsData = [
         'category_slug' => 'dresses-gowns',
         'image_key' => 'evening_gown',
         'price' => 89.00,
+        'flash' => 1,
+        'flash_amount' => 25, // 25% off
+        'start_date' => '2026-01-01',
+        'start_time' => '00:00',
+        'end_date' => '2030-12-31',
+        'end_time' => '23:59',
         'en' => [
             'title' => 'Classic Emerald Satin Evening Gown',
             'slug' => 'classic-emerald-satin-evening-gown',
@@ -119,6 +132,12 @@ $productsData = [
         'category_slug' => 'tops-shirts',
         'image_key' => 'linen_shirt',
         'price' => 35.00,
+        'flash' => 1,
+        'flash_amount' => 20, // 20% off
+        'start_date' => '2026-01-01',
+        'start_time' => '00:00',
+        'end_date' => '2030-12-31',
+        'end_time' => '23:59',
         'en' => [
             'title' => 'Premium Linen Button-Down Shirt',
             'slug' => 'premium-linen-button-down-shirt',
@@ -201,7 +220,7 @@ $productsData = [
         ]
     ],
     [
-        'category_slug' => 'summer-wear', // Mapped to the 5th category!
+        'category_slug' => 'summer-wear',
         'image_key' => 'silk_saree',
         'price' => 120.00,
         'en' => [
@@ -309,7 +328,7 @@ foreach ($categoriesData as $slugKey => $data) {
         'updated_at' => now()
     ]);
     $categoryMap[$slugKey] = $enCatId;
-    echo "Added category (EN): <strong>{$data['en']['name']}</strong> with image <strong>{$data['image']}</strong> (ID: {$enCatId})<br>";
+    echo "Added category (EN): <strong>{$data['en']['name']}</strong> (ID: {$enCatId})<br>";
 
     // Insert Arabic Category (if exists)
     if ($arLangId) {
@@ -340,8 +359,8 @@ foreach ($productsData as $product) {
     $slugKey = $product['category_slug'];
     $imageName = $product['image_key'] . '.png';
 
-    // Insert parent item row
-    $itemId = safeInsert('user_items', [
+    // Build user_items data array dynamically with flash sale options
+    $itemInsertData = [
         'user_id' => $uid,
         'currency_id' => $currencyId,
         'thumbnail' => $imageName,
@@ -353,7 +372,19 @@ foreach ($productsData as $product) {
         'stock' => 100,
         'created_at' => now(),
         'updated_at' => now()
-    ]);
+    ];
+
+    if (isset($product['flash'])) {
+        $itemInsertData['flash'] = $product['flash'];
+        $itemInsertData['flash_amount'] = $product['flash_amount'];
+        $itemInsertData['start_date'] = $product['start_date'];
+        $itemInsertData['start_time'] = $product['start_time'];
+        $itemInsertData['end_date'] = $product['end_date'];
+        $itemInsertData['end_time'] = $product['end_time'];
+    }
+
+    // Insert parent item row
+    $itemId = safeInsert('user_items', $itemInsertData);
 
     // Insert English Content
     $enCatId = $categoryMap[$slugKey] ?? null;
