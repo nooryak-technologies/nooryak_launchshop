@@ -1,0 +1,642 @@
+@extends('front.layout')
+
+@section('pagename')
+  - {{ $pageHeading ?? __('Shops') }}
+@endsection
+
+@section('meta-description', !empty($seo) ? $seo->listing_page_meta_description : '')
+@section('meta-keywords', !empty($seo) ? $seo->listing_page_meta_keyword : '')
+
+@section('styles')
+<style>
+  /* Completely hide the default grey parallax breadcrumb header */
+  .page-title-area {
+      display: none !important;
+  }
+</style>
+@endsection
+
+@section('content')
+
+  @php
+    // Fetch all theme template screenshots keyed by theme name
+    $themeTemplates = \App\Models\User::where('preview_template', 1)
+        ->whereHas('basic_setting')
+        ->with('basic_setting')
+        ->get()
+        ->mapWithKeys(function($item) {
+            $themeName = $item->basic_setting ? $item->basic_setting->theme : null;
+            return $themeName ? [$themeName => $item->template_img] : [];
+        })
+        ->toArray();
+
+    // Get all user themes to prevent N+1 queries in the loop
+    $userIds = $users->pluck('id')->toArray();
+    $userThemes = \App\Models\User\BasicSetting::whereIn('user_id', $userIds)
+        ->pluck('theme', 'user_id')
+        ->toArray();
+
+    // Friendly display labels for known themes.
+    $themeLabelMap = [
+      'vegetables' => ['category' => 'grocery', 'name' => __('Grocery')],
+      'grocery' => ['category' => 'grocery', 'name' => __('Grocery')],
+      'manti' => ['category' => 'multipurpose', 'name' => __('Multipurpose')],
+      'multipurpose' => ['category' => 'multipurpose', 'name' => __('Multipurpose')],
+      'fashion' => ['category' => 'fashion', 'name' => __('Fashion')],
+      'apparel' => ['category' => 'fashion', 'name' => __('Fashion')],
+      'jewellery' => ['category' => 'fashion', 'name' => __('Fashion')],
+      'kids' => ['category' => 'fashion', 'name' => __('Fashion')],
+      'electronics' => ['category' => 'electronics', 'name' => __('Electronics')],
+      'gadgets' => ['category' => 'electronics', 'name' => __('Electronics')],
+      'beauty' => ['category' => 'beauty', 'name' => __('Beauty')],
+      'cosmetics' => ['category' => 'beauty', 'name' => __('Beauty')],
+      'skinflow' => ['category' => 'beauty', 'name' => __('Beauty')],
+      'furniture' => ['category' => 'furniture', 'name' => __('Furniture')],
+    ];
+  @endphp
+
+  <!--====== Start Shops Hero Section ======-->
+  <section class="shops-hero">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <div class="shops-hero-content" data-aos="fade-right">
+            <span class="shops-hero-badge">{{ __('Customer Stores') }}</span>
+            <h1 class="shops-hero-title">
+              Discover Stores <br>Built on <span>Launchshop.in</span>
+            </h1>
+            <p class="shops-hero-text">
+              Real merchants. Real success. Real stories. <br>
+              Explore live stores across every industry and see how entrepreneurs are growing with Launchshop.in.
+            </p>
+            
+            <div class="shops-hero-btns">
+              <a href="{{ route('front.pricing') }}" class="btn-shops-primary">
+                {{ __('Start Free Trial') }} <i class="fas fa-arrow-right"></i>
+              </a>
+              <a href="{{ route('front.templates.view') }}" class="btn-shops-outline">
+                {{ __('Explore Themes') }}
+              </a>
+            </div>
+
+            <div class="shops-hero-features">
+              <span><i class="fas fa-check-circle"></i> {{ __('No credit card required') }}</span>
+              <span><i class="fas fa-check-circle"></i> {{ __('14-day free trial') }}</span>
+              <span><i class="fas fa-check-circle"></i> {{ __('Cancel anytime') }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <!-- Overlapping Mockup collage representation using CSS floating frames -->
+          <div class="shops-hero-mockup-wrapper" data-aos="fade-left">
+            <div class="shops-mockup-frame frame-1">
+              <img src="{{ asset('assets/front/img/template-previews/06d9b674bc8dc704f0a8e376252279a5081e05f8.png') }}" alt="Jewellery theme">
+            </div>
+            <div class="shops-mockup-frame frame-2">
+              <img src="{{ asset('assets/front/img/template-previews/5087ef599467c13d3ce13bed1636a9813bc48117.png') }}" alt="Skinflow theme">
+            </div>
+            <div class="shops-mockup-frame frame-3">
+              <img src="{{ asset('assets/front/img/template-previews/9ddfc4ab6f359c15bda0ee04b184ae092e5e3fbf.png') }}" alt="Grocery theme">
+            </div>
+            <div class="shops-mockup-frame frame-4">
+              <img src="{{ asset('assets/front/img/template-previews/964fb0768f8e185c53dc1ea1058a3ad8dbadaacf.png') }}" alt="Fashion theme">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--====== End Shops Hero Section ======-->
+
+  <!--====== Start Stats Banner Section ======-->
+  <div class="container">
+    <div class="row shops-stats-banner-row align-items-center text-center text-lg-start" data-aos="fade-up">
+      <div class="col-6 col-lg-3 mb-3 mb-lg-0">
+        <div class="shops-stat-item justify-content-center">
+          <div class="shops-stat-icon orange">
+            <i class="fas fa-store"></i>
+          </div>
+          <div>
+            <div class="shops-stat-value">2,500+</div>
+            <div class="shops-stat-label">{{ __('Live Stores') }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3 mb-3 mb-lg-0">
+        <div class="shops-stat-item justify-content-center">
+          <div class="shops-stat-icon red">
+            <i class="fas fa-users"></i>
+          </div>
+          <div>
+            <div class="shops-stat-value">8,000+</div>
+            <div class="shops-stat-label">{{ __('Merchants Onboarded') }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3 mb-3 mb-lg-0">
+        <div class="shops-stat-item justify-content-center">
+          <div class="shops-stat-icon blue">
+            <i class="fas fa-th-large"></i>
+          </div>
+          <div>
+            <div class="shops-stat-value">50+</div>
+            <div class="shops-stat-label">{{ __('Theme Categories') }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="shops-stat-item justify-content-center">
+          <div class="shops-stat-icon green">
+            <i class="fas fa-star"></i>
+          </div>
+          <div>
+            <div class="shops-stat-value">98%</div>
+            <div class="shops-stat-label">{{ __('Merchant Satisfaction') }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--====== End Stats Banner Section ======-->
+
+  <!--====== Start Shops Grid & Filter Section ======-->
+  <section class="shops-directory-list pb-80">
+    <div class="container">
+      
+      <!-- Filter and Search Form -->
+      <form action="{{ route('front.user.view') }}" method="GET" id="userSearchForm" class="shops-filter-search">
+        <!-- Hidden category value that updates when clicking horizontal tabs -->
+        <input type="hidden" name="category" id="searchCategoryInput" value="{{ request()->input('category') }}">
+        
+        <div class="row align-items-center g-3 mb-4">
+          <!-- Dropdown Category -->
+          <div class="col-lg-3 col-md-4">
+            <select id="categorySelect" class="shops-select-custom" onchange="filterCategory(this.value)">
+              <option value="">{{ __('All Categories') }}</option>
+              @foreach ($categories as $category)
+                <option value="{{ $category->slug }}" @selected($category->slug == request()->input('category'))>{{ __($category->name) }}</option>
+              @endforeach
+            </select>
+          </div>
+
+          <!-- Keyword Search -->
+          <div class="col-lg-6 col-md-5">
+            <div class="shops-search-input-wrapper">
+              <input type="text" name="shop_name" value="{{ request()->input('shop_name') }}" class="shops-search-input"
+                placeholder="{{ __('Search stores or keywords...') }}">
+              <span class="shops-search-icon-pos">
+                <i class="fas fa-search"></i>
+              </span>
+            </div>
+          </div>
+
+          <!-- Sort by -->
+          <div class="col-lg-3 col-md-3">
+            <select name="sort_by" class="shops-select-custom" onchange="$('#userSearchForm').submit()">
+              <option value="popular" @selected(request()->input('sort_by') == 'popular')>{{ __('Sort by: Popular') }}</option>
+              <option value="newest" @selected(request()->input('sort_by') == 'newest')>{{ __('Sort by: Newest') }}</option>
+              <option value="rating" @selected(request()->input('sort_by') == 'rating')>{{ __('Sort by: Rating') }}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Horizontal Category Pill Buttons / Tabs -->
+        <div class="shops-category-tabs-container" data-aos="fade-up">
+          <a href="javascript:void(0)" onclick="filterCategory('')" class="shops-category-tab {{ empty(request()->input('category')) ? 'active' : '' }}">
+            <i class="fas fa-store"></i> {{ __('All Stores') }}
+          </a>
+          @foreach ($categories as $cat)
+            @php
+              $catSlug = strtolower($cat->slug);
+              $icon = 'fa-th-large';
+              if (str_contains($catSlug, 'fashion')) $icon = 'fa-tshirt';
+              elseif (str_contains($catSlug, 'beauty') || str_contains($catSlug, 'cosmetic')) $icon = 'fa-magic';
+              elseif (str_contains($catSlug, 'grocery') || str_contains($catSlug, 'food')) $icon = 'fa-shopping-basket';
+              elseif (str_contains($catSlug, 'electro')) $icon = 'fa-bolt';
+              elseif (str_contains($catSlug, 'furnit')) $icon = 'fa-chair';
+              elseif (str_contains($catSlug, 'kid') || str_contains($catSlug, 'toy')) $icon = 'fa-child';
+              elseif (str_contains($catSlug, 'jewel')) $icon = 'fa-gem';
+              elseif (str_contains($catSlug, 'multi')) $icon = 'fa-cubes';
+            @endphp
+            <a href="javascript:void(0)" onclick="filterCategory('{{ $cat->slug }}')" class="shops-category-tab {{ request()->input('category') == $cat->slug ? 'active' : '' }}">
+              <i class="fas {{ $icon }}"></i> {{ __($cat->name) }}
+            </a>
+          @endforeach
+        </div>
+      </form>
+
+      <!-- Shops list Grid -->
+      <div id="shops-grid-wrapper">
+      <div class="row">
+        @if (count($users) == 0)
+          <div class="bg-light text-center py-5 d-block w-100 rounded-3">
+            <h3 class="my-4 text-muted">{{ __('NO STORE FOUND') }}</h3>
+          </div>
+        @else
+          <div class="shops-grid-cols-5 col-12">
+            @foreach ($users as $user)
+              @php
+                $shopName = $user->shop_name ?: $user->username;
+                $rating = '4.8';
+                $desc = 'Modern storefront offering premium services and products.';
+
+                $userTheme = $userThemes[$user->id] ?? null;
+                $themeLabel = $userTheme && isset($themeLabelMap[$userTheme]) ? $themeLabelMap[$userTheme] : null;
+
+                // Category Mapping: prefer theme label (English), then convert slug, never use raw DB name (may be Arabic/other lang).
+                if ($themeLabel) {
+                    $catName = $themeLabel['name'];
+                    $catSlug = $themeLabel['category'];
+                } elseif ($user->category) {
+                    $catSlug = strtolower($user->category->slug);
+                    // Convert slug to readable English label
+                    $slugLabelMap = [
+                        'grocery' => __('Grocery'), 'vegetables' => __('Grocery'),
+                        'fashion' => __('Fashion'), 'apparel' => __('Fashion'),
+                        'kids' => __('Kids Fashion'), 'jewellery' => __('Jewellery'),
+                        'electronics' => __('Electronics'), 'gadgets' => __('Electronics'),
+                        'beauty' => __('Beauty'), 'cosmetics' => __('Beauty'), 'skinflow' => __('Beauty'),
+                        'furniture' => __('Furniture'),
+                        'multipurpose' => __('Multipurpose'), 'manti' => __('Multipurpose'),
+                        'pet' => __('Pet'), 'food' => __('Food'),
+                    ];
+                    $catName = $slugLabelMap[$catSlug] ?? ucfirst(str_replace(['-','_'], ' ', $catSlug));
+                } else {
+                    $catName = __('Store');
+                    $catSlug = 'store';
+                }
+                $catClass = 'cat-' . (str_contains($catSlug, 'beauty') ? 'beauty' 
+                            : (str_contains($catSlug, 'grocery') ? 'grocery' 
+                            : (str_contains($catSlug, 'fashion') ? 'fashion' 
+                            : (str_contains($catSlug, 'kids') ? 'kids' 
+                            : (str_contains($catSlug, 'jewel') ? 'jewellery' 
+                            : (str_contains($catSlug, 'electro') ? 'electronics' 
+                            : (str_contains($catSlug, 'furnit') ? 'furniture' 
+                            : (str_contains($catSlug, 'multi') ? 'multipurpose' : 'default'))))))));
+
+                // Images Mapping - Automatically fetch screenshot of the theme the subdomain/shop is using
+                $bannerFile = $user->template_img;
+                if (empty($bannerFile)) {
+                    if ($userTheme && isset($themeTemplates[$userTheme])) {
+                        $bannerFile = $themeTemplates[$userTheme];
+                    }
+                }
+
+                $bannerImg = !empty($bannerFile) 
+                    ? asset('assets/front/img/template-previews/' . $bannerFile) 
+                    : asset('assets/front/images/placeholder.png');
+                
+                $logoImg = !empty($user->photo) 
+                    ? asset('assets/front/img/user/' . $user->photo) 
+                    : asset('assets/user/img/profile.png');
+              @endphp
+
+              <!-- Card -->
+              <div class="shop-card-modern" data-aos="fade-up" data-aos-delay="{{ ($loop->index % 5) * 50 }}">
+                <div class="shop-card-banner">
+                  <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ $bannerImg }}" alt="{{ $shopName }}">
+                </div>
+                <div class="shop-card-logo-container">
+                  <img class="lazyload" src="{{ asset('assets/user/img/profile.png') }}" data-src="{{ $logoImg }}" alt="{{ $shopName }} Logo">
+                </div>
+                <div class="shop-card-body">
+                  <div class="shop-card-header">
+                    <h3 class="shop-card-name" title="{{ $shopName }}">{{ $shopName }}</h3>
+                    <span class="shop-card-rating">
+                      {{ $rating }} <i class="fas fa-star"></i>
+                    </span>
+                  </div>
+                  <div class="shop-card-meta">
+                    <span class="shop-card-category {{ $catClass }}">{{ $catName }}</span>
+                  </div>
+                  <p class="shop-card-desc">{{ __($desc) }}</p>
+                  <div class="shop-card-actions">
+                    <a href="{{ detailsUrl($user) }}" class="btn-preview" target="_blank">{{ __('Preview Store') }}</a>
+                    <a href="{{ route('front.templates.view') }}" class="btn-theme">{{ __('View Theme') }}</a>
+                  </div>
+                </div>
+              </div>
+            @endforeach
+          </div>
+        @endif
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination justify-content-center mt-4">
+        {{ $users->appends([
+          'shop_name' => request()->input('shop_name'),
+          'category' => request()->input('category'),
+          'sort_by' => request()->input('sort_by')
+        ])->links() }}
+      </div>
+      </div>
+
+    </div>
+  </section>
+  <!--====== End Shops Grid & Filter Section ======-->
+
+  <!--====== Start Featured Merchants Section ======-->
+  <section class="shops-featured-merchants">
+    <div class="container">
+      <div class="row align-items-center justify-content-between mb-4">
+        <div class="col-md-8">
+          <h2 class="shops-section-title">{{ __('Featured Merchants') }}</h2>
+          <p class="shops-section-desc">{{ __('Real stories from real entrepreneurs building successful brands.') }}</p>
+        </div>
+        <!-- <div class="col-md-4 text-md-end mb-3 mb-md-0">
+          <a href="{{ route('front.contact') }}" class="btn-merchant-stories">
+            {{ __('View All Stories') }} <i class="fas fa-arrow-right"></i>
+          </a>
+        </div> -->
+      </div>
+      
+      <div class="row">
+        <!-- Profile 1 -->
+        <div class="col-lg-3 col-md-6 mb-30">
+          <div class="merchant-profile-card" data-aos="fade-up" data-aos-delay="50">
+            <div class="merchant-avatar">
+              <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ asset('assets/front/img/testimonials/aecbe1c13cb47add3d283d46f1418fdb50c78a09.png') }}" alt="Nooryak Khan">
+            </div>
+            <div class="merchant-info">
+              <h4 class="merchant-name">Nooryak Khan</h4>
+              <span class="merchant-role">Founder, FreshMart</span>
+              <p class="merchant-quote">"Scaled from 0 to 10K+ orders in 3 months."</p>
+            </div>
+          </div>
+        </div>
+        <!-- Profile 2 -->
+        <div class="col-lg-3 col-md-6 mb-30">
+          <div class="merchant-profile-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="merchant-avatar">
+              <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ asset('assets/front/img/testimonials/b9d4f3318e122b00074861c93e83b3bab652fb14.png') }}" alt="Priya Mehta">
+            </div>
+            <div class="merchant-info">
+              <h4 class="merchant-name">Priya Mehta</h4>
+              <span class="merchant-role">Founder, Skinflow</span>
+              <p class="merchant-quote">"Turned passion into a profitable brand."</p>
+            </div>
+          </div>
+        </div>
+        <!-- Profile 3 -->
+        <div class="col-lg-3 col-md-6 mb-30">
+          <div class="merchant-profile-card" data-aos="fade-up" data-aos-delay="150">
+            <div class="merchant-avatar">
+              <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ asset('assets/front/img/testimonials/13fd6b3eeaa68a3cea83870f79ed4bfa83cd9bf6.png') }}" alt="Ayaan Patel">
+            </div>
+            <div class="merchant-info">
+              <h4 class="merchant-name">Ayaan Patel</h4>
+              <span class="merchant-role">Founder, Electri</span>
+              <p class="merchant-quote">"Expanded to 5 cities with Launchshop.in."</p>
+            </div>
+          </div>
+        </div>
+        <!-- Profile 4 -->
+        <div class="col-lg-3 col-md-6 mb-30">
+          <div class="merchant-profile-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="merchant-avatar">
+              <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ asset('assets/front/img/testimonials/854159a46208ff0e663b6a8f3178225f90230946.png') }}" alt="Sneha Reddy">
+            </div>
+            <div class="merchant-info">
+              <h4 class="merchant-name">Sneha Reddy</h4>
+              <span class="merchant-role">Founder, Urban Chic</span>
+              <p class="merchant-quote">"Built a fashion brand customers love."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--====== End Featured Merchants Section ======-->
+
+  <!--====== Start Testimonials Section ======-->
+  <section class="shops-loved-by-merchants">
+    <div class="container">
+      <h2 class="shops-section-title">{{ __('Loved by Merchants') }}</h2>
+      <p class="shops-section-desc">{{ __('Hear from store owners who are growing their business with Launchshop.in.') }}</p>
+      
+      <div class="row mt-5">
+        <!-- Testimonial 1 -->
+        <div class="col-lg-4 col-md-6 mb-30">
+          <div class="testimonial-modern-card" data-aos="fade-up" data-aos-delay="50">
+            <div class="testimonial-stars">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p class="testimonial-quote-text">"Launchshop.in made it incredibly easy to launch my store. The themes are beautiful and the support is outstanding."</p>
+            <div class="testimonial-author">
+              <div>
+                <h4 class="testimonial-author-name">Nooryak Khan</h4>
+                <span class="testimonial-author-role">Founder, FreshMart</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Testimonial 2 -->
+        <div class="col-lg-4 col-md-6 mb-30">
+          <div class="testimonial-modern-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="testimonial-stars">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p class="testimonial-quote-text">"I love how customizable everything is. My store looks premium and my customers trust my brand."</p>
+            <div class="testimonial-author">
+              <div>
+                <h4 class="testimonial-author-name">Priya Mehta</h4>
+                <span class="testimonial-author-role">Founder, Skinflow</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Testimonial 3 -->
+        <div class="col-lg-4 col-md-6 mb-30">
+          <div class="testimonial-modern-card" data-aos="fade-up" data-aos-delay="150">
+            <div class="testimonial-stars">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p class="testimonial-quote-text">"From setup to sales, Launchshop.in has been my growth partner. Highly recommended!"</p>
+            <div class="testimonial-author">
+              <div>
+                <h4 class="testimonial-author-name">Ayaan Patel</h4>
+                <span class="testimonial-author-role">Founder, Electri</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--====== End Testimonials Section ======-->
+
+  <!--====== Start Why Choose Section ======-->
+  <section class="shops-why-choose">
+    <div class="container text-center">
+      <h2 class="shops-section-title mb-5">{{ __('Why Choose Stores Built on Launchshop.in?') }}</h2>
+      
+      <div class="why-choose-grid">
+        <!-- Item 1 -->
+        <div class="why-choose-item" data-aos="fade-up" data-aos-delay="50">
+          <div class="why-choose-icon-box orange">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <h4 class="why-choose-title">{{ __('Beautiful & Fast Themes') }}</h4>
+          <p class="why-choose-desc">{{ __('Mobile-first, high-converting themes that look stunning.') }}</p>
+        </div>
+        <!-- Item 2 -->
+        <div class="why-choose-item" data-aos="fade-up" data-aos-delay="100">
+          <div class="why-choose-icon-box red">
+            <i class="fas fa-sliders-h"></i>
+          </div>
+          <h4 class="why-choose-title">{{ __('Easy Customization') }}</h4>
+          <p class="why-choose-desc">{{ __('Build your brand your way without any coding.') }}</p>
+        </div>
+        <!-- Item 3 -->
+        <div class="why-choose-item" data-aos="fade-up" data-aos-delay="150">
+          <div class="why-choose-icon-box blue">
+            <i class="fas fa-rocket"></i>
+          </div>
+          <h4 class="why-choose-title">{{ __('Powerful Features') }}</h4>
+          <p class="why-choose-desc">{{ __('Everything you need to sell, grow & succeed online.') }}</p>
+        </div>
+        <!-- Item 4 -->
+        <div class="why-choose-item" data-aos="fade-up" data-aos-delay="200">
+          <div class="why-choose-icon-box green">
+            <i class="fas fa-headset"></i>
+          </div>
+          <h4 class="why-choose-title">{{ __('Trusted Support') }}</h4>
+          <p class="why-choose-desc">{{ __('Dedicated support team whenever you need us.') }}</p>
+        </div>
+        <!-- Item 5 -->
+        <div class="why-choose-item" data-aos="fade-up" data-aos-delay="250">
+          <div class="why-choose-icon-box orange">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h4 class="why-choose-title">{{ __('Secure & Reliable') }}</h4>
+          <p class="why-choose-desc">{{ __('Built on a secure platform you can count on.') }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--====== End Why Choose Section ======-->
+
+  <!--====== Start Footer CTA Block ======-->
+  <div class="container">
+    <div class="shops-footer-cta-block" data-aos="zoom-in">
+      <div class="row align-items-center">
+        <div class="col-lg-7">
+          <h2 class="shops-footer-cta-title">{{ __('Ready to Launch Your Own Store?') }}</h2>
+          <p class="shops-footer-cta-desc">{{ __('Join thousands of successful merchants and start your online journey today.') }}</p>
+          
+          <div class="shops-hero-btns">
+            <a href="{{ route('front.pricing') }}" class="btn-shops-primary">
+              {{ __('Start Free Trial') }} <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="{{ route('front.templates.view') }}" class="btn-shops-outline">
+              {{ __('Explore Themes') }}
+            </a>
+          </div>
+
+          <div class="shops-footer-cta-features">
+            <span><i class="fas fa-check-circle"></i> 14-day free trial</span>
+            <span><i class="fas fa-check-circle"></i> No credit card required</span>
+            <span><i class="fas fa-check-circle"></i> Cancel anytime</span>
+          </div>
+        </div>
+      </div>
+      <!-- Storefront Mockup Image on CTA footer background -->
+      <div class="shops-footer-cta-graphic">
+        <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ asset('assets/front/images/banner.png') }}" alt="Storefront">
+      </div>
+    </div>
+  </div>
+  <!--====== End Footer CTA Block ======-->
+
+@endsection
+
+@section('scripts')
+<script>
+  "use strict";
+
+  // JS helper to filter store cards by clicking horizontal category tabs
+  function filterCategory(slug) {
+      // Update hidden input
+      $('#searchCategoryInput').val(slug);
+      
+      // Sync dropdown select
+      $('#categorySelect').val(slug);
+      
+      // Update horizontal tabs active states
+      $('.shops-category-tab').removeClass('active');
+      if (slug === '') {
+          $('.shops-category-tab').first().addClass('active');
+      } else {
+          $('.shops-category-tab').each(function() {
+              var onclickAttr = $(this).attr('onclick');
+              if (onclickAttr && onclickAttr.indexOf("'" + slug + "'") !== -1) {
+                  $(this).addClass('active');
+              }
+          });
+      }
+      
+      // Submit form via AJAX
+      $('#userSearchForm').submit();
+  }
+
+  // Load content via AJAX
+  function loadShopsAjax(url) {
+      // Fade out grid during loading
+      $('#shops-grid-wrapper').css('opacity', '0.5');
+      
+      // Load target grid container content
+      $('#shops-grid-wrapper').load(url + ' #shops-grid-wrapper > *', function(response, status, xhr) {
+          $('#shops-grid-wrapper').css('opacity', '1');
+          if (status === "error") {
+              console.error("AJAX Error loading shops:", xhr.status, xhr.statusText);
+          } else {
+              // Re-trigger lazyload images immediately
+              $('#shops-grid-wrapper img.lazyload').each(function() {
+                  var dataSrc = $(this).attr('data-src');
+                  if (dataSrc) {
+                      $(this).attr('src', dataSrc);
+                  }
+              });
+              // Update browser URL and state
+              history.pushState(null, '', url);
+
+                if (typeof AOS !== 'undefined' && AOS.refreshHard) {
+                  AOS.refreshHard();
+                } else if (typeof AOS !== 'undefined' && AOS.refresh) {
+                  AOS.refresh();
+                }
+          }
+      });
+  }
+
+  $(document).ready(function() {
+      // Intercept form submit and use AJAX instead
+      $(document).on('submit', '#userSearchForm', function(e) {
+          e.preventDefault();
+          $('#searchCategoryInput').val($('#categorySelect').val() || $('#searchCategoryInput').val() || '');
+          var actionUrl = $(this).attr('action');
+          var formData = $(this).serialize();
+          var url = actionUrl + '?' + formData;
+          loadShopsAjax(url);
+      });
+
+      // Intercept pagination clicks and load via AJAX
+      $(document).on('click', '#shops-grid-wrapper .pagination a', function(e) {
+          e.preventDefault();
+          var url = $(this).attr('href');
+          if (url) {
+              loadShopsAjax(url);
+          }
+      });
+
+      // Live search with 500ms debounce
+      var searchTimeout = null;
+      $(document).on('keyup', '.shops-search-input', function() {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(function() {
+              $('#userSearchForm').submit();
+          }, 500);
+      });
+  });
+</script>
+@endsection
