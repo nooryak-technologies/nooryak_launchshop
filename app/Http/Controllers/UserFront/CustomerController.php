@@ -399,7 +399,23 @@ class CustomerController extends Controller
         $token = md5($randStr . $request->username . $request->email);
 
         $customer->verification_token = $token;
+
+        // Auto-verify on local environment for seamless development and testing
+        if (config('app.env') === 'local') {
+            $customer->email_verified = 1;
+            $customer->email_verified_at = date('Y-m-d H:i:s');
+            $customer->status = 1;
+            $customer->verification_token = null;
+        }
+
         $customer->save();
+
+        if (config('app.env') === 'local') {
+            // Auto login on local for better DX
+            Auth::guard('customer')->login($customer);
+            Session::flash('success', $keywords['Registration successful'] ?? __('Registration successful'));
+            return redirect()->route('customer.dashboard', getParam());
+        }
 
         // send a mail to user for verify his/her email address
         if (is_null($user->first_name && $user->last_name)) {
