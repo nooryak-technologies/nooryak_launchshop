@@ -80,7 +80,7 @@
             <h1>{!! $static_hero_section->title !!}</h1>
           @else
             <h1 style="font-family: 'Jost', sans-serif; font-size: clamp(2.8rem, 5vw, 5rem); line-height: 1.1; font-weight: 700; margin-bottom: 18px;">
-              Style <em style="font-style: italic; font-weight: 400;">Redefined</em> For You
+              Style <em style="font-style: italic; font-weight: 400;">Sameer</em> For You
             </h1>
           @endif
           @if(!is_null(@$static_hero_section->subtitle))
