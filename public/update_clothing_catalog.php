@@ -50,23 +50,32 @@ if (!$enLangId) {
 }
 echo "<p>Resolved Language IDs - English: <strong>{$enLangId}</strong> | Arabic: <strong>" . ($arLangId ?? 'None') . "</strong></p>";
 
-// 3. Define the new categories
+// 3. Define the new categories (5 categories to fit the 5 Instagram slots)
 $categoriesData = [
     'dresses-gowns' => [
+        'image' => 'cat_dresses.png',
         'en' => ['name' => 'Dresses & Gowns', 'slug' => 'dresses-gowns'],
         'ar' => ['name' => 'فساتين وعبايات', 'slug' => 'فساتين-وعبايات']
     ],
     'tops-shirts' => [
+        'image' => 'cat_tops.png',
         'en' => ['name' => 'Tops & Shirts', 'slug' => 'tops-shirts'],
         'ar' => ['name' => 'قمصان وتيشرتات', 'slug' => 'قمصان-وتيشرتات']
     ],
     'outerwear' => [
+        'image' => 'cat_outerwear.png',
         'en' => ['name' => 'Outerwear', 'slug' => 'outerwear'],
         'ar' => ['name' => 'ملابس خارجية', 'slug' => 'ملابس-خارجية']
     ],
     'ethnic-wear' => [
+        'image' => 'cat_ethnic.png',
         'en' => ['name' => 'Ethnic Wear', 'slug' => 'ethnic-wear'],
         'ar' => ['name' => 'ملابس تقليدية', 'slug' => 'ملابس-تقليدية']
+    ],
+    'summer-wear' => [
+        'image' => 'cat_summer.png',
+        'en' => ['name' => 'Summer Wear', 'slug' => 'summer-wear'],
+        'ar' => ['name' => 'ملابس صيفية', 'slug' => 'ملابس-صيفية']
     ]
 ];
 
@@ -192,7 +201,7 @@ $productsData = [
         ]
     ],
     [
-        'category_slug' => 'ethnic-wear',
+        'category_slug' => 'summer-wear', // Mapped to the 5th category!
         'image_key' => 'silk_saree',
         'price' => 120.00,
         'en' => [
@@ -211,44 +220,58 @@ $productsData = [
 ];
 
 // 5. Copy generated images from source to public assets
-echo "<h3>Step 1: Copying new product images...</h3>";
+echo "<h3>Step 1: Copying new product and category images...</h3>";
 $imageSourceDir = 'C:/Users/samir/.gemini/antigravity-ide/brain/c2ac7673-7e34-429a-87db-b2de09e9c2b3/';
 $imageDestThumbnailDir = __DIR__ . '/assets/front/img/user/items/thumbnail/';
 $imageDestSliderDir = __DIR__ . '/assets/front/img/user/items/slider-images/';
+$imageDestCategoryDir = __DIR__ . '/assets/front/img/user/items/categories/';
 
 @mkdir($imageDestThumbnailDir, 0775, true);
 @mkdir($imageDestSliderDir, 0775, true);
+@mkdir($imageDestCategoryDir, 0775, true);
 
 // Map image keys to their specific generated filenames in the brain folder
 $imageFileMap = [
-    'maxi_dress' => 'maxi_dress_1780407302539.png',
-    'evening_gown' => 'evening_gown_1780407321435.png',
-    'linen_shirt' => 'linen_shirt_1780407337923.png',
-    'crewneck_tshirt' => 'crewneck_tshirt_1780407354623.png',
-    'knit_cardigan' => 'knit_cardigan_1780407371926.png',
-    'denim_jacket' => 'denim_jacket_1780407392158.png',
-    'cotton_kurta' => 'cotton_kurta_1780407407788.png',
-    'silk_saree' => 'silk_saree_1780407422547.png'
+    // Product images
+    'thumbnail/maxi_dress.png' => 'maxi_dress_1780407302539.png',
+    'slider-images/maxi_dress.png' => 'maxi_dress_1780407302539.png',
+    'thumbnail/evening_gown.png' => 'evening_gown_1780407321435.png',
+    'slider-images/evening_gown.png' => 'evening_gown_1780407321435.png',
+    'thumbnail/linen_shirt.png' => 'linen_shirt_1780407337923.png',
+    'slider-images/linen_shirt.png' => 'linen_shirt_1780407337923.png',
+    'thumbnail/crewneck_tshirt.png' => 'crewneck_tshirt_1780407354623.png',
+    'slider-images/crewneck_tshirt.png' => 'crewneck_tshirt_1780407354623.png',
+    'thumbnail/knit_cardigan.png' => 'knit_cardigan_1780407371926.png',
+    'slider-images/knit_cardigan.png' => 'knit_cardigan_1780407371926.png',
+    'thumbnail/denim_jacket.png' => 'denim_jacket_1780407392158.png',
+    'slider-images/denim_jacket.png' => 'denim_jacket_1780407392158.png',
+    'thumbnail/cotton_kurta.png' => 'cotton_kurta_1780407407788.png',
+    'slider-images/cotton_kurta.png' => 'cotton_kurta_1780407407788.png',
+    'thumbnail/silk_saree.png' => 'silk_saree_1780407422547.png',
+    'slider-images/silk_saree.png' => 'silk_saree_1780407422547.png',
+    
+    // Category images
+    'categories/cat_dresses.png' => 'cat_dresses_1780408515101.png',
+    'categories/cat_tops.png' => 'cat_tops_1780408534896.png',
+    'categories/cat_outerwear.png' => 'cat_outerwear_1780408552618.png',
+    'categories/cat_ethnic.png' => 'cat_ethnic_1780408567761.png',
+    'categories/cat_summer.png' => 'cat_summer_1780408587210.png'
 ];
 
-foreach ($imageFileMap as $key => $filename) {
+foreach ($imageFileMap as $relPath => $filename) {
     $srcPath = $imageSourceDir . $filename;
-    $dstName = $key . '.png';
-    $dstThumbPath = $imageDestThumbnailDir . $dstName;
-    $dstSliderPath = $imageDestSliderDir . $dstName;
+    $dstPath = __DIR__ . '/assets/front/img/user/items/' . $relPath;
 
     if (file_exists($srcPath)) {
-        copy($srcPath, $dstThumbPath);
-        copy($srcPath, $dstSliderPath);
-        echo "Successfully copied image: <strong>{$dstName}</strong><br>";
+        copy($srcPath, $dstPath);
+        echo "Successfully copied image: <strong>{$relPath}</strong><br>";
     } else {
-        echo "<span style='color:orange;'>Warning: Source image {$srcPath} not found. Setting DB name to {$dstName} anyway.</span><br>";
+        echo "<span style='color:orange;'>Warning: Source image {$srcPath} not found. Setting DB name for {$relPath} anyway.</span><br>";
     }
 }
 
 // 6. Database Cleanup
 echo "<h3>Step 2: Cleaning up existing catalog items for 'clothing'...</h3>";
-// Get existing items for user to delete image relationships
 $oldItemIds = DB::table('user_items')->where('user_id', $uid)->pluck('id')->toArray();
 if (!empty($oldItemIds)) {
     DB::table('user_item_images')->whereIn('item_id', $oldItemIds)->delete();
@@ -259,13 +282,12 @@ if (!empty($oldItemIds)) {
     DB::table('product_variant_option_contents')->whereIn('item_id', $oldItemIds)->delete();
     DB::table('user_items')->where('user_id', $uid)->delete();
 }
-// Clean up categories
 DB::table('user_item_categories')->where('user_id', $uid)->delete();
 DB::table('user_item_sub_categories')->where('user_id', $uid)->delete();
 echo "Cleanup completed.<br>";
 
 // 7. Seed new categories
-echo "<h3>Step 3: Seeding new categories...</h3>";
+echo "<h3>Step 3: Seeding new categories with images...</h3>";
 $categoryMap = []; // Maps slug -> target Category ID for English
 $categoryArabMap = []; // Maps slug -> target Category ID for Arabic
 
@@ -278,6 +300,8 @@ foreach ($categoriesData as $slugKey => $data) {
         'language_id' => $enLangId,
         'name' => $data['en']['name'],
         'slug' => $data['en']['slug'],
+        'image' => $data['image'],
+        'category_background_image' => $data['image'],
         'status' => 1,
         'is_featured' => 1,
         'unique_id' => $uniqueId,
@@ -285,7 +309,7 @@ foreach ($categoriesData as $slugKey => $data) {
         'updated_at' => now()
     ]);
     $categoryMap[$slugKey] = $enCatId;
-    echo "Added category (EN): <strong>{$data['en']['name']}</strong> (ID: {$enCatId})<br>";
+    echo "Added category (EN): <strong>{$data['en']['name']}</strong> with image <strong>{$data['image']}</strong> (ID: {$enCatId})<br>";
 
     // Insert Arabic Category (if exists)
     if ($arLangId) {
@@ -294,6 +318,8 @@ foreach ($categoriesData as $slugKey => $data) {
             'language_id' => $arLangId,
             'name' => $data['ar']['name'],
             'slug' => $data['ar']['slug'],
+            'image' => $data['image'],
+            'category_background_image' => $data['image'],
             'status' => 1,
             'is_featured' => 1,
             'unique_id' => $uniqueId,
@@ -377,4 +403,4 @@ echo "<h3>Step 5: Clearing cache...</h3>";
 \Illuminate\Support\Facades\Artisan::call('cache:clear');
 echo "Cache cleared successfully!<br>";
 
-echo "<h2 style='color:green;'>SUCCESS! All products and images have been updated to represent a clean dress store!</h2>";
+echo "<h2 style='color:green;'>SUCCESS! All categories, products, and homepage/instagram images have been updated!</h2>";
