@@ -13,6 +13,13 @@
   .page-title-area {
       display: none !important;
   }
+
+  /* Strikeout and make red the text of disabled features */
+  .disabled-feature span:not(.feat-check-circle) {
+      text-decoration: line-through !important;
+      color: #ef4444 !important;
+      opacity: 0.65;
+  }
 </style>
 @endsection
 
@@ -322,7 +329,7 @@
                                 @php
                                   $hasFeature = is_array($pFeatures) && in_array($feature, $pFeatures);
                                 @endphp
-                                <li>
+                                <li class="{{ !$hasFeature ? 'disabled-feature' : '' }}">
                                   @if ($hasFeature)
                                     <span class="feat-check-circle"><i class="fas fa-check"></i></span>
                                   @else
