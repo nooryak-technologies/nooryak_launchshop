@@ -206,6 +206,9 @@ class BasicController extends Controller
             'base_color' => $request->base_color,
             'timezone' => $request->timezone
         ]);
+        Auth::guard('web')->user()->update([
+            'photo' => $filename
+        ]);
         Session::flash('success', __('Updated Successfully'));
         return 'success';
     }
@@ -222,8 +225,12 @@ class BasicController extends Controller
                 break;
 
             case 'logo':
+                @unlink(public_path("assets/front/img/user/") . $data->logo);
                 @unlink(public_path("assets/front/img/footer/") . $data->logo);
                 $data->logo = null;
+                Auth::guard('web')->user()->update([
+                    'photo' => null
+                ]);
                 break;
 
             case 'preloader':

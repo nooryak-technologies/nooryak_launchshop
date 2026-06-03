@@ -610,9 +610,12 @@ class FrontendController extends Controller
         }
 
 
-        $users = User::with(['category' => function ($query) use ($currentLang) {
-            $query->where('language_id', $currentLang->id);
-        }])
+        $users = User::with([
+            'category' => function ($query) use ($currentLang) {
+                $query->where('language_id', $currentLang->id);
+            },
+            'basic_setting'
+        ])
             ->where(function ($query) {
                 $query->where('preview_template', 1)
                       ->orWhere(function ($q) {

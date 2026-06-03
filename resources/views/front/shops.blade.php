@@ -275,9 +275,11 @@
                     ? asset('assets/front/img/template-previews/' . $bannerFile) 
                     : asset('assets/front/images/placeholder.png');
                 
-                $logoImg = !empty($user->photo) 
-                    ? asset('assets/front/img/user/' . $user->photo) 
-                    : asset('assets/user/img/profile.png');
+                $logoImg = !empty(optional($user->basic_setting)->logo) 
+                    ? asset('assets/front/img/user/' . $user->basic_setting->logo) 
+                    : (!empty($user->photo) 
+                        ? asset('assets/front/img/user/' . $user->photo) 
+                        : asset('assets/user/img/profile.png'));
               @endphp
 
               <!-- Card -->
