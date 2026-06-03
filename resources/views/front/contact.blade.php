@@ -24,6 +24,23 @@
       z-index: 2 !important;
   }
 
+    .contact-phone-symbol {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #ff5a2c;
+      font-size: 20px;
+      line-height: 1;
+      font-weight: 700;
+    }
+
+    .form-group-custom .input-wrapper .contact-phone-symbol {
+      width: 18px;
+      height: 18px;
+      font-size: 18px;
+      z-index: 2 !important;
+    }
+
   /* Fix nice-select styling inside custom form fields on contact page */
   .form-group-custom .input-wrapper .nice-select.form-control {
       width: 100% !important;
@@ -375,7 +392,7 @@
         <div class="col-md-6 col-lg-3">
           <div class="contact-info-card">
             <div class="icon-circle phone">
-              <i class="fas fa-phone-alt"></i>
+              <span class="contact-phone-symbol" aria-hidden="true">☎</span>
             </div>
             <div class="card-details">
               <h4>{{ __('Phone') }}</h4>
@@ -485,7 +502,7 @@
                   <div class="form-group-custom">
                     <label>Phone Number *</label>
                     <div class="input-wrapper">
-                      <i class="fas fa-phone-alt icon"></i>
+                      <span class="contact-phone-symbol icon" aria-hidden="true">☎</span>
                       <input type="text" name="phone" class="form-control" placeholder="+91 98765 43210" required>
                     </div>
                   </div>
