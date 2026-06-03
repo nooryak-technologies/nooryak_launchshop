@@ -64,7 +64,7 @@
 
       <!-- Templates Grid Section -->
       <div class="templates-grid-wrapper">
-        <div class="row g-4 justify-content-center" id="templatesGrid">
+        <div class="row g-4 justify-content-start" id="templatesGrid">
           @foreach ($templates as $template)
             @php
               $themeName = App\Models\User\BasicSetting::where('user_id', $template->id)->pluck('theme')->first();
