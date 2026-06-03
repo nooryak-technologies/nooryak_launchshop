@@ -485,7 +485,7 @@
                   <div class="form-group-custom">
                     <label>Phone Number *</label>
                     <div class="input-wrapper">
-                      <i class="far fa-phone icon"></i>
+                      <i class="fas fa-phone-alt icon"></i>
                       <input type="text" name="phone" class="form-control" placeholder="+91 98765 43210" required>
                     </div>
                   </div>
