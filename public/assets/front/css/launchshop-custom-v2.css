@@ -2072,6 +2072,7 @@ h6 {
     .hero-wrapper .row.align-items-center {
         display: flex !important;
         flex-direction: column !important;
+        margin-top: 20px !important;
     }
 
     .hero-wrapper .col-lg-5,
@@ -6764,6 +6765,8 @@ h6 {
         border-top: none !important;
         z-index: 1000 !important;
         padding: 0 !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
     }
 
     /* Keep the same styling when sticky */
@@ -6777,6 +6780,8 @@ h6 {
         border-bottom: none !important;
         border-top: none !important;
         padding: 0 !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
     }
 
     /* Ensure the hero wrapper has enough padding-top so content is not hidden under the fixed capsule */
@@ -6797,6 +6802,8 @@ h6 {
         border-top: none !important;
         box-shadow: none !important;
         -webkit-box-shadow: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
     }
 
     /* Convert the menu bar container into a beautiful glassmorphic capsule */
@@ -6833,7 +6840,7 @@ h6 {
     }
 
     .header-area .main-responsive-nav .main-responsive-menu .logo img {
-        max-height: 36px !important;
+
         width: auto !important;
         object-fit: contain !important;
     }
@@ -6939,7 +6946,7 @@ h6 {
         overflow-x: hidden !important;
         z-index: 99999 !important;
         padding-top: 80px !important;
-        
+
         /* Smooth CSS drawer transition on open and close */
         display: block !important;
         transform: translateX(100%) !important;
@@ -6949,7 +6956,7 @@ h6 {
     }
 
     /* Show drawer when meanmenu is open */
-    .mean-container:has(a.meanclose) .mean-nav {
+    .header-area .main-responsive-nav .main-responsive-menu.mean-container:has(a.meanclose) .mean-nav {
         transform: translateX(0) !important;
         visibility: visible !important;
         pointer-events: auto !important;
@@ -7076,6 +7083,7 @@ h6 {
     from {
         transform: translateX(100%);
     }
+
     to {
         transform: translateX(0);
     }
@@ -7085,6 +7093,7 @@ h6 {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -7169,7 +7178,7 @@ h6 {
 }
 
 .signup-illustration-wrapper {
-    
+
     height: 100%;
     min-height: 620px;
     display: flex;
