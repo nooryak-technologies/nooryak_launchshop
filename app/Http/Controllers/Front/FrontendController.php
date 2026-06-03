@@ -646,7 +646,7 @@ class FrontendController extends Controller
             }, function ($q) {
                 return $q->orderBy('preview_template', 'ASC')->orderByRaw('CASE WHEN preview_template = 1 THEN template_serial_number ELSE landing_order END ASC')->orderBy('id', 'DESC');
             })
-            ->paginate(9);
+            ->paginate(10);
 
         $data['users'] = $users;
 
