@@ -39,6 +39,7 @@ use Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 use Purifier;
 use Validator;
 use PDF;
@@ -92,6 +93,14 @@ class FrontendController extends Controller
                     ->where('start_date', '<=', Carbon::now()->format('Y-m-d'))
                     ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'));
             })->orderBy('template_serial_number', 'ASC')->get();
+
+        // Debug logging to help diagnose missing templates on the templates page
+        try {
+            $usernames = $data['templates']->pluck('username')->toArray();
+            Log::info('Templates page loaded. Count: ' . count($data['templates']) . '. Usernames: ' . implode(',', $usernames));
+        } catch (\Exception $e) {
+            Log::error('Error logging templates info: ' . $e->getMessage());
+        }
 
 
         $data['testimonials'] = Testimonial::where('language_id', $lang_id)
