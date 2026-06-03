@@ -591,6 +591,7 @@ class CheckoutController extends Controller
         } else {
             $user = $user->first();
         }
+        session()->flash('new_user_username', $user->username);
         return $user;
     }
 

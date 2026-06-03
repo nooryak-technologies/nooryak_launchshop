@@ -371,7 +371,7 @@
 <script>
   'use strict';
   @php
-    $username     = $new_user_username ?? null;
+    $username     = $new_user_username ?? (auth()->check() ? auth()->user()->username : null);
     $websiteHost  = env('WEBSITE_HOST', request()->getHost());
     $subdomainUrl = $username ? 'https://' . $username . '.' . $websiteHost : null;
     $storeUrl     = $subdomainUrl ?? (auth()->check() ? route('user-dashboard') : route('front.index'));

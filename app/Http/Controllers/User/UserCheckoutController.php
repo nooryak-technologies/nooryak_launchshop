@@ -365,6 +365,7 @@ class UserCheckoutController extends Controller
                 'conversation_id' => $conversation_id
             ]);
         }
+        session()->flash('new_user_username', $user->username);
         return $user;
     }
 }
