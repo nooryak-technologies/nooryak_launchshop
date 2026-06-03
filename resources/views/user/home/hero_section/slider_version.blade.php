@@ -91,7 +91,7 @@
                     <thead>
                       <tr>
                         <th scope="col">#</th>
-                        @if ($userBs->theme === 'vegetables' || $userBs->theme === 'electronics' || $userBs->theme === 'manti')
+                        @if ($userBs->theme === 'vegetables' || $userBs->theme === 'electronics' || $userBs->theme === 'manti' || $userBs->theme === 'clothing')
                           <th scope="col">{{ __('Image') }}</th>
                         @endif
                         <th scope="col">{{ __('Title') }}</th>
@@ -104,7 +104,7 @@
                           <td>
                             {{ $loop->iteration }}
                           </td>
-                          @if ($userBs->theme === 'vegetables' || $userBs->theme == 'electronics' || $userBs->theme === 'manti')
+                          @if ($userBs->theme === 'vegetables' || $userBs->theme == 'electronics' || $userBs->theme === 'manti' || $userBs->theme === 'clothing')
                             <td>
                               <img src="{{ asset('assets/front/img/hero_slider/' . $slider->img) }}" alt="image"
                                 class="table-image">

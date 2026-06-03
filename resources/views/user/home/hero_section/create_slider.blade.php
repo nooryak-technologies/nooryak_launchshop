@@ -81,7 +81,7 @@
                   @endif
                 </div>
                 <input type="hidden" name="is_static" class="form-control" value="0">
-                @if ($userBs->theme === 'vegetables' || $userBs->theme === 'electronics' || $userBs->theme === 'manti' || $userBs->theme == 'skinflow')
+                @if ($userBs->theme === 'vegetables' || $userBs->theme === 'electronics' || $userBs->theme === 'manti' || $userBs->theme == 'skinflow' || $userBs->theme === 'clothing')
                   <div class="form-group">
                     <div class="col-12 mb-2 pl-0">
                       <label for="image"><strong>{{ __('Background Image') }} <span
@@ -109,7 +109,7 @@
                       <p class="mt-2 mb-0 text-danger">{{ $errors->first('slider_img') }}</p>
                     @endif
                     <p class="text-warning p-0 mb-1">
-                      @if ($userBs->theme === 'manti')
+                        @if ($userBs->theme === 'manti' || $userBs->theme === 'clothing')
                         {{ __('Recommended Image size : 1440X576') }}
                       @else
                         {{ __('Recommended Image size : 870X590') }}
@@ -207,7 +207,7 @@
 
                 </div>
 
-                @if ($userBs->theme === 'vegetables' || $userBs->theme === 'electronics' || $userBs->theme === 'manti')
+                @if ($userBs->theme === 'vegetables' || $userBs->theme === 'electronics' || $userBs->theme === 'manti' || $userBs->theme === 'clothing')
                   <div class="row">
                     <div class="col-lg-12">
                       <div class="form-group">

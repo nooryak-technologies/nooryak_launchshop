@@ -249,18 +249,7 @@
                     $catSlug = $themeLabel['category'];
                 } elseif ($user->category) {
                     $catSlug = strtolower($user->category->slug);
-                    // Convert slug to readable English label
-                    $slugLabelMap = [
-                        'grocery' => __('Grocery'), 'vegetables' => __('Grocery'),
-                        'fashion' => __('Fashion'), 'apparel' => __('Fashion'),
-                        'kids' => __('Kids Fashion'), 'jewellery' => __('Jewellery'),
-                        'electronics' => __('Electronics'), 'gadgets' => __('Electronics'),
-                        'beauty' => __('Beauty'), 'cosmetics' => __('Beauty'), 'skinflow' => __('Beauty'),
-                        'furniture' => __('Furniture'),
-                        'multipurpose' => __('Multipurpose'), 'manti' => __('Multipurpose'),
-                        'pet' => __('Pet'), 'food' => __('Food'),
-                    ];
-                    $catName = $slugLabelMap[$catSlug] ?? ucfirst(str_replace(['-','_'], ' ', $catSlug));
+                    $catName = $user->category->name;
                 } else {
                     $catName = __('Store');
                     $catSlug = 'store';

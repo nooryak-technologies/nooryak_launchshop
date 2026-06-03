@@ -13,6 +13,35 @@
   <!--- For Social Media Share Thumbnail --->
 @endsection
 
+@section('breadcrumb_right')
+  <!-- Horizontal Scrollable Category Pills -->
+  @if(count($categories) > 0)
+    <div class="shop-category-pills">
+      <div class="pills-wrapper justify-content-lg-end justify-content-start">
+        <a href="#" class="category pill-item {{ Route::current()->getName() == 'front.user.shop' && empty(request()->input('category')) ? 'active' : '' }}" data-category-slug-="all">
+          <div class="pill-img-wrap">
+            <div class="pill-icon"><i class="fal fa-th-large"></i></div>
+          </div>
+          <span class="pill-name">{{ $keywords['All'] ?? __('All') }}</span>
+        </a>
+        @foreach ($categories as $category)
+          <a href="#" class="category pill-item {{ request()->input('category') == $category->slug ? 'active' : '' }}" data-slug="{{ $category->slug }}">
+            <div class="pill-img-wrap">
+              @if(!empty($category->image))
+                <img class="lazyload pill-img" src="{{ asset('assets/front/images/placeholder.png') }}"
+                  data-src="{{ asset('assets/front/img/user/items/categories/' . $category->image) }}" alt="{{ $category->name }}">
+              @else
+                <div class="pill-icon"><i class="fal fa-tags"></i></div>
+              @endif
+            </div>
+            <span class="pill-name">{{ $category->name }}</span>
+          </a>
+        @endforeach
+      </div>
+    </div>
+  @endif
+@endsection
+
 @section('content')
   <!-- Shop Start -->
   <div class="products pt-40 pb-70">
@@ -249,32 +278,6 @@
 
 
         <div class="col-lg-8 col-xl-9">
-          <!-- Horizontal Scrollable Category Pills -->
-          @if(count($categories) > 0)
-            <div class="shop-category-pills mb-40">
-              <div class="pills-wrapper">
-                <a href="#" class="category pill-item {{ Route::current()->getName() == 'front.user.shop' && empty(request()->input('category')) ? 'active' : '' }}" data-category-slug-="all">
-                  <div class="pill-img-wrap">
-                    <div class="pill-icon"><i class="fal fa-th-large"></i></div>
-                  </div>
-                  <span class="pill-name">{{ $keywords['All'] ?? __('All') }}</span>
-                </a>
-                @foreach ($categories as $category)
-                  <a href="#" class="category pill-item {{ request()->input('category') == $category->slug ? 'active' : '' }}" data-slug="{{ $category->slug }}">
-                    <div class="pill-img-wrap">
-                      @if(!empty($category->image))
-                        <img class="lazyload pill-img" src="{{ asset('assets/front/images/placeholder.png') }}"
-                          data-src="{{ asset('assets/front/img/user/items/categories/' . $category->image) }}" alt="{{ $category->name }}">
-                      @else
-                        <div class="pill-icon"><i class="fal fa-tags"></i></div>
-                      @endif
-                    </div>
-                    <span class="pill-name">{{ $category->name }}</span>
-                  </a>
-                @endforeach
-              </div>
-            </div>
-          @endif
 
           <div class="product-sort-area mb-30">
 
