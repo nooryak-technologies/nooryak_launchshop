@@ -6895,3 +6895,14 @@ html[dir="rtl"] #product-details-slider .slick-track {
     margin-right: 0 !important;
     margin-left: auto !important;
 }
+
+/* Fix Breadcrumb link visibility */
+.page-title-area .breadcrumb-item a {
+    color: #475569 !important;
+}
+.page-title-area .breadcrumb-item a:hover {
+    color: var(--color-primary, #ff5a2c) !important;
+}
+.page-title-area .breadcrumb-item::before {
+    color: #94a3b8 !important;
+}
