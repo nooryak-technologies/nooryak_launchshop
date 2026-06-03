@@ -641,10 +641,10 @@ class FrontendController extends Controller
                 } elseif ($request->sort_by == 'rating') {
                     return $q->orderBy('landing_rating', 'DESC')->orderBy('id', 'DESC');
                 } else {
-                    return $q->orderBy('landing_order', 'ASC')->orderBy('id', 'DESC');
+                    return $q->orderByRaw('CASE WHEN preview_template = 1 THEN template_serial_number ELSE landing_order END ASC')->orderBy('id', 'DESC');
                 }
             }, function ($q) {
-                return $q->orderBy('landing_order', 'ASC')->orderBy('id', 'DESC');
+                return $q->orderByRaw('CASE WHEN preview_template = 1 THEN template_serial_number ELSE landing_order END ASC')->orderBy('id', 'DESC');
             })
             ->paginate(9);
 
