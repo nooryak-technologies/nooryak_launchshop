@@ -15,9 +15,9 @@
   }
 
   /* Strikeout and make red the text of disabled features, with a black line */
-  .disabled-feature span:not(.feat-check-circle) {
-      text-decoration: line-through !important;
-      text-decoration-color: #000000 !important;
+  .pricing-card-modern .features-list-block ul li.disabled-feature span:not(.feat-check-circle),
+  .pricing-card-modern .pricing-features-extra ul li.disabled-feature span:not(.feat-check-circle) {
+      text-decoration: line-through solid #000000 !important;
       color: #ef4444 !important;
       opacity: 0.65;
   }
