@@ -13,9 +13,7 @@ class ChangeLandingStatusDefaultInUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->tinyInteger('landing_status')->default(0)->change();
-        });
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE users MODIFY COLUMN landing_status TINYINT NOT NULL DEFAULT 0;");
     }
 
     /**
@@ -25,8 +23,6 @@ class ChangeLandingStatusDefaultInUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->tinyInteger('landing_status')->default(1)->change();
-        });
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE users MODIFY COLUMN landing_status TINYINT NOT NULL DEFAULT 1;");
     }
 }

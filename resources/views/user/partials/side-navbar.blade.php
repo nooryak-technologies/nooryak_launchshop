@@ -556,7 +556,7 @@
                         </li>
 
                         @php
-                          $__allow_hero_section = ['pet', 'jewellery', 'clothing'];
+                          $__allow_hero_section = ['pet', 'jewellery'];
                         @endphp
                         @if (in_array($userBs->theme, $__allow_hero_section))
                           <li class="
@@ -586,7 +586,18 @@
                                     request()->routeIs('user.home_page.hero.create_slider') ||
                                     request()->routeIs('user.home_page.hero.edit_slider')) show @endif pl-3">
                               <ul class="nav nav-collapse subnav">
-                                @if ($userBs->theme == 'fashion')
+                                @if ($userBs->theme == 'fashion' || $userBs->theme == 'clothing')
+                                  <li
+                                    class="
+                              @if (request()->routeIs('user.home_page.hero.slider_version')) active
+                              @elseif (request()->routeIs('user.home_page.hero.create_slider')) active
+                              @elseif (request()->routeIs('user.home_page.hero.edit_slider')) active @endif">
+                                    <a
+                                      href="{{ route('user.home_page.hero.slider_version', ['language' => $defaultLang]) }}">
+                                      <span class="sub-item">{{ __('Sliders') }}</span>
+                                    </a>
+                                  </li>
+                                @elseif ($userBs->theme == 'fashion')
                                   <li
                                     class="{{ request()->routeIs('user.home_page.heroSec.product_slider') ? 'active' : '' }}">
                                     <a href="{{ route('user.home_page.heroSec.product_slider') }}">
