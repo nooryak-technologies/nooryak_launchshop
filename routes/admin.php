@@ -267,6 +267,14 @@ Route::domain($domain)->group(function () {
             Route::post('/subscriber/bulk-delete', 'Admin\SubscriberController@bulkDelete')->name('admin.subscriber.bulk.delete');
         });
 
+        // Shops Management
+        Route::prefix('shops')->middleware('checkpermission:Shops')->group(function () {
+            Route::get('/', 'Admin\ShopController@index')->name('admin.shops.index');
+            Route::get('/edit/{id}', 'Admin\ShopController@edit')->name('admin.shops.edit');
+            Route::post('/update/{id}', 'Admin\ShopController@update')->name('admin.shops.update');
+            Route::post('/status', 'Admin\ShopController@status')->name('admin.shops.status');
+        });
+
         // Package Management
         Route::prefix('package-management')->middleware('checkpermission:Package Management')->group(function () {
             // Package Settings routes

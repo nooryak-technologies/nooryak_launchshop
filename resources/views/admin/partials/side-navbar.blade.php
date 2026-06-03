@@ -134,6 +134,17 @@
           </li>
         @endif
 
+        {{-- Shops Management --}}
+        @if (empty($admin->role) || (!empty($permissions) && in_array('Shops', $permissions)))
+          <li class="nav-item
+            @if (request()->routeIs('admin.shops.index') || request()->routeIs('admin.shops.edit')) active @endif">
+            <a href="{{ route('admin.shops.index') }}">
+              <i class="fas fa-store"></i>
+              <p>{{ __('Shops') }}</p>
+            </a>
+          </li>
+        @endif
+
         {{-- Package Management --}}
         @if (empty($admin->role) || (!empty($permissions) && in_array('Package Management', $permissions)))
           <li

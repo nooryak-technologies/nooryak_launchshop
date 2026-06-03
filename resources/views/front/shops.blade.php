@@ -237,8 +237,8 @@
             @foreach ($users as $user)
               @php
                 $shopName = $user->shop_name ?: $user->username;
-                $rating = '4.8';
-                $desc = 'Modern storefront offering premium services and products.';
+                $rating = $user->landing_rating ?: '4.8';
+                $desc = $user->landing_description ?: 'Modern storefront offering premium services and products.';
 
                 $userTheme = $userThemes[$user->id] ?? null;
                 $themeLabel = $userTheme && isset($themeLabelMap[$userTheme]) ? $themeLabelMap[$userTheme] : null;

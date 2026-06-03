@@ -71,45 +71,93 @@
   @if($ubs->hero_section == 1)
   <section class="header-next" style="padding: 0; margin-bottom: 40px; margin-top: 30px;">
     <div class="container">
-      <div class="clothing-hero-shell" data-aos="fade-up" data-aos-delay="60">
+      @php
+        $heroSlides = collect();
 
-        {{-- Copy container (with nested image visual frame inside it) --}}
-        <div class="clothing-hero-copy">
-          <span class="clothing-hero-kicker">{{ $keywords['New Season'] ?? __('NEW SEASON') }}</span>
-          @if(!is_null(@$static_hero_section->title))
-            <h1>{!! $static_hero_section->title !!}</h1>
-          @else
-            <h1 style="font-family: 'Jost', sans-serif; font-size: clamp(2.8rem, 5vw, 5rem); line-height: 1.1; font-weight: 700; margin-bottom: 18px;">
-              Style <em style="font-style: italic; font-weight: 400;">Redefined</em> For You
-            </h1>
-          @endif
-          @if(!is_null(@$static_hero_section->subtitle))
-            <p style="font-size: 15px; line-height: 1.6; color: #6b6157; margin-bottom: 28px;">{{ $static_hero_section->subtitle }}</p>
-          @else
-            <p style="font-size: 15px; line-height: 1.6; color: #6b6157; margin-bottom: 28px;">
-              Timeless designs. Premium fabrics.<br>Made for the modern you.
-            </p>
-          @endif
+        if (isset($sliders) && count($sliders) > 0) {
+          $heroSlides = $sliders->map(function ($slide) {
+            return [
+              'kicker' => __('NEW SEASON'),
+              'title' => $slide->title,
+              'title_html' => null,
+              'subtitle' => $slide->subtitle,
+              'text' => $slide->text,
+              'primary_btn_name' => $slide->btn_name,
+              'primary_btn_url' => $slide->btn_url,
+              'image_url' => !empty($slide->img) ? asset('assets/front/img/hero_slider/' . $slide->img) : null
+            ];
+          });
+        }
 
-          {{-- Nested image --}}
-          <div class="hero-visual-frame">
-            @if(!is_null(@$static_hero_section->background_image))
-              <img class="lazyload blur-up"
-                src="{{ asset('assets/front/images/placeholder.png') }}"
-                data-src="{{ asset('assets/front/img/hero-section/' . $static_hero_section->background_image) }}"
-                alt="hero" style="width:100%;height:100%;object-fit:cover;">
-            @else
-              <img src="{{ asset('assets/user-front/images/fashion/banner/banner-1.jpg') }}"
-                alt="hero" style="width:100%;height:100%;object-fit:cover;">
-            @endif
+        if ($heroSlides->isEmpty()) {
+          $heroSlides = collect([
+            [
+              'kicker' => $keywords['New Season'] ?? __('NEW SEASON'),
+              'title' => null,
+              'title_html' => !is_null(@$static_hero_section->title) ? $static_hero_section->title : 'Style <em>Redefined</em> For You',
+              'subtitle' => @$static_hero_section->subtitle,
+              'text' => null,
+              'primary_btn_name' => __('SHOP MEN'),
+              'primary_btn_url' => route('front.user.shop', getParam()),
+              'image_url' => !is_null(@$static_hero_section->background_image)
+                ? asset('assets/front/img/hero-section/' . $static_hero_section->background_image)
+                : asset('assets/user-front/images/fashion/banner/banner-1.jpg')
+            ]
+          ]);
+        }
+
+        $heroAutoplay = $heroSlides->count() > 1;
+      @endphp
+
+      <div class="clothing-hero-slider" data-hero-autoplay="{{ $heroAutoplay ? 'true' : 'false' }}" data-aos="fade-up" data-aos-delay="60">
+        @foreach($heroSlides as $heroSlide)
+          <div class="clothing-hero-slide">
+            <div class="clothing-hero-shell">
+              <div class="clothing-hero-copy">
+                <span class="clothing-hero-kicker">{{ $heroSlide['kicker'] }}</span>
+
+                @if(!empty($heroSlide['title_html']))
+                  <h1>{!! $heroSlide['title_html'] !!}</h1>
+                @elseif(!empty($heroSlide['title']))
+                  <h1>{{ $heroSlide['title'] }}</h1>
+                @else
+                  <h1>Style <em>Redefined</em> For You</h1>
+                @endif
+
+                <p>
+                  @if(!empty($heroSlide['subtitle']))
+                    {{ $heroSlide['subtitle'] }}
+                  @elseif(!empty($heroSlide['text']))
+                    {{ $heroSlide['text'] }}
+                  @else
+                    Timeless designs. Premium fabrics.<br>Made for the modern you.
+                  @endif
+                </p>
+
+                <div class="hero-visual-frame">
+                  @if(!empty($heroSlide['image_url']))
+                    <img class="lazyload blur-up"
+                      src="{{ asset('assets/front/images/placeholder.png') }}"
+                      data-src="{{ $heroSlide['image_url'] }}"
+                      alt="hero banner">
+                  @else
+                    <img class="lazyload blur-up"
+                      src="{{ asset('assets/front/images/placeholder.png') }}"
+                      data-src="{{ asset('assets/user-front/images/fashion/banner/banner-1.jpg') }}"
+                      alt="hero banner">
+                  @endif
+                </div>
+
+                <div class="clothing-hero-actions">
+                  <a href="{{ !empty($heroSlide['primary_btn_url']) ? $heroSlide['primary_btn_url'] : route('front.user.shop', getParam()) }}" class="clothing-btn-dark">
+                    {{ !empty($heroSlide['primary_btn_name']) ? $heroSlide['primary_btn_name'] : __('SHOP MEN') }} <i class="fal fa-arrow-right"></i>
+                  </a>
+                  <a href="{{ route('front.user.shop', getParam()) }}" class="clothing-btn-light">{{ __('SHOP WOMEN') }} <i class="fal fa-arrow-right"></i></a>
+                </div>
+              </div>
+            </div>
           </div>
-
-          <div class="clothing-hero-actions">
-            <a href="{{ route('front.user.shop', getParam()) }}" class="clothing-btn-dark">SHOP MEN <i class="fal fa-arrow-right"></i></a>
-            <a href="{{ route('front.user.shop', getParam()) }}" class="clothing-btn-light">SHOP WOMEN <i class="fal fa-arrow-right"></i></a>
-          </div>
-        </div>
-
+        @endforeach
       </div>
     </div>
   </section>
@@ -506,6 +554,26 @@
 @section('scripts')
 <script>
 $(document).ready(function() {
+  var $heroSlider = $('.clothing-hero-slider');
+  if ($heroSlider.length > 0 && !$heroSlider.hasClass('slick-initialized')) {
+    var enableHeroAutoplay = String($heroSlider.data('hero-autoplay')) === 'true';
+
+    $heroSlider.slick({
+      dots: enableHeroAutoplay,
+      arrows: false,
+      autoplay: enableHeroAutoplay,
+      autoplaySpeed: 4500,
+      speed: 700,
+      infinite: enableHeroAutoplay,
+      pauseOnHover: true,
+      pauseOnFocus: false,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      adaptiveHeight: false,
+      rtl: $('html').attr('dir') === 'rtl'
+    });
+  }
+
   if ($('.testimonial-slider-clothing').length > 0) {
     $('.testimonial-slider-clothing').slick({
       dots: true,

@@ -603,6 +603,7 @@ class FrontendController extends Controller
 
         $users = User::with('category')
             ->where('online_status', 1)
+            ->where('landing_status', 1)
             ->whereHas('memberships', function ($q) {
                 $q->where('status', '=', 1)
                     ->where('start_date', '<=', Carbon::now()->format('Y-m-d'))
@@ -626,8 +627,17 @@ class FrontendController extends Controller
             ->when($selectedCategoryUniqueId, function ($q) use ($selectedCategoryUniqueId) {
                 return $q->where('category_id', $selectedCategoryUniqueId);
             })
-
-            ->orderBy('id', 'DESC')
+            ->when($request->sort_by, function ($q) use ($request) {
+                if ($request->sort_by == 'newest') {
+                    return $q->orderBy('id', 'DESC');
+                } elseif ($request->sort_by == 'rating') {
+                    return $q->orderBy('landing_rating', 'DESC')->orderBy('id', 'DESC');
+                } else {
+                    return $q->orderBy('landing_order', 'ASC')->orderBy('id', 'DESC');
+                }
+            }, function ($q) {
+                return $q->orderBy('landing_order', 'ASC')->orderBy('id', 'DESC');
+            })
             ->paginate(9);
 
         $data['users'] = $users;
