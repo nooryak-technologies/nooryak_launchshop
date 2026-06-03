@@ -493,18 +493,10 @@
                 
                 <div class="col-md-6">
                   <div class="form-group-custom">
-                    <label>Store Type / Industry *</label>
+                    <label>Describe Issues *</label>
                     <div class="input-wrapper">
-                      <select name="industry" class="form-control form-select-custom" required>
-                        <option value="" disabled selected>Select your industry</option>
-                        <option value="Fashion & Apparel">Fashion & Apparel</option>
-                        <option value="Grocery & Supermarket">Grocery & Supermarket</option>
-                        <option value="Electronics & Gadgets">Electronics & Gadgets</option>
-                        <option value="Beauty & Cosmetics">Beauty & Cosmetics</option>
-                        <option value="Home Decor & Furniture">Home Decor & Furniture</option>
-                        <option value="Food & Beverages">Food & Beverages</option>
-                        <option value="Others">Others</option>
-                      </select>
+                      <i class="far fa-clipboard-list icon"></i>
+                      <input type="text" name="describe_issues" class="form-control" placeholder="Describe your issues" required>
                     </div>
                   </div>
                 </div>
@@ -647,15 +639,15 @@
       // Form submit hook: merge phone and store type details into the hidden message body
       $('#contactForm').on('submit', function(e) {
           var phone = $('[name="phone"]').val();
-          var industry = $('[name="industry"]').val();
+        var describeIssues = $('[name="describe_issues"]').val();
           var originalMsg = $('#temp_message').val();
           
           var additionalInfo = "";
           if (phone) {
               additionalInfo += "\nPhone Number: " + phone;
           }
-          if (industry) {
-              additionalInfo += "\nStore Type / Industry: " + industry;
+        if (describeIssues) {
+          additionalInfo += "\nDescribe Issues: " + describeIssues;
           }
           
           if (additionalInfo) {
@@ -665,15 +657,6 @@
           }
       });
       
-      // Manage placeholder class for select field
-      $('select[name="industry"]').on('change', function() {
-          var $niceSelect = $(this).next('.nice-select');
-          if ($(this).val()) {
-              $niceSelect.removeClass('placeholder-selected');
-          } else {
-              $niceSelect.addClass('placeholder-selected');
-          }
-      }).trigger('change');
   });
 </script>
 @endsection
