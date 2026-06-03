@@ -16,8 +16,22 @@ class ShopController extends Controller
     public function index(Request $request)
     {
         $term = $request->term;
+
+        if (session()->has('admin_lang')) {
+            $lang_code = str_replace('admin_', '', session()->get('admin_lang'));
+            $language = Language::where('code', $lang_code)->first();
+            if (empty($language)) {
+                $language = Language::where('is_default', 1)->first();
+            }
+        } else {
+            $language = Language::where('is_default', 1)->first();
+        }
         
-        $shops = User::with('category')->where('preview_template', 0)
+        $shops = User::with(['category' => function ($query) use ($language) {
+            if ($language) {
+                $query->where('language_id', $language->id);
+            }
+        }])->where('preview_template', 0)
             ->when($term, function ($query, $term) {
                 $query->where(function($q) use ($term) {
                     $q->where('username', 'like', '%' . $term . '%')
