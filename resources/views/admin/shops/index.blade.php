@@ -47,8 +47,10 @@
                   <table class="table table-striped mt-3">
                     <thead>
                       <tr>
+                        <th scope="col">{{ __('Logo') }}</th>
                         <th scope="col">{{ __('Thumbnail') }}</th>
                         <th scope="col">{{ __('Shop Name') }}</th>
+                        <th scope="col">{{ __('Category') }}</th>
                         <th scope="col">{{ __('Username') }}</th>
                         <th scope="col">{{ __('Email') }}</th>
                         <th scope="col">{{ __('Rating') }}</th>
@@ -61,6 +63,15 @@
                       @foreach ($shops as $key => $shop)
                         <tr>
                           <td>
+                            @if (!empty($shop->photo))
+                              <img src="{{ asset('assets/front/img/user/' . $shop->photo) }}" 
+                                alt="{{ $shop->shop_name }}" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover; border: 1px solid #ddd;">
+                            @else
+                              <img src="{{ asset('assets/user/img/profile.png') }}" 
+                                alt="Default" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover; border: 1px solid #ddd;">
+                            @endif
+                          </td>
+                          <td>
                             @if (!empty($shop->template_img))
                               <img src="{{ asset('assets/front/img/template-previews/' . $shop->template_img) }}" 
                                 alt="{{ $shop->shop_name }}" style="width: 90px; height: 55px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;">
@@ -69,6 +80,7 @@
                             @endif
                           </td>
                           <td>{{ $shop->shop_name ?: __('N/A') }}</td>
+                          <td>{{ $shop->category ? $shop->category->name : __('N/A') }}</td>
                           <td>{{ $shop->username }}</td>
                           <td>{{ $shop->email }}</td>
                           <td>

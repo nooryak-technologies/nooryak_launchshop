@@ -59,6 +59,39 @@
                   @enderror
                 </div>
 
+                {{-- Shop Logo --}}
+                <div class="form-group">
+                  <label for="">{{ __('Shop Logo') }}</label>
+                  <div class="col-md-12 mb-3 pl-0">
+                    @if (!empty($shop->photo))
+                      <img class="img-thumbnail rounded-circle" src="{{ asset('assets/front/img/user/' . $shop->photo) }}" 
+                        alt="Current Logo" style="width: 80px; height: 80px; object-fit: cover; display: block; margin-bottom: 10px;">
+                    @else
+                      <img class="img-thumbnail rounded-circle" src="{{ asset('assets/user/img/profile.png') }}" 
+                        alt="Default Profile" style="width: 80px; height: 80px; object-fit: cover; display: block; margin-bottom: 10px;">
+                    @endif
+                  </div>
+                  <input type="file" class="form-control" name="logo">
+                  <p class="text-warning mb-0">{{ __('Only png, jpg, jpeg images under 2MB are allowed.') }}</p>
+                  @error('logo')
+                    <p class="text-danger mb-0">{{ $message }}</p>
+                  @enderror
+                </div>
+
+                {{-- Category Select --}}
+                <div class="form-group">
+                  <label for="">{{ __('Category') }}</label>
+                  <select name="category" class="form-control">
+                    <option value="" selected>{{ __('Select Category') }}</option>
+                    @foreach ($categories as $category)
+                      <option value="{{ $category->unique_id }}" {{ old('category', $shop->category_id) == $category->unique_id ? 'selected' : '' }}>{{ $category->name }}</option>
+                    @endforeach
+                  </select>
+                  @error('category')
+                    <p class="text-danger mb-0">{{ $message }}</p>
+                  @enderror
+                </div>
+
                 {{-- Shop Name --}}
                 <div class="form-group">
                   <label for="">{{ __('Shop Name') }} <span class="text-danger">*</span></label>

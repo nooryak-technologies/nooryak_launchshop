@@ -602,15 +602,21 @@ class FrontendController extends Controller
 
 
         $users = User::with('category')
-            ->where('online_status', 1)
-            ->where('landing_status', 1)
-            ->whereHas('memberships', function ($q) {
-                $q->where('status', '=', 1)
-                    ->where('start_date', '<=', Carbon::now()->format('Y-m-d'))
-                    ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'));
-            })
-            ->whereHas('permissions', function ($q) {
-                $q->where('permissions', 'LIKE', '%"Profile Listing"%');
+            ->where(function ($query) {
+                $query->where('preview_template', 1)
+                      ->orWhere(function ($q) {
+                          $q->where('preview_template', 0)
+                            ->where('online_status', 1)
+                            ->where('landing_status', 1)
+                            ->whereHas('memberships', function ($sub) {
+                                $sub->where('status', '=', 1)
+                                    ->where('start_date', '<=', Carbon::now()->format('Y-m-d'))
+                                    ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'));
+                            })
+                            ->whereHas('permissions', function ($sub) {
+                                $sub->where('permissions', 'LIKE', '%"Profile Listing"%');
+                            });
+                      });
             })
             ->when($request->shop_name, function ($q) use ($request) {
                 return $q->where(function ($query) use ($request) {

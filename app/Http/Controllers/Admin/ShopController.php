@@ -17,7 +17,7 @@ class ShopController extends Controller
     {
         $term = $request->term;
         
-        $shops = User::where('preview_template', 0)
+        $shops = User::with('category')->where('preview_template', 0)
             ->when($term, function ($query, $term) {
                 $query->where(function($q) use ($term) {
                     $q->where('username', 'like', '%' . $term . '%')
@@ -59,6 +59,8 @@ class ShopController extends Controller
             'shop_name' => 'required|max:255',
             'landing_rating' => 'required|numeric|min:0|max:5',
             'landing_order' => 'required|integer',
+            'category' => 'nullable',
+            'logo' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
             'preview_image' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
         ];
 
@@ -69,6 +71,15 @@ class ShopController extends Controller
         $shop->landing_description = $request->landing_description;
         $shop->landing_order = $request->landing_order;
         $shop->landing_status = $request->landing_status;
+        $shop->category_id = $request->category;
+
+        if ($request->hasFile('logo')) {
+            $dir = public_path('assets/front/img/user/');
+            if (!empty($shop->photo) && file_exists($dir . $shop->photo)) {
+                @unlink($dir . $shop->photo);
+            }
+            $shop->photo = Uploader::upload_picture($dir, $request->file('logo'));
+        }
 
         if ($request->hasFile('preview_image')) {
             $dir = public_path('assets/front/img/template-previews/');
