@@ -6753,7 +6753,7 @@ h6 {
     .header-area,
     .header-inner-page {
         position: fixed !important;
-        top: 15px !important;
+        top: 0 !important;
         left: 0 !important;
         width: 100% !important;
         background: transparent !important;
@@ -6769,19 +6769,20 @@ h6 {
     /* Keep the same styling when sticky */
     .header-area.is-sticky {
         position: fixed !important;
-        top: 15px !important;
-        background: transparent !important;
-        box-shadow: none !important;
-        -webkit-box-shadow: none !important;
+        top: 0 !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+        -webkit-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
         border: none !important;
-        border-bottom: none !important;
-        border-top: none !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
         padding: 0 !important;
     }
 
     /* Ensure the hero wrapper has enough padding-top so content is not hidden under the fixed capsule */
     .hero-wrapper {
-        padding-top: 95px !important;
+        padding-top: 80px !important;
         border-top: none !important;
         box-shadow: none !important;
         -webkit-box-shadow: none !important;
@@ -6798,30 +6799,34 @@ h6 {
         border-top: none !important;
         box-shadow: none !important;
         -webkit-box-shadow: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
     }
 
-    /* Convert the menu bar container into a beautiful glassmorphic capsule with a soft curve */
+    /* Convert the menu bar container into a transparent container spanning full width */
     .header-area .main-responsive-nav .main-responsive-menu {
-        background: rgba(255, 255, 255, 0.25) !important;
-        backdrop-filter: blur(15px) !important;
-        -webkit-backdrop-filter: blur(15px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.3) !important;
-        border-radius: 30px !important;
-        /* Soft curved pill look */
-        padding: 8px 24px !important;
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08) !important;
-        -webkit-box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08) !important;
+        background: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 8px 15px !important;
+        box-shadow: none !important;
+        -webkit-box-shadow: none !important;
         position: relative !important;
         display: flex !important;
         align-items: center !important;
         justify-content: space-between !important;
         min-height: 60px !important;
+        width: 100% !important;
+        margin: 0 !important;
     }
 
     /* Style the logo inside the capsule */
     .header-area .main-responsive-nav .main-responsive-menu .logo {
         position: absolute !important;
-        left: 24px !important;
+        left: 15px !important;
         top: 50% !important;
         transform: translateY(-50%) !important;
         max-width: 130px !important;
@@ -6872,7 +6877,7 @@ h6 {
         border-radius: 12px !important;
         width: 42px !important;
         height: 42px !important;
-        right: 24px !important;
+        right: 15px !important;
         top: 50% !important;
         transform: translateY(-50%) !important;
         padding: 0 !important;
@@ -6920,18 +6925,21 @@ h6 {
         display: none !important;
     }
 
-    /* Floating dropdown menu card */
+    /* Dropdown menu card connected to navbar bottom */
     .header-area .main-responsive-nav .main-responsive-menu.mean-container .mean-nav {
         position: absolute !important;
         top: 100% !important;
         left: 0 !important;
         width: 100% !important;
-        margin-top: 12px !important;
+        margin-top: 0 !important;
         background: rgba(255, 255, 255, 0.95) !important;
         backdrop-filter: blur(20px) !important;
         -webkit-backdrop-filter: blur(20px) !important;
         border: 1px solid rgba(255, 255, 255, 0.5) !important;
-        border-radius: 24px !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-top: none !important;
+        border-radius: 0 0 16px 16px !important;
         box-shadow: 0 15px 35px rgba(31, 38, 135, 0.12) !important;
         -webkit-box-shadow: 0 15px 35px rgba(31, 38, 135, 0.12) !important;
         overflow: hidden !important;

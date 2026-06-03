@@ -41,8 +41,8 @@
   {{-- floating-whatsapp --}}
   <link rel="stylesheet" href="{{ asset('assets/front/css/floating-whatsapp.css') }}">
   <!-- Main Style CSS -->
-  <link rel="stylesheet" href="{{ asset('assets/front/css/style.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/front/css/launchshop-custom.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/front/css/style.css?v=1.0.3') }}">
+  <link rel="stylesheet" href="{{ asset('assets/front/css/launchshop-custom.css?v=1.0.3') }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/tinymce-content.css') }}">
 
   <meta name="csrf-token" content="{{ csrf_token() }}" />
