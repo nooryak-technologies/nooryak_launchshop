@@ -73,7 +73,7 @@
               </div>
             </li> -->
 
-            <li class="mobile-menu-footer">
+            <!-- <li class="mobile-menu-footer">
               <div class="mobile-menu-footer-content">
                 <h3>{{ __('INFORMATION') }}</h3>
                 <ul class="info-list">
@@ -117,7 +117,7 @@
                   </div>
                 @endif
               </div>
-            </li>
+            </li> -->
           </ul>
 
         </div>
