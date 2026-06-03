@@ -181,7 +181,6 @@
                                         </option>
                                         <option value="monthly">{{ __('monthly') }}</option>
                                         <option value="yearly">{{ __('yearly') }}</option>
-                                        <option value="lifetime">{{ __('lifetime') }}</option>
                                     </select>
                                     <p id="errterm" class="mb-0 text-danger em"></p>
                                 </div>
