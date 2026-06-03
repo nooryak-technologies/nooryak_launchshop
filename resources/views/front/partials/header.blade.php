@@ -72,6 +72,52 @@
                 @endauth
               </div>
             </li> -->
+
+            <li class="mobile-menu-footer">
+              <div class="mobile-menu-footer-content">
+                <h3>{{ __('INFORMATION') }}</h3>
+                <ul class="info-list">
+                  @if (!empty($be->contact_numbers))
+                    @php
+                      $numbers = explode(',', $be->contact_numbers);
+                    @endphp
+                    <li>
+                      <i class="fal fa-phone"></i>
+                      <span>
+                        {!! implode(
+                            '<br>',
+                            array_map(fn($num) => '<a href="tel:' . trim($num) . '">' . trim($num) . '</a>', $numbers),
+                        ) !!}
+                      </span>
+                    </li>
+                  @endif
+                  @if (!empty($be->contact_mails))
+                    <li>
+                      <i class="fal fa-envelope"></i>
+                      <span>
+                        <a href="mailto:{{ $be->contact_mails }}">{{ $be->contact_mails }}</a>
+                      </span>
+                    </li>
+                  @endif
+                  @if (!empty($be->contact_addresses))
+                    <li>
+                      <i class="fal fa-map-marker-alt"></i>
+                      <span>{{ $be->contact_addresses }}</span>
+                    </li>
+                  @endif
+                </ul>
+
+                @if (isset($socials) && $socials->count() > 0)
+                  <h3>{{ __('FOLLOW US') }}</h3>
+                  <div class="social-links">
+                    @foreach ($socials as $social)
+                      @php $url = preg_match('/^https?:\/\//', $social->url) ? $social->url : 'http://' . $social->url; @endphp
+                      <a href="{{ $url }}" target="_blank"><i class="{{ $social->icon }}"></i></a>
+                    @endforeach
+                  </div>
+                @endif
+              </div>
+            </li>
           </ul>
 
         </div>

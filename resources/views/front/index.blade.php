@@ -1008,64 +1008,45 @@
     });
 
     // How It Works Step Line Scroll Animation
-    let hasUserScrolled = false;
-
     function updateStepLine() {
       const container = $('.steps-container');
       if (!container.length) return;
 
       const isMobile = window.innerWidth <= 991;
-      if (isMobile && !hasUserScrolled) {
-        $('.steps-line').css({
-          opacity: 0,
-          visibility: 'hidden'
-        });
-        $('.steps-line-fill').css({
-          height: '0%',
-          width: '100%'
-        });
-        return;
-      }
-
       const rect = container[0].getBoundingClientRect();
       const windowHeight = $(window).height();
 
-      // Check if container is inside viewport trigger range
-      if (rect.top < windowHeight && rect.bottom > 0) {
-        // We want the line to start growing when container's top enters 85% of screen height
-        // and be fully filled when container's top reaches 15% of screen height.
-        const startScroll = windowHeight * 0.85;
-        const endScroll = windowHeight * 0.15;
+      // Line starts growing when container's top enters 80% of screen height
+      // and is fully filled when container's bottom reaches 20% of screen height
+      const startPoint = windowHeight * 0.8;
+      const endPoint = windowHeight * 0.2;
+      const containerHeight = container.outerHeight();
+      const totalDistance = containerHeight + (startPoint - endPoint);
 
-        let progress = (startScroll - rect.top) / (startScroll - endScroll);
-        progress = Math.max(0, Math.min(1, progress));
+      let progress = (startPoint - rect.top) / totalDistance;
+      progress = Math.max(0, Math.min(1, progress));
 
-        const lineFill = $('.steps-line-fill');
-        if (lineFill.length) {
-          $('.steps-line').css({
-            opacity: 1,
-            visibility: 'visible'
+      const lineFill = $('.steps-line-fill');
+      if (lineFill.length) {
+        $('.steps-line').css({
+          opacity: progress > 0 ? 1 : 0,
+          visibility: progress > 0 ? 'visible' : 'hidden'
+        });
+        if (isMobile) {
+          lineFill.css({
+            height: (progress * 100) + '%',
+            width: '100%'
           });
-          if (isMobile) {
-            lineFill.css({
-              height: (progress * 100) + '%',
-              width: '100%'
-            });
-          } else {
-            lineFill.css({
-              width: (progress * 100) + '%',
-              height: '100%'
-            });
-          }
+        } else {
+          lineFill.css({
+            width: (progress * 100) + '%',
+            height: '100%'
+          });
         }
       }
     }
 
-    $(window).on('scroll', function () {
-      hasUserScrolled = true;
-      updateStepLine();
-    });
-
+    $(window).on('scroll', updateStepLine);
     $(window).on('resize', updateStepLine);
     updateStepLine();
   });
