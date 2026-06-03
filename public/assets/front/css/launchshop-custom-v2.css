@@ -7081,10 +7081,10 @@ h6 {
         left: 0 !important;
         width: 100% !important;
         height: 100vh !important;
-        background: rgba(0, 0, 0, 0.4) !important;
+        /* background: rgba(0, 0, 0, 0.4) !important; */
         backdrop-filter: blur(4px) !important;
         -webkit-backdrop-filter: blur(4px) !important;
-        z-index: 99998 !important;
+        /* z-index: 99998 !important; */
         animation: fadeIn 0.3s ease-in-out forwards !important;
     }
 }
