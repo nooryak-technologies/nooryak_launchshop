@@ -233,7 +233,7 @@
     <div class="container">
       @php
         $collectionLabels = ['SUMMER COLLECTION', 'STREETWEAR EDIT', 'FORMAL WEAR', 'SPORTSWEAR'];
-        $collectionCats = $item_categories->take(4);
+        $collectionCats = $item_categories;
       @endphp
       @if(count($collectionCats) > 0)
         <div class="clothing-collection-slider" data-aos="fade-up" data-aos-delay="70">

@@ -249,6 +249,33 @@
 
 
         <div class="col-lg-8 col-xl-9">
+          <!-- Horizontal Scrollable Category Pills -->
+          @if(count($categories) > 0)
+            <div class="shop-category-pills mb-40">
+              <div class="pills-wrapper">
+                <a href="#" class="category pill-item {{ Route::current()->getName() == 'front.user.shop' && empty(request()->input('category')) ? 'active' : '' }}" data-category-slug-="all">
+                  <div class="pill-img-wrap">
+                    <div class="pill-icon"><i class="fal fa-th-large"></i></div>
+                  </div>
+                  <span class="pill-name">{{ $keywords['All'] ?? __('All') }}</span>
+                </a>
+                @foreach ($categories as $category)
+                  <a href="#" class="category pill-item {{ request()->input('category') == $category->slug ? 'active' : '' }}" data-slug="{{ $category->slug }}">
+                    <div class="pill-img-wrap">
+                      @if(!empty($category->image))
+                        <img class="lazyload pill-img" src="{{ asset('assets/front/images/placeholder.png') }}"
+                          data-src="{{ asset('assets/front/img/user/items/categories/' . $category->image) }}" alt="{{ $category->name }}">
+                      @else
+                        <div class="pill-icon"><i class="fal fa-tags"></i></div>
+                      @endif
+                    </div>
+                    <span class="pill-name">{{ $category->name }}</span>
+                  </a>
+                @endforeach
+              </div>
+            </div>
+          @endif
+
           <div class="product-sort-area mb-30">
 
             <ul class="product-sort-list">
@@ -482,5 +509,25 @@
   </script>
 
   <script src="{{ asset('assets/user-front/js/product-search.js') }}"></script>
+  <script>
+    $(document).ready(function() {
+      // Sync active state on horizontal pills click
+      $('body').on('click', '.shop-category-pills .pill-item', function() {
+        $('.shop-category-pills .pill-item').removeClass('active');
+        $(this).addClass('active');
+      });
+      
+      // Sync active state on sidebar categories click
+      $('body').on('click', '#categories .category', function() {
+        var slug = $(this).data('slug');
+        $('.shop-category-pills .pill-item').removeClass('active');
+        if (slug) {
+          $('.shop-category-pills .pill-item[data-slug="' + slug + '"]').addClass('active');
+        } else {
+          $('.shop-category-pills .pill-item[data-category-slug-="all"]').addClass('active');
+        }
+      });
+    });
+  </script>
 
 @endsection
