@@ -15,7 +15,7 @@
 
 @section('content')
   <!-- Shop Start -->
-  <div class="products pt-100 pb-70">
+  <div class="products pt-40 pb-70">
     <div class="container">
       <div class="row gx-xl-5">
 
