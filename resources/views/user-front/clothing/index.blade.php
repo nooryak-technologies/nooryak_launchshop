@@ -236,20 +236,22 @@
         $collectionCats = $item_categories->take(4);
       @endphp
       @if(count($collectionCats) > 0)
-        <div class="clothing-collection-grid">
+        <div class="clothing-collection-slider" data-aos="fade-up" data-aos-delay="70">
           @foreach($collectionCats as $colCat)
             @php $colLabel = $collectionLabels[$loop->index] ?? strtoupper($colCat->name); @endphp
-            <a href="{{ route('front.user.shop', [getParam(), 'category='.$colCat->slug]) }}" 
-               class="clothing-collection-card" data-aos="fade-up" data-aos-delay="{{ $loop->index * 70 }}">
-              <img class="lazyload blur-up"
-                src="{{ asset('assets/front/images/placeholder.png') }}"
-                data-src="{{ asset('assets/front/img/user/items/categories/'.$colCat->image) }}"
-                alt="{{ $colLabel }}">
-              <div class="clothing-collection-content">
-                <h3>{{ $colLabel }}</h3>
-                <span class="clothing-collection-link">SHOP NOW <i class="fal fa-arrow-right"></i></span>
-              </div>
-            </a>
+            <div class="px-2">
+              <a href="{{ route('front.user.shop', [getParam(), 'category='.$colCat->slug]) }}" 
+                 class="clothing-collection-card">
+                <img class="lazyload blur-up"
+                  src="{{ asset('assets/front/images/placeholder.png') }}"
+                  data-src="{{ asset('assets/front/img/user/items/categories/'.$colCat->image) }}"
+                  alt="{{ $colLabel }}">
+                <div class="clothing-collection-content">
+                  <h3>{{ $colLabel }}</h3>
+                  <span class="clothing-collection-link">SHOP NOW <i class="fal fa-arrow-right"></i></span>
+                </div>
+              </a>
+            </div>
           @endforeach
         </div>
       @endif
@@ -514,6 +516,41 @@ $(document).ready(function() {
       slidesToScroll: 1,
       rtl: $('html').attr('dir') === 'rtl',
       responsive: [
+        {
+          breakpoint: 992,
+          settings: {
+            slidesToShow: 2,
+            slidesToScroll: 1
+          }
+        },
+        {
+          breakpoint: 768,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1
+          }
+        }
+      ]
+    });
+  }
+
+  if ($('.clothing-collection-slider').length > 0) {
+    $('.clothing-collection-slider').slick({
+      dots: true,
+      arrows: false,
+      autoplay: true,
+      autoplaySpeed: 3000,
+      slidesToShow: 4,
+      slidesToScroll: 1,
+      rtl: $('html').attr('dir') === 'rtl',
+      responsive: [
+        {
+          breakpoint: 1200,
+          settings: {
+            slidesToShow: 3,
+            slidesToScroll: 1
+          }
+        },
         {
           breakpoint: 992,
           settings: {

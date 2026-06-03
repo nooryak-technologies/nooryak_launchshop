@@ -50,7 +50,7 @@
                         <input name="theme" type="radio" value="electronics" class="imagecheck-input"
                           {{ !empty($data->theme) && $data->theme == 'electronics' ? 'checked' : '' }}>
                         <figure class="imagecheck-figure">
-                          <img src="{{ asset('assets/front/img/user/themes/electronics.png') }}" alt="title"
+                          <img src="{{ asset('assets/front/img/user/themes/electronics.PNG') }}" alt="title"
                             class="imagecheck-image">
                         </figure>
                       </label>
@@ -61,7 +61,7 @@
                         <input name="theme" type="radio" value="fashion" class="imagecheck-input"
                           {{ !empty($data->theme) && $data->theme == 'fashion' ? 'checked' : '' }}>
                         <figure class="imagecheck-figure">
-                          <img src="{{ asset('assets/front/img/user/themes/fashion.png') }}" alt="title"
+                          <img src="{{ asset('assets/front/img/user/themes/fashion.PNG') }}" alt="title"
                             class="imagecheck-image">
                         </figure>
                       </label>
@@ -73,7 +73,7 @@
                         <input name="theme" type="radio" value="furniture" class="imagecheck-input"
                           {{ !empty($data->theme) && $data->theme == 'furniture' ? 'checked' : '' }}>
                         <figure class="imagecheck-figure">
-                          <img src="{{ asset('assets/front/img/user/themes/furniture.png') }}" alt="title"
+                          <img src="{{ asset('assets/front/img/user/themes/furniture.PNG') }}" alt="title"
                             class="imagecheck-image">
                         </figure>
                       </label>
@@ -84,7 +84,7 @@
                         <input name="theme" type="radio" value="kids" class="imagecheck-input"
                           {{ !empty($data->theme) && $data->theme == 'kids' ? 'checked' : '' }}>
                         <figure class="imagecheck-figure">
-                          <img src="{{ asset('assets/front/img/user/themes/kids.png') }}" alt="title"
+                          <img src="{{ asset('assets/front/img/user/themes/kids.PNG') }}" alt="title"
                             class="imagecheck-image">
                         </figure>
                       </label>
@@ -96,7 +96,7 @@
                         <input name="theme" type="radio" value="vegetables" class="imagecheck-input"
                           {{ !empty($data->theme) && $data->theme == 'vegetables' ? 'checked' : '' }}>
                         <figure class="imagecheck-figure">
-                          <img src="{{ asset('assets/front/img/user/themes/vegetables.png') }}" alt="title"
+                          <img src="{{ asset('assets/front/img/user/themes/vegetables.PNG') }}" alt="title"
                             class="imagecheck-image">
                         </figure>
                       </label>
