@@ -4864,7 +4864,7 @@ a.btn-icon.view-type.active {
 .footer-area .footer-widget .social-link a {
     display: inline-block;
 
-    color: var(--color-white) !important;
+    color: var(--color-red) !important;
     height: 35px;
     width: 35px;
     text-align: center;
