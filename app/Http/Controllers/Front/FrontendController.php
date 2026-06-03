@@ -637,14 +637,14 @@ class FrontendController extends Controller
             })
             ->when($request->sort_by, function ($q) use ($request) {
                 if ($request->sort_by == 'newest') {
-                    return $q->orderBy('id', 'DESC');
+                    return $q->orderBy('preview_template', 'ASC')->orderBy('id', 'DESC');
                 } elseif ($request->sort_by == 'rating') {
-                    return $q->orderBy('landing_rating', 'DESC')->orderBy('id', 'DESC');
+                    return $q->orderBy('preview_template', 'ASC')->orderBy('landing_rating', 'DESC')->orderBy('id', 'DESC');
                 } else {
-                    return $q->orderByRaw('CASE WHEN preview_template = 1 THEN template_serial_number ELSE landing_order END ASC')->orderBy('id', 'DESC');
+                    return $q->orderBy('preview_template', 'ASC')->orderByRaw('CASE WHEN preview_template = 1 THEN template_serial_number ELSE landing_order END ASC')->orderBy('id', 'DESC');
                 }
             }, function ($q) {
-                return $q->orderByRaw('CASE WHEN preview_template = 1 THEN template_serial_number ELSE landing_order END ASC')->orderBy('id', 'DESC');
+                return $q->orderBy('preview_template', 'ASC')->orderByRaw('CASE WHEN preview_template = 1 THEN template_serial_number ELSE landing_order END ASC')->orderBy('id', 'DESC');
             })
             ->paginate(9);
 

@@ -104,4 +104,15 @@ class ShopController extends Controller
         Session::flash('success', __('Landing status updated successfully'));
         return back();
     }
+
+    public function reorder(Request $request)
+    {
+        $ids = $request->ids;
+        if (is_array($ids)) {
+            foreach ($ids as $index => $id) {
+                User::where('id', $id)->update(['landing_order' => $index]);
+            }
+        }
+        return response()->json(['status' => 'success', 'message' => __('Shops order updated successfully.')]);
+    }
 }

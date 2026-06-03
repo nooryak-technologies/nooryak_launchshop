@@ -273,6 +273,7 @@ Route::domain($domain)->group(function () {
             Route::get('/edit/{id}', 'Admin\ShopController@edit')->name('admin.shops.edit');
             Route::post('/update/{id}', 'Admin\ShopController@update')->name('admin.shops.update');
             Route::post('/status', 'Admin\ShopController@status')->name('admin.shops.status');
+            Route::post('/reorder', 'Admin\ShopController@reorder')->name('admin.shops.reorder');
         });
 
         // Package Management

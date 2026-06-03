@@ -47,6 +47,7 @@
                   <table class="table table-striped mt-3">
                     <thead>
                       <tr>
+                        <th scope="col"></th>
                         <th scope="col">{{ __('Logo') }}</th>
                         <th scope="col">{{ __('Thumbnail') }}</th>
                         <th scope="col">{{ __('Shop Name') }}</th>
@@ -59,9 +60,12 @@
                         <th scope="col">{{ __('Action') }}</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="sortable-shops">
                       @foreach ($shops as $key => $shop)
-                        <tr>
+                        <tr class="sortable-row" data-id="{{ $shop->id }}">
+                          <td>
+                            <i class="fas fa-arrows-alt reorder-handle" style="cursor: move; color: #888;"></i>
+                          </td>
                           <td>
                             @if (!empty($shop->photo))
                               <img src="{{ asset('assets/front/img/user/' . $shop->photo) }}" 
@@ -86,7 +90,7 @@
                           <td>
                             <span class="badge badge-info">{{ $shop->landing_rating ?: '4.80' }} <i class="fas fa-star text-warning"></i></span>
                           </td>
-                          <td>{{ $shop->landing_order }}</td>
+                          <td class="sort-order-cell">{{ $shop->landing_order }}</td>
                           <td>
                             <form id="statusForm{{ $shop->id }}" class="d-inline-block"
                               action="{{ route('admin.shops.status') }}" method="post">
@@ -125,4 +129,73 @@
       </div>
     </div>
   </div>
+@endsection
+
+@section('scripts')
+<script>
+  $(function() {
+    $("#sortable-shops").sortable({
+      handle: '.reorder-handle',
+      placeholder: "ui-state-highlight",
+      update: function(event, ui) {
+        var sortedIDs = [];
+        $("#sortable-shops tr.sortable-row").each(function() {
+          sortedIDs.push($(this).data('id'));
+        });
+        
+        // Show request loader
+        $(".request-loader").addClass("show");
+        
+        $.ajax({
+          url: "{{ route('admin.shops.reorder') }}",
+          type: "POST",
+          data: {
+            ids: sortedIDs,
+            _token: "{{ csrf_token() }}"
+          },
+          success: function(response) {
+            $(".request-loader").removeClass("show");
+            if (response.status === 'success') {
+              // Update Sort Order column text in the table dynamically
+              $("#sortable-shops tr.sortable-row").each(function(index) {
+                $(this).find('.sort-order-cell').text(index);
+              });
+              
+              // Show notification
+              var content = {};
+              content.message = response.message;
+              content.title = "{{ __('Success') }}";
+              content.icon = 'fa fa-bell';
+              $.notify(content, {
+                type: 'success',
+                placement: {
+                  from: 'top',
+                  align: 'right'
+                },
+                time: 1000,
+                delay: 3000,
+              });
+            }
+          },
+          error: function(xhr) {
+            $(".request-loader").removeClass("show");
+            var content = {};
+            content.message = "{{ __('Something went wrong!') }}";
+            content.title = "{{ __('Error') }}";
+            content.icon = 'fa fa-bell';
+            $.notify(content, {
+              type: 'danger',
+              placement: {
+                from: 'top',
+                align: 'right'
+              },
+              time: 1000,
+              delay: 3000,
+            });
+          }
+        });
+      }
+    });
+  });
+</script>
 @endsection
