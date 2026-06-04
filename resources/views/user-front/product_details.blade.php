@@ -619,9 +619,13 @@
   </div>
   <!-- Quick View Modal End -->
 
-  @if ($userBs->theme == 'clothing' && $shop_settings->catalog_mode != 1)
-    <!-- Sticky Bottom Cart Bar for Clothing Theme on Mobile -->
-    <div class="sticky-bottom-cart-bar d-xl-none">
+  @if ($shop_settings->catalog_mode != 1)
+    @php
+      $is_xl_breakpoint = in_array($userBs->theme, ['pet', 'skinflow', 'jewellery', 'clothing']);
+      $breakpoint_class = $is_xl_breakpoint ? 'd-xl-none' : 'd-lg-none';
+    @endphp
+    <!-- Sticky Bottom Cart Bar on Mobile -->
+    <div class="sticky-bottom-cart-bar {{ $breakpoint_class }}">
       <div class="container">
         <div class="sticky-cart-wrapper">
           <!-- Product Details / Name -->
@@ -661,7 +665,7 @@
 @endsection
 
 @section('styles')
-  @if ($userBs->theme == 'clothing' && $shop_settings->catalog_mode != 1)
+  @if ($shop_settings->catalog_mode != 1)
     <style>
       .sticky-bottom-cart-bar {
         position: fixed;
@@ -784,7 +788,7 @@
     </script>
   @endif
 
-  @if ($userBs->theme == 'clothing' && $shop_settings->catalog_mode != 1)
+  @if ($shop_settings->catalog_mode != 1)
     <script>
       $(document).ready(function() {
         // Sync main quantity to sticky quantity

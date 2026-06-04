@@ -15,6 +15,13 @@
   .page-title-area {
       display: none !important;
   }
+  /* Give longer thumbnail preview */
+  .card-image-wrap {
+      height: 380px !important;
+  }
+  .template-card-modern:hover .scrolling-img {
+      transform: translateY(calc(-100% + 380px)) !important;
+  }
 </style>
 @endsection
 
@@ -131,12 +138,6 @@
                 <!-- Card Body -->
                 <div class="card-body-wrap">
                   <h3 class="card-theme-title">{{ $displayName }} {{ __('Theme') }}</h3>
-                  
-                  <ul class="template-highlights">
-                    <li><i class="fas fa-check-circle text-success"></i> {{ __('Mobile Responsive Layout') }}</li>
-                    <li><i class="fas fa-check-circle text-success"></i> {{ __('Conversion Optimized Checkout') }}</li>
-                    <li><i class="fas fa-check-circle text-success"></i> {{ __('SEO Friendly & High Performance') }}</li>
-                  </ul>
                   
                   <hr class="card-divider">
                   
