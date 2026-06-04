@@ -119,7 +119,7 @@
               @if($shop_settings->catalog_mode != 1)
                 <!-- Cart -->
                 <li class="menu-item" style="position:relative;">
-                  <a href="javascript:void(0)" style="position:relative;color:#0d0d0d;padding:8px 10px;font-size:17px;display:flex;align-items:center;">
+                  <a href="javascript:void(0)" class="cart-sidebar-toggle" style="position:relative;color:#0d0d0d;padding:8px 10px;font-size:17px;display:flex;align-items:center;">
                     <i class="fal fa-shopping-bag"></i>
                     <span class="badge cart-dropdown-count" style="position:absolute;top:4px;right:0px;background:#000;color:#fff;font-size:9px;min-width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;">{{ $cartCount }}</span>
                   </a>
@@ -133,5 +133,6 @@
     </div>
   </div>
 
+  <div class="cart-sidebar-overlay"></div>
 </header>
 <!-- Header v10 (Clothing) End -->

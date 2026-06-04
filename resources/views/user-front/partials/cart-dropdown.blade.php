@@ -1,3 +1,8 @@
+<div class="cart-header d-flex justify-content-between align-items-center mb-3">
+  <h3 class="m-0" style="font-family: 'Jost', sans-serif; font-size: 18px; font-weight: 700; text-transform: uppercase;">{{ $keywords['Shopping Cart'] ?? __('Shopping Cart') }}</h3>
+  <a href="javascript:void(0)" class="close-cart-sidebar" style="font-size: 20px; color: #111;"><i class="fal fa-times"></i></a>
+</div>
+
 @if (!empty(Session::get('cart_' . $user->username)))
   <ul class="cart-dropdown-list">
     @php
