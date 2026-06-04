@@ -87,7 +87,7 @@
 <!-- Responsive Mobile Menu (Clothing) End -->
 
 <!-- Responsive Bottom Toolbar -->
-<div class="mobile-bottom-toolbar d-none d-xl-none">
+<div class="mobile-bottom-toolbar d-block d-xl-none">
   <div class="container">
     <nav class="toolbar" id="nav">
       <ul class="toolbar-nav">
