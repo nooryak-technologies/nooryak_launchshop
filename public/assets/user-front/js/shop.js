@@ -41,12 +41,22 @@
         verticalSwiping: true,
         slidesToShow: 4,
         slidesToScroll: 1,
-        asNavFor: '.product-image-slider',
         dots: false,
         focusOnSelect: true,
         asNavFor: ".product-single-slider",
         prevArrow: '<button type="button" class="btn-icon slider-btn slider-prev"><i class="fal fa-angle-left"></i></button>',
-        nextArrow: '<button type="button" class="btn-icon slider-btn slider-next"><i class="fal fa-angle-left"></i></span>'
+        nextArrow: '<button type="button" class="btn-icon slider-btn slider-next"><i class="fal fa-angle-left"></i></span>',
+        responsive: [
+            {
+                breakpoint: 576,
+                settings: {
+                    vertical: false,
+                    verticalSwiping: false,
+                    slidesToShow: 4,
+                    arrows: false
+                }
+            }
+        ]
     });
 
     proSingleSlider.on("beforeChange", function (event, slick, currentSlide, nextSlide) {
@@ -95,12 +105,22 @@
         verticalSwiping: true,
         slidesToShow: 5,
         slidesToScroll: 1,
-        asNavFor: '.product-image-slider',
         dots: false,
         focusOnSelect: true,
         asNavFor: ".product-single-slider2",
         prevArrow: '<button type="button" class="btn-icon slider-btn slider-prev"><i class="fal fa-angle-left"></i></button>',
-        nextArrow: '<button type="button" class="btn-icon slider-btn slider-next"><i class="fal fa-angle-left"></i></span>'
+        nextArrow: '<button type="button" class="btn-icon slider-btn slider-next"><i class="fal fa-angle-left"></i></span>',
+        responsive: [
+            {
+                breakpoint: 576,
+                settings: {
+                    vertical: false,
+                    verticalSwiping: false,
+                    slidesToShow: 4,
+                    arrows: false
+                }
+            }
+        ]
     });
 
     $(".product-single-slider2").on('setPosition afterChange', function (event, slick, currentSlide) {
