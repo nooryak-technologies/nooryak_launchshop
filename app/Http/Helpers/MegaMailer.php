@@ -98,7 +98,7 @@ class MegaMailer
                 $mailData['from_mail'] = $be->from_mail;
                 $mailData['toMail'] = $data['toMail'];
                 $mailData['subject'] = $temp->email_subject;
-                $mailData['body'] = $body;
+                $mailData['body'] = Common::wrapEmailBody($body, $temp->email_subject);
                 if (array_key_exists('membership_invoice', $data)) {
                     $mailData['membership_invoice'] = $data['membership_invoice'];
                 }
@@ -195,7 +195,7 @@ class MegaMailer
                 // Content
                 $mail->isHTML(true);
                 $mail->Subject = $temp->email_subject;
-                $mail->Body    = $body;
+                $mail->Body    = Common::wrapEmailBody($body, $temp->email_subject, $user);
 
                 $mail->send();
             } catch (Exception $e) {
@@ -233,7 +233,7 @@ class MegaMailer
             // Content
             $mail->isHTML(true);  // Set email format to HTML
             $mail->Subject = $data['subject'];
-            $mail->Body = $data['body'];
+            $mail->Body = Common::wrapEmailBody($data['body'], $data['subject']);
 
             $mail->send();
         } catch (\Exception $e) {
@@ -271,7 +271,7 @@ class MegaMailer
             // Content
             $mail->isHTML(true);
             $mail->Subject = $data['subject'];
-            $mail->Body    = $data['body'];
+            $mail->Body    = Common::wrapEmailBody($data['body'], $data['subject']);
             $mail->send();
         } catch (Exception $e) {
             Session::flash('error', $e);

@@ -15,349 +15,360 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>{{ __('Invoice') }}</title>
-  <link rel="stylesheet" href="{{ asset('assets/front/css/design-pdf.css') }}">
   @php
-    $font_family = 'DejaVu Sans, serif';
-
-    $color = '#333542';
-    $rtl = 'rtl';
-    $unicode_bidi = 'bidi-override';
-    $di_block = 'inline-block';
-    $w_60 = '60%';
-    $w_10 = '10%';
-    $w_30 = '30%';
-    $w_80 = '80%';
-    $w_20 = '20%';
-    $w_45 = '45%';
+    $font_family = 'DejaVu Sans, sans-serif';
+    $primary_color = '#' . str_replace('#', '', $userBs->base_color);
     if (!is_null(getUserNullCheck())) {
         $keywords = App\Http\Helpers\Common::get_keywords($user->id);
     }
   @endphp
+
   <style>
     body {
       font-family: {{ $font_family }} !important;
+      font-size: 13px;
+      color: #334155;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
     }
 
-    .rtl {
-      text-align: right;
-      unicode-bidi: {{ $unicode_bidi }} !important;
-      direction: {{ $rtl }} !important;
+    table {
+      width: 100%;
+      border-collapse: collapse;
     }
 
-    span {
-      display: {{ $di_block }};
+    td {
+      vertical-align: top;
     }
 
-    .w_50 {
-      width: {{ $w_60 }} !important;
+    /* Utilities */
+    .text-right { text-align: right; }
+    .text-center { text-align: center; }
+    .text-left { text-align: left; }
+    .text-white { color: #ffffff !important; }
+    .bold { font-weight: bold; }
+    
+    .invoice-title {
+      font-size: 32px;
+      font-weight: bold;
+      color: {{ $primary_color }};
+      line-height: 1;
+      text-transform: uppercase;
     }
 
-    .w_10 {
-      width: {{ $w_10 }} !important;
+    /* Layout structure */
+    .header-table {
+      margin-bottom: 25px;
     }
 
-    .w_40 {
-      width: {{ $w_30 }} !important;
+    .accent-bar {
+      height: 4px;
+      background-color: {{ $primary_color }};
+      margin-bottom: 30px;
     }
 
-    .w_80 {
-      width: {{ $w_80 }};
+    .meta-card {
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 15px 20px;
+      margin-bottom: 35px;
     }
 
-    .w-20 {
-      width: {{ $w_20 }};
+    .meta-table td {
+      font-size: 12px;
+      color: #64748b;
     }
 
-    .w_45 {
-      width: {{ $w_45 }};
+    .meta-table td strong {
+      color: #1e293b;
     }
 
-    .invoice-header {
-      background: rgba({{ hexToRgba($userBs->base_color) }}, 0.2);
-      padding: 20px 25px;
+    .info-section {
+      margin-bottom: 40px;
     }
 
-    .tm_invoice_info_table {
-      background: rgba({{ hexToRgba($userBs->base_color) }}, 0.2);
+    .info-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: {{ $primary_color }};
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 6px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    .package-info-table thead {
-      background: #{{ $userBs->base_color }};
+    .info-text {
+      font-size: 13px;
+      color: #475569;
+      margin-bottom: 5px;
     }
 
-    .bg-primary {
-      background: #{{ $userBs->base_color }};
+    /* Items Table */
+    .items-table {
+      margin-top: 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .items-table thead {
+      background-color: {{ $primary_color }};
+    }
+
+    .items-table th {
+      color: #ffffff;
+      font-weight: bold;
+      font-size: 12px;
+      text-transform: uppercase;
+      padding: 12px 15px;
+      border: none;
+    }
+
+    .items-table td {
+      padding: 14px 15px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #334155;
+      font-size: 13px;
+    }
+
+    .items-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Summary Footer */
+    .summary-section {
+      margin-top: 25px;
+    }
+
+    .summary-table {
+      width: 280px;
+      float: right;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .summary-table td {
+      padding: 8px 15px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 12px;
+    }
+
+    .summary-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .summary-total {
+      background-color: #f8fafc;
+      font-weight: bold;
+      color: #0f172a;
+    }
+
+    .summary-total td {
+      font-size: 13px;
+      padding: 12px 15px;
+    }
+
+    /* Regards */
+    .regards-section {
+      margin-top: 60px;
+      clear: both;
+    }
+
+    .regards-text {
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    .regards-brand {
+      font-size: 16px;
+      font-weight: bold;
+      color: #0f172a;
+      margin-top: 5px;
+    }
+    
+    .item-var-info {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 4px;
+      line-height: 1.4;
     }
   </style>
-
 </head>
 
 <body dir="{{ $language->rtl == 1 ? 'rtl' : '' }}">
   <div class="main">
-    <div class="invoice-container">
-      <div class="invoice-wrapper">
-        <div class="invoice-area pb-30">
-          <div class="invoice-header clearfix mb-15 px-25">
-            <div class="float-left">
-              @if ($userBs->logo)
-                <img src="{{ asset('/assets/front/img/user/' . $userBs->logo) }}" height="40"
-                  class="d-inline-block ">
-              @else
-                <img src="{{ asset('assets/admin/img/noimage.jpg') }}" height="40" class="d-inline-block">
-              @endif
-            </div>
-            <div class="text-right strong invoice-heading float-right"
-              class="{{ detectTextDirection($keywords['INVOICE'] ?? __('INVOICE')) }}"
-              dir="{{ detectTextDirection($keywords['INVOICE'] ?? __('INVOICE')) }}">
-              {{ $keywords['INVOICE'] ?? __('INVOICE') }}
-            </div>
-          </div>
+    
+    <!-- HEADER -->
+    <table class="header-table">
+      <tr>
+        <td>
+          @if ($userBs->logo)
+            <img src="{{ asset('/assets/front/img/user/' . $userBs->logo) }}" height="42" style="display: block; border: 0;">
+          @else
+            <img src="{{ asset('assets/admin/img/noimage.jpg') }}" height="42" style="display: block; border: 0;">
+          @endif
+        </td>
+        <td class="text-right">
+          <div class="invoice-title">{{ $keywords['INVOICE'] ?? __('INVOICE') }}</div>
+        </td>
+      </tr>
+    </table>
 
-          <div class="px-25 mb-15 clearfix tm_invoice_info_table">
-            <table>
-              <tbody>
-                <tr>
-                  <td>
-                    <span class="{{ detectTextDirection($keywords['Payment Method'] ?? __('Payment Method')) }}"
-                      dir="{{ detectTextDirection($keywords['Payment Method'] ?? __('Payment Method')) }}">
-                      {{ $keywords['Payment Method'] ?? __('Payment Method') }}:
-                      {{ $keywords[$order->method] ?? $order->method }}</span>
-                  </td>
-                  <td>
-                    <span class="{{ detectTextDirection($keywords['Invoice No'] ?? __('Invoice No')) }}"
-                      dir="{{ detectTextDirection($keywords['Invoice No'] ?? __('Invoice No')) }}">
-                      {{ $keywords['Invoice No'] ?? __('Invoice No') }}: #{{ $order->order_number }}
-                    </span>
-                  </td>
-                  <td class="text-right">
-                    <span class="{{ detectTextDirection($keywords['Date'] ?? __('Date')) }}"
-                      dir="{{ detectTextDirection($keywords['Date'] ?? __('Date')) }}">
-                      {{ $keywords['Date'] ?? __('Date') }}:
-                      {{ \Carbon\Carbon::parse($order->created_at)->locale('en')->isoFormat('Do, MMMM YYYY') }}
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="header clearfix px-25 mb-15">
-            <div class="text-left float-left">
-              <div class="strong" class="{{ detectTextDirection($keywords['Bill to'] ?? __('Bill to')) }}"
-                dir="{{ detectTextDirection($keywords['Bill to'] ?? __('Bill to')) }}">
-                {{ $keywords['Bill to'] ?? __('Bill to') }}:</div>
-              <div class="small">
-                <span class="{{ detectTextDirection($keywords['Name'] ?? __('Name')) }}"
-                  dir="{{ detectTextDirection($keywords['Name'] ?? __('Name')) }}">{{ $keywords['Name'] ?? __('Name') }}:
-                  {{ ucfirst($order->billing_fname) }}
-                  {{ ucfirst($order->billing_lname) }}
-                </span>
-              </div>
+    <!-- ACCENT BAR -->
+    <div class="accent-bar"></div>
 
-              <div class="small">
-                <span class="{{ detectTextDirection($keywords['Address'] ?? __('Address')) }}"
-                  dir="{{ detectTextDirection($keywords['Address'] ?? __('Address')) }}">{{ $keywords['Address'] ?? __('Address') }}:
-                  {{ $order->billing_address }}
-                </span>
-              </div>
-
-              <div class="small">
-                <span class="{{ detectTextDirection($keywords['City'] ?? __('City')) }}"
-                  dir="{{ detectTextDirection($keywords['City'] ?? __('City')) }}">{{ $keywords['City'] ?? __('City') }}:
-                  {{ $order->billing_city }},
-                  {{ $order->billing_state }}
-                </span>
-              </div>
-              @if (!is_null($order->billing_state))
-                <div class="small">
-                  <span class="{{ detectTextDirection($keywords['State'] ?? __('State')) }}"
-                    dir="{{ detectTextDirection($keywords['State'] ?? __('State')) }}">{{ $keywords['State'] ?? __('State') }}:
-                    {{ $order->billing_state }}
-                  </span>
-                </div>
-              @endif
-
-              <div class="small">
-                <span class="{{ detectTextDirection($keywords['Country'] ?? __('Country')) }}"
-                  dir="{{ detectTextDirection($keywords['Country'] ?? __('Country')) }}">{{ $keywords['Country'] ?? __('Country') }}:
-                  {{ $order->billing_country }}
-                </span>
-              </div>
-
-              <div class="small">
-                <span class="{{ detectTextDirection($keywords['Email'] ?? __('Email')) }}"
-                  dir="{{ detectTextDirection($keywords['Email'] ?? __('Email')) }}">{{ $keywords['Email'] ?? __('Email') }}:
-                  {{ $order->billing_email }}
-                </span>
-              </div>
-
-            </div>
-            <div class="order-details float-right">
-              <div class="text-right">
-                <div class="strong"
-                  class="{{ detectTextDirection($keywords['Order Details'] ?? __('Order Details')) }}"
-                  dir="{{ detectTextDirection($keywords['Order Details'] ?? __('Order Details')) }}">
-                  {{ $keywords['Order Details'] ?? __('Order Details') }}:</div>
-                @if (!is_null($order->discount))
-                  <div class="small">
-                    <span class="{{ detectTextDirection($keywords['Discount'] ?? __('Discount')) }}"
-                      dir="{{ detectTextDirection($keywords['Discount'] ?? __('Discount')) }}">{{ $keywords['Discount'] ?? __('Discount') }}:
-                      {{ currencyTextPrice($order->currency_id, $order->discount) }}
-                    </span>
-                  </div>
-                @endif
-
-                <div class="small">
-                  <span class="{{ detectTextDirection($keywords['Tax'] ?? __('Tax')) }}"
-                    dir="{{ detectTextDirection($keywords['Tax'] ?? __('Tax')) }}">{{ $keywords['Tax'] ?? __('Tax') }}:
-                    {{ currencyTextPrice($order->currency_id, $order->tax) }}
-                  </span>
-                </div>
-
-                <div class="small"><span
-                    class="{{ detectTextDirection($keywords['Paid Amount'] ?? __('Paid Amount')) }}"
-                    dir="{{ detectTextDirection($keywords['Paid Amount'] ?? __('Paid Amount')) }}">{{ $keywords['Paid Amount'] ?? __('Paid Amount') }}:
-                    {{ currencyTextPrice($order->currency_id, $order->total) }}
-                  </span>
-                </div>
-
-                <div class="small">
-                  <span class="{{ detectTextDirection($keywords['Payment Status'] ?? __('Payment Status')) }}"
-                    dir="{{ detectTextDirection($keywords['Payment Status'] ?? __('Payment Status')) }}">{{ $keywords['Payment Status'] ?? __('Payment Status') }}:
-                    {{ $keywords[$order->payment_status] ?? $order->payment_status }}
-                  </span>
-                </div>
-
-                <div class="small">
-                  <span class="{{ detectTextDirection($keywords['Order Status'] ?? __('Order Status')) }}"
-                    dir="{{ detectTextDirection($keywords['Order Status'] ?? __('Order Status')) }}">{{ $keywords['Order Status'] ?? __('Order Status') }}:
-                    {{ $keywords[ucfirst($order->order_status)] ?? ucfirst($order->order_status) }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="package-info px-25">
-            <table class="text-left package-info-table">
-              <thead>
-                <tr>
-                  <td class="text-center text-white small">
-                    <strong class="text-white" class="{{ detectTextDirection($keywords['Title'] ?? __('Title')) }}"
-                      dir="{{ detectTextDirection($keywords['Title'] ?? __('Title')) }}">{{ $keywords['Title'] ?? __('Title') }}</strong>
-                  </td>
-                  <td class="tm_border_left text-center text-white small">
-                    <strong class="text-white"
-                      class="{{ detectTextDirection($keywords['Quantity'] ?? __('Quantity')) }}"
-                      dir="{{ detectTextDirection($keywords['Quantity'] ?? __('Quantity')) }}">
-                      {{ $keywords['Quantity'] ?? __('Quantity') }}</strong>
-                  </td>
-                  <td class="tm_border_left text-center small">
-                    <strong class="text-white" class="{{ detectTextDirection($keywords['Price'] ?? __('Price')) }}"
-                      dir="{{ detectTextDirection($keywords['Price'] ?? __('Price')) }}">
-                      {{ $keywords['Price'] ?? __('Price') }}</strong>
-                  </td>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach ($order->orderitems as $item)
-                  <tr>
-                    <td>
-                      <p class="{{ detectTextDirection($item->title) }}"
-                        dir="{{ detectTextDirection($item->title) }}">{{ $item->title }}</p>
-                    </td>
-                    <td class="tm_border_left text-center">{{ $item->qty }}</td>
-                    <td class="tm_border_left text-right">
-                      {{ currencyTextPrice($order->currency_id, round($item->price, 2)) }}
-                      <br>
-                      @php
-                        $variations = json_decode($item->variations);
-                      @endphp
-                      @if (!is_null($variations))
-                        @foreach ($variations as $k => $vitm)
-                          @php
-                            $name = isset($vitm->name) ? $vitm->name : '';
-                            $key = is_string($k) ? $k : '';
-                          @endphp
-                          <span class="{{ detectTextDirection($name) }}" dir="{{ detectTextDirection($name) }}">
-                            {{ $name }} <small class="{{ detectTextDirection($key) }}"
-                              dir="{{ detectTextDirection($key) }}">({{ $key }})</small> :
-                            <span class="ltr"
-                              dir="ltr">{{ currencyTextPrice($order->currency_id, round($vitm->price, 2)) }}</span>
-                          </span>
-                        @endforeach
-                      @endif
-                    </td>
-                  </tr>
-                @endforeach
-              </tbody>
-            </table>
-          </div>
-
-          <div class="tm_invoice_footer clearfix px-25">
-            <div class="tm_right_footer float-right">
-              <table>
-                <tbody>
-                  <tr>
-                    <td class="fw-bold"><span
-                        class="{{ detectTextDirection($keywords['Subtotal'] ?? __('Subtotal')) }}"
-                        dir="{{ detectTextDirection($keywords['Subtotal'] ?? __('Subtotal')) }}">{{ $keywords['Subtotal'] ?? __('Subtotal') }}</span>
-                    </td>
-                    <td class="text-right fw-bold"> {{ currencyTextPrice($order->currency_id, $order->cart_total) }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="fw-bold">
-                      <span class="{{ detectTextDirection($keywords['Tax'] ?? __('Tax')) }}"
-                        dir="{{ detectTextDirection($keywords['Tax'] ?? __('Tax')) }}">
-                        {{ $keywords['Tax'] ?? __('Tax') }}
-                      </span>
-                    </td>
-                    <td class="text-right fw-bold">{{ currencyTextPrice($order->currency_id, $order->tax) }}</td>
-                  </tr>
-                  <tr>
-                    <td class="fw-bold">
-                      <span class="{{ detectTextDirection($keywords['Shipping Charge'] ?? __('Shipping Charge')) }}"
-                        dir="{{ detectTextDirection($keywords['Shipping Charge'] ?? __('Shipping Charge')) }}">{{ $keywords['Shipping Charge'] ?? __('Shipping Charge') }}</span>
-                    </td>
-                    <td class="text-right fw-bold">
-                      {{ currencyTextPrice($order->currency_id, $order->shipping_charge) }}
-                    </td>
-                  </tr>
-                  <tr class="bg-primary paid-tr">
-                    <td class="fw-bold ">
-                      <span
-                        class="text-white {{ detectTextDirection($keywords['Paid Amount'] ?? __('Paid Amount')) }}"
-                        dir="{{ detectTextDirection($keywords['Paid Amount'] ?? __('Paid Amount')) }}">
-                        {{ $keywords['Paid Amount'] ?? __('Paid Amount') }}
-                      </span>
-                    </td>
-                    <td class="text-right fw-bold text-white">
-                      {{ currencyTextPrice($order->currency_id, $order->total) }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="mt-50">
-            <div class="text-right regards"
-              class="{{ detectTextDirection($keywords['Thanks & Regards'] ?? __('Thanks & Regards')) }}"
-              dir="{{ detectTextDirection($keywords['Thanks & Regards'] ?? __('Thanks & Regards')) }}">
-              {{ $keywords['Thanks & Regards'] ?? __('Thanks & Regards') }},</div>
-            <div class="text-right strong regards">
-              @php
-                $website_title = $user->shop_name ?? $user->username;
-              @endphp
-              <span class="{{ detectTextDirection($website_title) }}"
-                dir="{{ detectTextDirection($website_title) }}">{{ $website_title }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- METADATA CARD -->
+    <div class="meta-card">
+      <table class="meta-table">
+        <tr>
+          <td width="35%">
+            <strong>{{ $keywords['Payment Method'] ?? __('Payment Method') }}:</strong>
+            <span>{{ $keywords[$order->method] ?? $order->method }}</span>
+          </td>
+          <td width="35%" class="text-center">
+            <strong>{{ $keywords['Invoice No'] ?? __('Invoice No') }}:</strong>
+            <span>#{{ $order->order_number }}</span>
+          </td>
+          <td width="30%" class="text-right">
+            <strong>{{ $keywords['Date'] ?? __('Date') }}:</strong>
+            <span>{{ \Carbon\Carbon::parse($order->created_at)->locale('en')->isoFormat('Do MMMM YYYY') }}</span>
+          </td>
+        </tr>
+      </table>
     </div>
-  </div>
 
+    <!-- BILL TO & ORDER DETAILS -->
+    <table class="info-section">
+      <tr>
+        <td width="48%">
+          <div class="info-title">{{ $keywords['Bill to'] ?? __('Bill to') }}</div>
+          <div class="info-text">
+            <strong>{{ $keywords['Name'] ?? __('Name') }}:</strong> {{ ucfirst($order->billing_fname) }} {{ ucfirst($order->billing_lname) }}
+          </div>
+          <div class="info-text">
+            <strong>{{ $keywords['Address'] ?? __('Address') }}:</strong> {{ $order->billing_address }}
+          </div>
+          <div class="info-text">
+            <strong>{{ $keywords['City'] ?? __('City') }}:</strong> {{ $order->billing_city }}@if(!is_null($order->billing_state)), {{ $order->billing_state }}@endif
+          </div>
+          <div class="info-text">
+            <strong>{{ $keywords['Country'] ?? __('Country') }}:</strong> {{ $order->billing_country }}
+          </div>
+          <div class="info-text">
+            <strong>{{ $keywords['Email'] ?? __('Email') }}:</strong> {{ $order->billing_email }}
+          </div>
+        </td>
+        <td width="4%"></td>
+        <td width="48%">
+          <div class="info-title">{{ $keywords['Order Details'] ?? __('Order Details') }}</div>
+          @if (!is_null($order->discount))
+            <div class="info-text">
+              <strong>{{ $keywords['Discount'] ?? __('Discount') }}:</strong> {{ currencyTextPrice($order->currency_id, $order->discount) }}
+            </div>
+          @endif
+          <div class="info-text">
+            <strong>{{ $keywords['Tax'] ?? __('Tax') }}:</strong> {{ currencyTextPrice($order->currency_id, $order->tax) }}
+          </div>
+          <div class="info-text">
+            <strong>{{ $keywords['Paid Amount'] ?? __('Paid Amount') }}:</strong> {{ currencyTextPrice($order->currency_id, $order->total) }}
+          </div>
+          <div class="info-text">
+            <strong>{{ $keywords['Payment Status'] ?? __('Payment Status') }}:</strong> 
+            <span style="color: {{ strtolower($order->payment_status) == 'pending' ? '#f59e0b' : '#10b981' }}; font-weight: bold;">
+              {{ $keywords[$order->payment_status] ?? $order->payment_status }}
+            </span>
+          </div>
+          <div class="info-text">
+            <strong>{{ $keywords['Order Status'] ?? __('Order Status') }}:</strong>
+            <span>{{ $keywords[ucfirst($order->order_status)] ?? ucfirst($order->order_status) }}</span>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- ITEMS TABLE -->
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th class="text-left" width="60%">{{ $keywords['Title'] ?? __('Title') }}</th>
+          <th class="text-center" width="20%">{{ $keywords['Quantity'] ?? __('Quantity') }}</th>
+          <th class="text-right" width="20%">{{ $keywords['Price'] ?? __('Price') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach ($order->orderitems as $item)
+          <tr>
+            <td>
+              <div class="bold">{{ $item->title }}</div>
+              @php
+                $variations = json_decode($item->variations);
+              @endphp
+              @if (!is_null($variations))
+                <div class="item-var-info">
+                  @foreach ($variations as $k => $vitm)
+                    @php
+                      $name = isset($vitm->name) ? $vitm->name : '';
+                      $key = is_string($k) ? $k : '';
+                    @endphp
+                    <div>
+                      <span>{{ $name }} ({{ $key }}) :</span>
+                      <span>{{ currencyTextPrice($order->currency_id, round($vitm->price, 2)) }}</span>
+                    </div>
+                  @endforeach
+                </div>
+              @endif
+            </td>
+            <td class="text-center">{{ $item->qty }}</td>
+            <td class="text-right bold">{{ currencyTextPrice($order->currency_id, round($item->price, 2)) }}</td>
+          </tr>
+        @endforeach
+      </tbody>
+    </table>
+
+    <!-- SUMMARY SECTION -->
+    <div class="summary-section">
+      <table class="summary-table">
+        <tr>
+          <td>{{ $keywords['Subtotal'] ?? __('Subtotal') }}</td>
+          <td class="text-right bold">{{ currencyTextPrice($order->currency_id, $order->cart_total) }}</td>
+        </tr>
+        <tr>
+          <td>{{ $keywords['Tax'] ?? __('Tax') }}</td>
+          <td class="text-right bold">{{ currencyTextPrice($order->currency_id, $order->tax) }}</td>
+        </tr>
+        <tr>
+          <td>{{ $keywords['Shipping Charge'] ?? __('Shipping Charge') }}</td>
+          <td class="text-right bold">{{ currencyTextPrice($order->currency_id, $order->shipping_charge) }}</td>
+        </tr>
+        <tr class="summary-total" style="background-color: {{ $primary_color }}; color: #ffffff;">
+          <td style="color: #ffffff; font-weight: bold;">{{ $keywords['Paid Amount'] ?? __('Paid Amount') }}</td>
+          <td class="text-right bold" style="color: #ffffff; font-weight: bold;">
+            {{ currencyTextPrice($order->currency_id, $order->total) }}
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- REGARDS -->
+    <table class="regards-section">
+      <tr>
+        <td class="text-right">
+          <div class="regards-text">{{ $keywords['Thanks & Regards'] ?? __('Thanks & Regards') }},</div>
+          <div class="regards-brand">
+            @php
+              $website_title = $user->shop_name ?? $user->username;
+            @endphp
+            {{ $website_title }}
+          </div>
+        </td>
+      </tr>
+    </table>
+
+  </div>
 </body>
 
 </html>

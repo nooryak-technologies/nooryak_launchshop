@@ -30,10 +30,11 @@ class BasicMailer
         Mail::send([], [], function (Message $message) use ($data) {
           $fromMail = $data['from_mail'];
           $subject = $data['subject'];
+          $body = Common::wrapEmailBody($data['body'], $subject);
           $message->to($data['recipient'])
             ->from($fromMail)
             ->subject($subject)
-            ->html($data['body'], 'text/html');
+            ->html($body, 'text/html');
 
           if (array_key_exists('invoice', $data)) {
             $message->attach($data['invoice']);

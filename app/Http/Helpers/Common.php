@@ -499,4 +499,69 @@ class Common
         $userCurrentLang = app('userCurrentLang');
         return json_decode($userCurrentLang->keywords, true);
     }
+
+    public static function wrapEmailBody($body, $subject, $user = null)
+    {
+        if (strpos($body, 'email-container') !== false || strpos($body, '<html') !== false) {
+            return $body;
+        }
+
+        $logo_url = null;
+        $website_title = 'Launchshop';
+        $base_color = 'ff6f61'; // fallback brand color
+
+        if (!empty($user)) {
+            // Merchant context passed explicitly
+            $userBs = BasicSetting::where('user_id', $user->id)->first();
+            if ($userBs) {
+                if ($userBs->logo) {
+                    $logo_url = asset('assets/front/img/user/' . $userBs->logo);
+                }
+                if ($userBs->base_color) {
+                    $base_color = $userBs->base_color;
+                }
+            }
+            $website_title = $user->shop_name ?? $user->username;
+        } elseif (app()->bound('user')) {
+            // Merchant context detected from app container
+            $merchant = app('user');
+            $userBs = BasicSetting::where('user_id', $merchant->id)->first();
+            if ($userBs) {
+                if ($userBs->logo) {
+                    $logo_url = asset('assets/front/img/user/' . $userBs->logo);
+                }
+                if ($userBs->base_color) {
+                    $base_color = $userBs->base_color;
+                }
+            }
+            $website_title = $merchant->shop_name ?? $merchant->username;
+        } else {
+            // Admin / Main website context
+            $currentLang = null;
+            if (session()->has('lang')) {
+                $currentLang = Language::where('code', session()->get('lang'))->first();
+            }
+            if (!$currentLang) {
+                $currentLang = Language::where('is_default', 1)->first();
+            }
+            if ($currentLang && $currentLang->basic_setting) {
+                $bs = $currentLang->basic_setting;
+                if ($bs->logo) {
+                    $logo_url = asset('assets/front/img/' . $bs->logo);
+                }
+                if ($bs->website_title) {
+                    $website_title = $bs->website_title;
+                }
+                if ($bs->base_color) {
+                    $base_color = $bs->base_color;
+                }
+            }
+        }
+
+        try {
+            return view('mail.styled_layout', compact('body', 'logo_url', 'website_title', 'base_color', 'subject'))->render();
+        } catch (\Exception $e) {
+            return $body;
+        }
+    }
 }
