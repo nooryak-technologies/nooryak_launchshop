@@ -116,7 +116,7 @@ body {
 }
 
 .header-v10 .header-icons .menu-item a {
-  color: var(--clothing-black);
+  color: #000;
   font-size: 16px;
   padding: 8px 12px;
   position: relative;
@@ -2680,6 +2680,7 @@ body {
 
 /* Responsive Overrides */
 @media(max-width:1199px) {
+
   .clothing-hero-slider .slick-list,
   .clothing-hero-slider .slick-track {
     border-radius: 0;
@@ -2923,7 +2924,8 @@ body {
   #cart-dropdown-mobile {
     position: fixed;
     top: 0;
-    right: -420px; /* Start offscreen right */
+    right: -420px;
+    /* Start offscreen right */
     left: auto;
     width: 420px;
     height: 100vh;
@@ -2944,7 +2946,8 @@ body {
   }
 
   #cart-dropdown-mobile.active {
-    right: 0 !important; /* Slide in right to left */
+    right: 0 !important;
+    /* Slide in right to left */
     left: auto !important;
   }
 
@@ -2960,6 +2963,7 @@ body {
 }
 
 @media (min-width: 1200px) {
+
   /* Hover Dropdown for Cart on Desktop */
   .header-icons .menu-item #cart-dropdown-header {
     position: absolute;
