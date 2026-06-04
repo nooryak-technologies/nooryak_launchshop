@@ -116,7 +116,7 @@ body {
 }
 
 .header-v10 .header-icons .menu-item a {
-  color: var(--clothing-white);
+  color: var(--color-white);
   font-size: 16px;
   padding: 8px 12px;
   position: relative;
@@ -2897,7 +2897,7 @@ body {
 
 /* Hide mobile cart dropdown container on desktop views */
 #cart-dropdown-mobile {
-  display: none !important;
+  display: none;
 }
 
 /* Cart Sidebar Overlay Backdrop */
