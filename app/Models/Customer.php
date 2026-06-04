@@ -89,10 +89,10 @@ class Customer extends Authenticatable
     {
         $username = Customer::query()->where('email', request()->email)->pluck('username')->first();
         $subject = 'You are receiving this email because we received a password reset request for your account.';
-        $body = "Recently you tried forget password for your account.Click below to reset your account password.
-             <br>
-             <a href='" . url('password/reset/' . $token . '/email/' . request()->email) . "'><button type='button' class='btn btn-primary'>Reset Password</button></a>
-             <br>
+        $body = "Recently you tried forget password for your account. Click below to reset your account password.
+             <br><br>
+             <a href='" . url('password/reset/' . $token . '/email/' . request()->email) . "' style=\"display: inline-block; padding: 12px 24px; font-family: sans-serif; font-size: 14px; font-weight: bold; color: #ffffff; background-color: #007bff; border-radius: 6px; text-decoration: none;\">Reset Password</a>
+             <br><br>
              Thank you.
              ";
 

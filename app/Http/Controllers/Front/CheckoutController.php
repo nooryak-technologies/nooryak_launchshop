@@ -383,7 +383,7 @@ class CheckoutController extends Controller
         }
         $bs = $currentLang->basic_setting;
         $token = md5(time() . $request['username'] . $request['email']);
-        $verification_link = "<a href='" . url('register/mode/' . $request['mode'] . '/verify/' . $token) . "'>" . "<button type=\"button\" class=\"btn btn-primary\">Click Here</button>" . "</a>";
+        $verification_link = "<a href='" . url('register/mode/' . $request['mode'] . '/verify/' . $token) . "' style=\"display: inline-block; padding: 10px 20px; font-family: sans-serif; font-size: 14px; font-weight: bold; color: #ffffff; background-color: #007bff; border-radius: 6px; text-decoration: none;\">Click Here</a>";
 
         $user = User::where('username', $request['username']);
         if ($user->count() == 0) {

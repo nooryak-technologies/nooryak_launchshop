@@ -360,14 +360,14 @@
           <p>{{ __("Enter the email address associated with your account and we'll send you a password reset link.") }}</p>
         </div>
 
-        @if (Session::has('message'))
+        @if (Session::has('message') || Session::has('status'))
           <div class="rp-success-box">
             <i class="fas fa-check-circle"></i>
-            <span>{{ Session::get('message') }}</span>
+            <span>{{ Session::get('message') ?? Session::get('status') }}</span>
           </div>
         @endif
 
-        <form id="authForm" action="{{ route('user-forgot-submit') }}" method="post" enctype="multipart/form-data">
+        <form id="authForm" action="{{ route('user.forgot.password.submit') }}" method="post" enctype="multipart/form-data">
           @csrf
 
           <div class="rp-field">
