@@ -21,6 +21,9 @@ class LimitCheckMiddleware
     {
         if (Auth::check()) {
             $user = Auth::user();
+            if ($user->preview_template == 1) {
+                return $next($request);
+            }
             $permissions =  UserPermissionHelper::currentPackagePermission($user->id);
             $downgradeText = __('Your feature limit is over or downgraded!');
             $featuresCount = LimitCheck::packageFeaturesCount($user->id);

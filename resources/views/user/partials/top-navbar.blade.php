@@ -97,7 +97,7 @@
     @if (request()->cookie('user-theme') == 'dark') data-background-color="dark" @endif>
     <div class="container-fluid">
       <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
-        @if (!is_null($currPackage))
+        @if (!is_null($currPackage) && Auth::guard('web')->user()->preview_template != 1)
           <li class="nav-item ml-2" id="limitDiv">
             <a class="btn btn-{{ $infoIcon == true ? 'danger' : 'primary' }} whitespace-nowrap btn-sm"
               data-toggle="modal" data-target="#limitModal" href="javascript::void()" id="limitBtn">
