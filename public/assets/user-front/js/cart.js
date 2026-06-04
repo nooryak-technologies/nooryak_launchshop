@@ -307,14 +307,14 @@ $('body').on('click', '.btn-wishlist', function (e) {
     $('body').on('click', '.cart-sidebar-toggle', function (e) {
         e.preventDefault();
         if (window.innerWidth < 1200) {
-            $("#cart-dropdown-header").addClass("active");
+            $("#cart-dropdown-mobile").addClass("active");
             $(".cart-sidebar-overlay").addClass("active");
         }
     });
 
     $('body').on('click', '.close-cart-sidebar, .cart-sidebar-overlay', function (e) {
         e.preventDefault();
-        $("#cart-dropdown-header").removeClass("active");
+        $("#cart-dropdown-mobile").removeClass("active");
         $(".cart-sidebar-overlay").removeClass("active");
     });
 }(jQuery));
@@ -767,8 +767,10 @@ function cartDropdown() {
             cartDropdownCount();
             $("#cart-dropdown-header").html('');
             $("#cart-dropdown-header").append(data);
+            $("#cart-dropdown-mobile").html('');
+            $("#cart-dropdown-mobile").append(data);
             if ($(".header-v10").length > 0 && window.innerWidth < 1200) {
-                $("#cart-dropdown-header").addClass("active");
+                $("#cart-dropdown-mobile").addClass("active");
                 $(".cart-sidebar-overlay").addClass("active");
             }
         },
