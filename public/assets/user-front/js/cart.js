@@ -52,7 +52,7 @@ function addToCart(url, variant, qty) {
             $("#cartQuantity").load(location.href + " #cartQuantity");
             $("#variationModal").modal('hide');
             $("#cartIconWrapper").load(location.href + " #cartIconWrapper>*", "");
-            cartDropdown();
+            cartDropdown(true);
         } else {
             toastr["error"](res.error);
         }
@@ -586,7 +586,7 @@ function addToCartDetails() {
                 $("#quickViewModal").modal('hide');
                 $("#variationModal").modal('hide');
                 $("#cartIconWrapper").load(location.href + " #cartIconWrapper>*", "");
-                cartDropdown();
+                cartDropdown(true);
             } else {
                 toastr["error"](res.error);
             }
@@ -619,7 +619,7 @@ function addToCartDetails2() {
                 $("#quickViewModal").modal('hide');
                 $("#variationModal").modal('hide');
                 $("#cartIconWrapper").load(location.href + " #cartIconWrapper>*", "");
-                cartDropdown();
+                cartDropdown(true);
             } else {
                 toastr["error"](res.error);
             }
@@ -753,7 +753,7 @@ $(document).on("click", $("input[type=radio]"), function () {
  * for product details end
  *************************************/
 
-function cartDropdown() {
+function cartDropdown(openDrawer = false) {
     let route = mainurl + '/cart/dropdown';
     $.ajaxSetup({
         headers: {
@@ -769,7 +769,7 @@ function cartDropdown() {
             $("#cart-dropdown-header").append(data);
             $("#cart-dropdown-mobile").html('');
             $("#cart-dropdown-mobile").append(data);
-            if ($(".header-v10").length > 0 && window.innerWidth < 1200) {
+            if (openDrawer && $(".header-v10").length > 0 && window.innerWidth < 1200) {
                 $("#cart-dropdown-mobile").addClass("active");
                 $(".cart-sidebar-overlay").addClass("active");
             }
@@ -777,8 +777,6 @@ function cartDropdown() {
         error: function (error) {
         }
     });
-
-
 }
 
 

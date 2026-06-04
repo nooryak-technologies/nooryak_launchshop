@@ -2894,6 +2894,11 @@ body {
   transform: translateY(0);
 }
 
+/* Hide mobile cart dropdown container on desktop views */
+#cart-dropdown-mobile {
+  display: none !important;
+}
+
 /* Cart Sidebar Overlay Backdrop */
 @media (max-width: 1199px) {
   .cart-sidebar-overlay {
@@ -2914,16 +2919,18 @@ body {
     visibility: visible;
   }
 
-  /* Fixed left-to-right Sidebar Drawer for Cart dropdown */
+  /* Fixed right-to-left Sidebar Drawer for Cart dropdown */
   #cart-dropdown-mobile {
     position: fixed;
     top: 0;
-    left: -420px; /* Start offscreen left */
+    right: -420px; /* Start offscreen right */
+    left: auto;
     width: 420px;
     height: 100vh;
     background: #ffffff;
-    border-right: 1px solid #e5e1db;
-    box-shadow: 10px 0 40px rgba(0, 0, 0, 0.15);
+    border-left: 1px solid #e5e1db;
+    border-right: none;
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.15);
     margin-top: 0;
     z-index: 100000;
     border-radius: 0;
@@ -2931,13 +2938,14 @@ body {
     opacity: 1 !important;
     visibility: visible !important;
     transform: none !important;
-    transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
     display: flex !important;
     flex-direction: column;
   }
 
   #cart-dropdown-mobile.active {
-    left: 0 !important; /* Slide in left to right */
+    right: 0 !important; /* Slide in right to left */
+    left: auto !important;
   }
 
   /* Enable styling for the inner header close button and layouts */
@@ -3142,7 +3150,8 @@ body {
 @media (max-width: 575px) {
   #cart-dropdown-mobile {
     width: 320px;
-    left: -320px;
+    right: -320px;
+    left: auto;
     padding: 24px 16px;
   }
 }
