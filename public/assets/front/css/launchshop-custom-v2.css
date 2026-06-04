@@ -400,6 +400,35 @@ h6 {
     color: var(--ls-gray-dark);
 }
 
+/* Password eye icon color (applies to password visibility toggles) */
+.show-password-field i,
+.show-password-field .show-icon,
+.show-password i,
+.show-password-field i.fa-eye,
+.show-password-field i.fa-eye-slash,
+#passEyeIcon,
+#eyeIcon1,
+#eyeIcon2,
+#password-eye-icon,
+#password-confirm-eye-icon,
+i[id$="-eye-icon"],
+i[id$="EyeIcon"] {
+    color: var(--ls-primary) !important;
+    transition: color 0.15s ease !important;
+}
+
+.show-password-field:hover i,
+.show-password-field i:hover,
+#passEyeIcon:hover,
+#eyeIcon1:hover,
+#eyeIcon2:hover,
+#password-eye-icon:hover,
+#password-confirm-eye-icon:hover,
+i[id$="-eye-icon"]:hover,
+i[id$="EyeIcon"]:hover {
+    color: var(--ls-primary-hover) !important;
+}
+
 /* How It Works Section */
 .how-it-works {
     padding: 50px 0;
