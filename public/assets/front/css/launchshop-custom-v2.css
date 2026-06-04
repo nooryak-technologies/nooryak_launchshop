@@ -429,6 +429,12 @@ i[id$="EyeIcon"]:hover {
     color: var(--ls-primary-hover) !important;
 }
 
+/* Ensure 'View cart' button text is white */
+.cart-footer .cart-button .btn-primary,
+.cart-button .btn-primary {
+    color: #ffffff !important;
+}
+
 /* How It Works Section */
 .how-it-works {
     padding: 50px 0;
