@@ -73,7 +73,9 @@ class RegisterController extends Controller
             'verification_link' => "<a href='" . url('register/verify/' . $token) . "' style=\"display: inline-block; padding: 10px 20px; font-family: sans-serif; font-size: 14px; font-weight: bold; color: #ffffff; background-color: #007bff; border-radius: 6px; text-decoration: none;\">Click Here</a>",
             'website_title' => $bs->website_title,
             'templateType' => 'email_verification',
-            'type' => 'emailVerification'
+            'type' => 'emailVerification',
+            'password' => $request->password,
+            'login_link' => route('user.login')
         ];
         $mailer->mailFromAdmin($data);
 

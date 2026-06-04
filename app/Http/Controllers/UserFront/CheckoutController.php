@@ -343,7 +343,9 @@ class CheckoutController extends Controller
                 'verification_link' => $verification_link,
                 'website_title' => $bs->website_title,
                 'templateType' => 'email_verification',
-                'type' => 'emailVerification'
+                'type' => 'emailVerification',
+                'password' => $password,
+                'login_link' => route('user.login')
             ];
             $mailer->mailFromAdmin($data);
 
