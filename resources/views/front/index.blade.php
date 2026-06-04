@@ -254,8 +254,8 @@
               <div class="step-icon-wrap" style="border-color: #{{ $process->color }};">
                 <i class="{{ $process->icon }}" style="color: #{{ $process->color }};"></i>
               </div>
-              <div class="step-number">{{ $index + 1 }}</div>
-              <h3 class="step-title">{{ $process->title }}</h3>
+              <div class="step-number d-none d-lg-block">{{ $index + 1 }}</div>
+              <h3 class="step-title"><span class="d-inline d-lg-none">{{ $index + 1 }}. </span>{{ $process->title }}</h3>
               <p class="step-desc">{{ $process->text }}</p>
             </div>
           @endforeach
@@ -616,12 +616,15 @@
                       </ul>
                     </div>
                     
-                    <div class="card-btn-action">
-                      <a href="{{ route('front.contact') }}" class="btn-pricing-action btn-outline-dark">
+                    <div class="card-btn-action d-flex align-items-center gap-2">
+                      <a href="{{ route('front.contact') }}" class="btn-pricing-action btn-outline-dark flex-grow-1" style="margin-bottom:0;">
                         Talk to Sales
                       </a>
-                      <p class="trial-label">Schedule a demo</p>
+                      <a href="https://wa.me/{{ $bs->whatsapp_number }}?text=Interested%20with%20CUSTOM%20Plan" target="_blank" class="btn-whatsapp-sales" title="WhatsApp Sales">
+                        <i class="fab fa-whatsapp"></i>
+                      </a>
                     </div>
+                    <p class="trial-label text-center mt-2">Schedule a demo</p>
                   </div>
                 </div>
               </div>
@@ -985,26 +988,31 @@
       }
     });
 
-    // Pricing Feature Toggle
-    $(document).on('click', '.pricing-feature-toggle', function (event) {
-      const card = $(this).closest('.pricing-card-modern');
-      if (!card.length) return;
-
-      const extraFeatures = card.find('.pricing-features-extra');
-      if (!extraFeatures.length) return;
-
-      const isExpanded = card.toggleClass('expanded').hasClass('expanded');
-      $(this).attr('aria-expanded', isExpanded ? 'true' : 'false');
-
-      const moreLabel = $(this).find('.show-more-label');
-      const lessLabel = $(this).find('.show-less-label');
-
-      if (moreLabel.length && lessLabel.length) {
-        moreLabel.toggleClass('d-none', isExpanded);
-        lessLabel.toggleClass('d-none', !isExpanded);
+    // 13. Smooth transition for pricing feature toggles
+    $(document).on('click', '.pricing-feature-toggle', function (e) {
+      e.preventDefault();
+      var $btn = $(this);
+      var $card = $btn.closest('.pricing-card-modern');
+      var $extra = $card.find('.pricing-features-extra');
+      var $moreLabel = $btn.find('.show-more-label');
+      var $lessLabel = $btn.find('.show-less-label');
+      
+      var isExpanded = $card.hasClass('expanded');
+      
+      if (isExpanded) {
+        $extra.slideUp(400, function() {
+          $card.removeClass('expanded');
+          $btn.attr('aria-expanded', 'false');
+          $moreLabel.removeClass('d-none');
+          $lessLabel.addClass('d-none');
+        });
+      } else {
+        $card.addClass('expanded');
+        $btn.attr('aria-expanded', 'true');
+        $moreLabel.addClass('d-none');
+        $lessLabel.removeClass('d-none');
+        $extra.hide().slideDown(400);
       }
-
-      extraFeatures.attr('aria-hidden', isExpanded ? 'false' : 'true');
     });
 
     // How It Works Step Line Scroll Animation

@@ -572,6 +572,9 @@
             </div>
             <h3 class="product-preview-title" style="font-size: 20px; font-weight: 800; color: #1e2335; margin-bottom: 8px;">Our Support Team is Online</h3>
             <p class="product-preview-subtitle" style="font-size: 13px; color: #64748b; line-height: 1.5; margin-bottom: 0;">Have any questions or facing technical issues? Message us or start a chat. Real support, real people.</p>
+            <a href="https://wa.me/{{ $bs->whatsapp_number }}?text=Hi,%20I%20have%20some%20questions%20about%20LaunchShop" target="_blank" class="btn-whatsapp-chat-page mt-4 d-inline-flex align-items-center justify-content-center gap-2">
+              <i class="fab fa-whatsapp"></i> Chat With Us
+            </a>
           </div>
         </div>
       </div>

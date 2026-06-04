@@ -469,17 +469,30 @@
                     </ul>
                   </div>
                   
-                  <div class="card-btn-action">
-                    <a href="{{ route('front.contact') }}" class="btn-pricing-action btn-outline-dark">
+                  <div class="card-btn-action d-flex align-items-center gap-2">
+                    <a href="{{ route('front.contact') }}" class="btn-pricing-action btn-outline-dark flex-grow-1" style="margin-bottom:0;">
                       Talk to Sales
                     </a>
-                    <p class="trial-label">Schedule a demo</p>
+                    <a href="https://wa.me/{{ $bs->whatsapp_number }}?text=Interested%20with%20CUSTOM%20Plan" target="_blank" class="btn-whatsapp-sales" title="WhatsApp Sales">
+                      <i class="fab fa-whatsapp"></i>
+                    </a>
                   </div>
+                  <p class="trial-label text-center mt-2">Schedule a demo</p>
                 </div>
               </div>
             </div>
           </div>
         @endforeach
+      </div>
+
+      <!-- Explore Store Designs Banner -->
+      <div class="text-center mt-5 mb-5" data-aos="fade-up">
+        <p class="explore-themes-text" style="font-size:16px; font-weight:600; color:#4a5568;">
+          {{ __('Looking for a specific store style?') }} 
+          <a href="{{ route('front.templates.view') }}" class="explore-themes-link" style="color:#ff5a2c; text-decoration:underline; font-weight:700; margin-left:5px;">
+            {{ __('Browse themes to explore store designs') }} <i class="fas fa-arrow-right ms-1" style="font-size:12px;"></i>
+          </a>
+        </p>
       </div>
 
       <!-- Trust Factors Highlights row -->
@@ -600,9 +613,9 @@
           <table class="table compare-table">
             <thead>
               <tr>
-                <th style="width: 28%;">Features</th>
+                <th style="width: 40%;">Features</th>
                 @foreach ($comparePackages as $pkg)
-                  <th style="width: 18%; text-align: center;" class="{{ $pkg->recommended == '1' ? 'highlight-column-header' : '' }}">
+                  <th style="width: 20%; text-align: center;" class="{{ $pkg->recommended == '1' ? 'highlight-column-header' : '' }}">
                     @if ($pkg->recommended == '1')
                       <div class="highlight-wrapper">
                         <i class="fas fa-crown text-orange me-1"></i> {{ __($pkg->title) }}
@@ -612,7 +625,6 @@
                     @endif
                   </th>
                 @endforeach
-                <th style="width: 18%; text-align: center;">Enterprise</th>
               </tr>
             </thead>
             <tbody>
@@ -639,19 +651,12 @@
                       @endif
                     </td>
                   @endforeach
-                  <td class="text-center">
-                    @if ($row['type'] == 'limit')
-                      {{ $row['ent_val'] }}
-                    @else
-                      <span class="feat-check-circle"><i class="fas fa-check"></i></span>
-                    @endif
-                  </td>
                 </tr>
               @endforeach
             </tbody>
             
             @if (count($hiddenCompareRows) > 0)
-              <tbody id="compare-features-hidden-rows" class="collapse">
+              <tbody id="compare-features-hidden-rows" style="display: none;">
                 @foreach ($hiddenCompareRows as $row)
                   <tr>
                     <td>{{ $row['label'] }}</td>
@@ -675,13 +680,6 @@
                         @endif
                       </td>
                     @endforeach
-                    <td class="text-center">
-                      @if ($row['type'] == 'limit')
-                        {{ $row['ent_val'] }}
-                      @else
-                        <span class="feat-check-circle"><i class="fas fa-check"></i></span>
-                      @endif
-                    </td>
                   </tr>
                 @endforeach
               </tbody>
@@ -691,7 +689,7 @@
 
         @if (count($hiddenCompareRows) > 0)
           <div class="text-center mt-4">
-            <button class="btn btn-orange-outline px-4 py-2" type="button" data-bs-toggle="collapse" data-bs-target="#compare-features-hidden-rows" aria-expanded="false" aria-controls="compare-features-hidden-rows" id="btn-toggle-compare-rows">
+            <button class="btn btn-orange-outline px-4 py-2" type="button" id="btn-toggle-compare-rows">
               View More Features <i class="fas fa-chevron-down ms-2"></i>
             </button>
           </div>
@@ -795,46 +793,47 @@
   </div>
 
   <script>
-    document.addEventListener('click', function (event) {
-      const toggleButton = event.target.closest('.pricing-feature-toggle');
+    $(document).ready(function() {
+      // 13. Smooth transition for pricing feature toggles
+      $(document).on('click', '.pricing-feature-toggle', function(e) {
+        e.preventDefault();
+        var $btn = $(this);
+        var $card = $btn.closest('.pricing-card-modern');
+        var $extra = $card.find('.pricing-features-extra');
+        var $moreLabel = $btn.find('.show-more-label');
+        var $lessLabel = $btn.find('.show-less-label');
+        
+        var isExpanded = $card.hasClass('expanded');
+        
+        if (isExpanded) {
+          $extra.slideUp(400, function() {
+            $card.removeClass('expanded');
+            $btn.attr('aria-expanded', 'false');
+            $moreLabel.removeClass('d-none');
+            $lessLabel.addClass('d-none');
+          });
+        } else {
+          $card.addClass('expanded');
+          $btn.attr('aria-expanded', 'true');
+          $moreLabel.addClass('d-none');
+          $lessLabel.removeClass('d-none');
+          $extra.hide().slideDown(400);
+        }
+      });
 
-      if (!toggleButton) {
-        return;
-      }
-
-      const card = toggleButton.closest('.pricing-card-modern');
-      if (!card) {
-        return;
-      }
-
-      const extraFeatures = card.querySelector('.pricing-features-extra');
-      if (!extraFeatures) {
-        return;
-      }
-
-      const isExpanded = card.classList.toggle('expanded');
-      toggleButton.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
-
-      const moreLabel = toggleButton.querySelector('.show-more-label');
-      const lessLabel = toggleButton.querySelector('.show-less-label');
-
-      if (moreLabel && lessLabel) {
-        moreLabel.classList.toggle('d-none', isExpanded);
-        lessLabel.classList.toggle('d-none', !isExpanded);
-      }
-
-      extraFeatures.setAttribute('aria-hidden', isExpanded ? 'false' : 'true');
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-      const hiddenRows = document.getElementById('compare-features-hidden-rows');
-      const toggleBtn = document.getElementById('btn-toggle-compare-rows');
-      if (hiddenRows && toggleBtn) {
-        hiddenRows.addEventListener('shown.bs.collapse', function () {
-          toggleBtn.innerHTML = 'Show Less Features <i class="fas fa-chevron-up ms-2"></i>';
-        });
-        hiddenRows.addEventListener('hidden.bs.collapse', function () {
-          toggleBtn.innerHTML = 'View More Features <i class="fas fa-chevron-down ms-2"></i>';
+      // 13. Smooth transition for comparison table toggle
+      var $hiddenRows = $('#compare-features-hidden-rows');
+      var $toggleBtn = $('#btn-toggle-compare-rows');
+      if ($hiddenRows.length && $toggleBtn.length) {
+        $toggleBtn.on('click', function(e) {
+          e.preventDefault();
+          if ($hiddenRows.is(':visible')) {
+            $hiddenRows.slideUp(400);
+            $toggleBtn.html('View More Features <i class="fas fa-chevron-down ms-2"></i>');
+          } else {
+            $hiddenRows.slideDown(400);
+            $toggleBtn.html('Show Less Features <i class="fas fa-chevron-up ms-2"></i>');
+          }
         });
       }
     });

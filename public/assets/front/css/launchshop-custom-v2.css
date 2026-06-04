@@ -2007,6 +2007,10 @@ i[id$="EyeIcon"]:hover {
         width: 100% !important;
         max-width: 320px !important;
     }
+
+    .step-desc {
+        line-height: 1.2 !important;
+    }
 }
 
 /* Brands Infinite Marquee */
@@ -7708,4 +7712,274 @@ i[id$="EyeIcon"]:hover {
 /* Hide mobile menu footer details on desktop */
 .mobile-menu-footer {
     display: none !important;
+}
+
+/* ==========================================================================
+   Sameer Request Style Changes (Black borders on pricing, mobile font/gaps)
+   ========================================================================== */
+
+/* 4. Pricing plans need a border in black */
+.pricing-card-modern {
+    border: 2px solid #000000 !important;
+}
+
+/* 6. Custom talk to sales btn right side need a wp icon with msg (Interested with CUSTOM Plan) */
+.btn-whatsapp-sales {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #25d366;
+    color: #ffffff !important;
+    font-size: 22px;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+.btn-whatsapp-sales:hover {
+    background-color: #128c7e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+/* 7. Chatbot and wp icon pop up need leftside pop up flow and rightside need the top btn pop up */
+.go-top {
+    left: auto !important;
+    right: 3% !important;
+}
+#WAButton {
+    left: 20px !important;
+    right: auto !important;
+}
+.floating-wpp {
+    left: 15px !important;
+    right: auto !important;
+}
+.floating-wpp-popup {
+    left: 70px !important;
+    right: auto !important;
+}
+/* Move Tawk.to chatbot widget to the left side */
+iframe[src*="tawk.to"], iframe[id^="tawkchat-"], .tawk-min-container {
+    left: 20px !important;
+    right: auto !important;
+}
+
+/* 9. In contact page need a whatsapp chat with us btn */
+.btn-whatsapp-chat-page {
+    background-color: #25d366 !important;
+    color: #ffffff !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    padding: 12px 28px !important;
+    border-radius: 8px !important;
+    border: none !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2) !important;
+    text-decoration: none !important;
+}
+.btn-whatsapp-chat-page:hover {
+    background-color: #128c7e !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(37, 211, 102, 0.3) !important;
+    color: #ffffff !important;
+}
+
+/* 10. 14 day free trial text bigger in plans */
+.trial-label {
+    font-size: 14px !important;
+    color: #475569 !important;
+    font-weight: 700 !important;
+}
+
+/* 11. Compare plan features font bigger */
+.compare-table th {
+    font-size: 18px !important;
+}
+.compare-table td {
+    font-size: 16px !important;
+}
+
+/* 13. When I click view more feature need a smooth transition */
+/* Disable original max-height/transition from CSS to prevent conflicts with jQuery smooth slide */
+.pricing-features-extra {
+    display: none;
+    max-height: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    overflow: hidden;
+}
+.pricing-card-modern.expanded .pricing-features-extra {
+    max-height: none !important;
+}
+
+/* 8. Bring More Profit features grid background globally light orange */
+.features-grid {
+    background-color: #fff6f3 !important;
+}
+
+/* ==========================================
+   MOBILE VIEWS RESPONSIVENESS OVERRIDES (<992px)
+   ========================================== */
+@media (max-width: 991px) {
+    /* 2. In mobile view sections heading need big in home page and all pages text need bigger */
+    body, p, span, li, a {
+        font-size: 16px !important;
+    }
+    .section-title {
+        font-size: 32px !important;
+        line-height: 1.3 !important;
+    }
+    .section-subtitle {
+        font-size: 16px !important;
+    }
+    h1 {
+        font-size: 38px !important;
+    }
+    h2 {
+        font-size: 32px !important;
+    }
+    h3 {
+        font-size: 24px !important;
+    }
+    .hero-text {
+        font-size: 16px !important;
+    }
+
+    /* 3. Reduce gap in mobile view in all section and all pages */
+    .pt-120 {
+        padding-top: 30px !important;
+    }
+    .pb-120 {
+        padding-bottom: 30px !important;
+    }
+    .ptb-120 {
+        padding-top: 35px !important;
+        padding-bottom: 35px !important;
+    }
+    .pt-90 {
+        padding-top: 25px !important;
+    }
+    .pb-90 {
+        padding-bottom: 25px !important;
+    }
+    .ptb-90 {
+        padding-top: 30px !important;
+        padding-bottom: 30px !important;
+    }
+    .mb-50 {
+        margin-bottom: 25px !important;
+    }
+    .mb-80 {
+        margin-bottom: 35px !important;
+    }
+    .mt-80 {
+        margin-top: 35px !important;
+    }
+    .mt-100 {
+        margin-top: 45px !important;
+    }
+    .hero-wrapper {
+        padding: 20px 0 30px !important;
+    }
+    .how-it-works {
+        padding: 25px 0 !important;
+    }
+    .pricing-section {
+        padding: 25px 0 !important;
+    }
+    .features-grid {
+        padding: 25px 0 !important;
+    }
+    .subdomain-banner {
+        padding: 30px 0 !important;
+    }
+    .testimonials-section {
+        padding: 25px 0 !important;
+    }
+    .modern-contact-page-wrapper {
+        padding-top: 15px !important;
+        padding-bottom: 30px !important;
+    }
+    .modern-pricing-page-wrapper {
+        padding-top: 15px !important;
+        padding-bottom: 30px !important;
+    }
+
+    /* 5. Pricing plan font need big in mobile view */
+    .pricing-card-modern h3 {
+        font-size: 22px !important;
+    }
+    .card-header-block .title-info .subtitle {
+        font-size: 13px !important;
+    }
+    .price-section .price-value {
+        font-size: 42px !important;
+    }
+    .price-section .currency-symbol {
+        font-size: 22px !important;
+    }
+    .price-section .period {
+        font-size: 15px !important;
+    }
+    .billing-subtext {
+        font-size: 14px !important;
+    }
+    .features-list-block ul li span,
+    .pricing-features-extra ul li span {
+        font-size: 15px !important;
+    }
+    .pricing-feature-toggle {
+        font-size: 14px !important;
+    }
+    .btn-pricing-action {
+        font-size: 15px !important;
+    }
+    .trial-label {
+        font-size: 14px !important;
+    }
+
+    /* 11. Compare plan features mobile font size bigger */
+    .compare-table th {
+        font-size: 15px !important;
+        padding: 10px 8px !important;
+    }
+    .compare-table td {
+        font-size: 14px !important;
+        padding: 8px 8px !important;
+    }
+}
+
+/* 8. Bring More Profit section need 2x2 in mobile view */
+@media (max-width: 767px) {
+    .features-grid .row {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        margin: 0 !important;
+    }
+    .features-grid .row > div {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    .features-grid .feature-box {
+        padding: 15px 10px !important;
+        margin-bottom: 0 !important;
+    }
+    .features-grid .feature-icon {
+        width: 45px !important;
+        height: 45px !important;
+        font-size: 20px !important;
+        margin-bottom: 10px !important;
+    }
+    .features-grid .feature-title {
+        font-size: 13px !important;
+    }
+    .features-grid .feature-desc {
+        font-size: 11px !important;
+    }
 }
