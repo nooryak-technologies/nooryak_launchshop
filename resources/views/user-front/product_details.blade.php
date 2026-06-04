@@ -618,9 +618,160 @@
     </div>
   </div>
   <!-- Quick View Modal End -->
+
+  @if ($userBs->theme == 'clothing' && $shop_settings->catalog_mode != 1)
+    <!-- Sticky Bottom Cart Bar for Clothing Theme on Mobile -->
+    <div class="sticky-bottom-cart-bar d-xl-none">
+      <div class="container">
+        <div class="sticky-cart-wrapper">
+          <!-- Product Details / Name -->
+          <div class="sticky-product-info text-center">
+            <span class="sticky-product-title">{{ $product->title }}</span>
+            <span class="sticky-product-variant-sep d-none"> — </span>
+            <span class="sticky-product-selected-variant"></span>
+          </div>
+          
+          <!-- Controls Row -->
+          <div class="sticky-cart-controls">
+            <!-- Quantity selector -->
+            <div class="sticky-quantity">
+              <div class="quantity-btn minus">
+                <i class="fal fa-minus"></i>
+              </div>
+              <input class="quantity_field sticky_quantity_field" type="number" name="sticky-cart-amount" value="1" min="1" readonly>
+              <div class="quantity-btn plus">
+                <i class="fal fa-plus"></i>
+              </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="sticky-actions">
+              <button class="sticky-add-to-cart" type="button" onclick="addToCartDetails2()">
+                {{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}
+              </button>
+              <button class="sticky-buy-now" type="button" onclick="buyNowDetails()">
+                {{ $keywords['Buy Now'] ?? __('Buy Now') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  @endif
 @endsection
-@if ($userBs->is_disqus == 1 && in_array('Disqus', $packagePermissions) && $shop_settings->disqus_comment_system == 1)
-  @section('scripts')
+
+@section('styles')
+  @if ($userBs->theme == 'clothing' && $shop_settings->catalog_mode != 1)
+    <style>
+      .sticky-bottom-cart-bar {
+        position: fixed;
+        bottom: -150px;
+        left: 0;
+        width: 100%;
+        background: #ffffff;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+        z-index: 998;
+        padding: 10px 15px;
+        transition: bottom 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        border-top: 1px solid #eaeaea;
+      }
+      .sticky-bottom-cart-bar.show {
+        bottom: 56px;
+      }
+      .sticky-cart-wrapper {
+        max-width: 540px;
+        margin: 0 auto;
+      }
+      .sticky-product-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: #333333;
+      }
+      .sticky-product-variant-sep {
+        color: #999;
+        margin: 0 4px;
+      }
+      .sticky-product-selected-variant {
+        font-size: 14px;
+        font-weight: 500;
+        color: #777777;
+      }
+      .sticky-cart-controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 8px;
+      }
+      .sticky-quantity {
+        display: flex;
+        align-items: center;
+        border: 1px solid #e1e1e1;
+        border-radius: 4px;
+        height: 38px;
+        background: #ffffff;
+      }
+      .sticky-quantity .quantity-btn {
+        width: 32px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 12px;
+        color: #333333;
+        user-select: none;
+      }
+      .sticky-quantity .quantity_field {
+        width: 36px;
+        height: 100%;
+        border: none;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 600;
+        color: #333333;
+        padding: 0;
+        background: transparent;
+        outline: none;
+      }
+      .sticky-actions {
+        flex: 1;
+        display: flex;
+        gap: 8px;
+      }
+      .sticky-actions button {
+        flex: 1;
+        height: 38px;
+        border: none;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 0 12px;
+        border-radius: 4px;
+        transition: all 0.2s ease-in-out;
+        outline: none;
+      }
+      .sticky-add-to-cart {
+        background-color: #1e1e1e;
+        color: #ffffff;
+      }
+      .sticky-add-to-cart:hover {
+        background-color: #333333;
+      }
+      .sticky-buy-now {
+        background-color: #111111;
+        color: #ffffff;
+      }
+      .sticky-buy-now:hover {
+        background-color: #222222;
+      }
+    </style>
+  @endif
+@endsection
+
+@section('scripts')
+  @if ($userBs->is_disqus == 1 && in_array('Disqus', $packagePermissions) && $shop_settings->disqus_comment_system == 1)
     <script>
       "use strict";
       (function() {
@@ -631,5 +782,110 @@
         (d.head || d.body).appendChild(s);
       })();
     </script>
-  @endsection
-@endif
+  @endif
+
+  @if ($userBs->theme == 'clothing' && $shop_settings->catalog_mode != 1)
+    <script>
+      $(document).ready(function() {
+        // Sync main quantity to sticky quantity
+        $(document).on('click', '.item_quantity_details .plus, .item_quantity_details .minus', function() {
+          setTimeout(function() {
+            var mainQty = $(".item_quantity_details input[name='cart-amount']").val();
+            $(".sticky_quantity_field").val(mainQty);
+          }, 50);
+        });
+
+        // Sync sticky quantity to main quantity and run update price
+        $(document).on('click', '.sticky-quantity .plus', function() {
+          var $input = $(".sticky_quantity_field");
+          var currval = parseInt($input.val());
+          var newval = currval + 1;
+          $input.val(newval);
+          $(".item_quantity_details input[name='cart-amount']").val(newval);
+          totalPriceDetails2(newval);
+        });
+
+        $(document).on('click', '.sticky-quantity .minus', function() {
+          var $input = $(".sticky_quantity_field");
+          var currval = parseInt($input.val());
+          if (currval > 1) {
+            var newval = currval - 1;
+            $input.val(newval);
+            $(".item_quantity_details input[name='cart-amount']").val(newval);
+            totalPriceDetails2(newval);
+          }
+        });
+
+        $(document).on('input', '.sticky_quantity_field', function() {
+          var val = $(this).val();
+          $(".item_quantity_details input[name='cart-amount']").val(val);
+          totalPriceDetails2(val);
+        });
+
+        // Function to update selected variant names in sticky bottom bar
+        function updateStickySelectedVariant() {
+          var selected = [];
+          $('#variantListULDetails .variantUL li input:checked').each(function() {
+            var val = $(this).val();
+            var parts = val.split(":");
+            selected.push(parts[0]);
+          });
+          if (selected.length > 0) {
+            $('.sticky-product-variant-sep').removeClass('d-none');
+            $('.sticky-product-selected-variant').text(selected.join(', '));
+          } else {
+            $('.sticky-product-variant-sep').addClass('d-none');
+            $('.sticky-product-selected-variant').text('');
+          }
+        }
+
+        // Initialize and listen to change
+        updateStickySelectedVariant();
+        $(document).on('change', '.product-variant', function() {
+          updateStickySelectedVariant();
+        });
+
+        // Scroll listener to show/hide sticky bar
+        $(window).scroll(function() {
+          var mainBtn = $('.item_quantity_details');
+          if (mainBtn.length) {
+            var btnTop = mainBtn.offset().top + mainBtn.outerHeight();
+            if ($(window).scrollTop() > btnTop) {
+              $('.sticky-bottom-cart-bar').addClass('show');
+            } else {
+              $('.sticky-bottom-cart-bar').removeClass('show');
+            }
+          }
+        });
+      });
+
+      // Buy Now functionality
+      function buyNowDetails() {
+        $(".request-loader").addClass("show");
+        let $input = $(".item_quantity_details input");
+        let qty = parseInt($input.val());
+        let item_id = $('#details_item_id').val();
+        let url = mainurl + "/add-to-cart/" + item_id;
+        let final_price = totalPriceDetails2(qty);
+
+        if (stErr > 0) {
+          stErrMsg.forEach(msg => {
+            toastr["error"](msg);
+          });
+          $(".request-loader").removeClass("show");
+        } else {
+          let cartUrl = url;
+
+          $.get(cartUrl + ',,,' + qty + ',,,' + final_price + ',,,' + JSON.stringify(variant), function (res) {
+            if (res.message) {
+              window.location.href = "{{ route('front.user.checkout', getParam()) }}";
+            } else {
+              toastr["error"](res.error);
+              $(".request-loader").removeClass("show");
+            }
+          });
+        }
+      }
+    </script>
+  @endif
+@endsection
