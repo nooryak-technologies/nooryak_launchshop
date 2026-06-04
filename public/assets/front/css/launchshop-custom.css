@@ -5325,9 +5325,7 @@ h6 {
     }
 
     .frame-4 {
-        width: 90px;
-        height: 140px;
-        left: 5%;
+        display: none;
     }
 }
 
