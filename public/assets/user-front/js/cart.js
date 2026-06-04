@@ -306,8 +306,10 @@ $('body').on('click', '.btn-wishlist', function (e) {
 
     $('body').on('click', '.cart-sidebar-toggle', function (e) {
         e.preventDefault();
-        $("#cart-dropdown-header").addClass("active");
-        $(".cart-sidebar-overlay").addClass("active");
+        if (window.innerWidth < 1200) {
+            $("#cart-dropdown-header").addClass("active");
+            $(".cart-sidebar-overlay").addClass("active");
+        }
     });
 
     $('body').on('click', '.close-cart-sidebar, .cart-sidebar-overlay', function (e) {
@@ -765,7 +767,7 @@ function cartDropdown() {
             cartDropdownCount();
             $("#cart-dropdown-header").html('');
             $("#cart-dropdown-header").append(data);
-            if ($(".header-v10").length > 0) {
+            if ($(".header-v10").length > 0 && window.innerWidth < 1200) {
                 $("#cart-dropdown-header").addClass("active");
                 $(".cart-sidebar-overlay").addClass("active");
             }

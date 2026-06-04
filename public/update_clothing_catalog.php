@@ -436,6 +436,15 @@ foreach ($productsData as $product) {
     }
 }
 
+// 8b. Update User Contact Info
+echo "<h3>Step 4.5: Updating contact information...</h3>";
+$updatedContacts = DB::table('user_contacts')->where('user_id', $uid)->update([
+    'contact_numbers' => '6374913298',
+    'contact_mails' => 'nooryaktechnologies@gmail.com',
+    'contact_addresses' => 'Triplicane, Chennai, IND'
+]);
+echo "Updated {$updatedContacts} contact records.<br>";
+
 // 9. Clear Laravel cache
 echo "<h3>Step 5: Clearing cache...</h3>";
 \Illuminate\Support\Facades\Artisan::call('view:clear');
