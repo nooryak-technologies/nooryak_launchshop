@@ -401,10 +401,18 @@ foreach ($productsData as $product) {
         'updated_at' => now()
     ]);
 
-    // Insert English slider image
+    // Insert English slider images (3 images per product)
     safeInsertNoId('user_item_images', [
         'item_id' => $itemId,
         'image' => $imageName
+    ]);
+    safeInsertNoId('user_item_images', [
+        'item_id' => $itemId,
+        'image' => $product['image_key'] . '_2.png'
+    ]);
+    safeInsertNoId('user_item_images', [
+        'item_id' => $itemId,
+        'image' => $product['image_key'] . '_3.png'
     ]);
     
     echo "Added product (EN): <strong>{$product['en']['title']}</strong> (ID: {$itemId})<br>";
