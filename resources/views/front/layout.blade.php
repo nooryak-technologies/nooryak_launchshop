@@ -42,7 +42,7 @@
   <link rel="stylesheet" href="{{ asset('assets/front/css/floating-whatsapp.css') }}">
   <!-- Main Style CSS -->
   <link rel="stylesheet" href="{{ asset('assets/front/css/style.css?v=1.0.4') }}">
-  <link rel="stylesheet" href="{{ asset('assets/front/css/launchshop-custom-v2.css?v=2.0.6') }}">
+  <link rel="stylesheet" href="{{ asset('assets/front/css/launchshop-custom-v2.css?v=2.0.8') }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/tinymce-content.css') }}">
 
   <meta name="csrf-token" content="{{ csrf_token() }}" />
@@ -157,7 +157,7 @@
   {{-- Popups end --}}
 
   {{-- WhatsApp Chat Button --}}
-  <div id="WAButton"></div>
+  <div id="WAButton" style="left:15px !important;right:auto !important;position:fixed;"></div>
 
   <!-- Go to Top -->
   <div class="go-top"><i class="fal fa-angle-up"></i></div>
@@ -269,6 +269,17 @@
       var Tawk_API = Tawk_API || {},
         Tawk_LoadStart = new Date();
 
+      // Move Tawk.to widget to LEFT side
+      Tawk_API.onLoad = function() {
+        Tawk_API.customStyle({
+          zIndex: 999,
+          visibility: {
+            desktop: { position: 'bl', xOffset: 20, yOffset: 20 },
+            mobile:  { position: 'bl', xOffset: 15, yOffset: 15 }
+          }
+        });
+      };
+
       (function() {
         var s1 = document.createElement("script"),
           s0 = document.getElementsByTagName("script")[0];
@@ -309,6 +320,69 @@
           $('a.meanmenu-reveal.meanclose').click();
         }
       });
+
+      // ─────────────────────────────────────────────────────────
+      // FORCE: WhatsApp LEFT + scroll-to-top RIGHT
+      // ─────────────────────────────────────────────────────────
+      function forcePositions() {
+        // 1. Floating WhatsApp (#WAButton / .floating-wpp)
+        var waBtn = document.getElementById('WAButton');
+        if (waBtn) {
+          waBtn.style.cssText += ';left:15px!important;right:auto!important;position:fixed!important;';
+          var wpp = waBtn.querySelector('.floating-wpp');
+          if (wpp) {
+            wpp.style.cssText += ';left:15px!important;right:auto!important;';
+          }
+        }
+
+        // 2. Scroll-to-top stays RIGHT
+        var goTop = document.querySelector('.go-top');
+        if (goTop) {
+          goTop.style.cssText += ';right:20px!important;left:auto!important;';
+        }
+
+        // 3. Tawk.to — target its injected container divs
+        var tawkSelectors = [
+          '#tawkchat-container',
+          '.tawk-min-container',
+          '[class*="tawk-min"]',
+          '[id*="tawkchat"]',
+          'iframe[src*="tawk.to"]'
+        ];
+        tawkSelectors.forEach(function(sel) {
+          document.querySelectorAll(sel).forEach(function(el) {
+            var target = el.tagName === 'IFRAME' ? el.parentElement : el;
+            if (target) {
+              target.style.cssText += ';left:20px!important;right:auto!important;';
+            }
+          });
+        });
+      }
+
+      // Run once after page load
+      setTimeout(forcePositions, 500);
+      setTimeout(forcePositions, 2000);
+      setTimeout(forcePositions, 5000);
+
+      // Watch for dynamically injected Tawk.to widgets
+      if (window.MutationObserver) {
+        var posObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.addedNodes.length) {
+              mutation.addedNodes.forEach(function(node) {
+                if (node.nodeType === 1) {
+                  var id = (node.id || '').toLowerCase();
+                  var cls = (node.className || '').toLowerCase();
+                  if (id.indexOf('tawk') !== -1 || cls.indexOf('tawk') !== -1) {
+                    node.style.cssText += ';left:20px!important;right:auto!important;';
+                  }
+                }
+              });
+            }
+          });
+        });
+        posObserver.observe(document.body, { childList: true, subtree: true });
+      }
     });
   </script>
 

@@ -487,12 +487,14 @@
 
       <!-- Explore Store Designs Banner -->
       <div class="text-center mt-5 mb-5" data-aos="fade-up">
-        <p class="explore-themes-text" style="font-size:16px; font-weight:600; color:#4a5568;">
-          {{ __('Looking for a specific store style?') }} 
-          <a href="{{ route('front.templates.view') }}" class="explore-themes-link" style="color:#ff5a2c; text-decoration:underline; font-weight:700; margin-left:5px;">
-            {{ __('Browse themes to explore store designs') }} <i class="fas fa-arrow-right ms-1" style="font-size:12px;"></i>
+        <div style="display:inline-block; background:linear-gradient(135deg,#fff5f2 0%,#fff9f7 100%); border:2px solid #ff5a2c; border-radius:14px; padding:20px 36px; max-width:560px; box-shadow:0 4px 20px rgba(255,90,44,0.10);">
+          <p style="font-size:15px; font-weight:600; color:#4a5568; margin-bottom:10px;">
+            {{ __('Looking for a specific store style?') }}
+          </p>
+          <a href="{{ route('front.templates.view') }}" style="display:inline-flex; align-items:center; gap:8px; background:#ff5a2c; color:#fff; font-size:16px; font-weight:700; padding:12px 28px; border-radius:10px; text-decoration:none; transition:all 0.2s ease; box-shadow:0 4px 14px rgba(255,90,44,0.25);" onmouseover="this.style.background='#e04d24';this.style.boxShadow='0 6px 20px rgba(255,90,44,0.35)';" onmouseout="this.style.background='#ff5a2c';this.style.boxShadow='0 4px 14px rgba(255,90,44,0.25)';">
+            <i class="fas fa-palette"></i> {{ __('Browse Themes to Explore Store Designs') }} <i class="fas fa-arrow-right"></i>
           </a>
-        </p>
+        </div>
       </div>
 
       <!-- Trust Factors Highlights row -->
@@ -615,7 +617,7 @@
               <tr>
                 <th style="width: 40%;">Features</th>
                 @foreach ($comparePackages as $pkg)
-                  <th style="width: 20%; text-align: center;" class="{{ $pkg->recommended == '1' ? 'highlight-column-header' : '' }}">
+                  <th style="text-align: center;" class="{{ $pkg->recommended == '1' ? 'highlight-column-header' : '' }}">
                     @if ($pkg->recommended == '1')
                       <div class="highlight-wrapper">
                         <i class="fas fa-crown text-orange me-1"></i> {{ __($pkg->title) }}
@@ -689,7 +691,7 @@
 
         @if (count($hiddenCompareRows) > 0)
           <div class="text-center mt-4">
-            <button class="btn btn-orange-outline px-4 py-2" type="button" id="btn-toggle-compare-rows">
+            <button class="btn btn-orange-outline px-4 py-2" type="button" id="btn-toggle-compare-rows" style="font-size:16px; font-weight:700; padding:14px 32px !important; border-radius:10px;">
               View More Features <i class="fas fa-chevron-down ms-2"></i>
             </button>
           </div>
