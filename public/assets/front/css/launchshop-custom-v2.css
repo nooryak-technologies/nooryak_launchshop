@@ -198,7 +198,6 @@ h6 {
     padding: 40px 0 60px;
     background: radial-gradient(circle at 100% 0%, #fff5f2 0%, #ffffff 100%);
     position: relative;
-    overflow: hidden;
 }
 
 .hero-badge {
@@ -8188,4 +8187,240 @@ iframe[id^="tawkchat-"],
     left: auto !important;
     right: 20px !important;
     bottom: 80px !important;
+}
+
+/* ============================================================
+   HERO ROCKET ANIMATION
+   ============================================================ */
+
+/* Container — pinned to the bottom-right of the right column */
+.hero-rocket-container {
+    position: absolute;
+    bottom: -10px;
+    right: 0;
+    z-index: 20;
+    pointer-events: none;
+    display: flex;
+    justify-content: flex-end;
+    animation: rocketFadeIn 0.6s ease forwards;
+}
+
+@keyframes rocketFadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Inner wrapper — floats + launches */
+.rocket-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: rocketFloat 2s ease-in-out infinite;
+    transform-origin: center bottom;
+    will-change: transform;
+}
+
+/* Floating idle animation */
+@keyframes rocketFloat {
+    0%,  100% { transform: translateY(0px)    rotate(0deg); }
+    30%        { transform: translateY(-12px)  rotate(-1deg); }
+    70%        { transform: translateY(-6px)   rotate(1deg); }
+}
+
+/* SVG rocket itself */
+.rocket-svg {
+    width: 88px;
+    height: auto;
+    filter:
+        drop-shadow(0 0 10px rgba(255, 90, 44, 0.45))
+        drop-shadow(0 4px 18px rgba(0, 0, 0, 0.15));
+}
+
+/* ---- Exhaust / fire assembly ---- */
+.rocket-exhaust {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 44px;
+    height: 54px;
+    margin-top: -6px;
+}
+
+.exhaust-flame {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 50% 50% 40% 40%;
+    transform-origin: center top;
+}
+
+/* Outermost flame — wide, orange-red */
+.flame-outer {
+    width: 34px;
+    height: 50px;
+    background: linear-gradient(to bottom,
+        rgba(255, 160, 20, 0.95) 0%,
+        rgba(255, 80, 20, 0.85) 45%,
+        rgba(255, 40, 0, 0) 100%);
+    animation: flameOuter 0.25s ease-in-out infinite alternate;
+    filter: blur(1.5px);
+}
+
+/* Middle flame — narrower, brighter */
+.flame-mid {
+    width: 22px;
+    height: 40px;
+    background: linear-gradient(to bottom,
+        rgba(255, 220, 60, 1) 0%,
+        rgba(255, 140, 20, 0.9) 50%,
+        rgba(255, 90, 10, 0) 100%);
+    animation: flameMid 0.2s ease-in-out infinite alternate;
+    filter: blur(0.8px);
+}
+
+/* Inner core — tiny, white-hot */
+.flame-inner {
+    width: 10px;
+    height: 26px;
+    background: linear-gradient(to bottom,
+        rgba(255, 255, 220, 1) 0%,
+        rgba(255, 240, 100, 0.9) 60%,
+        rgba(255, 200, 50, 0) 100%);
+    animation: flameInner 0.15s ease-in-out infinite alternate;
+}
+
+@keyframes flameOuter {
+    0%   { transform: translateX(-50%) scaleX(1)    scaleY(1);    opacity: 0.90; }
+    100% { transform: translateX(-50%) scaleX(1.15) scaleY(0.90); opacity: 1;    }
+}
+@keyframes flameMid {
+    0%   { transform: translateX(-50%) scaleX(0.9)  scaleY(1.05); opacity: 0.95; }
+    100% { transform: translateX(-50%) scaleX(1.1)  scaleY(0.92); opacity: 1;    }
+}
+@keyframes flameInner {
+    0%   { transform: translateX(-50%) scaleX(0.85) scaleY(1.1);  opacity: 1;    }
+    100% { transform: translateX(-50%) scaleX(1.1)  scaleY(0.88); opacity: 0.85; }
+}
+
+/* ---- Sparks / embers ---- */
+.exhaust-spark {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0;
+}
+
+.spark-1 {
+    width: 5px;
+    height: 5px;
+    background: #ffcc00;
+    bottom: 18px;
+    left: calc(50% - 14px);
+    animation: sparkFly1 0.7s ease-out infinite;
+    animation-delay: 0s;
+}
+.spark-2 {
+    width: 4px;
+    height: 4px;
+    background: #ff7a00;
+    bottom: 10px;
+    left: calc(50% + 8px);
+    animation: sparkFly2 0.85s ease-out infinite;
+    animation-delay: 0.2s;
+}
+.spark-3 {
+    width: 3px;
+    height: 3px;
+    background: #ffee58;
+    bottom: 22px;
+    left: calc(50% + 2px);
+    animation: sparkFly3 0.6s ease-out infinite;
+    animation-delay: 0.4s;
+}
+
+@keyframes sparkFly1 {
+    0%   { transform: translate(0, 0)    scale(1);    opacity: 1; }
+    100% { transform: translate(-14px, 28px) scale(0.3); opacity: 0; }
+}
+@keyframes sparkFly2 {
+    0%   { transform: translate(0, 0)    scale(1);    opacity: 1; }
+    100% { transform: translate(12px, 32px)  scale(0.2); opacity: 0; }
+}
+@keyframes sparkFly3 {
+    0%   { transform: translate(0, 0)    scale(1);    opacity: 1; }
+    100% { transform: translate(6px, 24px)   scale(0.3); opacity: 0; }
+}
+
+/* ---- LAUNCH: rocket shoots upward and vanishes ---- */
+.rocket-launching .rocket-body {
+    animation: rocketLaunch 3.0s cubic-bezier(0.4, 0, 1, 1) forwards !important;
+}
+.rocket-launching .exhaust-flame {
+    animation: none !important;
+    transform: translateX(-50%) scaleY(2.5) scaleX(0.7) !important;
+    filter: blur(3px) !important;
+    opacity: 0.6;
+    transition: all 0.15s ease;
+}
+.rocket-launching .flame-outer { height: 80px !important; opacity: 0.8 !important; }
+.rocket-launching .flame-mid   { height: 60px !important; }
+.rocket-launching .flame-inner { height: 40px !important; }
+
+@keyframes rocketLaunch {
+    0%   { transform: translateY(0)    scaleX(1);   opacity: 1; }
+    12%  { transform: translateY(6px)  scaleX(1.04); opacity: 1; } /* thrust-back rumble */
+    35%  { transform: translateY(-40px)  scaleX(0.98); opacity: 1; }
+    65%  { transform: translateY(-240px) scaleX(0.93); opacity: 0.8; }
+    100% { transform: translateY(-750px) scaleX(0.85); opacity: 0; }
+}
+
+/* Loop Helper Classes */
+.hero-rocket-container.rocket-hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    animation: none !important;
+}
+.hero-rocket-container.rocket-fade-in {
+    animation: rocketFadeIn 1.0s ease forwards !important;
+}
+
+/* ============================================================
+   RESPONSIVE BREAKPOINTS
+   ============================================================ */
+
+/* Tablet (≤ 1199px) */
+@media (max-width: 1199px) {
+    .rocket-svg { width: 70px; }
+    .exhaust-flame { }
+    .flame-outer { width: 28px; height: 42px; }
+    .flame-mid   { width: 18px; height: 32px; }
+    .flame-inner { width: 8px;  height: 22px; }
+}
+
+/* Small tablet (≤ 991px) — column stacks, move rocket */
+@media (max-width: 991px) {
+    .hero-rocket-container {
+        bottom: 0;
+        right: 10px;
+    }
+    .rocket-svg { width: 60px; }
+    .rocket-exhaust { width: 36px; height: 44px; }
+    .flame-outer { width: 24px; height: 36px; }
+    .flame-mid   { width: 16px; height: 28px; }
+    .flame-inner { width: 7px;  height: 18px; }
+}
+
+/* Mobile (≤ 575px) */
+@media (max-width: 575px) {
+    .hero-rocket-container {
+        bottom: 0;
+        right: 6px;
+    }
+    .rocket-svg { width: 46px; }
+    .rocket-exhaust { width: 26px; height: 32px; }
+    .flame-outer { width: 18px; height: 28px; }
+    .flame-mid   { width: 12px; height: 22px; }
+    .flame-inner { width: 5px;  height: 14px; }
+    .exhaust-spark { display: none; }
 }
