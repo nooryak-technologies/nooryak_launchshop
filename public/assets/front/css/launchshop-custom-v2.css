@@ -3727,14 +3727,54 @@ i[id$="EyeIcon"]:hover {
     max-height: 0;
     overflow: hidden;
     opacity: 0;
-    transform: translateY(-6px);
-    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, transform 0.3s ease;
+    transform: translateY(-8px);
+    transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease, transform 0.35s ease;
+    will-change: max-height, opacity, transform;
 }
 
 .pricing-card-modern.expanded .pricing-features-extra {
     max-height: 2000px;
     opacity: 1;
     transform: translateY(0);
+}
+#btn-toggle-compare-rows {
+    transition: all 0.25s ease;
+    position: relative;
+}
+
+#btn-toggle-compare-rows:hover {
+    transform: translateY(-2px);
+}
+
+#btn-toggle-compare-rows i {
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+/* Compare hidden rows — hidden by JS on load (.hide() sets inline display:none) */
+/* No !important here — jQuery inline styles must be able to override this */
+#compare-features-hidden-rows.compare-rows-hidden {
+    display: none;
+}
+
+/* Animate the rows when revealed */
+#compare-features-hidden-rows tr {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+@keyframes compareFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#compare-features-hidden-rows tr {
+    animation: compareFadeIn 0.35s ease both;
 }
 
 .pricing-features-extra ul {
@@ -7830,20 +7870,8 @@ i[id$="EyeIcon"]:hover {
     padding: 12px 10px !important;
 }
 
-/* 13. When I click view more feature need a smooth transition */
-/* Disable original max-height/transition from CSS to prevent conflicts with jQuery smooth slide */
-.pricing-features-extra {
-    display: none;
-    max-height: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-    overflow: hidden;
-}
-
-.pricing-card-modern.expanded .pricing-features-extra {
-    max-height: none !important;
-}
+/* 13. "Show more" feature panel — CSS max-height animation via .expanded class */
+/* The JS toggles .expanded on .pricing-card-modern; no jQuery show/hide needed here */
 
 /* 8. Bring More Profit features grid background globally light orange */
 .features-grid {
@@ -8042,6 +8070,7 @@ i[id$="EyeIcon"]:hover {
 
 /* 8. Bring More Profit section need 2x2 in mobile view */
 @media (max-width: 767px) {
+
     /* Only apply grid to the features cards row, NOT the section title row */
     .features-grid .row:last-child {
         display: grid !important;
@@ -8069,7 +8098,7 @@ i[id$="EyeIcon"]:hover {
         padding: 0 10px !important;
     }
 
-    .features-grid .row:last-child > div {
+    .features-grid .row:last-child>div {
         width: 100% !important;
         max-width: 100% !important;
         padding: 0 !important;

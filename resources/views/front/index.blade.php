@@ -84,9 +84,11 @@
                   </div>
                 </div>
                 <div class="hero-stat-col">
-                  <div class="hero-stat-icon icon-uptime"><i class="fas fa-shield-check"></i></div>
-                  <div class="hero-stat-value">99.99%</div>
-                  <div class="hero-stat-label">Uptime Guarantee</div>
+                  <div class="hero-stat-item">
+                    <div class="hero-stat-icon icon-uptime"><i class="fas fa-shield-check"></i></div>
+                    <div class="hero-stat-value">99.99%</div>
+                    <div class="hero-stat-label">Uptime Guarantee</div>
+                  </div>
                 </div>
                 <div class="hero-stat-col">
                   <div class="hero-stat-item">
@@ -131,7 +133,7 @@
     <section class="templates-section" id="templates">
       <div class="container">
         <div class="row align-items-center mb-50">
-          <div class="col-lg-5">
+          <div class="col-12 text-center">
             <div class="section-subtitle" data-aos="fade-up">{{ @$homeSec->template_section_title ?: 'Stunning. Modern. Conversion-Focused.' }}</div>
             <h2 class="section-title mb-0" data-aos="fade-up">{{ @$homeSec->template_section_subtitle ?: 'Choose a Theme You Love' }}</h2>
           </div>

@@ -42,7 +42,7 @@
   <link rel="stylesheet" href="{{ asset('assets/front/css/floating-whatsapp.css') }}">
   <!-- Main Style CSS -->
   <link rel="stylesheet" href="{{ asset('assets/front/css/style.css?v=1.0.4') }}">
-  <link rel="stylesheet" href="{{ asset('assets/front/css/launchshop-custom-v2.css?v=2.0.8') }}">
+  <link rel="stylesheet" href="{{ asset('assets/front/css/launchshop-custom-v2.css?v=2.0.9') }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/tinymce-content.css') }}">
 
   <meta name="csrf-token" content="{{ csrf_token() }}" />
@@ -265,19 +265,44 @@
   @endif
 
   @if ($bs->is_tawkto == 1)
+    {{-- Force Tawk.to to left side via CSS on its injected containers --}}
+    <style>
+      /* Tawk.to widget pinned to bottom-LEFT */
+      #tawkchat-status-container,
+      .tawk-min-container,
+      [id^="tawk-bubble"],
+      div[class*="tawk-min"],
+      div[id*="tawkchat"] {
+        left: 20px !important;
+        right: auto !important;
+      }
+    </style>
     <script type="text/javascript">
       var Tawk_API = Tawk_API || {},
         Tawk_LoadStart = new Date();
 
-      // Move Tawk.to widget to LEFT side
+      // Move Tawk.to widget to LEFT side via the official API
       Tawk_API.onLoad = function() {
-        Tawk_API.customStyle({
-          zIndex: 999,
-          visibility: {
-            desktop: { position: 'bl', xOffset: 20, yOffset: 20 },
-            mobile:  { position: 'bl', xOffset: 15, yOffset: 15 }
-          }
-        });
+        try {
+          Tawk_API.customStyle({
+            visibility: {
+              desktop: { position: 'bl', xOffset: '20', yOffset: '20' },
+              mobile:  { position: 'bl', xOffset: '15', yOffset: '15' }
+            }
+          });
+        } catch(e) {}
+
+        // Also inject CSS directly into Tawk iframe for reliable positioning
+        try {
+          var frames = document.querySelectorAll('iframe[src*="tawk.to"], iframe[title*="chat"]');
+          frames.forEach(function(f) {
+            var p = f.parentElement;
+            if (p) {
+              p.style.setProperty('left', '20px', 'important');
+              p.style.setProperty('right', 'auto', 'important');
+            }
+          });
+        } catch(e) {}
       };
 
       (function() {
@@ -341,21 +366,37 @@
           goTop.style.cssText += ';right:20px!important;left:auto!important;';
         }
 
-        // 3. Tawk.to — target its injected container divs
+        // 3. Tawk.to — target its injected container divs and iframes
         var tawkSelectors = [
+          '#tawkchat-status-container',
           '#tawkchat-container',
           '.tawk-min-container',
           '[class*="tawk-min"]',
           '[id*="tawkchat"]',
-          'iframe[src*="tawk.to"]'
+          '[id^="tawk-bubble"]',
+          'iframe[src*="tawk.to"]',
+          'iframe[title*="chat"]'
         ];
         tawkSelectors.forEach(function(sel) {
           document.querySelectorAll(sel).forEach(function(el) {
             var target = el.tagName === 'IFRAME' ? el.parentElement : el;
             if (target) {
-              target.style.cssText += ';left:20px!important;right:auto!important;';
+              target.style.setProperty('left', '20px', 'important');
+              target.style.setProperty('right', 'auto', 'important');
             }
           });
+        });
+        // Also catch any div containing a tawk iframe
+        document.querySelectorAll('iframe[src*="tawk.to"]').forEach(function(iframe) {
+          var p = iframe.parentElement;
+          while (p && p !== document.body) {
+            if (p.style && (p.style.bottom || p.style.right || getComputedStyle(p).position === 'fixed')) {
+              p.style.setProperty('left', '20px', 'important');
+              p.style.setProperty('right', 'auto', 'important');
+              break;
+            }
+            p = p.parentElement;
+          }
         });
       }
 
@@ -372,9 +413,16 @@
               mutation.addedNodes.forEach(function(node) {
                 if (node.nodeType === 1) {
                   var id = (node.id || '').toLowerCase();
-                  var cls = (node.className || '').toLowerCase();
+                  var cls = (typeof node.className === 'string' ? node.className : '').toLowerCase();
                   if (id.indexOf('tawk') !== -1 || cls.indexOf('tawk') !== -1) {
-                    node.style.cssText += ';left:20px!important;right:auto!important;';
+                    node.style.setProperty('left', '20px', 'important');
+                    node.style.setProperty('right', 'auto', 'important');
+                  }
+                  // Also handle iframes inside injected containers
+                  var iframes = node.querySelectorAll ? node.querySelectorAll('iframe[src*="tawk.to"]') : [];
+                  if (iframes.length) {
+                    node.style.setProperty('left', '20px', 'important');
+                    node.style.setProperty('right', 'auto', 'important');
                   }
                 }
               });
