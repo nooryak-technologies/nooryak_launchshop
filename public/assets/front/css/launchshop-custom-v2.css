@@ -88,6 +88,12 @@ h6 {
     color: var(--ls-dark);
 }
 
+/* Templates section heading — "Ecom Store" highlighted orange via span */
+.templates-section .section-title span,
+.templates-section .section-title em {
+    color: var(--ls-primary);
+}
+
 /* Buttons */
 .btn-ls-primary {
     background-color: var(--ls-primary) !important;
@@ -474,7 +480,7 @@ i[id$="EyeIcon"]:hover {
 
 .steps-line {
     position: absolute;
-    top: 40px;
+    top: 58px;
     left: 50px;
     right: 50px;
     height: 4px;
@@ -8132,9 +8138,11 @@ i[id$="EyeIcon"]:hover {
 /* Floating WhatsApp button — LEFT on all devices */
 .floating-wpp,
 #WAButton,
-#WAButton .floating-wpp {
+#WAButton .floating-wpp,
+#WAButton > div {
     left: 15px !important;
     right: auto !important;
+    position: fixed !important;
 }
 
 /* WhatsApp popup — open to the right of the button */

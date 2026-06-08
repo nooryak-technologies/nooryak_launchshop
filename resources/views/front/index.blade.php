@@ -135,7 +135,7 @@
         <div class="row align-items-center mb-50">
           <div class="col-12 text-center">
             <div class="section-subtitle" data-aos="fade-up">{{ @$homeSec->template_section_title ?: 'Stunning. Modern. Conversion-Focused.' }}</div>
-            <h2 class="section-title mb-0" data-aos="fade-up">{{ @$homeSec->template_section_subtitle ?: 'Choose a Theme You Love' }}</h2>
+            <h2 class="section-title mb-0" data-aos="fade-up">{!! preg_replace('/(Ecom Store)/i', '<span>$1</span>', e(@$homeSec->template_section_subtitle ?: 'Choose a Theme You Love')) !!}</h2>
           </div>
           <!-- <div class="col-lg-7 text-lg-end mt-4 mt-lg-0" data-aos="fade-up">
             <div class="theme-filters mb-3 mb-lg-0 d-inline-flex">
