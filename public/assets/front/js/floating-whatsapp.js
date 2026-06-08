@@ -139,6 +139,12 @@
         right: '15px'
       });
       $popup.css('right', '0');
+    } else {
+      // Explicitly enforce left position
+      this.css({
+        left: '15px',
+        right: 'auto'
+      });
     }
     //#endregion
 

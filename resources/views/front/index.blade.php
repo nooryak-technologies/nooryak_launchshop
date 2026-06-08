@@ -799,6 +799,44 @@
         <h4 class="brands-title">Trusted by 10,000+ amazing brands</h4>
         <div class="brands-marquee">
           <div class="brands-marquee-inner">
+            @php
+            $svgBrands = [
+              /* Amazon */
+              ['name'=>'Amazon','svg'=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 38"><text x="4" y="28" font-family="Arial Black,Arial" font-weight="900" font-size="26" fill="#232F3E">amazon</text><path d="M8 33 Q34 42 60 33" stroke="#FF9900" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M57 30 L63 33 L57 36" fill="#FF9900"/></svg>'],
+              /* Flipkart */
+              ['name'=>'Flipkart','svg'=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 38"><rect x="0" y="4" width="30" height="30" rx="5" fill="#2874F0"/><text x="3" y="26" font-family="Arial Black" font-weight="900" font-size="20" fill="#fff">F</text><text x="35" y="27" font-family="Arial Black,Arial" font-weight="900" font-size="20" fill="#2874F0">flipkart</text></svg>'],
+              /* Shopify */
+              ['name'=>'Shopify','svg'=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 38"><g transform="translate(2,3)"><path d="M26 6c-.1-.7-.7-1.1-1.2-1.1s-3.9-.3-3.9-.3S19 2.8 18.6 2.4c0 0-.1-.1-.2-.1L17 32l9.9 2.4S26.1 6.7 26 6z" fill="#95BF47"/><path d="M18.6 2.4c-.1-.1-.2-.1-.2-.1l-1.2 29.8 4.2 1c.4-1.1 1.7-5 1.7-5L18.6 2.4z" fill="#5E8E3E"/><path d="M15.1 12.5l-.5-1.5c0 0-1.1.3-2.2 1-.1-1.4.4-2.4 1.5-2.5.4 0 .8.1 1.1.2V7.9c-.3-.1-.7-.1-1.1-.1C10.6 7.8 8.4 10 8.4 13c0 1.9.8 3.3 2.2 4.2L15.1 12.5z" fill="#fff"/></g><text x="32" y="26" font-family="Arial Black,Arial" font-weight="900" font-size="18" fill="#96BF48">shopify</text></svg>'],
+              /* Nike */
+              ['name'=>'Nike','svg'=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 38"><path d="M5 26 Q30 8 65 14 Q80 17 85 12 Q90 8 72 22 Q50 36 5 26z" fill="#111"/></svg>'],
+              /* Apple */
+              ['name'=>'Apple','svg'=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 40"><path d="M31 8c-3.5 0-6 2-7.5 2-1.6 0-4-2-6.8-2C12 8 7 12 7 19c0 8.5 7.5 20 12 20 2 0 3.5-1.5 6-1.5s3.8 1.5 6 1.5c4.8 0 8-5.5 10-11-3-.5-7-3-7-8 0-4.5 3.5-7 5.5-7.5C37.5 9.5 34 8 31 8z" fill="#555"/><path d="M29 4c0 0 3.5-0.5 5 3-1.5 1-5 1-5-3z" fill="#555"/><text x="48" y="27" font-family="Arial Black,Arial" font-weight="900" font-size="18" fill="#111">apple</text></svg>'],
+              /* Samsung */
+              ['name'=>'Samsung','svg'=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 38"><text x="4" y="27" font-family="Arial Black,Arial" font-weight="900" font-size="22" letter-spacing="-1" fill="#1428A0">SAMSUNG</text></svg>'],
+              /* Adidas */
+              ['name'=>'Adidas','svg'=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 38"><polygon points="20,32 36,8 52,32" fill="none" stroke="#000" stroke-width="3.5"/><line x1="16" y1="32" x2="55" y2="32" stroke="#000" stroke-width="3"/><text x="60" y="27" font-family="Arial Black,Arial" font-weight="900" font-size="17" fill="#000">adidas</text></svg>'],
+              /* Zara */
+              ['name'=>'Zara','svg'=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 38"><text x="4" y="28" font-family="Times New Roman,serif" font-weight="700" font-size="28" letter-spacing="4" fill="#111">ZARA</text></svg>'],
+              /* H&M */
+              ['name'=>'H&amp;M','svg'=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 38"><text x="4" y="28" font-family="Arial Black,Arial" font-weight="900" font-size="26" fill="#E50010">H&amp;M</text></svg>'],
+              /* Nykaa */
+              ['name'=>'Nykaa','svg'=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 38"><circle cx="14" cy="19" r="10" fill="#FC2779"/><circle cx="14" cy="19" r="5" fill="#fff"/><text x="30" y="27" font-family="Arial Black,Arial" font-weight="900" font-size="20" fill="#FC2779">nykaa</text></svg>'],
+              /* IKEA */
+              ['name'=>'IKEA','svg'=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 38"><rect x="2" y="4" width="86" height="30" rx="4" fill="#0058A3"/><text x="10" y="27" font-family="Arial Black,Arial" font-weight="900" font-size="22" fill="#FFCC02" letter-spacing="3">IKEA</text></svg>'],
+              /* Puma */
+              ['name'=>'Puma','svg'=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 38"><path d="M8 30 C8 14 18 6 26 10 C30 12 28 18 24 20 C20 22 14 18 18 14 C22 10 28 14 30 20 L35 30" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/><text x="38" y="27" font-family="Arial Black,Arial" font-weight="900" font-size="20" fill="#111">PUMA</text></svg>'],
+              /* Decathlon */
+              ['name'=>'Decathlon','svg'=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 38"><rect x="2" y="6" width="26" height="26" rx="4" fill="#0082C9"/><text x="5" y="25" font-family="Arial Black" font-weight="900" font-size="18" fill="#fff">D</text><text x="33" y="27" font-family="Arial Black,Arial" font-weight="900" font-size="17" fill="#0082C9">decathlon</text></svg>'],
+              /* Myntra */
+              ['name'=>'Myntra','svg'=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 38"><path d="M10 28 L10 10 L19 22 L28 10 L28 28" fill="none" stroke="#FF3F6C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><text x="36" y="27" font-family="Arial Black,Arial" font-weight="900" font-size="18" fill="#FF3F6C">myntra</text></svg>'],
+              /* Meesho */
+              ['name'=>'Meesho','svg'=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 38"><text x="4" y="27" font-family="Arial Black,Arial" font-weight="900" font-size="20" fill="#9B4DCA">meesho</text></svg>'],
+              /* WooCommerce */
+              ['name'=>'WooCommerce','svg'=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 38"><rect x="2" y="4" width="30" height="30" rx="6" fill="#7F54B3"/><text x="6" y="26" font-family="Arial Black" font-weight="900" font-size="18" fill="#fff">W</text><text x="37" y="26" font-family="Arial Black,Arial" font-weight="700" font-size="14" fill="#7F54B3">WooCommerce</text></svg>'],
+            ];
+            @endphp
+
+            {{-- First copy --}}
             <div class="marquee-content">
               @foreach ($partners as $partner)
                 <a href="{{ $partner->url }}" target="_blank" class="brand-item">
@@ -806,13 +844,13 @@
                        data-src="{{ asset('assets/front/img/partners/' . $partner->image) }}" alt="Partner">
                 </a>
               @endforeach
-              @foreach(['zepto.co', 'boat-lifestyle.com', 'firstcry.com', 'croma.com', 'himalayawellness.in', 'nykaa.com', 'pepperfry.com', 'decathlon.in', 'myntra.com', 'ajio.com'] as $domain)
-                <div class="brand-item">
-                  <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="https://logo.clearbit.com/{{ $domain }}" alt="{{ explode('.', $domain)[0] }}">
+              @foreach($svgBrands as $brand)
+                <div class="brand-item brand-item-svg" title="{{ $brand['name'] }}">
+                  {!! $brand['svg'] !!}
                 </div>
               @endforeach
             </div>
-            {{-- Duplicate for infinite loop --}}
+            {{-- Duplicate for infinite scroll --}}
             <div class="marquee-content" aria-hidden="true">
               @foreach ($partners as $partner)
                 <a href="{{ $partner->url }}" target="_blank" class="brand-item">
@@ -820,9 +858,9 @@
                        data-src="{{ asset('assets/front/img/partners/' . $partner->image) }}" alt="Partner">
                 </a>
               @endforeach
-              @foreach(['zepto.co', 'boat-lifestyle.com', 'firstcry.com', 'croma.com', 'himalayawellness.in', 'nykaa.com', 'pepperfry.com', 'decathlon.in', 'myntra.com', 'ajio.com'] as $domain)
-                <div class="brand-item">
-                  <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="https://logo.clearbit.com/{{ $domain }}" alt="{{ explode('.', $domain)[0] }}">
+              @foreach($svgBrands as $brand)
+                <div class="brand-item brand-item-svg" title="{{ $brand['name'] }}">
+                  {!! $brand['svg'] !!}
                 </div>
               @endforeach
             </div>

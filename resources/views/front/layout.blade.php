@@ -157,7 +157,7 @@
   {{-- Popups end --}}
 
   {{-- WhatsApp Chat Button --}}
-  <div id="WAButton" style="left:15px !important;right:auto !important;position:fixed;"></div>
+  <div id="WAButton" style="position:fixed;left:15px;right:auto;bottom:15px;z-index:999;"></div>
 
   <!-- Go to Top -->
   <div class="go-top"><i class="fal fa-angle-up"></i></div>
@@ -353,10 +353,14 @@
         // 1. Floating WhatsApp (#WAButton / .floating-wpp)
         var waBtn = document.getElementById('WAButton');
         if (waBtn) {
-          waBtn.style.cssText += ';left:15px!important;right:auto!important;position:fixed!important;';
+          waBtn.style.setProperty('left', '15px', 'important');
+          waBtn.style.setProperty('right', 'auto', 'important');
+          waBtn.style.setProperty('position', 'fixed', 'important');
+          waBtn.style.setProperty('bottom', '15px', 'important');
           var wpp = waBtn.querySelector('.floating-wpp');
           if (wpp) {
-            wpp.style.cssText += ';left:15px!important;right:auto!important;';
+            wpp.style.setProperty('left', '15px', 'important');
+            wpp.style.setProperty('right', 'auto', 'important');
           }
         }
 

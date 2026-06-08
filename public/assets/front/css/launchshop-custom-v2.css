@@ -2065,7 +2065,7 @@ i[id$="EyeIcon"]:hover {
 .brands-marquee-inner {
     display: flex;
     width: max-content;
-    animation: marquee 12s linear infinite;
+    animation: marquee 39s linear infinite;
 }
 
 .marquee-content {
@@ -2093,6 +2093,27 @@ i[id$="EyeIcon"]:hover {
 }
 
 .brand-item img:hover {
+    opacity: 1;
+    filter: none;
+}
+
+/* SVG inline brand logos — same greyscale/opacity treatment as img logos */
+.brand-item-svg {
+    padding: 0 10px;
+    cursor: default;
+}
+
+.brand-item-svg svg {
+    height: 32px;
+    width: auto;
+    max-width: 130px;
+    opacity: 0.5;
+    filter: grayscale(100%);
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.brand-item-svg:hover svg {
     opacity: 1;
     filter: none;
 }
@@ -8143,9 +8164,10 @@ i[id$="EyeIcon"]:hover {
     left: 15px !important;
     right: auto !important;
     position: fixed !important;
+    bottom: 15px !important;
 }
 
-/* WhatsApp popup — open to the right of the button */
+/* WhatsApp popup — open upward from left-anchored button */
 .floating-wpp .floating-wpp-popup,
 .floating-wpp-popup {
     left: 0 !important;

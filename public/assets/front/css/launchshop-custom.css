@@ -1987,7 +1987,7 @@ h6 {
 .brands-marquee-inner {
     display: flex;
     width: max-content;
-    animation: marquee 12s linear infinite;
+    animation: marquee 39s linear infinite;
 }
 
 .marquee-content {
