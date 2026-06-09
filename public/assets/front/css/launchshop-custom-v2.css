@@ -7851,7 +7851,9 @@ i[id$="EyeIcon"]:hover {
 /* 7. WhatsApp & chatbot LEFT side, scroll-to-top RIGHT side — see consolidated rules at bottom of file */
 .go-top {
     left: auto !important;
-    right: 20px !important;
+    right: 18px !important;
+    bottom: 22px !important;
+    border-radius: 12px !important;
 }
 
 
@@ -8182,11 +8184,12 @@ iframe[id^="tawkchat-"],
     right: auto !important;
 }
 
-/* Scroll-to-top button — stays RIGHT side */
+/* Scroll-to-top button — stays RIGHT side, bottom-right aligned with WhatsApp */
 .go-top {
     left: auto !important;
-    right: 20px !important;
-    bottom: 80px !important;
+    right: 18px !important;
+    bottom: 22px !important;
+    border-radius: 12px !important;
 }
 
 /* ============================================================

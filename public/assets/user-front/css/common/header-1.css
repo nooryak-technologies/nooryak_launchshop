@@ -287,7 +287,7 @@
 
 .menu .nav-link {
   padding: 20px 15px;
-  color: #ffffff;
+  color: var(--color-dark);
   font-weight: 600;
 }
 

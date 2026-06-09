@@ -156,8 +156,113 @@
   @includeIf('front.partials.popups')
   {{-- Popups end --}}
 
-  {{-- WhatsApp Chat Button --}}
-  <div id="WAButton" style="position:fixed;left:15px;right:auto;bottom:15px;z-index:999;"></div>
+  {{-- WhatsApp Chat Button (dynamic via plugin when is_whatsapp=1) --}}
+  <div id="WAButton" style="position:fixed;left:18px;right:auto;bottom:22px;z-index:999;"></div>
+
+  {{-- ═══════════════════════════════════════════════════
+       LEFT SIDE FLOATING STACK  (bottom → top)
+       [WhatsApp]  bottom: 22px
+       [AI Chat]   bottom: 90px  (22 + 56 + 12 gap)
+       ═══════════════════════════════════════════════════ --}}
+
+  {{-- Static WhatsApp — shows when is_whatsapp plugin is OFF but number exists --}}
+  @if (!empty($bs->whatsapp_number) && $bs->is_whatsapp != 1)
+    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $bs->whatsapp_number) }}"
+       target="_blank" rel="noopener noreferrer"
+       class="fab-btn fab-whatsapp"
+       title="Chat on WhatsApp"
+       aria-label="Chat on WhatsApp">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="26" height="26" fill="#fff">
+        <path d="M24 4C13 4 4 13 4 24c0 3.6.97 7 2.66 9.9L4 44l10.37-2.63A19.9 19.9 0 0 0 24 44c11 0 20-9 20-20S35 4 24 4zm0 36a16 16 0 0 1-8.18-2.26l-.58-.35-6.16 1.56 1.6-5.98-.38-.6A16 16 0 1 1 24 40zm8.77-11.9c-.48-.24-2.83-1.4-3.27-1.56-.44-.16-.76-.24-1.08.24-.32.48-1.24 1.56-1.52 1.88-.28.32-.56.36-1.04.12-.48-.24-2.02-.74-3.85-2.36-1.42-1.26-2.38-2.82-2.66-3.3-.28-.48-.03-.74.21-.98.22-.22.48-.56.72-.84.24-.28.32-.48.48-.8.16-.32.08-.6-.04-.84-.12-.24-1.08-2.6-1.48-3.56-.38-.93-.78-.8-1.08-.82h-.92c-.32 0-.84.12-1.28.6-.44.48-1.68 1.64-1.68 4s1.72 4.64 1.96 4.96c.24.32 3.38 5.16 8.2 7.24 1.14.5 2.04.8 2.74 1.02 1.15.36 2.2.31 3.03.19.92-.14 2.83-1.16 3.23-2.28.4-1.12.4-2.08.28-2.28-.12-.2-.44-.32-.92-.56z"/>
+      </svg>
+    </a>
+  @endif
+
+  {{-- AI Chat Button — always visible, above WhatsApp --}}
+  <button type="button"
+          class="fab-btn fab-ai-chat"
+          title="AI Assistant"
+          aria-label="Chat with AI"
+          onclick="window.dispatchEvent(new CustomEvent('open-ai-chat'))">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2a8 8 0 0 1 8 8c0 3-1.6 5.6-4 7.1V20l-4-2-4 2v-2.9A8 8 0 0 1 4 10a8 8 0 0 1 8-8z"/>
+      <circle cx="9" cy="10" r="1" fill="#fff" stroke="none"/>
+      <circle cx="12" cy="10" r="1" fill="#fff" stroke="none"/>
+      <circle cx="15" cy="10" r="1" fill="#fff" stroke="none"/>
+    </svg>
+    <span class="fab-ai-pulse"></span>
+  </button>
+
+  <style>
+    /* ── Shared FAB base ── */
+    .fab-btn {
+      position: fixed;
+      left: 18px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+      text-decoration: none !important;
+      z-index: 9999;
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+    .fab-btn:hover {
+      transform: scale(1.1) translateY(-2px);
+    }
+
+    /* ── WhatsApp ── */
+    .fab-whatsapp {
+      bottom: 22px;
+      background: #25D366;
+      box-shadow: 0 4px 16px rgba(37,211,102,0.45);
+      color: #fff !important;
+    }
+    .fab-whatsapp:hover {
+      background: #20ba58;
+      box-shadow: 0 6px 20px rgba(37,211,102,0.6);
+      color: #fff !important;
+    }
+
+    /* ── AI Chat ── */
+    .fab-ai-chat {
+      bottom: 90px;           /* 22px + 56px + 12px gap */
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      box-shadow: 0 4px 16px rgba(99,102,241,0.45);
+      position: fixed;
+      padding: 0;
+    }
+    .fab-ai-chat:hover {
+      box-shadow: 0 6px 20px rgba(99,102,241,0.6);
+    }
+
+    /* Animated pulse ring on AI button */
+    .fab-ai-pulse {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid rgba(139,92,246,0.5);
+      animation: fab-pulse 2s ease-out infinite;
+      pointer-events: none;
+    }
+    @keyframes fab-pulse {
+      0%   { transform: scale(1);   opacity: 0.7; }
+      70%  { transform: scale(1.5); opacity: 0;   }
+      100% { transform: scale(1.5); opacity: 0;   }
+    }
+
+    /* ── Scroll-to-top — bottom-RIGHT at same level as WhatsApp ── */
+    .go-top {
+      left: auto !important;
+      right: 18px !important;
+      bottom: 22px !important;
+      border-radius: 12px !important;
+    }
+  </style>
 
   <!-- Go to Top -->
   <div class="go-top"><i class="fal fa-angle-up"></i></div>

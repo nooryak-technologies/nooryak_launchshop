@@ -54,7 +54,7 @@ body {
 }
 
 a {
-    color: #ffffff;
+    color: var(--color-dark);
     text-decoration: none;
     outline: 0 !important;
     -webkit-transition: all 0.3s ease-out;
