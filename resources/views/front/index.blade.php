@@ -60,46 +60,46 @@
               <img class="img-fluid lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
                 data-src="{{ asset('images/hero-section.png') }}" 
                 alt="Storefront Mockup" style="width: 100%; height: auto; max-width: 100%; display: block; margin: 0 auto;">
-            </div>
 
-            {{-- ===== Rocket Animation ===== --}}
-            <div class="hero-rocket-container" id="heroRocketAnim">
-              <div class="rocket-body">
-                {{-- SVG Rocket --}}
-                <svg class="rocket-svg" viewBox="0 0 90 160" xmlns="http://www.w3.org/2000/svg">
-                  {{-- Body --}}
-                  <ellipse cx="45" cy="85" rx="22" ry="48" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
-                  {{-- Nose Cone --}}
-                  <path d="M45 10 Q65 35 65 65 Q45 52 25 65 Q25 35 45 10Z" fill="#FF5A2C"/>
-                  {{-- Window --}}
-                  <circle cx="45" cy="72" r="10" fill="#dbeafe" stroke="#93c5fd" stroke-width="2"/>
-                  <circle cx="45" cy="72" r="5" fill="#bfdbfe"/>
-                  {{-- Window shine --}}
-                  <circle cx="42" cy="69" r="2" fill="rgba(255,255,255,0.7)"/>
-                  {{-- Left Fin --}}
-                  <path d="M23 108 Q6 125 12 140 L23 125Z" fill="#FF5A2C"/>
-                  {{-- Right Fin --}}
-                  <path d="M67 108 Q84 125 78 140 L67 125Z" fill="#FF5A2C"/>
-                  {{-- Nozzle --}}
-                  <rect x="37" y="128" width="16" height="14" rx="4" fill="#94a3b8"/>
-                  {{-- Nozzle shine --}}
-                  <rect x="39" y="130" width="5" height="10" rx="2" fill="rgba(255,255,255,0.3)"/>
-                  {{-- Body stripe --}}
-                  <rect x="35" y="92" width="20" height="4" rx="2" fill="#FF5A2C" opacity="0.4"/>
-                </svg>
+              {{-- ===== Rocket Animation ===== --}}
+              <div class="hero-rocket-container" id="heroRocketAnim">
+                <div class="rocket-body">
+                  {{-- SVG Rocket --}}
+                  <svg class="rocket-svg" viewBox="0 0 90 160" xmlns="http://www.w3.org/2000/svg">
+                    {{-- Body --}}
+                    <ellipse cx="45" cy="85" rx="22" ry="48" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+                    {{-- Nose Cone --}}
+                    <path d="M45 10 Q65 35 65 65 Q45 52 25 65 Q25 35 45 10Z" fill="#FF5A2C"/>
+                    {{-- Window --}}
+                    <circle cx="45" cy="72" r="10" fill="#dbeafe" stroke="#93c5fd" stroke-width="2"/>
+                    <circle cx="45" cy="72" r="5" fill="#bfdbfe"/>
+                    {{-- Window shine --}}
+                    <circle cx="42" cy="69" r="2" fill="rgba(255,255,255,0.7)"/>
+                    {{-- Left Fin --}}
+                    <path d="M23 108 Q6 125 12 140 L23 125Z" fill="#FF5A2C"/>
+                    {{-- Right Fin --}}
+                    <path d="M67 108 Q84 125 78 140 L67 125Z" fill="#FF5A2C"/>
+                    {{-- Nozzle --}}
+                    <rect x="37" y="128" width="16" height="14" rx="4" fill="#94a3b8"/>
+                    {{-- Nozzle shine --}}
+                    <rect x="39" y="130" width="5" height="10" rx="2" fill="rgba(255,255,255,0.3)"/>
+                    {{-- Body stripe --}}
+                    <rect x="35" y="92" width="20" height="4" rx="2" fill="#FF5A2C" opacity="0.4"/>
+                  </svg>
 
-                {{-- Fire / Exhaust --}}
-                <div class="rocket-exhaust">
-                  <div class="exhaust-flame flame-outer"></div>
-                  <div class="exhaust-flame flame-mid"></div>
-                  <div class="exhaust-flame flame-inner"></div>
-                  <div class="exhaust-spark spark-1"></div>
-                  <div class="exhaust-spark spark-2"></div>
-                  <div class="exhaust-spark spark-3"></div>
+                  {{-- Fire / Exhaust --}}
+                  <div class="rocket-exhaust">
+                    <div class="exhaust-flame flame-outer"></div>
+                    <div class="exhaust-flame flame-mid"></div>
+                    <div class="exhaust-flame flame-inner"></div>
+                    <div class="exhaust-spark spark-1"></div>
+                    <div class="exhaust-spark spark-2"></div>
+                    <div class="exhaust-spark spark-3"></div>
+                  </div>
                 </div>
               </div>
+              {{-- ===== End Rocket ===== --}}
             </div>
-            {{-- ===== End Rocket ===== --}}
           </div>
         </div>
         

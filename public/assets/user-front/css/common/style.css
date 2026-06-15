@@ -1638,6 +1638,82 @@ Lazyload CSS
 }
 
 /* -----------------------------------------
+    Mobile: Hide slider prev/next arrows (<>)
+    and enable touch-scroll on wide sections
+----------------------------------------- */
+@media (max-width: 767px) {
+
+    /* ── Hide all slider arrow buttons on mobile ── */
+    .slider-btn.slider-prev,
+    .slider-btn.slider-next,
+    .slider-arrow .slider-btn,
+    .slider-arrow-inline .slider-btn,
+    .slick-prev,
+    .slick-next,
+    .slick-arrow {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+
+    /* ── Touch-scrollable wide content sections ── */
+    /* Banner collection rows that use container-fluid or row with multiple cols */
+    .banner-collection,
+    .category-slider-wrapper,
+    .products-showcase-section,
+    .flash-sale-section .row,
+    .product-section .row,
+    .tab-content-section,
+    .newsletter .image-inner {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+
+    .banner-collection::-webkit-scrollbar,
+    .category-slider-wrapper::-webkit-scrollbar,
+    .products-showcase-section::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    /* Slick list — allow swipe/touch natively */
+    .slick-list {
+        overflow: visible !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Ensure slick slides don't overflow viewport */
+    .slick-track {
+        display: flex !important;
+    }
+
+    /* Full-width banner images on mobile */
+    .banner-sm,
+    .banner-lg,
+    .home-banner,
+    .banner-content {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    /* Prevent banner content text overflow */
+    .banner-sm .banner-content,
+    .banner-lg .banner-content {
+        padding: 10px 12px !important;
+    }
+
+    /* Fluid containers — clamp to viewport width */
+    .container-fluid.p-0,
+    .container-fuild.p-0 {
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+    }
+}
+
+/* -----------------------------------------
     Nav Tabs CSS
 ----------------------------------------- */
 .tabs-navigation .nav {
