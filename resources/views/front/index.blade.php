@@ -24,7 +24,7 @@
                 </div>
               @endif
               
-              <h1 class="hero-title">Launch Your  <br><span>Online Store</span> In minutes</h1>
+              <h1 class="hero-title">Launch Your  <br><span>Online Store In</span> Just 2 minutes</h1>
               
               <p class="hero-text">{{ @$homeSec->hero_section_desc ?: 'Launch a professional online store in minutes. Choose a theme, pick a plan, get your subdomain and start selling – all without coding.' }}</p>
               
