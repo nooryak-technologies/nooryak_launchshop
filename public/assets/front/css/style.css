@@ -488,6 +488,9 @@ textarea {
 .header-area .main-navbar .navbar .navbar-brand {
     padding: 0;
 }
+.navbar-brand{
+    width: 20%;
+}
 
 .header-area .main-navbar .nav-item {
     position: relative;
@@ -1827,6 +1830,10 @@ html[dir="rtl"] .header-area .main-responsive-nav .main-responsive-menu.mean-con
 
 .choose-area .card .card-icon.primary {
     border-color: var(--color-primary);
+}
+
+.navbar-brand img{
+       max-width: 100% !important;
 }
 
 .choose-area .card .card-icon.primary::after {
