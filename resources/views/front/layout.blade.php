@@ -167,7 +167,7 @@
 
   {{-- Static WhatsApp — shows when is_whatsapp plugin is OFF but number exists --}}
   @if (!empty($bs->whatsapp_number) && $bs->is_whatsapp != 1)
-    <a href="https://wa.me/{{ $bs->whatsapp_number ?? '6374913298' }}"
+    <a href="https://wa.me/6374913298?text=Hi%2C%20I%20want%20to%20enquire%20about%20the%20LaunchShop.%20Please%20help%20me%20get%20started."
        target="_blank" rel="noopener noreferrer"
        class="fab-btn fab-whatsapp"
        title="Chat on WhatsApp"
@@ -351,19 +351,20 @@
     <script type="text/javascript">
       "use strict";
       var whatsapp_popup = {{ $bs->whatsapp_popup }};
-      var whatsapp_number = "{{ $bs->whatsapp_number ?? '6374913298' }}"
+      var whatsapp_number = "6374913298";
+      var whatsapp_prefill = "Hi%2C%20I%20want%20to%20enquire%20about%20the%20LaunchShop.%20Please%20help%20me%20get%20started.";
       var whatsapp_header_title = "{{ $bs->whatsapp_header_title }}";
       var popup_message = `{!! $bs->whatsapp_popup_message !!}`;
       var whatsappImg = "{{ asset('assets/front/images/whatsapp.svg') }}";
       $(function() {
         $('#WAButton').floatingWhatsApp({
-          phone: whatsapp_number, //WhatsApp Business phone number
-          headerTitle: whatsapp_header_title, //Popup Title
-          popupMessage: popup_message, //Popup Message
-          showPopup: whatsapp_popup == 1 ? true : false, //Enables popup display
-          buttonImage: '<img src="' + whatsappImg + '" />', //Button Image
-          position: "left" //Position: left | right
-
+          phone: whatsapp_number,
+          headerTitle: whatsapp_header_title,
+          popupMessage: popup_message,
+          message: "Hi, I want to enquire about the LaunchShop. Please help me get started.",
+          showPopup: whatsapp_popup == 1 ? true : false,
+          buttonImage: '<img src="' + whatsappImg + '" />',
+          position: "left"
         });
       });
     </script>
