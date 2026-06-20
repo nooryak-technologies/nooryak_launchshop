@@ -16,7 +16,10 @@ class PaytmController extends Controller
 {
     public function __construct()
     {
-        $data = UserPaymentGeteway::where('keyword', 'paytm')->where('user_id', getUser()->id)->first();
+        $_userCtx = getUser(); if (!$_userCtx) { return; }
+        $user = $_userCtx; if (!$user) { return; }
+        $data = UserPaymentGeteway::where('keyword', 'paytm')->where('user_id', $_userCtx->id)->first();
+        if (!$data) { return; }
         $paydata = $data->convertAutoData();
         Config::set('services.paytm-wallet.env', $paydata['environment']);
         Config::set('services.paytm-wallet.merchant_id', $paydata['merchant']);
@@ -45,7 +48,7 @@ class PaytmController extends Controller
 
     public function handlePaytmRequest($_item_number, $amount, $callback_url)
     {
-        $data = UserPaymentGeteway::whereKeyword('paytm')->where('user_id', getUser()->id)->first();
+        $data = UserPaymentGeteway::whereKeyword('paytm')->where('user_id', $_userCtx->id)->first();
         $paydata = $data->convertAutoData();
 
         // Load all functions of encdec_paytm.php and config-paytm.php
@@ -368,7 +371,7 @@ class PaytmController extends Controller
 
 
         if ($transaction->isSuccessful()) {
-            $user = getUser();
+            $user = $_userCtx;
             $txnId = UserPermissionHelper::uniqidReal(8);
             $chargeId = $request->paymentId;
             $order = Common::saveOrder($requestData, $txnId, $chargeId,'Completed', 'online', $user->id);

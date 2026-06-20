@@ -167,7 +167,7 @@
 
   {{-- Static WhatsApp — shows when is_whatsapp plugin is OFF but number exists --}}
   @if (!empty($bs->whatsapp_number) && $bs->is_whatsapp != 1)
-    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $bs->whatsapp_number) }}"
+    <a href="https://wa.me/{{ $bs->whatsapp_number ?? '6374913298' }}"
        target="_blank" rel="noopener noreferrer"
        class="fab-btn fab-whatsapp"
        title="Chat on WhatsApp"
@@ -178,7 +178,7 @@
     </a>
   @endif
 
-  {{-- AI Chat Button — always visible, above WhatsApp --}}
+  <!-- {{-- AI Chat Button — always visible, above WhatsApp --}}
   <button type="button"
           class="fab-btn fab-ai-chat"
           title="AI Assistant"
@@ -191,7 +191,7 @@
       <circle cx="15" cy="10" r="1" fill="#fff" stroke="none"/>
     </svg>
     <span class="fab-ai-pulse"></span>
-  </button>
+  </button> -->
 
   <style>
     /* ── Shared FAB base ── */
@@ -351,7 +351,7 @@
     <script type="text/javascript">
       "use strict";
       var whatsapp_popup = {{ $bs->whatsapp_popup }};
-      var whatsapp_number = "{{ $bs->whatsapp_number }}"
+      var whatsapp_number = "{{ $bs->whatsapp_number ?? '6374913298' }}"
       var whatsapp_header_title = "{{ $bs->whatsapp_header_title }}";
       var popup_message = `{!! $bs->whatsapp_popup_message !!}`;
       var whatsappImg = "{{ asset('assets/front/images/whatsapp.svg') }}";

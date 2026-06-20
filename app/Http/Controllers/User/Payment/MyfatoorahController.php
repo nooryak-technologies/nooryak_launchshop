@@ -15,13 +15,16 @@ use Illuminate\Support\Facades\Config;
 class MyfatoorahController extends Controller
 {
     public $myfatoorah;
+
     public function __construct()
     {
+        $_userCtx = getUser(); if (!$_userCtx) { return; }
         $myfatoorah_user = Session::get('myfatoorah_user');
+        if (!$myfatoorah_user) { return; }
         $paymentMethod = UserPaymentGeteway::where([['keyword', 'myfatoorah'], ['user_id', $myfatoorah_user->id]])->first();
+        if (!$paymentMethod) { return; }
         $paydata = json_decode($paymentMethod->information, true);
-
-        $currency  = Common::getUserCurrentCurrency($myfatoorah_user->id);
+        $currency = Common::getUserCurrentCurrency($myfatoorah_user->id);
 
         Config::set('myfatorah.token', @$paydata['token']);
         Config::set('myfatorah.DisplayCurrencyIso', $currency->name);
@@ -36,8 +39,12 @@ class MyfatoorahController extends Controller
 
     public function paymentProcess(Request $request, $_amount, $_cancel_url)
     {
+        $user = getUser();
         $request->session()->put('myfatoorah_payment_type', 'product_purchase');
-        $paymentMethod = UserPaymentGeteway::where([['keyword', 'myfatoorah'], ['user_id', getUser()->id]])->first();
+        $paymentMethod = UserPaymentGeteway::where([['keyword', 'myfatoorah'], ['user_id', $user->id]])->first();
+        if (!$paymentMethod) {
+            return redirect()->route('myfatoorah.cancel');
+        }
         $paydata = json_decode($paymentMethod->information, true);
         if (is_null(@$paydata['token'])) {
             return redirect()->route('myfatoorah.cancel');
@@ -54,8 +61,8 @@ class MyfatoorahController extends Controller
             $_amount,
             [
                 'CustomerMobile' => @$paydata['sandbox_status'] == 1 ? '56562123544' : $phone,
-                'CustomerReference' => "$random_1",  //orderID
-                'UserDefinedField' => "$random_2", //clientID
+                'CustomerReference' => "$random_1",
+                'UserDefinedField' => "$random_2",
                 "InvoiceItems" => [
                     [
                         "ItemName" => "Product Purchase",
@@ -65,7 +72,7 @@ class MyfatoorahController extends Controller
                 ]
             ]
         );
-        
+
         if ($result && $result['IsSuccess'] == true) {
             return redirect($result['Data']['InvoiceURL']);
         } else {
@@ -92,13 +99,9 @@ class MyfatoorahController extends Controller
             Session::forget('user_request');
             Session::forget('user_amount');
             Session::forget('cart_' . $user->username);
-            return [
-                'status' => 'success'
-            ];
+            return ['status' => 'success'];
         } else {
-            return [
-                'status' => 'fail'
-            ];
+            return ['status' => 'fail'];
         }
     }
 }

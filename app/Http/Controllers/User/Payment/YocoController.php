@@ -15,7 +15,7 @@ class YocoController extends Controller
 {
     public function paymentProcess(Request $request, $_amount, $_success_url, $_cancel_url)
     {
-        $paymentMethod = UserPaymentGeteway::where([['keyword', 'yoco'], ['user_id', getUser()->id]])->first();
+        $paymentMethod = UserPaymentGeteway::where([['keyword', 'yoco'], ['user_id', $_userCtx->id]])->first();
         $paydata = json_decode($paymentMethod->information, true);
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
@@ -43,10 +43,10 @@ class YocoController extends Controller
     public function successPayment(Request $request)
     {
         $requestData = Session::get('user_request');
-        $user = getUser();
+        $user = $_userCtx;
         $id = Session::get('yoco_id');
         $s_key = Session::get('s_key');
-        $paymentMethod = UserPaymentGeteway::where([['keyword', 'yoco'], ['user_id', getUser()->id]])->first();
+        $paymentMethod = UserPaymentGeteway::where([['keyword', 'yoco'], ['user_id', $_userCtx->id]])->first();
         $paydata = $paymentMethod->convertAutoData();
         if ($id && $paydata['secret_key'] == $s_key) {
             $txnId = UserPermissionHelper::uniqidReal(8);

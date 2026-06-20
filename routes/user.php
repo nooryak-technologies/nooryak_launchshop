@@ -534,7 +534,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'userstatus', 'Demo',
             Route::get('/{id}/images', 'User\ItemController@images')->name('user.item.images');
         });
 
-        Route::post('/orders/mail', 'Admin\ItemOrderController@mail')->name('user.orders.mail');
+        Route::post('/orders/mail', 'User\ItemOrderController@mail')->name('user.orders.mail');
 
         // Product Order
         Route::prefix('orders')->group(function () {

@@ -16,7 +16,10 @@ class RazorpayController extends Controller
 {
     public function __construct()
     {
-        $data = UserPaymentGeteway::where('keyword', 'razorpay')->where('user_id', getUser()->id)->first();
+        $_userCtx = getUser(); if (!$_userCtx) { return; }
+        $user = $_userCtx; if (!$user) { return; }
+        $data = UserPaymentGeteway::where('keyword', 'razorpay')->where('user_id', $_userCtx->id)->first();
+        if (!$data) { return; }
         $paydata = $data->convertAutoData();
         $this->keyId = $paydata['key'];
         $this->keySecret = $paydata['secret'];
@@ -83,7 +86,7 @@ class RazorpayController extends Controller
     {
         $requestData = Session::get('user_request');
 
-        $user = getUser();
+        $user = $_userCtx;
 
         /** Get the payment ID before session clear **/
         $payment_id = Session::get('user_order_payment_id');

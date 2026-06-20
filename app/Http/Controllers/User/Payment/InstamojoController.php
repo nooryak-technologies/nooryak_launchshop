@@ -16,7 +16,7 @@ class InstamojoController extends Controller
 {
     public function paymentProcess(Request $request, $_amount, $_success_url, $_cancel_url, $_title)
     {
-        $data = UserPaymentGeteway::where('keyword', 'instamojo')->where('user_id', getUser()->id)->first();
+        $data = UserPaymentGeteway::where('keyword', 'instamojo')->where('user_id', $_userCtx->id)->first();
 
         $paydata = $data->convertAutoData();
         $cancel_url = $_cancel_url;
@@ -52,7 +52,7 @@ class InstamojoController extends Controller
     {
 
         $requestData = Session::get('user_request');
-        $user = getUser();
+        $user = $_userCtx;
         $cancel_url = Session::get('user_cancel_url');
         /** Get the payment ID before session clear **/
         $txnId = UserPermissionHelper::uniqidReal(8);

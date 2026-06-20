@@ -23,6 +23,9 @@ class AuthorizenetController extends Controller
     public function __construct()
     {
         $data = PaymentGateway::whereKeyword('authorize.net')->first();
+        if (!$data) {
+            return;
+        }
         $paydata = $data->convertAutoData();
         $this->gateway = Omnipay::create('AuthorizeNetApi_Api');
         $this->gateway->setAuthName($paydata['login_id']);

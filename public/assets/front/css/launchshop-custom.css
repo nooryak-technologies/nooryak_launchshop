@@ -633,7 +633,7 @@ h6 {
 }
 
 .feature-title {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 700;
     color: var(--ls-dark);
     margin-bottom: 10px;
@@ -692,6 +692,7 @@ h6 {
     flex-grow: 1;
     font-size: 15px;
     outline: none;
+    min-width: 0 !important;
 }
 
 .subdomain-input-group .domain-ext {
@@ -700,6 +701,7 @@ h6 {
     color: var(--ls-gray-dark);
     font-weight: 600;
     border-left: 1px solid var(--ls-border);
+    flex-shrink: 0 !important;
 }
 
 .subdomain-input-group button {
@@ -710,6 +712,7 @@ h6 {
     font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
+    flex-shrink: 0 !important;
 }
 
 .subdomain-input-group button:hover {
@@ -1933,7 +1936,7 @@ h6 {
     }
 
     .steps-line {
-        display: block !important;
+        display: none !important;
         position: absolute !important;
         top: 40px !important;
         bottom: 40px !important;
@@ -2193,31 +2196,46 @@ h6 {
     .hero-stats-banner {
         padding: 20px 10px !important;
         margin-top: 40px !important;
-        overflow: hidden !important;
+        overflow: visible !important;
     }
 
     .hero-stats-banner .hero-stats-row {
         display: flex !important;
-        flex-wrap: nowrap !important;
-        width: max-content !important;
-        gap: 20px !important;
+        flex-wrap: wrap !important;
+        width: 100% !important;
+        gap: 0 !important;
+        row-gap: 20px !important;
         margin: 0 !important;
-        animation: stats-marquee 8s linear infinite alternate !important;
-        /* Sped up from 16s to 8s */
+        animation: none !important;
         padding: 5px 0 !important;
-        will-change: transform;
     }
 
     .hero-stats-banner .hero-stat-col {
-        flex: 0 0 145px !important;
-        max-width: 145px !important;
-        padding: 0 !important;
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+        padding: 0 10px !important;
         margin: 0 !important;
     }
 
     .hero-stats-banner .hero-stats-row:hover,
     .hero-stats-banner .hero-stats-row:active {
-        animation-play-state: paused !important;
+        animation-play-state: initial !important;
+    }
+
+    /* Task 3: 2-column step items on mobile */
+    .steps-container {
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        gap: 24px 15px !important;
+        justify-content: center !important;
+        align-items: stretch !important;
+    }
+
+    .steps-container .step-item {
+        flex: 0 0 calc(50% - 8px) !important;
+        width: calc(50% - 8px) !important;
+        max-width: none !important;
+        margin-bottom: 0 !important;
     }
 
     /* Contact Page mobile text size overrides */
@@ -3254,9 +3272,19 @@ h6 {
     display: inline-block;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    padding: 6px;
+    padding: 20px 10px 10px 10px !important;
     border-radius: 50px;
     margin-bottom: 8px;
+}
+
+.pricing-toggle-area .nav-pills {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 8px !important;
 }
 
 .pricing-toggle-area .nav-pills .nav-link {

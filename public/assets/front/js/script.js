@@ -202,7 +202,9 @@
     // AOS Init
     AOS.init({
         easing: "ease-out",
-        duration: 600
+        duration: 600,
+        once: true,
+        offset: 80
     });
 
     // Nice Select

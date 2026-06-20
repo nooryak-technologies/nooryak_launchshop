@@ -357,7 +357,7 @@ h6 {
     border: 1px solid var(--ls-border);
     overflow: hidden;
     transition: all 0.3s;
-    margin-bottom: 30px;
+    margin-bottom: 0px;
     display: flex;
     flex-direction: column;
     height: calc(100% - 30px);
@@ -474,7 +474,7 @@ i[id$="EyeIcon"]:hover {
     display: flex;
     justify-content: space-between;
     position: relative;
-    margin-top: 60px;
+    margin-top: 20px;
 }
 
 .steps-line {
@@ -542,7 +542,7 @@ i[id$="EyeIcon"]:hover {
 }
 
 .step-title {
-    font-size: 15px;
+    font-size: 15px !important;
     font-weight: 700;
     color: var(--ls-dark);
     margin-bottom: 8px;
@@ -706,7 +706,7 @@ i[id$="EyeIcon"]:hover {
 }
 
 .feature-title {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 700;
     color: var(--ls-dark);
     margin-bottom: 10px;
@@ -765,6 +765,7 @@ i[id$="EyeIcon"]:hover {
     flex-grow: 1;
     font-size: 15px;
     outline: none;
+    min-width: 0 !important;
 }
 
 .subdomain-input-group .domain-ext {
@@ -773,6 +774,7 @@ i[id$="EyeIcon"]:hover {
     color: var(--ls-gray-dark);
     font-weight: 600;
     border-left: 1px solid var(--ls-border);
+    flex-shrink: 0 !important;
 }
 
 .subdomain-input-group button {
@@ -783,6 +785,7 @@ i[id$="EyeIcon"]:hover {
     font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
+    flex-shrink: 0 !important;
 }
 
 .subdomain-input-group button:hover {
@@ -2006,7 +2009,7 @@ i[id$="EyeIcon"]:hover {
     }
 
     .steps-line {
-        display: block !important;
+        display: none !important;
         position: absolute !important;
         top: 40px !important;
         bottom: 40px !important;
@@ -2224,13 +2227,13 @@ i[id$="EyeIcon"]:hover {
     .pricing-section,
     .features-grid,
     .testimonials-section {
-        padding: 60px 0 !important;
+        padding: 10px 0 !important;
     }
 
     .section-title {
         font-size: 32px !important;
         line-height: 1.3 !important;
-        margin-bottom: 35px !important;
+        margin-bottom: 0px !important;
     }
 
     .subdomain-inner {
@@ -2291,32 +2294,47 @@ i[id$="EyeIcon"]:hover {
 
     .hero-stats-banner {
         padding: 20px 10px !important;
-        margin-top: 40px !important;
-        overflow: hidden !important;
+        margin-top: 3px !important;
+        overflow: visible !important;
     }
 
     .hero-stats-banner .hero-stats-row {
         display: flex !important;
-        flex-wrap: nowrap !important;
-        width: max-content !important;
-        gap: 20px !important;
+        flex-wrap: wrap !important;
+        width: 100% !important;
+        gap: 0 !important;
+        row-gap: 20px !important;
         margin: 0 !important;
-        animation: stats-marquee 8s linear infinite alternate !important;
-        /* Sped up from 16s to 8s */
+        animation: none !important;
         padding: 5px 0 !important;
-        will-change: transform;
     }
 
     .hero-stats-banner .hero-stat-col {
-        flex: 0 0 145px !important;
-        max-width: 145px !important;
-        padding: 0 !important;
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+        padding: 0 10px !important;
         margin: 0 !important;
     }
 
     .hero-stats-banner .hero-stats-row:hover,
     .hero-stats-banner .hero-stats-row:active {
-        animation-play-state: paused !important;
+        animation-play-state: initial !important;
+    }
+
+    /* Task 3: 2-column step items on mobile */
+    .steps-container {
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        gap: 24px 15px !important;
+        justify-content: center !important;
+        align-items: stretch !important;
+    }
+
+    .steps-container .step-item {
+        flex: 0 0 calc(50% - 8px) !important;
+        width: calc(50% - 8px) !important;
+        max-width: none !important;
+        margin-bottom: 0 !important;
     }
 
     /* Contact Page mobile text size overrides */
@@ -2490,12 +2508,12 @@ i[id$="EyeIcon"]:hover {
 
 /* 4. Section Overflow Fixes for Mobile View Right-Side Gap */
 .hero-wrapper,
-.templates-section,
+/* .templates-section, */
 .how-it-works,
-.pricing-section,
-.features-grid,
+/* .pricing-section, */
+/* .features-grid, */
 .subdomain-banner,
-.testimonials-section,
+/* .testimonials-section, */
 .brands-banner,
 .bottom-cta,
 .footer-area {
@@ -3071,7 +3089,7 @@ i[id$="EyeIcon"]:hover {
     font-size: 16px;
     line-height: 1.6;
     color: #4a5568;
-    margin-bottom: 30px;
+    margin-bottom: 0px;
     max-width: 480px;
 }
 
@@ -3353,9 +3371,19 @@ i[id$="EyeIcon"]:hover {
     display: inline-block;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    padding: 6px;
+    padding: 20px 10px 10px 10px !important;
     border-radius: 50px;
     margin-bottom: 8px;
+}
+
+.pricing-toggle-area .nav-pills {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 8px !important;
 }
 
 .pricing-toggle-area .nav-pills .nav-link {
@@ -3390,11 +3418,6 @@ i[id$="EyeIcon"]:hover {
     box-shadow: 0 2px 4px rgba(255, 90, 44, 0.3);
     pointer-events: none;
     z-index: 10;
-}
-
-/* Give toggle container extra top padding so badge doesn't clip over sibling tab */
-.pricing-toggle-area .toggle-container {
-    padding-top: 14px !important;
 }
 
 .toggle-subtext {
@@ -3919,7 +3942,7 @@ i[id$="EyeIcon"]:hover {
 
 /* Feature Comparison Table */
 .compare-features-section {
-    padding: 20px 0;
+    padding: 0px 0;
 }
 
 .compare-table {
@@ -4105,7 +4128,7 @@ i[id$="EyeIcon"]:hover {
     }
 
     .pricing-dashboard-mockup-wrapper {
-        margin-top: 40px;
+        margin-top: 0px;
     }
 
     .pricing-highlights-row {
@@ -4186,7 +4209,7 @@ i[id$="EyeIcon"]:hover {
     }
 
     .badge-best-value {
-        top: -12px;
+        top: -22px;
         font-size: 7px;
     }
 
@@ -5148,7 +5171,7 @@ i[id$="EyeIcon"]:hover {
 }
 
 .pricing-toggle-area {
-    padding-top: 20px;
+    padding-top: 0px;
 }
 
 /* Pricing plan badge with gradient */
@@ -8019,7 +8042,7 @@ i[id$="EyeIcon"]:hover {
     }
 
     .pricing-section {
-        padding: 25px 0 !important;
+        padding: 5px 0 !important;
     }
 
     .features-grid {
@@ -8104,8 +8127,8 @@ i[id$="EyeIcon"]:hover {
     /* Only apply grid to the features cards row, NOT the section title row */
     .features-grid .row:last-child {
         display: grid !important;
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 12px !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 8px !important;
         margin: 0 !important;
     }
 
@@ -8136,23 +8159,23 @@ i[id$="EyeIcon"]:hover {
     }
 
     .features-grid .feature-box {
-        padding: 15px 10px !important;
+        padding: 10px 5px !important;
         margin-bottom: 0 !important;
     }
 
     .features-grid .feature-icon {
-        width: 45px !important;
-        height: 45px !important;
-        font-size: 20px !important;
-        margin-bottom: 10px !important;
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 16px !important;
+        margin-bottom: 8px !important;
     }
 
     .features-grid .feature-title {
-        font-size: 13px !important;
+        font-size: 11px !important;
     }
 
     .features-grid .feature-desc {
-        font-size: 11px !important;
+        display: none !important;
     }
 }
 

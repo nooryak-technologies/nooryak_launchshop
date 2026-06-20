@@ -18,7 +18,7 @@ class ToyyibpayController extends Controller
      */
     public function paymentProcess(Request $request, $_amount, $_success_url, $_cancel_url)
     {
-        $paymentMethod = UserPaymentGeteway::where([['keyword', 'toyyibpay'], ['user_id', getUser()->id]])->first();
+        $paymentMethod = UserPaymentGeteway::where([['keyword', 'toyyibpay'], ['user_id', $_userCtx->id]])->first();
         $paydata = json_decode($paymentMethod->information, true);
         $first_name = $request->billing_fname;
         $last_name = $request->billing_lname;
@@ -76,7 +76,7 @@ class ToyyibpayController extends Controller
     {
 
         $requestData = Session::get('user_request');
-        $user = getUser();
+        $user = $_userCtx;
         $ref = session()->get('toyyibpay_ref_id');
         if ($request['status_id'] == 1 && $request['order_id'] == $ref) {
             $txnId = UserPermissionHelper::uniqidReal(8);

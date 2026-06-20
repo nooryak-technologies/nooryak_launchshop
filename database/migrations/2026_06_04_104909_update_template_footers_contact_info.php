@@ -23,11 +23,13 @@ return new class extends Migration
             ->pluck('id')
             ->toArray();
 
-        DB::table('user_contacts')->whereIn('user_id', $userIds)->update([
-            'contact_numbers' => '6374913298',
-            'contact_mails' => 'nooryaktechnologies@gmail.com',
-            'contact_addresses' => 'Triplicane, Chennai, IND'
-        ]);
+        if (Schema::hasTable('user_contacts')) {
+            DB::table('user_contacts')->whereIn('user_id', $userIds)->update([
+                'contact_numbers' => '6374913298',
+                'contact_mails' => 'nooryaktechnologies@gmail.com',
+                'contact_addresses' => 'Triplicane, Chennai, IND'
+            ]);
+        }
     }
 
     /**

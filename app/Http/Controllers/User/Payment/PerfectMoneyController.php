@@ -19,7 +19,7 @@ class PerfectMoneyController extends Controller
     public function paymentProcess(Request $request, $_amount, $_success_url, $_cancel_url, $currency, $title)
     {
         $amount = $_amount;
-        $paymentMethod = UserPaymentGeteway::where([['keyword', 'perfect_money'], ['user_id', getUser()->id]])->first();
+        $paymentMethod = UserPaymentGeteway::where([['keyword', 'perfect_money'], ['user_id', $_userCtx->id]])->first();
         $paydata = json_decode($paymentMethod->information, true);
 
         Session::put('user_request', $request->all());
@@ -53,12 +53,12 @@ class PerfectMoneyController extends Controller
     {
 
         $requestData = Session::get('user_request');
-        $user = getUser();
+        $user = $_userCtx;
         $amo = $request['PAYMENT_AMOUNT'];
         $track = $request['PAYMENT_ID'];
         $id = Session::get('payment_id');
         $final_amount = Session::get('amount');
-        $paymentMethod = UserPaymentGeteway::where([['keyword', 'perfect_money'], ['user_id', getUser()->id]])->first();
+        $paymentMethod = UserPaymentGeteway::where([['keyword', 'perfect_money'], ['user_id', $_userCtx->id]])->first();
         $perfectMoneyInfo = json_decode($paymentMethod->information, true);
 
         if ($request->PAYEE_ACCOUNT == $perfectMoneyInfo['perfect_money_wallet_id']  && $track == $id && $amo == round($final_amount, 2)) {

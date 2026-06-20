@@ -16,8 +16,10 @@ class StripeController extends Controller
 {
     public function __construct()
     {
-        //Set Spripe Keys
-        $stripe = UserPaymentGeteway::where([['keyword', 'stripe'], ['user_id', getUser()->id]])->first();
+        $_userCtx = getUser(); if (!$_userCtx) { return; }
+        //Set Stripe Keys
+        $stripe = UserPaymentGeteway::where([['keyword', 'stripe'], ['user_id', $_userCtx->id]])->first();
+        if (!$stripe) { return; }
         $stripeConf = json_decode($stripe->information, true);
         Config::set('services.stripe.key', $stripeConf["key"]);
         Config::set('services.stripe.secret', $stripeConf["secret"]);

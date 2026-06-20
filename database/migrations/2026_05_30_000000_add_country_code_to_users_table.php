@@ -14,7 +14,7 @@ class AddCountryCodeToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('country_code', 10)->nullable()->after('phone');
+            $table->string('country_code', 10)->nullable()->after('number');
         });
     }
 

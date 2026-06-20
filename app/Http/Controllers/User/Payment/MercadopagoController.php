@@ -18,7 +18,10 @@ class MercadopagoController extends Controller
 
     public function __construct()
     {
-        $data = UserPaymentGeteway::where('keyword', 'mercadopago')->where('user_id',  getUser()->id)->first();
+        $_userCtx = getUser(); if (!$_userCtx) { return; }
+        $user = $_userCtx; if (!$user) { return; }
+        $data = UserPaymentGeteway::where('keyword', 'mercadopago')->where('user_id',  $_userCtx->id)->first();
+        if (!$data) { return; }
         $paydata = $data->convertAutoData();
         $this->access_token = $paydata['token'];
         $this->sandbox = $paydata['sandbox_check'];

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\UserFront;
 
-require_once __DIR__ . '/../../../../vendor/Transliterator/Transliterator.php';
+// require_once __DIR__ . '/../../../../vendor/Transliterator/Transliterator.php';
 
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\BasicMailer;

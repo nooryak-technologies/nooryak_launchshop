@@ -29,7 +29,10 @@ class PaypalController extends Controller
 
     public function __construct()
     {
-        $data = UserPaymentGeteway::where('keyword', 'paypal')->where('user_id', getUser()->id)->first();
+        $_userCtx = getUser(); if (!$_userCtx) { return; }
+        $user = $_userCtx;
+        $data = UserPaymentGeteway::where('keyword', 'paypal')->where('user_id', $_userCtx->id)->first();
+        if (!$data) { return; }
         $paydata = $data->convertAutoData();
         $paypal_conf = Config::get('paypal');
         $paypal_conf['client_id'] = $paydata['client_id'];
@@ -105,7 +108,7 @@ class PaypalController extends Controller
 
         $requestData = Session::get('user_request');
         $amount = Session::get('user_amount');
-        $user = getUser();
+        $user = $_userCtx;
         $be = BasicSetting::where('user_id', $user->id)->firstorFail();
         /** Get the payment ID before session clear **/
         $payment_id = Session::get('user_paypal_payment_id');

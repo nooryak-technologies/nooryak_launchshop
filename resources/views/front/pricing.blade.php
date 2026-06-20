@@ -43,7 +43,7 @@
 
       <!-- Hero Header Section -->
       <div class="row align-items-center mb-80 pricing-hero-row">
-        <div class="col-lg-6 mb-5 mb-lg-0">
+        <div class="col-lg-6  mb-lg-0">
           <div class="pricing-hero-content" data-aos="fade-right">
             <span class="pricing-plan-badge">{{ __('PRICING PLANS') }}</span>
             <h1 class="pricing-hero-title">
@@ -60,95 +60,7 @@
           </div>
         </div>
         
-        <div class="col-lg-6">
-          <div class="pricing-dashboard-mockup-wrapper" data-aos="fade-left">
-            <!-- Dotted Background Grid glow -->
-            <div class="mockup-bg-glow"></div>
-            
-            <!-- Live CSS Dashboard Card Mockup -->
-            <div class="pricing-dashboard-mockup">
-              <!-- Left Sidebar -->
-              <div class="mockup-sidebar">
-                <div class="mockup-sidebar-header">
-                  <i class="fas fa-shopping-bag"></i>
-                </div>
-                <ul class="mockup-sidebar-menu">
-                  <li class="active"><i class="fas fa-th-large"></i> <span>Overview</span></li>
-                  <li><i class="fas fa-shopping-cart"></i> <span>Orders</span></li>
-                  <li><i class="fas fa-box"></i> <span>Products</span></li>
-                  <li><i class="fas fa-users"></i> <span>Customers</span></li>
-                  <li><i class="fas fa-chart-bar"></i> <span>Analytics</span></li>
-                  <li><i class="fas fa-bullhorn"></i> <span>Marketing</span></li>
-                  <li><i class="fas fa-cog"></i> <span>Settings</span></li>
-                </ul>
-              </div>
-              
-              <!-- Main Content Area -->
-              <div class="mockup-main">
-                <!-- Stat widgets row -->
-                <div class="mockup-stats-row">
-                  <div class="stat-card">
-                    <span class="stat-label">Total Sales</span>
-                    <span class="stat-value">₹1,24,560</span>
-                    <span class="stat-growth success"><i class="fas fa-arrow-up"></i> +24.8%</span>
-                  </div>
-                  <div class="stat-card">
-                    <span class="stat-label">Orders</span>
-                    <span class="stat-value">2,345</span>
-                    <span class="stat-growth success"><i class="fas fa-arrow-up"></i> +7.2%</span>
-                  </div>
-                  <div class="stat-card">
-                    <span class="stat-label">Visitors</span>
-                    <span class="stat-value">12,845</span>
-                    <span class="stat-growth success"><i class="fas fa-arrow-up"></i> +12.4%</span>
-                  </div>
-                </div>
-                
-                <!-- Chart widgets box -->
-                <div class="mockup-chart-card">
-                  <div class="chart-header">
-                    <span class="chart-title">Sales Overview</span>
-                    <span class="chart-filter">This Month <i class="fas fa-chevron-down"></i></span>
-                  </div>
-                  <div class="chart-body">
-                    <svg viewBox="0 0 400 120" class="chart-svg">
-                      <!-- Grid lines -->
-                      <line x1="0" y1="20" x2="400" y2="20" stroke="#f1f5f9" stroke-dasharray="4" />
-                      <line x1="0" y1="50" x2="400" y2="50" stroke="#f1f5f9" stroke-dasharray="4" />
-                      <line x1="0" y1="80" x2="400" y2="80" stroke="#f1f5f9" stroke-dasharray="4" />
-                      <line x1="0" y1="110" x2="400" y2="110" stroke="#e2e8f0" />
-                      <!-- Orange wavy trend line -->
-                      <path d="M 0 100 Q 50 60 100 80 T 200 40 T 300 90 T 400 30" fill="none" stroke="#ff5a2c" stroke-width="3" stroke-linecap="round" />
-                      <!-- Area gradient under trend line -->
-                      <path d="M 0 100 Q 50 60 100 80 T 200 40 T 300 90 T 400 30 L 400 110 L 0 110 Z" fill="url(#pricing-chart-grad)" opacity="0.1" />
-                      <defs>
-                        <linearGradient id="pricing-chart-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stop-color="#ff5a2c" />
-                          <stop offset="100%" stop-color="#ffffff" />
-                        </linearGradient>
-                      </defs>
-                    </svg>
-                    <div class="chart-months">
-                      <span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Store Growth floating widget -->
-              <div class="mockup-floating-growth">
-                <div class="growth-icon-circle">
-                  <i class="fas fa-chart-line"></i>
-                </div>
-                <div class="growth-info">
-                  <span class="growth-title">Store Growth</span>
-                  <span class="growth-pct">+42%</span>
-                  <span class="growth-sub">vs last month</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      
       </div>
 
       <!-- Toggle Tabs Section -->
@@ -492,7 +404,7 @@
             {{ __('Looking for a specific store style?') }}
           </p>
           <a href="{{ route('front.templates.view') }}" style="display:inline-flex; align-items:center; gap:8px; background:#ff5a2c; color:#fff; font-size:16px; font-weight:700; padding:12px 28px; border-radius:10px; text-decoration:none; transition:all 0.2s ease; box-shadow:0 4px 14px rgba(255,90,44,0.25);" onmouseover="this.style.background='#e04d24';this.style.boxShadow='0 6px 20px rgba(255,90,44,0.35)';" onmouseout="this.style.background='#ff5a2c';this.style.boxShadow='0 4px 14px rgba(255,90,44,0.25)';">
-            <i class="fas fa-palette"></i> {{ __('Browse Themes to Explore Store Designs') }} <i class="fas fa-arrow-right"></i>
+            <i class="fas fa-palette"></i> {{ __('Explore Store Themes') }} <i class="fas fa-arrow-right"></i>
           </a>
         </div>
       </div>
@@ -700,7 +612,7 @@
 
       @if (count($faqs) > 0)
         <!-- FAQ Section collapse grid -->
-        <div class="pricing-faq-section mt-100" data-aos="fade-up">
+        <div class="pricing-faq-section " data-aos="fade-up">
           <h2 class="section-title text-center mb-50">Frequently Asked Questions</h2>
           
           <div class="row">
@@ -752,9 +664,9 @@
       @endif
 
       <!-- Bottom final CTA conversion card -->
-      <div class="pricing-footer-cta-card mt-100" data-aos="fade-up">
+      <div class="pricing-footer-cta-card " data-aos="fade-up">
         <div class="row align-items-center">
-          <div class="col-lg-7 d-flex align-items-center mb-4 mb-lg-0">
+          <div class="col-lg-7 d-flex align-items-center  mb-lg-0">
             <div class="cta-store-icon me-4 d-none d-sm-block">
               <div class="roof-span"></div>
               <div class="window-span"></div>

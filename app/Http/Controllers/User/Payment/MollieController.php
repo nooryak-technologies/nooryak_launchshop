@@ -18,7 +18,10 @@ class MollieController extends Controller
 {
     public function __construct()
     {
-        $data = UserPaymentGeteway::where('keyword', 'mollie')->where('user_id', getUser()->id)->first();
+        $_userCtx = getUser(); if (!$_userCtx) { return; }
+        $user = $_userCtx; if (!$user) { return; }
+        $data = UserPaymentGeteway::where('keyword', 'mollie')->where('user_id', $_userCtx->id)->first();
+        if (!$data) { return; }
         $paydata = $data->convertAutoData();
         Config::set('mollie.key', $paydata['key']);
     }

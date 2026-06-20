@@ -21,7 +21,7 @@ class XenditController extends Controller
      */
     public function paymentProcess(Request $request, $_amount, $_success_url, $_cancel_url, $currency)
     {
-        $paymentMethod = UserPaymentGeteway::where([['keyword', 'xendit'], ['user_id', getUser()->id]])->first();
+        $paymentMethod = UserPaymentGeteway::where([['keyword', 'xendit'], ['user_id', $_userCtx->id]])->first();
         $paydata = json_decode($paymentMethod->information, true);
 
         try {
@@ -53,7 +53,7 @@ class XenditController extends Controller
     public function successPayment(Request $request)
     {
         $requestData = Session::get('user_request');
-        $user = getUser();
+        $user = $_userCtx;
         $xendit_id = Session::get('xendit_id');
         $secret_key = Session::get('secret_key');
         $paymentMethod = PaymentGateway::where('keyword', 'xendit')->first();

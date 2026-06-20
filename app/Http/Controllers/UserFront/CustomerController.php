@@ -31,7 +31,13 @@ class CustomerController extends Controller
     public function __construct()
     {
         $user = getUser();
+        if (!$user) {
+            return; // skip in CLI / non-HTTP context (e.g. artisan route:list)
+        }
         $basic_settings = BasicSetting::where('user_id', $user->id)->first();
+        if (!$basic_settings) {
+            return;
+        }
         Config::set('services.google.client_id', $basic_settings->google_client_id);
         Config::set('services.google.client_secret', $basic_settings->google_client_secret);
         Config::set('services.google.redirect', route('customer.google.callback', $user->username));

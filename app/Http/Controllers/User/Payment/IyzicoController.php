@@ -13,7 +13,7 @@ class IyzicoController extends Controller
 {
     public function paymentProcess(Request $request, $_amount, $_success_url, $_cancel_url)
     {
-        $paymentMethod = UserPaymentGeteway::where([['keyword', 'iyzico'], ['user_id', getUser()->id]])->first();
+        $paymentMethod = UserPaymentGeteway::where([['keyword', 'iyzico'], ['user_id', $_userCtx->id]])->first();
         $paydata = json_decode($paymentMethod->information, true);
 
         $first_name = $request['billing_fname'];
@@ -116,7 +116,7 @@ class IyzicoController extends Controller
     public function successPayment(Request $request)
     {
         $requestData = Session::get('user_request');
-        $user = getUser();
+        $user = $_userCtx;
 
         $txnId = UserPermissionHelper::uniqidReal(8);
         $chargeId = $request->paymentId;

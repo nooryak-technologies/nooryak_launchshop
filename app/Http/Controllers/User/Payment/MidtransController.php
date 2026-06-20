@@ -16,7 +16,7 @@ class MidtransController extends Controller
 {
     public function paymentProcess(Request $request, $_amount, $title, $_success_url, $_cancel_url)
     {
-        $paymentMethod = UserPaymentGeteway::where([['keyword', 'midtrans'], ['user_id', getUser()->id]])->first();
+        $paymentMethod = UserPaymentGeteway::where([['keyword', 'midtrans'], ['user_id', $_userCtx->id]])->first();
         $paydata = json_decode($paymentMethod->information, true);
 
         $name = $request->billing_fname . ' ' . $request->billing_lname;
@@ -66,7 +66,7 @@ class MidtransController extends Controller
     public function successPayment(Request $request)
     {
         $requestData = Session::get('user_request');
-        $user = getUser();
+        $user = $_userCtx;
         $token = Session::get('token');
         if ($request->status_code == 200 && $token == $request->order_id) {
             $txnId = UserPermissionHelper::uniqidReal(8);

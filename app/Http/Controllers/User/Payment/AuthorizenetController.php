@@ -16,7 +16,10 @@ class AuthorizenetController extends Controller
 
     public function __construct()
     {
-        $data = UserPaymentGeteway::whereKeyword('authorize.net')->where('user_id', getUser()->id)->first();
+        $_userCtx = getUser(); if (!$_userCtx) { return; }
+        $user = $_userCtx; if (!$user) { return; }
+        $data = UserPaymentGeteway::whereKeyword('authorize.net')->where('user_id', $_userCtx->id)->first();
+        if (!$data) { return; }
         $paydata = $data->convertAutoData();
         $this->gateway = Omnipay::create('AuthorizeNetApi_Api');
         $this->gateway->setAuthName($paydata['login_id']);
@@ -28,7 +31,7 @@ class AuthorizenetController extends Controller
 
     public function paymentProcess(Request $request, $_amount, $be)
     {
-        $user = getUser();
+        $user = $_userCtx;
         if ($request->opaqueDataDescriptor && $request->opaqueDataValue) {
             Session::put('user_request', $request->all());
             // Generate a unique merchant site transaction ID.
