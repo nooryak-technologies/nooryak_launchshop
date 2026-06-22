@@ -313,6 +313,9 @@
   {{-- push notification js --}}
   <script src="{{ asset('assets/front/js/push-notification.js') }}"></script>
 
+  <!-- LaunchShop Slider Engine -->
+  <script src="{{ asset('assets/front/js/ls-slider.js') }}"></script>
+
   @yield('scripts')
 
   @yield('vuescripts')

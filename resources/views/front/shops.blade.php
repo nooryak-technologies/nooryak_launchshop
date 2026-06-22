@@ -117,7 +117,7 @@
             <i class="fas fa-store"></i>
           </div>
           <div>
-            <div class="shops-stat-value">2,500+</div>
+            <div class="shops-stat-value" data-count="2500" data-suffix="+">2,500+</div>
             <div class="shops-stat-label">{{ __('Live Stores') }}</div>
           </div>
         </div>
@@ -128,7 +128,7 @@
             <i class="fas fa-users"></i>
           </div>
           <div>
-            <div class="shops-stat-value">8,000+</div>
+            <div class="shops-stat-value" data-count="8000" data-suffix="+">8,000+</div>
             <div class="shops-stat-label">{{ __('Merchants Onboarded') }}</div>
           </div>
         </div>
@@ -139,7 +139,7 @@
             <i class="fas fa-th-large"></i>
           </div>
           <div>
-            <div class="shops-stat-value">50+</div>
+            <div class="shops-stat-value" data-count="50" data-suffix="+">50+</div>
             <div class="shops-stat-label">{{ __('Theme Categories') }}</div>
           </div>
         </div>
@@ -150,7 +150,7 @@
             <i class="fas fa-star"></i>
           </div>
           <div>
-            <div class="shops-stat-value">98%</div>
+            <div class="shops-stat-value" data-count="98" data-suffix="%">98%</div>
             <div class="shops-stat-label">{{ __('Merchant Satisfaction') }}</div>
           </div>
         </div>
@@ -313,7 +313,7 @@
       </div>
 
       <!-- Pagination -->
-      <div class="pagination justify-content-center mt-4">
+      <div class="pagination justify-content-center ">
         {{ $users->appends([
           'shop_name' => request()->input('shop_name'),
           'category' => request()->input('category'),
@@ -334,67 +334,80 @@
           <h2 class="shops-section-title">{{ __('Featured Merchants') }}</h2>
           <p class="shops-section-desc">{{ __('Real stories from real entrepreneurs building successful brands.') }}</p>
         </div>
-        <!-- <div class="col-md-4 text-md-end mb-3 mb-md-0">
-          <a href="{{ route('front.contact') }}" class="btn-merchant-stories">
-            {{ __('View All Stories') }} <i class="fas fa-arrow-right"></i>
-          </a>
-        </div> -->
       </div>
-      
-      <div class="row">
-        <!-- Profile 1 -->
-        <div class="col-lg-3 col-md-6 mb-30">
-          <div class="merchant-profile-card" data-aos="fade-up" data-aos-delay="50">
-            <div class="merchant-avatar">
-              <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ asset('assets/front/img/testimonials/aecbe1c13cb47add3d283d46f1418fdb50c78a09.png') }}" alt="Nooryak Khan">
-            </div>
-            <div class="merchant-info">
-              <h4 class="merchant-name">Nooryak Khan</h4>
-              <span class="merchant-role">Founder, FreshMart</span>
-              <p class="merchant-quote">"Scaled from 0 to 10K+ orders in 3 months."</p>
-            </div>
-          </div>
-        </div>
-        <!-- Profile 2 -->
-        <div class="col-lg-3 col-md-6 mb-30">
-          <div class="merchant-profile-card" data-aos="fade-up" data-aos-delay="100">
-            <div class="merchant-avatar">
-              <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ asset('assets/front/img/testimonials/b9d4f3318e122b00074861c93e83b3bab652fb14.png') }}" alt="Priya Mehta">
-            </div>
-            <div class="merchant-info">
-              <h4 class="merchant-name">Priya Mehta</h4>
-              <span class="merchant-role">Founder, Skinflow</span>
-              <p class="merchant-quote">"Turned passion into a profitable brand."</p>
+
+      <!-- Merchant Slider -->
+      <div class="ls-slider-wrapper" id="merchantSlider">
+        <div class="ls-slider-viewport">
+          <div class="ls-slider-track">
+
+          <!-- Slide 1 -->
+          <div class="ls-slide">
+            <div class="merchant-profile-card">
+              <div class="merchant-avatar">
+                <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ asset('assets/front/img/testimonials/aecbe1c13cb47add3d283d46f1418fdb50c78a09.png') }}" alt="Nooryak Khan">
+              </div>
+              <div class="merchant-info">
+                <h4 class="merchant-name">Nooryak Khan</h4>
+                <span class="merchant-role">Founder, FreshMart</span>
+                <p class="merchant-quote">"Scaled from 0 to 10K+ orders in 3 months."</p>
+              </div>
             </div>
           </div>
-        </div>
-        <!-- Profile 3 -->
-        <div class="col-lg-3 col-md-6 mb-30">
-          <div class="merchant-profile-card" data-aos="fade-up" data-aos-delay="150">
-            <div class="merchant-avatar">
-              <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ asset('assets/front/img/testimonials/13fd6b3eeaa68a3cea83870f79ed4bfa83cd9bf6.png') }}" alt="Ayaan Patel">
-            </div>
-            <div class="merchant-info">
-              <h4 class="merchant-name">Ayaan Patel</h4>
-              <span class="merchant-role">Founder, Electri</span>
-              <p class="merchant-quote">"Expanded to 5 cities with Launchshop.in."</p>
-            </div>
-          </div>
-        </div>
-        <!-- Profile 4 -->
-        <div class="col-lg-3 col-md-6 mb-30">
-          <div class="merchant-profile-card" data-aos="fade-up" data-aos-delay="200">
-            <div class="merchant-avatar">
-              <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ asset('assets/front/img/testimonials/854159a46208ff0e663b6a8f3178225f90230946.png') }}" alt="Sneha Reddy">
-            </div>
-            <div class="merchant-info">
-              <h4 class="merchant-name">Sneha Reddy</h4>
-              <span class="merchant-role">Founder, Urban Chic</span>
-              <p class="merchant-quote">"Built a fashion brand customers love."</p>
+
+          <!-- Slide 2 -->
+          <div class="ls-slide">
+            <div class="merchant-profile-card">
+              <div class="merchant-avatar">
+                <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ asset('assets/front/img/testimonials/b9d4f3318e122b00074861c93e83b3bab652fb14.png') }}" alt="Priya Mehta">
+              </div>
+              <div class="merchant-info">
+                <h4 class="merchant-name">Priya Mehta</h4>
+                <span class="merchant-role">Founder, Skinflow</span>
+                <p class="merchant-quote">"Turned passion into a profitable brand."</p>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+
+          <!-- Slide 3 -->
+          <div class="ls-slide">
+            <div class="merchant-profile-card">
+              <div class="merchant-avatar">
+                <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ asset('assets/front/img/testimonials/13fd6b3eeaa68a3cea83870f79ed4bfa83cd9bf6.png') }}" alt="Ayaan Patel">
+              </div>
+              <div class="merchant-info">
+                <h4 class="merchant-name">Ayaan Patel</h4>
+                <span class="merchant-role">Founder, Electri</span>
+                <p class="merchant-quote">"Expanded to 5 cities with Launchshop.in."</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 4 -->
+          <div class="ls-slide">
+            <div class="merchant-profile-card">
+              <div class="merchant-avatar">
+                <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ asset('assets/front/img/testimonials/854159a46208ff0e663b6a8f3178225f90230946.png') }}" alt="Sneha Reddy">
+              </div>
+              <div class="merchant-info">
+                <h4 class="merchant-name">Sneha Reddy</h4>
+                <span class="merchant-role">Founder, Urban Chic</span>
+                <p class="merchant-quote">"Built a fashion brand customers love."</p>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /.ls-slider-track -->
+        </div><!-- /.ls-slider-viewport -->
+
+        <!-- Arrows -->
+        <button class="ls-arrow ls-prev" aria-label="Previous" onclick="lsSlide('merchantSlider', -1)"><i class="fas fa-chevron-left"></i></button>
+        <button class="ls-arrow ls-next" aria-label="Next"     onclick="lsSlide('merchantSlider',  1)"><i class="fas fa-chevron-right"></i></button>
+
+        <!-- Dots -->
+        <div class="ls-dots" id="merchantSlider-dots"></div>
+      </div><!-- /#merchantSlider -->
+
     </div>
   </section>
   <!--====== End Featured Merchants Section ======-->
@@ -404,54 +417,87 @@
     <div class="container">
       <h2 class="shops-section-title">{{ __('Loved by Merchants') }}</h2>
       <p class="shops-section-desc">{{ __('Hear from store owners who are growing their business with Launchshop.in.') }}</p>
-      
-      <div class="row mt-5">
-        <!-- Testimonial 1 -->
-        <div class="col-lg-4 col-md-6 mb-30">
-          <div class="testimonial-modern-card" data-aos="fade-up" data-aos-delay="50">
-            <div class="testimonial-stars">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-            </div>
-            <p class="testimonial-quote-text">"Launchshop.in made it incredibly easy to launch my store. The themes are beautiful and the support is outstanding."</p>
-            <div class="testimonial-author">
-              <div>
-                <h4 class="testimonial-author-name">Nooryak Khan</h4>
-                <span class="testimonial-author-role">Founder, FreshMart</span>
+
+      <!-- Testimonial Slider -->
+      <div class="ls-slider-wrapper" id="testimonialSlider">
+        <div class="ls-slider-viewport">
+          <div class="ls-slider-track">
+
+          <!-- Slide 1 -->
+          <div class="ls-slide">
+            <div class="testimonial-modern-card">
+              <div class="testimonial-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              </div>
+              <p class="testimonial-quote-text">"Launchshop.in made it incredibly easy to launch my store. The themes are beautiful and the support is outstanding."</p>
+              <div class="testimonial-author">
+                <div>
+                  <h4 class="testimonial-author-name">Nooryak Khan</h4>
+                  <span class="testimonial-author-role">Founder, FreshMart</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <!-- Testimonial 2 -->
-        <div class="col-lg-4 col-md-6 mb-30">
-          <div class="testimonial-modern-card" data-aos="fade-up" data-aos-delay="100">
-            <div class="testimonial-stars">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-            </div>
-            <p class="testimonial-quote-text">"I love how customizable everything is. My store looks premium and my customers trust my brand."</p>
-            <div class="testimonial-author">
-              <div>
-                <h4 class="testimonial-author-name">Priya Mehta</h4>
-                <span class="testimonial-author-role">Founder, Skinflow</span>
+
+          <!-- Slide 2 -->
+          <div class="ls-slide">
+            <div class="testimonial-modern-card">
+              <div class="testimonial-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              </div>
+              <p class="testimonial-quote-text">"I love how customizable everything is. My store looks premium and my customers trust my brand."</p>
+              <div class="testimonial-author">
+                <div>
+                  <h4 class="testimonial-author-name">Priya Mehta</h4>
+                  <span class="testimonial-author-role">Founder, Skinflow</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <!-- Testimonial 3 -->
-        <div class="col-lg-4 col-md-6 mb-30">
-          <div class="testimonial-modern-card" data-aos="fade-up" data-aos-delay="150">
-            <div class="testimonial-stars">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-            </div>
-            <p class="testimonial-quote-text">"From setup to sales, Launchshop.in has been my growth partner. Highly recommended!"</p>
-            <div class="testimonial-author">
-              <div>
-                <h4 class="testimonial-author-name">Ayaan Patel</h4>
-                <span class="testimonial-author-role">Founder, Electri</span>
+
+          <!-- Slide 3 -->
+          <div class="ls-slide">
+            <div class="testimonial-modern-card">
+              <div class="testimonial-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              </div>
+              <p class="testimonial-quote-text">"From setup to sales, Launchshop.in has been my growth partner. Highly recommended!"</p>
+              <div class="testimonial-author">
+                <div>
+                  <h4 class="testimonial-author-name">Ayaan Patel</h4>
+                  <span class="testimonial-author-role">Founder, Electri</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+
+          <!-- Slide 4 -->
+          <div class="ls-slide">
+            <div class="testimonial-modern-card">
+              <div class="testimonial-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              </div>
+              <p class="testimonial-quote-text">"The analytics dashboard is a game changer. I know exactly where my sales are coming from every single day."</p>
+              <div class="testimonial-author">
+                <div>
+                  <h4 class="testimonial-author-name">Sneha Reddy</h4>
+                  <span class="testimonial-author-role">Founder, Urban Chic</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /.ls-slider-track -->
+        </div><!-- /.ls-slider-viewport -->
+
+        <!-- Arrows -->
+        <button class="ls-arrow ls-prev" aria-label="Previous" onclick="lsSlide('testimonialSlider', -1)"><i class="fas fa-chevron-left"></i></button>
+        <button class="ls-arrow ls-next" aria-label="Next"     onclick="lsSlide('testimonialSlider',  1)"><i class="fas fa-chevron-right"></i></button>
+
+        <!-- Dots -->
+        <div class="ls-dots" id="testimonialSlider-dots"></div>
+      </div><!-- /#testimonialSlider -->
+
     </div>
   </section>
   <!--====== End Testimonials Section ======-->
@@ -545,15 +591,299 @@
 <script>
   "use strict";
 
-  // JS helper to filter store cards by clicking horizontal category tabs
+  /* =========================================================
+     Count-Up Animation for Stats (shops page only)
+     ========================================================= */
+  function lsCountUp(el) {
+    if (el.dataset.counted) return;
+    el.dataset.counted = '1';
+    var target   = parseInt(el.getAttribute('data-count'), 10);
+    var suffix   = el.getAttribute('data-suffix') || '';
+    var duration = 1800;
+    var startTime = null;
+
+    function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
+
+    function step(ts) {
+      if (!startTime) startTime = ts;
+      var progress = Math.min((ts - startTime) / duration, 1);
+      var value    = Math.round(easeOutQuart(progress) * target);
+      el.textContent = (target >= 1000 ? value.toLocaleString('en-US') : value) + suffix;
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        el.textContent = (target >= 1000 ? target.toLocaleString('en-US') : target) + suffix;
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  function lsInitCounters() {
+    var counters = document.querySelectorAll('.shops-stat-value[data-count]');
+    if (!counters.length) return;
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) { lsCountUp(entry.target); obs.unobserve(entry.target); }
+        });
+      }, { threshold: 0.4 });
+      counters.forEach(function(el) { obs.observe(el); });
+    } else {
+      counters.forEach(function(el) { lsCountUp(el); });
+    }
+  }
+
+  /* =========================================================
+     Category Filter & AJAX helpers
+     ========================================================= */
   function filterCategory(slug) {
-      // Update hidden input
+    $('#searchCategoryInput').val(slug);
+    $('#categorySelect').val(slug);
+    $('.shops-category-tab').removeClass('active');
+    if (slug === '') {
+      $('.shops-category-tab').first().addClass('active');
+    } else {
+      $('.shops-category-tab').each(function() {
+        var oc = $(this).attr('onclick');
+        if (oc && oc.indexOf("'" + slug + "'") !== -1) { $(this).addClass('active'); }
+      });
+    }
+    $('#userSearchForm').submit();
+  }
+
+  function loadShopsAjax(url) {
+    $('#shops-grid-wrapper').css('opacity', '0.5');
+    $('#shops-grid-wrapper').load(url + ' #shops-grid-wrapper > *', function(response, status, xhr) {
+      $('#shops-grid-wrapper').css('opacity', '1');
+      if (status === 'error') {
+        console.error('AJAX Error:', xhr.status, xhr.statusText);
+      } else {
+        $('#shops-grid-wrapper img.lazyload').each(function() {
+          var s = $(this).attr('data-src');
+          if (s) { $(this).attr('src', s); }
+        });
+        history.pushState(null, '', url);
+        if (typeof AOS !== 'undefined') { (AOS.refreshHard || AOS.refresh).call(AOS); }
+      }
+    });
+  }
+
+  $(document).ready(function() {
+    // Init sliders (lsInit comes from ls-slider.js loaded in layout)
+    lsInit('merchantSlider');
+    lsInit('testimonialSlider');
+
+    // Count-up stats
+    lsInitCounters();
+
+    // Form submit → AJAX
+    $(document).on('submit', '#userSearchForm', function(e) {
+      e.preventDefault();
+      $('#searchCategoryInput').val($('#categorySelect').val() || $('#searchCategoryInput').val() || '');
+      loadShopsAjax($(this).attr('action') + '?' + $(this).serialize());
+    });
+
+    // Pagination → AJAX
+    $(document).on('click', '#shops-grid-wrapper .pagination a', function(e) {
+      e.preventDefault();
+      var url = $(this).attr('href');
+      if (url) { loadShopsAjax(url); }
+    });
+
+    // Live search — 500ms debounce
+    var searchTimeout = null;
+    $(document).on('keyup', '.shops-search-input', function() {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(function() { $('#userSearchForm').submit(); }, 500);
+    });
+  });
+</script>
+@endsection
+
+
+    if (!wrapper) return;
+    var viewport  = wrapper.querySelector('.ls-slider-viewport');
+    var track     = wrapper.querySelector('.ls-slider-track');
+    var slides    = wrapper.querySelectorAll('.ls-slide');
+    var dotsEl    = document.getElementById(id + '-dots');
+    var total     = slides.length;
+    var perView   = lsPerView(viewport || wrapper);
+    var current   = 0;
+    var autoMs    = opts.auto !== false ? (opts.autoMs || 4000) : 0;
+    var timer     = null;
+
+    // Build dots
+    dotsEl.innerHTML = '';
+    var totalPages = Math.ceil(total / perView);
+    for (var i = 0; i < totalPages; i++) {
+      var d = document.createElement('button');
+      d.className = 'ls-dot' + (i === 0 ? ' active' : '');
+      d.setAttribute('aria-label', 'Slide ' + (i + 1));
+      (function(idx){ d.addEventListener('click', function(){ lsGoTo(id, idx * lsState[id].perView); }); })(i);
+      dotsEl.appendChild(d);
+    }
+
+    lsState[id] = { track: track, slides: slides, dotsEl: dotsEl, total: total,
+                    perView: perView, current: current, timer: timer, autoMs: autoMs, viewport: viewport };
+    lsRender(id);
+    if (autoMs) lsStartAuto(id);
+
+    // Pause on hover / focus
+    wrapper.addEventListener('mouseenter', function(){ lsStopAuto(id); });
+    wrapper.addEventListener('mouseleave', function(){ if (lsState[id].autoMs) lsStartAuto(id); });
+
+    // Touch / swipe support (mobile)
+    var touchStartX = 0;
+    wrapper.addEventListener('touchstart', function(e){ touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+    wrapper.addEventListener('touchend',   function(e){
+      var diff = touchStartX - e.changedTouches[0].screenX;
+      if (Math.abs(diff) > 40) lsSlide(id, diff > 0 ? 1 : -1);
+    }, { passive: true });
+
+    // Recalc on resize
+    window.addEventListener('resize', function(){ lsResize(id); });
+  }
+
+  function lsPerView(el) {
+    var w = el ? (el.offsetWidth || window.innerWidth) : window.innerWidth;
+    if (w >= 992) return 3;
+    if (w >= 576) return 2;
+    return 1;
+  }
+
+  function lsRender(id) {
+    var s = lsState[id];
+    if (!s) return;
+    var pct    = (100 / s.perView);
+    var offset = -(s.current * pct);
+
+    for (var i = 0; i < s.slides.length; i++) {
+      s.slides[i].style.flex     = '0 0 ' + pct + '%';
+      s.slides[i].style.maxWidth = pct + '%';
+    }
+    s.track.style.transform = 'translateX(' + offset + '%)';
+
+    var dots       = s.dotsEl.querySelectorAll('.ls-dot');
+    var activePage = Math.floor(s.current / s.perView);
+    for (var j = 0; j < dots.length; j++) {
+      dots[j].classList.toggle('active', j === activePage);
+    }
+  }
+
+  function lsResize(id) {
+    var s = lsState[id];
+    if (!s) return;
+    var el     = s.viewport || document.getElementById(id);
+    var newPer = lsPerView(el);
+    if (newPer === s.perView) return;
+    s.perView  = newPer;
+
+    var totalPages = Math.ceil(s.total / newPer);
+    s.dotsEl.innerHTML = '';
+    for (var i = 0; i < totalPages; i++) {
+      var d = document.createElement('button');
+      d.className = 'ls-dot';
+      d.setAttribute('aria-label', 'Slide ' + (i + 1));
+      (function(idx){ d.addEventListener('click', function(){ lsGoTo(id, idx * lsState[id].perView); }); })(i);
+      s.dotsEl.appendChild(d);
+    }
+    var maxIdx = s.total - newPer;
+    if (s.current > maxIdx) s.current = maxIdx < 0 ? 0 : maxIdx;
+    lsRender(id);
+  }
+
+  function lsGoTo(id, idx) {
+    var s = lsState[id];
+    if (!s) return;
+    var maxIdx = s.total - s.perView;
+    if (maxIdx < 0) maxIdx = 0;
+    s.current = Math.max(0, Math.min(idx, maxIdx));
+    lsRender(id);
+  }
+
+  function lsSlide(id, dir) {
+    var s = lsState[id];
+    if (!s) return;
+    lsStopAuto(id);
+    var next   = s.current + dir * s.perView;
+    var maxIdx = s.total - s.perView;
+    if (maxIdx < 0) maxIdx = 0;
+    if (next > maxIdx) next = 0;
+    if (next < 0)     next = maxIdx;
+    s.current  = next;
+    lsRender(id);
+    if (s.autoMs) lsStartAuto(id);
+  }
+
+  function lsStartAuto(id) {
+    var s = lsState[id];
+    if (!s || !s.autoMs) return;
+    lsStopAuto(id);
+    s.timer = setInterval(function(){ lsSlide(id, 1); }, s.autoMs);
+  }
+
+  function lsStopAuto(id) {
+    var s = lsState[id];
+    if (s && s.timer) { clearInterval(s.timer); s.timer = null; }
+  }
+
+  /* =========================================================
+     Count-Up Animation for Stats
+     ========================================================= */
+  function lsCountUp(el) {
+    if (el.dataset.counted) return;
+    el.dataset.counted = '1';
+    var target  = parseInt(el.getAttribute('data-count'), 10);
+    var suffix  = el.getAttribute('data-suffix') || '';
+    var duration = 1800; // ms
+    var startTime = null;
+
+    function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
+
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      var elapsed  = timestamp - startTime;
+      var progress = Math.min(elapsed / duration, 1);
+      var value    = Math.round(easeOutQuart(progress) * target);
+
+      // Format with commas for large numbers
+      el.textContent = (target >= 1000 ? value.toLocaleString('en-US') : value) + suffix;
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        el.textContent = (target >= 1000 ? target.toLocaleString('en-US') : target) + suffix;
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  function lsInitCounters() {
+    var counters = document.querySelectorAll('.shops-stat-value[data-count]');
+    if (!counters.length) return;
+
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            lsCountUp(entry.target);
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.4 });
+      counters.forEach(function(el) { obs.observe(el); });
+    } else {
+      // Fallback for very old browsers — run immediately
+      counters.forEach(function(el) { lsCountUp(el); });
+    }
+  }
+
+  /* =========================================================
+     Category Filter & AJAX helpers
+     ========================================================= */
+  function filterCategory(slug) {
       $('#searchCategoryInput').val(slug);
-      
-      // Sync dropdown select
       $('#categorySelect').val(slug);
-      
-      // Update horizontal tabs active states
       $('.shops-category-tab').removeClass('active');
       if (slug === '') {
           $('.shops-category-tab').first().addClass('active');
@@ -565,68 +895,56 @@
               }
           });
       }
-      
-      // Submit form via AJAX
       $('#userSearchForm').submit();
   }
 
-  // Load content via AJAX
   function loadShopsAjax(url) {
-      // Fade out grid during loading
       $('#shops-grid-wrapper').css('opacity', '0.5');
-      
-      // Load target grid container content
       $('#shops-grid-wrapper').load(url + ' #shops-grid-wrapper > *', function(response, status, xhr) {
           $('#shops-grid-wrapper').css('opacity', '1');
           if (status === "error") {
               console.error("AJAX Error loading shops:", xhr.status, xhr.statusText);
           } else {
-              // Re-trigger lazyload images immediately
               $('#shops-grid-wrapper img.lazyload').each(function() {
                   var dataSrc = $(this).attr('data-src');
-                  if (dataSrc) {
-                      $(this).attr('src', dataSrc);
-                  }
+                  if (dataSrc) { $(this).attr('src', dataSrc); }
               });
-              // Update browser URL and state
               history.pushState(null, '', url);
-
-                if (typeof AOS !== 'undefined' && AOS.refreshHard) {
-                  AOS.refreshHard();
-                } else if (typeof AOS !== 'undefined' && AOS.refresh) {
-                  AOS.refresh();
-                }
+              if (typeof AOS !== 'undefined' && AOS.refreshHard) { AOS.refreshHard(); }
+              else if (typeof AOS !== 'undefined' && AOS.refresh)  { AOS.refresh(); }
           }
       });
   }
 
   $(document).ready(function() {
-      // Intercept form submit and use AJAX instead
+      // Init sliders
+      lsInit('merchantSlider');
+      lsInit('testimonialSlider');
+
+      // Init count-up counters
+      lsInitCounters();
+
+      // Intercept form submit → AJAX
       $(document).on('submit', '#userSearchForm', function(e) {
           e.preventDefault();
           $('#searchCategoryInput').val($('#categorySelect').val() || $('#searchCategoryInput').val() || '');
           var actionUrl = $(this).attr('action');
-          var formData = $(this).serialize();
-          var url = actionUrl + '?' + formData;
-          loadShopsAjax(url);
+          var formData  = $(this).serialize();
+          loadShopsAjax(actionUrl + '?' + formData);
       });
 
-      // Intercept pagination clicks and load via AJAX
+      // Intercept pagination clicks → AJAX
       $(document).on('click', '#shops-grid-wrapper .pagination a', function(e) {
           e.preventDefault();
           var url = $(this).attr('href');
-          if (url) {
-              loadShopsAjax(url);
-          }
+          if (url) { loadShopsAjax(url); }
       });
 
       // Live search with 500ms debounce
       var searchTimeout = null;
       $(document).on('keyup', '.shops-search-input', function() {
           clearTimeout(searchTimeout);
-          searchTimeout = setTimeout(function() {
-              $('#userSearchForm').submit();
-          }, 500);
+          searchTimeout = setTimeout(function() { $('#userSearchForm').submit(); }, 500);
       });
   });
 </script>

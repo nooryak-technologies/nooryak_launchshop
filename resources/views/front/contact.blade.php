@@ -126,6 +126,9 @@
   .contact-mobile-feature-card {
       display: none;
   }
+  .contact-split-row{
+        margin-top: 1.2rem;
+  }
 
   @media (max-width: 991.98px) {
       /* Text alignment */
@@ -145,6 +148,9 @@
           font-size: 14px !important;
       }
 
+        .contact-split-row{
+        margin-top: 0;
+  }
       /* Hide the complex CSS device collage — it causes horizontal overflow */
       .contact-device-collage-wrapper {
           display: none !important;
@@ -160,11 +166,12 @@
           /* background: linear-gradient(135deg, #0e1b3d 0%, #1a3060 80%, #ff5a2c 200%); */
           border-radius: 18px;
           padding: 28px 20px;
-          margin: 0 auto 28px;
+          margin: 0 auto 0px;
           max-width: 460px;
           text-align: center;
           position: relative;
           overflow: hidden;
+          padding-bottom: 0px;
       }
       .contact-mobile-feature-card::before {
           content: '';
@@ -276,7 +283,7 @@
   @media (max-width: 767.98px) {
       .modern-contact-page-wrapper {
           padding-top: 20px !important;
-          padding-bottom: 50px !important;
+          padding-bottom: 0px !important;
       }
   }
 </style>
@@ -297,8 +304,8 @@
       </nav> -->
 
       <!-- Hero Header Section -->
-      <div class="row align-items-center mb-80 contact-hero-row">
-        <div class="col-lg-6 mb-5 mb-lg-0">
+      <div class="row align-items-center   contact-hero-row" >
+        <div class="col-lg-6 mb-5 mb-lg-0" style="margin-bottom: 0rem !important;">
           <div class="contact-hero-content" data-aos="fade-right">
             <h1 class="contact-hero-title">
               Let's Talk About <br><span>Your Store Launch</span>
@@ -451,12 +458,12 @@
           </div>
         </div>
       </div>
-<br><br>
+<!-- <br><br> -->
       <!-- Split section: Form & Calendar Booking -->
-      <div class="row g-5 contact-split-row">
+      <div class="row g-5 contact-split-row" >
         
         <!-- Contact Message Form -->
-        <div class="col-lg-7">
+        <div class="col-lg-7" style="margin-top: 0px;">
           <div class="contact-form-card" data-aos="fade-right">
             <h3 class="form-title">Send Us a Message</h3>
             <p class="form-subtitle">Fill out the form and our team will get back to you shortly.</p>
@@ -565,22 +572,22 @@
         </div>
         
         <!-- Online Support Agent Card -->
-        <div class="col-lg-5">
+        <div class="col-lg-5" style="margin-top: 20px;">
           <div class="product-preview-card text-center" data-aos="fade-left" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.01); height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
             <div class="gif-wrapper mb-4" style="width: 100%; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid #f1f5f9;">
               <img src="{{ asset('assets/front/img/support-agent.png') }}" alt="Support Agent Online" style="width: 100%; height: auto; display: block; object-fit: cover;">
             </div>
             <h3 class="product-preview-title" style="font-size: 20px; font-weight: 800; color: #1e2335; margin-bottom: 8px;">Our Support Team is Online</h3>
             <p class="product-preview-subtitle" style="font-size: 13px; color: #64748b; line-height: 1.5; margin-bottom: 0;">Have any questions or facing technical issues? Message us or start a chat. Real support, real people.</p>
-            <a href="https://wa.me/{{ $bs->whatsapp_number }}?text=Hi,%20I%20have%20some%20questions%20about%20LaunchShop" target="_blank" class="btn-whatsapp-chat-page mt-4 d-inline-flex align-items-center justify-content-center gap-2">
+            <a href="https://wa.me/916374913298?text=Hi,%20I%20want%20to%20enquire%20about%20the%20LaunchShop.%20Please%20help%20me%20get%20started." target="_blank" class="btn-whatsapp-chat-page mt-4 d-inline-flex align-items-center justify-content-center gap-2">
               <i class="fab fa-whatsapp"></i> Chat With Us
             </a>
           </div>
         </div>
       </div>
-<br><br>
+<!-- <br><br> -->
       <!-- Trust Factors Highlights -->
-      <div class="contact-highlights-banner mt-80" data-aos="fade-up">
+      <div class="contact-highlights-banner " data-aos="fade-up">
         <div class="highlight-item">
           <div class="icon-box"><i class="fas fa-bolt"></i></div>
           <div class="text-box">

@@ -488,7 +488,8 @@ textarea {
 .header-area .main-navbar .navbar .navbar-brand {
     padding: 0;
 }
-.navbar-brand{
+
+.navbar-brand {
     width: 20%;
 }
 
@@ -1832,8 +1833,8 @@ html[dir="rtl"] .header-area .main-responsive-nav .main-responsive-menu.mean-con
     border-color: var(--color-primary);
 }
 
-.navbar-brand img{
-       max-width: 100% !important;
+.navbar-brand img {
+    max-width: 100% !important;
 }
 
 .choose-area .card .card-icon.primary::after {
@@ -3726,7 +3727,7 @@ Terms & Conditions CSS
 	Pagination CSS
 ----------------------------------------- */
 .pagination {
-    padding-top: 20px;
+    padding-top: 0px;
 }
 
 .pagination .page-numbers {

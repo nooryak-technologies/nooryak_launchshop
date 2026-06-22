@@ -5291,7 +5291,7 @@ i[id$="EyeIcon"]:hover {
     font-size: 16px;
     color: #64748b;
     line-height: 1.6;
-    margin-bottom: 32px;
+    margin-bottom: 12px;
 }
 
 .shops-hero-btns {
@@ -5305,7 +5305,7 @@ i[id$="EyeIcon"]:hover {
     background: #ff5a2c;
     color: #ffffff !important;
     border: none;
-    padding: 14px 28px;
+    padding: 14px 20px;
     border-radius: 50px;
     font-weight: 600;
     display: inline-flex;
@@ -5314,6 +5314,7 @@ i[id$="EyeIcon"]:hover {
     transition: all 0.3s ease;
     box-shadow: 0 4px 14px rgba(255, 90, 44, 0.35);
     text-decoration: none !important;
+    font-size: 15px;
 }
 
 .btn-shops-primary:hover {
@@ -5327,13 +5328,14 @@ i[id$="EyeIcon"]:hover {
     border: 1.5px solid #cbd5e1;
     background: #ffffff;
     color: #0e1b3d !important;
-    padding: 14px 28px;
+    padding: 14px 20px;
     border-radius: 50px;
     font-weight: 600;
     text-decoration: none !important;
     transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
+    font-size: 15px;
 }
 
 .btn-shops-outline:hover {
@@ -5448,8 +5450,8 @@ i[id$="EyeIcon"]:hover {
 
 @media (max-width: 991px) {
     .shops-hero {
-        padding-top: 115px !important;
-        padding-bottom: 50px !important;
+        padding-top: 97px !important;
+        padding-bottom: 0px !important;
     }
 
     .shops-hero-content {
@@ -5467,7 +5469,7 @@ i[id$="EyeIcon"]:hover {
 
     .shops-hero-mockup-wrapper {
         margin-top: 50px;
-        min-height: 320px;
+        min-height: 270px;
     }
 
     .frame-1 {
@@ -5558,7 +5560,7 @@ i[id$="EyeIcon"]:hover {
 
 @media (max-width: 991px) {
     .shops-stats-banner-row {
-        margin-bottom: 40px;
+        margin-bottom: 15px;
         padding: 12px;
     }
 }
@@ -5619,7 +5621,7 @@ i[id$="EyeIcon"]:hover {
 .shops-category-tabs-container {
     overflow-x: auto;
     white-space: nowrap;
-    padding: 5px 2px 15px;
+    padding: 5px 2px 0px;
     margin-bottom: 40px;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
@@ -5665,7 +5667,7 @@ i[id$="EyeIcon"]:hover {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 20px;
-    margin-bottom: 60px;
+    margin-bottom: 30px;
 }
 
 @media (max-width: 1440px) {
@@ -5688,7 +5690,15 @@ i[id$="EyeIcon"]:hover {
 
 @media (max-width: 540px) {
     .shops-grid-cols-5 {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .shop-card-header {
+        display: unset !important;
+    }
+
+    .shop-card-actions {
+        flex-direction: column;
     }
 }
 
@@ -5916,7 +5926,7 @@ i[id$="EyeIcon"]:hover {
 
 /* Featured Merchants */
 .shops-featured-merchants {
-    padding: 40px 0;
+    padding: 10px 0;
     background: #fffcfb;
     border-top: 1px solid #f1f5f9;
 }
@@ -5932,7 +5942,7 @@ i[id$="EyeIcon"]:hover {
 .shops-section-desc {
     font-size: 16px;
     color: #64748b;
-    margin-bottom: 40px;
+    margin-bottom: 0px;
 }
 
 .merchant-profile-card {
@@ -6016,9 +6026,130 @@ i[id$="EyeIcon"]:hover {
     background: #f8fafc;
 }
 
+/* ===================================================
+   LaunchShop Slider Component (ls-slider)
+   =================================================== */
+
+/* Outer wrapper: visible overflow so arrows can poke outside */
+.ls-slider-wrapper {
+    position: relative;
+    padding: 0 44px 48px;
+    /* side padding = space for arrows; bottom = dots room */
+}
+
+/* Inner viewport: THIS clips the slides */
+.ls-slider-viewport {
+    overflow: hidden;
+    width: 100%;
+}
+
+.ls-slider-track {
+    display: flex;
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+}
+
+.ls-slide {
+    box-sizing: border-box;
+    padding: 0 10px;
+    flex-shrink: 0;
+}
+
+/* Arrow buttons — sit in the padded gutter, never clipped */
+.ls-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(calc(-50% - 24px));
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: #ffffff;
+    color: #ff5a2c;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    z-index: 10;
+    transition: background 0.25s, color 0.25s, box-shadow 0.25s;
+}
+
+.ls-arrow:hover {
+    background: #ff5a2c;
+    color: #ffffff;
+    box-shadow: 0 6px 20px rgba(255, 90, 44, 0.4);
+}
+
+/* Arrows sit at the very edge of the padded gutter */
+.ls-prev {
+    left: 0;
+}
+
+.ls-next {
+    right: 0;
+}
+
+/* Dot indicators */
+.ls-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.ls-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: none;
+    background: #cbd5e1;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.ls-dot.active {
+    background: #ff5a2c;
+    transform: scale(1.4);
+}
+
+/* Mobile: tighten gutter so content stays wide */
+@media (max-width: 576px) {
+    .ls-slider-wrapper {
+        padding: 0 36px 48px;
+    }
+
+    .ls-arrow {
+        width: 36px;
+        height: 36px;
+        font-size: 13px;
+        z-index: 99;
+        background: rgba(255, 255, 255, 0.95) !important;
+        border: 1px solid rgba(255, 90, 44, 0.2) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .ls-prev {
+        left: 4px;
+    }
+
+    .ls-next {
+        right: 4px;
+    }
+
+    .ls-slide {
+        padding: 0 5px;
+    }
+}
+
 /* Testimonials */
 .shops-loved-by-merchants {
-    padding: 40px 0;
+    padding: 10px 0;
     background: #ffffff;
     text-align: center;
 }
@@ -6077,7 +6208,7 @@ i[id$="EyeIcon"]:hover {
 .why-choose-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 20px;
+    gap: 10px;
 }
 
 @media (max-width: 1200px) {
@@ -6094,7 +6225,7 @@ i[id$="EyeIcon"]:hover {
 
 @media (max-width: 480px) {
     .why-choose-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
     }
 }
 
@@ -6166,8 +6297,8 @@ i[id$="EyeIcon"]:hover {
     color: #ffffff;
     overflow: hidden;
     position: relative;
-    margin-top: 40px;
-    margin-bottom: 80px;
+    margin-top: 0px;
+    margin-bottom: 0px;
     box-shadow: 0 20px 50px rgba(11, 21, 48, 0.25);
 }
 
@@ -7946,7 +8077,7 @@ i[id$="EyeIcon"]:hover {
     }
 
     h1 {
-        font-size: 38px !important;
+        font-size: 30px !important;
     }
 
     /* Preserve specific hero title sizes, don't let generic h1 override them */
