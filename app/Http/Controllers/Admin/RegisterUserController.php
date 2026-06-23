@@ -446,6 +446,54 @@ class RegisterUserController extends Controller
         $productLimit = !empty($package) ? $package->product_limit : 999999;
 
         DB::transaction(function () use ($templateUser, $user, $defaultCurrencyId, $languageMap, $categoriesLimit, $subcategoriesLimit, $productLimit) {
+            // Delete target user's existing catalog assets/slider images first to prevent orphaned records or constraints
+            if (\Illuminate\Support\Facades\Schema::hasTable('user_items')) {
+                $targetItemIds = DB::table('user_items')->where('user_id', $user->id)->pluck('id')->toArray();
+                if (!empty($targetItemIds) && \Illuminate\Support\Facades\Schema::hasTable('user_item_images')) {
+                    DB::table('user_item_images')->whereIn('item_id', $targetItemIds)->delete();
+                }
+            }
+
+            $tablesToDelete = [
+                'user_item_categories',
+                'user_item_sub_categories',
+                'variant_contents',
+                'variant_option_contents',
+                'product_variation_contents',
+                'product_variant_option_contents',
+                'product_variant_options',
+                'product_variations',
+                'user_item_contents',
+                'user_items',
+                'user_sections',
+                'user_seos',
+                'user_basic_extendes',
+                'user_hero_sliders',
+                'user_banners',
+                'user_tabs',
+                'user_product_hero_sliders',
+                'user_howit_work_sections',
+                'user_counter_information',
+                'user_counter_sections',
+                'user_call_to_actions',
+                'user_about_testimonials',
+                'user_ulinks',
+                'static_hero_sections',
+                'user_about_us',
+                'user_about_us_features',
+                'user_contacts',
+                'user_faqs',
+                'user_features',
+                'user_headers',
+                'user_headings'
+            ];
+
+            foreach ($tablesToDelete as $table) {
+                if (\Illuminate\Support\Facades\Schema::hasTable($table)) {
+                    DB::table($table)->where('user_id', $user->id)->delete();
+                }
+            }
+
             $categoryMap = [];
             $subcategoryMap = [];
             $variantContentMap = [];

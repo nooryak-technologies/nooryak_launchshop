@@ -100,8 +100,10 @@ class LimitCheck
         $prevTotalLang = Language::count();
 
         $featuresCount = [];
-        $featuresCount['categories'] = $user->item_categories->count();
-        $featuresCount['subcategories'] = $user->item_sub_categories->count();
+        $featuresCount['categories'] = $user->item_categories()->whereNotNull('unique_id')->distinct('unique_id')->count('unique_id')
+            + $user->item_categories()->whereNull('unique_id')->count();
+        $featuresCount['subcategories'] = $user->item_sub_categories()->whereNotNull('unique_id')->distinct('unique_id')->count('unique_id')
+            + $user->item_sub_categories()->whereNull('unique_id')->count();
         $featuresCount['languages'] = $user->languages->count() - $prevTotalLang;
         $featuresCount['items'] = $user->items->count();
         $featuresCount['custome_page'] = $user->custome_page->count();
