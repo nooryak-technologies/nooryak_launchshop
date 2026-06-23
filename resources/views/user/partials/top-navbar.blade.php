@@ -34,7 +34,7 @@
   $canAddPage = $pageLimit - $totalCustomPage;
   //order limit
   $orderLimit = LimitCheck::orderLimit($userId);
-  $totalOrder = $featureCount['items'];
+  $totalOrder = $featureCount['orders'];
   $canAddOrder = $orderLimit - $totalOrder;
 
   $today = Carbon::now()->toDateString();

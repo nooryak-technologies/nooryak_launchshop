@@ -106,6 +106,7 @@ class LimitCheck
             + $user->item_sub_categories()->whereNull('unique_id')->count();
         $featuresCount['languages'] = $user->languages->count() - $prevTotalLang;
         $featuresCount['items'] = $user->items->count();
+        $featuresCount['orders'] = $user->orders()->count();
         $featuresCount['custome_page'] = $user->custome_page->count();
         $featuresCount['blogs'] = $user->blogs->count();
 

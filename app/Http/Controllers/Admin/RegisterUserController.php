@@ -441,9 +441,9 @@ class RegisterUserController extends Controller
         if (empty($package)) {
             $package = UserPermissionHelper::currPackageOrPending($user->id);
         }
-        $categoriesLimit = !empty($package) ? $package->categories_limit : 999999;
-        $subcategoriesLimit = !empty($package) ? $package->subcategories_limit : 999999;
-        $productLimit = !empty($package) ? $package->product_limit : 999999;
+        $categoriesLimit = (!empty($package) && is_numeric($package->categories_limit)) ? (int)$package->categories_limit : 999999;
+        $subcategoriesLimit = (!empty($package) && is_numeric($package->subcategories_limit)) ? (int)$package->subcategories_limit : 999999;
+        $productLimit = (!empty($package) && is_numeric($package->product_limit)) ? (int)$package->product_limit : 999999;
 
         DB::transaction(function () use ($templateUser, $user, $defaultCurrencyId, $languageMap, $categoriesLimit, $subcategoriesLimit, $productLimit) {
             // Delete target user's existing catalog assets/slider images first to prevent orphaned records or constraints
