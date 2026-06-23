@@ -145,7 +145,15 @@ class SeedTemplateCatalogForUser extends Command
 
         $languageMap = $this->buildLanguageMap($templateUser->id, $targetUser->id);
 
-        DB::transaction(function () use ($templateUser, $targetUser, $defaultCurrencyId, $languageMap) {
+        $package = \App\Http\Helpers\UserPermissionHelper::currentPackagePermission($targetUser->id);
+        if (empty($package)) {
+            $package = \App\Http\Helpers\UserPermissionHelper::currPackageOrPending($targetUser->id);
+        }
+        $categoriesLimit = !empty($package) ? $package->categories_limit : 999999;
+        $subcategoriesLimit = !empty($package) ? $package->subcategories_limit : 999999;
+        $productLimit = !empty($package) ? $package->product_limit : 999999;
+
+        DB::transaction(function () use ($templateUser, $targetUser, $defaultCurrencyId, $languageMap, $categoriesLimit, $subcategoriesLimit, $productLimit) {
             $categoryMap = [];
             $subcategoryMap = [];
             $variantContentMap = [];
@@ -155,7 +163,11 @@ class SeedTemplateCatalogForUser extends Command
             $itemMap = [];
 
             $sourceCategories = UserItemCategory::where('user_id', $templateUser->id)->orderBy('id')->get();
+            $categoriesCloned = 0;
             foreach ($sourceCategories->groupBy('unique_id') as $categoryGroup) {
+                if ($categoriesCloned >= $categoriesLimit) {
+                    break;
+                }
                 $newUniqueId = uniqid();
                 foreach ($categoryGroup as $sourceCategory) {
                     $newCategory = $sourceCategory->replicate();
@@ -168,21 +180,40 @@ class SeedTemplateCatalogForUser extends Command
 
                     $categoryMap[$sourceCategory->id] = $newCategory->id;
                 }
+                $categoriesCloned++;
             }
 
             $sourceSubcategories = UserItemSubCategory::where('user_id', $templateUser->id)->orderBy('id')->get();
+            $subcategoriesCloned = 0;
             foreach ($sourceSubcategories->groupBy('unique_id') as $subcategoryGroup) {
+                if ($subcategoriesCloned >= $subcategoriesLimit) {
+                    break;
+                }
+                $hasValidCategory = false;
+                foreach ($subcategoryGroup as $sourceSubcategory) {
+                    if (isset($categoryMap[$sourceSubcategory->category_id])) {
+                        $hasValidCategory = true;
+                        break;
+                    }
+                }
+                if (!$hasValidCategory) {
+                    continue;
+                }
+
                 $newUniqueId = uniqid();
                 foreach ($subcategoryGroup as $sourceSubcategory) {
-                    $newSubcategory = $sourceSubcategory->replicate();
-                    $newSubcategory->user_id = $targetUser->id;
-                    $newSubcategory->unique_id = $newUniqueId;
-                    $newSubcategory->language_id = $languageMap[$sourceSubcategory->language_id] ?? $sourceSubcategory->language_id;
-                    $newSubcategory->category_id = $categoryMap[$sourceSubcategory->category_id] ?? $sourceSubcategory->category_id;
-                    $this->safeSave($newSubcategory);
+                    if (isset($categoryMap[$sourceSubcategory->category_id])) {
+                        $newSubcategory = $sourceSubcategory->replicate();
+                        $newSubcategory->user_id = $targetUser->id;
+                        $newSubcategory->unique_id = $newUniqueId;
+                        $newSubcategory->language_id = $languageMap[$sourceSubcategory->language_id] ?? $sourceSubcategory->language_id;
+                        $newSubcategory->category_id = $categoryMap[$sourceSubcategory->category_id] ?? $sourceSubcategory->category_id;
+                        $this->safeSave($newSubcategory);
 
-                    $subcategoryMap[$sourceSubcategory->id] = $newSubcategory->id;
+                        $subcategoryMap[$sourceSubcategory->id] = $newSubcategory->id;
+                    }
                 }
+                $subcategoriesCloned++;
             }
 
             $sourceVariantContents = VariantContent::where('user_id', $templateUser->id)->orderBy('id')->get();
@@ -208,7 +239,25 @@ class SeedTemplateCatalogForUser extends Command
             }
 
             $sourceItems = UserItem::where('user_id', $templateUser->id)->orderBy('id')->get();
+            $productsCloned = 0;
             foreach ($sourceItems as $sourceItem) {
+                if ($productsCloned >= $productLimit) {
+                    break;
+                }
+
+                // Verify if the product's categories are cloned
+                $itemContents = UserItemContent::where('item_id', $sourceItem->id)->get();
+                $hasValidCategory = true;
+                foreach ($itemContents as $sourceContent) {
+                    if (!empty($sourceContent->category_id) && !isset($categoryMap[$sourceContent->category_id])) {
+                        $hasValidCategory = false;
+                        break;
+                    }
+                }
+                if (!$hasValidCategory) {
+                    continue;
+                }
+
                 $newItem = $sourceItem->replicate();
                 $newItem->user_id = $targetUser->id;
                 $newItem->currency_id = $defaultCurrencyId;
@@ -224,7 +273,7 @@ class SeedTemplateCatalogForUser extends Command
                     ]);
                 }
 
-                foreach (UserItemContent::where('item_id', $sourceItem->id)->get() as $sourceContent) {
+                foreach ($itemContents as $sourceContent) {
                     $newContent = $sourceContent->replicate();
                     $newContent->user_id = $targetUser->id;
                     $newContent->item_id = $newItem->id;
@@ -272,6 +321,7 @@ class SeedTemplateCatalogForUser extends Command
                     $newVariationOptionContent->option_name = $variantOptionMap[$sourceVariationOptionContent->option_name] ?? $sourceVariationOptionContent->option_name;
                     $newVariationOptionContent->save();
                 }
+                $productsCloned++;
             }
 
             $sourceShopSetting = UserShopSetting::where('user_id', $templateUser->id)->first();
