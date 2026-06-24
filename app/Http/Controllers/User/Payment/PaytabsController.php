@@ -18,7 +18,7 @@ class PaytabsController extends Controller
      */
     public function paymentProcess(Request $request, $_amount, $_success_url, $_cancel_url)
     {
-        $user = $_userCtx;
+        $user = getUser();
         Session::put('user_request', $request->all());
         $paytabInfo = paytabInfo('user', $user->id);
         $description = 'Product Purchase via paytabs';
@@ -48,7 +48,7 @@ class PaytabsController extends Controller
     public function successPayment(Request $request)
     {
         $requestData = Session::get('user_request');
-        $user = $_userCtx;
+        $user = getUser();
         $resp = $request->all();
         if ($resp['respStatus'] == "A" && $resp['respMessage'] == 'Authorised') {
             $txnId = UserPermissionHelper::uniqidReal(8);

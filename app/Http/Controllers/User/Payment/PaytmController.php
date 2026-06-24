@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use App\Models\User\UserPaymentGeteway;
+use App\Models\User\UserOrder;
 use Illuminate\Support\Facades\Session;
 use App\Http\Helpers\UserPermissionHelper;
 use Anand\LaravelPaytmWallet\Facades\PaytmWallet;
@@ -48,7 +49,7 @@ class PaytmController extends Controller
 
     public function handlePaytmRequest($_item_number, $amount, $callback_url)
     {
-        $data = UserPaymentGeteway::whereKeyword('paytm')->where('user_id', $_userCtx->id)->first();
+        $data = UserPaymentGeteway::whereKeyword('paytm')->where('user_id', getUser()->id)->first();
         $paydata = $data->convertAutoData();
 
         // Load all functions of encdec_paytm.php and config-paytm.php
@@ -371,13 +372,15 @@ class PaytmController extends Controller
 
 
         if ($transaction->isSuccessful()) {
-            $user = $_userCtx;
+            $user = getUser();
             $txnId = UserPermissionHelper::uniqidReal(8);
             $chargeId = $request->paymentId;
             $order = Common::saveOrder($requestData, $txnId, $chargeId,'Completed', 'online', $user->id);
             $order_id = $order->id;
             Common::saveOrderedItems($order_id);
-            $this->sendOrderCompleteMails($order);
+            Common::generateInvoice($order, $user);
+            $order = UserOrder::where('id', $order_id)->first();
+            Common::OrderCompletedMail($order, $user);
             session()->flash('success', __('successful_payment'));
             Session::forget('user_request');
             Session::forget('user_amount');

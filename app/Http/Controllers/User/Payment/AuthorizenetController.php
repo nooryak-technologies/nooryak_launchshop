@@ -31,7 +31,7 @@ class AuthorizenetController extends Controller
 
     public function paymentProcess(Request $request, $_amount, $be)
     {
-        $user = $_userCtx;
+        $user = getUser();
         if ($request->opaqueDataDescriptor && $request->opaqueDataValue) {
             Session::put('user_request', $request->all());
             // Generate a unique merchant site transaction ID.

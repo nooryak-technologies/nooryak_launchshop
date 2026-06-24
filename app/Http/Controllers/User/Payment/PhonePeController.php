@@ -15,7 +15,7 @@ class PhonePeController extends Controller
 {
     public function paymentProcess(Request $request, $_amount, $_success_url, $_cancel_url)
     {
-        $user = $_userCtx;
+        $user = getUser();
         Session::put('user_request', $request->all());
         $paymentMethod = UserPaymentGeteway::where([['keyword', 'phonepe'], ['user_id', $user->id]])->first();
         $paydata = json_decode($paymentMethod->information, true);
@@ -70,7 +70,7 @@ class PhonePeController extends Controller
     public function successPayment(Request $request)
     {
         $requestData = Session::get('user_request');
-        $user = $_userCtx;
+        $user = getUser();
         if ($request->code == 'PAYMENT_SUCCESS') {
             $txnId = UserPermissionHelper::uniqidReal(8);
             $chargeId = $request->paymentId;

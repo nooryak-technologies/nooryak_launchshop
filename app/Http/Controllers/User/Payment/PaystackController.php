@@ -19,7 +19,7 @@ class PaystackController extends Controller
      */
     public function paymentProcess(Request $request, $_amount, $_email, $_success_url, $bex)
     {
-        $data = UserPaymentGeteway::where([['keyword', 'paystack'], ['user_id', $_userCtx->id]])->first();
+        $data = UserPaymentGeteway::where([['keyword', 'paystack'], ['user_id', getUser()->id]])->first();
         $paydata = $data->convertAutoData();
 
         $secret_key = $paydata['key'];
@@ -60,7 +60,7 @@ class PaystackController extends Controller
     public function successPayment(Request $request)
     {
         $requestData = Session::get('user_request');
-        $user = $_userCtx;
+        $user = getUser();
         $be = BasicSetting::where('user_id', $user->id)->firstorFail();
         if ($request['trxref'] === $request['reference']) {
             $txnId = UserPermissionHelper::uniqidReal(8);

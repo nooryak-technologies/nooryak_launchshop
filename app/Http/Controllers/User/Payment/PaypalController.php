@@ -108,7 +108,7 @@ class PaypalController extends Controller
 
         $requestData = Session::get('user_request');
         $amount = Session::get('user_amount');
-        $user = $_userCtx;
+        $user = getUser();
         $be = BasicSetting::where('user_id', $user->id)->firstorFail();
         /** Get the payment ID before session clear **/
         $payment_id = Session::get('user_paypal_payment_id');

@@ -86,7 +86,7 @@ class RazorpayController extends Controller
     {
         $requestData = Session::get('user_request');
 
-        $user = $_userCtx;
+        $user = getUser();
 
         /** Get the payment ID before session clear **/
         $payment_id = Session::get('user_order_payment_id');
