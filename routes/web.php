@@ -34,6 +34,7 @@ Route::domain($domain)->group(function () {
         Route::post('/subscribe', 'Front\FrontendController@subscribe')->name('front.subscribe');
         Route::get('/shops', 'Front\FrontendController@shops')->name('front.user.view');
         Route::get('/templates', 'Front\FrontendController@templates')->name('front.templates.view');
+        Route::get('/templates/autologin/{username}', 'Front\FrontendController@autoLoginTemplate')->name('front.templates.autologin');
         Route::get('/contact', 'Front\FrontendController@contactView')->name('front.contact');
         Route::post('/admin/contact-msg', 'Front\FrontendController@adminContactMessage')->name('front.admin.contact.message')->middleware('Demo');
         Route::get('/faqs', 'Front\FrontendController@faqs')->name('front.faq.view');

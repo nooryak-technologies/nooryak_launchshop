@@ -22,6 +22,16 @@
   .template-card-modern:hover .scrolling-img {
       transform: translateY(calc(-100% + 380px)) !important;
   }
+  .btn-template-action.admin-btn {
+      background: #0e1b3d;
+      color: #ffffff;
+      border: 1px solid #0e1b3d;
+  }
+  .btn-template-action.admin-btn:hover {
+      background: #1e293b;
+      border-color: #1e293b;
+      color: #ffffff;
+  }
 </style>
 @endsection
 
@@ -144,6 +154,9 @@
                   <div class="card-action-row">
                     <a href="{{ $previewUrl }}" target="_blank" class="btn-template-action outline-btn">
                       <i class="fas fa-eye me-2"></i> {{ __('Live Preview') }}
+                    </a>
+                    <a href="{{ route('front.templates.autologin', $template->username) }}" target="_blank" class="btn-template-action admin-btn">
+                      <i class="fas fa-user-cog me-2"></i> {{ __('Theme Admin') }}
                     </a>
                     <a href="{{ $purchaseUrl }}" class="btn-template-action primary-btn">
                       <i class="fas fa-shopping-cart me-2"></i> {{ __('Purchase') }}

@@ -835,6 +835,18 @@ class FrontendController extends Controller
         return view('front.template', $data);
     }
 
+    public function autoLoginTemplate($username)
+    {
+        $user = User::where('username', $username)
+            ->where('preview_template', 1)
+            ->firstOrFail();
+
+        Auth::guard('web')->login($user);
+        Session::put('secrect_login', true);
+
+        return redirect()->route('user-dashboard');
+    }
+
     public function invoice()
     {
         $data = [];
