@@ -102,7 +102,7 @@
 
   <!-- Section featured End -->
   @if ($ubs->featuers_section == 1)
-    <section class="featured featured-2 pt-30 pb-70">
+    <section class="featured featured-2  pb-70">
       <div class="container">
         <div class="row align-items-center gx-xl-5">
           @foreach ($how_work_steps as $how_work_step)
@@ -145,7 +145,7 @@
 
   <!-- Category Start -->
   @if ($userBs->category_section == 1)
-    <section class="category category-6 pb-100">
+    <section class="category category-6 ">
       <div class="container">
         <div class="row">
           <div class="col-12">

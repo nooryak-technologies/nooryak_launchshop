@@ -4865,7 +4865,7 @@ a.btn-icon.view-type.active {
 }
 
 .featured.featured-2 .featured-item .icon {
-    font-size: 50px;
+    font-size: 32px;
     width: auto;
     height: auto;
 }
@@ -4959,7 +4959,6 @@ a.btn-icon.view-type.active {
 
 .footer-area .footer-widget .social-link a {
     display: inline-block;
-
     color: white !important;
     height: 35px;
     width: 35px;
@@ -7016,4 +7015,56 @@ html[dir="rtl"] #product-details-slider .slick-track {
 
 .page-title-area .breadcrumb-item::before {
     color: #94a3b8 !important;
+}
+
+/* Mobile button inline layout */
+@media only screen and (max-width: 767px) {
+    .btn-icon-group.btn-inline {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+        width: 100% !important;
+        position: static !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        margin-top: 10px !important;
+        padding: 0 5px !important;
+    }
+
+    .btn-icon-group.btn-inline .btn-icon,
+    .btn-icon-group.btn-inline .btn,
+    .btn-icon-group.btn-inline a,
+    .btn-icon-group.btn-inline button {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        height: 38px !important;
+        line-height: 38px !important;
+        font-size: 15px !important;
+        position: static !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        border-radius: 4px !important;
+    }
+}
+
+/* Product gallery alignment on mobile */
+@media only screen and (max-width: 575px) {
+    .product-single-default .slider-thumbnails2 {
+        display: block !important;
+        width: 100% !important;
+        order: 2 !important;
+        margin-top: 15px !important;
+    }
+
+    .product-single-default .product-single-slider2 {
+        width: 100% !important;
+        order: 1 !important;
+    }
 }

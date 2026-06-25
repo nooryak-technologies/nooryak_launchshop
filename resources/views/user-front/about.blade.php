@@ -71,7 +71,7 @@
 
   @if ($userBs->about_features_section == 1)
     <!-- featured section start  -->
-    <section class="featured featured-2 pt-30 pb-70">
+    <section class="featured featured-2  pb-70">
       <div class="container">
         <div class="row align-items-center">
           @foreach ($how_work_steps as $how_work_step)

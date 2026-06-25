@@ -384,7 +384,7 @@
 
   <!-- Featured Start -->
   @if ($ubs->featuers_section == 1)
-    <section class="featured featured-2 pt-100 pb-70">
+    <section class="featured featured-2 pb-70">
       <div class="container">
         <div class="row align-items-center gx-xl-5">
           @foreach ($how_work_steps as $how_work_step)
