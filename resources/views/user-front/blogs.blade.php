@@ -54,7 +54,7 @@
             </div>
           @endforeach
         </div>
-        <div class="pagination mb-30 justify-content-center">
+        <div class="pagination  justify-content-center">
           {{ $blogs->appends(['category' => request()->input('category')])->links() }}
         </div>
       @else

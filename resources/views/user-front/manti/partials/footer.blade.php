@@ -4,7 +4,7 @@
   <img class="lazyload bg-img"
     data-src="{{ !is_null(@$footer->background_image) ? asset('assets/front/img/footer/' . @$footer->background_image) : asset('assets/user-front/images/manti/footer.jpg') }}"
     alt="Bg-img">
-  <div class="footer-top pt-100">
+  <div class="footer-top ">
     <div class="container">
       <div class="row gx-xl-5">
         <div class="col-xl-3 col-lg-6 col-md-6">

@@ -7,7 +7,7 @@
       alt="Bg-img">
   </div>
 
-  <div class="footer-top pt-100">
+  <div class="footer-top ">
     <div class="container">
       <div class="row gx-xl-5">
         <div class="col-xl-3 col-lg-6 col-md-6">

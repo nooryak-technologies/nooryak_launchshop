@@ -991,6 +991,7 @@ textarea {
         font-size: 14px;
         font-weight: 600;
         display: block;
+        color: white !important;
     }
 
     .menu-action-item .icon .currency-symbol,

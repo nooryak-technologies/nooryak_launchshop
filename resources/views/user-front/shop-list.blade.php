@@ -105,7 +105,7 @@
     </div>
   @endforeach
   <div class="col-12">
-    <div class="pagination mb-30 justify-content-center">
+    <div class="pagination  justify-content-center">
       @if (count($items) > 0)
         {{ $items->appends([
                 'type' => request()->input('type'),
