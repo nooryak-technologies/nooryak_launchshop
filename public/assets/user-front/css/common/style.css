@@ -1680,15 +1680,15 @@ Lazyload CSS
     }
 
     /* Slick list — allow swipe/touch natively */
-    .slick-list {
+    /* .slick-list {
         overflow: visible !important;
         -webkit-overflow-scrolling: touch;
-    }
+    } */
 
     /* Ensure slick slides don't overflow viewport */
-    .slick-track {
+    /* .slick-track {
         display: flex !important;
-    }
+    } */
 
     /* Full-width banner images on mobile */
     .banner-sm,
@@ -2316,6 +2316,11 @@ input[type="radio"]:checked+.form-check-label::after {
     visibility: visible;
     -webkit-transform: translateX(0);
     transform: translateX(0);
+}
+
+.menu-active .mobile-navbar,
+.menu-active .header {
+    z-index: 999 !important;
 }
 
 .mobile-menu {
