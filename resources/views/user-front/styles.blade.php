@@ -80,4 +80,162 @@
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/jewellery/jewellery-rtl.css') }}">
 @endif
 
+<style>
+/* ==========================================================================
+   MOBILE & LAYOUT ALIGNMENT FIXES (All Templates)
+   ========================================================================== */
+
+/* --- Task 2: Page Title Area (About/Inner Headers) Spacing Fix --- */
+.page-title-area {
+  padding-top: 180px !important;
+  padding-bottom: 60px !important;
+}
+
+@media only screen and (max-width: 991.98px) {
+  .page-title-area {
+    padding-top: 110px !important;
+    padding-bottom: 40px !important;
+  }
+}
+
+/* --- Task 4: Hero Slider Product Thumb Overlap Fix --- */
+@media only screen and (max-width: 767.98px) {
+  .home-slider .product-thumb {
+    position: relative !important;
+    left: 0 !important;
+    margin-top: 30px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    bottom: auto !important;
+    padding: 0 15px !important;
+    display: block !important;
+  }
+}
+
+/* --- Task 1: Product Card Button Action Icons Group Mobile Fit --- */
+@media only screen and (max-width: 575.98px) {
+  /* Prevent action buttons from wrapping and keep on a single line */
+  .btn-icon-group, 
+  .btn-icon-group-area,
+  .product-default .btn-icon-group,
+  .product-default-2 .btn-icon-group,
+  .product-default-3 .btn-icon-group,
+  .product-default-7 .btn-icon-group,
+  .product-default-8 .btn-icon-group,
+  .product-default-9 .btn-icon-group,
+  .product-default-tab-card .btn-icon-group {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    white-space: nowrap !important;
+    gap: 4px !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  .btn-icon-group.text-center,
+  .btn-icon-group.justify-content-center,
+  .product-center .btn-icon-group {
+    justify-content: center !important;
+  }
+
+  .btn-icon-group.text-start,
+  .btn-icon-group.justify-content-start {
+    justify-content: flex-start !important;
+  }
+
+  .btn-icon-group.text-end,
+  .btn-icon-group.justify-content-end {
+    justify-content: flex-end !important;
+  }
+
+  /* Shrink button sizes inside the action group to fit card width */
+  .btn-icon-group .btn-icon,
+  .btn-icon-group a.btn,
+  .btn-icon-group button.btn,
+  .btn-icon-group a,
+  .btn-icon-group button {
+    --size: 26px !important;
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
+    max-width: 26px !important;
+    line-height: 24px !important;
+    font-size: 10px !important;
+    padding: 0 !important;
+    margin: 0 1px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .btn-icon-group .btn-icon i,
+  .btn-icon-group a.btn i,
+  .btn-icon-group button.btn i,
+  .btn-icon-group a i,
+  .btn-icon-group button i {
+    font-size: 10px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+/* --- Task 3: Single Product Gallery Alignment & Thumbnails --- */
+@media only screen and (max-width: 575.98px) {
+  .product-single-default .product-single-gallery {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 15px !important;
+    width: 100% !important;
+  }
+
+  .product-single-default .slider-thumbnails,
+  .product-single-default .slider-thumbnails2 {
+    width: 100% !important;
+    max-width: 100% !important;
+    order: 2 !important;
+    margin-top: 10px !important;
+    display: block !important;
+    height: auto !important;
+  }
+
+  .product-single-default .slider-thumbnails .slick-list,
+  .product-single-default .slider-thumbnails2 .slick-list {
+    height: auto !important;
+  }
+
+  .product-single-default .slider-thumbnails2 .slick-track,
+  .product-single-default .slider-thumbnails .slick-track {
+    height: auto !important;
+  }
+
+  .product-single-default .product-single-slider,
+  .product-single-default .product-single-slider2 {
+    width: 100% !important;
+    max-width: 100% !important;
+    order: 1 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Make thumbnail items nice squares on mobile */
+  .product-single-default .slider-thumbnails2 .thumbnail-img,
+  .product-single-default .slider-thumbnails .thumbnail-img {
+    width: 65px !important;
+    height: 65px !important;
+    max-width: 65px !important;
+    max-height: 65px !important;
+    margin: 0 auto !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 6px !important;
+  }
+
+  .product-single-default .slider-thumbnails2 .thumbnail-img img,
+  .product-single-default .slider-thumbnails .thumbnail-img img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+}
+</style>
+
 @yield('styles')
