@@ -4211,7 +4211,7 @@ input[type="radio"]:checked+.form-check-label::after {
 
 @media only screen and (max-width: 575px) {
     .category-slider {
-        padding-bottom: 42px;
+        padding-bottom: 0px;
     }
 
     .category-slider .slick-slide {
@@ -7021,7 +7021,7 @@ html[dir="rtl"] #product-details-slider .slick-track {
 @media only screen and (max-width: 767px) {
     .btn-icon-group.btn-inline {
         display: grid !important;
-        grid-template-columns: repeat(2, 1fr) !important;
+        grid-template-columns: repeat(4, 1fr) !important;
         gap: 8px !important;
         width: 100% !important;
         position: static !important;
