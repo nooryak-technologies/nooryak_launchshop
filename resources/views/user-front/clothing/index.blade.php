@@ -28,7 +28,12 @@
 <style>
 /* ---- Clothing Home Overrides ---- */
 .cl-section { padding: 60px 0; }
-.cl-section-sm { padding: 40px 0; }
+.cl-section-sm { padding: 60px 0; }
+
+@media screen (max-width : 767px) {
+  .cl-section { padding: 6px 0 !important; }
+  .cl-section-sm { padding: 6px 0 !important; }
+}
 
 /* Section heading */
 .cl-heading {
@@ -316,7 +321,7 @@
   {{-- ═══════════════════════════════════════════
        BEST SELLERS
   ═══════════════════════════════════════════ --}}
-  <section class="cl-section" style="background:#f8f5f0;padding-top:60px;">
+  <section class="cl-section" style="background:#f8f5f0;padding-top:6px;">
     <div class="container">
       <div class="cl-heading" data-aos="fade-up">
         <h2>{{ $keywords['Best Sellers'] ?? 'BEST SELLERS' }}</h2>
@@ -504,7 +509,7 @@
   {{-- ═══════════════════════════════════════════
        FOLLOW US ON INSTAGRAM
   ═══════════════════════════════════════════ --}}
-  <section class="cl-section" style="padding-bottom:60px;padding-top:0;">
+  <section class="cl-section" style="padding-bottom:6px;padding-top:0;">
     <div class="container">
       <div class="cl-heading" style="justify-content:center; flex-direction:column; text-align:center; margin-bottom:35px;" data-aos="fade-up">
         <span style="font-size:11px; font-weight:700; letter-spacing:2px; color:#8c7f70; text-transform:uppercase; margin-bottom:8px;">INSTAGRAM</span>
