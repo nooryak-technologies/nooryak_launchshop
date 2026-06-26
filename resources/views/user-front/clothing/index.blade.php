@@ -30,7 +30,7 @@
 .cl-section { padding: 60px 0; }
 .cl-section-sm { padding: 60px 0; }
 
-@media screen (max-width : 767px) {
+@media (max-width : 767px) {
   .cl-section { padding: 6px 0 !important; }
   .cl-section-sm { padding: 6px 0 !important; }
 }
