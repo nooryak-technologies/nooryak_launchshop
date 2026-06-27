@@ -111,7 +111,7 @@
         popupMessage: `{!! !empty($userBs->whatsapp_popup_message) ? nl2br($userBs->whatsapp_popup_message) : '' !!}`, //Popup Message
         showPopup: whatsapp_popup == 1 ? true : false, //Enables popup display
         buttonImage: whatsappButtonImage, //Button Image
-        position: "right" //Position: left | right
+        position: "left" //Position: left | right
 
       });
     });
