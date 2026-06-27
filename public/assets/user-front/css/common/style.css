@@ -3269,14 +3269,14 @@ input[type="radio"]:checked+.form-check-label::after {
 @media (max-width: 767px) {
     .product-default .product-price .new-price {
         margin-inline-end: 3px;
-        font-size: 14px;
+        font-size: 18px;
     }
 
     .product-default .product-price span {
         display: inline-block;
         font-weight: var(--font-medium);
         font-family: var(--font-family-base);
-        font-size: 13px;
+        font-size: 16px;
     }
 }
 

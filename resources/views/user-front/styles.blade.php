@@ -250,6 +250,11 @@
 .third-slide-content p {
   font-size: 14px !important;
 }
+
+/* Override pt-100 padding-top to 20px on the product details page only */
+.product-single.pt-100 {
+  padding-top: 20px !important;
+}
 </style>
 
 @yield('styles')

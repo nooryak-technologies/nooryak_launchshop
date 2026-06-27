@@ -19,7 +19,7 @@
   @endphp
 
   @if ($ubs->slider_section == 1)
-    <section class="home-slider home-slider-6 pt-40 header-next">
+    <section class="home-slider home-slider-6  header-next">
       <div class="container">
         <div class="animated-slider" id="home-slider-6"
           data-slick='{
