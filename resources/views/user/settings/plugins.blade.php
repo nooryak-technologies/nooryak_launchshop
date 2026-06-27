@@ -384,7 +384,7 @@
           </div>
         @endif
 
-        @if (in_array('WhatsApp Chat Button', $features))
+        @if (in_array('WhatsApp Chat Button', $features) || (Auth::check() && Auth::user()->whatsapp_status == 1))
           {{-- Whatsapp Chat Button --}}
           <div class="col-lg-4">
             <div class="card">

@@ -98,7 +98,7 @@
 
 
 {{-- whatsapp init code --}}
-@if ($user->whatsapp_status == 1 && $userBs->is_whatsapp == 1 && in_array('WhatsApp Chat Button', $packagePermissions))
+@if ($user->whatsapp_status == 1 && $userBs->is_whatsapp == 1)
   <script type="text/javascript">
     "use strict";
     var whatsapp_popup = {{ $userBs->whatsapp_popup }};
@@ -111,7 +111,7 @@
         popupMessage: `{!! !empty($userBs->whatsapp_popup_message) ? nl2br($userBs->whatsapp_popup_message) : '' !!}`, //Popup Message
         showPopup: whatsapp_popup == 1 ? true : false, //Enables popup display
         buttonImage: whatsappButtonImage, //Button Image
-        position: "right" //Position: left | right
+        position: "left" //Position: left | right
 
       });
     });

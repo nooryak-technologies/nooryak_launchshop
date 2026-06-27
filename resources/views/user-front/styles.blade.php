@@ -87,14 +87,14 @@
 
 /* --- Task 2: Page Title Area (About/Inner Headers) Spacing Fix --- */
 .page-title-area {
-  padding-top: 180px !important;
+  padding-top: 0px !important;
   padding-bottom: 60px !important;
 }
 
 @media only screen and (max-width: 991.98px) {
   .page-title-area {
-    padding-top: 110px !important;
-    padding-bottom: 40px !important;
+    padding-top: 15px !important;
+    padding-bottom: 10px !important;
   }
 }
 
@@ -249,6 +249,11 @@
 .third-slide-content .text-lg, 
 .third-slide-content p {
   font-size: 14px !important;
+}
+
+/* Custom class for product details page related products spacing */
+.product-details-related-products {
+  padding-top: 20px !important;
 }
 </style>
 
