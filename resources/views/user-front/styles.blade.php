@@ -251,8 +251,8 @@
   font-size: 14px !important;
 }
 
-/* Override pt-100 padding-top to 20px on the product details page only */
-.product-single.pt-100 {
+/* Custom class for product details page related products spacing */
+.product-details-related-products {
   padding-top: 20px !important;
 }
 </style>
