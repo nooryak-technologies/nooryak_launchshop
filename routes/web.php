@@ -44,6 +44,8 @@ Route::domain($domain)->group(function () {
         Route::get('/registration/select-template/{status}/{id}', 'Front\FrontendController@selectTemplate')->name('front.select.template');
         Route::get('/registration/step-1/{status}/{id}', 'Front\FrontendController@step1')->name('front.register.view');
         Route::get('/check/{username}/username', 'Front\FrontendController@checkUsername')->name('front.username.check');
+        Route::post('/otp/send', 'Front\FrontendController@sendOtp')->name('front.otp.send');
+        Route::post('/otp/verify', 'Front\FrontendController@verifyOtp')->name('front.otp.verify');
         Route::get('/p/{slug}', 'Front\FrontendController@dynamicPage')->name('front.dynamicPage');
         Route::get('/success', 'Front\CheckoutController@paymentSuccess')->name('success.page');
         Route::get('/about', 'Front\FrontendController@about')->name('front.about');

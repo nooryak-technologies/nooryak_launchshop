@@ -790,13 +790,12 @@
 
       // Phone OTP Verification Logic
       let isPhoneVerified = false;
-      let generatedOtp = "123456"; // Default mock OTP
-      let countdownSeconds = 60;
+      let countdownSeconds = 120;
       let otpTimer = null;
 
       function startOtpTimer() {
         clearInterval(otpTimer);
-        countdownSeconds = 60;
+        countdownSeconds = 120;
         $('#otp-timer').removeClass('d-none').text('{{ __("Resend OTP in") }} ' + countdownSeconds + 's');
         $('#btn-resend-otp').addClass('d-none');
         
@@ -825,53 +824,101 @@
 
         $('#phone_number').removeClass('is-invalid');
         $('#phone-feedback').html('<span class="text-info"><i class="fas fa-spinner fa-spin"></i> {{ __("Sending OTP...") }}</span>');
-        $(this).prop('disabled', true);
+        let $btn = $(this);
+        $btn.prop('disabled', true);
 
-        // Simulate OTP send API call
-        setTimeout(function() {
-          $('#phone-feedback').html('<span class="text-success"><i class="fas fa-check-circle"></i> {{ __("OTP sent successfully! For demo, use 123456") }}</span>');
-          $('#otp-group').removeClass('d-none');
-          $('#btn-send-otp').text('{{ __("Sent") }}');
-          startOtpTimer();
-        }, 1000);
+        $.post("{{ route('front.otp.send') }}", {
+          _token: "{{ csrf_token() }}",
+          phone_number: phoneVal,
+          country_code: countryCode
+        }, function(response) {
+          if (response.success) {
+            $('#phone-feedback').html('<span class="text-success"><i class="fas fa-check-circle"></i> ' + response.message + '</span>');
+            $('#otp-group').removeClass('d-none');
+            $btn.text('{{ __("Sent") }}');
+            startOtpTimer();
+          } else {
+            $('#phone-feedback').html('<span class="text-danger"><i class="fas fa-times-circle"></i> ' + response.message + '</span>');
+            $btn.prop('disabled', false);
+          }
+        }).fail(function(xhr) {
+          let msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : '{{ __("Failed to send OTP. Please try again.") }}';
+          $('#phone-feedback').html('<span class="text-danger"><i class="fas fa-times-circle"></i> ' + msg + '</span>');
+          $btn.prop('disabled', false);
+        });
       });
 
       $('#btn-resend-otp').on('click', function(e) {
         e.preventDefault();
+        let phoneVal = $('#phone_number').val().trim();
+        let countryCode = $('#country_code').val().trim();
+
         $('#otp-feedback').html('');
         $('#phone-feedback').html('<span class="text-info"><i class="fas fa-spinner fa-spin"></i> {{ __("Resending OTP...") }}</span>');
-        
-        setTimeout(function() {
-          $('#phone-feedback').html('<span class="text-success"><i class="fas fa-check-circle"></i> {{ __("New OTP sent successfully! Use 123456") }}</span>');
-          startOtpTimer();
-        }, 1000);
+        let $btn = $(this);
+        $btn.addClass('d-none');
+
+        $.post("{{ route('front.otp.send') }}", {
+          _token: "{{ csrf_token() }}",
+          phone_number: phoneVal,
+          country_code: countryCode
+        }, function(response) {
+          if (response.success) {
+            $('#phone-feedback').html('<span class="text-success"><i class="fas fa-check-circle"></i> ' + response.message + '</span>');
+            startOtpTimer();
+          } else {
+            $('#phone-feedback').html('<span class="text-danger"><i class="fas fa-times-circle"></i> ' + response.message + '</span>');
+            $btn.removeClass('d-none');
+          }
+        }).fail(function(xhr) {
+          let msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : '{{ __("Failed to resend OTP.") }}';
+          $('#phone-feedback').html('<span class="text-danger"><i class="fas fa-times-circle"></i> ' + msg + '</span>');
+          $btn.removeClass('d-none');
+        });
       });
 
       $('#btn-verify-otp').on('click', function(e) {
         e.preventDefault();
         let enteredOtp = $('#otp_code').val().trim();
+        let phoneVal = $('#phone_number').val().trim();
 
-        if (enteredOtp === generatedOtp) {
-          isPhoneVerified = true;
-          clearInterval(otpTimer);
-          $('#otp-group').addClass('d-none');
-          $('#phone-feedback').html('<span class="text-success" style="font-size: 15px;"><i class="fas fa-check-circle"></i> {{ __("Phone number verified successfully!") }}</span>');
-          
-          // Make fields readonly and change verify button state
-          $('#phone_number').prop('readonly', true);
-          $('#country_code').prop('readonly', true);
-          
-          $('#btn-send-otp')
-            .prop('disabled', true)
-            .text('{{ __("Verified") }}')
-            .css({
-              'border-color': '#10b981',
-              'color': '#10b981',
-              'background-color': 'rgba(16, 185, 129, 0.05)'
-            });
-        } else {
-          $('#otp-feedback').html('<span class="text-danger"><i class="fas fa-times-circle"></i> {{ __("Invalid OTP. Please enter 123456") }}</span>');
+        if (!enteredOtp) {
+          $('#otp-feedback').html('<span class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ __("Please enter the OTP.") }}</span>');
+          return;
         }
+
+        $('#otp-feedback').html('<span class="text-info"><i class="fas fa-spinner fa-spin"></i> {{ __("Verifying OTP...") }}</span>');
+
+        $.post("{{ route('front.otp.verify') }}", {
+          _token: "{{ csrf_token() }}",
+          otp: enteredOtp,
+          phone_number: phoneVal
+        }, function(response) {
+          if (response.success) {
+            isPhoneVerified = true;
+            clearInterval(otpTimer);
+            $('#otp-group').addClass('d-none');
+            $('#phone-feedback').html('<span class="text-success" style="font-size: 15px;"><i class="fas fa-check-circle"></i> ' + response.message + '</span>');
+            
+            // Make fields readonly and change verify button state
+            $('#phone_number').prop('readonly', true);
+            $('#country_code').prop('readonly', true);
+            
+            $('#btn-send-otp')
+              .prop('disabled', true)
+              .text('{{ __("Verified") }}')
+              .css({
+                'border-color': '#10b981',
+                'color': '#10b981',
+                'background-color': 'rgba(16, 185, 129, 0.05)'
+              });
+          } else {
+            $('#otp-feedback').html('<span class="text-danger"><i class="fas fa-times-circle"></i> ' + response.message + '</span>');
+          }
+        }).fail(function(xhr) {
+          let msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : '{{ __("Invalid OTP. Please try again.") }}';
+          $('#otp-feedback').html('<span class="text-danger"><i class="fas fa-times-circle"></i> ' + msg + '</span>');
+        });
       });
 
       // Prevent signup form submission if phone is not verified

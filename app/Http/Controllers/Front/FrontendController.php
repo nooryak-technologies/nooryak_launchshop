@@ -40,6 +40,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 use Purifier;
 use Validator;
 use PDF;
@@ -232,6 +233,112 @@ class FrontendController extends Controller
         $count = User::where('username', $username)->count();
         $status = $count > 0 ? true : false;
         return response()->json($status);
+    }
+
+    public function sendOtp(Request $request)
+    {
+        $request->validate([
+            'phone_number' => 'required',
+            'country_code' => 'required'
+        ]);
+
+        $phone = $request->phone_number;
+        $countryCode = $request->country_code;
+
+        $cleanPhone = preg_replace('/[^0-9]/', '', $phone);
+        $cleanCountryCode = preg_replace('/[^0-9]/', '', $countryCode);
+
+        $mobileNo = $cleanPhone;
+        if (strlen($mobileNo) == 10 && $cleanCountryCode == '91') {
+            $mobileNo = '91' . $mobileNo;
+        }
+
+        $otp = rand(100000, 999999);
+
+        try {
+            $response = Http::post('https://meraotp.in/api/sendSMS', [
+                'apiKey' => '5a697992860ef6ec1cd7b166c0',
+                'mobileNo' => $mobileNo,
+                'messageType' => 'AUTH_OTP',
+                'brandName' => 'LaunchShop',
+                'otp' => (string)$otp,
+                'senderId' => 'MRAOTP'
+            ]);
+
+            $resData = $response->json();
+            Log::info('MeraOTP Send Response:', ['response' => $resData, 'phone' => $mobileNo]);
+
+            if ($response->successful()) {
+                Session::put('otp_code', $otp);
+                Session::put('otp_phone', $phone);
+                Session::put('otp_expires_at', time() + 120);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => __('OTP sent successfully!')
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('Failed to send OTP. Please try again.')
+                ], 400);
+            }
+        } catch (\Exception $e) {
+            Log::error('MeraOTP Send Exception: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => __('An error occurred while sending OTP.')
+            ], 500);
+        }
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'otp' => 'required',
+            'phone_number' => 'required'
+        ]);
+
+        $otp = $request->otp;
+        $phone = $request->phone_number;
+
+        $sessionOtp = Session::get('otp_code');
+        $sessionPhone = Session::get('otp_phone');
+        $sessionExpiresAt = Session::get('otp_expires_at');
+
+        if (!$sessionOtp || !$sessionPhone || !$sessionExpiresAt) {
+            return response()->json([
+                'success' => false,
+                'message' => __('No OTP request found. Please request a new OTP.')
+            ], 400);
+        }
+
+        if (time() > $sessionExpiresAt) {
+            return response()->json([
+                'success' => false,
+                'message' => __('OTP has expired. Please request a new OTP.')
+            ], 400);
+        }
+
+        $cleanPhone = preg_replace('/[^0-9]/', '', $phone);
+        $cleanSessionPhone = preg_replace('/[^0-9]/', '', $sessionPhone);
+
+        if ($otp == $sessionOtp && substr($cleanPhone, -10) === substr($cleanSessionPhone, -10)) {
+            Session::put('phone_verified', true);
+            Session::put('verified_phone', $phone);
+
+            Session::forget(['otp_code', 'otp_phone', 'otp_expires_at']);
+
+            return response()->json([
+                'success' => true,
+                'message' => __('Phone number verified successfully!')
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => __('Invalid OTP. Please try again.')
+        ], 400);
     }
 
     public function selectTemplate($status, $id)
