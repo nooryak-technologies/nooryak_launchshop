@@ -3266,6 +3266,20 @@ input[type="radio"]:checked+.form-check-label::after {
     font-size: 20px;
 }
 
+@media (max-width: 767px) {
+    .product-default .product-price .new-price {
+        margin-inline-end: 3px;
+        font-size: 14px;
+    }
+
+    .product-default .product-price span {
+        display: inline-block;
+        font-weight: var(--font-medium);
+        font-family: var(--font-family-base);
+        font-size: 13px;
+    }
+}
+
 .line_through {
     text-decoration: line-through;
 }

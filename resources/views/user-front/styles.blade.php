@@ -94,7 +94,7 @@
 @media only screen and (max-width: 991.98px) {
   .page-title-area {
     padding-top: 15px !important;
-    padding-bottom: 40px !important;
+    padding-bottom: 10px !important;
   }
 }
 
