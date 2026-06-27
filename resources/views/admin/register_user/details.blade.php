@@ -314,6 +314,41 @@
         </div>
       </div>
 
+      <div class="card mt-4">
+        <div class="card-header">
+          <h4 class="card-title">{{ __('WhatsApp Settings') }}</h4>
+        </div>
+        <div class="card-body">
+          @php
+            $userBs = \App\Models\User\BasicSetting::where('user_id', $user->id)->first();
+          @endphp
+          <form action="{{ route('register.user.whatsapp_settings') }}" method="POST">
+            @csrf
+            <input type="hidden" name="user_id" value="{{ $user->id }}">
+            <div class="form-group">
+              <label>{{ __('WhatsApp Number') }}</label>
+              <input class="form-control" type="text" name="whatsapp_number"
+                value="{{ $userBs->whatsapp_number ?? '' }}">
+              <p class="text-warning mb-0">
+                {{ __('Enter Phone number with Country Code (e.g. 919876543210)') }}
+              </p>
+            </div>
+            <div class="form-group">
+              <label>{{ __('WhatsApp Header Title') }}</label>
+              <input class="form-control" type="text" name="whatsapp_header_title"
+                value="{{ $userBs->whatsapp_header_title ?? '' }}">
+            </div>
+            <div class="form-group">
+              <label>{{ __('WhatsApp Popup Message') }}</label>
+              <textarea class="form-control" name="whatsapp_popup_message" rows="2">{{ $userBs->whatsapp_popup_message ?? '' }}</textarea>
+            </div>
+            <div class="form-group text-center">
+              <button type="submit" class="btn btn-success">{{ __('Update WhatsApp Settings') }}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
     </div>
   </div>
 

@@ -946,7 +946,30 @@ class RegisterUserController extends Controller
         $user = User::where('id', $request->user_id)->first();
         $user->whatsapp_status = $request->whatsapp_status;
         $user->save();
+
+        $userBs = UserBasicSetting::where('user_id', $request->user_id)->first();
+        if (!empty($userBs)) {
+            $userBs->is_whatsapp = $request->whatsapp_status;
+            $userBs->save();
+        }
+
         Session::flash('success', __('Updated Successfully'));
+        return back();
+    }
+
+    public function updateWhatsappSettings(Request $request)
+    {
+        $userBs = UserBasicSetting::where('user_id', $request->user_id)->first();
+        if (empty($userBs)) {
+            $userBs = new UserBasicSetting();
+            $userBs->user_id = $request->user_id;
+        }
+        $userBs->whatsapp_number = $request->whatsapp_number;
+        $userBs->whatsapp_header_title = $request->whatsapp_header_title;
+        $userBs->whatsapp_popup_message = $request->whatsapp_popup_message;
+        $userBs->save();
+
+        Session::flash('success', __('WhatsApp Settings Updated Successfully'));
         return back();
     }
 

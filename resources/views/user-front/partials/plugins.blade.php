@@ -98,7 +98,7 @@
 
 
 {{-- whatsapp init code --}}
-@if ($user->whatsapp_status == 1 && $userBs->is_whatsapp == 1 && in_array('WhatsApp Chat Button', $packagePermissions))
+@if ($user->whatsapp_status == 1 && $userBs->is_whatsapp == 1)
   <script type="text/javascript">
     "use strict";
     var whatsapp_popup = {{ $userBs->whatsapp_popup }};
