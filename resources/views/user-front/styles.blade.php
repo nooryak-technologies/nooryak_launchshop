@@ -236,6 +236,20 @@
     object-fit: cover !important;
   }
 }
+
+/* --- Task 4: Reduce font size for the third slider image/slide --- */
+.third-slide-content .title, 
+.third-slide-content h1 {
+  font-size: clamp(1.5rem, 0.5rem + 2vw, 3rem) !important;
+}
+.third-slide-content .sub-title, 
+.third-slide-content span {
+  font-size: 14px !important;
+}
+.third-slide-content .text-lg, 
+.third-slide-content p {
+  font-size: 14px !important;
+}
 </style>
 
 @yield('styles')

@@ -33,7 +33,7 @@ body {
    ============================================================ */
 .header-area.header-v10 {
   background: var(--clothing-white);
-  border-bottom: 1px solid var(--clothing-border);
+  /* border-bottom: 1px solid var(--clothing-border); */
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
 }
 
@@ -760,6 +760,7 @@ body {
 .flash-sale-clothing {
   /*padding: 100px 0;*/
   background: var(--clothing-cream);
+      margin-top: 1rem;
 }
 
 .flash-sale-clothing .flash-header {

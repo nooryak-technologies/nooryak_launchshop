@@ -99,6 +99,13 @@
           </a>
         </li>
         <li class="tolbar-item">
+          <a class="{{ request()->routeIs('front.user.shop') ? 'active' : '' }}"
+            href="{{ route('front.user.shop', getParam()) }}">
+            <i class="fal fa-shopping-cart"></i>
+            <span>{{ $keywords['Shop'] ?? __('Shop') }}</span>
+          </a>
+        </li>
+        <li class="tolbar-item">
           <a class="{{ request()->routeIs('front.user.cart') ? 'active' : '' }}"
             href="{{ route('front.user.cart', getParam()) }}">
             <i class="fal fa-shopping-bag"></i>

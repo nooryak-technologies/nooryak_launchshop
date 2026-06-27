@@ -52,7 +52,8 @@ class User extends Authenticatable
         'verification_link',
         'email_verified',
         'online_status',
-        'category_id'
+        'category_id',
+        'whatsapp_status'
     ];
 
     /**

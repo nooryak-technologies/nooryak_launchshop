@@ -461,9 +461,15 @@
       <nav class="toolbar" id="nav">
         <ul class="toolbar-nav">
           <li class="tolbar-item">
-            <a class="active" href="{{ route('front.user.detail.view', getParam()) }}" target="_self">
+            <a class="{{ request()->routeIs('front.user.detail.view') ? 'active' : '' }}" href="{{ route('front.user.detail.view', getParam()) }}" target="_self">
               <i class="fal fa-home"></i>
               <span>{{ $keywords['Home'] ?? __('Home') }}</span>
+            </a>
+          </li>
+          <li class="tolbar-item">
+            <a class="{{ request()->routeIs('front.user.shop') ? 'active' : '' }}" href="{{ route('front.user.shop', getParam()) }}" target="_self">
+              <i class="fal fa-shopping-cart"></i>
+              <span>{{ $keywords['Shop'] ?? __('Shop') }}</span>
             </a>
           </li>
           <li class="tolbar-item">

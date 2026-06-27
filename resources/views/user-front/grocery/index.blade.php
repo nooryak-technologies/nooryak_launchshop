@@ -37,7 +37,7 @@
                       data-src="{{ asset('assets/front/img/hero_slider/' . $slider->img) }}" alt="Banner">
 
                     <div class="d-flex align-items-center">
-                      <div class="slider-content">
+                      <div class="slider-content {{ $loop->iteration == 3 ? 'third-slide-content' : '' }}">
                         <span class="sub-title color-primary" data-animation="animate__fadeInUp" data-delay=".3s">
                           {{ $slider->title }}
                         </span>

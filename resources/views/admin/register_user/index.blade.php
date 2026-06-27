@@ -66,6 +66,7 @@
                         <th scope="col">{{ __('Email') }}</th>
                         <th scope="col">{{ __('Featured') }}</th>
                         <th scope="col">{{ __('Preview Template') }}</th>
+                        <th scope="col">{{ __('WhatsApp') }}</th>
                         <th scope="col">{{ __('Email Status') }}</th>
                         <th scope="col">{{ __('Account') }}</th>
                         <td scope="col">{{ __('Action') }}</td>
@@ -116,6 +117,23 @@
 
                           @includeIf('admin.register_user.template-modal')
                           @includeIf('admin.register_user.template-image-modal')
+
+                          <td>
+                            <form id="whatsappForm{{ $user->id }}" class="d-inline-block"
+                              action="{{ route('register.user.whatsapp') }}" method="post">
+                              @csrf
+                              <select
+                                class="form-control form-control-sm {{ $user->whatsapp_status == 1 ? 'bg-success' : 'bg-danger' }}"
+                                name="whatsapp_status"
+                                onchange="document.getElementById('whatsappForm{{ $user->id }}').submit();">
+                                <option value="1" {{ $user->whatsapp_status == 1 ? 'selected' : '' }}>
+                                  {{ __('Enable') }}</option>
+                                <option value="0" {{ $user->whatsapp_status == 0 ? 'selected' : '' }}>
+                                  {{ __('Disable') }}</option>
+                              </select>
+                              <input type="hidden" name="user_id" value="{{ $user->id }}">
+                            </form>
+                          </td>
 
                           <td>
                             <form id="emailForm{{ $user->id }}" class="d-inline-block"

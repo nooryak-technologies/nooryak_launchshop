@@ -245,6 +245,7 @@ Route::domain($domain)->group(function () {
             Route::post('register/users/template', 'Admin\RegisterUserController@userTemplate')->name('register.user.template');
             Route::post('register/users/template/update', 'Admin\RegisterUserController@userUpdateTemplate')->name('register.user.updateTemplate');
             Route::post('register/users/email', 'Admin\RegisterUserController@emailStatus')->name('register.user.email');
+            Route::post('register/users/whatsapp', 'Admin\RegisterUserController@userWhatsapp')->name('register.user.whatsapp');
 
             Route::post('/user/current-package/remove', 'Admin\RegisterUserController@removeCurrPackage')->name('user.currPackage.remove');
             Route::post('/user/current-package/change', 'Admin\RegisterUserController@changeCurrPackage')->name('user.currPackage.change');

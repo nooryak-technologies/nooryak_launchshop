@@ -941,6 +941,15 @@ class RegisterUserController extends Controller
         return back();
     }
 
+    public function userWhatsapp(Request $request)
+    {
+        $user = User::where('id', $request->user_id)->first();
+        $user->whatsapp_status = $request->whatsapp_status;
+        $user->save();
+        Session::flash('success', __('Updated Successfully'));
+        return back();
+    }
+
     public function userUpdateTemplate(Request $request)
     {
         $prevImg = $request->file('preview_image');
