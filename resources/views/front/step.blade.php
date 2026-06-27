@@ -529,22 +529,52 @@
 
                 <!-- Country Code + Phone Input -->
                 <div class="form-group mb-20">
-                  <div class="row g-2">
+                  <div class="row g-2 align-items-center">
                     <div class="col-3 col-sm-2">
-                      <input class="form-control" type="text" name="country_code" value="{{ old('country_code', '+91') }}"
+                      <input class="form-control" type="text" name="country_code" id="country_code" value="{{ old('country_code', '+91') }}"
                         placeholder="{{ __('Code') }}" required inputmode="numeric">
                       @error('country_code')
                         <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
                       @enderror
                     </div>
-                    <div class="col-9 col-sm-10">
-                      <input class="form-control" type="number" name="phone" value="{{ old('phone') }}"
+                    <div class="col-6 col-sm-7">
+                      <input class="form-control" type="number" name="phone" id="phone_number" value="{{ old('phone') }}"
                         placeholder="{{ __('Phone Number') }}" required min="0" step="1" inputmode="numeric">
                       @error('phone')
                         <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
                       @enderror
                     </div>
+                    <div class="col-3 col-sm-3">
+                      <button type="button" class="btn w-100 py-2 btn-verify-phone" id="btn-send-otp" style="height: 50px !important; border-radius: 8px; font-weight: 600; font-size: 14px; border: 1.5px solid var(--primary-color, #ff5a2c); color: var(--primary-color, #ff5a2c); background-color: transparent; transition: all 0.3s ease;">
+                        {{ __('Verify') }}
+                      </button>
+                    </div>
                   </div>
+                  <div id="phone-feedback" class="small mt-2" style="font-weight: 600; text-align: left;"></div>
+                </div>
+
+                <!-- OTP Input Field (hidden initially) -->
+                <div class="form-group mb-20 d-none" id="otp-group">
+                  <label class="form-label font-weight-bold small mb-2" style="color: #475569; display: block; text-align: left;">
+                    {{ __('Enter OTP sent to your Mobile Number') }} *
+                  </label>
+                  <div class="row g-2 align-items-center">
+                    <div class="col-8 col-sm-9">
+                      <input class="form-control" type="text" id="otp_code" placeholder="Enter 6-digit OTP" maxlength="6" inputmode="numeric">
+                    </div>
+                    <div class="col-4 col-sm-3">
+                      <button type="button" class="btn w-100 py-2" id="btn-verify-otp" style="height: 50px !important; border-radius: 8px; font-weight: 600; font-size: 14px; background-color: var(--primary-color, #ff5a2c); border-color: var(--primary-color, #ff5a2c); color: #fff;">
+                        {{ __('Submit') }}
+                      </button>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <span id="otp-timer" class="small text-muted" style="font-weight: 600;"></span>
+                    <button type="button" class="btn btn-link p-0 small d-none" id="btn-resend-otp" style="color: var(--primary-color, #ff5a2c); font-weight: 600; text-decoration: none;">
+                      {{ __('Resend OTP') }}
+                    </button>
+                  </div>
+                  <div id="otp-feedback" class="small mt-2" style="font-weight: 600; text-align: left;"></div>
                 </div>
 
                 <!-- Password Input -->
@@ -755,6 +785,107 @@
           }, 300); // 300ms debounce
         } else {
           $("#usernameAvailable").html('');
+        }
+      });
+
+      // Phone OTP Verification Logic
+      let isPhoneVerified = false;
+      let generatedOtp = "123456"; // Default mock OTP
+      let countdownSeconds = 60;
+      let otpTimer = null;
+
+      function startOtpTimer() {
+        clearInterval(otpTimer);
+        countdownSeconds = 60;
+        $('#otp-timer').removeClass('d-none').text('{{ __("Resend OTP in") }} ' + countdownSeconds + 's');
+        $('#btn-resend-otp').addClass('d-none');
+        
+        otpTimer = setInterval(function() {
+          countdownSeconds--;
+          if (countdownSeconds <= 0) {
+            clearInterval(otpTimer);
+            $('#otp-timer').addClass('d-none');
+            $('#btn-resend-otp').removeClass('d-none');
+          } else {
+            $('#otp-timer').text('{{ __("Resend OTP in") }} ' + countdownSeconds + 's');
+          }
+        }, 1000);
+      }
+
+      $('#btn-send-otp').on('click', function(e) {
+        e.preventDefault();
+        let phoneVal = $('#phone_number').val().trim();
+        let countryCode = $('#country_code').val().trim();
+
+        if (!phoneVal) {
+          $('#phone-feedback').html('<span class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ __("Please enter a valid phone number.") }}</span>');
+          $('#phone_number').addClass('is-invalid');
+          return;
+        }
+
+        $('#phone_number').removeClass('is-invalid');
+        $('#phone-feedback').html('<span class="text-info"><i class="fas fa-spinner fa-spin"></i> {{ __("Sending OTP...") }}</span>');
+        $(this).prop('disabled', true);
+
+        // Simulate OTP send API call
+        setTimeout(function() {
+          $('#phone-feedback').html('<span class="text-success"><i class="fas fa-check-circle"></i> {{ __("OTP sent successfully! For demo, use 123456") }}</span>');
+          $('#otp-group').removeClass('d-none');
+          $('#btn-send-otp').text('{{ __("Sent") }}');
+          startOtpTimer();
+        }, 1000);
+      });
+
+      $('#btn-resend-otp').on('click', function(e) {
+        e.preventDefault();
+        $('#otp-feedback').html('');
+        $('#phone-feedback').html('<span class="text-info"><i class="fas fa-spinner fa-spin"></i> {{ __("Resending OTP...") }}</span>');
+        
+        setTimeout(function() {
+          $('#phone-feedback').html('<span class="text-success"><i class="fas fa-check-circle"></i> {{ __("New OTP sent successfully! Use 123456") }}</span>');
+          startOtpTimer();
+        }, 1000);
+      });
+
+      $('#btn-verify-otp').on('click', function(e) {
+        e.preventDefault();
+        let enteredOtp = $('#otp_code').val().trim();
+
+        if (enteredOtp === generatedOtp) {
+          isPhoneVerified = true;
+          clearInterval(otpTimer);
+          $('#otp-group').addClass('d-none');
+          $('#phone-feedback').html('<span class="text-success" style="font-size: 15px;"><i class="fas fa-check-circle"></i> {{ __("Phone number verified successfully!") }}</span>');
+          
+          // Make fields readonly and change verify button state
+          $('#phone_number').prop('readonly', true);
+          $('#country_code').prop('readonly', true);
+          
+          $('#btn-send-otp')
+            .prop('disabled', true)
+            .text('{{ __("Verified") }}')
+            .css({
+              'border-color': '#10b981',
+              'color': '#10b981',
+              'background-color': 'rgba(16, 185, 129, 0.05)'
+            });
+        } else {
+          $('#otp-feedback').html('<span class="text-danger"><i class="fas fa-times-circle"></i> {{ __("Invalid OTP. Please enter 123456") }}</span>');
+        }
+      });
+
+      // Prevent signup form submission if phone is not verified
+      $('#authForm').on('submit', function(e) {
+        if (!isPhoneVerified) {
+          e.preventDefault();
+          $('#phone-feedback').html('<span class="text-danger" style="font-size: 15px;"><i class="fas fa-exclamation-triangle"></i> {{ __("Please verify your phone number before continuing.") }}</span>');
+          
+          // Scroll to the phone verification area
+          $('html, body').animate({
+            scrollTop: $('#phone_number').offset().top - 120
+          }, 500);
+          
+          $('#phone_number').addClass('is-invalid');
         }
       });
     });
