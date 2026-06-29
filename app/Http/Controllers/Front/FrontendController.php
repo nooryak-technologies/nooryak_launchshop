@@ -265,9 +265,13 @@ class FrontendController extends Controller
             ]);
 
             $resData = $response->json();
-            Log::info('Tehub WhatsApp OTP Send Response:', ['response' => $resData, 'phone' => $mobileNo]);
+            Log::info('Tehub WhatsApp OTP Send Response:', [
+                'status' => $response->status(),
+                'response' => $resData,
+                'phone' => $mobileNo
+            ]);
 
-            if ($response->successful()) {
+            if ($response->successful() && isset($resData['success']) && $resData['success'] === true) {
                 Session::put('otp_code', $otp);
                 Session::put('otp_phone', $phone);
                 Session::put('otp_expires_at', time() + 120);
@@ -277,14 +281,23 @@ class FrontendController extends Controller
                     'message' => __('OTP sent successfully!')
                 ]);
             } else {
-                $errorMsg = isset($resData['message']) ? $resData['message'] : __('Failed to send OTP. Please try again.');
+                $errorMsg = __('Failed to send OTP. Please try again.');
+                if (is_array($resData)) {
+                    if (isset($resData['error'])) {
+                        $errorMsg = $resData['error'];
+                    } elseif (isset($resData['message'])) {
+                        $errorMsg = $resData['message'];
+                    }
+                }
                 return response()->json([
                     'success' => false,
                     'message' => $errorMsg
                 ], 400);
             }
         } catch (\Exception $e) {
-            Log::error('Tehub WhatsApp OTP Send Exception: ' . $e->getMessage());
+            Log::error('Tehub WhatsApp OTP Send Exception: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
             return response()->json([
                 'success' => false,
                 'message' => __('An error occurred while sending OTP.')
