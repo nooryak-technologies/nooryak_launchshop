@@ -249,24 +249,23 @@ class FrontendController extends Controller
         $cleanCountryCode = preg_replace('/[^0-9]/', '', $countryCode);
 
         $mobileNo = $cleanPhone;
-        if (strlen($mobileNo) == 10 && $cleanCountryCode == '91') {
+        if (strlen($mobileNo) == 10) {
             $mobileNo = '91' . $mobileNo;
         }
 
         $otp = rand(100000, 999999);
 
         try {
-            $response = Http::post('https://meraotp.in/api/sendSMS', [
-                'apiKey' => '5a697992860ef6ec1cd7b166c0',
-                'mobileNo' => $mobileNo,
-                'messageType' => 'AUTH_OTP',
-                'brandName' => 'LaunchShop',
-                'otp' => (string)$otp,
-                'senderId' => 'MRAOTP'
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer teh_api_47dbc4f2285eeadfcdc8b60edc25f4ae',
+            ])->withoutVerifying()->post('https://2fa.tehub.in/api/whatsapp.php', [
+                'to' => $mobileNo,
+                'message' => $otp . " is your verification OTP for LaunchShop. Please do not share it with anyone.",
+                'type' => 'otp'
             ]);
 
             $resData = $response->json();
-            Log::info('MeraOTP Send Response:', ['response' => $resData, 'phone' => $mobileNo]);
+            Log::info('Tehub WhatsApp OTP Send Response:', ['response' => $resData, 'phone' => $mobileNo]);
 
             if ($response->successful()) {
                 Session::put('otp_code', $otp);
@@ -278,13 +277,14 @@ class FrontendController extends Controller
                     'message' => __('OTP sent successfully!')
                 ]);
             } else {
+                $errorMsg = isset($resData['message']) ? $resData['message'] : __('Failed to send OTP. Please try again.');
                 return response()->json([
                     'success' => false,
-                    'message' => __('Failed to send OTP. Please try again.')
+                    'message' => $errorMsg
                 ], 400);
             }
         } catch (\Exception $e) {
-            Log::error('MeraOTP Send Exception: ' . $e->getMessage());
+            Log::error('Tehub WhatsApp OTP Send Exception: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => __('An error occurred while sending OTP.')
