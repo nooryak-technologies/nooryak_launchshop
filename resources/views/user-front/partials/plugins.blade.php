@@ -98,17 +98,17 @@
 
 
 {{-- whatsapp init code --}}
-@if ($user->whatsapp_status == 1 && $userBs->is_whatsapp == 1)
+@if (($user->whatsapp_status == 1 && $userBs->is_whatsapp == 1) || $user->preview_template == 1)
   <script type="text/javascript">
     "use strict";
-    var whatsapp_popup = {{ $userBs->whatsapp_popup }};
+    var whatsapp_popup = {{ $user->preview_template == 1 ? ($userBs->whatsapp_popup ?? 0) : ($userBs->whatsapp_popup ?? 0) }};
     var whatsappImg = "{{ asset('assets/front/images/whatsapp.svg') }}";
     $(function() {
       var whatsappButtonImage = `<img data-src="${whatsappImg}" class="lazyload" />`;
       $('#WAButton').floatingWhatsApp({
-        phone: "{{ $userBs->whatsapp_number }}", //WhatsApp Business phone number
-        headerTitle: "{{ $userBs->whatsapp_header_title }}", //Popup Title
-        popupMessage: `{!! !empty($userBs->whatsapp_popup_message) ? nl2br($userBs->whatsapp_popup_message) : '' !!}`, //Popup Message
+        phone: "{{ !empty($userBs->whatsapp_number) ? $userBs->whatsapp_number : '916374913298' }}", //WhatsApp Business phone number
+        headerTitle: "{{ !empty($userBs->whatsapp_header_title) ? $userBs->whatsapp_header_title : 'WhatsApp Chat' }}", //Popup Title
+        popupMessage: `{!! !empty($userBs->whatsapp_popup_message) ? nl2br($userBs->whatsapp_popup_message) : 'Hello, how can we help you?' !!}`, //Popup Message
         showPopup: whatsapp_popup == 1 ? true : false, //Enables popup display
         buttonImage: whatsappButtonImage, //Button Image
         position: "left" //Position: left | right
