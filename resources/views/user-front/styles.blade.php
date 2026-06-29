@@ -86,6 +86,7 @@
    ========================================================================== */
 
 /* --- Task 2: Page Title Area (About/Inner Headers) Spacing Fix --- */
+@if ($userBs->theme != 'fashion' && $userBs->theme != 'furniture')
 .page-title-area {
   padding-top: 0px !important;
   padding-bottom: 0px !important;
@@ -97,13 +98,16 @@
     padding-bottom: 23px !important;
   }
 }
+@endif
 
 /* Reduce page title font size on desktop only */
 @media only screen and (min-width: 992px) {
+  @if ($userBs->theme != 'fashion' && $userBs->theme != 'furniture')
   .page-title-area {
     padding-top: 30px !important;
     padding-bottom: 30px !important;
   }
+  @endif
 
   .page-title-area h1,
   .page-title-area h2,
