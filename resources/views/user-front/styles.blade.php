@@ -101,8 +101,8 @@
 /* Reduce page title font size on desktop only */
 @media only screen and (min-width: 992px) {
   .page-title-area {
-    padding-top: 20px !important;
-    padding-bottom: 20px !important;
+    padding-top: 30px !important;
+    padding-bottom: 30px !important;
   }
 
   .page-title-area h1,
