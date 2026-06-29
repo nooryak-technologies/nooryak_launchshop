@@ -88,13 +88,23 @@
 /* --- Task 2: Page Title Area (About/Inner Headers) Spacing Fix --- */
 .page-title-area {
   padding-top: 0px !important;
-  padding-bottom: 60px !important;
+  padding-bottom: 0px !important;
 }
 
 @media only screen and (max-width: 991.98px) {
   .page-title-area {
     padding-top: 15px !important;
-    padding-bottom: 10px !important;
+    padding-bottom: 0px !important;
+  }
+}
+
+/* Reduce page title font size on desktop only */
+@media only screen and (min-width: 992px) {
+  .page-title-area h1,
+  .page-title-area h2,
+  .page-title-area h3,
+  .page-title-area .content h2 {
+    font-size: 28px !important;
   }
 }
 
