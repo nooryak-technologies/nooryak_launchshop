@@ -26,17 +26,25 @@ class ItemController extends Controller
     {
         $user = app('user');
         $userCurrentLang = app('userCurrentLang');
-        if (!Session::has('cart_' . $user->username)) {
-            return redirect()->route('front.user.detail.view', getParam());
-        }
 
         $data['pageHeading'] = $this->getUserPageHeading($userCurrentLang);
 
         if (Session::has('cart_' . $user->username)) {
             $data['cart'] = Session::get('cart_' . $user->username);
         } else {
-            $data['cart'] = null;
+            $data['cart'] = [];
         }
+
+        // Filter out any items that belong to other tenants
+        $user_id = $user->id;
+        if (!is_null($data['cart']) && is_array($data['cart'])) {
+            $data['cart'] = array_filter($data['cart'], function ($item) use ($user_id) {
+                return isset($item['user_id']) && $item['user_id'] == $user_id;
+            });
+        } else {
+            $data['cart'] = [];
+        }
+
         $data['totalQty'] = array_sum(array_column($data['cart'], 'qty'));
         $data['totalCart'] = array_sum(array_column($data['cart'], 'total'));
 

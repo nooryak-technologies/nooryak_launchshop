@@ -7,18 +7,18 @@
           <div class="header-left">
             <ul>
               <li>
-                {{ $header->header_text ?? '' }}
+                {{ preg_replace('/\bHours\b\s*/i', '', $header->header_text ?? '') }}
                 @php
                   $emails = !empty($userContact->contact_mails) ? explode(',', $userContact->contact_mails) : [];
                 @endphp
-              </li>
-              @if (count($emails) > 0)
-                <li>
+                @if (count($emails) > 0)
+                  <span class="mx-2">|</span>
                   @foreach ($emails as $email)
-                    {{ $email }} {{ !$loop->last ? ', ' : '' }}
+                    <i class="fal fa-envelope"></i>
+                    <a href="mailTo:{{ trim($email) }}" style="color: inherit;">{{ trim($email) }}</a>{{ !$loop->last ? ', ' : '' }}
                   @endforeach
-                </li>
-              @endif
+                @endif
+              </li>
             </ul>
           </div>
         </div>

@@ -21,18 +21,20 @@
       <div class="row">
         <div class="col-xl-6 col-lg-6">
           <div class="header-left">
-            <ul>
-              <li><i class="{{ $header->header_logo ?? '' }}"></i>{{ $header->header_text ?? '' }}</li>
-              @php
-                $emails = !empty($userContact->contact_mails) ? explode(',', $userContact->contact_mails) : [];
-              @endphp
-              @if (count($emails) > 0)
-                <li>
+             <ul>
+              <li>
+                <i class="{{ $header->header_logo ?? '' }}"></i>{{ preg_replace('/\bHours\b\s*/i', '', $header->header_text ?? '') }}
+                @php
+                  $emails = !empty($userContact->contact_mails) ? explode(',', $userContact->contact_mails) : [];
+                @endphp
+                @if (count($emails) > 0)
+                  <span class="mx-2">|</span>
                   @foreach ($emails as $email)
-                    {{ $email }} {{ !$loop->last ? ', ' : '' }}
+                    <i class="fal fa-envelope"></i>
+                    <a href="mailTo:{{ trim($email) }}" style="color: inherit;">{{ trim($email) }}</a>{{ !$loop->last ? ', ' : '' }}
                   @endforeach
-                </li>
-              @endif
+                @endif
+              </li>
             </ul>
           </div>
         </div>

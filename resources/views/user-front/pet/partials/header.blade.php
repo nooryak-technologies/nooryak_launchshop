@@ -3,30 +3,31 @@
   <div class="header-top with-b-border">
     <div class="container">
       <div class="row">
-        <div class="col-xl-4 col-lg-4">
+        <div class="col-xl-6 col-lg-6">
           <div class="header-left">
             <ul>
-              <li><i class="{{ $header->header_logo ?? '' }}"></i>{{ $header->header_text ?? '' }}</li>
-              @php
-                $emails = !empty($userContact->contact_mails) ? explode(',', $userContact->contact_mails) : [];
-              @endphp
-              @if (count($emails) > 0)
-                <li>
+              <li>
+                <i class="{{ $header->header_logo ?? '' }}"></i>{{ preg_replace('/\bHours\b\s*/i', '', $header->header_text ?? '') }}
+                @php
+                  $emails = !empty($userContact->contact_mails) ? explode(',', $userContact->contact_mails) : [];
+                @endphp
+                @if (count($emails) > 0)
+                  <span class="mx-2">|</span>
                   @foreach ($emails as $email)
                     <i class="fal fa-envelope"></i>
-                    <a href="mailTo: {{ $email }}">{{ $email }}</a>{{ !$loop->last ? ', ' : '' }}
+                    <a href="mailTo:{{ trim($email) }}">{{ trim($email) }}</a>{{ !$loop->last ? ', ' : '' }}
                   @endforeach
-                </li>
-              @endif
+                @endif
+              </li>
             </ul>
           </div>
         </div>
-        <div class="col-xl-5 col-lg-4">
+        <div class="col-xl-3 col-lg-3">
           <div class="header-center text-center">
             <p class="m-0">{{ $header->header_middle_text ?? '' }}</p>
           </div>
         </div>
-        <div class="col-xl-3 col-lg-4 text-end">
+        <div class="col-xl-3 col-lg-3 text-end">
           <div class="header-right">
             <ul class="menu sf-js-enabled" style="touch-action: pan-y;">
               <li class="menu-item">
