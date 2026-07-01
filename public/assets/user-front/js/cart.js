@@ -305,8 +305,10 @@ $('body').on('click', '.btn-wishlist', function (e) {
     });
 
     $('body').on('click', '.cart-sidebar-toggle', function (e) {
-        e.preventDefault();
-        cartDropdown(true);
+        if (window.innerWidth < 1200) {
+            e.preventDefault();
+            cartDropdown(true);
+        }
     });
 
     $('body').on('click', '.close-cart-sidebar, .cart-sidebar-overlay', function (e) {

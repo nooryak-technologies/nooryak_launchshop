@@ -317,10 +317,13 @@
 }
 
 .cart-dropdown-list-item {
-  padding: 10px 0 !important;
+  position: relative !important;
+  padding: 15px 0 !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
   display: flex !important;
-  align-items: center !important;
+  align-items: flex-start !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .cart-dropdown-list-item:last-child {
@@ -328,18 +331,102 @@
 }
 
 .cart-dropdown-list-item .cart-img {
+  width: 70px !important;
+  height: 70px !important;
   margin-right: 15px !important;
   flex-shrink: 0 !important;
+  border-radius: 6px !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  overflow: hidden !important;
+}
+
+.cart-dropdown-list-item .cart-img img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
 }
 
 .cart-dropdown-list-item .cart-title {
   flex-grow: 1 !important;
   min-width: 0 !important;
+  padding-right: 10px !important;
+}
+
+.cart-dropdown-list-item .cart-title .product-title {
+  margin-top: 0 !important;
+  margin-bottom: 6px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+}
+
+.cart-dropdown-list-item .cart-title .product-title a {
+  color: #111 !important;
+  text-decoration: none !important;
 }
 
 .cart-dropdown-list-item .cart-delete {
-  margin-left: 15px !important;
+  position: static !important;
+  margin-left: auto !important;
   flex-shrink: 0 !important;
+  align-self: flex-start !important;
+  right: auto !important;
+  top: auto !important;
+  transform: none !important;
+}
+
+.cart-dropdown-list-item .cart-delete .btn-remove {
+  width: 24px !important;
+  height: 24px !important;
+  line-height: 24px !important;
+  font-size: 12px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+  color: #666 !important;
+  transition: all 0.2s ease !important;
+}
+
+.cart-dropdown-list-item .cart-delete .btn-remove:hover {
+  background: #ff3f5c !important;
+  color: #fff !important;
+}
+
+/* Variation table overrides inside cart items */
+.cart-dropdown-list-item .variation-table {
+  width: 100% !important;
+  margin: 4px 0 !important;
+  border-collapse: collapse !important;
+  border: none !important;
+}
+
+.cart-dropdown-list-item .variation-table tr {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  width: 100% !important;
+  margin-bottom: 2px !important;
+}
+
+.cart-dropdown-list-item .variation-table td {
+  padding: 0 !important;
+  border: none !important;
+  font-size: 12px !important;
+  background: transparent !important;
+}
+
+.cart-dropdown-list-item .variation-table td:first-child {
+  font-weight: 500 !important;
+  color: #666 !important;
+  padding-right: 10px !important;
+}
+
+.cart-dropdown-list-item .variation-table td:last-child {
+  text-align: right !important;
+  font-weight: 600 !important;
+  color: #111 !important;
 }
 
 .cart-footer {

@@ -8767,7 +8767,7 @@ iframe[id^="tawkchat-"],
         background: rgba(255, 255, 255, 0.95) !important;
         backdrop-filter: blur(10px) saturate(180%) !important;
         -webkit-backdrop-filter: blur(10px) saturate(180%) !important;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15) !important;
         border: 1px solid rgba(0, 0, 0, 0.05) !important;
         padding: 0px 0 !important;
         height: 70px !important;
