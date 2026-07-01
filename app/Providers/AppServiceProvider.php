@@ -138,9 +138,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('userCurrency', function () {
             $user = app('user');
             $userCurrency = UserCurrency::where('user_id', $user->id)
-                ->where(function($q) {
-                    $q->where('code', 'INR')->orWhere('text', 'INR');
-                })->get();
+                ->where('text', 'INR')
+                ->get();
             if ($userCurrency->isEmpty()) {
                 $fallback = new UserCurrency();
                 $fallback->id = 999999;
@@ -148,7 +147,6 @@ class AppServiceProvider extends ServiceProvider
                 $fallback->is_default = 1;
                 $fallback->symbol = '₹';
                 $fallback->text = 'INR';
-                $fallback->code = 'INR';
                 $fallback->value = 1;
                 $fallback->symbol_position = 'left';
                 $userCurrency = collect([$fallback]);
@@ -206,9 +204,8 @@ class AppServiceProvider extends ServiceProvider
             }
 
             $userCurrentCurr = UserCurrency::where('user_id', $user->id)
-                ->where(function($q) {
-                    $q->where('code', 'INR')->orWhere('text', 'INR');
-                })->first();
+                ->where('text', 'INR')
+                ->first();
 
             if (empty($userCurrentCurr)) {
                 $fallback = new UserCurrency();
@@ -217,7 +214,6 @@ class AppServiceProvider extends ServiceProvider
                 $fallback->is_default = 1;
                 $fallback->symbol = '₹';
                 $fallback->text = 'INR';
-                $fallback->code = 'INR';
                 $fallback->value = 1;
                 $fallback->symbol_position = 'left';
                 $userCurrentCurr = $fallback;
@@ -237,9 +233,8 @@ class AppServiceProvider extends ServiceProvider
             }
 
             $userDefaultCurrency = UserCurrency::where('user_id', $user->id)
-                ->where(function($q) {
-                    $q->where('code', 'INR')->orWhere('text', 'INR');
-                })->first();
+                ->where('text', 'INR')
+                ->first();
 
             if (empty($userDefaultCurrency)) {
                 $fallback = new UserCurrency();
@@ -248,7 +243,6 @@ class AppServiceProvider extends ServiceProvider
                 $fallback->is_default = 1;
                 $fallback->symbol = '₹';
                 $fallback->text = 'INR';
-                $fallback->code = 'INR';
                 $fallback->value = 1;
                 $fallback->symbol_position = 'left';
                 $userDefaultCurrency = $fallback;
