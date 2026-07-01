@@ -149,6 +149,9 @@
   <!-- WhatsApp Chat Button -->
   <div id="WAButton"></div>
 
+  <div class="cart-dropdown" id="cart-dropdown-mobile"></div>
+  <div class="cart-sidebar-overlay"></div>
+
   @includeif('user-front.scripts')
   @yield('scripts')
   @includeIf('user-front.partials.plugins')

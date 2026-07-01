@@ -357,6 +357,65 @@
   font-weight: 500 !important;
   color: #6c757d !important;
 }
+
+/* --- Global Cart Sidebar Drawer & Overlay Backdrop --- */
+.cart-sidebar-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.4) !important;
+  z-index: 999999 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: all 0.3s ease !important;
+}
+
+.cart-sidebar-overlay.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#cart-dropdown-mobile {
+  position: fixed !important;
+  top: 0 !important;
+  right: -420px !important;
+  left: auto !important;
+  width: 420px !important;
+  max-width: 100% !important;
+  height: 100vh !important;
+  background: #ffffff !important;
+  border-left: 1px solid #e5e1db !important;
+  border-right: none !important;
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.15) !important;
+  margin-top: 0 !important;
+  z-index: 1000000 !important;
+  border-radius: 0 !important;
+  padding: 30px 24px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+#cart-dropdown-mobile.active {
+  right: 0 !important;
+  left: auto !important;
+}
+
+/* Close button and list item styling overrides for sidebar drawer */
+.cart-dropdown .cart-header {
+  display: flex !important;
+}
+
+#cart-dropdown-mobile .cart-dropdown-list {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  margin-bottom: 20px !important;
+}
 </style>
 
 @yield('styles')

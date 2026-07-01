@@ -473,7 +473,7 @@
             </a>
           </li>
           <li class="tolbar-item">
-            <a href="{{ route('front.user.cart', getParam()) }}" target="_self">
+            <a href="{{ route('front.user.cart', getParam()) }}" class="cart-sidebar-toggle" target="_self">
               <i class="fal fa-shopping-bag"></i>
               {{ $keywords['Cart'] ?? __('Cart') }}
               <span class="badge cart-dropdown-count">0</span>

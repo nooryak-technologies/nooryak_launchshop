@@ -38,7 +38,7 @@
         </div>
         <div class="col-xl-3 col-lg-3">
           <div class="header-center text-center">
-            <p class="m-0">{{ $header->header_middle_text ?? '' }}</p>
+            <!-- <p class="m-0">{{ $header->header_middle_text ?? '' }}</p> -->
           </div>
         </div>
         <div class="col-xl-3 col-lg-3 text-end">
@@ -159,7 +159,7 @@
           </li>
           @if ($shop_settings->catalog_mode != 1)
             <li class="menu-item">
-              <a href="{{ route('front.user.cart', getParam()) }}" class="menu-link "><i class="fal fa-shopping-cart"><span
+              <a href="{{ route('front.user.cart', getParam()) }}" class="menu-link cart-sidebar-toggle"><i class="fal fa-shopping-cart"><span
                     class="badge cart-dropdown-count">{{ $cartCount }}</span></i>
                 {{ $keywords['Cart'] ?? __('Cart') }} </a>
               <div class="cart-dropdown" id="cart-dropdown-header">

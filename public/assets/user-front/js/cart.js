@@ -305,15 +305,8 @@ $('body').on('click', '.btn-wishlist', function (e) {
     });
 
     $('body').on('click', '.cart-sidebar-toggle', function (e) {
-        let href = $(this).attr('href');
-        if (href && href !== 'javascript:void(0)') {
-            return;
-        }
         e.preventDefault();
-        if (window.innerWidth < 1200) {
-            $("#cart-dropdown-mobile").addClass("active");
-            $(".cart-sidebar-overlay").addClass("active");
-        }
+        cartDropdown(true);
     });
 
     $('body').on('click', '.close-cart-sidebar, .cart-sidebar-overlay', function (e) {
@@ -773,7 +766,7 @@ function cartDropdown(openDrawer = false) {
             $("#cart-dropdown-header").append(data);
             $("#cart-dropdown-mobile").html('');
             $("#cart-dropdown-mobile").append(data);
-            if (openDrawer && $(".header-v10").length > 0 && window.innerWidth < 1200) {
+            if (openDrawer) {
                 $("#cart-dropdown-mobile").addClass("active");
                 $(".cart-sidebar-overlay").addClass("active");
             }

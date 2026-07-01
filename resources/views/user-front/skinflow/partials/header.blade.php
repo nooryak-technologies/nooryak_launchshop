@@ -149,7 +149,7 @@
           </li>
           @if ($shop_settings->catalog_mode != 1)
             <li class="menu-item">
-              <a href="{{ route('front.user.cart', getParam()) }}" class="menu-link ">
+              <a href="{{ route('front.user.cart', getParam()) }}" class="menu-link cart-sidebar-toggle">
                 <i class="fal fa-shopping-cart"><span class="badge cart-dropdown-count">{{ $cartCount }}</span></i>
               </a>
               <div class="cart-dropdown" id="cart-dropdown-header">

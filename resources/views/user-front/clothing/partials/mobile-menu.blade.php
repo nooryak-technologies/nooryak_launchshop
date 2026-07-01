@@ -106,7 +106,7 @@
           </a>
         </li>
         <li class="tolbar-item">
-          <a class="{{ request()->routeIs('front.user.cart') ? 'active' : '' }}"
+          <a class="{{ request()->routeIs('front.user.cart') ? 'active' : '' }} cart-sidebar-toggle"
             href="{{ route('front.user.cart', getParam()) }}">
             <i class="fal fa-shopping-bag"></i>
             {{ $keywords['Cart'] ?? __('Cart') }}

@@ -133,7 +133,5 @@
     </div>
   </div>
 
-  <div class="cart-dropdown" id="cart-dropdown-mobile"></div>
-  <div class="cart-sidebar-overlay"></div>
 </header>
 <!-- Header v10 (Clothing) End -->
