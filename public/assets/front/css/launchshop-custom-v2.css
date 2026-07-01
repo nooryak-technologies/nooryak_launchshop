@@ -8741,7 +8741,7 @@ iframe[id^="tawkchat-"],
    Task 1: Reduce Logo Size & Task 2: Floating Sticky Header Capsule on Scroll
    ============================================================ */
 
-/* Reduced logo sizes */
+/* Reduced logo sizes for static header */
 .navbar-brand img {
     max-height: 40px !important;
     width: auto !important;
@@ -8755,9 +8755,7 @@ iframe[id^="tawkchat-"],
 
 /* Floating Sticky Header Capsule on Scroll (Desktop) */
 @media (min-width: 1200px) {
-    .header-area {
-        transition: all 0.3s ease-in-out !important;
-    }
+    .header-area,
     .header-area.is-sticky {
         top: 20px !important;
         left: 5% !important;
@@ -8770,20 +8768,60 @@ iframe[id^="tawkchat-"],
         -webkit-backdrop-filter: blur(10px) saturate(180%) !important;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
         border: 1px solid rgba(0, 0, 0, 0.05) !important;
-        padding: 5px 0 !important;
+        padding: 0px 0 !important;
+        height: 70px !important;
+        display: flex !important;
+        align-items: center !important;
+        transition: all 0.3s ease-in-out !important;
         animation: none !important; /* Disable default slideDown animation for smooth transition */
     }
     
+    .header-area .main-navbar,
+    .header-area .main-navbar .container-fluid,
+    .header-area .main-navbar .navbar,
+    .header-area.is-sticky .main-navbar,
+    .header-area.is-sticky .main-navbar .container-fluid,
+    .header-area.is-sticky .main-navbar .navbar {
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
+    
+    .header-area .main-navbar .navbar .navbar-brand,
     .header-area.is-sticky .main-navbar .navbar .navbar-brand {
         padding-left: 25px !important;
+        display: flex !important;
+        align-items: center !important;
     }
     
+    .header-area .main-navbar .navbar .navbar-brand img,
+    .header-area.is-sticky .main-navbar .navbar .navbar-brand img {
+        max-height: 36px !important; /* Slightly smaller logo in sticky header for better fit */
+    }
+    
+    .header-area .main-navbar .navbar .side-option,
     .header-area.is-sticky .main-navbar .navbar .side-option {
         padding-right: 25px !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
     }
     
+    /* Make the buttons more compact and rounded inside the sticky capsule */
+    .header-area .side-option .btn-ls-primary,
+    .header-area .side-option .btn-ls-outline,
+    .header-area.is-sticky .side-option .btn-ls-primary,
+    .header-area.is-sticky .side-option .btn-ls-outline {
+        padding: 8px 20px !important;
+        font-size: 14px !important;
+        border-radius: 30px !important;
+    }
+    
+    .header-area .navbar-nav .nav-link,
     .header-area.is-sticky .navbar-nav .nav-link {
-        padding-top: 15px !important;
-        padding-bottom: 15px !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        line-height: 70px !important; /* Vertically center links using line-height */
     }
 }
