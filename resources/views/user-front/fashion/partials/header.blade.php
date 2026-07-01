@@ -65,7 +65,7 @@
                 </ul>
               </li>
 
-              <li class="menu-item">
+              {{-- <li class="menu-item">
                 @if ($userCurrentCurr->id)
                   <a href="javascript:void(0)">{{ $userCurrentCurr->symbol }}
                     &nbsp;{{ convertUtf8($userCurrentCurr->text) }}</a>
@@ -79,7 +79,7 @@
                     </li>
                   @endforeach
                 </ul>
-              </li>
+              </li> --}}
 
               <li class="menu-item">
                 <a href="#"><i class="fal fa-user"></i>{{ $keywords['My Account'] ?? __('My Account') }}</a>
@@ -174,7 +174,7 @@
           </li>
           @if ($shop_settings->catalog_mode != 1)
             <li class="menu-item">
-              <a href="javascript:void(0)" class="menu-link "><i class="fal fa-shopping-cart"><span
+              <a href="{{ route('front.user.cart', getParam()) }}" class="menu-link "><i class="fal fa-shopping-cart"><span
                     class="badge cart-dropdown-count">{{ $cartCount }}</span></i></a>
               <div class="cart-dropdown" id="cart-dropdown-header">
               </div>

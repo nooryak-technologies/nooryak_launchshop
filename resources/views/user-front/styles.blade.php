@@ -298,6 +298,65 @@
 .product-details-related-products {
   padding-top: 20px !important;
 }
+
+/* --- Task 3: Cart Popup Padding & Styling Fix (All Templates) --- */
+.cart-dropdown,
+#cart-dropdown-header,
+#cart-dropdown-mobile {
+  padding: 20px 24px 24px 24px !important;
+  box-sizing: border-box !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+.cart-dropdown-list {
+  padding: 0 !important;
+  margin: 0 0 15px 0 !important;
+  list-style: none !important;
+}
+
+.cart-dropdown-list-item {
+  padding: 10px 0 !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.cart-dropdown-list-item:last-child {
+  border-bottom: none !important;
+}
+
+.cart-dropdown-list-item .cart-img {
+  margin-right: 15px !important;
+  flex-shrink: 0 !important;
+}
+
+.cart-dropdown-list-item .cart-title {
+  flex-grow: 1 !important;
+  min-width: 0 !important;
+}
+
+.cart-dropdown-list-item .cart-delete {
+  margin-left: 15px !important;
+  flex-shrink: 0 !important;
+}
+
+.cart-footer {
+  padding-top: 15px !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Empty cart spacing */
+.cart-dropdown h4.text-center,
+#cart-dropdown-header h4.text-center,
+#cart-dropdown-mobile h4.text-center {
+  padding: 30px 10px !important;
+  margin: 0 !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  color: #6c757d !important;
+}
 </style>
 
 @yield('styles')

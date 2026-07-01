@@ -8736,3 +8736,54 @@ iframe[id^="tawkchat-"],
         display: none;
     }
 }
+
+/* ============================================================
+   Task 1: Reduce Logo Size & Task 2: Floating Sticky Header Capsule on Scroll
+   ============================================================ */
+
+/* Reduced logo sizes */
+.navbar-brand img {
+    max-height: 40px !important;
+    width: auto !important;
+}
+
+/* Mobile responsive menu logo */
+.header-area .main-responsive-nav .main-responsive-menu .logo img {
+    max-height: 32px !important;
+    width: auto !important;
+}
+
+/* Floating Sticky Header Capsule on Scroll (Desktop) */
+@media (min-width: 1200px) {
+    .header-area {
+        transition: all 0.3s ease-in-out !important;
+    }
+    .header-area.is-sticky {
+        top: 20px !important;
+        left: 5% !important;
+        right: 5% !important;
+        width: 90% !important;
+        margin: 0 auto !important;
+        border-radius: 50px !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(10px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(10px) saturate(180%) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+        border: 1px solid rgba(0, 0, 0, 0.05) !important;
+        padding: 5px 0 !important;
+        animation: none !important; /* Disable default slideDown animation for smooth transition */
+    }
+    
+    .header-area.is-sticky .main-navbar .navbar .navbar-brand {
+        padding-left: 25px !important;
+    }
+    
+    .header-area.is-sticky .main-navbar .navbar .side-option {
+        padding-right: 25px !important;
+    }
+    
+    .header-area.is-sticky .navbar-nav .nav-link {
+        padding-top: 15px !important;
+        padding-bottom: 15px !important;
+    }
+}

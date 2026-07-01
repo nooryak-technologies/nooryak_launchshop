@@ -46,7 +46,7 @@
           </ul>
         </li>
         <!-- Currency -->
-        <li class="menu-action-item">
+        {{-- <li class="menu-action-item">
           <a href="javascript:void(0)">
             <span class="icon"><i>{{ $userCurrentCurr->symbol }}</i></span>
             {{ convertUtf8($userCurrentCurr->text) }}
@@ -61,7 +61,7 @@
               </li>
             @endforeach
           </ul>
-        </li>
+        </li> --}}
         <!-- Account -->
         <li class="menu-action-item">
           <a href="javascript:void(0)">

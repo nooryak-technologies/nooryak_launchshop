@@ -137,7 +137,22 @@ class AppServiceProvider extends ServiceProvider
         //user currency
         $this->app->singleton('userCurrency', function () {
             $user = app('user');
-            $userCurrency = UserCurrency::where('user_id', $user->id)->get();
+            $userCurrency = UserCurrency::where('user_id', $user->id)
+                ->where(function($q) {
+                    $q->where('code', 'INR')->orWhere('text', 'INR');
+                })->get();
+            if ($userCurrency->isEmpty()) {
+                $fallback = new UserCurrency();
+                $fallback->id = 999999;
+                $fallback->user_id = $user->id;
+                $fallback->is_default = 1;
+                $fallback->symbol = '₹';
+                $fallback->text = 'INR';
+                $fallback->code = 'INR';
+                $fallback->value = 1;
+                $fallback->symbol_position = 'left';
+                $userCurrency = collect([$fallback]);
+            }
             return $userCurrency;
         });
         //user languages
@@ -190,29 +205,27 @@ class AppServiceProvider extends ServiceProvider
                 $user = app('user');
             }
 
-            if (session()->has('user_curr_' . $user->username)) {
-                $userCurrentCurr = UserCurrency::where('id', session()->get('user_curr_' . $user->username))->first();
+            $userCurrentCurr = UserCurrency::where('user_id', $user->id)
+                ->where(function($q) {
+                    $q->where('code', 'INR')->orWhere('text', 'INR');
+                })->first();
 
-                if (empty($userCurrentCurr)) {
-                    $userCurrentCurr = UserCurrency::where('is_default', 1)->where('user_id', $user->id)->first();
-                    if (empty($userCurrentCurr)) {
-                        $userCurrentCurr = UserCurrency::where('user_id', $user->id)->orderBy('id', 'asc')->first();
-                    }
-
-                    if (!empty($userCurrentCurr)) {
-                        session()->put('user_curr_' . $user->username, $userCurrentCurr->id);
-                    }
-                }
-            } else {
-                $userCurrentCurr = UserCurrency::where('is_default', 1)->where('user_id', $user->id)->first();
-                if (empty($userCurrentCurr)) {
-                    $userCurrentCurr = UserCurrency::where('user_id', $user->id)->orderBy('id', 'asc')->first();
-                }
-
-                if (!empty($userCurrentCurr)) {
-                    session()->put('user_curr_' . $user->username, $userCurrentCurr->id);
-                }
+            if (empty($userCurrentCurr)) {
+                $fallback = new UserCurrency();
+                $fallback->id = 999999;
+                $fallback->user_id = $user->id;
+                $fallback->is_default = 1;
+                $fallback->symbol = '₹';
+                $fallback->text = 'INR';
+                $fallback->code = 'INR';
+                $fallback->value = 1;
+                $fallback->symbol_position = 'left';
+                $userCurrentCurr = $fallback;
             }
+
+            session()->put('user_curr_' . $user->username, $userCurrentCurr->id);
+            session()->put('user_curr_sign_' . $user->username, $userCurrentCurr->symbol);
+
             return $userCurrentCurr;
         });
         //selected currency for currency converter helper
@@ -223,17 +236,22 @@ class AppServiceProvider extends ServiceProvider
                 $user = app('user');
             }
 
-            $userDefaultCurrency = UserCurrency::where('is_default', 1)
-                ->where('user_id', $user->id)
-                ->first();
+            $userDefaultCurrency = UserCurrency::where('user_id', $user->id)
+                ->where(function($q) {
+                    $q->where('code', 'INR')->orWhere('text', 'INR');
+                })->first();
 
-            //if currency is not set as default then set the first currency as default
-            if (is_null($userDefaultCurrency)) {
-                $userDefaultCurrency = UserCurrency::where('user_id', $user->id)->first();
-
-                if ($userDefaultCurrency) {
-                    $userDefaultCurrency->update(['is_default' => 1]);
-                }
+            if (empty($userDefaultCurrency)) {
+                $fallback = new UserCurrency();
+                $fallback->id = 999999;
+                $fallback->user_id = $user->id;
+                $fallback->is_default = 1;
+                $fallback->symbol = '₹';
+                $fallback->text = 'INR';
+                $fallback->code = 'INR';
+                $fallback->value = 1;
+                $fallback->symbol_position = 'left';
+                $userDefaultCurrency = $fallback;
             }
 
             return $userDefaultCurrency;

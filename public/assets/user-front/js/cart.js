@@ -305,6 +305,10 @@ $('body').on('click', '.btn-wishlist', function (e) {
     });
 
     $('body').on('click', '.cart-sidebar-toggle', function (e) {
+        let href = $(this).attr('href');
+        if (href && href !== 'javascript:void(0)') {
+            return;
+        }
         e.preventDefault();
         if (window.innerWidth < 1200) {
             $("#cart-dropdown-mobile").addClass("active");
