@@ -8749,12 +8749,13 @@ iframe[id^="tawkchat-"],
 
 /* Mobile responsive menu logo */
 .header-area .main-responsive-nav .main-responsive-menu .logo img {
-    max-height: 32px !important;
+    max-height: 62px !important;
     width: auto !important;
 }
 
 /* Floating Sticky Header Capsule on Scroll (Desktop) */
 @media (min-width: 1200px) {
+
     .header-area,
     .header-area.is-sticky {
         top: 20px !important;
@@ -8773,9 +8774,10 @@ iframe[id^="tawkchat-"],
         display: flex !important;
         align-items: center !important;
         transition: all 0.3s ease-in-out !important;
-        animation: none !important; /* Disable default slideDown animation for smooth transition */
+        animation: none !important;
+        /* Disable default slideDown animation for smooth transition */
     }
-    
+
     .header-area .main-navbar,
     .header-area .main-navbar .container-fluid,
     .header-area .main-navbar .navbar,
@@ -8787,19 +8789,20 @@ iframe[id^="tawkchat-"],
         align-items: center !important;
         width: 100% !important;
     }
-    
+
     .header-area .main-navbar .navbar .navbar-brand,
     .header-area.is-sticky .main-navbar .navbar .navbar-brand {
-        padding-left: 25px !important;
+        padding-left: 0px !important;
         display: flex !important;
         align-items: center !important;
     }
-    
+
     .header-area .main-navbar .navbar .navbar-brand img,
     .header-area.is-sticky .main-navbar .navbar .navbar-brand img {
-        max-height: 36px !important; /* Slightly smaller logo in sticky header for better fit */
+        max-height: 74px !important;
+        /* Slightly smaller logo in sticky header for better fit */
     }
-    
+
     .header-area .main-navbar .navbar .side-option,
     .header-area.is-sticky .main-navbar .navbar .side-option {
         padding-right: 25px !important;
@@ -8807,7 +8810,7 @@ iframe[id^="tawkchat-"],
         display: flex !important;
         align-items: center !important;
     }
-    
+
     /* Make the buttons more compact and rounded inside the sticky capsule */
     .header-area .side-option .btn-ls-primary,
     .header-area .side-option .btn-ls-outline,
@@ -8817,11 +8820,12 @@ iframe[id^="tawkchat-"],
         font-size: 14px !important;
         border-radius: 30px !important;
     }
-    
+
     .header-area .navbar-nav .nav-link,
     .header-area.is-sticky .navbar-nav .nav-link {
         padding-top: 0 !important;
         padding-bottom: 0 !important;
-        line-height: 70px !important; /* Vertically center links using line-height */
+        line-height: 70px !important;
+        /* Vertically center links using line-height */
     }
 }
