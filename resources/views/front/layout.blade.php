@@ -307,6 +307,9 @@
     var show_less = "{{ __('Show Less') }}";
   </script>
 
+  <!-- Lenis Smooth Scroll -->
+  <script src="{{ asset('assets/front/js/lenis.min.js') }}"></script>
+
   <!-- Main script JS -->
   <script src="{{ asset('assets/front/js/script.js') }}"></script>
 
@@ -436,16 +439,46 @@
         }
       });
 
-      // Sticky header scroll shadow
-      const header = document.querySelector('.header-area');
-      if (header) {
-        window.addEventListener('scroll', function() {
-          if (window.scrollY > 10) {
-            header.classList.add('scrolled');
-          } else {
-            header.classList.remove('scrolled');
-          }
-        }, { passive: true });
+      // ─────────────────────────────────────────────────────────
+      // LENIS SMOOTH SCROLL — initialised here after all scripts
+      // ─────────────────────────────────────────────────────────
+      if (typeof Lenis !== 'undefined') {
+        var lenis = new Lenis({
+          duration: 1.2,
+          easing: function(t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+          smooth: true,
+          smoothTouch: false,
+          autoRaf: true,
+        });
+
+        // Sticky header scroll shadow driven by Lenis
+        var header = document.querySelector('.header-area');
+        if (header) {
+          lenis.on('scroll', function(e) {
+            if (e.scroll > 10) {
+              header.classList.add('scrolled');
+            } else {
+              header.classList.remove('scrolled');
+            }
+          });
+        }
+
+        // Keep AOS in sync with Lenis
+        lenis.on('scroll', function() {
+          if (typeof AOS !== 'undefined') { AOS.refresh(); }
+        });
+      } else {
+        // Fallback: native scroll for header shadow if Lenis failed to load
+        var header = document.querySelector('.header-area');
+        if (header) {
+          window.addEventListener('scroll', function() {
+            if (window.scrollY > 10) {
+              header.classList.add('scrolled');
+            } else {
+              header.classList.remove('scrolled');
+            }
+          }, { passive: true });
+        }
       }
 
       // Close mobile menu when clicking outside (on the overlay)

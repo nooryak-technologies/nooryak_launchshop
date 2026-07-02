@@ -18,34 +18,62 @@
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-/* Hide scrollbars globally across all browsers while keeping page scrollable */
-* {
-    scrollbar-width: none !important;
-    /* Firefox */
-    -ms-overflow-style: none !important;
-    /* IE 10+ */
+/* Hide scrollbars for normal elements but allow and style the orange scrollbar on html */
+html {
+    scrollbar-width: auto !important; /* Firefox */
+    scrollbar-color: #FF5A2C #F7FAFC !important; /* thumb background (Firefox) */
+    -ms-overflow-style: auto !important; /* IE/Edge */
 }
 
-*::-webkit-scrollbar {
+html::-webkit-scrollbar {
+    display: block !important;
+    width: 10px !important;
+    height: 10px !important;
+}
+
+html::-webkit-scrollbar-track {
+    display: block !important;
+    background: #F7FAFC !important;
+}
+
+html::-webkit-scrollbar-thumb {
+    display: block !important;
+    background: #FF5A2C !important;
+    border-radius: 10px !important;
+    border: 2px solid #F7FAFC !important;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+    background: #e0451a !important;
+}
+
+/* Hide scrollbars globally for inner containers to keep UI clean, while keeping page scrollable */
+*:not(html) {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+
+*:not(html)::-webkit-scrollbar {
     display: none !important;
     width: 0 !important;
     height: 0 !important;
     background: transparent !important;
 }
 
-*::-webkit-scrollbar-thumb {
+*:not(html)::-webkit-scrollbar-thumb {
     display: none !important;
     background: transparent !important;
 }
 
-*::-webkit-scrollbar-track {
+*:not(html)::-webkit-scrollbar-track {
     display: none !important;
     background: transparent !important;
 }
 
 html {
-    scroll-behavior: smooth;
+    /* scroll-behavior: smooth handled by Lenis */
 }
+
 
 body {
     font-family: var(--font-primary) !important;
@@ -5160,7 +5188,7 @@ i[id$="EyeIcon"]:hover {
 }
 
 .header-area.scrolled {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2) !important;
 }
 
 /* =========================================================
@@ -7114,8 +7142,8 @@ i[id$="EyeIcon"]:hover {
         border: 1px solid rgb(0 0 0 / 30%) !important;
         border-radius: 30px !important;
         padding: 8px 24px !important;
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08) !important;
-        -webkit-box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08) !important;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.22) !important;
+        -webkit-box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.22) !important;
         position: relative !important;
         display: flex !important;
         align-items: center !important;
@@ -8767,7 +8795,7 @@ iframe[id^="tawkchat-"],
         background: rgba(255, 255, 255, 0.95) !important;
         backdrop-filter: blur(10px) saturate(180%) !important;
         -webkit-backdrop-filter: blur(10px) saturate(180%) !important;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15) !important;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3) !important;
         border: 1px solid rgba(0, 0, 0, 0.05) !important;
         padding: 0px 0 !important;
         height: 70px !important;
