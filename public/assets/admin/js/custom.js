@@ -992,7 +992,14 @@ $(function ($) {
             e.stopImmediatePropagation();
         }
     });
+
+    // Close mobile sidebar when clicking on main panel overlay
+    $(document).on('click', '.nav_open .main-panel', function() {
+        $("html").removeClass("nav_open");
+        $(".sidenav-toggler").removeClass("toggled");
+    });
 });
+
 
 
 

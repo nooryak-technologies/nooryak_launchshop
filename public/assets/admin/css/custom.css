@@ -1377,8 +1377,8 @@ a[title=".fab fa-acquisitions-incorporated"] {
 }
 body[data-background-color="dark"] #adminThemeForm .theme-circle-btn,
 body[data-background-color="dark"] .profile-circle-btn {
-    background: #1a2035 !important;
-    border-color: #2f374b !important;
+    background: #161616 !important;
+    border-color: #282828 !important;
     color: #b9babf !important;
 }
 body[data-background-color="dark"] #adminThemeForm .selectgroup-input:checked + .theme-circle-btn {
@@ -1487,4 +1487,127 @@ body[data-background-color="dark"] #adminThemeForm .selectgroup-input:checked + 
     font-size: 13px;
     font-weight: 500;
     color: rgba(255, 255, 255, 0.95);
+}
+
+/* 6. Comprehensive OLED Black & Charcoal Dark Theme Overrides */
+body[data-background-color="dark"],
+body[data-background-color="dark"] .wrapper,
+body[data-background-color="dark"] .main-panel,
+body[data-background-color="dark"] .content,
+body[data-background-color="dark"] .main-header,
+.navbar[data-background-color="dark"],
+.navbar[data-background-color="dark"] .navbar-header {
+    background: #000000 !important;
+    background-color: #000000 !important;
+}
+
+body[data-background-color="dark"] .sidebar,
+body[data-background-color="dark"] .logo-header {
+    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+body[data-background-color="dark"] .main-header .navbar-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+body[data-background-color="dark"] .card,
+body[data-background-color="dark"] .card-header,
+body[data-background-color="dark"] .card-body,
+body[data-background-color="dark"] .card-footer,
+body[data-background-color="dark"] .modal-content,
+body[data-background-color="dark"] .dropdown-menu,
+body[data-background-color="dark"] .list-group-item,
+body[data-background-color="dark"] .timeline > li > .timeline-panel,
+body[data-background-color="dark"] .footer,
+body[data-background-color="dark"] .bg-dark,
+body[data-background-color="dark"] .bg-dark2,
+body[data-background-color="dark"] .card-pricing2,
+body[data-background-color="dark"] .page-with-aside .page-aside {
+    background: #111111 !important;
+    background-color: #111111 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+body[data-background-color="dark"] .form-control,
+body[data-background-color="dark"] .custom-select,
+body[data-background-color="dark"] .select2-container--default .select2-selection--single,
+body[data-background-color="dark"] .select2-dropdown,
+body[data-background-color="dark"] .custom-file-label,
+body[data-background-color="dark"] .dropzone:hover,
+body[data-background-color="dark"] .form-control[readonly],
+body[data-background-color="dark"] .form-control[disabled],
+body[data-background-color="dark"] .bootstrap-tagsinput,
+body[data-background-color="dark"] .bootstrap-tagsinput input,
+body[data-background-color="dark"] .ui-state-default,
+body[data-background-color="dark"] .ui-widget-content .ui-state-default,
+body[data-background-color="dark"] .ui-widget-header .ui-state-default,
+body[data-background-color="dark"] .ui-button {
+    background: #161616 !important;
+    background-color: #161616 !important;
+    border-color: #282828 !important;
+    color: #ffffff !important;
+}
+
+body[data-background-color="dark"] .border,
+body[data-background-color="dark"] .border-top,
+body[data-background-color="dark"] .border-bottom,
+body[data-background-color="dark"] .border-left,
+body[data-background-color="dark"] .border-right,
+body[data-background-color="dark"] .table td,
+body[data-background-color="dark"] .table th,
+body[data-background-color="dark"] .table thead th,
+body[data-background-color="dark"] .modal-header,
+body[data-background-color="dark"] .modal-footer,
+body[data-background-color="dark"] .divider,
+body[data-background-color="dark"] .separator-dashed,
+body[data-background-color="dark"] .separator-solid,
+body[data-background-color="dark"] .separator-dot,
+body[data-background-color="dark"] .list-group .list-group-item,
+body[data-background-color="dark"] .main-panel .page-divider {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* 7. Fix Mobile Sidebar Overlay (Do Not Shift or Break Content) */
+@media screen and (max-width: 991px) {
+    html.nav_open .main-panel,
+    html.nav_open .main-header,
+    .nav_open .main-panel,
+    .nav_open .main-header,
+    .nav_open .wrapper .main-panel,
+    .nav_open .wrapper .main-header {
+        transform: none !important;
+        -webkit-transform: none !important;
+        -moz-transform: none !important;
+        -ms-transform: none !important;
+        -o-transform: none !important;
+    }
+    html.nav_open .sidebar,
+    .nav_open .sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: auto !important;
+        z-index: 9999 !important;
+        box-shadow: 0 0 35px rgba(0, 0, 0, 0.75) !important;
+    }
+    body[data-dashboard-language="rtl"] html.nav_open .sidebar,
+    body[data-dashboard-language="rtl"] .nav_open .sidebar,
+    .rtl html.nav_open .sidebar,
+    .rtl .nav_open .sidebar {
+        left: auto !important;
+        right: 0 !important;
+    }
+    html.nav_open .main-panel:after,
+    .nav_open .main-panel:after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9990;
+        pointer-events: auto;
+    }
 }

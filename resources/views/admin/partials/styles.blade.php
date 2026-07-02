@@ -10,7 +10,6 @@
 <link rel="stylesheet" href="{{ asset('assets/admin/css/flatpickr.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/admin/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/admin/css/atlantis.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/admin/css/custom.css') }}">
 @if (request()->cookie('admin-theme') == 'dark')
   <link rel="stylesheet" href="{{ asset('assets/admin/css/dark.css') }}">
 @endif
@@ -18,4 +17,5 @@
 @if ($default->rtl == 1)
   <link rel="stylesheet" href="{{ asset('assets/admin/css/rtl-style.css') }}">
 @endif
+<link rel="stylesheet" href="{{ asset('assets/admin/css/custom.css') }}">
 @yield('styles')

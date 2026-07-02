@@ -398,7 +398,7 @@
             <div class="card-header border-0 pb-0 pt-4 px-4 bg-transparent d-flex justify-content-between align-items-center">
               <h4 class="card-title font-weight-bold mb-0 d-flex align-items-center" style="font-size: 18px;">
                 <span class="d-inline-flex align-items-center justify-content-center mr-2" style="width: 34px; height: 34px; border-radius: 50%; background: rgba(16, 185, 129, 0.1);">
-                  <i class="fas fa-dollar-sign text-success" style="font-size: 15px;"></i>
+                  <i class="fas fa-rupee-sign text-success" style="font-size: 15px;"></i>
                 </span>
                 {{ __('Recent Payment Logs') }}
               </h4>
