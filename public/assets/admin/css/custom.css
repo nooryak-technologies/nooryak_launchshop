@@ -1301,3 +1301,190 @@ a[title=".fab fa-acquisitions-incorporated"] {
     transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
+
+/* ==========================================================================
+   Task 2 & Task 1 Overrides: Fully Black Sidebar & Reference UI Styling
+   ========================================================================== */
+
+/* 1. Fully black sidebar and logo header by default and after toggle */
+.sidebar, .sidebar.sidebar-style-2, .sidebar[data-background-color="dark"], .sidebar[data-background-color="dark2"], .sidebar[data-background-color="black"],
+.logo-header, .logo-header[data-background-color="dark"], .logo-header[data-background-color="dark2"], .logo-header[data-background-color="black"] {
+    background: #000000 !important;
+}
+
+/* 2. Active item styling for sidebar in black theme (Vibrant blue pill matching reference image) */
+.sidebar.sidebar-style-2 .nav > .nav-item.active > a,
+.sidebar[data-background-color="dark2"].sidebar-style-2 .nav > .nav-item.active > a,
+.sidebar[data-background-color="dark"].sidebar-style-2 .nav > .nav-item.active > a {
+    background: #0d6efd !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.35) !important;
+}
+.sidebar.sidebar-style-2 .nav > .nav-item.active > a i,
+.sidebar.sidebar-style-2 .nav > .nav-item.active > a p,
+.sidebar[data-background-color="dark2"].sidebar-style-2 .nav > .nav-item.active > a i,
+.sidebar[data-background-color="dark2"].sidebar-style-2 .nav > .nav-item.active > a p {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+.sidebar[data-background-color="dark2"] .nav > .nav-item a:hover,
+.sidebar[data-background-color="dark2"] .nav > .nav-item a:focus {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-radius: 10px !important;
+}
+
+/* 3. Sidebar search input in black theme */
+.sidebar .sidebar-search {
+    background-color: #111318 !important;
+    border: 1px solid #2a2e39 !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 10px 15px !important;
+}
+.sidebar .sidebar-search::-webkit-input-placeholder { color: #6c757d !important; }
+.sidebar .sidebar-search::-moz-placeholder { color: #6c757d !important; }
+
+/* 4. Top Navbar circular theme toggle buttons */
+#adminThemeForm .selectgroup {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+#adminThemeForm .selectgroup-item {
+    margin: 0 !important;
+}
+#adminThemeForm .theme-circle-btn,
+.profile-circle-btn {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 1px solid #e2e8f0 !important;
+    background: #ffffff !important;
+    color: #64748b !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03) !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer;
+}
+#adminThemeForm .selectgroup-input:checked + .theme-circle-btn {
+    background: #0d6efd !important;
+    color: #ffffff !important;
+    border-color: #0d6efd !important;
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.25) !important;
+}
+body[data-background-color="dark"] #adminThemeForm .theme-circle-btn,
+body[data-background-color="dark"] .profile-circle-btn {
+    background: #1a2035 !important;
+    border-color: #2f374b !important;
+    color: #b9babf !important;
+}
+body[data-background-color="dark"] #adminThemeForm .selectgroup-input:checked + .theme-circle-btn {
+    background: #0d6efd !important;
+    color: #ffffff !important;
+    border-color: #0d6efd !important;
+}
+
+/* 5. Custom Dashboard Stat Card Gradients */
+.stat-card-gradient-blue {
+    background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%) !important;
+    color: #fff !important;
+    border: 0 !important;
+    border-radius: 16px !important;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(30, 136, 229, 0.25) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stat-card-gradient-purple {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%) !important;
+    color: #fff !important;
+    border: 0 !important;
+    border-radius: 16px !important;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(139, 92, 246, 0.25) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stat-card-gradient-cyan {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%) !important;
+    color: #fff !important;
+    border: 0 !important;
+    border-radius: 16px !important;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(6, 182, 212, 0.25) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stat-card-gradient-orange {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+    color: #fff !important;
+    border: 0 !important;
+    border-radius: 16px !important;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(249, 115, 22, 0.25) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stat-card-gradient-green {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    color: #fff !important;
+    border: 0 !important;
+    border-radius: 16px !important;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.25) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stat-card-gradient-red {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    color: #fff !important;
+    border: 0 !important;
+    border-radius: 16px !important;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(239, 68, 68, 0.25) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stat-card-gradient-blue:hover,
+.stat-card-gradient-purple:hover,
+.stat-card-gradient-cyan:hover,
+.stat-card-gradient-orange:hover,
+.stat-card-gradient-green:hover,
+.stat-card-gradient-red:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2) !important;
+}
+.stat-card-icon-box {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.stat-card-watermark {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    font-size: 85px;
+    opacity: 0.15;
+    color: #ffffff;
+    pointer-events: none;
+    line-height: 1;
+}
+.stat-card-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 12px;
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.95);
+}

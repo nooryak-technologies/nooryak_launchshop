@@ -11,8 +11,9 @@
 
 @section('content')
   <div class="mt-2 mb-4">
-    <h2 class="pb-2">{{ __('Welcome back') }},
-      {{ Auth::guard('web')->user()->shop_name ?? Auth::guard('web')->user()->username }}!</h2>
+    <h2 class="pb-1 font-weight-bold" style="font-size: 26px; color: inherit;">{{ __('Welcome back') }},
+      {{ Auth::guard('web')->user()->shop_name ?? Auth::guard('web')->user()->username }}! 👋</h2>
+    <p class="text-muted mb-0" style="font-size: 15px;">{{ __("Here's what's happening with your store today.") }}</p>
   </div>
   @if (is_null($package))
     @php
@@ -39,39 +40,45 @@
       </div>
     @endif
   @else
-    <div class="row justify-content-center align-items-center mb-1">
+    <div class="row justify-content-center align-items-center mb-4">
       <div class="col-12">
-        <div class="alert border-left border-primary text-dark">
+        <div class="card card-body py-3 px-4 mb-0 border-0 shadow-sm" style="border-radius: 12px;">
           @if ($package_count >= 2)
             @if ($next_membership->status == 0)
-              <strong
-                class="text-danger">{{ __('You have requested a package which needs an action (Approval / Rejection) by Admin. You will be notified via mail once an action is taken.') }}</strong><br>
+              <div class="alert alert-danger mb-2 p-2" style="border-radius: 8px; font-size: 13px;">
+                <strong>{{ __('You have requested a package which needs an action (Approval / Rejection) by Admin. You will be notified via mail once an action is taken.') }}</strong>
+              </div>
             @elseif ($next_membership->status == 1)
-              <strong
-                class="text-danger">{{ __('You have another package to activate after the current package expires. You cannot purchase / extend any package, until the next package is activated') }}</strong><br>
+              <div class="alert alert-danger mb-2 p-2" style="border-radius: 8px; font-size: 13px;">
+                <strong>{{ __('You have another package to activate after the current package expires. You cannot purchase / extend any package, until the next package is activated') }}</strong>
+              </div>
             @endif
           @endif
-
-          <strong>{{ __('Current Package:') }} </strong> {{ __($current_package->title) }}
-          <span class="badge badge-secondary">{{ __($current_package->term) }}</span>
-          @if ($current_membership->is_trial == 1)
-            ({{ __('Expire Date:') }}
-            {{ Carbon\Carbon::parse($current_membership->expire_date)->format('jS M ,Y') }})
-            <span class="badge badge-primary">{{ __('Trial') }}</span>
-          @else
-            ({{ __('Expire Date:') }}
-            {{ $current_package->term === 'lifetime' ? __('Lifetime') : Carbon\Carbon::parse($current_membership->expire_date)->format('jS M ,Y') }})
-          @endif
-
+          <div class="d-flex align-items-center flex-wrap">
+            <div class="mr-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; border-radius: 50%; background: rgba(13, 110, 253, 0.1);">
+              <i class="fas fa-cube text-primary" style="font-size: 20px;"></i>
+            </div>
+            <div class="d-flex align-items-center flex-wrap my-1">
+              <span class="mr-1 font-weight-bold">{{ __('Current Package:') }}</span>
+              <span class="mr-2 font-weight-bold">{{ __($current_package->title) }}</span>
+              <span class="badge badge-pill text-white mr-2" style="background: #6366f1; padding: 5px 12px; font-size: 12px; font-weight: 600;">{{ __($current_package->term) }}</span>
+              <span class="text-muted" style="font-size: 13px;">
+                @if ($current_membership->is_trial == 1)
+                  ({{ __('Expire Date:') }} {{ Carbon\Carbon::parse($current_membership->expire_date)->format('jS M, Y') }})
+                  <span class="badge badge-primary ml-1">{{ __('Trial') }}</span>
+                @else
+                  ({{ __('Expire Date:') }} {{ $current_package->term === 'lifetime' ? __('Lifetime') : Carbon\Carbon::parse($current_membership->expire_date)->format('jS M, Y') }})
+                @endif
+              </span>
+            </div>
+          </div>
           @if ($package_count >= 2)
-            <div>
+            <div class="mt-2 pt-2 border-top" style="font-size: 13px;">
               <strong>{{ __('Next Package To Activate:') }} </strong>
               {{ $next_package->title }} <span class="badge badge-secondary">{{ $next_package->term }}</span>
               @if ($current_package->term != 'lifetime' && $current_membership->is_trial != 1)
-                ({{ __('Activation Date:') }}
-                {{ Carbon\Carbon::parse($next_membership->start_date)->format('jS M ,Y') }},
-                {{ __('Expire Date:') }}
-                {{ $next_package->term === 'lifetime' ? __('Lifetime') : Carbon\Carbon::parse($next_membership->expire_date)->format('jS M ,Y') }})
+                ({{ __('Activation Date:') }} {{ Carbon\Carbon::parse($next_membership->start_date)->format('jS M, Y') }},
+                {{ __('Expire Date:') }} {{ $next_package->term === 'lifetime' ? __('Lifetime') : Carbon\Carbon::parse($next_membership->expire_date)->format('jS M, Y') }})
               @endif
               @if ($next_membership->status == 0)
                 <span class="badge badge-warning">{{ __('Decision Pending') }}</span>
@@ -82,83 +89,83 @@
       </div>
     </div>
   @endif
+
   <div class="row">
     @if (!is_null($package))
-      <div class="col-sm-6 col-md-4">
-        <a class="card card-stats card-primary card-round"
+      <div class="col-sm-6 col-md-4 mb-4">
+        <a class="card card-stats card-round stat-card-gradient-blue card-tooltip-trigger h-100 mb-0 d-block p-3"
           href="{{ route('user.item.index', ['language' => $default->code]) }}">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-5">
-                <div class="icon-big text-center">
-                  <i class="fas fa-store-alt"></i>
-                </div>
-              </div>
-              <div class="col-7 col-stats">
-                <div class="numbers">
-                  <p class="card-category">{{ __('Total Items') }}</p>
-                  <h4 class="card-title">{{ $total_items }}</h4>
-                </div>
-              </div>
+          <div class="d-flex align-items-center">
+            <div class="stat-card-icon-box mr-3">
+              <i class="fas fa-store-alt text-primary" style="font-size: 22px;"></i>
             </div>
+            <div>
+              <p class="mb-1 font-weight-500 text-white" style="font-size: 14px; opacity: 0.9;">{{ __('Total Items') }}</p>
+              <h3 class="mb-0 font-weight-bold text-white" style="font-size: 30px; line-height: 1;">{{ $total_items }}</h3>
+            </div>
+          </div>
+          <i class="fas fa-store-alt stat-card-watermark"></i>
+          <div class="stat-card-divider">
+            <span>{{ __('View all items') }}</span>
+            <i class="fas fa-arrow-right"></i>
           </div>
         </a>
       </div>
-      <div class="col-sm-6 col-md-4">
-        <a class="card card-stats card-secondary card-round" href="{{ route('user.all.item.orders') }}">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-5">
-                <div class="icon-big text-center">
-                  <i class="fas fa-shopping-cart"></i>
-                </div>
-              </div>
-              <div class="col-7 col-stats">
-                <div class="numbers">
-                  <p class="card-category">{{ __('Total Orders') }}</p>
-                  <h4 class="card-title">{{ $total_orders }}</h4>
-                </div>
-              </div>
+      <div class="col-sm-6 col-md-4 mb-4">
+        <a class="card card-stats card-round stat-card-gradient-purple card-tooltip-trigger h-100 mb-0 d-block p-3"
+          href="{{ route('user.all.item.orders') }}">
+          <div class="d-flex align-items-center">
+            <div class="stat-card-icon-box mr-3">
+              <i class="fas fa-shopping-cart" style="font-size: 22px; color: #8b5cf6;"></i>
             </div>
+            <div>
+              <p class="mb-1 font-weight-500 text-white" style="font-size: 14px; opacity: 0.9;">{{ __('Total Orders') }}</p>
+              <h3 class="mb-0 font-weight-bold text-white" style="font-size: 30px; line-height: 1;">{{ $total_orders }}</h3>
+            </div>
+          </div>
+          <i class="fas fa-shopping-cart stat-card-watermark"></i>
+          <div class="stat-card-divider">
+            <span>{{ __('View all orders') }}</span>
+            <i class="fas fa-arrow-right"></i>
           </div>
         </a>
       </div>
 
-      <div class="col-sm-6 col-md-4">
-        <a class="card card-stats card-info card-round" href="{{ route('user.register.user') }}">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-5">
-                <div class="icon-big text-center">
-                  <i class="fas fa-users"></i>
-                </div>
-              </div>
-              <div class="col-7 col-stats">
-                <div class="numbers">
-                  <p class="card-category">{{ __('Registered Customers') }}</p>
-                  <h4 class="card-title">{{ $total_customers }}</h4>
-                </div>
-              </div>
+      <div class="col-sm-6 col-md-4 mb-4">
+        <a class="card card-stats card-round stat-card-gradient-cyan card-tooltip-trigger h-100 mb-0 d-block p-3"
+          href="{{ route('user.register.user') }}">
+          <div class="d-flex align-items-center">
+            <div class="stat-card-icon-box mr-3">
+              <i class="fas fa-users" style="font-size: 22px; color: #06b6d4;"></i>
             </div>
+            <div>
+              <p class="mb-1 font-weight-500 text-white" style="font-size: 14px; opacity: 0.9;">{{ __('Registered Customers') }}</p>
+              <h3 class="mb-0 font-weight-bold text-white" style="font-size: 30px; line-height: 1;">{{ $total_customers }}</h3>
+            </div>
+          </div>
+          <i class="fas fa-users stat-card-watermark"></i>
+          <div class="stat-card-divider">
+            <span>{{ __('View customers') }}</span>
+            <i class="fas fa-arrow-right"></i>
           </div>
         </a>
       </div>
-      <div class="col-sm-6 col-md-4">
-        <a class="card card-stats card-warning card-round" href="{{ route('user.subscriber.index') }}">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-5">
-                <div class="icon-big text-center">
-                  <i class="fas fa-envelope-open"></i>
-                </div>
-              </div>
-              <div class="col-7 col-stats">
-                <div class="numbers">
-                  <p class="card-category">{{ __('Subscribers') }}</p>
-                  <h4 class="card-title">{{ $total_subscribers }}</h4>
-                </div>
-              </div>
+      <div class="col-sm-6 col-md-4 mb-4">
+        <a class="card card-stats card-round stat-card-gradient-orange card-tooltip-trigger h-100 mb-0 d-block p-3"
+          href="{{ route('user.subscriber.index') }}">
+          <div class="d-flex align-items-center">
+            <div class="stat-card-icon-box mr-3">
+              <i class="fas fa-envelope-open" style="font-size: 22px; color: #f97316;"></i>
             </div>
+            <div>
+              <p class="mb-1 font-weight-500 text-white" style="font-size: 14px; opacity: 0.9;">{{ __('Subscribers') }}</p>
+              <h3 class="mb-0 font-weight-bold text-white" style="font-size: 30px; line-height: 1;">{{ $total_subscribers }}</h3>
+            </div>
+          </div>
+          <i class="fas fa-envelope-open stat-card-watermark"></i>
+          <div class="stat-card-divider">
+            <span>{{ __('View subscribers') }}</span>
+            <i class="fas fa-arrow-right"></i>
           </div>
         </a>
       </div>
@@ -166,22 +173,22 @@
 
 
     @if (!empty($permissions) && in_array('Blog', $permissions))
-      <div class="col-sm-6 col-md-4">
-        <a class="card card-stats card-success card-round" href="{{ route('user.blog.index') }}">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-5">
-                <div class="icon-big text-center">
-                  <i class="fas fa-blog"></i>
-                </div>
-              </div>
-              <div class="col-7 col-stats">
-                <div class="numbers">
-                  <p class="card-category">{{ __('Blogs') }}</p>
-                  <h4 class="card-title">{{ $blogs }}</h4>
-                </div>
-              </div>
+      <div class="col-sm-6 col-md-4 mb-4">
+        <a class="card card-stats card-round stat-card-gradient-green card-tooltip-trigger h-100 mb-0 d-block p-3"
+          href="{{ route('user.blog.index') }}">
+          <div class="d-flex align-items-center">
+            <div class="stat-card-icon-box mr-3">
+              <i class="fas fa-blog" style="font-size: 22px; color: #10b981;"></i>
             </div>
+            <div>
+              <p class="mb-1 font-weight-500 text-white" style="font-size: 14px; opacity: 0.9;">{{ __('Blogs') }}</p>
+              <h3 class="mb-0 font-weight-bold text-white" style="font-size: 30px; line-height: 1;">{{ $blogs }}</h3>
+            </div>
+          </div>
+          <i class="fas fa-blog stat-card-watermark"></i>
+          <div class="stat-card-divider">
+            <span>{{ __('View all blogs') }}</span>
+            <i class="fas fa-arrow-right"></i>
           </div>
         </a>
       </div>
@@ -189,22 +196,22 @@
 
 
     @if (!empty($permissions) && in_array('Custom Page', $permissions))
-      <div class="col-sm-6 col-md-4">
-        <a class="card card-stats card-danger card-round" href="{{ route('user.blog.index') }}">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-5">
-                <div class="icon-big text-center">
-                  <i class="la flaticon-file"></i>
-                </div>
-              </div>
-              <div class="col-7 col-stats">
-                <div class="numbers">
-                  <p class="card-category">{{ __('Custom Pages') }}</p>
-                  <h4 class="card-title">{{ $total_custom_pages }}</h4>
-                </div>
-              </div>
+      <div class="col-sm-6 col-md-4 mb-4">
+        <a class="card card-stats card-round stat-card-gradient-red card-tooltip-trigger h-100 mb-0 d-block p-3"
+          href="{{ route('user.page.index') }}">
+          <div class="d-flex align-items-center">
+            <div class="stat-card-icon-box mr-3">
+              <i class="la flaticon-file" style="font-size: 24px; color: #ef4444;"></i>
             </div>
+            <div>
+              <p class="mb-1 font-weight-500 text-white" style="font-size: 14px; opacity: 0.9;">{{ __('Custom Pages') }}</p>
+              <h3 class="mb-0 font-weight-bold text-white" style="font-size: 30px; line-height: 1;">{{ $total_custom_pages }}</h3>
+            </div>
+          </div>
+          <i class="la flaticon-file stat-card-watermark"></i>
+          <div class="stat-card-divider">
+            <span>{{ __('View pages') }}</span>
+            <i class="fas fa-arrow-right"></i>
           </div>
         </a>
       </div>
@@ -215,18 +222,40 @@
     <div class="col-lg-6">
       <div class="row row-card-no-pd">
         <div class="col-md-12">
-          <div class="card">
-            <div class="card-header">
-              <div class="card-head-row">
-                <h4 class="card-title">{{ __('Latest Product Orders') }}</h4>
+          <div class="card shadow-sm border-0" style="border-radius: 12px;">
+            <div class="card-header border-0 pb-0 pt-4 px-4 bg-transparent d-flex justify-content-between align-items-center">
+              <h4 class="card-title font-weight-bold mb-0 d-flex align-items-center" style="font-size: 18px;">
+                <span class="d-inline-flex align-items-center justify-content-center mr-2" style="width: 34px; height: 34px; border-radius: 50%; background: rgba(13, 110, 253, 0.1);">
+                  <i class="fas fa-shopping-bag text-primary" style="font-size: 15px;"></i>
+                </span>
+                {{ __('Latest Product Orders') }}
+              </h4>
+              <div class="dropdown">
+                <button class="btn btn-link text-muted p-0" type="button" data-toggle="dropdown"><i class="fas fa-ellipsis-h" style="font-size: 16px;"></i></button>
               </div>
             </div>
-            <div class="card-body">
+            <div class="card-body px-4 pt-3 pb-4">
               <div class="row">
                 <div class="col-lg-12">
                   @if (count($orders) == 0)
-                    <h3 class="text-center">{{ __('NO PRODUCT ORDER FOUND') }}
-                    </h3>
+                    <div class="text-center py-5 my-3">
+                      <div class="mb-3 d-flex justify-content-center">
+                        <svg width="120" height="120" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="100" cy="100" r="80" fill="rgba(13, 110, 253, 0.05)"/>
+                          <path d="M60 85 L100 65 L140 85 L100 105 Z" fill="#93C5FD"/>
+                          <path d="M60 85 V125 L100 145 V105 Z" fill="#60A5FA"/>
+                          <path d="M140 85 V125 L100 145 V105 Z" fill="#3B82F6"/>
+                          <path d="M60 85 L80 75 L120 95 L100 105 Z" fill="#2563EB" opacity="0.3"/>
+                          <!-- Sparkles -->
+                          <path d="M40 60 L43 50 L53 47 L43 44 L40 34 L37 44 L27 47 L37 50 Z" fill="#F59E0B" opacity="0.8"/>
+                          <path d="M150 50 L152 42 L160 40 L152 38 L150 30 L148 38 L140 40 L148 42 Z" fill="#3B82F6" opacity="0.8"/>
+                          <path d="M155 130 L157 124 L163 122 L157 120 L155 114 L153 120 L147 122 L153 124 Z" fill="#10B981" opacity="0.8"/>
+                          <circle cx="50" cy="130" r="4" fill="#6366F1" opacity="0.6"/>
+                        </svg>
+                      </div>
+                      <h4 class="font-weight-bold mb-1" style="font-size: 16px;">{{ __('NO PRODUCT ORDER FOUND') }}</h4>
+                      <p class="text-muted mb-0" style="font-size: 14px;">{{ __('Looks like there are no product orders yet.') }}</p>
+                    </div>
                   @else
                     <div class="table-responsive">
                       <table class="table table-striped mt-3">
@@ -365,17 +394,26 @@
     <div class="col-lg-6">
       <div class="row row-card-no-pd">
         <div class="col-md-12">
-          <div class="card">
-            <div class="card-header">
-              <div class="card-head-row">
-                <h4 class="card-title">{{ __('Recent Payment Logs') }}</h4>
+          <div class="card shadow-sm border-0" style="border-radius: 12px;">
+            <div class="card-header border-0 pb-0 pt-4 px-4 bg-transparent d-flex justify-content-between align-items-center">
+              <h4 class="card-title font-weight-bold mb-0 d-flex align-items-center" style="font-size: 18px;">
+                <span class="d-inline-flex align-items-center justify-content-center mr-2" style="width: 34px; height: 34px; border-radius: 50%; background: rgba(16, 185, 129, 0.1);">
+                  <i class="fas fa-dollar-sign text-success" style="font-size: 15px;"></i>
+                </span>
+                {{ __('Recent Payment Logs') }}
+              </h4>
+              <div class="dropdown">
+                <button class="btn btn-link text-muted p-0" type="button" data-toggle="dropdown"><i class="fas fa-ellipsis-h" style="font-size: 16px;"></i></button>
               </div>
             </div>
-            <div class="card-body">
+            <div class="card-body px-4 pt-3 pb-4">
               <div class="row">
                 <div class="col-lg-12">
                   @if (count($memberships) == 0)
-                    <h3 class="text-center">{{ __('NO PAYMENT LOG FOUND') }}</h3>
+                    <div class="text-center py-5 my-3">
+                      <h4 class="font-weight-bold mb-1" style="font-size: 16px;">{{ __('NO PAYMENT LOG FOUND') }}</h4>
+                      <p class="text-muted mb-0" style="font-size: 14px;">{{ __('Looks like there are no payment transactions yet.') }}</p>
+                    </div>
                   @else
                     <div class="table-responsive">
                       <table class="table table-striped mt-3">
@@ -502,6 +540,11 @@
                           @endforeach
                         </tbody>
                       </table>
+                    </div>
+                    <div class="mt-3 pt-2">
+                      <a href="{{ route('user.payment-log.index') }}" class="font-weight-bold text-primary d-inline-flex align-items-center" style="font-size: 14px;">
+                        {{ __('View all payments') }} <i class="fas fa-arrow-right ml-2"></i>
+                      </a>
                     </div>
                   @endif
                 </div>

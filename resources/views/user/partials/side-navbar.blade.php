@@ -9,7 +9,7 @@
       $permissions = json_decode($permissions, true);
   }
 @endphp
-<div class="sidebar sidebar-style-2" @if (request()->cookie('user-theme') == 'dark') data-background-color="dark2" @endif>
+<div class="sidebar sidebar-style-2" data-background-color="dark2">
   <div class="sidebar-wrapper scrollbar scrollbar-inner">
     <div class="sidebar-content">
       <div class="user">
@@ -67,7 +67,7 @@
         <li class="nav-item
                 @if (request()->path() == 'user/dashboard') active @endif">
           <a href="{{ route('user-dashboard') }}">
-            <i class="la flaticon-paint-palette"></i>
+            <i class="fas fa-tachometer-alt"></i>
             <p>{{ __('Dashboard') }}</p>
           </a>
         </li>

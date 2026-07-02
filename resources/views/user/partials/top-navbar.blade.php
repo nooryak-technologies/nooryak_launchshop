@@ -72,7 +72,7 @@
 
 <div class="main-header">
   <!-- Logo Header -->
-  <div class="logo-header" @if (request()->cookie('user-theme') == 'dark') data-background-color="dark2" @endif>
+  <div class="logo-header" data-background-color="dark2">
     <a href="{{ route('front.index') }}" class="logo" target="_blank">
       <img
         src="{{ !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png') }}"
@@ -99,7 +99,8 @@
       <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
         @if (!is_null($currPackage) && Auth::guard('web')->user()->preview_template != 1)
           <li class="nav-item ml-2" id="limitDiv">
-            <a class="btn btn-{{ $infoIcon == true ? 'danger' : 'primary' }} whitespace-nowrap btn-sm"
+            <a class="btn btn-{{ $infoIcon == true ? 'danger' : 'primary' }} whitespace-nowrap btn-sm font-weight-bold"
+              style="border-radius: 8px; padding: 6px 16px; box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);"
               data-toggle="modal" data-target="#limitModal" href="javascript::void()" id="limitBtn">
               @if ($infoIcon == true)
                 <span class="text-danger">
@@ -110,26 +111,26 @@
             </a>
           </li>
         @endif
-        <form action="{{ route('user.theme.change') }}" class="form-inline" id="adminThemeForm">
-          <div class="form-group">
-            <div class="selectgroup selectgroup-secondary selectgroup-pills">
-              <label class="selectgroup-item">
+        <form action="{{ route('user.theme.change') }}" class="form-inline ml-2" id="adminThemeForm">
+          <div class="form-group py-0">
+            <div class="selectgroup selectgroup-secondary selectgroup-pills d-flex align-items-center">
+              <label class="selectgroup-item mb-0 mr-1">
                 <input type="radio" name="theme" value="light" class="selectgroup-input"
                   {{ empty(request()->cookie('user-theme')) || request()->cookie('user-theme') == 'light' ? 'checked' : '' }}
                   onchange="document.getElementById('adminThemeForm').submit();">
-                <span class="selectgroup-button selectgroup-button-icon"><i class="fa fa-sun"></i></span>
+                <span class="selectgroup-button selectgroup-button-icon theme-circle-btn"><i class="fa fa-sun"></i></span>
               </label>
-              <label class="selectgroup-item">
+              <label class="selectgroup-item mb-0">
                 <input type="radio" name="theme" value="dark" class="selectgroup-input"
                   {{ request()->cookie('user-theme') == 'dark' ? 'checked' : '' }}
                   onchange="document.getElementById('adminThemeForm').submit();">
-                <span class="selectgroup-button selectgroup-button-icon"><i class="fa fa-moon"></i></span>
+                <span class="selectgroup-button selectgroup-button-icon theme-circle-btn"><i class="fa fa-moon"></i></span>
               </label>
             </div>
           </div>
         </form>
         <li>
-        <li class="mr-2">
+        <li class="mr-3 ml-2">
           @php
             if (Auth::user()->custom_domain_status == 1 && !empty(Auth::user()->custom_domain)) {
                 $domain = Auth::user()->custom_domain;
@@ -137,9 +138,10 @@
                 $domain = Auth::user()->username . '.' . env('WEBSITE_HOST');
             }
           @endphp
-          <a class="btn btn-primary btn-sm btn-round" target="_blank"
+          <a class="btn btn-sm btn-round d-inline-flex align-items-center justify-content-center profile-circle-btn" target="_blank"
+            style="width: 38px; height: 38px; border-radius: 50%; background: #ffffff; border: 1px solid #e2e8f0; color: #0d6efd; box-shadow: 0 2px 6px rgba(0,0,0,0.03);"
             href="{{ route('front.user.detail.view', Auth::user()->username) }}" title="View Profile">
-            <i class="fas fa-eye"></i>
+            <i class="fas fa-eye" style="font-size: 14px;"></i>
           </a>
         </li>
         </li>
