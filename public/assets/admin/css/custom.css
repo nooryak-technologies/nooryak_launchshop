@@ -1619,3 +1619,31 @@ body[data-background-color="dark"] .main-panel .page-divider {
         font-size: 12px !important;
     }
 }
+
+/* 9. Bulletproof Dark Mode Styles for Redesigned Pages */
+body[data-background-color="dark"] .dark-card {
+    background-color: #1a2035 !important;
+    color: #ffffff !important;
+}
+body[data-background-color="dark"] .dark-border {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+body[data-background-color="dark"] .dark-label {
+    color: #ffffff !important;
+}
+body[data-background-color="dark"] .dark-text {
+    color: #a1aab2 !important;
+}
+body[data-background-color="dark"] .dark-input {
+    background-color: #1a2035 !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+}
+body[data-background-color="dark"] .dark-table th,
+body[data-background-color="dark"] .dark-table td {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    color: #ffffff !important;
+}
+body[data-background-color="dark"] .stat-card-icon-box {
+    background: rgba(255, 255, 255, 0.08) !important;
+}

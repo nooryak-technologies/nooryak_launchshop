@@ -1014,9 +1014,18 @@ $(function ($) {
     $(document).on('click', '.mobile-sidebar-close, .mobile-sidebar-backdrop', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        if ($("html").hasClass("nav_open")) {
-            $(".sidenav-toggler").trigger("click");
+        
+        // Trigger native DOM click to reset Atlantis closure variables (if needed)
+        var toggler = document.querySelector(".sidenav-toggler");
+        if (toggler) {
+            toggler.click();
         }
+        
+        // Explicitly remove all open classes from html and body to guarantee immediate closing
+        $("html, body").removeClass("nav_open quick_sidebar_open topbar_open pagesidebar_open");
+        $(".wrapper").removeClass("is-show sidebar_minimize");
+        $(".sidenav-toggler, .quick-sidebar-toggler, .topbar-toggler, .page-sidebar-toggler, .sidenav-overlay-toggler, .toggle-sidebar").removeClass("toggled");
+        
         $(".mobile-sidebar-backdrop").remove();
     });
 });
