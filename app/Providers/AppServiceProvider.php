@@ -41,6 +41,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind(\SimpleSoftwareIO\QrCode\Generator::class, function () {
+            return new \App\Libraries\QrCodeGenerator();
+        });
+
+        $this->app->bind('qrcode', function () {
+            return new \App\Libraries\QrCodeGenerator();
+        });
+
         $this->app->singleton('user', function () {
             return getUser();
         });
