@@ -20,9 +20,12 @@
 
 /* Hide scrollbars for normal elements but allow and style the orange scrollbar on html */
 html {
-    scrollbar-width: auto !important; /* Firefox */
-    scrollbar-color: #FF5A2C #F7FAFC !important; /* thumb background (Firefox) */
-    -ms-overflow-style: auto !important; /* IE/Edge */
+    scrollbar-width: auto !important;
+    /* Firefox */
+    scrollbar-color: #FF5A2C #F7FAFC !important;
+    /* thumb background (Firefox) */
+    -ms-overflow-style: auto !important;
+    /* IE/Edge */
 }
 
 html::-webkit-scrollbar {
@@ -8855,5 +8858,33 @@ iframe[id^="tawkchat-"],
         padding-bottom: 0 !important;
         line-height: 70px !important;
         /* Vertically center links using line-height */
+    }
+}
+
+@media (min-width: 1550px) {
+
+    .header-area .main-navbar .navbar .navbar-brand img,
+    .header-area.is-sticky .main-navbar .navbar .navbar-brand img {
+        max-height: 94px !important;
+    }
+
+    .header-area .main-navbar .nav-item {
+        position: relative;
+        margin-left: 40px;
+        margin-right: 15px;
+    }
+
+    .mx-auto {
+        margin-right: auto !important;
+        margin-left: unset !important;
+    }
+
+    .container,
+    .container-lg,
+    .container-md,
+    .container-sm,
+    .container-xl,
+    .container-xxl {
+        max-width: 1584px;
     }
 }
