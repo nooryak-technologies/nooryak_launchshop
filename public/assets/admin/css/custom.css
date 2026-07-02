@@ -1597,17 +1597,25 @@ body[data-background-color="dark"] .main-panel .page-divider {
     .rtl .nav_open .sidebar {
         left: auto !important;
         right: 0 !important;
+}
+
+/* 8. Responsive Styling for 2-Column Mobile Dashboard Stats */
+@media (max-width: 575px) {
+    .card-stats {
+        padding: 12px !important;
     }
-    html.nav_open .main-panel:after,
-    .nav_open .main-panel:after {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 9990;
-        pointer-events: auto;
+    .card-stats .stat-card-icon-box {
+        width: 42px !important;
+        height: 42px !important;
+        margin-right: 10px !important;
+    }
+    .card-stats .stat-card-icon-box i {
+        font-size: 18px !important;
+    }
+    .card-stats h3 {
+        font-size: 22px !important;
+    }
+    .card-stats p {
+        font-size: 12px !important;
     }
 }

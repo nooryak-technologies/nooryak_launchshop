@@ -993,10 +993,31 @@ $(function ($) {
         }
     });
 
-    // Close mobile sidebar when clicking on main panel overlay
-    $(document).on('click', '.nav_open .main-panel', function() {
-        $("html").removeClass("nav_open");
-        $(".sidenav-toggler").removeClass("toggled");
+    // Robust mobile sidebar backdrop and close button handling
+    var navObserver = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.attributeName === "class") {
+                if ($("html").hasClass("nav_open")) {
+                    if ($(".mobile-sidebar-backdrop").length === 0) {
+                        $('<div class="mobile-sidebar-backdrop" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 9990; cursor: pointer; transition: opacity 0.3s ease;"></div>').appendTo("body");
+                    }
+                } else {
+                    $(".mobile-sidebar-backdrop").remove();
+                }
+            }
+        });
+    });
+    if (document.documentElement) {
+        navObserver.observe(document.documentElement, { attributes: true });
+    }
+
+    $(document).on('click', '.mobile-sidebar-close, .mobile-sidebar-backdrop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if ($("html").hasClass("nav_open")) {
+            $(".sidenav-toggler").trigger("click");
+        }
+        $(".mobile-sidebar-backdrop").remove();
     });
 });
 

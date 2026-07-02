@@ -10,6 +10,11 @@
   }
 @endphp
 <div class="sidebar sidebar-style-2" data-background-color="dark2">
+  <div class="d-flex justify-content-end pt-3 pr-3 pb-0 d-lg-none">
+    <button type="button" class="btn btn-icon btn-sm text-white bg-transparent border-0 mobile-sidebar-close" style="font-size: 22px; cursor: pointer;">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
   <div class="sidebar-wrapper scrollbar scrollbar-inner">
     <div class="sidebar-content">
       <div class="user">

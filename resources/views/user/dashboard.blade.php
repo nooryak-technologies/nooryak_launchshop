@@ -92,7 +92,7 @@
 
   <div class="row">
     @if (!is_null($package))
-      <div class="col-sm-6 col-md-4 mb-4">
+      <div class="col-6 col-md-4 mb-4">
         <a class="card card-stats card-round stat-card-gradient-blue card-tooltip-trigger h-100 mb-0 d-block p-3"
           href="{{ route('user.item.index', ['language' => $default->code]) }}">
           <div class="d-flex align-items-center">
@@ -111,7 +111,7 @@
           </div>
         </a>
       </div>
-      <div class="col-sm-6 col-md-4 mb-4">
+      <div class="col-6 col-md-4 mb-4">
         <a class="card card-stats card-round stat-card-gradient-purple card-tooltip-trigger h-100 mb-0 d-block p-3"
           href="{{ route('user.all.item.orders') }}">
           <div class="d-flex align-items-center">
@@ -131,7 +131,7 @@
         </a>
       </div>
 
-      <div class="col-sm-6 col-md-4 mb-4">
+      <div class="col-6 col-md-4 mb-4">
         <a class="card card-stats card-round stat-card-gradient-cyan card-tooltip-trigger h-100 mb-0 d-block p-3"
           href="{{ route('user.register.user') }}">
           <div class="d-flex align-items-center">
@@ -150,7 +150,7 @@
           </div>
         </a>
       </div>
-      <div class="col-sm-6 col-md-4 mb-4">
+      <div class="col-6 col-md-4 mb-4">
         <a class="card card-stats card-round stat-card-gradient-orange card-tooltip-trigger h-100 mb-0 d-block p-3"
           href="{{ route('user.subscriber.index') }}">
           <div class="d-flex align-items-center">
@@ -173,7 +173,7 @@
 
 
     @if (!empty($permissions) && in_array('Blog', $permissions))
-      <div class="col-sm-6 col-md-4 mb-4">
+      <div class="col-6 col-md-4 mb-4">
         <a class="card card-stats card-round stat-card-gradient-green card-tooltip-trigger h-100 mb-0 d-block p-3"
           href="{{ route('user.blog.index') }}">
           <div class="d-flex align-items-center">
@@ -196,7 +196,7 @@
 
 
     @if (!empty($permissions) && in_array('Custom Page', $permissions))
-      <div class="col-sm-6 col-md-4 mb-4">
+      <div class="col-6 col-md-4 mb-4">
         <a class="card card-stats card-round stat-card-gradient-red card-tooltip-trigger h-100 mb-0 d-block p-3"
           href="{{ route('user.page.index') }}">
           <div class="d-flex align-items-center">
