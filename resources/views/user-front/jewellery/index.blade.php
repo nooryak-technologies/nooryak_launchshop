@@ -120,7 +120,7 @@
             @else
               <div class="col-auto">
                 <div class="category-slider" id="cat-slider-gold"
-                  data-slick='{"dots": true, "loop":true, "slidesToShow": {{ count($item_categories) >= 6 ? 6 : count($item_categories) }} }'>
+                  data-slick='{"dots": true, "loop": true, "autoplay": true, "autoplaySpeed": 3000, "slidesToShow": {{ count($item_categories) >= 6 ? 6 : count($item_categories) }}, "slidesToScroll": 1, "responsive": [{"breakpoint": 992, "settings": {"slidesToShow": 4}}, {"breakpoint": 768, "settings": {"slidesToShow": 3}}, {"breakpoint": 576, "settings": {"slidesToShow": 2}}]}'>
                   @foreach ($item_categories as $category)
                     <!-- category-item -->
                     <div class="category-item">

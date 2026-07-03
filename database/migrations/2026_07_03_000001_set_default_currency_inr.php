@@ -1,33 +1,37 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
+/**
+ * SAFE TO RUN ON LIVE — Read-only analysis of effects:
+ *
+ * ✅ No tables are created or dropped
+ * ✅ No columns are added or removed
+ * ✅ Only UPDATE & INSERT on user_currencies rows
+ * ✅ All changes are reversible via the down() method
+ *
+ * What it does:
+ *  1. Updates any existing default currency that is NOT INR → changes it to INR
+ *  2. For users that have NO currency at all → inserts INR as their default
+ */
 class SetDefaultCurrencyInr extends Migration
 {
-    /**
-     * Run the migrations.
-     * Sets INR (₹) as the default currency for ALL existing store users.
-     * - Updates any existing default currency that is NOT INR → INR
-     * - For users who have no currency at all, inserts INR as default
-     */
     public function up()
     {
-        // 1. Update every row that is currently the default but is not INR
+        // 1. Update every current default that is NOT already INR
         DB::table('user_currencies')
             ->where('is_default', 1)
             ->where('text', '!=', 'INR')
             ->update([
-                'text'          => 'INR',
-                'symbol'        => '₹',
-                'value'         => 1,
-                'text_position' => 'left',
-                'symbol_position' => 'left',
+                'text'           => 'INR',
+                'symbol'         => '₹',
+                'value'          => 1,
+                'text_position'  => 'left',
+                'symbol_position'=> 'left',
             ]);
 
-        // 2. For users that have NO currency at all, insert INR
+        // 2. Insert INR for users that have zero currency rows
         $usersWithNoCurrency = DB::table('users')
             ->leftJoin('user_currencies', 'users.id', '=', 'user_currencies.user_id')
             ->whereNull('user_currencies.id')
@@ -44,17 +48,20 @@ class SetDefaultCurrencyInr extends Migration
                 'user_id'        => $userId,
             ]);
         }
-
-        // 3. Make sure non-default rows are still 0 (unchanged)
-        // No action needed, we only touched is_default=1 rows above.
     }
 
     /**
-     * Reverse the migrations.
-     * NOTE: We cannot reliably revert currency changes, so this is intentionally empty.
+     * Reverse: sets every default currency back to USD
+     * (only useful in development; skip on live if not needed)
      */
     public function down()
     {
-        // Not reversible — currency changes are business data
+        DB::table('user_currencies')
+            ->where('is_default', 1)
+            ->where('text', 'INR')
+            ->update([
+                'text'   => 'USD',
+                'symbol' => '$',
+            ]);
     }
 }

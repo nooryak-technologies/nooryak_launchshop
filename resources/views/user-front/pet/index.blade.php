@@ -63,7 +63,7 @@
               </h5>
             @else
               <div class="category-slider-wrapper">
-                <div class="category-slider" id="cat-slider-pet" data-slick='{"dots": true,  "slidesToShow": 6}'>
+                <div class="category-slider" id="cat-slider-pet" data-slick='{"dots": true, "autoplay": true, "autoplaySpeed": 3000, "slidesToShow": 6, "slidesToScroll": 1, "responsive": [{"breakpoint": 1200, "settings": {"slidesToShow": 5}}, {"breakpoint": 992, "settings": {"slidesToShow": 4}}, {"breakpoint": 768, "settings": {"slidesToShow": 3}}, {"breakpoint": 576, "settings": {"slidesToShow": 2}}]}'>
                   @foreach ($item_categories as $category)
                     <div class="category-item">
                       <a href="{{ route('front.user.shop', [getParam(), 'category' => $category->slug]) }}">
