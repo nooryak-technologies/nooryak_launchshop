@@ -211,4 +211,103 @@ class ShippingGatewayController extends Controller
         Session::flash('success', __('Tracking Details Saved & Customer Notified!'));
         return back();
     }
+
+    public static function createShiprocketOrder($order, $user_id)
+    {
+        $gateway = UserShippingGateway::where([['user_id', $user_id], ['keyword', 'shiprocket'], ['status', 1]])->first();
+        if (!$gateway) {
+            return;
+        }
+
+        $info = json_decode($gateway->information, true);
+        $email = $info['email'] ?? '';
+        $password = $info['password'] ?? '';
+
+        if (empty($email) || empty($password)) {
+            return;
+        }
+
+        try {
+            $client = new \GuzzleHttp\Client();
+            
+            // Step 1: Login to Shiprocket
+            $response = $client->post('https://apiv2.shiprocket.in/v1/external/auth/login', [
+                'json' => [
+                    'email' => $email,
+                    'password' => $password
+                ]
+            ]);
+            
+            $loginData = json_decode($response->getBody()->getContents(), true);
+            $token = $loginData['token'] ?? '';
+            if (empty($token)) {
+                return;
+            }
+
+            // Step 2: Extract pincode from address using regex (matches any 5 or 6 digit number)
+            preg_match('/\b\d{5,6}\b/', $order->shipping_address, $matches);
+            $shipping_pincode = $matches[0] ?? (preg_match('/\b\d{5,6}\b/', $order->billing_address, $bMatches) ? $bMatches[0] : '110001');
+
+            // Step 3: Fetch order items
+            $order_items = \App\Models\User\UserOrderItem::where('user_order_id', $order->id)->get();
+            $itemsData = [];
+            foreach ($order_items as $item) {
+                $itemsData[] = [
+                    'name' => $item->title,
+                    'sku' => $item->sku ?? ('SKU-' . $item->item_id),
+                    'units' => $item->qty,
+                    'selling_price' => $item->price,
+                    'discount' => 0,
+                    'tax' => 0,
+                    'hsn' => ''
+                ];
+            }
+
+            // Step 4: Map payment method
+            $paymentMethod = (strtolower($order->method) == 'cod' || strtolower($order->gateway_type) == 'offline') ? 'COD' : 'Prepaid';
+
+            // Step 5: Send order creation request to Shiprocket
+            $orderPayload = [
+                'order_id' => $order->order_number,
+                'order_date' => $order->created_at->format('Y-m-d H:i'),
+                'pickup_location' => 'Primary',
+                'billing_customer_name' => $order->billing_fname,
+                'billing_last_name' => $order->billing_lname ?? '',
+                'billing_address' => $order->billing_address,
+                'billing_city' => $order->billing_city,
+                'billing_pincode' => $shipping_pincode,
+                'billing_state' => $order->billing_state ?? $order->billing_city,
+                'billing_country' => $order->billing_country ?? 'India',
+                'billing_email' => $order->billing_email,
+                'billing_phone' => $order->billing_number,
+                'shipping_is_billing' => true,
+                'order_items' => $itemsData,
+                'payment_method' => $paymentMethod,
+                'sub_total' => $order->cart_total,
+                'length' => 10,
+                'breadth' => 10,
+                'height' => 10,
+                'weight' => 0.5
+            ];
+
+            $orderResponse = $client->post('https://apiv2.shiprocket.in/v1/external/orders/create/adhoc', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'Content-Type' => 'application/json'
+                ],
+                'json' => $orderPayload
+            ]);
+
+            $resData = json_decode($orderResponse->getBody()->getContents(), true);
+            
+            // Save shiprocket order details to user_orders
+            if (isset($resData['shipment_id'])) {
+                $order->shipping_gateway_keyword = 'shiprocket';
+                $order->tracking_url = 'https://shiprocket.co/tracking/' . $order->order_number;
+                $order->save();
+            }
+        } catch (\Exception $e) {
+            \Log::error('Shiprocket Auto-Create Order Error: ' . $e->getMessage());
+        }
+    }
 }

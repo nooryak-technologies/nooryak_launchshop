@@ -108,6 +108,10 @@ class ItemOrderController extends Controller
         $po->order_status = $request->order_status;
         $po->save();
 
+        if ($request->order_status == 'processing') {
+            \App\Http\Controllers\User\ShippingGatewayController::createShiprocketOrder($po, $user_id);
+        }
+
         //get customer information
         $customer = Customer::where('id', $po->customer_id)->first();
         if ($customer) {
