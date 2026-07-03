@@ -537,7 +537,6 @@
   /* Expand left and right columns to fill available space */
   .header-top .row > div:first-child {
     flex: 1 1 auto !important;
-    max-width: 50% !important;
     width: auto !important;
   }
   .header-top .row > div:last-child {
