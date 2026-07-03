@@ -224,51 +224,51 @@
               <h2 class="title mb-20">
                 {{ $userSec->category_section_title ?? ($keywords['Categories'] ?? __('Categories')) }}
               </h2>
-              <p class="text mx-auto mb-0">{{ $userSec->category_section_subtitle ?? '' }} </p>
+              <p class="text mx-auto mb-0">{{ $userSec->category_section_subtitle ?? '' }}</p>
             </div>
           </div>
+
           <div class="col-12">
-            @if (count($item_categories) > 0)
-              <div class="row">
-                @foreach ($item_categories as $key => $cat)
-                  <div class="col-xl-3 col-lg-4 col-md-6 col-6">
-                    <div class="category-item category-inline mb-30">
-                      <div class="category-img">
-                        <img class="lazyload blur-up absolute-img"
-                          src="{{ asset('assets/front/images/placeholder.png') }}"
-                          data-src="{{ asset('assets/front/img/user/items/categories/' . $cat->image) }}"
-                          alt="Image">
-                      </div>
-                      <div class="category-details">
-                        <a href="{{ route('front.user.shop', [getParam(), 'category=' . $cat->slug]) }}">
-                          <h4 class="category-title">{{ $cat->name }}</h4>
-                        </a>
-                        <ul class="category-list list-unstyled" data-toggle-list="categoryToggle" data-toggle-show="3">
-                          @foreach ($cat->subcategories->take($shopSet->subcategories_count) as $subcat)
-                            <li>
-                              <a
-                                href="{{ route('front.user.shop', [getParam(), 'category=' . $cat->slug . '&subcategory=' . $subcat->slug]) }}">{{ $subcat->name }}
-                              </a>
-                            </li>
-                          @endforeach
-                        </ul>
-                        <span class="show-more text-dark fw-bold font-sm"
-                          data-toggle-btn="toggleListBtn">{{ $keywords['Show More'] ?? __('Show More') }} +</span>
-                      </div>
-                    </div>
-                  </div>
-                @endforeach
-              </div>
-              <div class="text-center mt-10">
-                <a href="{{ route('front.user.shop', getParam()) }}"
-                  class="btn btn-lg btn-primary rounded-pill icon-end shadow">{{ $keywords['Explore More'] ?? __('Explore More') }}
-                  <span class="icon"><i class="fal fa-arrow-right"></i></span>
-                </a>
-              </div>
-            @else
+            @if (count($item_categories) == 0)
               <h5 class="title text-center mb-20">
                 {{ $userSec->category_section_title ?? ($keywords['NO CATEGORIES FOUND'] ?? __('NO CATEGORIES FOUND')) }}
               </h5>
+            @else
+              {{-- Slick slider: links straight to shop filtered by category --}}
+              <div class="category-slider" id="cat-slider-electronics"
+                data-slick='{"dots": true, "arrows": true, "autoplay": true, "autoplaySpeed": 3000, "slidesToShow": 5, "slidesToScroll": 1,
+                  "responsive": [
+                    {"breakpoint": 1200, "settings": {"slidesToShow": 4}},
+                    {"breakpoint": 992,  "settings": {"slidesToShow": 3}},
+                    {"breakpoint": 768,  "settings": {"slidesToShow": 2}},
+                    {"breakpoint": 576,  "settings": {"slidesToShow": 1}}
+                  ]
+                }'>
+                @foreach ($item_categories as $cat)
+                  <div class="px-2">
+                    <a href="{{ route('front.user.shop', [getParam(), 'category=' . $cat->slug]) }}"
+                       class="d-block text-center text-decoration-none category-item category-inline mb-30">
+                      <div class="category-img mb-15" style="border-radius:12px;overflow:hidden;">
+                        <img class="lazyload blur-up absolute-img"
+                          src="{{ asset('assets/front/images/placeholder.png') }}"
+                          data-src="{{ asset('assets/front/img/user/items/categories/' . $cat->image) }}"
+                          alt="{{ $cat->name }}"
+                          style="border-radius:12px;">
+                      </div>
+                      <h4 class="category-title lc-1" style="font-size:14px; font-weight:600;">{{ $cat->name }}</h4>
+                      <span class="text-muted" style="font-size:12px;">{{ count($cat->items) }}+ {{ $keywords['Items'] ?? __('Items') }}</span>
+                    </a>
+                  </div>
+                @endforeach
+              </div>
+
+              <div class="text-center mt-20">
+                <a href="{{ route('front.user.shop', getParam()) }}"
+                   class="btn btn-lg btn-primary rounded-pill icon-end shadow">
+                  {{ $keywords['Explore More'] ?? __('Explore More') }}
+                  <span class="icon"><i class="fal fa-arrow-right"></i></span>
+                </a>
+              </div>
             @endif
           </div>
         </div>
