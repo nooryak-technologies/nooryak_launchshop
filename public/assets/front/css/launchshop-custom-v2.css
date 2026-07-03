@@ -8980,3 +8980,10 @@ iframe[id^="tawkchat-"],
 .shop-category-pills {
     margin-right: 2rem !important;
 }
+
+/* ── Remove large-screen margin-top offset below header for all templates ── */
+@media (min-width: 1500px) {
+    .header-next {
+        margin-top: 0 !important;
+    }
+}
