@@ -156,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // header-next
     var getHeaderHeight = function () {
         var headerNext = $(".header-next");
-        if ($(window).width() >= 1500) {
+        if ($(window).width() >= 1200) {
             headerNext.css("margin-top", "");
         } else {
             var header = $(".header-mt-fix");
