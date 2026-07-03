@@ -176,7 +176,7 @@
         <nav class="menu">
           <ul class="menu-left">
             <li class="menu-item">
-              <button class="btn btn-lg btn-primary radius-sm" type="button">
+              <button class="btn btn-lg btn-primary radius-sm category-menu-toggle" type="button">
                 <i class="fas fa-th-large"></i>
                 <span> {{ $keywords['Browse All Categories'] ?? __('Browse All Categories') }}</span>
                 <i class="fal fa-angle-down"></i>
@@ -248,6 +248,20 @@
 
           </ul>
         </nav>
+        
+        <!-- Categories Navigation Slider -->
+        <div class="categories-nav-slider-wrapper">
+          <div class="categories-nav-slider" id="categories-nav-slider">
+            @foreach ($categories as $category)
+              <div class="category-nav-item">
+                <a href="{{ route('front.user.shop', [getParam(), 'category=' . $category->slug]) }}">
+                  {{ $category->name }}
+                </a>
+              </div>
+            @endforeach
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

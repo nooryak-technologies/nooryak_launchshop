@@ -15,16 +15,22 @@
 
 @if ($userBs->theme == 'vegetables')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/grocery/home-1.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/grocery/custom-styles.css') }}">
 @elseif ($userBs->theme == 'furniture')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/furniture/home-2.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/furniture/custom-styles.css') }}">
 @elseif ($userBs->theme == 'fashion')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/fashion/home-3.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/fashion/custom-styles.css') }}">
 @elseif ($userBs->theme == 'electronics')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/home-4.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/custom-styles.css') }}">
 @elseif ($userBs->theme == 'kids')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/kids/home-5.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/kids/custom-styles.css') }}">
 @elseif ($userBs->theme == 'manti')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/manti/home-6.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/manti/custom-styles.css') }}">
 @elseif ($userBs->theme == 'pet')
   <style>
     :root {
@@ -33,6 +39,7 @@
     }
   </style>
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/pet/home-7.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/pet/custom-styles.css') }}">
 @elseif ($userBs->theme == 'skinflow')
   <style>
     :root {
@@ -41,6 +48,7 @@
     }
   </style>
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/skinflow/home-8.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/skinflow/custom-styles.css') }}">
 @elseif ($userBs->theme == 'jewellery')
 
   <style>
@@ -50,6 +58,7 @@
     }
   </style>
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/jewellery/jewellery.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/jewellery/custom-styles.css') }}">
 @elseif ($userBs->theme == 'clothing')
 
   <style>
@@ -63,6 +72,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/clothing/clothing.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/clothing/custom-styles.css') }}">
 @endif
 <!--====== Style css ======-->
 

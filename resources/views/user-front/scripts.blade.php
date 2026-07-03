@@ -38,6 +38,31 @@
 <script src="{{ asset('assets/user-front/js/script.js') }}"></script>
 <script src="{{ asset('assets/user-front/js/cart.js') }}"></script>
 
+<!-- Custom Category Slider Script -->
+<script>
+  $(document).ready(function() {
+    // Duplicate categories for seamless infinite loop
+    if ($('#categories-nav-slider').length > 0) {
+      var slider = $('#categories-nav-slider');
+      var originalContent = slider.html();
+      slider.append(originalContent); // Duplicate for seamless loop
+      
+      // Pause on hover
+      slider.on('mouseenter', function() {
+        $(this).css('animation-play-state', 'paused');
+      }).on('mouseleave', function() {
+        $(this).css('animation-play-state', 'running');
+      });
+    }
+    
+    // Toggle category dropdown on button click (mobile)
+    $('.category-menu-toggle').on('click', function(e) {
+      e.preventDefault();
+      $(this).siblings('.category-dropdown').slideToggle();
+    });
+  });
+</script>
+
 @if (session()->has('success'))
   <script>
     "use strict";

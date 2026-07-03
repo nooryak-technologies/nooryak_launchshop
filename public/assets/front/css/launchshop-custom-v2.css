@@ -8888,3 +8888,90 @@ iframe[id^="tawkchat-"],
         max-width: 1584px;
     }
 }
+
+/* ====================================================
+   NOORYAK CRM CENTERED LAYOUT — min-width: 1600px
+   All content is constrained to 1600px and centered.
+   Header bar spans full width but its inner nav is
+   capped at 1600px, mirroring the CRM header style.
+   ==================================================== */
+@media (min-width: 1600px) {
+
+    /* ── Constrain all Bootstrap containers ── */
+    .container,
+    .container-lg,
+    .container-md,
+    .container-sm,
+    .container-xl,
+    .container-xxl,
+    .container-fluid {
+        max-width: 1600px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-left: 30px !important;
+        padding-right: 30px !important;
+    }
+
+    /* ── Header: full-width bar, inner content centered ── */
+    .header-area {
+        width: 100% !important;
+    }
+
+    .header-area .main-navbar {
+        width: 100% !important;
+    }
+
+    /* The container-fluid inside the header nav */
+    .header-area .main-navbar .container-fluid,
+    .header-area .main-navbar>.container-fluid {
+        max-width: 1600px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-left: 30px !important;
+        padding-right: 30px !important;
+        width: 100% !important;
+    }
+
+    /* Responsive nav container */
+    .header-area .main-responsive-nav .container {
+        max-width: 1600px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    /* ── Nav item spacing on very wide screens ── */
+    .header-area .main-navbar .nav-item {
+        margin-left: 30px !important;
+        margin-right: 10px !important;
+    }
+
+    /* ── Logo size ── */
+    .header-area .main-navbar .navbar .navbar-brand img,
+    .header-area.is-sticky .main-navbar .navbar .navbar-brand img {
+        max-height: 84px !important;
+    }
+
+    /* ── Page sections & wrappers ── */
+    .hero-wrapper>.container,
+    section>.container,
+    div>.container,
+    footer .container,
+    .footer-area .container {
+        max-width: 1600px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    /* ── Page-title breadcrumb area ── */
+    .page-title-area .container {
+        max-width: 1600px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    /* ── Restore mx-auto to true centering ── */
+    .mx-auto {
+        margin-right: auto !important;
+        margin-left: auto !important;
+    }
+}

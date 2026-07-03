@@ -442,8 +442,8 @@ class CheckoutController extends Controller
             $currCount = UserCurrency::where('user_id', $user->id)->where('is_default', 1)->count();
             if ($currCount == 0) {
                 UserCurrency::create([
-                    'text' => 'USD',
-                    'symbol' => '$',
+                    'text' => 'INR',
+                    'symbol' => '₹',
                     'value' => '1',
                     'is_default' => 1,
                     'text_position' => 'left',
