@@ -65,7 +65,8 @@
                 </ul>
               </li>
 
-              <li class="menu-item">
+              {{-- Currency Switcher hidden --}}
+              {{-- <li class="menu-item">
                 @if ($userCurrentCurr->id)
                   <a href="javascript:void(0)">{{ $userCurrentCurr->symbol }}
                     &nbsp;{{ convertUtf8($userCurrentCurr->text) }}</a>
@@ -80,7 +81,7 @@
                   @endforeach
                 </ul>
 
-              </li>
+              </li> --}}
 
               <li class="menu-item">
                 <a href="#"><i class="fal fa-user"></i>{{ $keywords['My Account'] ?? __('My Account') }}</a>
