@@ -146,7 +146,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('userCurrency', function () {
             $user = app('user');
             $userCurrency = UserCurrency::where('user_id', $user->id)
-                ->where('text', 'INR')
                 ->get();
             if ($userCurrency->isEmpty()) {
                 $fallback = new UserCurrency();
@@ -211,9 +210,29 @@ class AppServiceProvider extends ServiceProvider
                 $user = app('user');
             }
 
-            $userCurrentCurr = UserCurrency::where('user_id', $user->id)
-                ->where('text', 'INR')
-                ->first();
+            if (session()->has('user_curr_' . $user->username)) {
+                $userCurrentCurr = UserCurrency::where('id', session()->get('user_curr_' . $user->username))->first();
+
+                if (empty($userCurrentCurr)) {
+                    $userCurrentCurr = UserCurrency::where('is_default', 1)->where('user_id', $user->id)->first();
+                    if (empty($userCurrentCurr)) {
+                        $userCurrentCurr = UserCurrency::where('user_id', $user->id)->orderBy('id', 'asc')->first();
+                    }
+
+                    if (!empty($userCurrentCurr)) {
+                        session()->put('user_curr_' . $user->username, $userCurrentCurr->id);
+                    }
+                }
+            } else {
+                $userCurrentCurr = UserCurrency::where('is_default', 1)->where('user_id', $user->id)->first();
+                if (empty($userCurrentCurr)) {
+                    $userCurrentCurr = UserCurrency::where('user_id', $user->id)->orderBy('id', 'asc')->first();
+                }
+
+                if (!empty($userCurrentCurr)) {
+                    session()->put('user_curr_' . $user->username, $userCurrentCurr->id);
+                }
+            }
 
             if (empty($userCurrentCurr)) {
                 $fallback = new UserCurrency();
@@ -240,9 +259,18 @@ class AppServiceProvider extends ServiceProvider
                 $user = app('user');
             }
 
-            $userDefaultCurrency = UserCurrency::where('user_id', $user->id)
-                ->where('text', 'INR')
+            $userDefaultCurrency = UserCurrency::where('is_default', 1)
+                ->where('user_id', $user->id)
                 ->first();
+
+            //if currency is not set as default then set the first currency as default
+            if (is_null($userDefaultCurrency)) {
+                $userDefaultCurrency = UserCurrency::where('user_id', $user->id)->first();
+
+                if ($userDefaultCurrency) {
+                    $userDefaultCurrency->update(['is_default' => 1]);
+                }
+            }
 
             if (empty($userDefaultCurrency)) {
                 $fallback = new UserCurrency();
