@@ -344,10 +344,51 @@
                 {{ convertUtf8($order->billing_address) }}
               </div>
             </div>
-          </div>
-        </div>
       </div>
 
+    </div>
+
+    @php
+      $shipping_gateways = App\Models\User\UserShippingGateway::where('user_id', Auth::guard('web')->user()->id)->where('status', 1)->get();
+    @endphp
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title d-inline-block">{{ __('Shipment Tracking') }}</div>
+        </div>
+        <form action="{{ route('user.item.order.tracking_update') }}" method="POST">
+          @csrf
+          <input type="hidden" name="order_id" value="{{ $order->id }}">
+          <div class="card-body">
+            <div class="form-group pt-0">
+              <label>{{ __('Shipping Gateway / Method') }}</label>
+              <select name="shipping_gateway_keyword" class="form-control">
+                <option value="">{{ __('Manual (No API)') }}</option>
+                @foreach($shipping_gateways as $gateway)
+                  <option value="{{ $gateway->keyword }}" @selected($order->shipping_gateway_keyword == $gateway->keyword)>{{ $gateway->name }}</option>
+                @endforeach
+              </select>
+            </div>
+            <div class="form-group pt-0">
+              <label>{{ __('Courier Partner') }}</label>
+              <input type="text" name="courier_name" class="form-control" value="{{ $order->courier_name }}" placeholder="e.g. DHL, FedEx, Delhivery">
+            </div>
+            <div class="form-group pt-0">
+              <label>{{ __('Tracking Number') }}</label>
+              <input type="text" name="tracking_number" class="form-control" value="{{ $order->tracking_number }}" placeholder="Tracking Number">
+            </div>
+            @if($order->tracking_url)
+            <div class="form-group pt-0 pb-0">
+              <a href="{{ $order->tracking_url }}" target="_blank" class="btn btn-sm btn-link text-primary p-0">{{ __('View Tracking on Carrier Site') }}</a>
+            </div>
+            @endif
+          </div>
+          <div class="card-footer text-right">
+            <button type="submit" class="btn btn-primary btn-sm">{{ __('Save Tracking') }}</button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <div class="col-lg-12">

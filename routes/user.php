@@ -321,6 +321,14 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'userstatus', 'Demo',
             Route::post('/iyzico/update', 'User\GatewayController@iyzicoUpdate')->name('user.iyzico.update');
         });
 
+        // User Shipping Gateways Routes
+        Route::get('/shipping-gateways', 'User\ShippingGatewayController@index')->name('user.shipping_gateway.index');
+        Route::middleware('limitCheck:items,update,without_ajax')->group(function () {
+            Route::post('/shipping-gateways/aftership', 'User\ShippingGatewayController@aftershipUpdate')->name('user.shipping_gateway.aftership_update');
+            Route::post('/shipping-gateways/shiprocket', 'User\ShippingGatewayController@shiprocketUpdate')->name('user.shipping_gateway.shiprocket_update');
+            Route::post('/shipping-gateways/shippo', 'User\ShippingGatewayController@shippoUpdate')->name('user.shipping_gateway.shippo_update');
+        });
+
         // User Offline Gateway Routes
         Route::get('/offline/gateways', 'User\GatewayController@offline')->name('user.gateway.offline');
         Route::post(
@@ -544,6 +552,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'userstatus', 'Demo',
             Route::get('/completed/orders', 'User\ItemOrderController@completed')->name('user.completed.item.orders');
             Route::get('/rejected/orders', 'User\ItemOrderController@rejected')->name('user.rejected.item.orders');
             Route::post('/order/status', 'User\ItemOrderController@status')->name('user.item.orders.status');
+            Route::post('/order/tracking-update', 'User\ShippingGatewayController@trackingUpdate')->name('user.item.order.tracking_update');
             Route::get('/orders/details/{id}', 'User\ItemOrderController@details')->name('user.item.details');
             Route::post('/order/delete', 'User\ItemOrderController@orderDelete')->name('user.item.order.delete');
             Route::post('/order/bulk-delete', 'User\ItemOrderController@bulkOrderDelete')->name('user.item.order.bulk.delete');

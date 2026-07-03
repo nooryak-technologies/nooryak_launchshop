@@ -251,6 +251,28 @@
                                       </td>
                                       <td> {{ $data->shipping_country }}</td>
                                     </tr>
+                                    @if(!empty($data->courier_name))
+                                    <tr>
+                                      <td>
+                                        <p class="mb-0">{{ $keywords['Courier Partner'] ?? __('Courier Partner') }} :</p>
+                                      </td>
+                                      <td>{{ $data->courier_name }}</td>
+                                    </tr>
+                                    @endif
+                                    @if(!empty($data->tracking_number))
+                                    <tr>
+                                      <td>
+                                        <p class="mb-0">{{ $keywords['Tracking Number'] ?? __('Tracking Number') }} :</p>
+                                      </td>
+                                      <td>
+                                        @if(!empty($data->tracking_url))
+                                          <a href="{{ $data->tracking_url }}" target="_blank" style="color: #28a745; text-decoration: underline; font-weight: bold;">{{ $data->tracking_number }}</a>
+                                        @else
+                                          {{ $data->tracking_number }}
+                                        @endif
+                                      </td>
+                                    </tr>
+                                    @endif
                                   </tbody>
                                 </table>
                               </div>
