@@ -64,7 +64,7 @@
                 </ul>
               </li>
 
-              {{-- <li class="menu-item">
+              <li class="menu-item">
                 @if ($userCurrentCurr->id)
                   <a href="javascript:void(0)">{{ $userCurrentCurr->symbol }}
                     &nbsp;{{ convertUtf8($userCurrentCurr->text) }}</a>
@@ -77,7 +77,7 @@
                     </li>
                   @endforeach
                 </ul>
-              </li> --}}
+              </li>
 
               <li class="menu-item">
                 <a href="#"><i class="fal fa-user"></i>{{ $keywords['My Account'] ?? __('My Account') }}</a>
@@ -249,18 +249,6 @@
           </ul>
         </nav>
         
-        <!-- Categories Navigation Slider -->
-        <div class="categories-nav-slider-wrapper">
-          <div class="categories-nav-slider" id="categories-nav-slider">
-            @foreach ($categories as $category)
-              <div class="category-nav-item">
-                <a href="{{ route('front.user.shop', [getParam(), 'category=' . $category->slug]) }}">
-                  {{ $category->name }}
-                </a>
-              </div>
-            @endforeach
-          </div>
-        </div>
 
       </div>
     </div>

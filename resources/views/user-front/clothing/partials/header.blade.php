@@ -86,6 +86,20 @@
 
             <!-- Icons Menu -->
             <ul class="menu header-icons" style="display:flex;justify-content:flex-end;gap:4px;align-items:center;list-style:none;margin-bottom:0;padding-left:0;">
+              <!-- Currency Switcher -->
+              <li class="menu-item" style="position:relative;">
+                <a href="javascript:void(0)" class="sf-with-ul" style="display:flex;align-items:center;gap:6px;color:#0d0d0d;padding:8px 10px;font-size:13px;font-weight:500;">
+                  <span>{{ $userCurrentCurr->symbol }} {{ convertUtf8($userCurrentCurr->text) }}</span>
+                </a>
+                <ul class="setting-dropdown" style="display:none;">
+                  @foreach ($userCurrency as $userCurr)
+                    <li>
+                      <a href="{{ route('front.user.changeUserCurrency', ['id' => $userCurr->id, getParam()]) }}"
+                        class="menu-link">{{ $userCurr->text }}</a>
+                    </li>
+                  @endforeach
+                </ul>
+              </li>
               <!-- Account -->
               <li class="menu-item" style="position:relative;">
                 <a href="javascript:void(0)" class="sf-with-ul" style="display:flex;align-items:center;gap:6px;color:#0d0d0d;padding:8px 10px;font-size:13px;font-weight:500;">

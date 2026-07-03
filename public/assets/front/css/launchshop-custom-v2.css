@@ -8975,3 +8975,8 @@ iframe[id^="tawkchat-"],
         margin-left: auto !important;
     }
 }
+
+/* ── Spacing for shop category pills across all templates ── */
+.shop-category-pills {
+    margin-right: 2rem !important;
+}

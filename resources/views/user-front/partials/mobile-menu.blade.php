@@ -17,7 +17,7 @@
       </ul>
     </li>
 
-    {{-- <li class="menu-action-item">
+    <li class="menu-action-item">
       @if ($userCurrentCurr->id)
       <a href="javascript:void(0)">
           <span class="icon">
@@ -34,7 +34,7 @@
           </li>
         @endforeach
       </ul>
-    </li> --}}
+    </li>
     <li class="menu-action-item">
       <a href="javascript:void(0)"><span class="icon"><i class="fal fa-user"></i></span>
         {{ $keywords['My Account'] ?? __('My Account') }} <span class="plus-icon"><i class="fal fa-plus"></i></span></a>

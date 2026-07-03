@@ -73,7 +73,7 @@
               @endforeach
             </ul>
           </li>
-          {{-- <li class="menu-item">
+          <li class="menu-item">
             @if ($userCurrentCurr->id)
               <a href="#" class="sf-with-ul">{{ $userCurrentCurr->symbol }}
                 &nbsp;{{ convertUtf8($userCurrentCurr->text) }}</a>
@@ -86,7 +86,7 @@
                 </li>
               @endforeach
             </ul>
-          </li> --}}
+          </li>
           <li class="menu-item">
             <a href="javascript:void(0)" class="sf-with-ul"><i
                 class="fal fa-user"></i>{{ $keywords['My Account'] ?? __('My Account') }}</a>

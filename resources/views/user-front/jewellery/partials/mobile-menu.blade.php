@@ -42,7 +42,7 @@
           @endforeach
         </ul>
       </li>
-      {{-- <li class="menu-action-item">
+      <li class="menu-action-item">
         <a href="javascript:void(0)">
           <span class="icon">
             <i>{{ $userCurrentCurr->symbol }}</i>
@@ -56,7 +56,7 @@
             </li>
           @endforeach
         </ul>
-      </li> --}}
+      </li>
       <li class="menu-action-item">
         <a href="javascript:void(0)">
           <span class="icon"><i class="fal fa-user"></i></span>
