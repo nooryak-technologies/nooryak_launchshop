@@ -8914,11 +8914,11 @@ iframe[id^="tawkchat-"],
 
     /* ── Header: full-width bar, inner content centered ── */
     .header-area {
-        width: 100% !important;
+        width: 74% !important;
     }
 
     .header-area .main-navbar {
-        width: 78% !important;
+        width: 100% !important;
     }
 
     /* The container-fluid inside the header nav */
