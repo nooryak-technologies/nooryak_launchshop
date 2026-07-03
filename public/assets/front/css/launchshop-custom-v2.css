@@ -8982,7 +8982,7 @@ iframe[id^="tawkchat-"],
 }
 
 /* ── Remove large-screen margin-top offset below header for all templates (above 1500px) ── */
-@media (min-width: 1500px) {
+@media (min-width: 1600px) {
     .header-next {
         margin-top: 0 !important;
     }
