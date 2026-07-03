@@ -87,110 +87,120 @@
 
 /* Task 3: Nooryak CRM Layout - Centered Content for screens > 1600px */
 @media (min-width: 1600px) {
-  /* Center the main container */
-  .header,
-  .container,
-  body > section > .container,
-  body > div > .container {
-    max-width: 1600px;
-    margin-left: auto;
-    margin-right: auto;
+  /* Center the main container with fixed width */
+  .container {
+    max-width: 1400px !important;
+    width: 1400px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
   }
 
-  /* Header specific centering */
-  .header .container {
-    max-width: 1600px;
+  /* Header wrapper - full width background */
+  .header {
+    width: 100% !important;
+    position: relative !important;
   }
 
-  .header-top .container,
-  .header-middle .container,
-  .header-bottom .container {
-    max-width: 1600px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  /* Main content centering */
-  body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  body > * {
-    width: 100%;
-    max-width: 1600px;
-  }
-
-  /* Section centering */
-  section {
-    max-width: 1600px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  /* Footer centering */
-  footer .container {
-    max-width: 1600px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  /* Ensure full width backgrounds but centered content */
-  .bg-light-1,
+  /* Header sections - full width backgrounds with centered content */
   .header-top,
   .header-middle,
   .header-bottom {
-    width: 100%;
+    width: 100% !important;
+    position: relative !important;
   }
 
-  .bg-light-1 > .container,
-  .header-top > .container,
-  .header-middle > .container,
-  .header-bottom > .container {
-    max-width: 1600px;
-    margin-left: auto;
-    margin-right: auto;
+  /* Header containers - centered with fixed width */
+  .header .container,
+  .header-top .container,
+  .header-middle .container,
+  .header-bottom .container {
+    max-width: 1400px !important;
+    width: 1400px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+
+  /* Main content sections */
+  section {
+    width: 100% !important;
+  }
+
+  section > .container {
+    max-width: 1400px !important;
+    width: 1400px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Footer centering */
+  footer {
+    width: 100% !important;
+  }
+
+  footer .container {
+    max-width: 1400px !important;
+    width: 1400px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Ensure backgrounds extend full width */
+  .bg-light-1 {
+    width: 100% !important;
+  }
+
+  /* Body alignment */
+  body {
+    overflow-x: hidden !important;
   }
 }
 
 /* Nooryak CRM Style Header Layout for 1600px+ */
 @media (min-width: 1600px) {
-  .header-top,
-  .header-middle,
-  .header-bottom {
-    position: relative;
+  /* Header alignment fixes */
+  .header-top .header-left,
+  .header-top .header-center,
+  .header-top .header-right {
+    display: flex;
+    align-items: center;
   }
 
-  .header-top::before,
-  .header-middle::before,
-  .header-bottom::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 1600px;
-    height: 100%;
-    top: 0;
-    z-index: -1;
-  }
-
-  /* Center align text and elements */
+  /* Header middle - proper flex distribution */
   .header-middle {
-    text-align: center;
+    display: block !important;
   }
 
-  .header-middle .header-left,
-  .header-middle .header-center,
+  .header-middle .header-left {
+    flex: 0 0 auto;
+  }
+
+  .header-middle .header-center {
+    flex: 1 1 auto;
+    padding: 0 20px;
+  }
+
   .header-middle .header-right {
-    justify-content: center;
+    flex: 0 0 auto;
   }
 
   /* Main content wrapper */
   .main-content-wrapper {
-    max-width: 1600px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 0 15px;
+  }
+
+  /* Ensure proper spacing on zoom */
+  .header-middle > .container,
+  .header-top > .container,
+  .header-bottom > .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 }
 
@@ -198,15 +208,15 @@
 @media (min-width: 1600px) {
   /* Clean, professional header spacing */
   .header-top {
-    padding: 8px 0;
+    padding: 8px 0 !important;
   }
 
   .header-middle {
-    padding: 15px 0;
+    padding: 15px 0 !important;
   }
 
   .header-bottom {
-    padding: 10px 0;
+    padding: 10px 0 !important;
   }
 
   /* Typography refinements */
@@ -229,6 +239,20 @@
   /* Smooth scroll behavior */
   html {
     scroll-behavior: smooth;
+  }
+
+  /* Fix zoom issues - prevent horizontal scroll */
+  html,
+  body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+  }
+
+  /* Category slider wrapper alignment */
+  .categories-nav-slider-wrapper {
+    max-width: 1400px;
+    margin: 10px auto 0;
+    padding: 0 15px;
   }
 }
 

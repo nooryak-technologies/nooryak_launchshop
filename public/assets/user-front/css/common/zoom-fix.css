@@ -1,0 +1,231 @@
+/* Zoom Level Fix - Maintains proper centering at all zoom levels (Ctrl +/-) */
+
+/* Base responsive container fixes */
+@media (min-width: 1600px) {
+  /* Prevent horizontal scrolling at any zoom level */
+  html {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Fixed width container for centering */
+  .container {
+    max-width: 1400px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Header fix - Full width background with centered content */
+  header,
+  .header {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Header sections */
+  .header-top,
+  .header-middle,
+  .header-bottom {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Header inner containers - centered */
+  .header .container,
+  .header-top .container,
+  .header-middle .container,
+  .header-bottom .container {
+    max-width: 1400px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Main content sections */
+  main,
+  section,
+  .section {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Section containers - centered */
+  main > .container,
+  section > .container,
+  .section > .container {
+    max-width: 1400px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Footer fix */
+  footer,
+  .footer {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  footer .container,
+  .footer .container {
+    max-width: 1400px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Row fix for bootstrap grid */
+  .row {
+    margin-left: -15px !important;
+    margin-right: -15px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Navbar fix */
+  .navbar,
+  .nav,
+  .main-nav {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Ensure menu items don't break */
+  .menu,
+  .menu-left,
+  .menu-right {
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box !important;
+  }
+}
+
+/* Additional zoom level specific fixes */
+@media (min-width: 1600px) and (max-width: 1920px) {
+  /* For standard large screens 1600-1920px */
+  .container {
+    max-width: 1400px !important;
+  }
+}
+
+@media (min-width: 1921px) {
+  /* For ultra-wide screens */
+  .container {
+    max-width: 1400px !important;
+  }
+}
+
+/* Zoom level compensation */
+@media (min-width: 1600px) {
+  /* Scale compensation for browser zoom */
+  * {
+    box-sizing: border-box !important;
+  }
+
+  /* Ensure images don't break layout */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Prevent text from breaking layout */
+  h1, h2, h3, h4, h5, h6, p, span, div {
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+}
+
+/* Header alignment at all zoom levels */
+@media (min-width: 1600px) {
+  /* Top header alignment */
+  .header-top .header-left,
+  .header-top .header-center,
+  .header-top .header-right {
+    flex: 0 0 auto;
+  }
+
+  /* Middle header - proper distribution */
+  .header-middle .container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+
+  .header-middle .header-left {
+    flex: 0 0 auto;
+  }
+
+  .header-middle .header-center {
+    flex: 1 1 auto;
+    padding: 0 20px;
+  }
+
+  .header-middle .header-right {
+    flex: 0 0 auto;
+  }
+
+  /* Bottom header */
+  .header-bottom .container {
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .header-bottom .main-nav {
+    width: 100%;
+  }
+}
+
+/* Category slider centering fix */
+@media (min-width: 1600px) {
+  .categories-nav-slider-wrapper {
+    max-width: 1370px !important;
+    margin: 10px auto 0 !important;
+    padding: 0 15px !important;
+  }
+}
+
+/* Fix for elements with position: absolute */
+@media (min-width: 1600px) {
+  .header-top,
+  .header-middle,
+  .header-bottom {
+    position: relative !important;
+  }
+
+  /* Ensure dropdowns and modals center properly */
+  .dropdown-menu,
+  .modal,
+  .popup {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+}
+
+/* Smooth transitions for zoom changes */
+* {
+  transition: none !important;
+}
+
+.container,
+.header .container,
+section > .container {
+  transition: max-width 0.3s ease !important;
+}
