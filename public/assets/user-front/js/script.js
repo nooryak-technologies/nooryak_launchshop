@@ -156,11 +156,15 @@ document.addEventListener("DOMContentLoaded", () => {
     // header-next
     var getHeaderHeight = function () {
         var headerNext = $(".header-next");
-        var header = $(".header-mt-fix");
-        var headerHeight = header.height();
-        headerNext.css({
-            "margin-top": headerHeight + "px"
-        });
+        if ($(window).width() >= 1500) {
+            headerNext.css("margin-top", "");
+        } else {
+            var header = $(".header-mt-fix");
+            var headerHeight = header.height();
+            headerNext.css({
+                "margin-top": headerHeight + "px"
+            });
+        }
     }
     getHeaderHeight();
 
