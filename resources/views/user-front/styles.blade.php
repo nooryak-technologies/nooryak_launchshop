@@ -514,6 +514,56 @@
   overflow-y: auto !important;
   margin-bottom: 20px !important;
 }
+
+/* ── Remove large-screen margin-top offset below header for all templates (above 1500px) ── */
+@media (min-width: 1500px) {
+  .header-next {
+    margin-top: 0 !important;
+  }
+}
+
+/* ── Ensure header-top is a single line on desktop screens (min-width: 1500px) ── */
+@media (min-width: 1500px) {
+  .header-top .row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+  }
+  /* Hide the empty middle column */
+  .header-top .row > div:nth-child(2) {
+    display: none !important;
+  }
+  /* Expand left and right columns to fill available space */
+  .header-top .row > div:first-child {
+    flex: 1 1 auto !important;
+    max-width: 50% !important;
+    width: auto !important;
+  }
+  .header-top .row > div:last-child {
+    flex: 1 1 auto !important;
+    max-width: 50% !important;
+    width: auto !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+  }
+  /* Force right menu items to stay inline */
+  .header-top .header-right ul.menu {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 15px !important;
+  }
+  .header-top .header-right ul.menu > li {
+    white-space: nowrap !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+}
 </style>
 
 @yield('styles')
