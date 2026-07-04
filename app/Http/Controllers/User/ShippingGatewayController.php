@@ -376,7 +376,9 @@ class ShippingGatewayController extends Controller
                 'json' => $orderPayload
             ]);
 
-            $resData = json_decode($orderResponse->getBody()->getContents(), true);
+            $responseBody = $orderResponse->getBody()->getContents();
+            \Log::info('Shiprocket API Success Response: ' . $responseBody);
+            $resData = json_decode($responseBody, true);
             
             // Save shiprocket order details to user_orders
             if (isset($resData['shipment_id'])) {
@@ -384,7 +386,7 @@ class ShippingGatewayController extends Controller
                 $order->tracking_url = 'https://shiprocket.co/tracking/' . $order->order_number;
                 $order->save();
             } else {
-                Session::flash('warning', 'Shiprocket Error: Order created but no shipment ID was returned.');
+                Session::flash('warning', 'Shiprocket Error: Order created but no shipment ID was returned. API Response: ' . $responseBody);
             }
         } catch (\GuzzleHttp\Exception\BadResponseException $e) {
             $response = $e->getResponse();
