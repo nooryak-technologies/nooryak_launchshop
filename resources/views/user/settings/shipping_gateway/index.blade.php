@@ -25,7 +25,7 @@
   </div>
   
   <div class="row">
-    {{-- AfterShip --}}
+    {{-- Commented out AfterShip
     <div class="col-lg-4">
       <div class="card">
         <form action="{{ route('user.shipping_gateway.aftership_update') }}" method="post">
@@ -74,6 +74,7 @@
         </form>
       </div>
     </div>
+    --}}
 
     {{-- Shiprocket --}}
     <div class="col-lg-4">
@@ -132,7 +133,7 @@
       </div>
     </div>
 
-    {{-- Shippo --}}
+    {{-- Commented out Shippo
     <div class="col-lg-4">
       <div class="card">
         <form action="{{ route('user.shipping_gateway.shippo_update') }}" method="post">
@@ -181,5 +182,6 @@
         </form>
       </div>
     </div>
+    --}}
   </div>
 @endsection
