@@ -1220,8 +1220,40 @@ $(document).ready(function () {
     });
 
     $(document).on('focusin', function (e) {
-        if ($(e.target).closest(".tox-tinymce, .tox-tinymce-aux, .moxman-window, .tam-assetmanager-root").length) {
+        if ($(e.target).closest(".tox-tinymce, .tox-tinymce-aux, .tam-assetmanager-root").length) {
             e.stopImmediatePropagation();
+        }
+    });
+
+    // Convert SVG QR code downloads to PNG on the fly
+    $(document).on('click', 'a.qr-download, #downloadBtn', function (e) {
+        let href = $(this).attr('href');
+        if (href && href.indexOf('.svg') !== -1) {
+            e.preventDefault();
+            let filename = $(this).attr('download') || 'qr-code.png';
+            if (filename.indexOf('.svg') !== -1) {
+                filename = filename.replace(/\.svg/g, '.png');
+            }
+            
+            let image = new Image();
+            image.crossOrigin = 'anonymous';
+            image.onload = function() {
+                let canvas = document.createElement('canvas');
+                canvas.width = image.naturalWidth || image.width || 300;
+                canvas.height = image.naturalHeight || image.height || 300;
+                let ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(image, 0, 0);
+                
+                let a = document.createElement('a');
+                a.download = filename;
+                a.href = canvas.toDataURL('image/png');
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            };
+            image.src = href;
         }
     });
 });

@@ -73,7 +73,7 @@
                           </td>
                           <td>
                             <a href="{{ asset('assets/front/img/user/qr/' . $qrcode->image) }}"
-                              download="{{ $qrcode->name }}.{{ pathinfo($qrcode->image, PATHINFO_EXTENSION) }}" class="btn btn-secondary btn-sm mb-1">
+                              download="{{ $qrcode->name }}.png" class="btn btn-secondary btn-sm mb-1 qr-download">
                               <i class="fas fa-download"></i> {{ __('Download') }}
                             </a>
                             <form class="deleteform d-inline-block" action="{{ route('user.qrcode.delete') }}"
@@ -109,7 +109,7 @@
                               </div>
                               <div class="modal-footer justify-content-center">
                                 <a href="{{ asset('assets/front/img/user/qr/' . $qrcode->image) }}"
-                                  download="{{ $qrcode->name }}.{{ pathinfo($qrcode->image, PATHINFO_EXTENSION) }}" class="btn btn-secondary">
+                                  download="{{ $qrcode->name }}.png" class="btn btn-secondary qr-download">
                                   <i class="fas fa-download"></i> {{ __('Download') }}
                                 </a>
                               </div>
