@@ -8912,20 +8912,28 @@ iframe[id^="tawkchat-"],
         padding-right: 30px !important;
     }
 
-    /* ── Override / Reset Glassmorphic Capsule to Full Width Bar ── */
+    /* ── Floating Centered Capsule Header ── */
     .header-area,
     .header-area.is-sticky {
-        width: 100% !important;
-        max-width: 100% !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        border-radius: 0 !important;
-        margin: 0 !important;
-        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05) !important;
-        border: none !important;
-        border-bottom: 1px solid #efefef !important;
+        position: fixed !important;
+        top: 20px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: calc(100% - 60px) !important;
+        max-width: 1400px !important;
+        margin: 0 auto !important;
+        border-radius: 50px !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(10px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(10px) saturate(180%) !important;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
         height: 70px !important;
+        display: flex !important;
+        align-items: center !important;
+        z-index: 9999 !important;
+        transition: all 0.3s ease-in-out !important;
+        animation: none !important;
     }
 
     .header-area .main-navbar {
@@ -8984,6 +8992,11 @@ iframe[id^="tawkchat-"],
     .mx-auto {
         margin-right: auto !important;
         margin-left: auto !important;
+    }
+
+    /* ── Hero Wrapper Top Spacing to Offset Floating Header ── */
+    .hero-wrapper {
+        margin-top: 70px !important;
     }
 }
 
