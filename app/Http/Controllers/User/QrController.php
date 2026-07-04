@@ -27,11 +27,11 @@ class QrController extends Controller
         if (empty($bs->qr_image) || !file_exists(public_path('assets/front/img/user/qr/' . $bs->qr_image))) {
             $directory = public_path('assets/front/img/user/qr/');
             @mkdir($directory, 0775, true);
-            $fileName = uniqid() . '.png';
+            $fileName = uniqid() . '.svg';
 
             \QrCode::size(250)->errorCorrection('H')
                 ->color(0, 0, 0)
-                ->format('png')
+                ->format('svg')
                 ->generate(url(Auth::user()->username), $directory . $fileName);
 
 
@@ -61,7 +61,7 @@ class QrController extends Controller
 
         $directory = public_path('assets/front/img/user/qr/');
         @mkdir($directory, 0775, true);
-        $qrImage = uniqid() . '.png';
+        $qrImage = uniqid() . '.svg';
 
         // remove previous qr image
         @unlink($directory . $bs->qr_image);
@@ -69,7 +69,7 @@ class QrController extends Controller
         // new QR code init
         $qrcode = \QrCode::size($request->size)->errorCorrection('H')->margin($request->margin)
             ->color(0, 0, 0)
-            ->format('png');
+            ->format('svg');
 
         if ($type == 'image' && $request->hasFile('image')) {
 

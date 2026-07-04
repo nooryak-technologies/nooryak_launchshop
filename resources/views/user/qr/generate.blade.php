@@ -93,7 +93,7 @@
           </div>
         </div>
         <div class="card-footer text-center border-top-ebecec">
-          <a id="downloadBtn" class="btn btn-success" download="qr-image.png"
+          <a id="downloadBtn" class="btn btn-success" download="qr-image.{{ !empty($abs->qr_image) ? pathinfo($abs->qr_image, PATHINFO_EXTENSION) : 'svg' }}"
             href="{{ asset('assets/front/img/user/qr/' . $abs->qr_image) }}">{{ __('Download Image') }}</a>
         </div>
       </div>
