@@ -272,7 +272,12 @@ class ShippingGatewayController extends Controller
 
             // Extract shipping pincode (handles 4 to 8 digits)
             preg_match('/\b\d{4,8}\b/', $shipping_address, $matches);
-            $shipping_pincode = $matches[0] ?? (preg_match('/\b\d{4,8}\b/', $billing_address, $bMatches) ? $bMatches[0] : '110001');
+            $shipping_pincode = $matches[0] ?? (preg_match('/\b\d{4,8}\b/', $billing_address, $bMatches) ? $bMatches[0] : '');
+
+            if (empty($shipping_pincode)) {
+                Session::flash('warning', 'Shiprocket Error: No valid pincode (4-8 digits) found in the address. Please edit the order address to include a pincode (e.g., 622001).');
+                return;
+            }
 
             // Step 3: Fetch order items
             $order_items = \App\Models\User\UserOrderItem::where('user_order_id', $order->id)->get();
