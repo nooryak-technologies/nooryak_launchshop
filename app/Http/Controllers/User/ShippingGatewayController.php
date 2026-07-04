@@ -245,9 +245,34 @@ class ShippingGatewayController extends Controller
                 return;
             }
 
-            // Step 2: Extract pincode from address using regex (matches any 5 or 6 digit number)
-            preg_match('/\b\d{5,6}\b/', $order->shipping_address, $matches);
-            $shipping_pincode = $matches[0] ?? (preg_match('/\b\d{5,6}\b/', $order->billing_address, $bMatches) ? $bMatches[0] : '110001');
+            // Step 2: Clean up address fields and phone numbers to prevent empty values or formatting errors
+            $billing_fname = !empty($order->billing_fname) ? trim($order->billing_fname) : 'Customer';
+            $billing_lname = !empty($order->billing_lname) ? trim($order->billing_lname) : '';
+            $billing_address = !empty($order->billing_address) ? trim($order->billing_address) : 'Address not provided';
+            $billing_city = !empty($order->billing_city) ? trim($order->billing_city) : 'City';
+            $billing_state = !empty($order->billing_state) ? trim($order->billing_state) : $billing_city;
+            $billing_country = !empty($order->billing_country) ? trim($order->billing_country) : 'India';
+            $billing_email = !empty($order->billing_email) ? trim($order->billing_email) : 'email@example.com';
+            $billing_phone = !empty($order->billing_number) ? preg_replace('/[^0-9]/', '', $order->billing_number) : '9999999999';
+            if (empty($billing_phone)) {
+                $billing_phone = '9999999999';
+            }
+
+            $shipping_fname = !empty($order->shipping_fname) ? trim($order->shipping_fname) : $billing_fname;
+            $shipping_lname = !empty($order->shipping_lname) ? trim($order->shipping_lname) : $billing_lname;
+            $shipping_address = !empty($order->shipping_address) ? trim($order->shipping_address) : $billing_address;
+            $shipping_city = !empty($order->shipping_city) ? trim($order->shipping_city) : $billing_city;
+            $shipping_state = !empty($order->shipping_state) ? trim($order->shipping_state) : $shipping_city;
+            $shipping_country = !empty($order->shipping_country) ? trim($order->shipping_country) : $billing_country;
+            $shipping_email = !empty($order->shipping_email) ? trim($order->shipping_email) : $billing_email;
+            $shipping_phone = !empty($order->shipping_number) ? preg_replace('/[^0-9]/', '', $order->shipping_number) : $billing_phone;
+            if (empty($shipping_phone)) {
+                $shipping_phone = $billing_phone;
+            }
+
+            // Extract shipping pincode (handles 4 to 8 digits)
+            preg_match('/\b\d{4,8}\b/', $shipping_address, $matches);
+            $shipping_pincode = $matches[0] ?? (preg_match('/\b\d{4,8}\b/', $billing_address, $bMatches) ? $bMatches[0] : '110001');
 
             // Step 3: Fetch order items
             $order_items = \App\Models\User\UserOrderItem::where('user_order_id', $order->id)->get();
@@ -272,16 +297,28 @@ class ShippingGatewayController extends Controller
                 'order_id' => $order->order_number,
                 'order_date' => $order->created_at->format('Y-m-d H:i'),
                 'pickup_location' => 'Primary',
-                'billing_customer_name' => $order->billing_fname,
-                'billing_last_name' => $order->billing_lname ?? '',
-                'billing_address' => $order->billing_address,
-                'billing_city' => $order->billing_city,
+                
+                'billing_customer_name' => $billing_fname,
+                'billing_last_name' => $billing_lname,
+                'billing_address' => $billing_address,
+                'billing_city' => $billing_city,
                 'billing_pincode' => $shipping_pincode,
-                'billing_state' => $order->billing_state ?? $order->billing_city,
-                'billing_country' => $order->billing_country ?? 'India',
-                'billing_email' => $order->billing_email,
-                'billing_phone' => $order->billing_number,
-                'shipping_is_billing' => true,
+                'billing_state' => $billing_state,
+                'billing_country' => $billing_country,
+                'billing_email' => $billing_email,
+                'billing_phone' => $billing_phone,
+                
+                'shipping_is_billing' => false,
+                'shipping_customer_name' => $shipping_fname,
+                'shipping_last_name' => $shipping_lname,
+                'shipping_address' => $shipping_address,
+                'shipping_city' => $shipping_city,
+                'shipping_pincode' => $shipping_pincode,
+                'shipping_state' => $shipping_state,
+                'shipping_country' => $shipping_country,
+                'shipping_email' => $shipping_email,
+                'shipping_phone' => $shipping_phone,
+
                 'order_items' => $itemsData,
                 'payment_method' => $paymentMethod,
                 'sub_total' => $order->cart_total,
