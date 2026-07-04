@@ -8905,16 +8905,27 @@ iframe[id^="tawkchat-"],
     .container-xl,
     .container-xxl,
     .container-fluid {
-        max-width: 1600px !important;
+        max-width: 1400px !important;
         margin-left: auto !important;
         margin-right: auto !important;
         padding-left: 30px !important;
         padding-right: 30px !important;
     }
 
-    /* ── Header: full-width bar, inner content centered ── */
-    .header-area {
+    /* ── Override / Reset Glassmorphic Capsule to Full Width Bar ── */
+    .header-area,
+    .header-area.is-sticky {
         width: 100% !important;
+        max-width: 100% !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05) !important;
+        border: none !important;
+        border-bottom: 1px solid #efefef !important;
+        height: 70px !important;
     }
 
     .header-area .main-navbar {
@@ -8924,7 +8935,7 @@ iframe[id^="tawkchat-"],
     /* The container-fluid inside the header nav */
     .header-area .main-navbar .container-fluid,
     .header-area .main-navbar>.container-fluid {
-        max-width: 1600px !important;
+        max-width: 1400px !important;
         margin-left: auto !important;
         margin-right: auto !important;
         padding-left: 30px !important;
@@ -8934,7 +8945,7 @@ iframe[id^="tawkchat-"],
 
     /* Responsive nav container */
     .header-area .main-responsive-nav .container {
-        max-width: 1600px !important;
+        max-width: 1400px !important;
         margin-left: auto !important;
         margin-right: auto !important;
     }
@@ -8957,14 +8968,14 @@ iframe[id^="tawkchat-"],
     div>.container,
     footer .container,
     .footer-area .container {
-        max-width: 1600px !important;
+        max-width: 1400px !important;
         margin-left: auto !important;
         margin-right: auto !important;
     }
 
     /* ── Page-title breadcrumb area ── */
     .page-title-area .container {
-        max-width: 1600px !important;
+        max-width: 1400px !important;
         margin-left: auto !important;
         margin-right: auto !important;
     }

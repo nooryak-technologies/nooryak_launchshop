@@ -108,6 +108,7 @@
                         <th scope="col" class="border-top-0 border-bottom-0" style="border-radius: 8px 0 0 8px; width: 40px;">
                           <input type="checkbox" class="bulk-check" data-val="all">
                         </th>
+                        <th scope="col" class="border-top-0 border-bottom-0 font-weight-bold" style="width: 80px;">{{ __('Image') }}</th>
                         <th scope="col" class="border-top-0 border-bottom-0 font-weight-bold">{{ __('Title') }}</th>
                         <th scope="col" class="border-top-0 border-bottom-0 font-weight-bold">{{ __('Price') }} ({{ $currency->text }})</th>
                         <th scope="col" class="border-top-0 border-bottom-0 font-weight-bold">{{ __('Type') }}</th>
@@ -126,6 +127,9 @@
                         <tr style="background: #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.02); border-radius: 8px;">
                           <td class="align-middle" style="border-top: 1px solid rgba(0,0,0,0.04); border-bottom: 1px solid rgba(0,0,0,0.04); border-left: 1px solid rgba(0,0,0,0.04); border-radius: 8px 0 0 8px;">
                             <input type="checkbox" class="bulk-check" data-val="{{ $item->item_id }}">
+                          </td>
+                          <td class="align-middle" style="border-top: 1px solid rgba(0,0,0,0.04); border-bottom: 1px solid rgba(0,0,0,0.04);">
+                            <img src="{{ $item->thumbnail ? asset('assets/front/img/user/items/thumbnail/' . $item->thumbnail) : asset('assets/admin/img/noimage.jpg') }}" alt="Product Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(0,0,0,0.08);">
                           </td>
                           <td class="align-middle font-weight-bold" style="border-top: 1px solid rgba(0,0,0,0.04); border-bottom: 1px solid rgba(0,0,0,0.04);">
                             <a href="{{ route('front.user.productDetails', [Auth::user('web')->username, 'slug' => $item->slug]) }}"
