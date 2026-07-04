@@ -32,8 +32,6 @@ class QrController extends Controller
             \QrCode::size(250)->errorCorrection('H')
                 ->color(0, 0, 0)
                 ->format('png')
-                ->style('square')
-                ->eye('square')
                 ->generate(url(Auth::user()->username), $directory . $fileName);
 
 
@@ -71,9 +69,7 @@ class QrController extends Controller
         // new QR code init
         $qrcode = \QrCode::size($request->size)->errorCorrection('H')->margin($request->margin)
             ->color(0, 0, 0)
-            ->format('png')
-            ->style($request->style)
-            ->eye($request->eye_style);
+            ->format('png');
 
         if ($type == 'image' && $request->hasFile('image')) {
 
