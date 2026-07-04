@@ -59,7 +59,7 @@ class QrController extends Controller
         $bs = BasicSetting::where('user_id', Auth::guard('web')->user()->id)->first();
 
         // set default values for all params of qr image, if there is no value for a param
-        $color = hex2rgb($request->color);
+        $color = ['red' => 0, 'green' => 0, 'blue' => 0];
 
         $directory = public_path('assets/front/img/user/qr/');
         @mkdir($directory, 0775, true);
@@ -70,7 +70,7 @@ class QrController extends Controller
 
         // new QR code init
         $qrcode = \QrCode::size($request->size)->errorCorrection('H')->margin($request->margin)
-            ->color($color['red'], $color['green'], $color['blue'])
+            ->color(0, 0, 0)
             ->format('png')
             ->style($request->style)
             ->eye($request->eye_style);
@@ -162,7 +162,7 @@ class QrController extends Controller
         }
 
 
-        $bs->qr_color = $request->color;
+        $bs->qr_color = '000000';
         $bs->qr_size = $request->size;
         $bs->qr_style = $request->style;
         $bs->qr_eye_style = $request->eye_style;

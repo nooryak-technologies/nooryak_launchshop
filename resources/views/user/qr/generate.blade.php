@@ -36,7 +36,7 @@
           <form id="qrGeneratorForm" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row">
-              <div class="col-lg-6">
+              <div class="col-lg-12">
                 <div class="form-group">
                   @php
                     $qrUrl = !empty($abs->qr_url) ? $abs->qr_url : url(Auth::user()->username);
@@ -49,23 +49,7 @@
                   </p>
                 </div>
               </div>
-              <div class="col-lg-6">
-                <div class="form-group">
-                  <label for="">{{ __('Color') }}</label>
-                  @php
-                    if (empty($abs->qr_color)) {
-                        $qrColor = '000000';
-                    } else {
-                        $qrColor = $abs->qr_color;
-                    }
-                  @endphp
-                  <input type="text" class="form-control jscolor" name="color" value="{{ $qrColor }}"
-                    onchange="generateQr()">
-                  <p class="mb-0 text-warning">
-                    {{ __('If the QR Code cannnot be scanned, then choose a darker color') }}
-                  </p>
-                </div>
-              </div>
+              <input type="hidden" name="color" value="000000">
             </div>
             <div class="row">
               <div class="col-lg-6">
