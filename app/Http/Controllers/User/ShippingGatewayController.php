@@ -297,11 +297,44 @@ class ShippingGatewayController extends Controller
             // Step 4: Map payment method
             $paymentMethod = (strtolower($order->method) == 'cod' || strtolower($order->gateway_type) == 'offline') ? 'COD' : 'Prepaid';
 
+            // Step 4.5: Fetch active pickup locations dynamically from Shiprocket
+            $pickupLocation = 'Primary';
+            try {
+                $pickupResponse = $client->get('https://apiv2.shiprocket.in/v1/external/settings/company/pickup', [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                        'Content-Type' => 'application/json'
+                    ]
+                ]);
+                $pickupData = json_decode($pickupResponse->getBody()->getContents(), true);
+                $hasPickupAddress = false;
+                if (isset($pickupData['data']['shipping_address']) && is_array($pickupData['data']['shipping_address']) && count($pickupData['data']['shipping_address']) > 0) {
+                    $hasPickupAddress = true;
+                    // Find an active pickup address
+                    foreach ($pickupData['data']['shipping_address'] as $addr) {
+                        if (isset($addr['status']) && $addr['status'] == 1 && !empty($addr['pickup_location'])) {
+                            $pickupLocation = $addr['pickup_location'];
+                            break;
+                        }
+                    }
+                    if (empty($pickupLocation) && !empty($pickupData['data']['shipping_address'][0]['pickup_location'])) {
+                        $pickupLocation = $pickupData['data']['shipping_address'][0]['pickup_location'];
+                    }
+                }
+                
+                if (!$hasPickupAddress) {
+                    Session::flash('warning', 'Shiprocket Error: No pickup location found in your Shiprocket account. Please log in to Shiprocket, go to Settings -> Pickup Addresses, and add at least one pickup address first.');
+                    return;
+                }
+            } catch (\Exception $e) {
+                \Log::warning('Shiprocket Failed to fetch pickup location dynamically: ' . $e->getMessage());
+            }
+
             // Step 5: Send order creation request to Shiprocket
             $orderPayload = [
                 'order_id' => $order->order_number,
                 'order_date' => $order->created_at->format('Y-m-d H:i'),
-                'pickup_location' => 'Primary',
+                'pickup_location' => $pickupLocation,
                 
                 'billing_customer_name' => $billing_fname,
                 'billing_last_name' => $billing_lname,
@@ -332,6 +365,8 @@ class ShippingGatewayController extends Controller
                 'height' => 10,
                 'weight' => 0.5
             ];
+
+            \Log::info('Shiprocket Payload: ' . json_encode($orderPayload));
 
             $orderResponse = $client->post('https://apiv2.shiprocket.in/v1/external/orders/create/adhoc', [
                 'headers' => [
