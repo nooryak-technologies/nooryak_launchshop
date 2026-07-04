@@ -308,17 +308,24 @@ class ShippingGatewayController extends Controller
                 ]);
                 $pickupData = json_decode($pickupResponse->getBody()->getContents(), true);
                 $hasPickupAddress = false;
-                if (isset($pickupData['data']['shipping_address']) && is_array($pickupData['data']['shipping_address']) && count($pickupData['data']['shipping_address']) > 0) {
+                
+                $addresses = [];
+                if (isset($pickupData['data']['data']) && is_array($pickupData['data']['data'])) {
+                    $addresses = $pickupData['data']['data'];
+                } elseif (isset($pickupData['data']['shipping_address']) && is_array($pickupData['data']['shipping_address'])) {
+                    $addresses = $pickupData['data']['shipping_address'];
+                } elseif (isset($pickupData['data']) && is_array($pickupData['data'])) {
+                    $addresses = $pickupData['data'];
+                }
+
+                if (count($addresses) > 0) {
                     $hasPickupAddress = true;
-                    // Find an active pickup address
-                    foreach ($pickupData['data']['shipping_address'] as $addr) {
-                        if (isset($addr['status']) && $addr['status'] == 1 && !empty($addr['pickup_location'])) {
+                    // Find a pickup address
+                    foreach ($addresses as $addr) {
+                        if (!empty($addr['pickup_location'])) {
                             $pickupLocation = $addr['pickup_location'];
                             break;
                         }
-                    }
-                    if (empty($pickupLocation) && !empty($pickupData['data']['shipping_address'][0]['pickup_location'])) {
-                        $pickupLocation = $pickupData['data']['shipping_address'][0]['pickup_location'];
                     }
                 }
                 
