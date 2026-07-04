@@ -241,6 +241,7 @@ class ShippingGatewayController extends Controller
             $loginData = json_decode($response->getBody()->getContents(), true);
             $token = $loginData['token'] ?? '';
             if (empty($token)) {
+                Session::flash('warning', 'Shiprocket Error: Failed to retrieve authentication token from response.');
                 return;
             }
 
@@ -305,9 +306,40 @@ class ShippingGatewayController extends Controller
                 $order->shipping_gateway_keyword = 'shiprocket';
                 $order->tracking_url = 'https://shiprocket.co/tracking/' . $order->order_number;
                 $order->save();
+            } else {
+                Session::flash('warning', 'Shiprocket Error: Order created but no shipment ID was returned.');
             }
+        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
+            $response = $e->getResponse();
+            $responseBody = $response ? $response->getBody()->getContents() : '';
+            \Log::error('Shiprocket API Bad Response: ' . $responseBody);
+            
+            $errorMessage = 'Shiprocket Error: ';
+            $errorData = json_decode($responseBody, true);
+            if (isset($errorData['message'])) {
+                $errorMessage .= $errorData['message'];
+            }
+            if (isset($errorData['errors']) && is_array($errorData['errors'])) {
+                $errs = [];
+                foreach ($errorData['errors'] as $field => $messages) {
+                    if (is_array($messages)) {
+                        $errs[] = implode(', ', $messages);
+                    } else {
+                        $errs[] = $messages;
+                    }
+                }
+                if (!empty($errs)) {
+                    $errorMessage .= ' (' . implode('; ', $errs) . ')';
+                }
+            }
+            if ($errorMessage == 'Shiprocket Error: ') {
+                $errorMessage .= $e->getMessage();
+            }
+            
+            Session::flash('warning', $errorMessage);
         } catch (\Exception $e) {
             \Log::error('Shiprocket Auto-Create Order Error: ' . $e->getMessage());
+            Session::flash('warning', 'Shiprocket Error: ' . $e->getMessage());
         }
     }
 }
