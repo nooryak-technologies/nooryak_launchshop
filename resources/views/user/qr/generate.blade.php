@@ -33,7 +33,7 @@
           <h4 class="card-title">{{ __('Qr Code Generator') }}</h4>
         </div>
         <div class="card-body">
-          <form id="qrGeneratorForm" method="POST" enctype="multipart/form-data">
+          <form id="qrGeneratorForm" method="POST" enctype="multipart/form-data" onsubmit="return false;">
             @csrf
             <div class="row">
               <div class="col-lg-12">
