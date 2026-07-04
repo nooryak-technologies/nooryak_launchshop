@@ -293,4 +293,101 @@ class ItemOrderController extends Controller
         }
         return Excel::download(new PorductOrderExport($orders), 'product-orders.csv');
     }
+
+    public function bulkOrderProcessing(Request $request)
+    {
+        $root_user = Auth::guard('web')->user();
+        $user_id = $root_user->id;
+        $ids = $request->ids;
+
+        if (empty($ids)) {
+            return response()->json(['status' => 'warning', 'message' => 'No orders selected.']);
+        }
+
+        $successCount = 0;
+        $warnings = [];
+
+        foreach ($ids as $id) {
+            $po = UserOrder::find($id);
+            if (!$po) {
+                continue;
+            }
+
+            // Update order status to 'processing'
+            $po->order_status = 'processing';
+            $po->save();
+
+            // Call createShiprocketOrder (it flashes warning to session if it fails)
+            Session::forget('warning'); // clear before call
+            \App\Http\Controllers\User\ShippingGatewayController::createShiprocketOrder($po, $user_id);
+            
+            if (Session::has('warning')) {
+                $warnings[] = "#" . $po->order_number . ": " . Session::get('warning');
+                Session::forget('warning'); // clear after capturing
+            } else {
+                $successCount++;
+            }
+
+            // remove previous invoice and generate a new one
+            @unlink(public_path('assets/front/invoices/') . $po->invoice_number);
+            $invoice = Common::generateInvoice($po, $root_user);
+            $po->update(['invoice_number' => $invoice]);
+
+            // send mail
+            try {
+                $customer = Customer::where('id', $po->customer_id)->first();
+                if ($customer) {
+                    $f_name = $customer->first_name;
+                    $l_name = $customer->last_name;
+                    $email = $customer->email;
+                } else {
+                    $f_name = $po->billing_fname;
+                    $l_name = $po->billing_lname;
+                    $email = $po->billing_email;
+                }
+
+                $mail_template = UserEmailTemplate::where([['user_id', $user_id], ['email_type', 'product_order_status']])->first();
+                if ($mail_template) {
+                    $mail_subject = $mail_template->email_subject;
+                    $mail_body = $mail_template->email_body;
+
+                    $info = DB::table('basic_extendeds')
+                        ->select('is_smtp', 'smtp_host', 'smtp_port', 'encryption', 'smtp_username', 'smtp_password', 'from_mail', 'from_name')
+                        ->first();
+
+                    $mail_body = str_replace('{customer_name}', $f_name . ' ' . $l_name, $mail_body);
+                    $mail_body = str_replace('{order_status}', 'processing', $mail_body);
+                    $mail_body = str_replace('{website_title}', $root_user->shop_name ?? $root_user->username, $mail_body);
+
+                    $to = $email;
+
+                    $data = [];
+                    $data['smtp_status'] = $info->is_smtp;
+                    $data['smtp_host'] = $info->smtp_host;
+                    $data['smtp_port'] = $info->smtp_port;
+                    $data['encryption'] = $info->encryption;
+                    $data['smtp_username'] = $info->smtp_username;
+                    $data['smtp_password'] = $info->smtp_password;
+
+                    $data['from_mail'] = $info->from_mail;
+                    $data['recipient'] = $to;
+                    $data['subject'] = $mail_subject;
+                    $data['body'] = $mail_body;
+                    $data['invoice'] = public_path('assets/front/invoices/' . $po->invoice_number);
+                    BasicMailer::sendMail($data);
+                }
+            } catch (\Exception $mailEx) {
+                \Log::error('Bulk processing mail send failed: ' . $mailEx->getMessage());
+            }
+        }
+
+        if (count($warnings) > 0) {
+            $compiledWarning = "Processed " . $successCount . " orders successfully. Errors occurred in " . count($warnings) . " orders:<br>" . implode("<br>", $warnings);
+            Session::flash('warning', $compiledWarning);
+            return response()->json(['status' => 'warning', 'message' => $compiledWarning]);
+        }
+
+        Session::flash('success', __('Bulk orders processed successfully'));
+        return response()->json(['status' => 'success']);
+    }
 }

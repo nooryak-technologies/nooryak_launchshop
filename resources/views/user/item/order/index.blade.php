@@ -86,6 +86,10 @@
                 class="btn btn-danger float-right btn-md d-none bulk-delete btn-sm {{ $dashboard_language->rtl == 1 ? 'mr-4' : 'ml-4' }}"
                 data-href="{{ route('user.item.order.bulk.delete') }}"><i class="flaticon-interface-5"></i>
                 {{ __('Delete') }}</button>
+              <button
+                class="btn btn-primary float-right btn-md d-none bulk-processing btn-sm {{ $dashboard_language->rtl == 1 ? 'mr-4' : 'ml-4' }}"
+                data-href="{{ route('user.item.order.bulk.processing') }}"><i class="fas fa-sync-alt"></i>
+                {{ __('Bulk Processing') }}</button>
               <form action="{{ url()->current() }}" class="d-inline-block float-right">
                 <input class="form-control" type="text" name="search" placeholder="{{ __('Search by Oder Number') }}"
                   value="{{ request()->input('search') ? request()->input('search') : '' }}">

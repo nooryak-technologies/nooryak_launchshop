@@ -556,6 +556,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'userstatus', 'Demo',
             Route::get('/orders/details/{id}', 'User\ItemOrderController@details')->name('user.item.details');
             Route::post('/order/delete', 'User\ItemOrderController@orderDelete')->name('user.item.order.delete');
             Route::post('/order/bulk-delete', 'User\ItemOrderController@bulkOrderDelete')->name('user.item.order.bulk.delete');
+            Route::post('/order/bulk-processing', 'User\ItemOrderController@bulkOrderProcessing')->name('user.item.order.bulk.processing');
             Route::get('/orders/report', 'User\ItemOrderController@report')->name('user.orders.report');
             Route::get('/export/report', 'User\ItemOrderController@exportReport')->name('user.orders.export');
         });

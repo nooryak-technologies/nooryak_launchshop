@@ -956,15 +956,19 @@ $(function ($) {
             }
         });
 
-        // if any checkbox is checked then show the delete button
+        // if any checkbox is checked then show the delete and processing buttons
         if (flag == 1) {
             $(".bulk-delete").addClass('d-inline-block');
             $(".bulk-delete").removeClass('d-none');
+            $(".bulk-processing").addClass('d-inline-block');
+            $(".bulk-processing").removeClass('d-none');
         }
-        // if no checkbox is checked then hide the delete button
+        // if no checkbox is checked then hide them
         else {
             $(".bulk-delete").removeClass('d-inline-block');
             $(".bulk-delete").addClass('d-none');
+            $(".bulk-processing").removeClass('d-inline-block');
+            $(".bulk-processing").addClass('d-none');
         }
     });
 
@@ -1023,8 +1027,65 @@ $(function ($) {
         });
 
     });
+
+    $('.bulk-processing').on('click', function () {
+
+        swal({
+            title: are_you_sure,
+            text: "You want to process all selected orders and send them to Shiprocket?",
+            type: 'warning',
+            buttons: {
+                confirm: {
+                    text: "Yes, process!",
+                    className: 'btn btn-success'
+                },
+                cancel: {
+                    text: cancel,
+                    visible: true,
+                    className: 'btn btn-danger'
+                }
+            }
+        }).then((Process) => {
+            if (Process) {
+                $(".request-loader").addClass('show');
+                let href = $(this).data('href');
+                let ids = [];
+
+                // take ids of checked one's
+                $(".bulk-check:checked").each(function () {
+                    if ($(this).data('val') != 'all') {
+                        ids.push($(this).data('val'));
+                    }
+                });
+
+                let fd = new FormData();
+                for (let i = 0; i < ids.length; i++) {
+                    fd.append('ids[]', ids[i]);
+                }
+
+                $.ajax({
+                    url: href,
+                    method: 'POST',
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        $(".request-loader").removeClass('show');
+                        location.reload();
+                    },
+                    error: function() {
+                        $(".request-loader").removeClass('show');
+                        location.reload();
+                    }
+                });
+            } else {
+                swal.close();
+            }
+        });
+
+    });
     /* ***************************************************
-    ==========Delete Using AJAX Request End==========
+    ==========Delete / Bulk Processing Using AJAX Request End==========
     ******************************************************/
 
 
