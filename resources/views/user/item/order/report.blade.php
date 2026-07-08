@@ -115,7 +115,7 @@
             </div>
             <div class="row mt-2">
               <div class="col-12">
-                <button type="submit" class="btn btn-premium-primary"><i class="fas fa-search mr-1"></i> {{ __('Submit') }}</button>
+                <button type="submit" class="btn btn-premium-primary"><i class="fas fa-filter mr-1"></i> {{ __('Submit') }}</button>
               </div>
             </div>
           </form>
@@ -186,8 +186,8 @@
             <!-- Average Order Value Card -->
             <div class="col-sm-6 col-md-3 mb-3">
               <div class="stat-card-premium">
-                <div class="icon-circle icon-purple">
-                  <i class="fas fa-calculator"></i>
+                <div class="icon-circle icon-orange">
+                  <i class="fas fa-wallet"></i>
                 </div>
                 <div class="content">
                   <div class="label">{{ __('Average Order Value') }}</div>
@@ -207,8 +207,8 @@
             <!-- Refunds Card (Mocked / Styled matching mockup) -->
             <div class="col-sm-6 col-md-3 mb-3">
               <div class="stat-card-premium">
-                <div class="icon-circle icon-orange">
-                  <i class="fas fa-undo-alt"></i>
+                <div class="icon-circle icon-purple">
+                  <i class="fas fa-credit-card"></i>
                 </div>
                 <div class="content">
                   <div class="label">{{ __('Refunds') }}</div>
