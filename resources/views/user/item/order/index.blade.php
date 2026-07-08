@@ -221,7 +221,7 @@
                           <td>
                             <input type="checkbox" class="bulk-check" data-val="{{ $order->id }}">
                           </td>
-                          <td style="font-weight: 600; color: #1e293b;">#{{ $order->order_number }}</td>
+                          <td style="font-weight: 600;"><a href="{{ route('user.item.details', $order->id) }}" style="color: #0052FF; text-decoration: none; transition: color 0.15s ease-in-out;">#{{ $order->order_number }}</a></td>
                           <td style="text-transform: capitalize;">{{ $order->method }}</td>
                           <td style="font-weight: 600; color: #0052FF;">
                             {{ textPrice($order->currency_text_position, $order->currency_code, round($order->total, 2)) }}
@@ -244,15 +244,15 @@
                               "
                                   name="order_status"
                                   onchange="document.getElementById('statusForm{{ $order->id }}').submit();"
-                                  style="border-radius: 30px !important; font-weight: 600; padding: 4px 20px 4px 10px !important; height: auto !important; border: 1px solid transparent !important; cursor: pointer;">
-                                  <option value="pending" {{ $order->order_status == 'pending' ? 'selected' : '' }}>
+                                  style="border-radius: 30px !important; font-weight: 600; padding: 4px 20px 4px 10px !important; height: auto !important; border: 1px solid transparent !important; cursor: pointer; color: #ffffff !important;">
+                                  <option value="pending" {{ $order->order_status == 'pending' ? 'selected' : '' }} style="color: #333;">
                                     {{ __('Pending') }}</option>
                                   <option value="processing"
-                                    {{ $order->order_status == 'processing' ? 'selected' : '' }}>
+                                    {{ $order->order_status == 'processing' ? 'selected' : '' }} style="color: #333;">
                                     {{ __('Processing') }}</option>
-                                  <option value="completed" {{ $order->order_status == 'completed' ? 'selected' : '' }}>
+                                  <option value="completed" {{ $order->order_status == 'completed' ? 'selected' : '' }} style="color: #333;">
                                     {{ __('Completed') }}</option>
-                                  <option value="rejected" {{ $order->order_status == 'rejected' ? 'selected' : '' }}>
+                                  <option value="rejected" {{ $order->order_status == 'rejected' ? 'selected' : '' }} style="color: #333;">
                                     {{ __('Rejected') }}</option>
                                 </select>
                               </form>
@@ -286,14 +286,14 @@
                                     "
                                     name="payment_status"
                                     onchange="document.getElementById('paymentStatusForm{{ $order->id }}').submit();"
-                                    style="border-radius: 30px !important; font-weight: 600; padding: 4px 20px 4px 10px !important; height: auto !important; border: 1px solid transparent !important; cursor: pointer;">
-                                    <option value="Pending" {{ $order->payment_status == 'Pending' ? 'selected' : '' }}>
+                                    style="border-radius: 30px !important; font-weight: 600; padding: 4px 20px 4px 10px !important; height: auto !important; border: 1px solid transparent !important; cursor: pointer; color: #ffffff !important;">
+                                    <option value="Pending" {{ $order->payment_status == 'Pending' ? 'selected' : '' }} style="color: #333;">
                                       {{ __('Pending') }}</option>
                                     <option value="Completed"
-                                      {{ $order->payment_status == 'Completed' ? 'selected' : '' }}>
+                                      {{ $order->payment_status == 'Completed' ? 'selected' : '' }} style="color: #333;">
                                       {{ __('Completed') }}</option>
                                     <option value="Rejected"
-                                      {{ $order->payment_status == 'Rejected' ? 'selected' : '' }}>
+                                      {{ $order->payment_status == 'Rejected' ? 'selected' : '' }} style="color: #333;">
                                       {{ __('Rejected') }}</option>
                                   </select>
                                 </form>
@@ -303,8 +303,7 @@
 
                           <td class="text-center">
                             @if (!empty($order->receipt))
-                              <a class="btn-action-more" href="#" data-toggle="modal"
-                                data-target="#receiptModal{{ $order->id }}" title="{{ __('Show Receipt') }}">
+                              <a class="btn-action-more" href="{{ asset('assets/front/invoices/' . $order->invoice_number) }}" target="_blank" title="{{ __('Show Invoice') }}">
                                 <i class="fas fa-receipt text-info"></i>
                               </a>
                             @else

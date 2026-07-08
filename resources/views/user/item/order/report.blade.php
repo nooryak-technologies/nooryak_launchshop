@@ -271,7 +271,7 @@
                     <tbody>
                       @foreach ($orders as $key => $order)
                         <tr>
-                          <td>#{{ $order->order_number }}</td>
+                          <td><a href="{{ route('user.item.details', $order->id) }}" style="color: #0052FF; text-decoration: none; font-weight: 600;">#{{ $order->order_number }}</a></td>
                           <td>{{ $order->billing_fname }}</td>
                           <td>{{ $order->billing_email }}</td>
                           <td>{{ $order->billing_number }}</td>
