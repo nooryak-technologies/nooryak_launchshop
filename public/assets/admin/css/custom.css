@@ -2092,24 +2092,24 @@ body[data-background-color="dark"] .stat-card-icon-box {
     font-size: 9px;
 }
 .badge-status-pill.payment-completed, .badge-status-pill.order-completed {
-    background: #ecfdf5 !important;
-    color: #10b981 !important;
-    border-color: #d1fae5 !important;
+    background: #22c55e !important;
+    color: #ffffff !important;
+    border-color: #22c55e !important;
 }
 .badge-status-pill.payment-pending, .badge-status-pill.order-pending {
-    background: #fffbeb !important;
-    color: #d97706 !important;
-    border-color: #fef3c7 !important;
+    background: #f59e0b !important;
+    color: #ffffff !important;
+    border-color: #f59e0b !important;
 }
 .badge-status-pill.payment-rejected, .badge-status-pill.order-rejected {
-    background: #fef2f2 !important;
-    color: #ef4444 !important;
-    border-color: #fca5a5 !important;
+    background: #ef4444 !important;
+    color: #ffffff !important;
+    border-color: #ef4444 !important;
 }
 .badge-status-pill.order-processing {
-    background: #eff6ff !important;
-    color: #2563eb !important;
-    border-color: #bfdbfe !important;
+    background: #3b82f6 !important;
+    color: #ffffff !important;
+    border-color: #3b82f6 !important;
 }
 
 /* Info Gateway Features List */

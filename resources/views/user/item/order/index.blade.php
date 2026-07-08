@@ -302,7 +302,7 @@
                           </td>
 
                           <td class="text-center">
-                            @if (!empty($order->receipt))
+                            @if (!empty($order->invoice_number))
                               <a class="btn-action-more" href="{{ asset('assets/front/invoices/' . $order->invoice_number) }}" target="_blank" title="{{ __('Show Invoice') }}">
                                 <i class="fas fa-receipt text-info"></i>
                               </a>

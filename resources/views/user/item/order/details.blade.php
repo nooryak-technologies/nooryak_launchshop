@@ -206,37 +206,51 @@
         <div class="card-body">
           <div class="payment-information">
             <div class="row mb-3">
-              <div class="col-lg-5" style="color: #64748b; font-weight: 500;">{{ __('Name') }} :</div>
+              <div class="col-lg-5 d-flex align-items-center" style="color: #64748b; font-weight: 500;">
+                <i class="fas fa-user text-muted mr-2" style="width: 16px;"></i>{{ __('Name') }} :
+              </div>
               <div class="col-lg-7" style="font-weight: 600; color: #1e293b;">{{ convertUtf8($order->shipping_fname . ' ' . $order->shipping_lname) }}</div>
             </div>
 
             <div class="row mb-3">
-              <div class="col-lg-5" style="color: #64748b; font-weight: 500;">{{ __('Email') }} :</div>
+              <div class="col-lg-5 d-flex align-items-center" style="color: #64748b; font-weight: 500;">
+                <i class="fas fa-envelope text-muted mr-2" style="width: 16px;"></i>{{ __('Email') }} :
+              </div>
               <div class="col-lg-7" style="font-weight: 600; color: #1e293b;">{{ convertUtf8($order->shipping_email) }}</div>
             </div>
 
             <div class="row mb-3">
-              <div class="col-lg-5" style="color: #64748b; font-weight: 500;">{{ __('Phone') }} :</div>
+              <div class="col-lg-5 d-flex align-items-center" style="color: #64748b; font-weight: 500;">
+                <i class="fas fa-phone text-muted mr-2" style="width: 16px;"></i>{{ __('Phone') }} :
+              </div>
               <div class="col-lg-7" style="font-weight: 600; color: #1e293b;">{{ $order->shipping_number }}</div>
             </div>
 
             <div class="row mb-3">
-              <div class="col-lg-5" style="color: #64748b; font-weight: 500;">{{ __('City') }} :</div>
+              <div class="col-lg-5 d-flex align-items-center" style="color: #64748b; font-weight: 500;">
+                <i class="fas fa-building text-muted mr-2" style="width: 16px;"></i>{{ __('City') }} :
+              </div>
               <div class="col-lg-7" style="font-weight: 600; color: #1e293b;">{{ convertUtf8($order->shipping_city) }}</div>
             </div>
 
             <div class="row mb-3">
-              <div class="col-lg-5" style="color: #64748b; font-weight: 500;">{{ __('State') }} :</div>
+              <div class="col-lg-5 d-flex align-items-center" style="color: #64748b; font-weight: 500;">
+                <i class="fas fa-map text-muted mr-2" style="width: 16px;"></i>{{ __('State') }} :
+              </div>
               <div class="col-lg-7" style="font-weight: 600; color: #1e293b;">{{ !is_null($order->shipping_state) ? convertUtf8($order->shipping_state) : '-' }}</div>
             </div>
 
             <div class="row mb-3">
-              <div class="col-lg-5" style="color: #64748b; font-weight: 500;">{{ __('Country') }} :</div>
+              <div class="col-lg-5 d-flex align-items-center" style="color: #64748b; font-weight: 500;">
+                <i class="fas fa-globe text-muted mr-2" style="width: 16px;"></i>{{ __('Country') }} :
+              </div>
               <div class="col-lg-7" style="font-weight: 600; color: #1e293b;">{{ convertUtf8($order->shipping_country) }}</div>
             </div>
 
             <div class="row mb-0">
-              <div class="col-lg-5" style="color: #64748b; font-weight: 500;">{{ __('Address') }} :</div>
+              <div class="col-lg-5 d-flex align-items-center" style="color: #64748b; font-weight: 500;">
+                <i class="fas fa-home text-muted mr-2" style="width: 16px;"></i>{{ __('Address') }} :
+              </div>
               <div class="col-lg-7" style="font-weight: 600; color: #1e293b;">{{ convertUtf8($order->shipping_address) }}</div>
             </div>
           </div>
@@ -259,43 +273,59 @@
           <div class="payment-information">
             @if (!is_null(@$order->customer->username))
               <div class="row mb-3">
-                <div class="col-lg-5" style="color: #64748b; font-weight: 500;">{{ __('Username') }} :</div>
+                <div class="col-lg-5 d-flex align-items-center" style="color: #64748b; font-weight: 500;">
+                  <i class="fas fa-user text-muted mr-2" style="width: 16px;"></i>{{ __('Username') }} :
+                </div>
                 <div class="col-lg-7" style="font-weight: 600;">
                   <a target="_blank" href="{{ route('user.register.user.view', $order->customer->id) }}" style="color: #2563eb;">{{ convertUtf8(@$order->customer->username) }}</a>
                 </div>
               </div>
             @endif
             <div class="row mb-3">
-              <div class="col-lg-5" style="color: #64748b; font-weight: 500;">{{ __('Name') }} :</div>
+              <div class="col-lg-5 d-flex align-items-center" style="color: #64748b; font-weight: 500;">
+                <i class="fas fa-user text-muted mr-2" style="width: 16px;"></i>{{ __('Name') }} :
+              </div>
               <div class="col-lg-7" style="font-weight: 600; color: #1e293b;">{{ convertUtf8($order->billing_fname . ' ' . $order->billing_lname) }}</div>
             </div>
             <div class="row mb-3">
-              <div class="col-lg-5" style="color: #64748b; font-weight: 500;">{{ __('Email') }} :</div>
+              <div class="col-lg-5 d-flex align-items-center" style="color: #64748b; font-weight: 500;">
+                <i class="fas fa-envelope text-muted mr-2" style="width: 16px;"></i>{{ __('Email') }} :
+              </div>
               <div class="col-lg-7" style="font-weight: 600; color: #1e293b;">{{ convertUtf8($order->billing_email) }}</div>
             </div>
 
             <div class="row mb-3">
-              <div class="col-lg-5" style="color: #64748b; font-weight: 500;">{{ __('Phone') }} :</div>
+              <div class="col-lg-5 d-flex align-items-center" style="color: #64748b; font-weight: 500;">
+                <i class="fas fa-phone text-muted mr-2" style="width: 16px;"></i>{{ __('Phone') }} :
+              </div>
               <div class="col-lg-7" style="font-weight: 600; color: #1e293b;">{{ $order->billing_number }}</div>
             </div>
 
             <div class="row mb-3">
-              <div class="col-lg-5" style="color: #64748b; font-weight: 500;">{{ __('City') }} :</div>
+              <div class="col-lg-5 d-flex align-items-center" style="color: #64748b; font-weight: 500;">
+                <i class="fas fa-building text-muted mr-2" style="width: 16px;"></i>{{ __('City') }} :
+              </div>
               <div class="col-lg-7" style="font-weight: 600; color: #1e293b;">{{ convertUtf8($order->billing_city) }}</div>
             </div>
             
             <div class="row mb-3">
-              <div class="col-lg-5" style="color: #64748b; font-weight: 500;">{{ __('State') }} :</div>
+              <div class="col-lg-5 d-flex align-items-center" style="color: #64748b; font-weight: 500;">
+                <i class="fas fa-map text-muted mr-2" style="width: 16px;"></i>{{ __('State') }} :
+              </div>
               <div class="col-lg-7" style="font-weight: 600; color: #1e293b;">{{ !is_null($order->billing_state) ? convertUtf8($order->billing_state) : '-' }}</div>
             </div>
 
             <div class="row mb-3">
-              <div class="col-lg-5" style="color: #64748b; font-weight: 500;">{{ __('Country') }} :</div>
+              <div class="col-lg-5 d-flex align-items-center" style="color: #64748b; font-weight: 500;">
+                <i class="fas fa-globe text-muted mr-2" style="width: 16px;"></i>{{ __('Country') }} :
+              </div>
               <div class="col-lg-7" style="font-weight: 600; color: #1e293b;">{{ convertUtf8($order->billing_country) }}</div>
             </div>
 
             <div class="row mb-0">
-              <div class="col-lg-5" style="color: #64748b; font-weight: 500;">{{ __('Address') }} :</div>
+              <div class="col-lg-5 d-flex align-items-center" style="color: #64748b; font-weight: 500;">
+                <i class="fas fa-home text-muted mr-2" style="width: 16px;"></i>{{ __('Address') }} :
+              </div>
               <div class="col-lg-7" style="font-weight: 600; color: #1e293b;">{{ convertUtf8($order->billing_address) }}</div>
             </div>
           </div>
