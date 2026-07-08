@@ -333,6 +333,7 @@
       </div>
     </div>
   </div>
+  <div class="row">
 
     @php
       $shipping_gateways = App\Models\User\UserShippingGateway::where('user_id', Auth::guard('web')->user()->id)->where('status', 1)->get();
