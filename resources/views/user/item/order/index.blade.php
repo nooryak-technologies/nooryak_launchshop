@@ -58,13 +58,14 @@
     </ul>
   </div>
   <div class="row">
-    <div class="col-md-12">
-
-      <div class="card">
+    <div class="col-md-12">      <div class="card card-premium">
         <div class="card-header">
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="card-title">
+          <div class="row align-items-center">
+            <div class="col-lg-6 d-flex align-items-center">
+              <div class="card-icon-wrap" style="background: #eff6ff; color: #2563eb; margin-right: 12px;">
+                <i class="fas fa-shopping-bag"></i>
+              </div>
+              <div class="card-title mb-0" style="font-size: 16px; font-weight: 600; color: #1e293b;">
                 @if (request()->routeIs('user.all.item.orders'))
                   {{ __('All') }}
                 @elseif (request()->routeIs('user.pending.item.orders'))
@@ -74,7 +75,7 @@
                 @elseif (request()->routeIs('user.completed.item.orders'))
                   {{ __('Completed') }}
                 @elseif (request()->routeIs('user.rejected.item.orders'))
-                  {{ __('Rejcted') }}
+                  {{ __('Rejected') }}
                 @elseif (request()->path() == 'admin/item/search/orders')
                   {{ __('Search') }}
                 @endif
@@ -84,15 +85,18 @@
             <div class="col-lg-6">
               <button
                 class="btn btn-danger float-right btn-md d-none bulk-delete btn-sm {{ $dashboard_language->rtl == 1 ? 'mr-4' : 'ml-4' }}"
-                data-href="{{ route('user.item.order.bulk.delete') }}"><i class="flaticon-interface-5"></i>
+                data-href="{{ route('user.item.order.bulk.delete') }}" style="border-radius: 8px;"><i class="fas fa-trash mr-1"></i>
                 {{ __('Delete') }}</button>
               <button
                 class="btn btn-primary float-right btn-md d-none bulk-processing btn-sm {{ $dashboard_language->rtl == 1 ? 'mr-4' : 'ml-4' }}"
-                data-href="{{ route('user.item.order.bulk.processing') }}"><i class="fas fa-sync-alt"></i>
+                data-href="{{ route('user.item.order.bulk.processing') }}" style="border-radius: 8px;"><i class="fas fa-sync-alt mr-1"></i>
                 {{ __('Bulk Processing') }}</button>
-              <form action="{{ url()->current() }}" class="d-inline-block float-right">
-                <input class="form-control" type="text" name="search" placeholder="{{ __('Search by Oder Number') }}"
-                  value="{{ request()->input('search') ? request()->input('search') : '' }}">
+              <form action="{{ url()->current() }}" class="d-inline-block float-right index-search-form">
+                <div class="input-icon-wrapper" style="width: 250px;">
+                  <i class="fas fa-search input-icon-prefix"></i>
+                  <input class="form-control" type="text" name="search" placeholder="{{ __('Search by Order Number') }}"
+                    value="{{ request()->input('search') ? request()->input('search') : '' }}" style="height: 38px; padding-left: 36px !important;">
+                </div>
               </form>
             </div>
           </div>
@@ -104,10 +108,10 @@
                 <h3 class="text-center">{{ __('NO ORDER FOUND') }}</h3>
               @else
                 <div class="table-responsive">
-                  <table class="table table-striped mt-3">
+                  <table class="table table-premium mt-3">
                     <thead>
                       <tr>
-                        <th scope="col">
+                        <th scope="col" style="width: 40px;">
                           <input type="checkbox" class="bulk-check" data-val="all">
                         </th>
 
@@ -116,8 +120,8 @@
                         <th scope="col">{{ __('Total') }}</th>
                         <th scope="col">{{ __('Order Status') }}</th>
                         <th scope="col">{{ __('Payment Status') }}</th>
-                        <th scope="col">{{ __('Receipt') }}</th>
-                        <th scope="col">{{ __('Actions') }}</th>
+                        <th scope="col" class="text-center">{{ __('Receipt') }}</th>
+                        <th scope="col" class="text-center">{{ __('Actions') }}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -126,9 +130,9 @@
                           <td>
                             <input type="checkbox" class="bulk-check" data-val="{{ $order->id }}">
                           </td>
-                          <td>#{{ $order->order_number }}</td>
-                          <td>{{ $order->method }}</td>
-                          <td>
+                          <td style="font-weight: 600; color: #1e293b;">#{{ $order->order_number }}</td>
+                          <td style="text-transform: capitalize;">{{ $order->method }}</td>
+                          <td style="font-weight: 600; color: #0052FF;">
                             {{ textPrice($order->currency_text_position, $order->currency_code, round($order->total, 2)) }}
                           </td>
                           <td>
@@ -138,7 +142,7 @@
                                 @csrf
                                 <input type="hidden" name="order_id" value="{{ $order->id }}">
                                 <select
-                                  class="w-min-max-100 form-control form-control-sm
+                                  class="form-control form-control-sm
                               @if ($order->order_status == 'pending') bg-warning
                               @elseif ($order->order_status == 'processing')
                                 bg-primary
@@ -148,7 +152,8 @@
                                 bg-danger @endif
                               "
                                   name="order_status"
-                                  onchange="document.getElementById('statusForm{{ $order->id }}').submit();">
+                                  onchange="document.getElementById('statusForm{{ $order->id }}').submit();"
+                                  style="border-radius: 30px !important; font-weight: 600; padding: 4px 20px 4px 10px !important; height: auto !important; border: 1px solid transparent !important; cursor: pointer;">
                                   <option value="pending" {{ $order->order_status == 'pending' ? 'selected' : '' }}>
                                     {{ __('Pending') }}</option>
                                   <option value="processing"
@@ -161,35 +166,36 @@
                                 </select>
                               </form>
                             @else
-                              <span class="badge badge-danger">{{ __('Rejected') }}</span>
+                              <span class="badge-status-pill order-rejected"><i class="fas fa-times-circle"></i> {{ __('Rejected') }}</span>
                             @endif
                           </td>
 
                           <td>
                             @if ($order->gateway_type != 'offline')
                               @if ($order->payment_status == 'Completed')
-                                <span class="badge badge-success">{{ __('Completed') }}</span>
+                                <span class="badge-status-pill payment-completed"><i class="fas fa-check"></i> {{ __('Completed') }}</span>
                               @elseif($order->payment_status == 'Pending')
-                                <span class="badge badge-warning">{{ __('Pending') }}</span>
+                                <span class="badge-status-pill payment-pending"><i class="fas fa-spinner"></i> {{ __('Pending') }}</span>
                               @elseif($order->payment_status == 'Rejected')
-                                <span class="badge badge-danger">{{ __('Rejected') }}</span>
+                                <span class="badge-status-pill payment-rejected"><i class="fas fa-times"></i> {{ __('Rejected') }}</span>
                               @endif
                             @elseif ($order->gateway_type == 'offline')
                               @if ($order->payment_status == 'Rejected')
-                                <span class="badge badge-danger">{{ __('Rejected') }}</span>
+                                <span class="badge-status-pill payment-rejected"><i class="fas fa-times"></i> {{ __('Rejected') }}</span>
                               @else
                                 <form action="{{ route('user.item.paymentStatus') }}"
                                   id="paymentStatusForm{{ $order->id }}" method="POST">
                                   @csrf
                                   <input type="hidden" name="order_id" value="{{ $order->id }}">
                                   <select
-                                    class="form-control-sm text-white border-0
+                                    class="form-control form-control-sm
                                     @if ($order->payment_status == 'Completed') bg-success
                                     @elseif($order->payment_status == 'Pending')
                                         bg-warning @endif
                                     "
                                     name="payment_status"
-                                    onchange="document.getElementById('paymentStatusForm{{ $order->id }}').submit();">
+                                    onchange="document.getElementById('paymentStatusForm{{ $order->id }}').submit();"
+                                    style="border-radius: 30px !important; font-weight: 600; padding: 4px 20px 4px 10px !important; height: auto !important; border: 1px solid transparent !important; cursor: pointer;">
                                     <option value="Pending" {{ $order->payment_status == 'Pending' ? 'selected' : '' }}>
                                       {{ __('Pending') }}</option>
                                     <option value="Completed"
@@ -204,42 +210,52 @@
                             @endif
                           </td>
 
-                          <td>
+                          <td class="text-center">
                             @if (!empty($order->receipt))
-                              <a class="btn btn-sm btn-info" href="#" data-toggle="modal"
-                                data-target="#receiptModal{{ $order->id }}">{{ __('Show') }}</a>
+                              <a class="btn-action-more" href="#" data-toggle="modal"
+                                data-target="#receiptModal{{ $order->id }}" title="{{ __('Show Receipt') }}">
+                                <i class="fas fa-receipt text-info"></i>
+                              </a>
                             @else
                               -
                             @endif
                           </td>
 
                           <td>
-                            <div class="dropdown">
-                              <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                {{ __('Actions') }}
-                              </button>
-                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item"
-                                  href="{{ route('user.item.details', $order->id) }}">{{ __('Details') }}</a>
-                                <a class="dropdown-item"
-                                  href="{{ asset('assets/front/invoices/' . $order->invoice_number) }}"
-                                  target="_blank">{{ __('Invoice') }}</a>
-                                <form class="deleteform d-block" action="{{ route('user.item.order.delete') }}"
-                                  method="post">
-                                  @csrf
-                                  <input type="hidden" name="order_id" value="{{ $order->id }}">
-                                  <button type="submit" class="deletebtn">
-                                    {{ __('Delete') }}
-                                  </button>
-                                </form>
+                            <div class="d-flex align-items-center justify-content-center">
+                              <div class="dropdown">
+                                <button class="btn-action-more" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right" style="border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                                  <a class="dropdown-item" href="{{ route('user.item.details', $order->id) }}" style="font-size: 13px; font-weight: 500;">
+                                    <i class="fas fa-eye mr-2 text-muted" style="width: 16px;"></i> {{ __('Details') }}
+                                  </a>
+                                  <a class="dropdown-item" href="{{ asset('assets/front/invoices/' . $order->invoice_number) }}" target="_blank" style="font-size: 13px; font-weight: 500;">
+                                    <i class="fas fa-file-invoice mr-2 text-muted" style="width: 16px;"></i> {{ __('Invoice') }}
+                                  </a>
+                                  <div class="dropdown-divider"></div>
+                                  <form class="deleteform d-block" action="{{ route('user.item.order.delete') }}" method="post">
+                                    @csrf
+                                    <input type="hidden" name="order_id" value="{{ $order->id }}">
+                                    <button type="submit" class="dropdown-item text-danger deletebtn" style="font-size: 13px; font-weight: 500;">
+                                      <i class="fas fa-trash-alt mr-2" style="width: 16px;"></i> {{ __('Delete') }}
+                                    </button>
+                                  </form>
+                                </div>
                               </div>
                             </div>
                           </td>
                         </tr>
-
-
-                        {{-- Receipt Modal --}}
+                      @endforeach
+                    </tbody>
+                  </table>
+                </div>
+              @endif
+            </div>
+          </div>
+        </div>
+      </div>
                         <div class="modal fade" id="receiptModal{{ $order->id }}" tabindex="-1" role="dialog"
                           aria-labelledby="exampleModalLabel" aria-hidden="true">
                           <div class="modal-dialog" role="document">

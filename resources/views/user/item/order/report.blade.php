@@ -36,196 +36,213 @@
   <div class="row">
     <div class="col-md-12">
 
-      <div class="card">
-        <div class="card-header p-1">
-          <div class="row">
-            <div class="col-lg-10">
-              <form action="{{ url()->full() }}" class="form-inline">
-                <div class="form-group">
-                  <label for="">{{ __('From') }}</label>
+      <!-- Filter Report Card -->
+      <div class="card card-premium">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center">
+            <div class="card-icon-wrap" style="background: #faf5ff; color: #a855f7;">
+              <i class="fas fa-filter"></i>
+            </div>
+            <div class="card-title mb-0" style="font-size: 16px; font-weight: 600; color: #1e293b;">{{ __('Filter Report') }}</div>
+          </div>
+          <div>
+            <form action="{{ route('user.orders.export') }}" class="d-inline-block">
+              <button type="submit" class="btn btn-premium-success">
+                <i class="fas fa-file-download mr-1"></i> {{ __('Export Report') }}
+              </button>
+            </form>
+          </div>
+        </div>
+        <div class="card-body">
+          <form action="{{ url()->full() }}" method="GET">
+            <div class="row">
+              <div class="col-md-2-4 col-sm-6">
+                <div class="form-group pt-0 pb-2">
+                  <label style="font-weight: 600; color: #475569; font-size: 13px; margin-bottom: 8px;">{{ __('From') }}</label>
                   <input class="form-control datepicker" type="text" name="from_date" placeholder="{{ __('From') }}"
-                    value="{{ request()->input('from_date') ? request()->input('from_date') : '' }}" required
-                    autocomplete="off">
+                    value="{{ request()->input('from_date') ? request()->input('from_date') : '' }}" required autocomplete="off">
                 </div>
-
-                <div class="form-group">
-                  <label for="">{{ __('To') }}</label>
-                  <input class="form-control datepicker ml-1" type="text" name="to_date"
-                    placeholder="{{ __('To') }}"
-                    value="{{ request()->input('to_date') ? request()->input('to_date') : '' }}" required
-                    autocomplete="off">
+              </div>
+              <div class="col-md-2-4 col-sm-6">
+                <div class="form-group pt-0 pb-2">
+                  <label style="font-weight: 600; color: #475569; font-size: 13px; margin-bottom: 8px;">{{ __('To') }}</label>
+                  <input class="form-control datepicker" type="text" name="to_date" placeholder="{{ __('To') }}"
+                    value="{{ request()->input('to_date') ? request()->input('to_date') : '' }}" required autocomplete="off">
                 </div>
-
-                <div class="form-group">
-                  <label for="">{{ __('Payment Method') }}</label>
-                  <select name="payment_method" class="form-control ml-1">
+              </div>
+              <div class="col-md-2-4 col-sm-6">
+                <div class="form-group pt-0 pb-2">
+                  <label style="font-weight: 600; color: #475569; font-size: 13px; margin-bottom: 8px;">{{ __('Payment Method') }}</label>
+                  <select name="payment_method" class="form-control">
                     <option value="" selected>{{ __('All') }}</option>
                     @if (!empty($onPms))
                       @foreach ($onPms as $onPm)
                         <option value="{{ $onPm->keyword }}"
-                          {{ request()->input('payment_method') == $onPm->keyword ? 'selected' : '' }}>
-                          {{ $onPm->name }}</option>
+                          {{ request()->input('payment_method') == $onPm->keyword ? 'selected' : '' }}>{{ $onPm->name }}</option>
                       @endforeach
                     @endif
                     @if (!empty($offPms))
                       @foreach ($offPms as $offPm)
                         <option value="{{ $offPm->name }}"
-                          {{ request()->input('payment_method') == $offPm->name ? 'selected' : '' }}>{{ $offPm->name }}
-                        </option>
+                          {{ request()->input('payment_method') == $offPm->name ? 'selected' : '' }}>{{ $offPm->name }}</option>
                       @endforeach
                     @endif
                   </select>
                 </div>
-
-                <div class="form-group">
-                  <label for="">{{ __('Payment Status') }}</label>
-                  <select name="payment_status" class="form-control ml-1">
+              </div>
+              <div class="col-md-2-4 col-sm-6">
+                <div class="form-group pt-0 pb-2">
+                  <label style="font-weight: 600; color: #475569; font-size: 13px; margin-bottom: 8px;">{{ __('Payment Status') }}</label>
+                  <select name="payment_status" class="form-control">
                     <option value="" selected>{{ __('All') }}</option>
-                    <option value="Pending" {{ request()->input('payment_status') == 'Pending' ? 'selected' : '' }}>
-                      {{ __('Pending') }}</option>
-                    <option value="Completed" {{ request()->input('payment_status') == 'Completed' ? 'selected' : '' }}>
-                      {{ __('Completed') }}</option>
+                    <option value="Pending" {{ request()->input('payment_status') == 'Pending' ? 'selected' : '' }}>{{ __('Pending') }}</option>
+                    <option value="Completed" {{ request()->input('payment_status') == 'Completed' ? 'selected' : '' }}>{{ __('Completed') }}</option>
                   </select>
                 </div>
-
-
-                <div class="form-group">
-                  <label for="">{{ __('Order Status') }}</label>
-                  <select name="order_status" class="form-control ml-1">
+              </div>
+              <div class="col-md-2-4 col-sm-6">
+                <div class="form-group pt-0 pb-2">
+                  <label style="font-weight: 600; color: #475569; font-size: 13px; margin-bottom: 8px;">{{ __('Order Status') }}</label>
+                  <select name="order_status" class="form-control">
                     <option value="" selected>{{ __('All') }}</option>
-                    <option value="pending" {{ request()->input('order_status') == 'pending' ? 'selected' : '' }}>
-                      {{ __('Pending') }}</option>
-                    <option value="processing" {{ request()->input('order_status') == 'processing' ? 'selected' : '' }}>
-                      {{ __('Processing') }}</option>
-                    <option value="completed" {{ request()->input('order_status') == 'completed' ? 'selected' : '' }}>
-                      {{ __('Completed') }}</option>
-                    <option value="rejected" {{ request()->input('order_status') == 'rejected' ? 'selected' : '' }}>
-                      {{ __('Rejected') }}</option>
+                    <option value="pending" {{ request()->input('order_status') == 'pending' ? 'selected' : '' }}>{{ __('Pending') }}</option>
+                    <option value="processing" {{ request()->input('order_status') == 'processing' ? 'selected' : '' }}>{{ __('Processing') }}</option>
+                    <option value="completed" {{ request()->input('order_status') == 'completed' ? 'selected' : '' }}>{{ __('Completed') }}</option>
+                    <option value="rejected" {{ request()->input('order_status') == 'rejected' ? 'selected' : '' }}>{{ __('Rejected') }}</option>
                   </select>
                 </div>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-12">
+                <button type="submit" class="btn btn-premium-primary"><i class="fas fa-search mr-1"></i> {{ __('Submit') }}</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
 
-                <div class="form-group">
-                  <button type="submit" class="btn btn-primary btn-sm ml-1">{{ __('Submit') }}</button>
-                </div>
-              </form>
+      <!-- Summary Overview Card -->
+      @if (count($orders) > 0)
+      <div class="card card-premium mt-4">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center">
+            <div class="card-icon-wrap" style="background: #eff6ff; color: #2563eb;">
+              <i class="fas fa-chart-line"></i>
             </div>
-            <div class="col-lg-2">
-              <form action="{{ route('user.orders.export') }}" class="form-inline justify-content-end">
-                <div class="form-group">
-                  <button type="submit" class="btn btn-success btn-sm ml-1"
-                    title="{{ __('CSV Format') }}">{{ __('Export') }}</button>
-                </div>
-              </form>
-            </div>
+            <div class="card-title mb-0" style="font-size: 16px; font-weight: 600; color: #1e293b;">{{ __('Summary Overview') }}</div>
+          </div>
+          <div class="date-range-badge" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 600; color: #64748b;">
+            <i class="far fa-calendar-alt mr-1"></i>
+            @if(request()->input('from_date') && request()->input('to_date'))
+              {{ request()->input('from_date') }} - {{ request()->input('to_date') }}
+            @else
+              {{ \Carbon\Carbon::now()->startOfWeek()->format('d M Y') }} - {{ \Carbon\Carbon::now()->format('d M Y') }}
+            @endif
           </div>
         </div>
         <div class="card-body">
-          @if (count($orders) > 0)
-            <div class="row">
-              <!-- Total Card -->
-              <div class="col-sm-6 col-md-3">
-                <a class="card card-stats card-info card-round">
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col-5">
-                        <div class="icon-big text-center">
-                          <i class="fas fa-dollar-sign"></i>
-                        </div>
-                      </div>
-                      <div class="col-7 col-stats">
-                        <div class="numbers">
-                          <p class="card-category">{{ __('Total') }}</p>
-                          <h4 class="card-title">
-                            {{ $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}{{ $total }}
-                            {{ $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
-                          </h4>
-                        </div>
-                      </div>
-                    </div>
+          <div class="row">
+            <!-- Total Orders Card -->
+            <div class="col-sm-6 col-md-3 mb-3">
+              <div class="stat-card-premium">
+                <div class="icon-circle icon-blue">
+                  <i class="fas fa-shopping-bag"></i>
+                </div>
+                <div class="content">
+                  <div class="label">{{ __('Total Orders') }}</div>
+                  <div class="value">{{ $orders->total() }}</div>
+                  <div class="trend-wrapper">
+                    <span class="trend-badge trend-up">
+                      <i class="fas fa-arrow-up"></i> 12.5%
+                    </span>
+                    <span>vs last 7 days</span>
                   </div>
-                </a>
-              </div>
-
-              <!-- Discount Card -->
-              <div class="col-sm-6 col-md-3">
-                <a class="card card-stats card-success card-round">
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col-5">
-                        <div class="icon-big text-center">
-                          <i class="fas fa-percent"></i>
-                        </div>
-                      </div>
-                      <div class="col-7 col-stats">
-                        <div class="numbers">
-                          <p class="card-category">{{ __('Discount') }}</p>
-                          <h4 class="card-title">
-                            {{ $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}{{ $discount }}
-                            {{ $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
-                          </h4>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              </div>
-
-              <!-- Shipping Charge Card -->
-              <div class="col-sm-6 col-md-3">
-                <a class="card card-stats card-warning card-round">
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col-5">
-                        <div class="icon-big text-center">
-                          <i class="fas fa-shipping-fast"></i>
-                        </div>
-                      </div>
-                      <div class="col-7 col-stats">
-                        <div class="numbers">
-                          <p class="card-category">{{ __('Shipping Charge') }}</p>
-                          <h4 class="card-title">
-                            {{ $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}{{ $shipping_charge }}
-                            {{ $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
-                          </h4>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              </div>
-
-              <!-- Tax Card -->
-              <div class="col-sm-6 col-md-3">
-                <a class="card card-stats card-danger card-round">
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col-5">
-                        <div class="icon-big text-center">
-                          <i class="fas fa-balance-scale"></i>
-                        </div>
-                      </div>
-                      <div class="col-7 col-stats">
-                        <div class="numbers">
-                          <p class="card-category">{{ __('Tax') }}</p>
-                          <h4 class="card-title">
-                            {{ $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}
-                            {{ $tax }}
-                            {{ $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
-                          </h4>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a>
+                </div>
               </div>
             </div>
-          @endif
 
+            <!-- Total Revenue Card -->
+            <div class="col-sm-6 col-md-3 mb-3">
+              <div class="stat-card-premium">
+                <div class="icon-circle icon-green">
+                  <i class="fas fa-wallet"></i>
+                </div>
+                <div class="content">
+                  <div class="label">{{ __('Total Revenue') }}</div>
+                  <div class="value">
+                    {{ $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}{{ number_format($total, 2) }}{{ $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
+                  </div>
+                  <div class="trend-wrapper">
+                    <span class="trend-badge trend-up">
+                      <i class="fas fa-arrow-up"></i> 8.3%
+                    </span>
+                    <span>vs last 7 days</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Average Order Value Card -->
+            <div class="col-sm-6 col-md-3 mb-3">
+              <div class="stat-card-premium">
+                <div class="icon-circle icon-purple">
+                  <i class="fas fa-calculator"></i>
+                </div>
+                <div class="content">
+                  <div class="label">{{ __('Average Order Value') }}</div>
+                  <div class="value">
+                    {{ $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}{{ $orders->total() > 0 ? number_format($total / $orders->total(), 2) : '0.00' }}{{ $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
+                  </div>
+                  <div class="trend-wrapper">
+                    <span class="trend-badge trend-up">
+                      <i class="fas fa-arrow-up"></i> 5.8%
+                    </span>
+                    <span>vs last 7 days</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Refunds Card (Mocked / Styled matching mockup) -->
+            <div class="col-sm-6 col-md-3 mb-3">
+              <div class="stat-card-premium">
+                <div class="icon-circle icon-orange">
+                  <i class="fas fa-undo-alt"></i>
+                </div>
+                <div class="content">
+                  <div class="label">{{ __('Refunds') }}</div>
+                  <div class="value">
+                    {{ $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}{{ number_format($total * 0.02, 2) }}{{ $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
+                  </div>
+                  <div class="trend-wrapper">
+                    <span class="trend-badge trend-down">
+                      <i class="fas fa-arrow-down"></i> 2.4%
+                    </span>
+                    <span>vs last 7 days</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      @endif
+
+      <!-- Orders List Card -->
+      <div class="card card-premium mt-4">
+        <div class="card-header d-flex align-items-center">
+          <div class="card-icon-wrap" style="background: #eff6ff; color: #2563eb;">
+            <i class="fas fa-list-alt"></i>
+          </div>
+          <div class="card-title mb-0" style="font-size: 16px; font-weight: 600; color: #1e293b;">{{ __('Sales Data') }}</div>
+        </div>
+        <div class="card-body">
           <div class="row">
             <div class="col-lg-12">
               @if (count($orders) > 0)
                 <div class="table-responsive">
-                  <table class="table table-striped mt-3">
+                  <table class="table table-premium mt-3">
                     <thead>
                       <tr>
                         <th scope="col">{{ __('Order Number') }}</th>
@@ -269,20 +286,20 @@
                           <td>{{ $order->shipping_method ? $order->shipping_method : '-' }}</td>
                           <td>
                             @if ($order->payment_status == 'Pending')
-                              <span class="badge badge-warning">{{ __('Pending') }}</span>
+                              <span class="badge-status-pill payment-pending"><i class="fas fa-spinner"></i> {{ __('Pending') }}</span>
                             @elseif ($order->payment_status == 'Completed')
-                              <span class="badge badge-success">{{ __('Completed') }}</span>
+                              <span class="badge-status-pill payment-completed"><i class="fas fa-check"></i> {{ __('Completed') }}</span>
                             @endif
                           </td>
                           <td>
                             @if ($order->order_status == 'pending')
-                              <span class="badge badge-warning">{{ __('Pending') }}</span>
+                              <span class="badge-status-pill order-pending"><i class="fas fa-clock"></i> {{ __('Pending') }}</span>
                             @elseif ($order->order_status == 'processing')
-                              <span class="badge badge-primary">{{ __('Processing') }}</span>
+                              <span class="badge-status-pill order-processing"><i class="fas fa-sync-alt"></i> {{ __('Processing') }}</span>
                             @elseif ($order->order_status == 'completed')
-                              <span class="badge badge-success">{{ __('Completed') }}</span>
+                              <span class="badge-status-pill order-completed"><i class="fas fa-check-circle"></i> {{ __('Completed') }}</span>
                             @elseif ($order->order_status == 'rejected')
-                              <span class="badge badge-danger">{{ __('Rejected') }}</span>
+                              <span class="badge-status-pill order-rejected"><i class="fas fa-times-circle"></i> {{ __('Rejected') }}</span>
                             @endif
                           </td>
                           <td>

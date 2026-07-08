@@ -29,18 +29,19 @@
   <div class="row">
     <div class="col-md-12">
 
-      <div class="card">
-        <div class="card-header">
-          <div class="row">
-            <div class="col-lg-7">
-              <div class="card-title d-inline-block">{{ __('Currencies') }}</div>
+      <div class="card card-premium">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center">
+            <div class="card-icon-wrap bg-primary-soft">
+              <i class="fas fa-money-check-alt text-primary"></i>
             </div>
+            <div class="card-title mb-0" style="font-size: 16px; font-weight: 600; color: #1e293b;">{{ __('Currencies') }}</div>
+          </div>
 
-            <div class="col-lg-4 offset-lg-1 mt-2 mt-lg-0">
-              <a href="#" class="btn btn-primary float-right btn-sm" data-toggle="modal"
-                data-target="#createModal"><i class="fas fa-plus"></i>
-                {{ __('Add Currency') }}</a>
-            </div>
+          <div>
+            <a href="#" class="btn btn-premium-primary btn-sm" data-toggle="modal"
+              data-target="#createModal"><i class="fas fa-plus"></i>
+              {{ __('Add Currency') }}</a>
           </div>
         </div>
         <div class="card-body">
@@ -51,62 +52,78 @@
                 <h3 class="text-center">{{ __('NO Currency FOUND') }}</h3>
               @else
                 <div class="table-responsive">
-                  <table class="table table-striped mt-3" id="basic-datatables">
+                  <table class="table table-premium mt-3" id="basic-datatables">
                     <thead>
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">{{ __('Text') }}</th>
+                        <th scope="col">{{ __('Currency Name') }}</th>
                         <th scope="col">{{ __('Symbol') }}</th>
-                        <th scope="col">{{ __('Rate') }}</th>
-                        <th scope="col">{{ __('Actions') }}</th>
+                        <th scope="col">{{ __('Exchange Rate') }}</th>
+                        <th scope="col">{{ __('Default') }}</th>
+                        <th scope="col" class="text-center">{{ __('Actions') }}</th>
                       </tr>
                     </thead>
                     <tbody>
                       @foreach ($currencies as $key => $currency)
                         <tr>
                           <td>{{ $loop->iteration }}</td>
-                          <td>{{ $currency->text }}</td>
+                          <td>
+                            <div class="d-flex align-items-center">
+                              @if(strpos(strtolower($currency->text), 'inr') !== false || strpos(strtolower($currency->text), 'rupee') !== false || $currency->symbol == '₹')
+                                <img src="https://flagcdn.com/w40/in.png" class="mr-2" style="width: 22px; height: 15px; object-fit: cover; border-radius: 2px;">
+                                {{ __('Indian Rupee (INR)') }}
+                              @else
+                                <i class="fas fa-globe mr-2 text-muted" style="font-size: 16px;"></i>
+                                {{ $currency->text }}
+                              @endif
+                            </div>
+                          </td>
                           <td>{{ $currency->symbol }}</td>
                           <td>{{ $currency->value }}</td>
                           <td>
-                            <a class="btn btn-info btn-sm editbtn mb-1" href="#editModal" data-toggle="modal"
-                              data-id="{{ $currency->id }}" data-text="{{ $currency->text }}"
-                              data-value="{{ $currency->value }}" data-symbol="{{ $currency->symbol }}"
-                              data-text_position="{{ $currency->text_position }}"
-                              data-symbol_position="{{ $currency->symbol_position }}">
-                              <span class="btn-label">
-                                <i class="fas fa-edit"></i>
+                            @if ($currency->is_default == 1)
+                              <span class="badge-default-pill">
+                                <i class="fas fa-check-circle"></i> {{ __('Default') }}
                               </span>
-                            </a>
-                            <form class="deleteform d-inline-block " action="{{ route('user-currency-delete') }}"
-                              method="post">
-                              @csrf
-                              <input type="hidden" name="currency_id" value="{{ $currency->id }}">
-                              <button type="submit" class="btn btn-danger btn-sm deletebtn  mb-1"
-                                @disabled($currency->is_default == 1)>
-                                <span class="btn-label">
-                                  <i class="fas fa-trash"></i>
-                                </span>
-                              </button>
-                            </form>
+                            @else
+                              -
+                            @endif
+                          </td>
+                          <td>
+                            <div class="d-flex align-items-center justify-content-center">
+                              <a class="btn-action-edit editbtn" href="#editModal" data-toggle="modal"
+                                data-id="{{ $currency->id }}" data-text="{{ $currency->text }}"
+                                data-value="{{ $currency->value }}" data-symbol="{{ $currency->symbol }}"
+                                data-text_position="{{ $currency->text_position }}"
+                                data-symbol_position="{{ $currency->symbol_position }}"
+                                title="{{ __('Edit') }}">
+                                <i class="fas fa-edit"></i>
+                              </a>
 
-                            <form class="DefaultForm d-inline-block"
-                              action="{{ route('user-currency-status', ['id1' => $currency->id, 'id2' => 1]) }}"
-                              method="post">
-                              @csrf
-                              <input type="hidden" name="currency_id" value="{{ $currency->id }}">
                               @if ($currency->is_default != 1)
-                                <button type="submit" class="DefaultBtn btn btn-secondary btn-sm  mb-1"><span
-                                    class="btn-label"><i class="fas fa-edit"></i></span>
-                                  {{ __('Set Default') }}
-                                </button>
+                                <form class="deleteform d-inline-block" action="{{ route('user-currency-delete') }}" method="post">
+                                  @csrf
+                                  <input type="hidden" name="currency_id" value="{{ $currency->id }}">
+                                  <button type="submit" class="btn-action-delete deletebtn" title="{{ __('Delete') }}">
+                                    <i class="fas fa-trash"></i>
+                                  </button>
+                                </form>
+
+                                <form class="DefaultForm d-inline-block"
+                                  action="{{ route('user-currency-status', ['id1' => $currency->id, 'id2' => 1]) }}"
+                                  method="post">
+                                  @csrf
+                                  <input type="hidden" name="currency_id" value="{{ $currency->id }}">
+                                  <button type="submit" class="btn-action-more DefaultBtn" title="{{ __('Set Default') }}">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                  </button>
+                                </form>
                               @else
-                                <button disabled class="btn btn-secondary btn-sm mb-1"><span class="btn-label"><i
-                                      class="fas fa-check"></i></span>
-                                  {{ __('Default') }}
+                                <button class="btn-action-more" disabled style="opacity: 0.5;">
+                                  <i class="fas fa-ellipsis-h"></i>
                                 </button>
                               @endif
-                            </form>
+                            </div>
                           </td>
                         </tr>
                       @endforeach

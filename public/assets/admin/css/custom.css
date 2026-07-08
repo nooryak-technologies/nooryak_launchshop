@@ -1647,3 +1647,634 @@ body[data-background-color="dark"] .dark-table td {
 body[data-background-color="dark"] .stat-card-icon-box {
     background: rgba(255, 255, 255, 0.08) !important;
 }
+
+/* ==========================================================================
+   Task 3: Redesigned Dashboard Content styling (Pixel Perfect & Responsive)
+   ========================================================================== */
+
+/* 1. Core Card Styling */
+.card-premium {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.015) !important;
+    margin-bottom: 24px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-premium .card-header {
+    background: #ffffff !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    padding: 18px 24px !important;
+}
+
+.card-premium .card-body {
+    padding: 24px !important;
+}
+
+/* 2. Premium Buttons & Badges */
+.btn-premium-primary {
+    background: #0052FF !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 10px 20px !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(0, 82, 255, 0.15) !important;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+.btn-premium-primary:hover {
+    background: #0041cc !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0, 82, 255, 0.25) !important;
+    color: #ffffff !important;
+    text-decoration: none;
+}
+
+.btn-premium-success {
+    background: transparent !important;
+    color: #10b981 !important;
+    border: 1px solid #10b981 !important;
+    border-radius: 8px !important;
+    padding: 8px 16px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+.btn-premium-success:hover {
+    background: #10b981 !important;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+    text-decoration: none;
+}
+
+/* 3. Card Title Icons Wrapper */
+.card-icon-wrap {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+.card-icon-wrap.bg-primary-soft {
+    background: #eff6ff;
+    color: #2563eb;
+}
+.card-icon-wrap.bg-info-soft {
+    background: #faf5ff;
+    color: #a855f7;
+}
+
+/* 4. Action Buttons for Tables */
+.btn-action-edit, .btn-action-delete, .btn-action-more {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px !important;
+    border: 1px solid #e2e8f0 !important;
+    background: #ffffff !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #64748b;
+    transition: all 0.2s;
+    padding: 0 !important;
+    margin-right: 6px;
+    cursor: pointer;
+}
+.btn-action-edit {
+    color: #2563eb !important;
+}
+.btn-action-edit:hover {
+    background: #eff6ff !important;
+    border-color: #bfdbfe !important;
+}
+.btn-action-delete {
+    color: #ef4444 !important;
+}
+.btn-action-delete:hover {
+    background: #fef2f2 !important;
+    border-color: #fca5a5 !important;
+}
+.btn-action-more {
+    color: #64748b !important;
+}
+.btn-action-more:hover {
+    background: #f1f5f9 !important;
+    border-color: #cbd5e1 !important;
+}
+
+/* 5. Custom Status Toggles */
+.status-toggle-wrapper {
+    display: flex;
+    background: #f1f5f9;
+    border-radius: 8px;
+    padding: 4px;
+    width: max-content;
+}
+.status-toggle-wrapper input[type="radio"] {
+    display: none;
+}
+.status-toggle-wrapper label.toggle-btn {
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    margin: 0;
+    transition: all 0.2s;
+    color: #64748b;
+}
+.status-toggle-wrapper input[id="status-active"]:checked + label.toggle-active {
+    background: #2563eb;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+}
+.status-toggle-wrapper input[id="status-deactive"]:checked + label.toggle-deactive {
+    background: #ffffff;
+    color: #1e293b;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* 6. Form Prefix / Suffix Icon inputs */
+.input-icon-wrapper {
+    position: relative;
+    width: 100%;
+}
+.input-icon-prefix {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 14px;
+    z-index: 5;
+}
+.input-icon-suffix {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 14px;
+    z-index: 5;
+    transition: color 0.2s;
+}
+.input-icon-suffix:hover {
+    color: #64748b;
+}
+.input-icon-wrapper .form-control {
+    padding-left: 38px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    height: 42px !important;
+    font-size: 13.5px !important;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.input-icon-wrapper .form-control:focus {
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+}
+
+/* 7. Timeline Style (Order Progress Tracking) */
+.timeline-container {
+    position: relative;
+    padding-left: 32px;
+    margin-top: 10px;
+}
+.timeline-container::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 7px;
+    bottom: 6px;
+    width: 2px;
+    background: #e2e8f0;
+}
+.timeline-item {
+    position: relative;
+    margin-bottom: 24px;
+}
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+.timeline-marker {
+    position: absolute;
+    left: -32px;
+    top: 4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: all 0.2s ease;
+}
+.timeline-marker.completed {
+    border-color: #10b981;
+    background: #10b981;
+    color: #ffffff;
+}
+.timeline-marker.completed i {
+    font-size: 8px;
+}
+.timeline-marker.active {
+    border-color: #2563eb;
+    background: #ffffff;
+}
+.timeline-marker.active::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #2563eb;
+}
+.timeline-content {
+    padding-left: 8px;
+}
+.timeline-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 2px;
+}
+.timeline-time {
+    font-size: 11.5px;
+    color: #94a3b8;
+    margin-bottom: 3px;
+}
+.timeline-desc {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+/* 8. Map Mockup Styling */
+.map-mockup-wrapper {
+    position: relative;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    min-height: 190px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.expected-delivery-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid #bfdbfe;
+    z-index: 5;
+}
+.map-svg {
+    width: 100%;
+    height: 170px;
+}
+
+/* 9. Premium Stats Cards styling */
+.stat-card-premium {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    padding: 18px !important;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: none !important;
+    margin-bottom: 15px;
+}
+.stat-card-premium .icon-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+.stat-card-premium .icon-blue { background: #eff6ff; color: #2563eb; }
+.stat-card-premium .icon-green { background: #ecfdf5; color: #10b981; }
+.stat-card-premium .icon-orange { background: #fff7ed; color: #f97316; }
+.stat-card-premium .icon-purple { background: #faf5ff; color: #a855f7; }
+
+.stat-card-premium .content {
+    flex-grow: 1;
+    padding: 0 !important;
+    background: transparent !important;
+}
+.stat-card-premium .label {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+.stat-card-premium .value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 2px;
+    line-height: 1.2;
+}
+.stat-card-premium .trend-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #94a3b8;
+}
+.stat-card-premium .trend-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 10px;
+}
+.stat-card-premium .trend-up { background: #ecfdf5; color: #10b981; }
+.stat-card-premium .trend-down { background: #fef2f2; color: #ef4444; }
+
+/* 10. Table Premium Style Override */
+.table-premium {
+    width: 100%;
+    border-collapse: collapse;
+    border: none !important;
+}
+.table-premium th {
+    background: #f8fafc !important;
+    color: #475569 !important;
+    font-weight: 600 !important;
+    font-size: 12.5px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    padding: 14px 18px !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    border-top: none !important;
+}
+.table-premium td {
+    padding: 14px 18px !important;
+    color: #1e293b !important;
+    font-size: 13.5px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    vertical-align: middle !important;
+}
+.table-premium tbody tr:hover {
+    background-color: #f8fafc !important;
+}
+
+/* Qty Box */
+.qty-border {
+    display: inline-block;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 4px 12px;
+    background: #f8fafc;
+    font-weight: 600;
+    color: #1e293b;
+    min-width: 38px;
+    text-align: center;
+}
+
+/* Badge Pill Override */
+.badge-default-pill {
+    background: #ecfdf5 !important;
+    color: #10b981 !important;
+    border: 1px solid #d1fae5 !important;
+    border-radius: 30px !important;
+    padding: 4px 12px !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 4px;
+}
+
+.badge-status-pill {
+    border-radius: 30px !important;
+    padding: 4px 12px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid transparent !important;
+}
+.badge-status-pill i {
+    font-size: 9px;
+}
+.badge-status-pill.payment-completed, .badge-status-pill.order-completed {
+    background: #ecfdf5 !important;
+    color: #10b981 !important;
+    border-color: #d1fae5 !important;
+}
+.badge-status-pill.payment-pending, .badge-status-pill.order-pending {
+    background: #fffbeb !important;
+    color: #d97706 !important;
+    border-color: #fef3c7 !important;
+}
+.badge-status-pill.payment-rejected, .badge-status-pill.order-rejected {
+    background: #fef2f2 !important;
+    color: #ef4444 !important;
+    border-color: #fca5a5 !important;
+}
+.badge-status-pill.order-processing {
+    background: #eff6ff !important;
+    color: #2563eb !important;
+    border-color: #bfdbfe !important;
+}
+
+/* Info Gateway Features List */
+.info-features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 16px;
+}
+.info-feature-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+.info-feature-icon-box {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+.info-feature-icon-box.blue { background: #eff6ff; color: #2563eb; }
+.info-feature-icon-box.purple { background: #faf5ff; color: #a855f7; }
+
+.info-feature-content {
+    display: flex;
+    flex-direction: column;
+}
+.info-feature-title {
+    font-weight: 600;
+    font-size: 13px;
+    color: #1e293b;
+    margin-bottom: 2px;
+}
+.info-feature-desc {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+/* 5-Column Grid Row Override */
+.col-md-2-4 {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+@media (min-width: 768px) {
+    .col-md-2-4 {
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+}
+
+/* 11. Dark Mode Specific Overrides for Premium Components */
+body[data-background-color="dark"] .card-premium {
+    background: #111111 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: none !important;
+}
+body[data-background-color="dark"] .card-premium .card-header {
+    background: #111111 !important;
+    border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+body[data-background-color="dark"] .btn-action-edit,
+body[data-background-color="dark"] .btn-action-delete,
+body[data-background-color="dark"] .btn-action-more {
+    background: #161616 !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+body[data-background-color="dark"] .btn-action-edit {
+    color: #3b82f6 !important;
+}
+body[data-background-color="dark"] .btn-action-edit:hover {
+    background: rgba(59, 130, 246, 0.15) !important;
+}
+body[data-background-color="dark"] .btn-action-delete {
+    color: #f87171 !important;
+}
+body[data-background-color="dark"] .btn-action-delete:hover {
+    background: rgba(248, 113, 113, 0.15) !important;
+}
+body[data-background-color="dark"] .btn-action-more:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+body[data-background-color="dark"] .status-toggle-wrapper {
+    background: #161616;
+}
+body[data-background-color="dark"] .status-toggle-wrapper label.toggle-btn {
+    color: #94a3b8;
+}
+body[data-background-color="dark"] .status-toggle-wrapper input[id="status-active"]:checked + label.toggle-active {
+    background: #2563eb;
+    color: #ffffff;
+}
+body[data-background-color="dark"] .status-toggle-wrapper input[id="status-deactive"]:checked + label.toggle-deactive {
+    background: #222222;
+    color: #ffffff;
+}
+body[data-background-color="dark"] .timeline-container::before {
+    background: rgba(255, 255, 255, 0.1);
+}
+body[data-background-color="dark"] .timeline-marker {
+    background: #111111;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+body[data-background-color="dark"] .timeline-marker.completed {
+    background: #10b981;
+    border-color: #10b981;
+}
+body[data-background-color="dark"] .timeline-marker.active {
+    border-color: #3b82f6;
+}
+body[data-background-color="dark"] .timeline-marker.active::after {
+    background: #3b82f6;
+}
+body[data-background-color="dark"] .timeline-title {
+    color: #f1f5f9;
+}
+body[data-background-color="dark"] .timeline-desc,
+body[data-background-color="dark"] .timeline-time {
+    color: #94a3b8;
+}
+body[data-background-color="dark"] .map-mockup-wrapper {
+    background: #161616;
+    border-color: rgba(255, 255, 255, 0.08);
+}
+body[data-background-color="dark"] .map-svg path {
+    stroke: rgba(255, 255, 255, 0.1);
+}
+body[data-background-color="dark"] .map-svg path[stroke="#2563eb"] {
+    stroke: #3b82f6;
+}
+body[data-background-color="dark"] .expected-delivery-badge {
+    background: rgba(37, 99, 235, 0.15);
+    border-color: rgba(37, 99, 235, 0.3);
+    color: #60a5fa;
+}
+body[data-background-color="dark"] .stat-card-premium {
+    background: #111111 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+body[data-background-color="dark"] .stat-card-premium .icon-blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+body[data-background-color="dark"] .stat-card-premium .icon-green { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+body[data-background-color="dark"] .stat-card-premium .icon-orange { background: rgba(249, 115, 22, 0.15); color: #fb923c; }
+body[data-background-color="dark"] .stat-card-premium .icon-purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+body[data-background-color="dark"] .stat-card-premium .value {
+    color: #f1f5f9;
+}
+body[data-background-color="dark"] .table-premium th {
+    background: #161616 !important;
+    color: #94a3b8 !important;
+    border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+body[data-background-color="dark"] .table-premium td {
+    color: #cbd5e1 !important;
+    border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+}
+body[data-background-color="dark"] .table-premium tbody tr:hover {
+    background-color: #161616 !important;
+}
+body[data-background-color="dark"] .qty-border {
+    background: #161616;
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #cbd5e1;
+}
