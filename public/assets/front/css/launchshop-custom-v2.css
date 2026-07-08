@@ -8826,6 +8826,7 @@ iframe[id^="tawkchat-"],
         padding-left: 0px !important;
         display: flex !important;
         align-items: center !important;
+        width: auto !important;
     }
 
     .header-area .main-navbar .navbar .navbar-brand img,
@@ -9057,6 +9058,42 @@ iframe[id^="tawkchat-"],
         white-space: nowrap !important;
         display: inline-flex !important;
         align-items: center !important;
+    }
+}
+
+/* Fix header collapsing/wrapping on medium desktop screens (1200px to 1549px) */
+@media (min-width: 1200px) and (max-width: 1549px) {
+    .header-area,
+    .header-area.is-sticky {
+        left: 2.5% !important;
+        right: 2.5% !important;
+        width: 95% !important;
+    }
+
+    .header-area .main-navbar .nav-item {
+        margin-left: 10px !important;
+        margin-right: 10px !important;
+    }
+
+    .navbar-nav .nav-link {
+        font-size: 14px !important;
+    }
+
+    .header-area .main-navbar .navbar .navbar-brand img,
+    .header-area.is-sticky .main-navbar .navbar .navbar-brand img {
+        max-height: 55px !important;
+    }
+
+    .header-area .side-option .btn-ls-primary,
+    .header-area .side-option .btn-ls-outline,
+    .header-area.is-sticky .side-option .btn-ls-primary,
+    .header-area.is-sticky .side-option .btn-ls-outline {
+        padding: 8px 16px !important;
+        font-size: 13px !important;
+    }
+
+    .header-area .side-option {
+        padding-right: 15px !important;
     }
 }
 
