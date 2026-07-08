@@ -61,13 +61,13 @@
               <div class="col-lg-6" style="color: #64748b; font-weight: 500;">
                 {{ __('Payment Status') }} :
               </div>
-              <div class="col-lg-6">
+               <div class="col-lg-6">
                 @if ($order->payment_status == 'Pending' || $order->payment_status == 'pending')
-                  <span class="badge-status-pill payment-pending"><i class="fas fa-spinner"></i> {{ convertUtf8($order->payment_status) }} </span>
+                  <span class="badge-status-pill payment-pending" style="background: #f59e0b !important; color: #ffffff !important; border: none !important; border-radius: 30px !important; padding: 4px 12px !important; font-size: 12px !important; font-weight: 600 !important; display: inline-flex !important; align-items: center; gap: 4px;"><i class="fas fa-spinner"></i> {{ convertUtf8($order->payment_status) }} </span>
                 @elseif ($order->payment_status == 'Completed')
-                  <span class="badge-status-pill payment-completed"><i class="fas fa-check"></i> {{ convertUtf8($order->payment_status) }} </span>
+                  <span class="badge-status-pill payment-completed" style="background: #22c55e !important; color: #ffffff !important; border: none !important; border-radius: 30px !important; padding: 4px 12px !important; font-size: 12px !important; font-weight: 600 !important; display: inline-flex !important; align-items: center; gap: 4px;"><i class="fas fa-check"></i> {{ convertUtf8($order->payment_status) }} </span>
                 @elseif ($order->payment_status == 'Rejected')
-                  <span class="badge-status-pill payment-rejected"><i class="fas fa-times"></i> {{ convertUtf8($order->payment_status) }} </span>
+                  <span class="badge-status-pill payment-rejected" style="background: #ef4444 !important; color: #ffffff !important; border: none !important; border-radius: 30px !important; padding: 4px 12px !important; font-size: 12px !important; font-weight: 600 !important; display: inline-flex !important; align-items: center; gap: 4px;"><i class="fas fa-times"></i> {{ convertUtf8($order->payment_status) }} </span>
                 @endif
               </div>
             </div>
@@ -78,13 +78,13 @@
               </div>
               <div class="col-lg-6">
                 @if ($order->order_status == 'pending')
-                  <span class="badge-status-pill order-pending"><i class="fas fa-clock"></i> {{ ucfirst($order->order_status) }} </span>
+                  <span class="badge-status-pill order-pending" style="background: #f59e0b !important; color: #ffffff !important; border: none !important; border-radius: 30px !important; padding: 4px 12px !important; font-size: 12px !important; font-weight: 600 !important; display: inline-flex !important; align-items: center; gap: 4px;"><i class="fas fa-clock"></i> {{ ucfirst($order->order_status) }} </span>
                 @elseif ($order->order_status == 'processing')
-                  <span class="badge-status-pill order-processing"><i class="fas fa-sync-alt"></i> {{ ucfirst($order->order_status) }} </span>
+                  <span class="badge-status-pill order-processing" style="background: #3b82f6 !important; color: #ffffff !important; border: none !important; border-radius: 30px !important; padding: 4px 12px !important; font-size: 12px !important; font-weight: 600 !important; display: inline-flex !important; align-items: center; gap: 4px;"><i class="fas fa-sync-alt"></i> {{ ucfirst($order->order_status) }} </span>
                 @elseif ($order->order_status == 'completed')
-                  <span class="badge-status-pill order-completed"><i class="fas fa-check-circle"></i> {{ ucfirst($order->order_status) }} </span>
+                  <span class="badge-status-pill order-completed" style="background: #22c55e !important; color: #ffffff !important; border: none !important; border-radius: 30px !important; padding: 4px 12px !important; font-size: 12px !important; font-weight: 600 !important; display: inline-flex !important; align-items: center; gap: 4px;"><i class="fas fa-check-circle"></i> {{ ucfirst($order->order_status) }} </span>
                 @elseif ($order->order_status == 'rejected')
-                  <span class="badge-status-pill order-rejected"><i class="fas fa-times-circle"></i> {{ ucfirst($order->order_status) }} </span>
+                  <span class="badge-status-pill order-rejected" style="background: #ef4444 !important; color: #ffffff !important; border: none !important; border-radius: 30px !important; padding: 4px 12px !important; font-size: 12px !important; font-weight: 600 !important; display: inline-flex !important; align-items: center; gap: 4px;"><i class="fas fa-times-circle"></i> {{ ucfirst($order->order_status) }} </span>
                 @endif
               </div>
             </div>

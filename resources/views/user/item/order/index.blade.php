@@ -257,22 +257,22 @@
                                 </select>
                               </form>
                             @else
-                              <span class="badge-status-pill order-rejected"><i class="fas fa-times-circle"></i> {{ __('Rejected') }}</span>
+                              <span class="badge-status-pill order-rejected" style="background: #ef4444 !important; color: #ffffff !important; border: none !important; border-radius: 30px !important; padding: 4px 12px !important; font-size: 12px !important; font-weight: 600 !important; display: inline-flex !important; align-items: center; gap: 4px;"><i class="fas fa-times-circle"></i> {{ __('Rejected') }}</span>
                             @endif
                           </td>
 
                           <td>
                             @if ($order->gateway_type != 'offline')
                               @if ($order->payment_status == 'Completed')
-                                <span class="badge-status-pill payment-completed"><i class="fas fa-check"></i> {{ __('Completed') }}</span>
+                                <span class="badge-status-pill payment-completed" style="background: #22c55e !important; color: #ffffff !important; border: none !important; border-radius: 30px !important; padding: 4px 12px !important; font-size: 12px !important; font-weight: 600 !important; display: inline-flex !important; align-items: center; gap: 4px;"><i class="fas fa-check"></i> {{ __('Completed') }}</span>
                               @elseif($order->payment_status == 'Pending')
-                                <span class="badge-status-pill payment-pending"><i class="fas fa-spinner"></i> {{ __('Pending') }}</span>
+                                <span class="badge-status-pill payment-pending" style="background: #f59e0b !important; color: #ffffff !important; border: none !important; border-radius: 30px !important; padding: 4px 12px !important; font-size: 12px !important; font-weight: 600 !important; display: inline-flex !important; align-items: center; gap: 4px;"><i class="fas fa-spinner"></i> {{ __('Pending') }}</span>
                               @elseif($order->payment_status == 'Rejected')
-                                <span class="badge-status-pill payment-rejected"><i class="fas fa-times"></i> {{ __('Rejected') }}</span>
+                                <span class="badge-status-pill payment-rejected" style="background: #ef4444 !important; color: #ffffff !important; border: none !important; border-radius: 30px !important; padding: 4px 12px !important; font-size: 12px !important; font-weight: 600 !important; display: inline-flex !important; align-items: center; gap: 4px;"><i class="fas fa-times"></i> {{ __('Rejected') }}</span>
                               @endif
                             @elseif ($order->gateway_type == 'offline')
                               @if ($order->payment_status == 'Rejected')
-                                <span class="badge-status-pill payment-rejected"><i class="fas fa-times"></i> {{ __('Rejected') }}</span>
+                                <span class="badge-status-pill payment-rejected" style="background: #ef4444 !important; color: #ffffff !important; border: none !important; border-radius: 30px !important; padding: 4px 12px !important; font-size: 12px !important; font-weight: 600 !important; display: inline-flex !important; align-items: center; gap: 4px;"><i class="fas fa-times"></i> {{ __('Rejected') }}</span>
                               @else
                                 <form action="{{ route('user.item.paymentStatus') }}"
                                   id="paymentStatusForm{{ $order->id }}" method="POST">
