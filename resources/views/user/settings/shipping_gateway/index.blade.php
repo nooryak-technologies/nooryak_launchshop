@@ -76,8 +76,8 @@
     </div>
     --}}    {{-- Shiprocket --}}
     <div class="col-lg-7">
-      <div class="card card-premium">
-        <form action="{{ route('user.shipping_gateway.shiprocket_update') }}" method="post">
+      <div class="card card-premium h-100">
+        <form action="{{ route('user.shipping_gateway.shiprocket_update') }}" method="post" class="d-flex flex-column h-100" style="height: 100%;">
           @csrf
           <div class="card-header d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
@@ -142,7 +142,7 @@
 
     {{-- About Shiprocket --}}
     <div class="col-lg-5">
-      <div class="card card-premium">
+      <div class="card card-premium h-100">
         <div class="card-header">
           <div class="d-flex align-items-center">
             <div class="card-icon-wrap" style="background: #faf5ff; color: #a855f7;">
