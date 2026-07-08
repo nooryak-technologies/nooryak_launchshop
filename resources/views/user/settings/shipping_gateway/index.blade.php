@@ -81,13 +81,24 @@
           @csrf
           <div class="card-header d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
-              <div class="card-icon-wrap" style="background: #eff6ff; color: #2563eb;">
-                <i class="fas fa-shipping-fast"></i>
+              <div class="card-icon-wrap" style="background: transparent; padding: 0; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="18" cy="18" r="18" fill="url(#shiprocketGrad)"/>
+                  <path d="M13 11L26 18L13 25V11Z" fill="white"/>
+                  <defs>
+                    <linearGradient id="shiprocketGrad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#7C3AED"/>
+                      <stop offset="1" stop-color="#2563EB"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
               </div>
               <div class="card-title mb-0" style="font-size: 16px; font-weight: 600; color: #1e293b;">{{ __('Shiprocket') }}</div>
             </div>
             @if($shiprocket && $shiprocket->status == 1)
-              <span class="badge badge-success" style="border-radius: 20px; font-size: 12px; padding: 4px 12px;"><i class="fas fa-check mr-1"></i> Active</span>
+              <span class="badge" style="background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; border-radius: 20px; font-size: 12px; padding: 4px 12px; display: inline-flex; align-items: center; gap: 4px;">
+                <i class="fas fa-check" style="font-size: 10px;"></i> Active
+              </span>
             @endif
           </div>
           <div class="card-body">
@@ -106,7 +117,7 @@
                 <label for="status-active" class="toggle-btn toggle-active">{{ __('Active') }}</label>
                 <input type="radio" name="status" id="status-deactive" value="0"
                   {{ !$shiprocket || $shiprocket->status == 0 ? 'checked' : '' }}>
-                <label for="status-deactive" class="toggle-btn toggle-deactive">{{ __('Deactive') }}</label>
+                <label for="status-deactive" class="toggle-btn toggle-deactive">{{ __('Deactivate') }}</label>
               </div>
             </div>
             
@@ -132,9 +143,10 @@
                 <p class="mb-0 text-danger" style="font-size: 12px; margin-top: 4px;">{{ $errors->first('password') }}</p>
               @endif
             </div>
-          </div>
-          <div class="card-footer text-center" style="background: transparent; border-top: none; padding-top: 0;">
-            <button type="submit" class="btn btn-premium-primary w-100" style="padding: 12px !important; font-size: 14px !important;">{{ __('Update') }}</button>
+            
+            <div class="form-group mb-0">
+              <button type="submit" class="btn w-100 btn-premium-gradient" style="background: linear-gradient(135deg, #2563eb, #7c3aed) !important; border: none !important; border-radius: 8px !important; padding: 12px !important; font-size: 14px !important; font-weight: 600 !important; color: #ffffff !important; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2) !important;">{{ __('Update') }}</button>
+            </div>
           </div>
         </form>
       </div>
@@ -168,7 +180,7 @@
             </div>
             
             <div class="info-feature-item">
-              <div class="info-feature-icon-box blue">
+              <div class="info-feature-icon-box purple">
                 <i class="fas fa-bolt"></i>
               </div>
               <div class="info-feature-content">
