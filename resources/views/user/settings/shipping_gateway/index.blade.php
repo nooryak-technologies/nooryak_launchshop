@@ -106,7 +106,7 @@
                 <label for="status-active" class="toggle-btn toggle-active">{{ __('Active') }}</label>
                 <input type="radio" name="status" id="status-deactive" value="0"
                   {{ !$shiprocket || $shiprocket->status == 0 ? 'checked' : '' }}>
-                <label for="status-deactive" class="toggle-btn toggle-deactive">{{ __('Deactivate') }}</label>
+                <label for="status-deactive" class="toggle-btn toggle-deactive">{{ __('Deactive') }}</label>
               </div>
             </div>
             
@@ -168,7 +168,7 @@
             </div>
             
             <div class="info-feature-item">
-              <div class="info-feature-icon-box purple">
+              <div class="info-feature-icon-box blue">
                 <i class="fas fa-bolt"></i>
               </div>
               <div class="info-feature-content">
