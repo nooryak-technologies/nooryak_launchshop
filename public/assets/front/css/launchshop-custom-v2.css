@@ -8831,7 +8831,7 @@ iframe[id^="tawkchat-"],
 
     .header-area .main-navbar .navbar .navbar-brand img,
     .header-area.is-sticky .main-navbar .navbar .navbar-brand img {
-        max-height: 74px !important;
+        max-height: 85px !important;
         /* Slightly smaller logo in sticky header for better fit */
     }
 
@@ -9063,6 +9063,7 @@ iframe[id^="tawkchat-"],
 
 /* Fix header collapsing/wrapping on medium desktop screens (1200px to 1549px) */
 @media (min-width: 1200px) and (max-width: 1549px) {
+
     .header-area,
     .header-area.is-sticky {
         left: 2.5% !important;
@@ -9096,4 +9097,3 @@ iframe[id^="tawkchat-"],
         padding-right: 15px !important;
     }
 }
-
