@@ -25,8 +25,19 @@
     gap: 20px;
     margin-bottom: 24px;
 }
-.plan-main-card {
+.plan-current-card {
     flex: 1;
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.plan-limit-card {
+    flex: 1.2;
     background: #fff;
     border: 1px solid #e9ecef;
     border-radius: 12px;
@@ -111,7 +122,6 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    min-width: 180px;
 }
 .plan-feature-item {
     display: flex;
@@ -126,19 +136,16 @@
     font-size: 12px;
     flex-shrink: 0;
 }
-.plan-illustration {
-    position: absolute;
-    right: 20px;
-    bottom: 0;
-    width: 120px;
-    opacity: 0.5;
-    pointer-events: none;
+.limit-right-img {
+    height: 70px;
+    width: auto;
+    object-fit: contain;
+    flex-shrink: 0;
 }
 
 /* Orders This Month card */
 .orders-month-card {
-    width: 240px;
-    flex-shrink: 0;
+    flex: 1;
     background: #fff;
     border: 1px solid #e9ecef;
     border-radius: 12px;
@@ -305,34 +312,7 @@
     font-weight: 500;
 }
 
-/* Custom scrollbar for bottom cards */
-.scroll-body {
-    max-height: 220px;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-.scroll-body::-webkit-scrollbar {
-    width: 4px;
-}
-.scroll-body::-webkit-scrollbar-track {
-    background: #F8FAFC;
-    border-radius: 4px;
-}
-.scroll-body::-webkit-scrollbar-thumb {
-    background: #CBD5E1;
-    border-radius: 4px;
-}
-.scroll-body::-webkit-scrollbar-thumb:hover {
-    background: #94A3B8;
-}
-/* Sticky header for scrollable tables */
-.compact-table thead th {
-    position: sticky;
-    top: 0;
-    background: #fff;
-    z-index: 1;
-    box-shadow: 0 1px 0 #E2E8F0;
-}
+/* ===== BOTTOM ROW (5 cols) ===== */
 .bottom-row {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -345,10 +325,8 @@
     border-radius: 12px;
     padding: 18px 18px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-    display: flex;
-    flex-direction: column;
+    overflow: hidden;
 }
-
 .bottom-card-header {
     display: flex;
     align-items: center;
@@ -491,28 +469,28 @@
 }
 
 /* ===== RESPONSIVE ===== */
-/* Tablet: 2-col charts, keep stats 4-col until 768 */
+/* Tablet & Small Desktop: stack plan cards */
 @media (max-width: 1200px) {
-    .plan-banner { flex-wrap: wrap; }
-    .orders-month-card { width: 100%; }
+    .plan-banner { flex-direction: column; gap: 16px; }
+    .plan-current-card, .plan-limit-card, .orders-month-card { width: 100%; flex: unset; }
     .bottom-row { grid-template-columns: repeat(2, 1fr); }
     .charts-row { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 991px) {
     .stats-row { grid-template-columns: repeat(2, 1fr); }
-    .plan-illustration { display: none; }
-    .plan-features-col { min-width: unset; }
 }
 /* Mobile: 2-col stats, 1-col everything else */
 @media (max-width: 767px) {
-    .plan-main-card { flex-direction: column; align-items: flex-start; gap: 16px; }
     .plan-left { flex-direction: column; gap: 10px; }
-    .plan-features-col { flex-direction: row; flex-wrap: wrap; gap: 6px 16px; }
     .stats-row { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .stat-card { padding: 14px 14px 12px; }
     .stat-card-value { font-size: 22px; }
     .charts-row { grid-template-columns: 1fr; }
     .bottom-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 576px) {
+    .plan-limit-card { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .limit-right-img { align-self: flex-end; }
 }
 @media (max-width: 480px) {
     .plan-banner { gap: 12px; }
@@ -568,30 +546,30 @@
     {{-- ===== PLAN BANNER ===== --}}
     <div class="plan-banner">
 
-      {{-- Current Plan Details --}}
-      <div class="plan-main-card">
-        <div class="plan-left">
-          <div class="plan-icon-box">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="3" y="3" width="18" height="18" rx="3" fill="#EFF3FF"/>
-              <path d="M7 7h10M7 12h10M7 17h6" stroke="#6366F1" stroke-width="1.8" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <div class="plan-details">
-            <div class="plan-label">{{ __('Current Plan') }}</div>
-            <div class="plan-name-row">
-              <span class="plan-name">{{ $current_package->title }}</span>
-              <span class="plan-term-badge">{{ ucfirst($current_package->term) }}</span>
-            </div>
-            <div class="plan-expire">
-              {{ __('Expires on') }}
-              {{ $current_package->term === 'lifetime' ? __('Lifetime') : \Carbon\Carbon::parse($current_membership->expire_date)->format('d M, Y') }}
-            </div>
-            <a href="{{ route('user.plan.extend.index') }}" class="plan-manage-btn">{{ __('Manage Plan') }}</a>
-          </div>
+      {{-- Container 1: Current Plan Details --}}
+      <div class="plan-current-card">
+        <div class="plan-icon-box">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="3" width="18" height="18" rx="3" fill="#EFF3FF"/>
+            <path d="M7 7h10M7 12h10M7 17h6" stroke="#6366F1" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
         </div>
+        <div class="plan-details">
+          <div class="plan-label">{{ __('Current Plan') }}</div>
+          <div class="plan-name-row">
+            <span class="plan-name">{{ $current_package->title }}</span>
+            <span class="plan-term-badge">{{ ucfirst($current_package->term) }}</span>
+          </div>
+          <div class="plan-expire">
+            {{ __('Expires on') }}
+            {{ $current_package->term === 'lifetime' ? __('Lifetime') : \Carbon\Carbon::parse($current_membership->expire_date)->format('d M, Y') }}
+          </div>
+          <a href="{{ route('user.plan.extend.index') }}" class="plan-manage-btn">{{ __('Manage Plan') }}</a>
+        </div>
+      </div>
 
-        {{-- Features column --}}
+      {{-- Container 2: Limit Container --}}
+      <div class="plan-limit-card">
         <div class="plan-features-col">
           <div class="plan-feature-item">
             <i class="fas fa-check-circle chk"></i>
@@ -601,32 +579,19 @@
             <i class="fas fa-check-circle chk"></i>
             <span>{{ $orderLimitLabel }}</span>
           </div>
-          @if(!empty($packageFeatures))
-            @foreach(array_slice($packageFeatures, 0, 2) as $feat)
-              <div class="plan-feature-item">
-                <i class="fas fa-check-circle chk"></i>
-                <span>{{ __($feat) }}</span>
-              </div>
-            @endforeach
-          @else
-            <div class="plan-feature-item"><i class="fas fa-check-circle chk"></i><span>{{ __('Standard Support') }}</span></div>
-            <div class="plan-feature-item"><i class="fas fa-check-circle chk"></i><span>{{ __('All Core Features') }}</span></div>
-          @endif
+          <div class="plan-feature-item">
+            <i class="fas fa-check-circle chk"></i>
+            <span>{{ __('Custom Domain') }}</span>
+          </div>
+          <div class="plan-feature-item">
+            <i class="fas fa-check-circle chk"></i>
+            <span>{{ __('Subdomain') }}</span>
+          </div>
         </div>
-
-        {{-- Decorative illustration --}}
-        <div class="plan-illustration">
-          <svg viewBox="0 0 160 130" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="20" width="120" height="90" rx="10" fill="#EEF2FF"/>
-            <rect x="35" y="35" width="90" height="60" rx="6" fill="#C7D2FE"/>
-            <rect x="50" y="50" width="60" height="30" rx="4" fill="#818CF8"/>
-            <circle cx="80" cy="100" r="12" fill="#6366F1"/>
-            <path d="M72 100 L78 106 L88 94" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+        <img src="{{ asset('images/right_side.png') }}" class="limit-right-img" alt="">
       </div>
 
-      {{-- Orders This Month --}}
+      {{-- Container 3: Orders This Month --}}
       <div class="orders-month-card">
         <div class="orders-month-label">{{ __('Orders This Month') }}</div>
         <div class="orders-month-value">
@@ -804,7 +769,7 @@
       @if(count($orders) == 0)
         <p class="text-muted" style="font-size:12px;">{{ __('No orders yet.') }}</p>
       @else
-        <div class="scroll-body">
+        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
           <table class="compact-table">
             <thead>
               <tr>
@@ -816,7 +781,7 @@
               </tr>
             </thead>
             <tbody>
-              @foreach($orders->take(10) as $order)
+              @foreach($orders->take(5) as $order)
                 <tr>
                   <td><strong>#{{ $order->order_number }}</strong></td>
                   <td>{{ $order->billing_fname }} {{ $order->billing_lname }}</td>
@@ -843,7 +808,7 @@
       @if(count($memberships) == 0)
         <p class="text-muted" style="font-size:12px;">{{ __('No payment logs yet.') }}</p>
       @else
-        <div class="scroll-body">
+        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
           <table class="compact-table">
             <thead>
               <tr>
@@ -854,7 +819,7 @@
               </tr>
             </thead>
             <tbody>
-              @foreach($memberships->take(10) as $membership)
+              @foreach($memberships->take(5) as $membership)
                 <tr>
                   <td><strong>{{ strlen($membership->transaction_id) > 10 ? mb_substr($membership->transaction_id, 0, 10, 'UTF-8').'...' : $membership->transaction_id }}</strong></td>
                   <td>{{ $membership->price == 0 ? __('Free') : format_price($membership->price) }}</td>
@@ -888,7 +853,7 @@
       @if(count($low_stock_items) == 0)
         <p class="text-muted" style="font-size:12px;">{{ __('All products healthy.') }}</p>
       @else
-        <div class="scroll-body">
+        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
           <table class="compact-table">
             <thead>
               <tr>
@@ -938,19 +903,21 @@
       @if(count($recent_customers) == 0)
         <p class="text-muted" style="font-size:12px;">{{ __('No customers yet.') }}</p>
       @else
-        <div class="scroll-body">
-          @foreach($recent_customers as $cust)
-            <div class="cust-row">
-              <div class="cust-left">
-                <div class="cust-avatar">{{ strtoupper(substr($cust->first_name ?? $cust->username ?? 'C', 0, 1)) }}</div>
-                <div>
-                  <p class="cust-name">{{ $cust->first_name }} {{ $cust->last_name }}</p>
-                  <p class="cust-email">{{ $cust->email }}</p>
+        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
+          <div style="min-width: 220px;">
+            @foreach($recent_customers as $cust)
+              <div class="cust-row">
+                <div class="cust-left">
+                  <div class="cust-avatar">{{ strtoupper(substr($cust->first_name ?? $cust->username ?? 'C', 0, 1)) }}</div>
+                  <div>
+                    <p class="cust-name">{{ $cust->first_name }} {{ $cust->last_name }}</p>
+                    <p class="cust-email">{{ $cust->email }}</p>
+                  </div>
                 </div>
+                <span class="cust-date">{{ $cust->created_at->format('j M, Y') }}</span>
               </div>
-              <span class="cust-date">{{ $cust->created_at->format('j M, Y') }}</span>
-            </div>
-          @endforeach
+            @endforeach
+          </div>
         </div>
       @endif
     </div>
