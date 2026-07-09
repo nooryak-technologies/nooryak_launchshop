@@ -84,7 +84,7 @@ h6 {
     font-size: 40px;
     font-weight: 800;
     line-height: 1.2;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
     color: var(--ls-dark);
 }
 
@@ -765,21 +765,24 @@ h6 {
 
 .testi-designation {
     font-size: 13.5px !important;
-    color: #FF5A2C !important; /* Orange designation */
+    color: #FF5A2C !important;
+    /* Orange designation */
     font-weight: 600 !important;
 }
 
 .testi-text {
     font-size: 15px !important;
     color: #334155 !important;
-    font-style: normal !important; /* Normal font style (non-italic) */
+    font-style: normal !important;
+    /* Normal font style (non-italic) */
     line-height: 1.65 !important;
     margin-bottom: 15px !important;
     display: block !important;
 }
 
 .testi-quote {
-    color: #FF5A2C !important; /* Orange double quote */
+    color: #FF5A2C !important;
+    /* Orange double quote */
     font-size: 24px !important;
     line-height: 1 !important;
     margin-right: 4px !important;
@@ -788,7 +791,8 @@ h6 {
 }
 
 .testi-stars {
-    color: #FFA114 !important; /* Bright orange stars */
+    color: #FFA114 !important;
+    /* Bright orange stars */
     font-size: 14px !important;
     margin-top: 15px !important;
 }
@@ -7684,12 +7688,15 @@ h6 {
 .feat-icon-box.icon-orange {
     background: #FFF0EB !important;
 }
+
 .feat-icon-box.icon-purple {
     background: #F3E8FF !important;
 }
+
 .feat-icon-box.icon-green {
     background: #DEF7EC !important;
 }
+
 .feat-icon-box.icon-blue {
     background: #E1EFFE !important;
 }
@@ -7822,17 +7829,20 @@ h6 {
     .hero-stats-banner {
         padding: 30px 20px !important;
     }
+
     .hero-stats-row {
         flex-wrap: wrap !important;
         justify-content: center !important;
         gap: 30px 0 !important;
     }
+
     .hero-stat-col {
         flex: 0 0 50% !important;
         max-width: 50% !important;
         border-right: none !important;
         justify-content: center !important;
     }
+
     .hero-stat-item {
         max-width: 220px !important;
         padding: 0 10px !important;
@@ -7845,6 +7855,7 @@ h6 {
         max-width: 100% !important;
     }
 }
+
 /* ============================================================
    How Launchshop Works V2 — Reference Pixel-Perfect Match
    ============================================================ */
@@ -7852,7 +7863,7 @@ h6 {
 /* Section wrapper */
 .how-it-works-v2 {
     background: #FFFFFF;
-    padding: 60px 0 70px;
+    padding: 0px 0 20px;
 }
 
 /* ---- Stats Bar ---- */
@@ -8009,9 +8020,12 @@ h6 {
 .hiw-steps-row::before {
     content: "";
     position: absolute;
-    top: 44px; /* vertical center of the 88px circle */
-    left: 10%; /* center of first circle */
-    right: 10%; /* center of last circle */
+    top: 44px;
+    /* vertical center of the 88px circle */
+    left: 10%;
+    /* center of first circle */
+    right: 10%;
+    /* center of last circle */
     height: 2px;
     border-top: 2px dashed #CBD5E1;
     z-index: 1;
@@ -8032,7 +8046,8 @@ h6 {
     position: relative;
     display: inline-block;
     margin-bottom: 8px;
-    z-index: 2; /* keep circles above the dashed line */
+    z-index: 2;
+    /* keep circles above the dashed line */
 }
 
 /* Circular icon button */
@@ -8051,7 +8066,7 @@ h6 {
 
 .hiw-step-circle:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.10);
 }
 
 /* Circle color variants */
@@ -8124,23 +8139,29 @@ h6 {
         padding: 24px 28px;
         gap: 16px;
     }
+
     .hiw-stat-card {
         min-width: 140px;
     }
+
     .hiw-stat-value {
         font-size: 22px;
     }
+
     .hiw-section-title {
         font-size: 26px !important;
     }
+
     .hiw-steps-row {
         flex-wrap: wrap;
         justify-content: center;
         gap: 32px;
     }
+
     .hiw-steps-row::before {
         display: none !important;
     }
+
     .hiw-step-item {
         flex: 0 0 calc(33.333% - 24px);
         max-width: 160px;
@@ -8150,30 +8171,37 @@ h6 {
 /* Mobile: stack stats, stack steps */
 @media (max-width: 767px) {
     .how-it-works-v2 {
-        padding: 40px 0 50px;
+        padding: 0px 0 10px;
     }
+
     .hiw-stats-row {
         flex-direction: column;
         align-items: flex-start;
         padding: 20px 24px;
         gap: 20px;
     }
+
     .hiw-stat-divider {
         display: none;
     }
+
     .hiw-stat-card {
         width: 100%;
     }
+
     .hiw-title-wrap {
         margin-bottom: 36px;
     }
+
     .hiw-section-title {
         font-size: 22px !important;
     }
+
     .hiw-steps-row {
         flex-wrap: wrap;
         gap: 28px;
     }
+
     .hiw-step-item {
         flex: 0 0 calc(50% - 14px);
         max-width: 50%;
@@ -8189,7 +8217,8 @@ h6 {
 /* How Launchshop Works - Rocket Steps Revamp (legacy) */
 .how-it-works {
     padding: 80px 0 !important;
-    background: #F8FAFC !important; /* Soft grey/blue background for contrast */
+    background: #F8FAFC !important;
+    /* Soft grey/blue background for contrast */
 }
 
 
@@ -8313,7 +8342,8 @@ h6 {
 }
 
 .new-stats-banner .hero-stat-icon {
-    border-radius: 16px !important; /* Squircle */
+    border-radius: 16px !important;
+    /* Squircle */
     font-size: 20px !important;
     width: 52px !important;
     height: 52px !important;
@@ -8351,20 +8381,25 @@ h6 {
     .steps-card-wrapper {
         padding: 30px 20px !important;
     }
+
     .steps-main-title {
         font-size: 28px !important;
         text-align: center !important;
     }
+
     .steps-main-subtitle {
         text-align: center !important;
         margin-bottom: 30px !important;
     }
+
     .v-step-item {
         margin-bottom: 24px !important;
     }
+
     .steps-cta-btn-wrap {
         text-align: center !important;
     }
+
     .rocket-main-img {
         max-height: 300px;
         margin-bottom: 20px;
@@ -8503,6 +8538,7 @@ h6 {
     .templates-section .section-title {
         white-space: nowrap !important;
     }
+
     .templates-section .section-subtitle-text {
         max-width: 100% !important;
         white-space: nowrap !important;
@@ -8771,10 +8807,12 @@ h6 {
         r: 4;
         opacity: 1;
     }
+
     50% {
         r: 8;
         opacity: 0.4;
     }
+
     100% {
         r: 4;
         opacity: 1;
@@ -8896,15 +8934,18 @@ h6 {
         text-align: center !important;
         margin-bottom: 40px;
     }
+
     .dashboard-bullets-list {
         display: inline-block !important;
         text-align: left !important;
     }
+
     .dashboard-side-features {
         margin-top: 40px !important;
         flex-direction: row !important;
         flex-wrap: wrap !important;
     }
+
     .dash-side-feat-card {
         flex: 1 0 45% !important;
     }
@@ -8914,12 +8955,15 @@ h6 {
     .dash-side-feat-card {
         flex: 1 0 100% !important;
     }
+
     .sim-dash-main {
         padding: 15px !important;
     }
+
     .dash-stat-card {
         padding: 10px !important;
     }
+
     .dash-stat-card .stat-val {
         font-size: 14px !important;
     }
@@ -9050,14 +9094,17 @@ h6 {
     .cta-revamp-title {
         font-size: 28px !important;
     }
+
     .cta-revamp-desc {
         font-size: 14px !important;
         margin: 0 auto 24px !important;
     }
+
     .cta-right-img {
         max-height: 280px !important;
         margin-top: 20px !important;
     }
+
     .cta-revamp-btns {
         margin-bottom: 20px !important;
     }
@@ -9067,10 +9114,12 @@ h6 {
     .cta-trust-banner {
         padding: 15px 10px !important;
     }
+
     .trust-badge-item {
         font-size: 11px !important;
         gap: 4px !important;
     }
+
     .trust-icon {
         font-size: 14px !important;
     }
@@ -9093,13 +9142,16 @@ h6 {
         scroll-behavior: smooth !important;
         -webkit-overflow-scrolling: touch !important;
     }
+
     .theme-filter-scroll-wrapper::-webkit-scrollbar {
         display: none !important;
     }
+
     .theme-filter-scroll-wrapper {
         -ms-overflow-style: none !important;
         scrollbar-width: none !important;
     }
+
     /* Prevent clipping dropdown */
     .theme-filter-scroll-wrapper .dropdown {
         position: static !important;
@@ -9114,11 +9166,13 @@ h6 {
         padding: 24px 15px !important;
         gap: 24px 0 !important;
     }
+
     .hiw-stats-row .hiw-stat-card {
         flex: 0 0 50% !important;
         max-width: 50% !important;
         padding: 0 10px !important;
     }
+
     .hiw-stats-row .hiw-stat-divider {
         display: none !important;
     }
@@ -9126,6 +9180,7 @@ h6 {
 
 /* Task 3 — Hero Features: 2 columns per row on mobile (wrapping, centered) */
 @media (max-width: 767px) {
+
     .hero-content .hero-features,
     .hero-content .hero-features.d-flex {
         display: flex !important;
@@ -9137,6 +9192,7 @@ h6 {
         margin-top: 25px !important;
         padding: 0 !important;
     }
+
     .hero-content .hero-features .hero-feature-item {
         flex: 0 0 50% !important;
         max-width: 50% !important;
@@ -9147,6 +9203,7 @@ h6 {
         align-items: center !important;
         padding: 0 5px !important;
     }
+
     .hero-content .hero-features .feat-divider {
         display: none !important;
     }
@@ -9160,6 +9217,7 @@ h6 {
         gap: 10px !important;
         padding: 10px 0 0 0 !important;
     }
+
     .card-action-row .btn-template-action {
         flex: 1 1 calc(50% - 5px) !important;
         max-width: calc(50% - 5px) !important;
@@ -9168,6 +9226,7 @@ h6 {
         padding: 12px 10px !important;
         font-size: 13px !important;
     }
+
     .card-action-row .btn-template-action.primary-btn {
         flex: 0 0 100% !important;
         max-width: 100% !important;
