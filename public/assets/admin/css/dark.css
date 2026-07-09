@@ -163,3 +163,62 @@ body[data-background-color=dark] .modal-v2 .modal-title {
 body[data-background-color=dark] .modal-v2 .text-muted-v2 {
   color: #fff !important;
 }
+
+/* Global Dark Mode Visibility Overrides */
+body[data-background-color="dark"] {
+  color: #ffffff !important;
+}
+
+body[data-background-color="dark"] .page-title,
+body[data-background-color="dark"] .card-title,
+body[data-background-color="dark"] .modal-title,
+body[data-background-color="dark"] h1,
+body[data-background-color="dark"] h2,
+body[data-background-color="dark"] h3,
+body[data-background-color="dark"] h4,
+body[data-background-color="dark"] h5,
+body[data-background-color="dark"] h6 {
+  color: #ffffff !important;
+}
+
+body[data-background-color="dark"] label {
+  color: #ffffff !important;
+}
+
+body[data-background-color="dark"] .text-muted,
+body[data-background-color="dark"] p.text-muted,
+body[data-background-color="dark"] small.text-muted {
+  color: #a5b4fc !important; /* brighter soft grey/blue for dark mode readability */
+}
+
+body[data-background-color="dark"] .breadcrumbs li,
+body[data-background-color="dark"] .breadcrumbs li a,
+body[data-background-color="dark"] .breadcrumbs li span,
+body[data-background-color="dark"] .breadcrumbs .separator i {
+  color: #a5b4fc !important;
+}
+
+body[data-background-color="dark"] .card {
+  background-color: #1a2035 !important;
+  border: 1px solid #2f374b !important;
+}
+
+body[data-background-color="dark"] .card-header,
+body[data-background-color="dark"] .card-footer {
+  border-color: #2f374b !important;
+}
+
+body[data-background-color="dark"] table.table tr {
+  background-color: transparent !important;
+}
+
+body[data-background-color="dark"] table.table tr td,
+body[data-background-color="dark"] table.table tr th {
+  color: #ffffff !important;
+  border-color: #2f374b !important;
+}
+
+body[data-background-color="dark"] .table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
