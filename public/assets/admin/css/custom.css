@@ -193,7 +193,10 @@ label.custom-file-label {
 }
 
 .logo-header .logo .navbar-brand {
-    max-width: 120px;
+    max-width: 150px !important;
+    height: auto !important;
+    max-height: 45px !important;
+    object-fit: contain !important;
 }
 
 .dropdown-item button.deletebtn {

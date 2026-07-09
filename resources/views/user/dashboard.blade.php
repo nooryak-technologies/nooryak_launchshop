@@ -541,6 +541,144 @@
 @media (max-width: 480px) {
     .plan-banner { gap: 12px; }
     .stats-row { gap: 10px; }
+/* ===== DARK THEME OVERRIDES ===== */
+body[data-background-color="dark"] {
+    color: #f8fafc !important;
+}
+body[data-background-color="dark"] .dash-wrapper {
+    color: #f8fafc !important;
+}
+body[data-background-color="dark"] .mb-4 h2 {
+    color: #ffffff !important;
+}
+body[data-background-color="dark"] .plan-current-card,
+body[data-background-color="dark"] .plan-limit-card,
+body[data-background-color="dark"] .orders-month-card,
+body[data-background-color="dark"] .chart-card,
+body[data-background-color="dark"] .bottom-card {
+    background: #1a2035 !important;
+    border-color: #2f374b !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+    color: #f8fafc !important;
+}
+body[data-background-color="dark"] .plan-name,
+body[data-background-color="dark"] .orders-month-value,
+body[data-background-color="dark"] .chart-card-title,
+body[data-background-color="dark"] .bottom-card-title {
+    color: #ffffff !important;
+}
+body[data-background-color="dark"] .plan-expire,
+body[data-background-color="dark"] .plan-feature-item,
+body[data-background-color="dark"] .orders-month-value span,
+body[data-background-color="dark"] .orders-percent-label {
+    color: #cbd5e1 !important;
+}
+body[data-background-color="dark"] .plan-icon-box {
+    background: #232a45 !important;
+}
+body[data-background-color="dark"] .orders-progress-bar-wrap {
+    background: #2e3856 !important;
+}
+body[data-background-color="dark"] .orders-progress-bar-fill {
+    background: #3b82f6 !important;
+}
+
+/* Bottom elements dark mode */
+body[data-background-color="dark"] .compact-table th {
+    color: #94a3b8 !important;
+    border-bottom: 1px solid #2f374b !important;
+}
+body[data-background-color="dark"] .compact-table td {
+    color: #cbd5e1 !important;
+    border-bottom: 1px solid #232a45 !important;
+}
+body[data-background-color="dark"] .cust-row {
+    border-bottom: 1px solid #232a45 !important;
+}
+body[data-background-color="dark"] .cust-name {
+    color: #ffffff !important;
+}
+body[data-background-color="dark"] .cust-email {
+    color: #94a3b8 !important;
+}
+body[data-background-color="dark"] .quick-action-row {
+    border: 1px solid #2f374b !important;
+    color: #cbd5e1 !important;
+}
+body[data-background-color="dark"] .quick-action-row:hover {
+    background: #232a45 !important;
+    border-color: #3f4a73 !important;
+}
+body[data-background-color="dark"] .stock-thumb {
+    border-color: #2f374b !important;
+}
+
+/* Stats Cards dark theme overrides (translucent background colors) */
+body[data-background-color="dark"] .stat-card.c-blue {
+    background: rgba(59, 130, 246, 0.12) !important;
+    border-color: rgba(59, 130, 246, 0.25) !important;
+}
+body[data-background-color="dark"] .stat-card.c-purple {
+    background: rgba(139, 92, 246, 0.12) !important;
+    border-color: rgba(139, 92, 246, 0.25) !important;
+}
+body[data-background-color="dark"] .stat-card.c-teal {
+    background: rgba(13, 148, 136, 0.12) !important;
+    border-color: rgba(13, 148, 136, 0.25) !important;
+}
+body[data-background-color="dark"] .stat-card.c-green {
+    background: rgba(22, 163, 74, 0.12) !important;
+    border-color: rgba(22, 163, 74, 0.25) !important;
+}
+body[data-background-color="dark"] .stat-card.c-orange {
+    background: rgba(234, 88, 12, 0.12) !important;
+    border-color: rgba(234, 88, 12, 0.25) !important;
+}
+body[data-background-color="dark"] .stat-card.c-red {
+    background: rgba(239, 68, 68, 0.12) !important;
+    border-color: rgba(239, 68, 68, 0.25) !important;
+}
+body[data-background-color="dark"] .stat-card.c-indigo {
+    background: rgba(79, 70, 229, 0.12) !important;
+    border-color: rgba(79, 70, 229, 0.25) !important;
+}
+
+body[data-background-color="dark"] .stat-card-value {
+    color: #ffffff !important;
+}
+
+body[data-background-color="dark"] .c-blue .stat-card-icon { background: rgba(59, 130, 246, 0.25) !important; color: #60a5fa !important; }
+body[data-background-color="dark"] .c-purple .stat-card-icon { background: rgba(139, 92, 246, 0.25) !important; color: #a78bfa !important; }
+body[data-background-color="dark"] .c-teal .stat-card-icon { background: rgba(13, 148, 136, 0.25) !important; color: #2dd4bf !important; }
+body[data-background-color="dark"] .c-green .stat-card-icon { background: rgba(22, 163, 74, 0.25) !important; color: #4ade80 !important; }
+body[data-background-color="dark"] .c-orange .stat-card-icon { background: rgba(234, 88, 12, 0.25) !important; color: #fb923c !important; }
+body[data-background-color="dark"] .c-red .stat-card-icon { background: rgba(239, 68, 68, 0.25) !important; color: #f87171 !important; }
+body[data-background-color="dark"] .c-indigo .stat-card-icon { background: rgba(79, 70, 229, 0.25) !important; color: #818cf8 !important; }
+
+body[data-background-color="dark"] .c-blue .stat-card-title { color: #60a5fa !important; }
+body[data-background-color="dark"] .c-purple .stat-card-title { color: #c084fc !important; }
+body[data-background-color="dark"] .c-teal .stat-card-title { color: #2dd4bf !important; }
+body[data-background-color="dark"] .c-green .stat-card-title { color: #4ade80 !important; }
+body[data-background-color="dark"] .c-orange .stat-card-title { color: #fb923c !important; }
+body[data-background-color="dark"] .c-red .stat-card-title { color: #f87171 !important; }
+body[data-background-color="dark"] .c-indigo .stat-card-title { color: #818cf8 !important; }
+
+body[data-background-color="dark"] .c-blue .stat-card-trend { color: #60a5fa !important; }
+body[data-background-color="dark"] .c-purple .stat-card-trend { color: #c084fc !important; }
+body[data-background-color="dark"] .c-teal .stat-card-trend { color: #2dd4bf !important; }
+body[data-background-color="dark"] .c-green .stat-card-trend { color: #4ade80 !important; }
+body[data-background-color="dark"] .c-orange .stat-card-trend { color: #fb923c !important; }
+body[data-background-color="dark"] .c-red .stat-card-trend { color: #f87171 !important; }
+body[data-background-color="dark"] .c-indigo .stat-card-trend { color: #818cf8 !important; }
+
+body[data-background-color="dark"] .c-blue .trend-neutral, 
+body[data-background-color="dark"] .c-purple .trend-neutral, 
+body[data-background-color="dark"] .c-teal .trend-neutral, 
+body[data-background-color="dark"] .c-green .trend-neutral, 
+body[data-background-color="dark"] .c-orange .trend-neutral, 
+body[data-background-color="dark"] .c-red .trend-neutral, 
+body[data-background-color="dark"] .c-indigo .trend-neutral {
+    color: #94a3b8 !important;
 }
 </style>
 @endsection
