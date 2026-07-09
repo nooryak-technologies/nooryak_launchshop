@@ -305,7 +305,34 @@
     font-weight: 500;
 }
 
-/* ===== BOTTOM ROW (5 cols) ===== */
+/* Custom scrollbar for bottom cards */
+.scroll-body {
+    max-height: 220px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.scroll-body::-webkit-scrollbar {
+    width: 4px;
+}
+.scroll-body::-webkit-scrollbar-track {
+    background: #F8FAFC;
+    border-radius: 4px;
+}
+.scroll-body::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 4px;
+}
+.scroll-body::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}
+/* Sticky header for scrollable tables */
+.compact-table thead th {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 1;
+    box-shadow: 0 1px 0 #E2E8F0;
+}
 .bottom-row {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -318,8 +345,10 @@
     border-radius: 12px;
     padding: 18px 18px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
+
 .bottom-card-header {
     display: flex;
     align-items: center;
@@ -775,28 +804,30 @@
       @if(count($orders) == 0)
         <p class="text-muted" style="font-size:12px;">{{ __('No orders yet.') }}</p>
       @else
-        <table class="compact-table">
-          <thead>
-            <tr>
-              <th>{{ __('Order') }}</th>
-              <th>{{ __('Customer') }}</th>
-              <th>{{ __('Total') }}</th>
-              <th>{{ __('Status') }}</th>
-              <th>{{ __('Date') }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach($orders->take(5) as $order)
+        <div class="scroll-body">
+          <table class="compact-table">
+            <thead>
               <tr>
-                <td><strong>#{{ $order->order_number }}</strong></td>
-                <td>{{ $order->billing_fname }} {{ $order->billing_lname }}</td>
-                <td>{{ round($order->total, 2) }}<br><small style="color:#9CA3AF;">{{ $order->currency_code }}</small></td>
-                <td><span class="status-badge s-{{ $order->order_status }}">{{ ucfirst($order->order_status) }}</span></td>
-                <td style="color:#9CA3AF;">{{ $order->created_at->format('j M, Y') }}</td>
+                <th>{{ __('Order') }}</th>
+                <th>{{ __('Customer') }}</th>
+                <th>{{ __('Total') }}</th>
+                <th>{{ __('Status') }}</th>
+                <th>{{ __('Date') }}</th>
               </tr>
-            @endforeach
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              @foreach($orders->take(10) as $order)
+                <tr>
+                  <td><strong>#{{ $order->order_number }}</strong></td>
+                  <td>{{ $order->billing_fname }} {{ $order->billing_lname }}</td>
+                  <td>{{ round($order->total, 2) }}<br><small style="color:#9CA3AF;">{{ $order->currency_code }}</small></td>
+                  <td><span class="status-badge s-{{ $order->order_status }}">{{ ucfirst($order->order_status) }}</span></td>
+                  <td style="color:#9CA3AF;">{{ $order->created_at->format('j M, Y') }}</td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
       @endif
     </div>
 
@@ -812,34 +843,36 @@
       @if(count($memberships) == 0)
         <p class="text-muted" style="font-size:12px;">{{ __('No payment logs yet.') }}</p>
       @else
-        <table class="compact-table">
-          <thead>
-            <tr>
-              <th>{{ __('Transaction') }}</th>
-              <th>{{ __('Amount') }}</th>
-              <th>{{ __('Status') }}</th>
-              <th>{{ __('Date') }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach($memberships->take(5) as $membership)
+        <div class="scroll-body">
+          <table class="compact-table">
+            <thead>
               <tr>
-                <td><strong>{{ strlen($membership->transaction_id) > 10 ? mb_substr($membership->transaction_id, 0, 10, 'UTF-8').'...' : $membership->transaction_id }}</strong></td>
-                <td>{{ $membership->price == 0 ? __('Free') : format_price($membership->price) }}</td>
-                <td>
-                  @if($membership->status == 1)
-                    <span class="status-badge s-success">{{ __('Success') }}</span>
-                  @elseif($membership->status == 0)
-                    <span class="status-badge s-pending">{{ __('Pending') }}</span>
-                  @else
-                    <span class="status-badge s-rejected">{{ __('Rejected') }}</span>
-                  @endif
-                </td>
-                <td style="color:#9CA3AF;">{{ $membership->created_at->format('j M, Y') }}</td>
+                <th>{{ __('Transaction') }}</th>
+                <th>{{ __('Amount') }}</th>
+                <th>{{ __('Status') }}</th>
+                <th>{{ __('Date') }}</th>
               </tr>
-            @endforeach
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              @foreach($memberships->take(10) as $membership)
+                <tr>
+                  <td><strong>{{ strlen($membership->transaction_id) > 10 ? mb_substr($membership->transaction_id, 0, 10, 'UTF-8').'...' : $membership->transaction_id }}</strong></td>
+                  <td>{{ $membership->price == 0 ? __('Free') : format_price($membership->price) }}</td>
+                  <td>
+                    @if($membership->status == 1)
+                      <span class="status-badge s-success">{{ __('Success') }}</span>
+                    @elseif($membership->status == 0)
+                      <span class="status-badge s-pending">{{ __('Pending') }}</span>
+                    @else
+                      <span class="status-badge s-rejected">{{ __('Rejected') }}</span>
+                    @endif
+                  </td>
+                  <td style="color:#9CA3AF;">{{ $membership->created_at->format('j M, Y') }}</td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
       @endif
     </div>
 
@@ -855,39 +888,41 @@
       @if(count($low_stock_items) == 0)
         <p class="text-muted" style="font-size:12px;">{{ __('All products healthy.') }}</p>
       @else
-        <table class="compact-table">
-          <thead>
-            <tr>
-              <th>{{ __('Product') }}</th>
-              <th>{{ __('Stock') }}</th>
-              <th>{{ __('State') }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach($low_stock_items as $item)
+        <div class="scroll-body">
+          <table class="compact-table">
+            <thead>
               <tr>
-                <td>
-                  <div style="display:flex;align-items:center;gap:7px;">
-                    @if(!empty($item->thumbnail))
-                      <img src="{{ asset('assets/front/img/user/items/thumbnail/'.$item->thumbnail) }}" class="stock-thumb" alt="">
-                    @else
-                      <div class="stock-thumb" style="background:#F1F5F9;display:flex;align-items:center;justify-content:center;"><i class="fas fa-image" style="color:#CBD5E1;font-size:10px;"></i></div>
-                    @endif
-                    <span style="font-size:11.5px;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px;" title="{{ $item->title }}">{{ $item->title }}</span>
-                  </div>
-                </td>
-                <td><strong>{{ $item->stock }}</strong></td>
-                <td>
-                  @if($item->stock == 0)
-                    <span class="status-badge s-out-stock">{{ __('Out of Stock') }}</span>
-                  @else
-                    <span class="status-badge s-low-stock">{{ __('Low Stock') }}</span>
-                  @endif
-                </td>
+                <th>{{ __('Product') }}</th>
+                <th>{{ __('Stock') }}</th>
+                <th>{{ __('State') }}</th>
               </tr>
-            @endforeach
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              @foreach($low_stock_items as $item)
+                <tr>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:7px;">
+                      @if(!empty($item->thumbnail))
+                        <img src="{{ asset('assets/front/img/user/items/thumbnail/'.$item->thumbnail) }}" class="stock-thumb" alt="">
+                      @else
+                        <div class="stock-thumb" style="background:#F1F5F9;display:flex;align-items:center;justify-content:center;"><i class="fas fa-image" style="color:#CBD5E1;font-size:10px;"></i></div>
+                      @endif
+                      <span style="font-size:11.5px;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px;" title="{{ $item->title }}">{{ $item->title }}</span>
+                    </div>
+                  </td>
+                  <td><strong>{{ $item->stock }}</strong></td>
+                  <td>
+                    @if($item->stock == 0)
+                      <span class="status-badge s-out-stock">{{ __('Out of Stock') }}</span>
+                    @else
+                      <span class="status-badge s-low-stock">{{ __('Low Stock') }}</span>
+                    @endif
+                  </td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
       @endif
     </div>
 
@@ -903,7 +938,7 @@
       @if(count($recent_customers) == 0)
         <p class="text-muted" style="font-size:12px;">{{ __('No customers yet.') }}</p>
       @else
-        <div>
+        <div class="scroll-body">
           @foreach($recent_customers as $cust)
             <div class="cust-row">
               <div class="cust-left">
