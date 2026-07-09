@@ -817,7 +817,7 @@
             <i class="fas fa-chevron-right text-muted" style="font-size: 11px;"></i>
           </a>
 
-          <a href="{{ route('user.shop-setting.index') }}" class="quick-action-item">
+          <a href="{{ route('user.item.settings') }}" class="quick-action-item">
             <div class="quick-action-left">
               <div class="quick-action-icon icon-bg-pink">
                 <i class="fas fa-cog"></i>
