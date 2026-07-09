@@ -288,6 +288,7 @@
     border-radius: 12px;
     padding: 18px 20px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    overflow: hidden;
 }
 .chart-card-title {
     font-size: 13.5px;
@@ -729,7 +730,7 @@
         {{ __('Sales Overview') }}
         <span class="chart-subtitle">{{ __('Last 30 Days') }}</span>
       </div>
-      <div style="position:relative;height:200px;width:100%;">
+      <div style="position:relative;height:180px;width:100%;">
         <canvas id="salesOverviewChart"></canvas>
       </div>
     </div>
@@ -737,7 +738,7 @@
     {{-- Revenue Analytics --}}
     <div class="chart-card">
       <div class="chart-card-title">{{ __('Revenue Analytics') }}</div>
-      <div style="position:relative;height:200px;width:100%;">
+      <div style="position:relative;height:155px;width:100%;">
         <canvas id="revenueAnalyticsChart"></canvas>
       </div>
     </div>
@@ -745,7 +746,7 @@
     {{-- Order Trend --}}
     <div class="chart-card">
       <div class="chart-card-title">{{ __('Order Trend') }}</div>
-      <div style="position:relative;height:200px;width:100%;">
+      <div style="position:relative;height:180px;width:100%;">
         <canvas id="orderTrendChart"></canvas>
       </div>
     </div>
@@ -753,7 +754,7 @@
     {{-- Traffic Sources --}}
     <div class="chart-card">
       <div class="chart-card-title">{{ __('Traffic Sources') }}</div>
-      <div style="position:relative;height:200px;width:100%;">
+      <div style="position:relative;height:155px;width:100%;">
         <canvas id="trafficSourcesChart"></canvas>
       </div>
     </div>
@@ -1023,9 +1024,13 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        cutout: '65%',
+        cutout: '62%',
+        layout: { padding: { bottom: 0 } },
         plugins: {
-          legend: { position:'bottom', labels:{ boxWidth:10, padding:10, font:{size:10}, color:'#6B7280' } }
+          legend: {
+            position: 'bottom',
+            labels: { boxWidth: 9, padding: 8, font: { size: 10 }, color: '#6B7280' }
+          }
         }
       }
     });
@@ -1076,8 +1081,12 @@
         responsive: true,
         maintainAspectRatio: false,
         cutout: '55%',
+        layout: { padding: { bottom: 0 } },
         plugins: {
-          legend: { position:'right', labels:{ boxWidth:10, padding:8, font:{size:10}, color:'#6B7280' } }
+          legend: {
+            position: 'bottom',
+            labels: { boxWidth: 9, padding: 8, font: { size: 10 }, color: '#6B7280' }
+          }
         }
       }
     });
