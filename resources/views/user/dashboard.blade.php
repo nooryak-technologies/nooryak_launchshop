@@ -376,11 +376,26 @@
               </a>
             </div>
             <div class="col-md-5 mt-4 mt-md-0 border-left pl-md-4">
+              @php
+                $pLimitVal = $current_package->product_limit;
+                $oLimitVal = $current_package->order_limit;
+                
+                $prodLimitLabel = $pLimitVal == 999999 ? __('Unlimited Products') : __('Up to :count Products', ['count' => number_format($pLimitVal)]);
+                $orderLimitLabel = $oLimitVal == 999999 ? __('Unlimited Orders') : __('Up to :count Orders', ['count' => number_format($oLimitVal)]);
+                
+                $packageFeatures = json_decode($current_package->features, true) ?? [];
+              @endphp
               <ul class="plan-feature-list">
-                <li><i class="fas fa-check"></i> Up to 1,000 Products</li>
-                <li><i class="fas fa-check"></i> Unlimited Orders</li>
-                <li><i class="fas fa-check"></i> Standard Support</li>
-                <li><i class="fas fa-check"></i> All Core Features</li>
+                <li><i class="fas fa-check"></i> {{ $prodLimitLabel }}</li>
+                <li><i class="fas fa-check"></i> {{ $orderLimitLabel }}</li>
+                @if(!empty($packageFeatures))
+                  @foreach(array_slice($packageFeatures, 0, 2) as $feat)
+                    <li><i class="fas fa-check"></i> {{ __($feat) }}</li>
+                  @endforeach
+                @else
+                  <li><i class="fas fa-check"></i> {{ __('Standard Support') }}</li>
+                  <li><i class="fas fa-check"></i> {{ __('All Core Features') }}</li>
+                @endif
               </ul>
             </div>
           </div>
@@ -392,17 +407,25 @@
         <div class="card card-premium h-100 p-4 d-flex flex-column justify-content-between">
           <div>
             <span class="text-muted font-weight-600 uppercase" style="font-size: 11px; letter-spacing: 0.5px;">{{ __('Orders This Month') }}</span>
+            @php
+              $oLimitVal = $current_package->order_limit;
+              $isUnlimitedOrders = ($oLimitVal == 999999);
+              $orderPercent = $isUnlimitedOrders ? 0 : min(($total_orders / $oLimitVal) * 100, 100);
+            @endphp
             <h2 class="font-weight-bold text-dark mt-2 mb-3" style="font-size: 28px;">
-              {{ $total_orders }} <span class="text-muted" style="font-size: 18px; font-weight: 500;">/ 1,000</span>
+              {{ $total_orders }} <span class="text-muted" style="font-size: 18px; font-weight: 500;">/ {{ $isUnlimitedOrders ? __('Unlimited') : number_format($oLimitVal) }}</span>
             </h2>
             <div class="progress" style="height: 6px; border-radius: 3px; background-color: #f1f5f9;">
-              @php
-                $orderPercent = min(($total_orders / 1000) * 100, 100);
-              @endphp
-              <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $orderPercent }}%;" aria-valuenow="{{ $orderPercent }}" aria-valuemin="0" aria-valuemax="100"></div>
+              <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $isUnlimitedOrders ? 0 : $orderPercent }}%;" aria-valuenow="{{ $orderPercent }}" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
             <div class="d-flex justify-content-between mt-2">
-              <span class="text-muted font-weight-600" style="font-size: 12px;">{{ number_format($orderPercent, 1) }}% {{ __('Used') }}</span>
+              <span class="text-muted font-weight-600" style="font-size: 12px;">
+                @if($isUnlimitedOrders)
+                  {{ __('Unlimited Usage') }}
+                @else
+                  {{ number_format($orderPercent, 1) }}% {{ __('Used') }}
+                @endif
+              </span>
             </div>
           </div>
           <div class="mt-4">
