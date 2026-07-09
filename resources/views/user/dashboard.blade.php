@@ -852,7 +852,7 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
         </div>
       </div>
       <div class="stat-card-icon">
-        <i class="fas fa-dollar-sign"></i>
+        <i class="fas fa-rupee-sign"></i>
       </div>
     </div>
   </div>
