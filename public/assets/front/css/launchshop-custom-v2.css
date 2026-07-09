@@ -9328,11 +9328,266 @@ iframe[id^="tawkchat-"],
         max-width: 100% !important;
     }
 }
+/* ============================================================
+   How Launchshop Works V2 — Reference Pixel-Perfect Match
+   ============================================================ */
 
-/* How Launchshop Works - Rocket Steps Revamp */
+/* Section wrapper */
+.how-it-works-v2 {
+    background: #FFFFFF;
+    padding: 60px 0 70px;
+}
+
+/* ---- Stats Bar ---- */
+.hiw-stats-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #FFFFFF;
+    border: 1px solid #E8EDF2;
+    border-radius: 18px;
+    padding: 28px 40px;
+    box-shadow: 0 2px 16px rgba(15, 23, 42, 0.05);
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.hiw-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    min-width: 160px;
+}
+
+.hiw-stat-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.hiw-icon-orange { background: #FFF0EB; color: #FF5A2C; }
+.hiw-icon-purple { background: #F3EFFE; color: #7C3AED; }
+.hiw-icon-green  { background: #ECFDF5; color: #059669; }
+.hiw-icon-yellow { background: #FFFBEB; color: #D97706; }
+
+.hiw-stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.hiw-stat-value {
+    font-size: 26px;
+    font-weight: 800;
+    color: #0F172A;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+}
+
+.hiw-stat-label {
+    font-size: 14px;
+    color: #64748B;
+    font-weight: 500;
+    margin-top: 3px;
+}
+
+.hiw-stat-divider {
+    width: 1px;
+    height: 50px;
+    background: #E2E8F0;
+    flex-shrink: 0;
+}
+
+/* ---- Section Title ---- */
+.hiw-title-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 52px;
+}
+
+.hiw-section-title {
+    font-size: 30px !important;
+    font-weight: 800 !important;
+    color: #0F172A !important;
+    margin: 0 !important;
+    letter-spacing: -0.3px;
+}
+
+.hiw-decor-dot {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+}
+
+/* Rotated Diamond */
+.hiw-decor-dot::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    background: #FF5A2C;
+    transform: rotate(45deg);
+    display: block;
+    border-radius: 2px;
+}
+
+/* Outer Small Circular Dot */
+.hiw-decor-dot::after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: #FF5A2C;
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.hiw-decor-dot.left::after {
+    left: -14px;
+}
+
+.hiw-decor-dot.right::after {
+    right: -14px;
+}
+
+/* ---- Steps Row ---- */
+.hiw-steps-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+    position: relative;
+}
+
+/* Continuous dashed line behind circles, connecting first to last */
+.hiw-steps-row::before {
+    content: "";
+    position: absolute;
+    top: 44px; /* vertical center of the 88px circle */
+    left: 10%; /* center of first circle */
+    right: 10%; /* center of last circle */
+    height: 2px;
+    border-top: 2px dashed #CBD5E1;
+    z-index: 1;
+}
+
+.hiw-step-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 8px;
+    max-width: 200px;
+}
+
+.hiw-step-icon-wrap {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 8px;
+    z-index: 2; /* keep circles above the dashed line */
+}
+
+.hiw-step-circle {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    background: #FFFFFF;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hiw-step-circle:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+}
+
+.hiw-circle-orange { border-color: #FFCAB8; color: #FF5A2C; background: #FFF5F2; }
+.hiw-circle-purple { border-color: #C4B5FD; color: #7C3AED; background: #F5F3FF; }
+.hiw-circle-blue   { border-color: #93C5FD; color: #2563EB; background: #EFF6FF; }
+.hiw-circle-green  { border-color: #6EE7B7; color: #059669; background: #F0FDF4; }
+
+.hiw-step-badge {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 24px;
+    background: #FF5A2C;
+    color: #FFFFFF;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(255, 90, 44, 0.35);
+    border: 2.5px solid #FFFFFF;
+    z-index: 2;
+}
+
+.hiw-step-title {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #0F172A !important;
+    margin: 10px 0 6px !important;
+    line-height: 1.3 !important;
+}
+
+.hiw-step-desc {
+    font-size: 13px !important;
+    color: #64748B !important;
+    line-height: 1.55 !important;
+    margin: 0 !important;
+}
+
+@media (max-width: 991px) {
+    .hiw-stats-row { padding: 24px 28px; gap: 16px; }
+    .hiw-stat-card { min-width: 140px; }
+    .hiw-stat-value { font-size: 22px; }
+    .hiw-section-title { font-size: 26px !important; }
+    .hiw-steps-row { flex-wrap: wrap; justify-content: center; gap: 32px; }
+    .hiw-steps-row::before { display: none !important; }
+    .hiw-step-item { flex: 0 0 calc(33.333% - 24px); max-width: 160px; }
+}
+
+@media (max-width: 767px) {
+    .how-it-works-v2 { padding: 40px 0 50px; }
+    .hiw-stats-row { flex-direction: column; align-items: flex-start; padding: 20px 24px; gap: 20px; }
+    .hiw-stat-divider { display: none; }
+    .hiw-stat-card { width: 100%; }
+    .hiw-title-wrap { margin-bottom: 36px; }
+    .hiw-section-title { font-size: 22px !important; }
+    .hiw-steps-row { flex-wrap: wrap; gap: 28px; }
+    .hiw-step-item { flex: 0 0 calc(50% - 14px); max-width: 50%; }
+}
+
+@media (max-width: 480px) {
+    .hiw-step-item { flex: 0 0 100%; max-width: 240px; }
+    .hiw-stat-value { font-size: 20px; }
+}
+
+/* How Launchshop Works - Rocket Steps Revamp (legacy) */
 .how-it-works {
     padding: 80px 0 !important;
-    background: #F8FAFC !important; /* Soft grey/blue background for contrast */
+    background: #F8FAFC !important;
 }
 
 .steps-card-wrapper {

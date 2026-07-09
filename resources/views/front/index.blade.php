@@ -1,4 +1,4 @@
-﻿@extends('front.layout')
+@extends('front.layout')
 
 @section('pagename')
   - {{ __('Home') }}
@@ -149,20 +149,138 @@
     <!-- Hero Section End -->
   @endif
 
-  @if (count($after_hero) > 0)
-    @foreach ($after_hero as $cusHero)
-      @if (isset($additional_section_status[$cusHero->id]) && $additional_section_status[$cusHero->id] == 1)
-        @php
-          $cusHeroContent = App\Models\AdditionalSectionContent::where([
-              ['language_id', $lang_id],
-              ['addition_section_id', $cusHero->id],
-          ])->first();
-        @endphp
-        @includeIf('front.additional-section', ['data' => $cusHeroContent, 'possition' => $cusHero->possition])
-      @endif
-    @endforeach
-  @endif
+  @if ($bs->process_section == 1)
+    <!-- How It Works Start -->
+    <section class="how-it-works-v2" id="how-it-works">
+      <div class="container">
 
+        <!-- Stats Banner Row -->
+        <div class="hiw-stats-row" data-aos="fade-up">
+          <!-- Stat 1 -->
+          <div class="hiw-stat-card">
+            <div class="hiw-stat-icon hiw-icon-orange">
+              <i class="fas fa-store"></i>
+            </div>
+            <div class="hiw-stat-info">
+              <div class="hiw-stat-value"><span class="odometer" data-count="250">0</span>+</div>
+              <div class="hiw-stat-label">{{ __('Stores Launched') }}</div>
+            </div>
+          </div>
+          <!-- Divider -->
+          <div class="hiw-stat-divider"></div>
+          <!-- Stat 2 -->
+          <div class="hiw-stat-card">
+            <div class="hiw-stat-icon hiw-icon-purple">
+              <i class="fas fa-gem"></i>
+            </div>
+            <div class="hiw-stat-info">
+              <div class="hiw-stat-value"><span class="odometer" data-count="15">0</span>+</div>
+              <div class="hiw-stat-label">{{ __('Premium Themes') }}</div>
+            </div>
+          </div>
+          <!-- Divider -->
+          <div class="hiw-stat-divider"></div>
+          <!-- Stat 3 -->
+          <div class="hiw-stat-card">
+            <div class="hiw-stat-icon hiw-icon-green">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="hiw-stat-info">
+              <div class="hiw-stat-value"><span class="odometer" data-count="99">0</span>.99%</div>
+              <div class="hiw-stat-label">{{ __('Uptime Guarantee') }}</div>
+            </div>
+          </div>
+          <!-- Divider -->
+          <div class="hiw-stat-divider"></div>
+          <!-- Stat 4 -->
+          <div class="hiw-stat-card">
+            <div class="hiw-stat-icon hiw-icon-yellow">
+              <i class="fas fa-user-friends"></i>
+            </div>
+            <div class="hiw-stat-info">
+              <div class="hiw-stat-value"><span class="odometer" data-count="500">0</span>+</div>
+              <div class="hiw-stat-label">{{ __('Happy Merchants') }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section Title -->
+        <div class="hiw-title-wrap" data-aos="fade-up">
+          <span class="hiw-decor-dot left"></span>
+          <h2 class="hiw-section-title">{{ __('How Launchshop Works') }}</h2>
+          <span class="hiw-decor-dot right"></span>
+        </div>
+
+        <!-- 5 Steps Row -->
+        <div class="hiw-steps-row" data-aos="fade-up">
+
+          <!-- Step 1 -->
+          <div class="hiw-step-item">
+            <div class="hiw-step-icon-wrap">
+              <div class="hiw-step-circle hiw-circle-orange">
+                <i class="fas fa-paint-roller"></i>
+              </div>
+              <div class="hiw-step-badge">1</div>
+            </div>
+            <h4 class="hiw-step-title">{{ __('Choose a Theme') }}</h4>
+            <p class="hiw-step-desc">{{ __('Pick a professional theme that matches your brand.') }}</p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="hiw-step-item">
+            <div class="hiw-step-icon-wrap">
+              <div class="hiw-step-circle hiw-circle-purple">
+                <i class="fas fa-cog"></i>
+              </div>
+              <div class="hiw-step-badge">2</div>
+            </div>
+            <h4 class="hiw-step-title">{{ __('Customize Your Store') }}</h4>
+            <p class="hiw-step-desc">{{ __('Edit colors, fonts, layout and content easily.') }}</p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="hiw-step-item">
+            <div class="hiw-step-icon-wrap">
+              <div class="hiw-step-circle hiw-circle-blue">
+                <i class="fas fa-box-open"></i>
+              </div>
+              <div class="hiw-step-badge">3</div>
+            </div>
+            <h4 class="hiw-step-title">{{ __('Add Products') }}</h4>
+            <p class="hiw-step-desc">{{ __('Upload products, set prices and manage inventory.') }}</p>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="hiw-step-item">
+            <div class="hiw-step-icon-wrap">
+              <div class="hiw-step-circle hiw-circle-green">
+                <i class="fas fa-credit-card"></i>
+              </div>
+              <div class="hiw-step-badge">4</div>
+            </div>
+            <h4 class="hiw-step-title">{{ __('Accept Payments') }}</h4>
+            <p class="hiw-step-desc">{{ __('Enable secure payments and shipping options.') }}</p>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="hiw-step-item">
+            <div class="hiw-step-icon-wrap">
+              <div class="hiw-step-circle hiw-circle-orange">
+                <i class="fas fa-rocket"></i>
+              </div>
+              <div class="hiw-step-badge">5</div>
+            </div>
+            <h4 class="hiw-step-title">{{ __('Start Selling') }}</h4>
+            <p class="hiw-step-desc">{{ __('Publish your store and start growing your business.') }}</p>
+          </div>
+
+        </div>
+        <!-- /5 Steps Row -->
+
+      </div>
+    </section>
+    <!-- How It Works End -->
+  @endif
 
   @if ($bs->templates_section == 1)
     <!-- Templates Section Start -->
@@ -314,143 +432,7 @@
     <!-- Templates Section End -->
   @endif
 
-  @if ($bs->process_section == 1)
-    <!-- How It Works Start -->
-    <section class="how-it-works py-80">
-      <div class="container">
-        
-        <!-- Main Card Wrapper -->
-        <div class="steps-card-wrapper mb-50" data-aos="fade-up">
-          <div class="row align-items-center">
-            <!-- Left Rocket Column -->
-            <div class="col-lg-6 text-center mb-4 mb-lg-0">
-              <div class="rocket-img-wrap">
-                <img src="{{ asset('images/rocket_leftside.png') }}" class="img-fluid rocket-main-img" alt="Rocket Launch">
-              </div>
-            </div>
-            <!-- Right Steps Column -->
-            <div class="col-lg-6">
-              <div class="steps-content-wrap ps-lg-4">
-                <h2 class="steps-main-title mb-2">{{ __('Simple Steps. Big Results.') }}</h2>
-                <p class="steps-main-subtitle mb-4">{{ __('Launch your dream store in four simple steps.') }}</p>
-                
-                <div class="vertical-steps-list">
-                  <!-- Step 1 -->
-                  <div class="v-step-item d-flex align-items-start mb-4">
-                    <div class="v-step-icon-box orange">
-                      <i class="fas fa-store"></i>
-                    </div>
-                    <div class="v-step-text">
-                      <h4 class="v-step-title mb-1">1. {{ __('Choose Your Theme') }}</h4>
-                      <p class="v-step-desc mb-0">{{ __('Pick a professional theme that matches your brand.') }}</p>
-                    </div>
-                  </div>
 
-                  <!-- Step 2 -->
-                  <div class="v-step-item d-flex align-items-start mb-4">
-                    <div class="v-step-icon-box pink">
-                      <i class="fas fa-cog"></i>
-                    </div>
-                    <div class="v-step-text">
-                      <h4 class="v-step-title mb-1">2. {{ __('Customize & Setup') }}</h4>
-                      <p class="v-step-desc mb-0">{{ __('Add your products, customize design & settings.') }}</p>
-                    </div>
-                  </div>
-
-                  <!-- Step 3 -->
-                  <div class="v-step-item d-flex align-items-start mb-4">
-                    <div class="v-step-icon-box green">
-                      <i class="fas fa-credit-card"></i>
-                    </div>
-                    <div class="v-step-text">
-                      <h4 class="v-step-title mb-1">3. {{ __('Configure Payments') }}</h4>
-                      <p class="v-step-desc mb-0">{{ __('Set up payment methods and shipping options.') }}</p>
-                    </div>
-                  </div>
-
-                  <!-- Step 4 -->
-                  <div class="v-step-item d-flex align-items-start mb-4">
-                    <div class="v-step-icon-box blue">
-                      <i class="fas fa-rocket"></i>
-                    </div>
-                    <div class="v-step-text">
-                      <h4 class="v-step-title mb-1">4. {{ __('Launch Your Store') }}</h4>
-                      <p class="v-step-desc mb-0">{{ __('Your store is live! Start selling and growing.') }}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- CTA Button -->
-                @php
-                  $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
-                  $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
-                @endphp
-                <div class="steps-cta-btn-wrap mt-4">
-                  <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-ls-primary px-4 py-3 d-inline-flex align-items-center gap-2">
-                    {{ __('Start Your Journey') }} <i class="fas fa-arrow-right"></i>
-                  </a>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Stats Banner Row -->
-        <div class="row" data-aos="fade-up">
-          <div class="col-12">
-            <div class="hero-stats-banner new-stats-banner">
-              <div class="row hero-stats-row justify-content-between align-items-center">
-                
-                <div class="hero-stat-col">
-                  <div class="hero-stat-item">
-                    <div class="hero-stat-icon icon-stores-solid"><i class="fas fa-store"></i></div>
-                    <div class="hero-stat-info">
-                      <div class="hero-stat-value"><span class="odometer" data-count="2500">0</span>+</div>
-                      <div class="hero-stat-label">{{ __('Live Stores') }}</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="hero-stat-col">
-                  <div class="hero-stat-item">
-                    <div class="hero-stat-icon icon-merchants-solid"><i class="fas fa-user-friends"></i></div>
-                    <div class="hero-stat-info">
-                      <div class="hero-stat-value"><span class="odometer" data-count="8000">0</span>+</div>
-                      <div class="hero-stat-label">{{ __('Happy Merchants') }}</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="hero-stat-col">
-                  <div class="hero-stat-item">
-                    <div class="hero-stat-icon icon-themes-solid"><i class="fas fa-gem"></i></div>
-                    <div class="hero-stat-info">
-                      <div class="hero-stat-value"><span class="odometer" data-count="50">0</span>+</div>
-                      <div class="hero-stat-label">{{ __('Premium Themes') }}</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="hero-stat-col">
-                  <div class="hero-stat-item">
-                    <div class="hero-stat-icon icon-satisfaction-solid"><i class="fas fa-shield-alt"></i></div>
-                    <div class="hero-stat-info">
-                      <div class="hero-stat-value"><span class="odometer" data-count="98">0</span>%</div>
-                      <div class="hero-stat-label">{{ __('Customer Satisfaction') }}</div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-    <!-- How It Works End -->
-  @endif
 
   <!-- Dashboard Showcase Section Start -->
   <section class="dashboard-section py-80" id="dashboard-showcase">
@@ -544,7 +526,7 @@
                   <div class="col-6 col-xl-3">
                     <div class="dash-stat-card">
                       <span class="stat-lbl">{{ __('Total Sales') }}</span>
-                      <h4 class="stat-val">â‚¹24,50,000</h4>
+                      <h4 class="stat-val">₹24,50,000</h4>
                       <span class="stat-change text-success"><i class="fas fa-arrow-up"></i> +26%</span>
                     </div>
                   </div>
@@ -596,7 +578,7 @@
                           
                           <g class="chart-tooltip-g">
                             <rect x="180" y="45" width="80" height="30" rx="6" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"></rect>
-                            <text x="220" y="58" font-size="9" font-weight="700" fill="#0F172A" text-anchor="middle">â‚¹4,30,000</text>
+                            <text x="220" y="58" font-size="9" font-weight="700" fill="#0F172A" text-anchor="middle">₹4,30,000</text>
                             <text x="220" y="68" font-size="7" font-weight="500" fill="#64748B" text-anchor="middle">May 10, 2025</text>
                           </g>
                         </svg>
@@ -624,7 +606,7 @@
                             <span class="prod-name">Wireless Headphones</span>
                             <span class="prod-sales">320 sold</span>
                           </div>
-                          <span class="prod-price">â‚¹2,499</span>
+                          <span class="prod-price">₹2,499</span>
                         </div>
                         <div class="product-item d-flex align-items-center gap-2 mb-3">
                           <div class="prod-img"><i class="fas fa-stopwatch"></i></div>
@@ -632,7 +614,7 @@
                             <span class="prod-name">Smart Watch</span>
                             <span class="prod-sales">284 sold</span>
                           </div>
-                          <span class="prod-price">â‚¹1,999</span>
+                          <span class="prod-price">₹1,999</span>
                         </div>
                         <div class="product-item d-flex align-items-center gap-2">
                           <div class="prod-img"><i class="fas fa-shoe-prints"></i></div>
@@ -640,7 +622,7 @@
                             <span class="prod-name">Sneakers</span>
                             <span class="prod-sales">210 sold</span>
                           </div>
-                          <span class="prod-price">â‚¹1,499</span>
+                          <span class="prod-price">₹1,499</span>
                         </div>
                       </div>
                     </div>
@@ -1112,6 +1094,9 @@
   @endif
 
 
+  {{-- features-grid section removed --}}
+
+
 
   <!-- Claim Subdomain Banner -->
   <section class="subdomain-banner">
@@ -1200,6 +1185,8 @@
       @endif
     @endforeach
   @endif
+
+  {{-- brands-banner section removed --}}
 
 
   <!-- Bottom CTA Start -->
@@ -1345,7 +1332,7 @@
     // Initialize on page load
     applyFilterAndLimit();
 
-    // Shop animation loop â€” restart CSS animations every 6.5s
+    // Shop animation loop — restart CSS animations every 6.5s
     (function loopShopAnim() {
       var svg = document.getElementById('shopAnim');
       if (!svg) return;
