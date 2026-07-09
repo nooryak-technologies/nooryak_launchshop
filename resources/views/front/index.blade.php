@@ -18,40 +18,81 @@
         <div class="row align-items-center">
           <div class="col-lg-5 col-xl-5 order-2 order-lg-1">
             <div class="hero-content" data-aos="fade-right">
-              @if (@$homeSec->hero_section_title)
-                <div class="hero-badge">
-                  <i class="fas fa-bolt" style="margin-right: 8px;"></i> {{ @$homeSec->hero_section_title }}
-                </div>
-              @endif
+              <div class="hero-badge">
+                <i class="fas fa-bolt" style="margin-right: 8px;"></i> {{ __('Your Platform, Your Success Icon') }}
+              </div>
               
               <h1 class="hero-title">Launch Your  <br><span>Online Store In</span> Just 2 minutes</h1>
               
-              <p class="hero-text">{{ @$homeSec->hero_section_desc ?: 'Launch a professional online store in minutes. Choose a theme, pick a plan, get your subdomain and start selling – all without coding.' }}</p>
+              <p class="hero-text">{{ __('Manage products, payments, and sales effortlessly. Everything you need to grow your business is just a click away. Start today and simplify your e-commerce journey.') }}</p>
               
               <div class="d-flex align-items-center gap-3 hero-btns">
-                @if (@$homeSec->hero_section_button_url)
-                  <a href="{{ @$homeSec->hero_section_button_url }}" class="btn-ls-primary">
-                    {{ @$homeSec->hero_section_button_text ?: 'Start Free Trial' }}
-                  </a>
-                @else
-                  <a href="{{ route('front.pricing') }}" class="btn-ls-primary">Start Free Trial <i class="fas fa-arrow-right ms-2"></i></a>
-                @endif
+                <a href="{{ route('front.pricing') }}" class="btn-ls-primary">{{ __('Get Started Now') }} <i class="fas fa-arrow-right ms-2"></i></a>
 
-                @if (@$homeSec->hero_section_video_url)
-                  <a href="{{ @$homeSec->hero_section_video_url }}" class="btn-ls-outline youtube-popup">
-                    <i class="fas fa-play-circle me-2"></i> Book a Demo
-                  </a>
-                @else
-                  <a href="{{ route('front.contact') }}" class="btn-ls-outline">
-                    <i class="fas fa-play-circle me-2"></i> Book a Demo
-                  </a>
-                @endif
+                <a href="{{ route('front.contact') }}" class="btn-ls-outline">
+                  <span class="btn-play-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="12" cy="12" r="12" fill="#0F172A"/>
+                      <path d="M10 8L16 12L10 16V8Z" fill="white"/>
+                    </svg>
+                  </span>
+                  {{ __('Book a Demo') }}
+                </a>
               </div>
 
-              <div class="hero-features d-none d-md-flex">
-                <span><i class="fas fa-check-circle"></i> No Credit Card Required</span>
-                <span><i class="fas fa-times-circle" style="color:var(--ls-gray)"></i> Cancel Anytime</span>
-                <span><i class="fas fa-calendar-alt"></i> 14-Day Free Trial</span>
+              <div class="hero-features d-none d-md-flex align-items-center">
+                <div class="hero-feature-item">
+                  <div class="feat-icon-box icon-orange">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 22C12 22 20 18 20 12V5L12 2L4 5V12C4 18 12 22 12 22Z" stroke="#FF5A2C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M9 11L11 13L15 9" stroke="#FF5A2C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="feat-content">
+                    <div class="feat-title">{{ __('10-Days Money') }}</div>
+                    <div class="feat-sub">{{ __('Back Guarantee') }}</div>
+                  </div>
+                </div>
+                <div class="feat-divider"></div>
+                <div class="hero-feature-item">
+                  <div class="feat-icon-box icon-purple">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="12" cy="12" r="10" stroke="#8B5CF6" stroke-width="2"/>
+                      <path d="M15 9L9 15M9 9L15 15" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <div class="feat-content">
+                    <div class="feat-title">{{ __('Cancel') }}</div>
+                    <div class="feat-sub">{{ __('Anytime') }}</div>
+                  </div>
+                </div>
+                <div class="feat-divider"></div>
+                <div class="hero-feature-item">
+                  <div class="feat-icon-box icon-green">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M17.887 6.113c-.933-.933-2.903-1.157-5.111-.643l-4.148 4.148c-.689.69-.747 1.776-.174 2.507l-2.617 2.617a1 1 0 000 1.414l1.414 1.414a1 1 0 001.414 0l2.617-2.617c.731.573 1.817.515 2.507-.174l4.148-4.148c.514-2.208.29-4.178-.643-5.111z" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M8.5 15.5L4.5 19.5M15.5 8.5l.01-.01" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="feat-content">
+                    <div class="feat-title">{{ __('Launch') }}</div>
+                    <div class="feat-sub">{{ __('Instantly') }}</div>
+                  </div>
+                </div>
+                <div class="feat-divider"></div>
+                <div class="hero-feature-item">
+                  <div class="feat-icon-box icon-blue">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M3 18V11C3 6.02944 7.02944 2 12 2C16.9706 2 21 6.02944 21 11V18" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M21 19C21 20.1 20.1 21 19 21H17C15.9 21 15 20.1 15 19V15C15 13.9 15.9 13 17 13H21V19Z" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M3 19C3 20.1 3.9 21 5 21H7C8.1 21 9 20.1 9 15V11C9 9.9 8.1 9 7 9H3V19Z" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="feat-content">
+                    <div class="feat-title">{{ __('24/7 Expert') }}</div>
+                    <div class="feat-sub">{{ __('Support') }}</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -102,54 +143,148 @@
             </div>
           </div>
         </div>
+
+      </div>
+    </section>
+    <!-- Hero Section End -->
+  @endif
+
+  @if ($bs->process_section == 1)
+    <!-- How It Works Start -->
+    <section class="how-it-works py-80">
+      <div class="container">
         
-        <!-- Stats Banner -->
-        <div class="row">
-          <div class="col-12">
-            <div class="hero-stats-banner" data-aos="fade-up">
-              <div class="row hero-stats-row justify-content-center">
-                <div class="hero-stat-col">
-                  <div class="hero-stat-item">
-                    <div class="hero-stat-icon icon-stores"><i class="fas fa-shopping-bag"></i></div>
-                    <div class="hero-stat-value"><span class="odometer" data-count="99">0</span>+</div>
-                    <div class="hero-stat-label">Stores Launched</div>
+        <!-- Main Card Wrapper -->
+        <div class="steps-card-wrapper mb-50" data-aos="fade-up">
+          <div class="row align-items-center">
+            <!-- Left Rocket Column -->
+            <div class="col-lg-6 text-center mb-4 mb-lg-0">
+              <div class="rocket-img-wrap">
+                <img src="{{ asset('images/rocket_leftside.png') }}" class="img-fluid rocket-main-img" alt="Rocket Launch">
+              </div>
+            </div>
+            <!-- Right Steps Column -->
+            <div class="col-lg-6">
+              <div class="steps-content-wrap ps-lg-4">
+                <h2 class="steps-main-title mb-2">{{ __('Simple Steps. Big Results.') }}</h2>
+                <p class="steps-main-subtitle mb-4">{{ __('Launch your dream store in four simple steps.') }}</p>
+                
+                <div class="vertical-steps-list">
+                  <!-- Step 1 -->
+                  <div class="v-step-item d-flex align-items-start mb-4">
+                    <div class="v-step-icon-box orange">
+                      <i class="fas fa-store"></i>
+                    </div>
+                    <div class="v-step-text">
+                      <h4 class="v-step-title mb-1">1. {{ __('Choose Your Theme') }}</h4>
+                      <p class="v-step-desc mb-0">{{ __('Pick a professional theme that matches your brand.') }}</p>
+                    </div>
+                  </div>
+
+                  <!-- Step 2 -->
+                  <div class="v-step-item d-flex align-items-start mb-4">
+                    <div class="v-step-icon-box pink">
+                      <i class="fas fa-cog"></i>
+                    </div>
+                    <div class="v-step-text">
+                      <h4 class="v-step-title mb-1">2. {{ __('Customize & Setup') }}</h4>
+                      <p class="v-step-desc mb-0">{{ __('Add your products, customize design & settings.') }}</p>
+                    </div>
+                  </div>
+
+                  <!-- Step 3 -->
+                  <div class="v-step-item d-flex align-items-start mb-4">
+                    <div class="v-step-icon-box green">
+                      <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div class="v-step-text">
+                      <h4 class="v-step-title mb-1">3. {{ __('Configure Payments') }}</h4>
+                      <p class="v-step-desc mb-0">{{ __('Set up payment methods and shipping options.') }}</p>
+                    </div>
+                  </div>
+
+                  <!-- Step 4 -->
+                  <div class="v-step-item d-flex align-items-start mb-4">
+                    <div class="v-step-icon-box blue">
+                      <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="v-step-text">
+                      <h4 class="v-step-title mb-1">4. {{ __('Launch Your Store') }}</h4>
+                      <p class="v-step-desc mb-0">{{ __('Your store is live! Start selling and growing.') }}</p>
+                    </div>
                   </div>
                 </div>
-                <div class="hero-stat-col">
-                  <div class="hero-stat-item">
-                    <div class="hero-stat-icon icon-themes"><i class="fas fa-palette"></i></div>
-                    <div class="hero-stat-value"><span class="odometer" data-count="25">0</span>+</div>
-                    <div class="hero-stat-label">Premium Themes</div>
-                  </div>
+
+                <!-- CTA Button -->
+                @php
+                  $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
+                  $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
+                @endphp
+                <div class="steps-cta-btn-wrap mt-4">
+                  <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-ls-primary px-4 py-3 d-inline-flex align-items-center gap-2">
+                    {{ __('Start Your Journey') }} <i class="fas fa-arrow-right"></i>
+                  </a>
                 </div>
-                <div class="hero-stat-col">
-                  <div class="hero-stat-item">
-                    <div class="hero-stat-icon icon-uptime"><i class="fas fa-shield-check"></i></div>
-                    <div class="hero-stat-value"><span class="odometer" data-count="99">0</span>.99%</div>
-                    <div class="hero-stat-label">Uptime Guarantee</div>
-                  </div>
-                </div>
-                <div class="hero-stat-col">
-                  <div class="hero-stat-item">
-                    <div class="hero-stat-icon icon-merchants"><i class="fas fa-users"></i></div>
-                    <div class="hero-stat-value"><span class="odometer" data-count="60">0</span>+</div>
-                    <div class="hero-stat-label">Happy Merchants</div>
-                  </div>
-                </div>
-                <!-- <div class="hero-stat-col">
-                  <div class="hero-stat-item">
-                    <div class="hero-stat-icon icon-support"><i class="fas fa-heartbeat"></i></div>
-                    <div class="hero-stat-value"><span class="odometer" data-count="24">0</span>/7</div>
-                    <div class="hero-stat-label">Expert Support</div>
-                  </div>
-                </div> -->
+
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Stats Banner Row -->
+        <div class="row" data-aos="fade-up">
+          <div class="col-12">
+            <div class="hero-stats-banner new-stats-banner">
+              <div class="row hero-stats-row justify-content-between align-items-center">
+                
+                <div class="hero-stat-col">
+                  <div class="hero-stat-item">
+                    <div class="hero-stat-icon icon-stores-solid"><i class="fas fa-store"></i></div>
+                    <div class="hero-stat-info">
+                      <div class="hero-stat-value"><span class="odometer" data-count="2500">0</span>+</div>
+                      <div class="hero-stat-label">{{ __('Live Stores') }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="hero-stat-col">
+                  <div class="hero-stat-item">
+                    <div class="hero-stat-icon icon-merchants-solid"><i class="fas fa-user-friends"></i></div>
+                    <div class="hero-stat-info">
+                      <div class="hero-stat-value"><span class="odometer" data-count="8000">0</span>+</div>
+                      <div class="hero-stat-label">{{ __('Happy Merchants') }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="hero-stat-col">
+                  <div class="hero-stat-item">
+                    <div class="hero-stat-icon icon-themes-solid"><i class="fas fa-gem"></i></div>
+                    <div class="hero-stat-info">
+                      <div class="hero-stat-value"><span class="odometer" data-count="50">0</span>+</div>
+                      <div class="hero-stat-label">{{ __('Premium Themes') }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="hero-stat-col">
+                  <div class="hero-stat-item">
+                    <div class="hero-stat-icon icon-satisfaction-solid"><i class="fas fa-shield-alt"></i></div>
+                    <div class="hero-stat-info">
+                      <div class="hero-stat-value"><span class="odometer" data-count="98">0</span>%</div>
+                      <div class="hero-stat-label">{{ __('Customer Satisfaction') }}</div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
-    <!-- Hero Section End -->
+    <!-- How It Works End -->
   @endif
 
   @if (count($after_hero) > 0)
@@ -173,30 +308,58 @@
       <div class="container">
         <div class="row align-items-center mb-50">
           <div class="col-12 text-center">
-            <div class="section-subtitle">{{ @$homeSec->template_section_title ?: 'Creative & User Friendly Design' }}</div>
-            <h2 class="section-title mb-0">{!! preg_replace('/(Ecom Store)/i', '<span>$1</span>', e(@$homeSec->template_section_subtitle ?: 'Choose a Theme You Love')) !!}</h2>
-          </div>
-          <!-- <div class="col-lg-7 text-lg-end mt-4 mt-lg-0" data-aos="fade-up">
-            <div class="theme-filters mb-3 mb-lg-0 d-inline-flex">
-              <button class="theme-filter-btn active">All</button>
-              <button class="theme-filter-btn">Fashion</button>
-              <button class="theme-filter-btn">Grocery</button>
-              <button class="theme-filter-btn">Electronics</button>
-              <button class="theme-filter-btn">Beauty</button>
-              <button class="theme-filter-btn">Kids</button>
-              <button class="theme-filter-btn">Furniture</button>
-              <button class="theme-filter-btn">Pet</button>
-              <button class="theme-filter-btn">Jewellery</button>
+            <div class="templates-badge-wrap" data-aos="fade-up">
+              <span class="templates-badge">
+                <i class="fas fa-palette me-2"></i>{{ __('50+ Premium Themes') }}
+              </span>
             </div>
-            <a href="#" class="btn-ls-outline ms-lg-3">View All Themes <i class="fas fa-arrow-right ms-2"></i></a>
-          </div> -->
+            <h2 class="section-title mb-3" data-aos="fade-up" style="font-size: 38px; font-weight: 800; color: #1E2335;">{{ __('Professional Themes for Every Industry') }}</h2>
+            <p class="section-subtitle-text" data-aos="fade-up" style="font-size: 16px; color: #718096; max-width: 600px; margin: 0 auto 30px;">{{ __('Choose from 50+ premium themes designed for maximum conversions and beautiful user experience.') }}</p>
+          </div>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="row mb-50" data-aos="fade-up">
+          <div class="col-12 d-flex justify-content-center align-items-center gap-2 flex-wrap">
+            <button class="theme-filter-btn active" data-category="all">
+              <i class="fas fa-th-large me-2"></i>{{ __('All Themes') }}
+            </button>
+            <button class="theme-filter-btn" data-category="fashion">
+              <i class="fas fa-tshirt me-2"></i>{{ __('Fashion') }}
+            </button>
+            <button class="theme-filter-btn" data-category="electronics">
+              <i class="fas fa-laptop me-2"></i>{{ __('Electronics') }}
+            </button>
+            <button class="theme-filter-btn" data-category="furniture">
+              <i class="fas fa-couch me-2"></i>{{ __('Furniture') }}
+            </button>
+            <button class="theme-filter-btn" data-category="grocery">
+              <i class="fas fa-shopping-cart me-2"></i>{{ __('Grocery') }}
+            </button>
+            <button class="theme-filter-btn" data-category="lifestyle">
+              <i class="fas fa-shopping-bag me-2"></i>{{ __('Lifestyle') }}
+            </button>
+            <button class="theme-filter-btn" data-category="beauty">
+              <i class="fas fa-magic me-2"></i>{{ __('Beauty') }}
+            </button>
+            <div class="dropdown d-inline-block">
+              <button class="theme-filter-btn dropdown-toggle" type="button" id="moreCategoriesDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ __('More') }} <i class="fas fa-chevron-down ms-1" style="font-size: 10px;"></i>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="moreCategoriesDropdown">
+                <li><a class="dropdown-item theme-filter-dropdown-item" href="#" data-category="kids">{{ __('Kids') }}</a></li>
+                <li><a class="dropdown-item theme-filter-dropdown-item" href="#" data-category="pet">{{ __('Pet') }}</a></li>
+                <li><a class="dropdown-item theme-filter-dropdown-item" href="#" data-category="jewellery">{{ __('Jewellery') }}</a></li>
+              </ul>
+            </div>
+          </div>
         </div>
 
         @php
           $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
           $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
         @endphp
-        <div class="row">
+        <div class="row theme-grid-row">
           @foreach ($templates as $template)
             @php
               $themeName = App\Models\User\BasicSetting::where('user_id', $template->id)->pluck('theme')->first();
@@ -204,34 +367,31 @@
               // Map display name and custom mock names to match reference screenshot perfectly
               $themeTitle = '';
               $themeCat = '';
-              $themeBadgeColor = '';
               
               if ($themeName == 'fashion') {
-                  $themeTitle = __('Urban Chic');
-                  $themeCat = __('Fashion Store');
-                  $themeBadgeColor = 'badge-fashion';
+                  $themeTitle = __('Urban Style');
+                  $themeCat = __('Fashion');
               } elseif ($themeName == 'vegetables') {
                   $themeTitle = __('FreshMart');
-                  $themeCat = __('Grocery Store');
-                  $themeBadgeColor = 'badge-grocery';
+                  $themeCat = __('Grocery');
               } elseif ($themeName == 'electronics') {
-                  $themeTitle = __('TechWave');
+                  $themeTitle = __('TechHub');
                   $themeCat = __('Electronics');
-                  $themeBadgeColor = 'badge-electronics';
               } elseif ($themeName == 'beauty' || $themeName == 'cosmetics') {
                   $themeTitle = __('Glow Studio');
-                  $themeCat = __('Beauty & Cosmetics');
-                  $themeBadgeColor = 'badge-beauty';
+                  $themeCat = __('Beauty');
+              } elseif ($themeName == 'furniture') {
+                  $themeTitle = __('FurniCasa');
+                  $themeCat = __('Furniture');
               } else {
                   $themeTitle = __(ucfirst($themeName));
-                  $themeCat = __(ucfirst($themeName)) . ' ' . __('Store');
-                  $themeBadgeColor = 'badge-default';
+                  $themeCat = __(ucfirst($themeName));
               }
               
               // Normalize category for jQuery filtering
-              $filterCat = strtolower($themeName == 'vegetables' ? 'grocery' : $themeName);
+              $filterCat = strtolower($themeName == 'vegetables' ? 'grocery' : ($themeName == 'cosmetics' ? 'beauty' : $themeName));
             @endphp
-            <div class="col-lg-4 col-md-6 theme-item-col" data-category="{{ $filterCat }}" data-aos="fade-up" data-aos-delay="100">
+            <div class="col-lg-3 col-md-6 col-sm-12 theme-item-col mb-4" data-category="{{ $filterCat }}" data-aos="fade-up">
               <div class="theme-card">
                 <div class="theme-card-img-wrap">
                   <img class="theme-card-img lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
@@ -245,21 +405,309 @@
                     </a>
                   </div>
                 </div>
-                <div class="theme-card-body">
-                  <div>
-                    <h3 class="theme-card-title">{{ $themeTitle }}</h3>
-                    <span class="theme-card-cat-badge {{ $themeBadgeColor }}">{{ $themeCat }}</span>
+                <div class="theme-card-body d-flex justify-content-between align-items-center">
+                  <div class="theme-card-info">
+                    <h3 class="theme-card-title mb-1">{{ $themeTitle }}</h3>
+                    <span class="theme-card-category">{{ $themeCat }}</span>
                   </div>
-                  <div class="theme-card-badge">Premium</div>
+                  <span class="theme-card-premium-badge">{{ __('Premium') }}</span>
                 </div>
               </div>
             </div>
           @endforeach
         </div>
+
+        <!-- View All Themes Button Wrap -->
+        <div class="view-all-themes-btn-wrap d-none" data-aos="fade-up" style="display: flex; justify-content: center; margin-top: 40px;">
+          <button id="view-all-themes-btn" class="btn-view-all-themes">
+            {{ __('View All Themes') }} <i class="fas fa-arrow-right ms-2"></i>
+          </button>
+        </div>
+
+        <!-- Bottom Highlights Bar -->
+        <div class="row mt-50" data-aos="fade-up">
+          <div class="col-12">
+            <div class="templates-highlights-bar d-none d-md-flex align-items-center justify-content-center gap-4">
+              <div class="highlight-item">
+                <i class="fas fa-ribbon me-2"></i> {{ __('Premium Quality') }}
+              </div>
+              <div class="highlight-divider"></div>
+              <div class="highlight-item">
+                <i class="fas fa-sync me-2"></i> {{ __('Regular Updates') }}
+              </div>
+              <div class="highlight-divider"></div>
+              <div class="highlight-item">
+                <i class="fas fa-headset me-2"></i> {{ __('Lifetime Support') }}
+              </div>
+              <div class="highlight-divider"></div>
+              <div class="highlight-item">
+                <i class="fas fa-shield-alt me-2"></i> {{ __('Money-Back Guarantee') }}
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
     <!-- Templates Section End -->
   @endif
+
+  <!-- Dashboard Showcase Section Start -->
+  <section class="dashboard-section py-80" id="dashboard-showcase">
+    <div class="container-fluid px-lg-5">
+      <div class="row align-items-center">
+        
+        <!-- Left Text Column -->
+        <div class="col-lg-3 col-md-12 mb-5 mb-lg-0" data-aos="fade-right">
+          <div class="dashboard-text-wrap">
+            <span class="dashboard-subtitle mb-2 d-block">{{ __('Everything Under One Roof') }}</span>
+            <h2 class="dashboard-title mb-3">{{ __('Powerful Dashboard Built for Growth') }}</h2>
+            <p class="dashboard-desc mb-4">{{ __('From analytics to orders, products to customers, manage every part of your business from one smart dashboard.') }}</p>
+            
+            <ul class="dashboard-bullets-list list-unstyled mb-4">
+              <li class="mb-3 d-flex align-items-center gap-2">
+                <span class="bullet-check-icon"><i class="fas fa-check"></i></span>
+                <span class="bullet-txt">{{ __('Real-time sales & analytics') }}</span>
+              </li>
+              <li class="mb-3 d-flex align-items-center gap-2">
+                <span class="bullet-check-icon"><i class="fas fa-check"></i></span>
+                <span class="bullet-txt">{{ __('Manage products & inventory') }}</span>
+              </li>
+              <li class="mb-3 d-flex align-items-center gap-2">
+                <span class="bullet-check-icon"><i class="fas fa-check"></i></span>
+                <span class="bullet-txt">{{ __('Track orders, payments & shipping') }}</span>
+              </li>
+              <li class="mb-3 d-flex align-items-center gap-2">
+                <span class="bullet-check-icon"><i class="fas fa-check"></i></span>
+                <span class="bullet-txt">{{ __('Customers, coupons & reports') }}</span>
+              </li>
+            </ul>
+            
+            @php
+              $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
+              $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
+            @endphp
+            <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-dashboard-explore px-4 py-3 d-inline-flex align-items-center gap-2">
+              {{ __('Explore Dashboard') }} <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Center Dashboard Column -->
+        <div class="col-lg-6 col-md-12 mb-5 mb-lg-0" data-aos="fade-up">
+          <div class="simulated-dashboard-card">
+            <!-- Dashboard Header -->
+            <div class="sim-dash-header d-flex justify-content-between align-items-center">
+              <div class="dash-logo d-flex align-items-center">
+                <img src="{{ asset('assets/front/img/' . $bs->logo) }}" onerror="this.src='{{ asset('assets/front/img/logo.png') }}';" class="dash-logo-img" alt="logo" style="max-height: 28px;">
+              </div>
+              <div class="dash-header-right d-flex align-items-center gap-3">
+                <button class="btn-dash-view-store"><i class="fas fa-eye me-1"></i> {{ __('View Store') }}</button>
+                <div class="dash-bell-icon">
+                  <i class="fas fa-bell"></i>
+                  <span class="bell-badge"></span>
+                </div>
+                <div class="dash-user-profile d-flex align-items-center gap-2">
+                  <i class="fas fa-user-circle" style="font-size: 32px; color: #64748B;"></i>
+                  <div class="dash-user-info d-none d-sm-block">
+                    <span class="dash-user-name">John Doe</span>
+                    <span class="dash-user-role">Owner</span>
+                  </div>
+                  <i class="fas fa-chevron-down d-none d-sm-block ms-1" style="font-size: 10px; color: #64748B;"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dashboard Body -->
+            <div class="sim-dash-body d-flex">
+              <!-- Sidebar -->
+              <div class="sim-dash-sidebar d-none d-md-block">
+                <ul class="sidebar-menu list-unstyled mb-0">
+                  <li class="active"><i class="fas fa-home-alt"></i> {{ __('Dashboard') }}</li>
+                  <li><i class="fas fa-shopping-cart"></i> {{ __('Orders') }}</li>
+                  <li><i class="fas fa-box"></i> {{ __('Products') }}</li>
+                  <li><i class="fas fa-users"></i> {{ __('Customers') }}</li>
+                  <li><i class="fas fa-chart-bar"></i> {{ __('Analytics') }}</li>
+                  <li><i class="fas fa-bullhorn"></i> {{ __('Marketing') }}</li>
+                  <li><i class="fas fa-palette"></i> {{ __('Themes') }}</li>
+                  <li><i class="fas fa-credit-card"></i> {{ __('Payments') }}</li>
+                  <li><i class="fas fa-cog"></i> {{ __('Settings') }}</li>
+                </ul>
+              </div>
+              
+              <!-- Main Panel -->
+              <div class="sim-dash-main">
+                <h3 class="dash-panel-title mb-4">{{ __('Dashboard Overview') }}</h3>
+                
+                <!-- Stat Cards Row -->
+                <div class="row g-3 mb-4">
+                  <div class="col-6 col-xl-3">
+                    <div class="dash-stat-card">
+                      <span class="stat-lbl">{{ __('Total Sales') }}</span>
+                      <h4 class="stat-val">₹24,50,000</h4>
+                      <span class="stat-change text-success"><i class="fas fa-arrow-up"></i> +26%</span>
+                    </div>
+                  </div>
+                  <div class="col-6 col-xl-3">
+                    <div class="dash-stat-card">
+                      <span class="stat-lbl">{{ __('Orders') }}</span>
+                      <h4 class="stat-val">1,248</h4>
+                      <span class="stat-change text-success"><i class="fas fa-arrow-up"></i> +18%</span>
+                    </div>
+                  </div>
+                  <div class="col-6 col-xl-3">
+                    <div class="dash-stat-card">
+                      <span class="stat-lbl">{{ __('Visitors') }}</span>
+                      <h4 class="stat-val">56,340</h4>
+                      <span class="stat-change text-success"><i class="fas fa-arrow-up"></i> +12%</span>
+                    </div>
+                  </div>
+                  <div class="col-6 col-xl-3">
+                    <div class="dash-stat-card">
+                      <span class="stat-lbl">{{ __('Customers') }}</span>
+                      <h4 class="stat-val">8,642</h4>
+                      <span class="stat-change text-success"><i class="fas fa-arrow-up"></i> +24%</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Charts and Top Products Row -->
+                <div class="row g-4">
+                  <!-- Chart Card -->
+                  <div class="col-xl-7 col-md-12">
+                    <div class="dash-chart-card">
+                      <h4 class="chart-title mb-3">{{ __('Sales Overview') }}</h4>
+                      <div class="chart-svg-container">
+                        <svg viewBox="0 0 400 200" class="animated-chart-svg">
+                          <line x1="40" y1="40" x2="380" y2="40" stroke="#F1F5F9" stroke-width="1"></line>
+                          <line x1="40" y1="90" x2="380" y2="90" stroke="#F1F5F9" stroke-width="1"></line>
+                          <line x1="40" y1="140" x2="380" y2="140" stroke="#F1F5F9" stroke-width="1"></line>
+                          <line x1="40" y1="190" x2="380" y2="190" stroke="#E2E8F0" stroke-width="1.5"></line>
+                          
+                          <path class="graph-animated-path" d="M 40 170 L 90 140 L 140 145 L 190 135 L 240 100 L 290 108 L 340 55" fill="none" stroke="#3B82F6" stroke-width="3" stroke-linecap="round"></path>
+                          
+                          <circle cx="40" cy="170" r="4" fill="#3B82F6"></circle>
+                          <circle cx="90" cy="140" r="4" fill="#3B82F6"></circle>
+                          <circle cx="140" cy="145" r="4" fill="#3B82F6"></circle>
+                          <circle cx="190" cy="135" r="4" fill="#3B82F6"></circle>
+                          <circle cx="240" cy="100" r="4" fill="#3B82F6"></circle>
+                          <circle cx="290" cy="108" r="4" fill="#3B82F6"></circle>
+                          <circle cx="340" cy="55" r="4" fill="#3B82F6" class="pulse-active-dot"></circle>
+                          
+                          <g class="chart-tooltip-g">
+                            <rect x="180" y="45" width="80" height="30" rx="6" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"></rect>
+                            <text x="220" y="58" font-size="9" font-weight="700" fill="#0F172A" text-anchor="middle">₹4,30,000</text>
+                            <text x="220" y="68" font-size="7" font-weight="500" fill="#64748B" text-anchor="middle">May 10, 2025</text>
+                          </g>
+                        </svg>
+                        <div class="chart-labels d-flex justify-content-between mt-2 px-3">
+                          <span>May 6</span>
+                          <span>May 7</span>
+                          <span>May 8</span>
+                          <span>May 9</span>
+                          <span>May 10</span>
+                          <span>May 11</span>
+                          <span>May 12</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Top Products Card -->
+                  <div class="col-xl-5 col-md-12">
+                    <div class="dash-products-card">
+                      <h4 class="card-title mb-3">{{ __('Top Products') }}</h4>
+                      <div class="top-products-list">
+                        <div class="product-item d-flex align-items-center gap-2 mb-3">
+                          <div class="prod-img"><i class="fas fa-headphones"></i></div>
+                          <div class="prod-info flex-grow-1">
+                            <span class="prod-name">Wireless Headphones</span>
+                            <span class="prod-sales">320 sold</span>
+                          </div>
+                          <span class="prod-price">₹2,499</span>
+                        </div>
+                        <div class="product-item d-flex align-items-center gap-2 mb-3">
+                          <div class="prod-img"><i class="fas fa-stopwatch"></i></div>
+                          <div class="prod-info flex-grow-1">
+                            <span class="prod-name">Smart Watch</span>
+                            <span class="prod-sales">284 sold</span>
+                          </div>
+                          <span class="prod-price">₹1,999</span>
+                        </div>
+                        <div class="product-item d-flex align-items-center gap-2">
+                          <div class="prod-img"><i class="fas fa-shoe-prints"></i></div>
+                          <div class="prod-info flex-grow-1">
+                            <span class="prod-name">Sneakers</span>
+                            <span class="prod-sales">210 sold</span>
+                          </div>
+                          <span class="prod-price">₹1,499</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right Features Column -->
+        <div class="col-lg-3 col-md-12" data-aos="fade-left">
+          <div class="dashboard-side-features d-flex flex-column gap-3">
+            
+            <!-- Feature 1 -->
+            <div class="dash-side-feat-card d-flex align-items-center">
+              <div class="side-feat-icon-box purple">
+                <i class="fas fa-chart-pie"></i>
+              </div>
+              <div class="side-feat-info">
+                <h4 class="side-feat-title mb-1">{{ __('Analytics & Reports') }}</h4>
+                <p class="side-feat-desc mb-0">{{ __('Make data-driven decisions') }}</p>
+              </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="dash-side-feat-card d-flex align-items-center">
+              <div class="side-feat-icon-box orange">
+                <i class="fas fa-boxes"></i>
+              </div>
+              <div class="side-feat-info">
+                <h4 class="side-feat-title mb-1">{{ __('Inventory Management') }}</h4>
+                <p class="side-feat-desc mb-0">{{ __('Never run out of stock') }}</p>
+              </div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="dash-side-feat-card d-flex align-items-center">
+              <div class="side-feat-icon-box green">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <div class="side-feat-info">
+                <h4 class="side-feat-title mb-1">{{ __('Secure Payments') }}</h4>
+                <p class="side-feat-desc mb-0">{{ __('Track all transactions in one place') }}</p>
+              </div>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="dash-side-feat-card d-flex align-items-center">
+              <div class="side-feat-icon-box pink">
+                <i class="fas fa-user-friends"></i>
+              </div>
+              <div class="side-feat-info">
+                <h4 class="side-feat-title mb-1">{{ __('Customer Insights') }}</h4>
+                <p class="side-feat-desc mb-0">{{ __('Understand your customers better') }}</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <!-- Dashboard Showcase Section End -->
 
   @if (count($after_template) > 0)
     @foreach ($after_template as $cusTemplate)
@@ -276,35 +724,7 @@
   @endif
 
 
-  @if ($bs->process_section == 1)
-    <!-- How It Works Start -->
-    <section class="how-it-works">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 text-center">
-            <div class="section-subtitle" data-aos="fade-up">Simple Steps. Big Results.</div>
-            <h2 class="section-title" data-aos="fade-up">{{ @$homeSec->work_process_section_title ?: 'How Launchshop.in Works' }}</h2>
-          </div>
-        </div>
-        <div class="steps-container">
-          <div class="steps-line">
-            <div class="steps-line-fill"></div>
-          </div>
-          @foreach ($processes as $index => $process)
-            <div class="step-item" data-aos="fade-up" data-aos-delay="{{ $index * 100 }}">
-              <div class="step-icon-wrap" style="border-color: #{{ $process->color }};">
-                <i class="{{ $process->icon }}" style="color: #{{ $process->color }};"></i>
-              </div>
-              <div class="step-number d-none d-lg-block">{{ $index + 1 }}</div>
-              <h3 class="step-title"><span class="d-inline d-lg-none">{{ $index + 1 }}. </span>{{ $process->title }}</h3>
-              <p class="step-desc">{{ $process->text }}</p>
-            </div>
-          @endforeach
-        </div>
-      </div>
-    </section>
-    <!-- How It Works End -->
-  @endif
+
 
   @if (count($after_work_process) > 0)
     @foreach ($after_work_process as $cusWorkProcess)
@@ -1238,20 +1658,67 @@
 @section('scripts')
 <script>
   $(document).ready(function() {
-    // 1. Template filter logic
-    $('.theme-filter-btn').on('click', function(e) {
-      e.preventDefault();
-      $('.theme-filter-btn').removeClass('active');
-      $(this).addClass('active');
+    // 1. Template filter and show balance logic
+    let itemsLimit = 4;
+    let activeCategory = 'all';
+    let showAll = false;
 
-      let category = $(this).text().toLowerCase().trim();
-      if (category === 'all') {
-        $('.theme-item-col').fadeIn(300);
-      } else {
-        $('.theme-item-col').hide();
-        $('.theme-item-col[data-category="' + category + '"]').fadeIn(300);
+    function applyFilterAndLimit() {
+      // Get all items in active category
+      let filteredItems = $('.theme-item-col');
+      if (activeCategory !== 'all') {
+        filteredItems = $('.theme-item-col[data-category="' + activeCategory + '"]');
       }
+
+      // Hide all items first
+      $('.theme-item-col').addClass('d-none');
+
+      if (showAll) {
+        // Show all filtered items
+        filteredItems.removeClass('d-none');
+        // Hide the button
+        $('.view-all-themes-btn-wrap').addClass('d-none');
+      } else {
+        // Show first 4 filtered items
+        filteredItems.slice(0, itemsLimit).removeClass('d-none');
+        
+        // Show button only if there are more than itemsLimit items
+        if (filteredItems.length > itemsLimit) {
+          $('.view-all-themes-btn-wrap').removeClass('d-none');
+        } else {
+          $('.view-all-themes-btn-wrap').addClass('d-none');
+        }
+      }
+    }
+
+    // Category button click
+    $('.theme-filter-btn, .theme-filter-dropdown-item').on('click', function(e) {
+      e.preventDefault();
+      
+      // Remove active classes
+      $('.theme-filter-btn').removeClass('active');
+      
+      // If it is a dropdown item, add active to the dropdown toggle button
+      if ($(this).hasClass('theme-filter-dropdown-item')) {
+        $('#moreCategoriesDropdown').addClass('active');
+      } else {
+        $(this).addClass('active');
+      }
+
+      activeCategory = $(this).data('category').toLowerCase().trim();
+      showAll = false; // Reset to show only first 4 on category switch
+      applyFilterAndLimit();
     });
+
+    // "View All Themes" button click -> reveal all balance themes
+    $('#view-all-themes-btn').on('click', function(e) {
+      e.preventDefault();
+      showAll = true;
+      applyFilterAndLimit();
+    });
+
+    // Initialize on page load
+    applyFilterAndLimit();
 
     // Shop animation loop — restart CSS animations every 6.5s
     (function loopShopAnim() {
