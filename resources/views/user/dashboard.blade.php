@@ -213,74 +213,120 @@
     margin-bottom: 16px;
 }
 .stat-card {
-    background: #fff;
-    border: 1px solid #e9ecef;
     border-radius: 12px;
-    padding: 18px 20px 16px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-    transition: box-shadow 0.2s;
-}
-.stat-card:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
-}
-.stat-card-header {
+    padding: 20px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 10px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.stat-card-left {
+    display: flex;
+    flex-direction: column;
 }
 .stat-card-title {
-    font-size: 12.5px;
+    font-size: 13.5px;
     font-weight: 600;
-    color: #6B7280;
-    margin: 0;
+    margin: 0 0 6px 0;
 }
-/* Colored title variants matching reference */
-.stat-card-title.blue  { color: #3B82F6; }
-.stat-card-title.purple{ color: #7C3AED; }
-.stat-card-title.teal  { color: #0D9488; }
-.stat-card-title.green { color: #16A34A; }
-.stat-card-title.orange{ color: #EA580C; }
-.stat-card-title.red   { color: #DC2626; }
-.stat-card-title.gray  { color: #6B7280; }
-
-.stat-card-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 17px;
-    flex-shrink: 0;
-}
-.icon-blue   { background: #EFF6FF; color: #3B82F6; }
-.icon-purple { background: #F5F3FF; color: #7C3AED; }
-.icon-teal   { background: #F0FDFA; color: #0D9488; }
-.icon-green  { background: #F0FDF4; color: #16A34A; }
-.icon-orange { background: #FFF7ED; color: #EA580C; }
-.icon-pink   { background: #FDF2F8; color: #DB2777; }
-.icon-indigo { background: #EEF2FF; color: #4F46E5; }
-.icon-sky    { background: #F0F9FF; color: #0284C7; }
-
 .stat-card-value {
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 700;
-    color: #0F172A;
-    line-height: 1.2;
-    margin-bottom: 6px;
+    line-height: 1.1;
+    margin: 0 0 8px 0;
 }
 .stat-card-trend {
     font-size: 12px;
     font-weight: 500;
     display: flex;
     align-items: center;
-    gap: 3px;
-    color: #6B7280;
+    gap: 4px;
 }
-.trend-up   { color: #10B981; }
-.trend-down { color: #EF4444; }
-.trend-neutral { color: #94A3B8; }
+.stat-card-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+/* Card Variations (Theme Backgrounds) */
+.stat-card.c-blue {
+    background: #EFF6FF !important;
+    border-color: rgba(59, 130, 246, 0.1) !important;
+}
+.stat-card.c-purple {
+    background: #F5F3FF !important;
+    border-color: rgba(139, 92, 246, 0.1) !important;
+}
+.stat-card.c-teal {
+    background: #F0FDFA !important;
+    border-color: rgba(13, 148, 136, 0.1) !important;
+}
+.stat-card.c-green {
+    background: #F0FDF4 !important;
+    border-color: rgba(22, 163, 74, 0.1) !important;
+}
+.stat-card.c-orange {
+    background: #FFF7ED !important;
+    border-color: rgba(234, 88, 12, 0.1) !important;
+}
+.stat-card.c-red {
+    background: #FFF5F5 !important;
+    border-color: rgba(239, 68, 68, 0.1) !important;
+}
+.stat-card.c-indigo {
+    background: #EEF2FF !important;
+    border-color: rgba(79, 70, 229, 0.1) !important;
+}
+
+/* Title text variations */
+.c-blue .stat-card-title { color: #2563EB !important; }
+.c-purple .stat-card-title { color: #7C3AED !important; }
+.c-teal .stat-card-title { color: #0D9488 !important; }
+.c-green .stat-card-title { color: #16A34A !important; }
+.c-orange .stat-card-title { color: #EA580C !important; }
+.c-red .stat-card-title { color: #E11D48 !important; }
+.c-indigo .stat-card-title { color: #4F46E5 !important; }
+
+/* Value text variations */
+.c-blue .stat-card-value { color: #1E3A8A !important; }
+.c-purple .stat-card-value { color: #5B21B6 !important; }
+.c-teal .stat-card-value { color: #115E59 !important; }
+.c-green .stat-card-value { color: #14532D !important; }
+.c-orange .stat-card-value { color: #7C2D12 !important; }
+.c-red .stat-card-value { color: #9F1239 !important; }
+.c-indigo .stat-card-value { color: #3730A3 !important; }
+
+/* Icon Container variations */
+.c-blue .stat-card-icon { background: #DBEAFE !important; color: #2563EB !important; }
+.c-purple .stat-card-icon { background: #EDE9FE !important; color: #7C3AED !important; }
+.c-teal .stat-card-icon { background: #CCFBF1 !important; color: #0D9488 !important; }
+.c-green .stat-card-icon { background: #DCFCE7 !important; color: #16A34A !important; }
+.c-orange .stat-card-icon { background: #FFEDD5 !important; color: #EA580C !important; }
+.c-red .stat-card-icon { background: #FFE4E6 !important; color: #E11D48 !important; }
+.c-indigo .stat-card-icon { background: #E0E7FF !important; color: #4F46E5 !important; }
+
+/* Trend text variations */
+.c-blue .stat-card-trend { color: #2563EB !important; }
+.c-purple .stat-card-trend { color: #7C3AED !important; }
+.c-teal .stat-card-trend { color: #0D9488 !important; }
+.c-green .stat-card-trend { color: #16A34A !important; }
+.c-orange .stat-card-trend { color: #EA580C !important; }
+.c-red .stat-card-trend { color: #E11D48 !important; }
+.c-indigo .stat-card-trend { color: #4F46E5 !important; }
+
+.c-blue .trend-neutral, .c-purple .trend-neutral, .c-teal .trend-neutral, .c-green .trend-neutral, .c-orange .trend-neutral, .c-red .trend-neutral, .c-indigo .trend-neutral {
+    color: #94A3B8 !important;
+}
 
 /* ===== CHARTS ROW ===== */
 .charts-row {
@@ -616,102 +662,118 @@
 
   {{-- ===== STATS ROW 1 (Total Products, Orders, Customers, Revenue) ===== --}}
   <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-card-header">
-        <p class="stat-card-title blue">{{ __('Total Products') }}</p>
-        <div class="stat-card-icon icon-blue"><i class="fas fa-cube"></i></div>
+    <div class="stat-card c-blue">
+      <div class="stat-card-left">
+        <p class="stat-card-title">{{ __('Total Products') }}</p>
+        <div class="stat-card-value">{{ $total_items }}</div>
+        <div class="stat-card-trend">
+          <i class="fas fa-arrow-up" style="font-size:10px;"></i> 12.5%
+          <span class="trend-neutral">{{ __('vs last month') }}</span>
+        </div>
       </div>
-      <div class="stat-card-value">{{ $total_items }}</div>
-      <div class="stat-card-trend trend-up">
-        <i class="fas fa-arrow-up" style="font-size:10px;"></i> 12.5%
-        <span class="trend-neutral">{{ __('vs last month') }}</span>
-      </div>
-    </div>
-
-    <div class="stat-card">
-      <div class="stat-card-header">
-        <p class="stat-card-title purple">{{ __('Orders') }}</p>
-        <div class="stat-card-icon icon-purple"><i class="fas fa-shopping-bag"></i></div>
-      </div>
-      <div class="stat-card-value">{{ $total_orders }}</div>
-      <div class="stat-card-trend trend-up">
-        <i class="fas fa-arrow-up" style="font-size:10px;"></i> 33.3%
-        <span class="trend-neutral">{{ __('vs last month') }}</span>
+      <div class="stat-card-icon">
+        <i class="fas fa-cube"></i>
       </div>
     </div>
 
-    <div class="stat-card">
-      <div class="stat-card-header">
-        <p class="stat-card-title teal">{{ __('Customers') }}</p>
-        <div class="stat-card-icon icon-teal"><i class="fas fa-users"></i></div>
+    <div class="stat-card c-purple">
+      <div class="stat-card-left">
+        <p class="stat-card-title">{{ __('Orders') }}</p>
+        <div class="stat-card-value">{{ $total_orders }}</div>
+        <div class="stat-card-trend">
+          <i class="fas fa-arrow-up" style="font-size:10px;"></i> 33.3%
+          <span class="trend-neutral">{{ __('vs last month') }}</span>
+        </div>
       </div>
-      <div class="stat-card-value">{{ $total_customers }}</div>
-      <div class="stat-card-trend trend-up">
-        <i class="fas fa-arrow-up" style="font-size:10px;"></i> 100%
-        <span class="trend-neutral">{{ __('vs last month') }}</span>
+      <div class="stat-card-icon">
+        <i class="fas fa-shopping-bag"></i>
       </div>
     </div>
 
-    <div class="stat-card">
-      <div class="stat-card-header">
-        <p class="stat-card-title green">{{ __('Revenue') }}</p>
-        <div class="stat-card-icon icon-green"><i class="fas fa-dollar-sign"></i></div>
+    <div class="stat-card c-teal">
+      <div class="stat-card-left">
+        <p class="stat-card-title">{{ __('Customers') }}</p>
+        <div class="stat-card-value">{{ $total_customers }}</div>
+        <div class="stat-card-trend">
+          <i class="fas fa-arrow-up" style="font-size:10px;"></i> 100%
+          <span class="trend-neutral">{{ __('vs last month') }}</span>
+        </div>
       </div>
-      <div class="stat-card-value">{{ $user_currency ? $user_currency->symbol : '₹' }}{{ number_format($total_revenue, 2) }}</div>
-      <div class="stat-card-trend trend-up">
-        <i class="fas fa-arrow-up" style="font-size:10px;"></i> 28.7%
-        <span class="trend-neutral">{{ __('vs last month') }}</span>
+      <div class="stat-card-icon">
+        <i class="fas fa-users"></i>
+      </div>
+    </div>
+
+    <div class="stat-card c-green">
+      <div class="stat-card-left">
+        <p class="stat-card-title">{{ __('Revenue') }}</p>
+        <div class="stat-card-value">{{ $user_currency ? $user_currency->symbol : '₹' }}{{ number_format($total_revenue, 2) }}</div>
+        <div class="stat-card-trend">
+          <i class="fas fa-arrow-up" style="font-size:10px;"></i> 28.7%
+          <span class="trend-neutral">{{ __('vs last month') }}</span>
+        </div>
+      </div>
+      <div class="stat-card-icon">
+        <i class="fas fa-dollar-sign"></i>
       </div>
     </div>
   </div>
 
   {{-- ===== STATS ROW 2 (Conversion Rate, Subscribers, Blogs, Custom Pages) ===== --}}
   <div class="stats-row" style="margin-bottom:24px;">
-    <div class="stat-card">
-      <div class="stat-card-header">
-        <p class="stat-card-title orange">{{ __('Conversion Rate') }}</p>
-        <div class="stat-card-icon icon-orange"><i class="fas fa-chart-line"></i></div>
+    <div class="stat-card c-orange">
+      <div class="stat-card-left">
+        <p class="stat-card-title">{{ __('Conversion Rate') }}</p>
+        <div class="stat-card-value">{{ $conversion_rate }}%</div>
+        <div class="stat-card-trend">
+          <i class="fas fa-arrow-up" style="font-size:10px;"></i> 8.4%
+          <span class="trend-neutral">{{ __('vs last month') }}</span>
+        </div>
       </div>
-      <div class="stat-card-value">{{ $conversion_rate }}%</div>
-      <div class="stat-card-trend trend-up">
-        <i class="fas fa-arrow-up" style="font-size:10px;"></i> 8.4%
-        <span class="trend-neutral">{{ __('vs last month') }}</span>
-      </div>
-    </div>
-
-    <div class="stat-card">
-      <div class="stat-card-header">
-        <p class="stat-card-title red">{{ __('Subscribers') }}</p>
-        <div class="stat-card-icon icon-pink"><i class="fas fa-envelope"></i></div>
-      </div>
-      <div class="stat-card-value">{{ $total_subscribers }}</div>
-      <div class="stat-card-trend trend-up">
-        <i class="fas fa-arrow-up" style="font-size:10px;"></i> 100%
-        <span class="trend-neutral">{{ __('vs last month') }}</span>
+      <div class="stat-card-icon">
+        <i class="fas fa-chart-line"></i>
       </div>
     </div>
 
-    <div class="stat-card">
-      <div class="stat-card-header">
-        <p class="stat-card-title gray">{{ __('Blogs') }}</p>
-        <div class="stat-card-icon icon-teal"><i class="fas fa-file-alt"></i></div>
+    <div class="stat-card c-red">
+      <div class="stat-card-left">
+        <p class="stat-card-title">{{ __('Subscribers') }}</p>
+        <div class="stat-card-value">{{ $total_subscribers }}</div>
+        <div class="stat-card-trend">
+          <i class="fas fa-arrow-up" style="font-size:10px;"></i> 100%
+          <span class="trend-neutral">{{ __('vs last month') }}</span>
+        </div>
       </div>
-      <div class="stat-card-value">{{ $blogs }}</div>
-      <div class="stat-card-trend trend-neutral">
-        <i class="fas fa-minus" style="font-size:10px;"></i> 0%
-        <span class="trend-neutral">{{ __('vs last month') }}</span>
+      <div class="stat-card-icon">
+        <i class="fas fa-envelope"></i>
       </div>
     </div>
 
-    <div class="stat-card">
-      <div class="stat-card-header">
-        <p class="stat-card-title gray">{{ __('Custom Pages') }}</p>
-        <div class="stat-card-icon icon-sky"><i class="fas fa-file"></i></div>
+    <div class="stat-card c-teal">
+      <div class="stat-card-left">
+        <p class="stat-card-title">{{ __('Blogs') }}</p>
+        <div class="stat-card-value">{{ $blogs }}</div>
+        <div class="stat-card-trend">
+          <i class="fas fa-minus" style="font-size:10px;"></i> 0%
+          <span class="trend-neutral">{{ __('vs last month') }}</span>
+        </div>
       </div>
-      <div class="stat-card-value">{{ $total_custom_pages }}</div>
-      <div class="stat-card-trend trend-neutral">
-        <i class="fas fa-minus" style="font-size:10px;"></i> 0%
-        <span class="trend-neutral">{{ __('vs last month') }}</span>
+      <div class="stat-card-icon">
+        <i class="fas fa-file-alt"></i>
+      </div>
+    </div>
+
+    <div class="stat-card c-indigo">
+      <div class="stat-card-left">
+        <p class="stat-card-title">{{ __('Custom Pages') }}</p>
+        <div class="stat-card-value">{{ $total_custom_pages }}</div>
+        <div class="stat-card-trend">
+          <i class="fas fa-minus" style="font-size:10px;"></i> 0%
+          <span class="trend-neutral">{{ __('vs last month') }}</span>
+        </div>
+      </div>
+      <div class="stat-card-icon">
+        <i class="fas fa-file"></i>
       </div>
     </div>
   </div>
