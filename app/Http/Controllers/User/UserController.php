@@ -102,9 +102,9 @@ class UserController extends Controller
         $data['conversion_rate'] = $data['total_orders'] > 0 ? number_format(($data['total_orders'] / ($data['total_orders'] * 35 + 23)) * 100, 2) : '0.00';
 
         // 3. Resolve Current Dashboard Language
-        $lang = Language::where([['dashboard_default', 1], ['user_id', $user->id]])->first();
+        $lang = \App\Models\User\Language::where([['dashboard_default', 1], ['user_id', $user->id]])->first();
         if (!$lang) {
-            $lang = Language::where('user_id', $user->id)->first();
+            $lang = \App\Models\User\Language::where('user_id', $user->id)->first();
         }
         $lang_id = $lang ? $lang->id : null;
 
