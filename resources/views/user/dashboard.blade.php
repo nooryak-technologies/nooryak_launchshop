@@ -729,25 +729,33 @@
         {{ __('Sales Overview') }}
         <span class="chart-subtitle">{{ __('Last 30 Days') }}</span>
       </div>
-      <canvas id="salesOverviewChart" height="180"></canvas>
+      <div style="position:relative;height:200px;width:100%;">
+        <canvas id="salesOverviewChart"></canvas>
+      </div>
     </div>
 
     {{-- Revenue Analytics --}}
     <div class="chart-card">
       <div class="chart-card-title">{{ __('Revenue Analytics') }}</div>
-      <canvas id="revenueAnalyticsChart" height="180"></canvas>
+      <div style="position:relative;height:200px;width:100%;">
+        <canvas id="revenueAnalyticsChart"></canvas>
+      </div>
     </div>
 
     {{-- Order Trend --}}
     <div class="chart-card">
       <div class="chart-card-title">{{ __('Order Trend') }}</div>
-      <canvas id="orderTrendChart" height="180"></canvas>
+      <div style="position:relative;height:200px;width:100%;">
+        <canvas id="orderTrendChart"></canvas>
+      </div>
     </div>
 
     {{-- Traffic Sources --}}
     <div class="chart-card">
       <div class="chart-card-title">{{ __('Traffic Sources') }}</div>
-      <canvas id="trafficSourcesChart" height="180"></canvas>
+      <div style="position:relative;height:200px;width:100%;">
+        <canvas id="trafficSourcesChart"></canvas>
+      </div>
     </div>
   </div>
 
