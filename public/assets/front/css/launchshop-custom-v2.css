@@ -10718,6 +10718,7 @@ iframe[id^="tawkchat-"],
 
 /* Task 3 — Hero Features: 2 columns per row on mobile (wrapping, centered) */
 @media (max-width: 767px) {
+
     .hero-content .hero-features,
     .hero-content .hero-features.d-flex {
         display: flex !important;
