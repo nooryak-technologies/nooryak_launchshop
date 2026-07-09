@@ -8515,3 +8515,154 @@ h6 {
         font-size: 14px !important;
     }
 }
+
+/* ==========================================
+   Bottom CTA Revamp
+   ========================================== */
+.bottom-cta-revamp {
+    position: relative !important;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFF4F0 50%, #FFFFFF 100%) !important;
+    overflow: hidden !important;
+}
+
+.cta-decor-dots {
+    position: absolute !important;
+    width: 120px !important;
+    height: 80px !important;
+    background-image: radial-gradient(#FF5A2C 2.5px, transparent 2.5px) !important;
+    background-size: 16px 16px !important;
+    opacity: 0.22 !important;
+    z-index: 1 !important;
+    pointer-events: none !important;
+}
+
+.cta-decor-left {
+    left: 4% !important;
+    bottom: 50px !important;
+}
+
+.cta-decor-right {
+    right: 4% !important;
+    top: 50px !important;
+}
+
+.cta-blue-card {
+    background: linear-gradient(135deg, #0A1128 0%, #101F42 100%) !important;
+    border-radius: 24px !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    box-shadow: 0 20px 48px rgba(10, 17, 40, 0.15) !important;
+    overflow: hidden !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.cta-revamp-title {
+    font-size: 36px !important;
+    font-weight: 800 !important;
+    color: #FFFFFF !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.5px !important;
+}
+
+.cta-revamp-desc {
+    font-size: 16px !important;
+    color: #94A3B8 !important;
+    line-height: 1.6 !important;
+    max-width: 500px !important;
+}
+
+.btn-cta-launch {
+    background: linear-gradient(90deg, #ff5a2c 0%, #ff7a54 100%) !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    border: none !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 14px rgba(255, 90, 44, 0.3) !important;
+}
+
+.btn-cta-launch:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(255, 90, 44, 0.4) !important;
+    color: #FFFFFF !important;
+}
+
+.btn-cta-check {
+    background: #FFFFFF !important;
+    color: #0F172A !important;
+    font-weight: 700 !important;
+    border: 1.5px solid #E2E8F0 !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-cta-check:hover {
+    background: #F8FAFC !important;
+    transform: translateY(-2px) !important;
+    color: #0F172A !important;
+}
+
+.cta-right-col {
+    display: flex !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    align-self: stretch !important;
+}
+
+.cta-right-img {
+    max-height: 380px !important;
+    object-fit: contain !important;
+    display: block !important;
+}
+
+/* Trust Banner below Card */
+.cta-trust-banner {
+    background: #FFFFFF !important;
+    border-radius: 16px !important;
+    border: 1px solid #E2E8F0 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02) !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.trust-badge-item {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #475569 !important;
+}
+
+.trust-icon {
+    color: #FF5A2C !important;
+    font-size: 18px !important;
+}
+
+/* Responsive CTA Overrides */
+@media (max-width: 991px) {
+    .cta-revamp-title {
+        font-size: 28px !important;
+    }
+    .cta-revamp-desc {
+        font-size: 14px !important;
+        margin: 0 auto 24px !important;
+    }
+    .cta-right-img {
+        max-height: 280px !important;
+        margin-top: 20px !important;
+    }
+    .cta-revamp-btns {
+        margin-bottom: 20px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .cta-trust-banner {
+        padding: 15px 10px !important;
+    }
+    .trust-badge-item {
+        font-size: 11px !important;
+        gap: 4px !important;
+    }
+    .trust-icon {
+        font-size: 14px !important;
+    }
+}

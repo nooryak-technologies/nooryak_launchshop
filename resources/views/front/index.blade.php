@@ -1345,312 +1345,79 @@
 
 
   <!-- Bottom CTA Start -->
-  <section class="bottom-cta">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-8 text-center text-lg-start" data-aos="fade-right">
-          <h2 class="cta-title">Ready to Launch Your Dream Store?</h2>
-          <p class="cta-text">Join thousands of entrepreneurs who trust Launchshop.in. Start your 14-day free trial today. No credit card required.</p>
-          <div class="cta-btns d-flex gap-3 justify-content-center justify-content-lg-start">
-            <a href="{{ route('front.pricing') }}" class="btn-ls-primary" style="background:#fff !important; color:var(--ls-primary) !important;">Start Free Trial <i class="fas fa-arrow-right ms-2"></i></a>
-            <a href="{{ route('front.contact') }}" class="btn-ls-outline">Book a Demo</a>
-          </div>
-        </div>
-        <div class="col-lg-4 text-center mt-4 mt-lg-0" data-aos="fade-left">
-          <!-- Store Opening Animation -->
-          <div id="storeOpeningScene" class="store-scene-outer">
-            <style>
-              /* ── Scene wrapper ── */
-              .store-scene-outer{
-                width:100%;max-width:240px;margin:0 auto;
-                border-radius:18px;
-                overflow:hidden;
-                box-shadow:0 16px 48px rgba(0,0,0,0.28);
-                border:2px solid rgba(255,255,255,0.1);
-                background:linear-gradient(180deg,#0f1935 0%,#1a2a52 60%,#243060 100%);
-                padding:0;
-                position:relative;
-              }
-
-              /* ── Sky & stars ── */
-              .store-sky{
-                position:relative;
-                width:100%;height:70px;
-                background:linear-gradient(180deg,#06091e 0%,#0f1a40 100%);
-                overflow:hidden;
-              }
-              .s-star{
-                position:absolute;border-radius:50%;
-                background:#fff;
-                animation:twinkle 2s ease-in-out infinite alternate;
-              }
-              @keyframes twinkle{0%{opacity:0.2;transform:scale(0.8);}100%{opacity:1;transform:scale(1.2);}}
-
-              /* ── Ground ── */
-              .store-ground{
-                width:100%;
-                background:linear-gradient(180deg,#1e3a5f 0%,#152b4a 100%);
-                padding-bottom:14px;
-                position:relative;
-              }
-
-              /* ── Building ── */
-              .store-building{
-                position:relative;
-                margin:0 18px;
-              }
-
-              /* Roof / fascia */
-              .store-fascia{
-                background:linear-gradient(135deg,#ff5a2c 0%,#ff7a50 100%);
-                border-radius:8px 8px 0 0;
-                padding:7px 0 5px;
-                text-align:center;
-                position:relative;
-                box-shadow:0 3px 10px rgba(255,90,44,0.5);
-                animation:fasciaPulse 3s ease-in-out infinite;
-              }
-              @keyframes fasciaPulse{0%,100%{box-shadow:0 3px 10px rgba(255,90,44,0.5);}50%{box-shadow:0 3px 20px rgba(255,90,44,0.85);}}
-              .store-name-txt{
-                color:#fff;font-family:'Arial Black',Arial,sans-serif;font-size:13px;
-                font-weight:900;letter-spacing:1px;
-                text-shadow:0 2px 6px rgba(0,0,0,0.4);
-              }
-              /* decorative lights strip */
-              .lights-strip{
-                display:flex;justify-content:center;gap:6px;margin-top:4px;
-              }
-              .bulb{
-                width:7px;height:7px;border-radius:50%;
-                animation:bulbFlash 0.8s ease-in-out infinite alternate;
-              }
-              .bulb:nth-child(1){background:#ff3;animation-delay:0s;}
-              .bulb:nth-child(2){background:#f0f;animation-delay:0.15s;}
-              .bulb:nth-child(3){background:#0ff;animation-delay:0.3s;}
-              .bulb:nth-child(4){background:#ff3;animation-delay:0.45s;}
-              .bulb:nth-child(5){background:#f0f;animation-delay:0.6s;}
-              .bulb:nth-child(6){background:#0ff;animation-delay:0.75s;}
-              @keyframes bulbFlash{0%{opacity:0.3;transform:scale(0.7);}100%{opacity:1;transform:scale(1.15);box-shadow:0 0 6px 2px currentColor;}}
-
-              /* Walls */
-              .store-walls{
-                background:linear-gradient(180deg,#f0f4ff 0%,#e8edf8 100%);
-                padding:8px;
-                display:flex;
-                gap:6px;
-                align-items:flex-end;
-                border-left:2px solid #c8d2e8;
-                border-right:2px solid #c8d2e8;
-              }
-
-              /* Windows */
-              .store-window{
-                flex:1;
-                background:linear-gradient(180deg,#bfdbfe 0%,#93c5fd 100%);
-                border-radius:4px 4px 0 0;
-                height:36px;border:2px solid #93c5fd;
-                position:relative;overflow:hidden;
-                box-shadow:inset 0 0 10px rgba(147,197,253,0.5);
-                animation:windowGlow 2s ease-in-out infinite alternate;
-              }
-              @keyframes windowGlow{0%{box-shadow:inset 0 0 10px rgba(147,197,253,0.4),0 0 0 rgba(147,197,253,0);}100%{box-shadow:inset 0 0 14px rgba(147,197,253,0.8),0 0 8px 2px rgba(147,197,253,0.3);}}
-              /* window cross pane */
-              .store-window::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:2px;height:100%;background:rgba(255,255,255,0.5);}
-              .store-window::after{content:'';position:absolute;top:50%;left:0;width:100%;height:2px;background:rgba(255,255,255,0.5);}
-              /* curtain sway inside window */
-              .curtain{position:absolute;top:0;width:45%;height:100%;background:rgba(255,180,100,0.5);animation:curtainSway 2.5s ease-in-out infinite alternate;}
-              .curtain.left{left:0;border-radius:0 4px 4px 0;animation-direction:alternate;}
-              .curtain.right{right:0;border-radius:4px 0 0 4px;animation-direction:alternate-reverse;}
-              @keyframes curtainSway{0%{transform:skewX(-5deg) translateX(-2px);}100%{transform:skewX(5deg) translateX(2px);}}
-
-              /* Door wrapper – perspective for 3‑D swing */
-              .door-area{
-                width:46px;
-                position:relative;
-                display:flex;align-items:flex-end;justify-content:space-between;
-                margin:0 auto;
-              }
-              .door-half{
-                width:21px;height:46px;
-                background:linear-gradient(135deg,#ff7a50 0%,#ff5a2c 100%);
-                border-radius:3px 3px 0 0;
-                position:relative;
-                transform-origin:left center;
-                animation:doorOpenLeft 1.2s cubic-bezier(0.25,0.46,0.45,0.94) forwards 0.4s;
-                transform-style:preserve-3d;
-              }
-              .door-half.right{
-                transform-origin:right center;
-                animation:doorOpenRight 1.2s cubic-bezier(0.25,0.46,0.45,0.94) forwards 0.4s;
-              }
-              @keyframes doorOpenLeft{
-                0%{transform:perspective(120px) rotateY(0deg);}
-                100%{transform:perspective(120px) rotateY(-55deg);}
-              }
-              @keyframes doorOpenRight{
-                0%{transform:perspective(120px) rotateY(0deg);}
-                100%{transform:perspective(120px) rotateY(55deg);}
-              }
-              /* Door knob */
-              .door-half::after{content:'';position:absolute;top:50%;width:4px;height:4px;border-radius:50%;background:#fbbf24;box-shadow:0 0 4px #fbbf24;}
-              .door-half:not(.right)::after{right:3px;transform:translateY(-50%);}
-              .door-half.right::after{left:3px;transform:translateY(-50%);}
-              /* inner glow when door opens */
-              .door-inner{
-                position:absolute;top:0;left:0;width:100%;height:100%;
-                background:radial-gradient(ellipse at center,rgba(255,255,180,0.9) 0%,rgba(255,200,80,0.3) 70%,transparent 100%);
-                opacity:0;border-radius:0 0 0 0;
-                animation:innerGlow 0.6s ease forwards 1.2s;
-              }
-              @keyframes innerGlow{to{opacity:1;}}
-
-              /* Doorstep */
-              .store-step{
-                height:6px;margin:0 auto;width:60px;
-                background:linear-gradient(180deg,#94a3b8 0%,#64748b 100%);
-                border-radius:0 0 3px 3px;
-              }
-
-              /* ── OPEN neon sign ── */
-              .neon-open{
-                text-align:center;margin:6px 0 4px;
-                animation:signBounce 0.5s ease forwards 1.6s;
-                opacity:0;transform:scale(0.5);
-              }
-              @keyframes signBounce{
-                0%{opacity:0;transform:scale(0.5);}
-                70%{opacity:1;transform:scale(1.15);}
-                100%{opacity:1;transform:scale(1);}
-              }
-              .neon-open-inner{
-                display:inline-block;
-                background:#0a1f0a;
-                border:2px solid #22c55e;
-                border-radius:6px;
-                padding:3px 14px;
-                color:#22c55e;
-                font-family:'Arial Black',Arial,sans-serif;
-                font-size:13px;font-weight:900;letter-spacing:3px;
-                text-shadow:0 0 8px #22c55e,0 0 20px #22c55e,0 0 40px #22c55e;
-                box-shadow:0 0 8px #22c55e,inset 0 0 8px rgba(34,197,94,0.2);
-                animation:neonFlicker 1.5s ease-in-out infinite 2s;
-              }
-              @keyframes neonFlicker{
-                0%,18%,22%,25%,55%,57%,100%{text-shadow:0 0 8px #22c55e,0 0 20px #22c55e,0 0 40px #22c55e;opacity:1;}
-                20%,24%,56%{text-shadow:none;opacity:0.6;}
-              }
-
-              /* ── Confetti ── */
-              .confetti-wrap{
-                position:absolute;top:0;left:0;width:100%;height:100%;
-                pointer-events:none;overflow:hidden;
-                animation:confettiShow 0s forwards 1.8s;
-                opacity:0;
-              }
-              @keyframes confettiShow{to{opacity:1;}}
-              .cf{
-                position:absolute;top:-10px;
-                width:7px;height:10px;
-                border-radius:2px;
-                animation:cfFall linear infinite;
-              }
-              .cf:nth-child(1){left:10%;background:#ff5a2c;animation-duration:2.1s;animation-delay:1.8s;transform:rotate(20deg);}
-              .cf:nth-child(2){left:25%;background:#fbbf24;animation-duration:2.4s;animation-delay:2.0s;transform:rotate(-30deg);}
-              .cf:nth-child(3){left:40%;background:#22c55e;animation-duration:2.0s;animation-delay:1.9s;transform:rotate(45deg);}
-              .cf:nth-child(4){left:60%;background:#a78bfa;animation-duration:2.3s;animation-delay:2.1s;transform:rotate(-20deg);}
-              .cf:nth-child(5){left:75%;background:#38bdf8;animation-duration:2.5s;animation-delay:2.0s;transform:rotate(35deg);}
-              .cf:nth-child(6){left:88%;background:#f472b6;animation-duration:2.2s;animation-delay:1.85s;transform:rotate(-45deg);}
-              .cf:nth-child(7){left:15%;background:#fbbf24;width:5px;height:5px;border-radius:50%;animation-duration:1.9s;animation-delay:2.2s;}
-              .cf:nth-child(8){left:50%;background:#ff5a2c;width:5px;height:5px;border-radius:50%;animation-duration:2.1s;animation-delay:2.3s;}
-              .cf:nth-child(9){left:70%;background:#22c55e;width:5px;height:5px;border-radius:50%;animation-duration:2.0s;animation-delay:2.1s;}
-              @keyframes cfFall{
-                0%{top:-10px;opacity:1;transform:translateX(0) rotate(0deg);}
-                80%{opacity:1;}
-                100%{top:110%;opacity:0;transform:translateX(20px) rotate(720deg);}
-              }
-
-              /* ── Caption ── */
-              .store-caption{
-                text-align:center;
-                padding:8px 10px 12px;
-                font-family:Arial,sans-serif;
-                font-size:11px;color:#94a3b8;line-height:1.5;
-              }
-              .store-caption strong{color:#fbbf24;display:block;font-size:12px;margin-bottom:2px;}
-            </style>
-
-            <!-- confetti layer (position absolute over whole card) -->
-            <div class="confetti-wrap">
-              <div class="cf"></div><div class="cf"></div><div class="cf"></div>
-              <div class="cf"></div><div class="cf"></div><div class="cf"></div>
-              <div class="cf"></div><div class="cf"></div><div class="cf"></div>
-            </div>
-
-            <!-- Sky with stars -->
-            <div class="store-sky">
-              <div class="s-star" style="width:2px;height:2px;top:12px;left:15%;animation-delay:0s;"></div>
-              <div class="s-star" style="width:3px;height:3px;top:20px;left:35%;animation-delay:0.3s;"></div>
-              <div class="s-star" style="width:2px;height:2px;top:8px;left:55%;animation-delay:0.7s;"></div>
-              <div class="s-star" style="width:2px;height:2px;top:25px;left:72%;animation-delay:1.1s;"></div>
-              <div class="s-star" style="width:3px;height:3px;top:14px;left:85%;animation-delay:0.5s;"></div>
-              <div class="s-star" style="width:2px;height:2px;top:35px;left:20%;animation-delay:0.9s;"></div>
-              <div class="s-star" style="width:2px;height:2px;top:40px;left:65%;animation-delay:0.2s;"></div>
-              <!-- Moon -->
-              <div style="position:absolute;top:10px;right:14px;width:22px;height:22px;border-radius:50%;background:transparent;box-shadow:-6px 2px 0 0 #fffde7;"></div>
-            </div>
-
-            <!-- Building -->
-            <div class="store-ground">
-              <div class="store-building">
-                <!-- Fascia / sign board -->
-                <div class="store-fascia">
-                  <div class="store-name-txt">🛍️ MY STORE</div>
-                  <div class="lights-strip">
-                    <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
-                    <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
-                  </div>
-                </div>
-
-                <!-- Walls + windows + door -->
-                <div class="store-walls">
-                  <!-- Left window -->
-                  <div class="store-window">
-                    <div class="curtain left"></div>
-                    <div class="curtain right"></div>
-                  </div>
-
-                  <!-- Double door -->
-                  <div class="door-area">
-                    <div class="door-half"></div>
-                    <div class="door-inner"></div>
-                    <div class="door-half right"></div>
-                  </div>
-
-                  <!-- Right window -->
-                  <div class="store-window">
-                    <div class="curtain left"></div>
-                    <div class="curtain right"></div>
-                  </div>
-                </div>
-
-                <!-- Step -->
-                <div class="store-step"></div>
-              </div>
-
-              <!-- OPEN neon sign -->
-              <div class="neon-open">
-                <div class="neon-open-inner">OPEN</div>
-              </div>
-            </div>
-
-            <!-- Caption -->
-            <div class="store-caption">
-              <strong>🎉 Store is LIVE!</strong>
-              Pay once → Your store opens instantly
+  <section class="bottom-cta-revamp py-80">
+    <div class="container position-relative">
+      
+      <!-- Dot grid decorators -->
+      <div class="cta-decor-dots cta-decor-left"></div>
+      <div class="cta-decor-dots cta-decor-right"></div>
+      
+      <!-- Main Blue Card -->
+      <div class="cta-blue-card mb-4" data-aos="fade-up">
+        <div class="row align-items-center g-0">
+          
+          <!-- Left Column (Text & Buttons) -->
+          <div class="col-lg-6 col-md-12 p-4 p-sm-5 text-center text-lg-start">
+            <h2 class="cta-revamp-title mb-3">{{ __('Ready to Launch Your Dream Store?') }}</h2>
+            <p class="cta-revamp-desc mb-4">{{ __('Join thousands of entrepreneurs and start selling online with Launchshop in just minutes.') }}</p>
+            
+            <div class="cta-revamp-btns d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+              @php
+                $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
+                $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
+              @endphp
+              <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
+                {{ __('Launch Your Store') }} <i class="fas fa-arrow-right"></i>
+              </a>
+              <a href="#dashboard-showcase" class="btn-cta-check px-4 py-3 d-inline-flex align-items-center">
+                {{ __('Check Stores Launched') }}
+              </a>
             </div>
           </div>
+
+          <!-- Right Column (Footer Right Image) -->
+          <div class="col-lg-6 col-md-12 text-center d-flex align-items-end justify-content-center h-100 position-relative cta-right-col">
+            <img src="{{ asset('images/footer_right.png') }}" class="img-fluid cta-right-img" alt="Ready to Launch">
+          </div>
+
         </div>
       </div>
+
+      <!-- Trust Badges Banner -->
+      <div class="cta-trust-banner py-4 px-3" data-aos="fade-up">
+        <div class="row g-3 justify-content-between align-items-center text-center">
+          
+          <div class="col-6 col-md-3">
+            <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
+              <span class="trust-icon"><i class="fas fa-rocket"></i></span>
+              <span class="trust-txt">{{ __('Launch Instantly') }}</span>
+            </div>
+          </div>
+
+          <div class="col-6 col-md-3">
+            <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
+              <span class="trust-icon"><i class="fas fa-shield-alt"></i></span>
+              <span class="trust-txt">{{ __('14-Days Money Back Guarantee') }}</span>
+            </div>
+          </div>
+
+          <div class="col-6 col-md-3">
+            <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
+              <span class="trust-icon"><i class="fas fa-history"></i></span>
+              <span class="trust-txt">{{ __('Cancel Anytime') }}</span>
+            </div>
+          </div>
+
+          <div class="col-6 col-md-3">
+            <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
+              <span class="trust-icon"><i class="fas fa-headset"></i></span>
+              <span class="trust-txt">{{ __('24/7 Expert Support') }}</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </div>
   </section>
   <!-- Bottom CTA End -->
