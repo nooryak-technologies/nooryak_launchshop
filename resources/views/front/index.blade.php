@@ -398,7 +398,7 @@
         </div>
 
         <!-- View All Themes Button Wrap -->
-        <div class="view-all-themes-btn-wrap d-none" data-aos="fade-up" style="display: flex; justify-content: center; margin-top: 40px;">
+        <div class="view-all-themes-btn-wrap d-none" data-aos="fade-up" style="display: flex; justify-content: center; margin-top: 0px;">
           <button id="view-all-themes-btn" class="btn-view-all-themes">
             {{ __('View All Themes') }} <i class="fas fa-arrow-right ms-2"></i>
           </button>

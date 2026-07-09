@@ -2244,7 +2244,7 @@ i[id$="EyeIcon"]:hover {
 
 /* Testimonials Slider Tweaks */
 .testimonials-slider {
-    padding-bottom: 50px !important;
+    padding-bottom: 0px !important;
     overflow: hidden;
 }
 
