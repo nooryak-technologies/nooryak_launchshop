@@ -40,7 +40,7 @@
                 </a>
               </div>
 
-              <div class="hero-features d-none d-md-flex align-items-center">
+              <div class="hero-features d-flex align-items-center">
                 <div class="hero-feature-item">
                   <div class="feat-icon-box icon-orange">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -300,7 +300,7 @@
 
         <!-- Filter Buttons -->
         <div class="row mb-50" data-aos="fade-up">
-          <div class="col-12 d-flex justify-content-center align-items-center gap-2 flex-wrap">
+          <div class="col-12 theme-filter-scroll-wrapper d-flex justify-content-center align-items-center gap-2 flex-wrap">
             <button class="theme-filter-btn active" data-category="all">
               <i class="fas fa-th-large me-2"></i>{{ __('All Themes') }}
             </button>
@@ -1137,36 +1137,52 @@
     <!-- Testimonials Start -->
     <section class="testimonials-section">
       <div class="container">
+        
         <div class="row">
           <div class="col-12 text-center">
             <h2 class="section-title" data-aos="fade-up">{{ @$homeSec->testimonial_section_title ?: 'Loved by Entrepreneurs. Trusted by Thousands.' }}</h2>
           </div>
         </div>
-        <div class="swiper testimonials-slider pb-40" data-aos="fade-up">
-          <div class="swiper-wrapper">
-            @foreach ($testimonials as $testimonial)
-              <div class="swiper-slide">
-                <div class="testimonial-card h-100 mb-0">
-                  <div class="testi-header">
-                    <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
-                      data-src="{{ $testimonial->image ? asset('assets/front/img/testimonials/' . $testimonial->image) : asset('assets/front/img/thumb-1.jpg') }}"
-                      alt="User">
-                    <div>
-                      <h4 class="testi-name">{{ $testimonial->name }}</h4>
-                      <span class="testi-designation">{{ $testimonial->designation }}</span>
+
+        <div class="testimonials-slider-wrapper position-relative" data-aos="fade-up">
+          <div class="swiper testimonials-slider pb-40">
+            <div class="swiper-wrapper">
+              @foreach ($testimonials as $testimonial)
+                <div class="swiper-slide">
+                  <div class="testimonial-card h-100 mb-0">
+                    <div class="testi-header">
+                      <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
+                        data-src="{{ $testimonial->image ? asset('assets/front/img/testimonials/' . $testimonial->image) : asset('assets/front/img/thumb-1.jpg') }}"
+                        alt="User">
+                      <div>
+                        <h4 class="testi-name">{{ $testimonial->name }}</h4>
+                        <span class="testi-designation">{{ $testimonial->designation }}</span>
+                      </div>
+                    </div>
+                    <p class="testi-text">
+                      <span class="testi-quote">“</span>{{ $testimonial->comment }}”
+                    </p>
+                    <div class="testi-stars">
+                      <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                     </div>
                   </div>
-                  <p class="testi-text">"{{ $testimonial->comment }}"</p>
-                  <div class="testi-stars">
-                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                  </div>
                 </div>
-              </div>
-            @endforeach
+              @endforeach
+            </div>
+            <!-- Pagination -->
+            <div class="swiper-pagination"></div>
           </div>
-          <!-- Pagination -->
-          <div class="swiper-pagination"></div>
+
+          <!-- Navigation Arrow Buttons flanking the carousel -->
+          <div class="swiper-button-prev testimonials-prev-btn">
+            <i class="fas fa-chevron-left"></i>
+          </div>
+          <div class="swiper-button-next testimonials-next-btn">
+            <i class="fas fa-chevron-right"></i>
+          </div>
+
         </div>
+
       </div>
     </section>
     <!-- Testimonials End -->
@@ -1416,12 +1432,16 @@
 
     // 3. Testimonials swiper slider auto scroll
     new Swiper('.testimonials-slider', {
-      slidesPerView: 5,
-      spaceBetween: 25,
+      slidesPerView: 3,
+      spaceBetween: 30,
       loop: true,
       autoplay: {
         delay: 3000,
         disableOnInteraction: false,
+      },
+      navigation: {
+        nextEl: '.testimonials-next-btn',
+        prevEl: '.testimonials-prev-btn',
       },
       pagination: {
         el: '.swiper-pagination',
@@ -1432,21 +1452,13 @@
           slidesPerView: 1,
           spaceBetween: 15
         },
-        576: {
+        768: {
           slidesPerView: 2,
           spaceBetween: 20
         },
-        768: {
-          slidesPerView: 3,
-          spaceBetween: 20
-        },
         1024: {
-          slidesPerView: 4,
-          spaceBetween: 25
-        },
-        1200: {
-          slidesPerView: 5,
-          spaceBetween: 25
+          slidesPerView: 3,
+          spaceBetween: 30
         }
       }
     });

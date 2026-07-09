@@ -156,7 +156,7 @@
                       <i class="fas fa-eye me-2"></i> {{ __('Live Preview') }}
                     </a>
                     <a href="{{ route('front.templates.autologin', $template->username) }}" target="_blank" class="btn-template-action admin-btn">
-                      <i class="fas fa-user-cog me-2"></i> {{ __('Theme Admin') }}
+                      <i class="fas fa-user-cog me-2"></i> {{ __('Admin') }}
                     </a>
                     <a href="{{ $purchaseUrl }}" class="btn-template-action primary-btn">
                       <i class="fas fa-shopping-cart me-2"></i> {{ __('Purchase') }}

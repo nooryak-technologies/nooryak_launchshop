@@ -824,55 +824,136 @@ i[id$="EyeIcon"]:hover {
 }
 
 /* Testimonials */
+/* Testimonials V2 Redesign */
 .testimonials-section {
-    padding: 50px 0;
-    background: var(--ls-white);
+    padding: 80px 0 !important;
+    background: #FFFFFF !important;
 }
 
 .testimonial-card {
-    background: var(--ls-white);
-    border: 1px solid var(--ls-border);
-    border-radius: 16px;
-    padding: 30px;
-    margin-bottom: 30px;
+    background: #FFFFFF !important;
+    border: 1px solid #F1F5F9 !important;
+    border-radius: 16px !important;
+    padding: 30px !important;
+    margin-bottom: 30px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02) !important;
+    transition: all 0.3s ease !important;
+}
+
+.testimonial-card:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06) !important;
+    transform: translateY(-5px) !important;
+    border-color: rgba(255, 90, 44, 0.15) !important;
 }
 
 .testi-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
+    display: flex !important;
+    align-items: center !important;
+    margin-bottom: 20px !important;
 }
 
 .testi-header img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 15px;
-    object-fit: cover;
+    width: 54px !important;
+    height: 54px !important;
+    border-radius: 50% !important;
+    margin-right: 15px !important;
+    object-fit: cover !important;
 }
 
 .testi-name {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--ls-dark);
-    margin: 0;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #0F172A !important;
+    margin: 0 0 2px 0 !important;
 }
 
 .testi-designation {
-    font-size: 13px;
-    color: var(--ls-gray);
+    font-size: 13.5px !important;
+    color: #FF5A2C !important;
+    /* Orange designation */
+    font-weight: 600 !important;
 }
 
 .testi-text {
-    font-size: 15px;
-    color: var(--ls-gray-dark);
-    font-style: italic;
+    font-size: 15px !important;
+    color: #334155 !important;
+    font-style: normal !important;
+    /* Normal font style (non-italic) */
+    line-height: 1.65 !important;
+    margin-bottom: 15px !important;
+    display: block !important;
+}
+
+.testi-quote {
+    color: #FF5A2C !important;
+    /* Orange double quote */
+    font-size: 24px !important;
+    line-height: 1 !important;
+    margin-right: 4px !important;
+    font-family: inherit !important;
+    font-weight: 800 !important;
 }
 
 .testi-stars {
-    color: #fbbf24;
-    font-size: 14px;
-    margin-top: 15px;
+    color: #FFA114 !important;
+    /* Bright orange stars */
+    font-size: 14px !important;
+    margin-top: 15px !important;
+}
+
+/* Swiper navigation and layout overrides */
+.testimonials-slider-wrapper {
+    padding: 0 45px !important;
+}
+
+.testimonials-prev-btn,
+.testimonials-next-btn {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    margin: 0 !important;
+    width: 48px !important;
+    height: 48px !important;
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 50% !important;
+    color: #0F172A !important;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer !important;
+    z-index: 10 !important;
+}
+
+.testimonials-prev-btn:hover,
+.testimonials-next-btn:hover {
+    background: #F8FAFC !important;
+    color: #FF5A2C !important;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12) !important;
+}
+
+.testimonials-prev-btn {
+    left: -5px !important;
+}
+
+.testimonials-next-btn {
+    right: -5px !important;
+}
+
+.testimonials-prev-btn i,
+.testimonials-next-btn i {
+    font-size: 16px !important;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    display: none !important;
+}
+
+.testimonials-slider-wrapper .swiper-pagination-bullet-active {
+    background: #FF5A2C !important;
 }
 
 /* Brands */
@@ -2501,7 +2582,7 @@ i[id$="EyeIcon"]:hover {
     }
 }
 
-/* 3. Testimonial cards visual enhancements for 5-column layout */
+/* 3. Testimonial cards visual enhancements for 5-column layout (disabled for 3-column)
 @media (min-width: 1200px) {
     .testimonial-card {
         padding: 20px 15px !important;
@@ -2536,6 +2617,7 @@ i[id$="EyeIcon"]:hover {
         margin-top: 10px !important;
     }
 }
+*/
 
 /* 4. Section Overflow Fixes for Mobile View Right-Side Gap */
 .hero-wrapper,
@@ -9157,12 +9239,15 @@ iframe[id^="tawkchat-"],
 .feat-icon-box.icon-orange {
     background: #FFF0EB !important;
 }
+
 .feat-icon-box.icon-purple {
     background: #F3E8FF !important;
 }
+
 .feat-icon-box.icon-green {
     background: #DEF7EC !important;
 }
+
 .feat-icon-box.icon-blue {
     background: #E1EFFE !important;
 }
@@ -9191,17 +9276,7 @@ iframe[id^="tawkchat-"],
     background-color: #E2E8F0 !important;
 }
 
-@media (max-width: 991px) {
-    .hero-features {
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        gap: 16px !important;
-        margin-top: 35px !important;
-    }
-    .feat-divider {
-        display: none !important;
-    }
-}
+
 
 /* Stats Banner Revamp */
 .hero-stats-banner {
@@ -9305,17 +9380,20 @@ iframe[id^="tawkchat-"],
     .hero-stats-banner {
         padding: 30px 20px !important;
     }
+
     .hero-stats-row {
         flex-wrap: wrap !important;
         justify-content: center !important;
         gap: 30px 0 !important;
     }
+
     .hero-stat-col {
         flex: 0 0 50% !important;
         max-width: 50% !important;
         border-right: none !important;
         justify-content: center !important;
     }
+
     .hero-stat-item {
         max-width: 220px !important;
         padding: 0 10px !important;
@@ -9328,6 +9406,7 @@ iframe[id^="tawkchat-"],
         max-width: 100% !important;
     }
 }
+
 /* ============================================================
    How Launchshop Works V2 — Reference Pixel-Perfect Match
    ============================================================ */
@@ -9372,10 +9451,25 @@ iframe[id^="tawkchat-"],
     flex-shrink: 0;
 }
 
-.hiw-icon-orange { background: #FFF0EB; color: #FF5A2C; }
-.hiw-icon-purple { background: #F3EFFE; color: #7C3AED; }
-.hiw-icon-green  { background: #ECFDF5; color: #059669; }
-.hiw-icon-yellow { background: #FFFBEB; color: #D97706; }
+.hiw-icon-orange {
+    background: #FFF0EB;
+    color: #FF5A2C;
+}
+
+.hiw-icon-purple {
+    background: #F3EFFE;
+    color: #7C3AED;
+}
+
+.hiw-icon-green {
+    background: #ECFDF5;
+    color: #059669;
+}
+
+.hiw-icon-yellow {
+    background: #FFFBEB;
+    color: #D97706;
+}
 
 .hiw-stat-info {
     display: flex;
@@ -9475,9 +9569,12 @@ iframe[id^="tawkchat-"],
 .hiw-steps-row::before {
     content: "";
     position: absolute;
-    top: 44px; /* vertical center of the 88px circle */
-    left: 10%; /* center of first circle */
-    right: 10%; /* center of last circle */
+    top: 44px;
+    /* vertical center of the 88px circle */
+    left: 10%;
+    /* center of first circle */
+    right: 10%;
+    /* center of last circle */
     height: 2px;
     border-top: 2px dashed #CBD5E1;
     z-index: 1;
@@ -9497,7 +9594,8 @@ iframe[id^="tawkchat-"],
     position: relative;
     display: inline-block;
     margin-bottom: 8px;
-    z-index: 2; /* keep circles above the dashed line */
+    z-index: 2;
+    /* keep circles above the dashed line */
 }
 
 .hiw-step-circle {
@@ -9515,13 +9613,32 @@ iframe[id^="tawkchat-"],
 
 .hiw-step-circle:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.10);
 }
 
-.hiw-circle-orange { border-color: #FFCAB8; color: #FF5A2C; background: #FFF5F2; }
-.hiw-circle-purple { border-color: #C4B5FD; color: #7C3AED; background: #F5F3FF; }
-.hiw-circle-blue   { border-color: #93C5FD; color: #2563EB; background: #EFF6FF; }
-.hiw-circle-green  { border-color: #6EE7B7; color: #059669; background: #F0FDF4; }
+.hiw-circle-orange {
+    border-color: #FFCAB8;
+    color: #FF5A2C;
+    background: #FFF5F2;
+}
+
+.hiw-circle-purple {
+    border-color: #C4B5FD;
+    color: #7C3AED;
+    background: #F5F3FF;
+}
+
+.hiw-circle-blue {
+    border-color: #93C5FD;
+    color: #2563EB;
+    background: #EFF6FF;
+}
+
+.hiw-circle-green {
+    border-color: #6EE7B7;
+    color: #059669;
+    background: #F0FDF4;
+}
 
 .hiw-step-badge {
     position: absolute;
@@ -9559,29 +9676,82 @@ iframe[id^="tawkchat-"],
 }
 
 @media (max-width: 991px) {
-    .hiw-stats-row { padding: 24px 28px; gap: 16px; }
-    .hiw-stat-card { min-width: 140px; }
-    .hiw-stat-value { font-size: 22px; }
-    .hiw-section-title { font-size: 26px !important; }
-    .hiw-steps-row { flex-wrap: wrap; justify-content: center; gap: 32px; }
-    .hiw-steps-row::before { display: none !important; }
-    .hiw-step-item { flex: 0 0 calc(33.333% - 24px); max-width: 160px; }
+    .hiw-stats-row {
+        padding: 24px 28px;
+        gap: 16px;
+    }
+
+    .hiw-stat-card {
+        min-width: 140px;
+    }
+
+    .hiw-stat-value {
+        font-size: 22px;
+    }
+
+    .hiw-section-title {
+        font-size: 26px !important;
+    }
+
+    .hiw-steps-row {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 32px;
+    }
+
+    .hiw-steps-row::before {
+        display: none !important;
+    }
+
+    .hiw-step-item {
+        flex: 0 0 calc(33.333% - 24px);
+        max-width: 160px;
+    }
 }
 
 @media (max-width: 767px) {
-    .how-it-works-v2 { padding: 40px 0 50px; }
-    .hiw-stats-row { flex-direction: column; align-items: flex-start; padding: 20px 24px; gap: 20px; }
-    .hiw-stat-divider { display: none; }
-    .hiw-stat-card { width: 100%; }
-    .hiw-title-wrap { margin-bottom: 36px; }
-    .hiw-section-title { font-size: 22px !important; }
-    .hiw-steps-row { flex-wrap: wrap; gap: 28px; }
-    .hiw-step-item { flex: 0 0 calc(50% - 14px); max-width: 50%; }
+    .how-it-works-v2 {
+        padding: 40px 0 50px;
+    }
+
+    .hiw-stats-row {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px 24px;
+        gap: 20px;
+    }
+
+    .hiw-stat-divider {
+        display: none;
+    }
+
+    .hiw-stat-card {
+        width: 100%;
+    }
+
+    .hiw-title-wrap {
+        margin-bottom: 36px;
+    }
+
+    .hiw-section-title {
+        font-size: 22px !important;
+    }
+
+    .hiw-steps-row {
+        flex-wrap: wrap;
+        gap: 28px;
+    }
+
+    .hiw-step-item {
+        flex: 0 0 calc(50% - 14px);
+        max-width: 50%;
+    }
 }
 
 @media (max-width: 480px) {
-    .hiw-step-item { flex: 0 0 100%; max-width: 240px; }
-    .hiw-stat-value { font-size: 20px; }
+    .hiw-stat-value {
+        font-size: 17px;
+    }
 }
 
 /* How Launchshop Works - Rocket Steps Revamp (legacy) */
@@ -9710,7 +9880,8 @@ iframe[id^="tawkchat-"],
 }
 
 .new-stats-banner .hero-stat-icon {
-    border-radius: 16px !important; /* Squircle */
+    border-radius: 16px !important;
+    /* Squircle */
     font-size: 20px !important;
     width: 52px !important;
     height: 52px !important;
@@ -9748,20 +9919,25 @@ iframe[id^="tawkchat-"],
     .steps-card-wrapper {
         padding: 30px 20px !important;
     }
+
     .steps-main-title {
         font-size: 28px !important;
         text-align: center !important;
     }
+
     .steps-main-subtitle {
         text-align: center !important;
         margin-bottom: 30px !important;
     }
+
     .v-step-item {
         margin-bottom: 24px !important;
     }
+
     .steps-cta-btn-wrap {
         text-align: center !important;
     }
+
     .rocket-main-img {
         max-height: 300px;
         margin-bottom: 20px;
@@ -9900,6 +10076,7 @@ iframe[id^="tawkchat-"],
     .templates-section .section-title {
         white-space: nowrap !important;
     }
+
     .templates-section .section-subtitle-text {
         max-width: 100% !important;
         white-space: nowrap !important;
@@ -10168,10 +10345,12 @@ iframe[id^="tawkchat-"],
         r: 4;
         opacity: 1;
     }
+
     50% {
         r: 8;
         opacity: 0.4;
     }
+
     100% {
         r: 4;
         opacity: 1;
@@ -10293,15 +10472,18 @@ iframe[id^="tawkchat-"],
         text-align: center !important;
         margin-bottom: 40px;
     }
+
     .dashboard-bullets-list {
         display: inline-block !important;
         text-align: left !important;
     }
+
     .dashboard-side-features {
         margin-top: 40px !important;
         flex-direction: row !important;
         flex-wrap: wrap !important;
     }
+
     .dash-side-feat-card {
         flex: 1 0 45% !important;
     }
@@ -10311,12 +10493,15 @@ iframe[id^="tawkchat-"],
     .dash-side-feat-card {
         flex: 1 0 100% !important;
     }
+
     .sim-dash-main {
         padding: 15px !important;
     }
+
     .dash-stat-card {
         padding: 10px !important;
     }
+
     .dash-stat-card .stat-val {
         font-size: 14px !important;
     }
@@ -10447,14 +10632,17 @@ iframe[id^="tawkchat-"],
     .cta-revamp-title {
         font-size: 28px !important;
     }
+
     .cta-revamp-desc {
         font-size: 14px !important;
         margin: 0 auto 24px !important;
     }
+
     .cta-right-img {
         max-height: 280px !important;
         margin-top: 20px !important;
     }
+
     .cta-revamp-btns {
         margin-bottom: 20px !important;
     }
@@ -10464,11 +10652,121 @@ iframe[id^="tawkchat-"],
     .cta-trust-banner {
         padding: 15px 10px !important;
     }
+
     .trust-badge-item {
         font-size: 11px !important;
         gap: 4px !important;
     }
+
     .trust-icon {
         font-size: 14px !important;
+    }
+}
+
+/* ============================================================
+   Category Filter Scroll, HIW Stats 2-Col, Hero Features 2-Col, 
+   and Template Buttons Layout Overrides
+   ============================================================ */
+
+/* Task 1 — Category Filter Scrollable on mobile & tablet */
+@media (max-width: 991px) {
+    .theme-filter-scroll-wrapper {
+        display: flex !important;
+        gap: 10px !important;
+        overflow-x: auto !important;
+        flex-wrap: nowrap !important;
+        padding: 5px 15px 15px !important;
+        justify-content: flex-start !important;
+        scroll-behavior: smooth !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    .theme-filter-scroll-wrapper::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .theme-filter-scroll-wrapper {
+        -ms-overflow-style: none !important;
+        scrollbar-width: none !important;
+    }
+
+    /* Prevent clipping dropdown */
+    .theme-filter-scroll-wrapper .dropdown {
+        position: static !important;
+    }
+}
+
+/* Task 2 — HIW stats: two column per row on mobile */
+@media (max-width: 767px) {
+    .hiw-stats-row {
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        padding: 24px 15px !important;
+        gap: 24px 0 !important;
+    }
+
+    .hiw-stats-row .hiw-stat-card {
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+        padding: 0 10px !important;
+    }
+
+    .hiw-stats-row .hiw-stat-divider {
+        display: none !important;
+    }
+}
+
+/* Task 3 — Hero Features: 2 columns per row on mobile (wrapping, centered) */
+@media (max-width: 767px) {
+    .hero-content .hero-features,
+    .hero-content .hero-features.d-flex {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        overflow: visible !important;
+        gap: 16px 0 !important;
+        margin-top: 25px !important;
+        padding: 0 !important;
+    }
+
+    .hero-content .hero-features .hero-feature-item {
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+        min-width: 50% !important;
+        margin: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 0 5px !important;
+    }
+
+    .hero-content .hero-features .feat-divider {
+        display: none !important;
+    }
+}
+
+/* Task 4 — Template Action Buttons on Mobile View */
+@media (max-width: 767px) {
+    .card-action-row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 10px !important;
+        padding: 10px 0 0 0 !important;
+    }
+
+    .card-action-row .btn-template-action {
+        flex: 1 1 calc(50% - 5px) !important;
+        max-width: calc(50% - 5px) !important;
+        text-align: center !important;
+        justify-content: center !important;
+        padding: 12px 10px !important;
+        font-size: 13px !important;
+    }
+
+    .card-action-row .btn-template-action.primary-btn {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
     }
 }
