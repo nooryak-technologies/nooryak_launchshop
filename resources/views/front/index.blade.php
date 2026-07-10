@@ -35,6 +35,11 @@
       font-size: 13px !important;
       white-space: nowrap !important;
   }
+  .card-action-row {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 8px !important;
+  }
 </style>
 @endsection
 @php
