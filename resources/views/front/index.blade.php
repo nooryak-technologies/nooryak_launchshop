@@ -84,19 +84,6 @@
                 </div>
                 <div class="feat-divider"></div>
                 <div class="hero-feature-item">
-                  <div class="feat-icon-box icon-purple">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="12" cy="12" r="10" stroke="#8B5CF6" stroke-width="2"/>
-                      <path d="M15 9L9 15M9 9L15 15" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                  </div>
-                  <div class="feat-content">
-                    <div class="feat-title">{{ __('Cancel') }}</div>
-                    <div class="feat-sub">{{ __('Anytime') }}</div>
-                  </div>
-                </div>
-                <div class="feat-divider"></div>
-                <div class="hero-feature-item">
                   <div class="feat-icon-box icon-green">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M17.887 6.113c-.933-.933-2.903-1.157-5.111-.643l-4.148 4.148c-.689.69-.747 1.776-.174 2.507l-2.617 2.617a1 1 0 000 1.414l1.414 1.414a1 1 0 001.414 0l2.617-2.617c.731.573 1.817.515 2.507-.174l4.148-4.148c.514-2.208.29-4.178-.643-5.111z" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -579,14 +566,16 @@
                     
                     <hr class="card-divider" style="border-top: 1px solid #e2e8f0; margin: 15px 0;">
                     
-                    <div class="card-action-row" style="display: flex; gap: 8px;">
-                      <a href="{{ $previewUrl }}" target="_blank" class="btn-template-action outline-btn" style="flex: 1; justify-content: center; display: inline-flex; align-items: center; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 10px; font-size: 14px; font-weight: 600; color: #4a5568; text-decoration: none;">
-                        <i class="fas fa-eye me-2"></i> {{ __('Live Preview') }}
-                      </a>
-                      <a href="{{ route('front.templates.autologin', $template->username) }}" target="_blank" class="btn-template-action admin-btn" style="flex: 1; justify-content: center; display: inline-flex; align-items: center; border: 1.5px solid #0e1b3d; background: #0e1b3d; color: #ffffff; border-radius: 8px; padding: 10px; font-size: 14px; font-weight: 600; text-decoration: none;">
-                        <i class="fas fa-user-cog me-2"></i> {{ __('Admin') }}
-                      </a>
-                      <a href="{{ $purchaseUrl }}" class="btn-template-action primary-btn" style="flex: 1; justify-content: center; display: inline-flex; align-items: center; border: 1.5px solid #ff5a2c; background: #ff5a2c; color: #ffffff; border-radius: 8px; padding: 10px; font-size: 14px; font-weight: 600; text-decoration: none;">
+                    <div class="card-action-row" style="display: flex; flex-direction: column; gap: 8px;">
+                      <div class="d-flex gap-2" style="width: 100%;">
+                        <a href="{{ $previewUrl }}" target="_blank" class="btn-template-action outline-btn" style="flex: 1; justify-content: center; display: inline-flex; align-items: center; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 10px; font-size: 14px; font-weight: 600; color: #4a5568; text-decoration: none;">
+                          <i class="fas fa-eye me-2"></i> {{ __('Live Preview') }}
+                        </a>
+                        <a href="{{ route('front.templates.autologin', $template->username) }}" target="_blank" class="btn-template-action admin-btn" style="flex: 1; justify-content: center; display: inline-flex; align-items: center; border: 1.5px solid #0e1b3d; background: #0e1b3d; color: #ffffff; border-radius: 8px; padding: 10px; font-size: 14px; font-weight: 600; text-decoration: none;">
+                          <i class="fas fa-user-cog me-2"></i> {{ __('Admin') }}
+                        </a>
+                      </div>
+                      <a href="{{ $purchaseUrl }}" class="btn-template-action primary-btn" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; border: 1.5px solid #ff5a2c; background: #ff5a2c; color: #ffffff; border-radius: 8px; padding: 10px; font-size: 14px; font-weight: 600; text-decoration: none;">
                         <i class="fas fa-shopping-cart me-2"></i> {{ __('Purchase') }}
                       </a>
                     </div>
@@ -1272,28 +1261,21 @@
       <div class="cta-trust-banner py-4 px-3" data-aos="fade-up">
         <div class="row g-3 justify-content-between align-items-center text-center">
           
-          <div class="col-6 col-md-3">
+          <div class="col-6 col-md-4">
             <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
               <span class="trust-icon"><i class="fas fa-rocket"></i></span>
               <span class="trust-txt">{{ __('Launch Instantly') }}</span>
             </div>
           </div>
 
-          <div class="col-6 col-md-3">
+          <div class="col-6 col-md-4">
             <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
               <span class="trust-icon"><i class="fas fa-shield-alt"></i></span>
               <span class="trust-txt">{{ __('14-Days Money Back Guarantee') }}</span>
             </div>
           </div>
 
-          <div class="col-6 col-md-3">
-            <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
-              <span class="trust-icon"><i class="fas fa-history"></i></span>
-              <span class="trust-txt">{{ __('Cancel Anytime') }}</span>
-            </div>
-          </div>
-
-          <div class="col-6 col-md-3">
+          <div class="col-12 col-md-4">
             <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
               <span class="trust-icon"><i class="fas fa-headset"></i></span>
               <span class="trust-txt">{{ __('24/7 Expert Support') }}</span>
@@ -1319,7 +1301,14 @@
         // Get all template items in the duplicated section
         var filteredItems = $('.template-card-item');
         if (activeFilterThemes !== 'all') {
-            filteredItems = $('.template-card-item[data-category="' + activeFilterThemes + '"]');
+            if (activeFilterThemes === 'clothing') {
+                filteredItems = $('.template-card-item').filter(function() {
+                    var cat = $(this).attr('data-category');
+                    return cat === 'clothing' || cat === 'fashion' || cat === 'kids';
+                });
+            } else {
+                filteredItems = $('.template-card-item[data-category="' + activeFilterThemes + '"]');
+            }
         }
 
         // Hide all items first

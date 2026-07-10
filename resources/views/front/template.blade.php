@@ -17,10 +17,10 @@
   }
   /* Give longer thumbnail preview */
   .card-image-wrap {
-      height: 380px !important;
+      height: 280px !important;
   }
   .template-card-modern:hover .scrolling-img {
-      transform: translateY(calc(-100% + 380px)) !important;
+      transform: translateY(calc(-100% + 280px)) !important;
   }
   .btn-template-action.admin-btn {
       background: #0e1b3d;
@@ -151,14 +151,16 @@
                   
                   <hr class="card-divider">
                   
-                  <div class="card-action-row">
-                    <a href="{{ $previewUrl }}" target="_blank" class="btn-template-action outline-btn">
-                      <i class="fas fa-eye me-2"></i> {{ __('Live Preview') }}
-                    </a>
-                    <a href="{{ route('front.templates.autologin', $template->username) }}" target="_blank" class="btn-template-action admin-btn">
-                      <i class="fas fa-user-cog me-2"></i> {{ __('Admin') }}
-                    </a>
-                    <a href="{{ $purchaseUrl }}" class="btn-template-action primary-btn">
+                  <div class="card-action-row" style="display: flex; flex-direction: column; gap: 8px;">
+                    <div class="d-flex gap-2" style="width: 100%;">
+                      <a href="{{ $previewUrl }}" target="_blank" class="btn-template-action outline-btn" style="flex: 1; justify-content: center; display: inline-flex; align-items: center;">
+                        <i class="fas fa-eye me-2"></i> {{ __('Live Preview') }}
+                      </a>
+                      <a href="{{ route('front.templates.autologin', $template->username) }}" target="_blank" class="btn-template-action admin-btn" style="flex: 1; justify-content: center; display: inline-flex; align-items: center;">
+                        <i class="fas fa-user-cog me-2"></i> {{ __('Admin') }}
+                      </a>
+                    </div>
+                    <a href="{{ $purchaseUrl }}" class="btn-template-action primary-btn" style="width: 100%; justify-content: center; display: inline-flex; align-items: center;">
                       <i class="fas fa-shopping-cart me-2"></i> {{ __('Purchase') }}
                     </a>
                   </div>
@@ -267,7 +269,14 @@
           $('.template-card-item').each(function() {
               var category = $(this).attr('data-category');
               var searchText = $(this).attr('data-search') ? $(this).attr('data-search').toLowerCase() : '';
-              var matchCategory = (activeFilter === 'all' || category === activeFilter);
+              var matchCategory = false;
+              if (activeFilter === 'all') {
+                  matchCategory = true;
+              } else if (activeFilter === 'clothing') {
+                  matchCategory = (category === 'clothing' || category === 'fashion');
+              } else {
+                  matchCategory = (category === activeFilter);
+              }
               
               var matchSearch = true;
               for (var i = 0; i < searchTerms.length; i++) {
