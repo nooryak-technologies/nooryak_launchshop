@@ -3,6 +3,28 @@
 @section('pagename')
   - {{ __('Home') }}
 @endsection
+
+@section('styles')
+<style>
+  /* Give longer thumbnail preview */
+  .card-image-wrap {
+      height: 380px !important;
+  }
+  .template-card-modern:hover .scrolling-img {
+      transform: translateY(calc(-100% + 380px)) !important;
+  }
+  .btn-template-action.admin-btn {
+      background: #0e1b3d;
+      color: #ffffff;
+      border: 1px solid #0e1b3d;
+  }
+  .btn-template-action.admin-btn:hover {
+      background: #1e293b;
+      border-color: #1e293b;
+      color: #ffffff;
+  }
+</style>
+@endsection
 @php
   $additional_section_status = json_decode($bs->additional_section_status, true);
 @endphp
@@ -430,6 +452,141 @@
       </div>
     </section>
     <!-- Templates Section End -->
+  @endif
+
+  @if ($bs->templates_section == 1)
+    <!-- Duplicated Templates Section Start -->
+    <section class="templates-section mt-80" id="templates-duplicate" style="background: #f8fafc; padding: 80px 0;">
+      <div class="container">
+        <div class="row align-items-center mb-50">
+          <div class="col-12 text-center">
+            <div class="templates-badge-wrap" data-aos="fade-up">
+              <span class="templates-badge">
+                <i class="fas fa-palette me-2"></i>{{ __('50+ Premium Themes') }}
+              </span>
+            </div>
+            <h2 class="section-title mb-3" data-aos="fade-up" style="font-size: 38px; font-weight: 800; color: #1E2335;">{{ __('Professional Themes for Every Industry (Scrolling Style)') }}</h2>
+            <p class="section-subtitle-text" data-aos="fade-up" style="font-size: 16px; color: #718096; max-width: 600px; margin: 0 auto 30px;">{{ __('Explore our optimized scrolling templates built for speed, responsiveness, and conversions.') }}</p>
+          </div>
+        </div>
+
+        <!-- Search & Category Filter Section -->
+        <div class="templates-filter-section mb-50" data-aos="fade-up" data-aos-delay="100">
+          <div class="row g-4 align-items-center">
+            <div class="col-lg-4">
+              <div class="search-box-custom">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="templateSearch" class="form-control" placeholder="Search templates by name...">
+              </div>
+            </div>
+            <div class="col-lg-8">
+              <div class="templates-tabs-wrapper">
+                <button type="button" class="tab-btn active" data-filter="all">{{ __('All Templates') }}</button>
+                <button type="button" class="tab-btn" data-filter="fashion">{{ __('Fashion') }}</button>
+                <button type="button" class="tab-btn" data-filter="clothing">{{ __('Clothing') }}</button>
+                <button type="button" class="tab-btn" data-filter="grocery">{{ __('Grocery') }}</button>
+                <button type="button" class="tab-btn" data-filter="electronics">{{ __('Electronics') }}</button>
+                <button type="button" class="tab-btn" data-filter="beauty">{{ __('Beauty') }}</button>
+                <button type="button" class="tab-btn" data-filter="multipurpose">{{ __('Multipurpose') }}</button>
+                <button type="button" class="tab-btn" data-filter="others">{{ __('Others') }}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Templates Grid Section -->
+        <div class="templates-grid-wrapper">
+          <div class="row g-4 justify-content-start" id="templatesGrid">
+            @foreach ($templates as $template)
+              @php
+                $themeName = App\Models\User\BasicSetting::where('user_id', $template->id)->pluck('theme')->first();
+                $category = 'others';
+                $displayName = __('Theme');
+                $badgeClass = 'bg-secondary';
+                
+                if ($themeName == 'vegetables' || $themeName == 'grocery') {
+                    $category = 'grocery';
+                    $displayName = __('Grocery & Supermarket');
+                    $badgeClass = 'badge-grocery';
+                } elseif ($themeName == 'manti' || $themeName == 'multipurpose') {
+                    $category = 'multipurpose';
+                    $displayName = __('Multipurpose');
+                    $badgeClass = 'badge-multi';
+                } elseif ($themeName == 'fashion' || $themeName == 'apparel' || $themeName == 'jewellery' || $themeName == 'kids' || $themeName == 'clothing') {
+                    $category = ($themeName == 'clothing') ? 'clothing' : 'fashion';
+                    $displayName = match($themeName) {
+                        'jewellery' => __('Jewellery & Accessories'),
+                        'kids' => __('Kids Fashion'),
+                        'clothing' => __('Clothing & Apparel'),
+                        default => __('Fashion & Apparel'),
+                    };
+                    $badgeClass = 'badge-fashion';
+                } elseif ($themeName == 'electronics' || $themeName == 'gadgets') {
+                    $category = 'electronics';
+                    $displayName = __('Electronics & Gadgets');
+                    $badgeClass = 'badge-electronics';
+                } elseif ($themeName == 'beauty' || $themeName == 'cosmetics' || $themeName == 'skinflow') {
+                    $category = 'beauty';
+                    $displayName = match($themeName) {
+                        'skinflow' => __('Skin & Beauty Care'),
+                        default => __('Beauty & Cosmetics'),
+                    };
+                    $badgeClass = 'badge-beauty';
+                } else {
+                    $category = 'others';
+                    $displayName = ucfirst($themeName ?? 'Default');
+                    $badgeClass = 'badge-others';
+                }
+                
+                $previewUrl = detailsUrl($template);
+                $purchaseUrl = route('front.pricing') . '?template=' . urlencode($template->username);
+              @endphp
+              
+              <div class="col-lg-4 col-md-6 template-card-item mb-4" data-category="{{ $category }}" data-search="{{ strtolower(trim($displayName . ' ' . ($template->shop_name ?? '') . ' ' . $template->username . ' ' . ($themeName ?? '') . ' ' . $category)) }}">
+                <div class="template-card-modern">
+                  <!-- Image Wrapper with scroll hover effect -->
+                  <div class="card-image-wrap" style="height: 380px !important; overflow: hidden; position: relative;">
+                    <span class="category-badge {{ $badgeClass }}">{{ $displayName }}</span>
+                    <a href="{{ $previewUrl }}" target="_blank" class="image-viewport" style="display: block; height: 100%; overflow: hidden;">
+                      @if (!empty($template->template_img))
+                        <img class="lazyload scrolling-img" src="{{ asset('assets/front/images/placeholder.png') }}"
+                          data-src="{{ asset('assets/front/img/template-previews/' . $template->template_img) }}"
+                          alt="{{ $displayName }} Theme" style="width: 100%; transition: transform 2.5s ease-in-out;" />
+                      @else
+                        <img class="lazyload scrolling-img" src="{{ asset('assets/front/images/placeholder.png') }}"
+                          data-src="{{ asset('assets/front/img/template-previews/placeholder.png') }}"
+                          alt="Placeholder Theme" style="width: 100%; transition: transform 2.5s ease-in-out;" />
+                      @endif
+                    </a>
+                  </div>
+                  
+                  <!-- Card Body -->
+                  <div class="card-body-wrap" style="padding: 24px; background: #ffffff;">
+                    <h3 class="card-theme-title" style="font-size: 18px; font-weight: 700; color: #1e2335; margin-bottom: 12px;">{{ $displayName }} {{ __('Theme') }}</h3>
+                    
+                    <hr class="card-divider" style="border-top: 1px solid #e2e8f0; margin: 15px 0;">
+                    
+                    <div class="card-action-row" style="display: flex; gap: 8px;">
+                      <a href="{{ $previewUrl }}" target="_blank" class="btn-template-action outline-btn" style="flex: 1; justify-content: center; display: inline-flex; align-items: center; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 10px; font-size: 14px; font-weight: 600; color: #4a5568; text-decoration: none;">
+                        <i class="fas fa-eye me-2"></i> {{ __('Live Preview') }}
+                      </a>
+                      <a href="{{ route('front.templates.autologin', $template->username) }}" target="_blank" class="btn-template-action admin-btn" style="flex: 1; justify-content: center; display: inline-flex; align-items: center; border: 1.5px solid #0e1b3d; background: #0e1b3d; color: #ffffff; border-radius: 8px; padding: 10px; font-size: 14px; font-weight: 600; text-decoration: none;">
+                        <i class="fas fa-user-cog me-2"></i> {{ __('Admin') }}
+                      </a>
+                      <a href="{{ $purchaseUrl }}" class="btn-template-action primary-btn" style="flex: 1; justify-content: center; display: inline-flex; align-items: center; border: 1.5px solid #ff5a2c; background: #ff5a2c; color: #ffffff; border-radius: 8px; padding: 10px; font-size: 14px; font-weight: 600; text-decoration: none;">
+                        <i class="fas fa-shopping-cart me-2"></i> {{ __('Purchase') }}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            @endforeach
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <!-- Duplicated Templates Section End -->
   @endif
 
 
@@ -1133,6 +1290,54 @@
 @section('scripts')
 <script>
   $(document).ready(function() {
+    // ===== Duplicated Templates Grid Filtering Logic =====
+    var activeFilter = 'all';
+    var searchQuery = '';
+
+    function filterTemplates() {
+        var showCount = 0;
+        var searchTerms = searchQuery.split(/\s+/).filter(Boolean);
+
+        $('.template-card-item').each(function() {
+            var category = $(this).attr('data-category');
+            var searchText = $(this).attr('data-search') ? $(this).attr('data-search').toLowerCase() : '';
+            var matchCategory = (activeFilter === 'all' || category === activeFilter);
+            
+            var matchSearch = true;
+            for (var i = 0; i < searchTerms.length; i++) {
+                if (searchText.indexOf(searchTerms[i]) === -1) {
+                    matchSearch = false;
+                    break;
+                }
+            }
+
+            if (matchCategory && matchSearch) {
+                $(this).removeClass('d-none');
+                showCount++;
+            } else {
+                $(this).addClass('d-none');
+            }
+        });
+    }
+
+    $('#templateSearch').on('input', function() {
+        searchQuery = $.trim($(this).val()).toLowerCase();
+        if (searchQuery !== '') {
+            $('.tab-btn').removeClass('active');
+            $('.tab-btn[data-filter="all"]').addClass('active');
+            activeFilter = 'all';
+        }
+        filterTemplates();
+    });
+
+    $('.tab-btn').on('click', function() {
+        $('.tab-btn').removeClass('active');
+        $(this).addClass('active');
+        activeFilter = $(this).data('filter');
+        searchQuery = '';
+        $('#templateSearch').val('');
+        filterTemplates();
+    });
     // 1. Template filter and show balance logic
     let itemsLimit = 4;
     let activeCategory = 'all';
