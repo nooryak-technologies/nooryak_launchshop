@@ -13,6 +13,9 @@
   .page-title-area {
       display: none !important;
   }
+  .shops-hero {
+      padding-top: 140px !important;
+  }
 </style>
 @endsection
 
@@ -117,41 +120,41 @@
             <i class="fas fa-store"></i>
           </div>
           <div>
-            <div class="shops-stat-value" data-count="2500" data-suffix="+">2,500+</div>
-            <div class="shops-stat-label">{{ __('Live Stores') }}</div>
+            <div class="shops-stat-value" data-count="250" data-suffix="+">250+</div>
+            <div class="shops-stat-label">{{ __('Stores Launched') }}</div>
           </div>
         </div>
       </div>
       <div class="col-6 col-lg-3 mb-3 mb-lg-0">
         <div class="shops-stat-item justify-content-center">
-          <div class="shops-stat-icon red">
-            <i class="fas fa-users"></i>
+          <div class="shops-stat-icon" style="background-color: rgba(139, 92, 246, 0.1); color: #8b5cf6; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+            <i class="fas fa-gem"></i>
           </div>
           <div>
-            <div class="shops-stat-value" data-count="8000" data-suffix="+">8,000+</div>
-            <div class="shops-stat-label">{{ __('Merchants Onboarded') }}</div>
+            <div class="shops-stat-value" data-count="15" data-suffix="+">15+</div>
+            <div class="shops-stat-label">{{ __('Premium Themes') }}</div>
           </div>
         </div>
       </div>
       <div class="col-6 col-lg-3 mb-3 mb-lg-0">
         <div class="shops-stat-item justify-content-center">
-          <div class="shops-stat-icon blue">
-            <i class="fas fa-th-large"></i>
+          <div class="shops-stat-icon green">
+            <i class="fas fa-shield-alt"></i>
           </div>
           <div>
-            <div class="shops-stat-value" data-count="50" data-suffix="+">50+</div>
-            <div class="shops-stat-label">{{ __('Theme Categories') }}</div>
+            <div class="shops-stat-value">99.99%</div>
+            <div class="shops-stat-label">{{ __('Uptime Guarantee') }}</div>
           </div>
         </div>
       </div>
       <div class="col-6 col-lg-3">
         <div class="shops-stat-item justify-content-center">
-          <div class="shops-stat-icon green">
-            <i class="fas fa-star"></i>
+          <div class="shops-stat-icon red">
+            <i class="fas fa-user-friends"></i>
           </div>
           <div>
-            <div class="shops-stat-value" data-count="98" data-suffix="%">98%</div>
-            <div class="shops-stat-label">{{ __('Merchant Satisfaction') }}</div>
+            <div class="shops-stat-value" data-count="500" data-suffix="+">500+</div>
+            <div class="shops-stat-label">{{ __('Happy Merchants') }}</div>
           </div>
         </div>
       </div>

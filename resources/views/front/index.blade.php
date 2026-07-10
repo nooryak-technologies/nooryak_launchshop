@@ -30,6 +30,11 @@
       border-color: #1e293b;
       color: #ffffff;
   }
+  .btn-template-action {
+      padding: 8px 4px !important;
+      font-size: 13px !important;
+      white-space: nowrap !important;
+  }
 </style>
 @endsection
 @php
