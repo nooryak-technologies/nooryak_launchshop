@@ -483,10 +483,10 @@
               <label class="login-field-label">{{ __('Phone Number') }}</label>
               <div class="row g-2 align-items-center">
                 <div class="col-3 col-sm-3">
-                  <input class="login-input-field" type="text" id="otp_country_code" value="+91" placeholder="{{ __('Code') }}" required inputmode="numeric" style="height: 50px; text-align: center; border-radius: 8px; border: 1.5px solid #cbd5e1; width: 100%;">
+                  <input class="login-input-field" type="text" id="otp_country_code" value="+91" placeholder="{{ __('Code') }}" inputmode="numeric" style="height: 50px; text-align: center; border-radius: 8px; border: 1.5px solid #cbd5e1; width: 100%;">
                 </div>
                 <div class="col-9 col-sm-9">
-                  <input class="login-input-field" type="number" id="otp_phone" placeholder="81234 56789" required min="0" step="1" inputmode="numeric" style="height: 50px; border-radius: 8px; border: 1.5px solid #cbd5e1; width: 100%;">
+                  <input class="login-input-field" type="number" id="otp_phone" placeholder="81234 56789" min="0" step="1" inputmode="numeric" style="height: 50px; border-radius: 8px; border: 1.5px solid #cbd5e1; width: 100%;">
                 </div>
               </div>
               <div id="otp-phone-feedback" class="small mt-2" style="font-weight: 600; text-align: left;"></div>
@@ -556,6 +556,10 @@
       }).addClass('text-muted');
       $('#password-login-wrap').removeClass('d-none');
       $('#otp-login-wrap').addClass('d-none');
+      
+      // Enforce validation on password fields when visible
+      $('#loginEmail').prop('required', true);
+      $('#loginPassword').prop('required', true);
     });
 
     $('#tab-otp').on('click', function(e) {
@@ -570,6 +574,10 @@
       }).addClass('text-muted');
       $('#password-login-wrap').addClass('d-none');
       $('#otp-login-wrap').removeClass('d-none');
+      
+      // Disable validation on password fields when hidden
+      $('#loginEmail').prop('required', false);
+      $('#loginPassword').prop('required', false);
     });
 
     // OTP timer logic
