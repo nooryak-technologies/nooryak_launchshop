@@ -30,11 +30,11 @@
               @endphp
               @if (!array_key_exists('children', $link))
                 <li class="nav-item">
-                  <a class="nav-link " target="{{ $link['target'] }}" href="{{ $href }}">{{ $link['text'] }}</a>
+                  <a class="nav-link " target="{{ $link['target'] }}" href="{{ $href }}">{{ str_replace('Store Designs', 'Store Themes', $link['text']) }}</a>
                 </li>
               @else
                 <li class="nav-item has-submenu">
-                  <a class="nav-link " target="{{ $link['target'] }}" href="{{ $href }}">{{ $link['text'] }} <i class="fal fa-plus"></i></a>
+                  <a class="nav-link " target="{{ $link['target'] }}" href="{{ $href }}">{{ str_replace('Store Designs', 'Store Themes', $link['text']) }} <i class="fal fa-plus"></i></a>
                   <ul class="menu-dropdown">
                     @foreach ($link['children'] as $level2)
                       @php
@@ -42,7 +42,7 @@
                       @endphp
                       <li class="nav-item">
                         <a class="nav-link" href="{{ $l2Href }}"
-                          target="{{ $level2['target'] }}">{{ $level2['text'] }}</a>
+                          target="{{ $level2['target'] }}">{{ str_replace('Store Designs', 'Store Themes', $level2['text']) }}</a>
                       </li>
                     @endforeach
                   </ul>

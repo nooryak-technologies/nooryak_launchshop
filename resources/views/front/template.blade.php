@@ -1,7 +1,7 @@
 @extends('front.layout')
 
 @section('pagename')
-  - {{ $pageHeading ?? __('Templates') }}
+  - {{ str_replace('Store Designs', 'Store Themes', $pageHeading ?? __('Templates')) }}
 @endsection
 @php
   $additional_section_status = json_decode($bs->additional_section_status, true);
@@ -44,7 +44,7 @@
       <div class="row align-items-center mb-60 mt-30 templates-hero-row">
         <div class="col-lg-7 mx-auto text-center">
           <div class="templates-hero-content" data-aos="fade-up">
-            <span class="templates-hero-badge">{{ __('PREMIUM STORE DESIGNS') }}</span>
+            <span class="templates-hero-badge">{{ __('PREMIUM STORE THEMES') }}</span>
             <h1 class="templates-hero-title">
               Launch Your Dream Store <br><span>in Minutes</span>
             </h1>
@@ -196,7 +196,132 @@
           <p class="text-muted">Try choosing another category or clearing your search filter.</p>
         </div>
       </div>
-      
+
+      <!-- Duplicated Themes Section Start -->
+      <section class="templates-section mt-80" id="templates-themes-duplicate" style="background: transparent; padding: 0;">
+        <div class="container p-0">
+          <div class="row align-items-center mb-50">
+            <div class="col-12 text-center">
+              <div class="templates-badge-wrap" data-aos="fade-up">
+                <span class="templates-badge">
+                  <i class="fas fa-palette me-2"></i>{{ __('50+ Premium Themes') }}
+                </span>
+              </div>
+              <h2 class="section-title mb-3" data-aos="fade-up" style="font-size: 38px; font-weight: 800; color: #1E2335;">{{ __('Professional Themes for Every Industry') }}</h2>
+              <p class="section-subtitle-text" data-aos="fade-up" style="font-size: 16px; color: #718096; max-width: 600px; margin: 0 auto 30px;">{{ __('Choose from 50+ premium themes designed for maximum conversions and beautiful user experience.') }}</p>
+            </div>
+          </div>
+
+          <!-- Filter Buttons for the second grid -->
+          <div class="row mb-50" data-aos="fade-up">
+            <div class="col-12 theme-filter-scroll-wrapper d-flex justify-content-center align-items-center gap-2 flex-wrap">
+              <button class="theme-filter-btn active" data-category="all">
+                <i class="fas fa-th-large me-2"></i>{{ __('All Themes') }}
+              </button>
+              <button class="theme-filter-btn" data-category="fashion">
+                <i class="fas fa-tshirt me-2"></i>{{ __('Fashion') }}
+              </button>
+              <button class="theme-filter-btn" data-category="electronics">
+                <i class="fas fa-laptop me-2"></i>{{ __('Electronics') }}
+              </button>
+              <button class="theme-filter-btn" data-category="furniture">
+                <i class="fas fa-couch me-2"></i>{{ __('Furniture') }}
+              </button>
+              <button class="theme-filter-btn" data-category="grocery">
+                <i class="fas fa-shopping-cart me-2"></i>{{ __('Grocery') }}
+              </button>
+              <button class="theme-filter-btn" data-category="lifestyle">
+                <i class="fas fa-shopping-bag me-2"></i>{{ __('Lifestyle') }}
+              </button>
+              <button class="theme-filter-btn" data-category="beauty">
+                <i class="fas fa-magic me-2"></i>{{ __('Beauty') }}
+              </button>
+              <div class="dropdown d-inline-block">
+                <button class="theme-filter-btn dropdown-toggle" type="button" id="moreCategoriesDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                  {{ __('More') }} <i class="fas fa-chevron-down ms-1" style="font-size: 10px;"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="moreCategoriesDropdown">
+                  <li><a class="dropdown-item theme-filter-dropdown-item" href="#" data-category="kids">{{ __('Kids') }}</a></li>
+                  <li><a class="dropdown-item theme-filter-dropdown-item" href="#" data-category="pet">{{ __('Pet') }}</a></li>
+                  <li><a class="dropdown-item theme-filter-dropdown-item" href="#" data-category="jewellery">{{ __('Jewellery') }}</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          @php
+            $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
+            $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
+          @endphp
+          <div class="row theme-grid-row">
+            @foreach ($templates as $template)
+              @php
+                $themeName = App\Models\User\BasicSetting::where('user_id', $template->id)->pluck('theme')->first();
+                
+                // Map display name and custom mock names to match reference screenshot perfectly
+                $themeTitle = '';
+                $themeCat = '';
+                
+                if ($themeName == 'fashion') {
+                    $themeTitle = __('Urban Style');
+                    $themeCat = __('Fashion');
+                } elseif ($themeName == 'vegetables') {
+                    $themeTitle = __('FreshMart');
+                    $themeCat = __('Grocery');
+                } elseif ($themeName == 'electronics') {
+                    $themeTitle = __('TechHub');
+                    $themeCat = __('Electronics');
+                } elseif ($themeName == 'beauty' || $themeName == 'cosmetics') {
+                    $themeTitle = __('Glow Studio');
+                    $themeCat = __('Beauty');
+                } elseif ($themeName == 'furniture') {
+                    $themeTitle = __('FurniCasa');
+                    $themeCat = __('Furniture');
+                } else {
+                    $themeTitle = __(ucfirst($themeName));
+                    $themeCat = __(ucfirst($themeName));
+                }
+                
+                // Normalize category for jQuery filtering
+                $filterCat = strtolower($themeName == 'vegetables' ? 'grocery' : ($themeName == 'cosmetics' ? 'beauty' : $themeName));
+              @endphp
+              <div class="col-lg-3 col-md-6 col-sm-12 theme-item-col mb-4" data-category="{{ $filterCat }}" data-aos="fade-up">
+                <div class="theme-card">
+                  <div class="theme-card-img-wrap">
+                    <img class="theme-card-img lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
+                      data-src="{{ asset('assets/front/img/template-previews/' . $template->template_img) }}" alt="Theme Image">
+                    <div class="theme-card-overlay">
+                      <a href="{{ detailsUrl($template) }}" target="_blank" class="btn-overlay-preview">
+                        <i class="fas fa-eye me-1"></i> Live Preview
+                      </a>
+                      <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}?template={{ urlencode($template->username) }}" class="btn-overlay-purchase">
+                        <i class="fas fa-shopping-cart me-1"></i> Purchase
+                      </a>
+                    </div>
+                  </div>
+                  <div class="theme-card-body d-flex justify-content-between align-items-center">
+                    <div class="theme-card-info">
+                      <h3 class="theme-card-title mb-1">{{ $themeTitle }}</h3>
+                      <span class="theme-card-category">{{ $themeCat }}</span>
+                    </div>
+                    <span class="theme-card-premium-badge">{{ __('Premium') }}</span>
+                  </div>
+                </div>
+              </div>
+            @endforeach
+          </div>
+
+          <!-- View All Themes Button Wrap -->
+          <div class="view-all-themes-btn-wrap d-none" data-aos="fade-up" style="display: flex; justify-content: center; margin-top: 0px;">
+            <button id="view-all-themes-btn" class="btn-view-all-themes">
+              {{ __('View All Themes') }} <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+          </div>
+
+        </div>
+      </section>
+      <!-- Duplicated Themes Section End -->
+
       <!-- How it Works section -->
       <div class="template-how-it-works-section mt-100" data-aos="fade-up">
         <h2 class="section-title text-center">{{ __('How It Works') }}</h2>
@@ -341,6 +466,53 @@
               $answer.slideDown(250);
           }
       });
+
+      // ===== Duplicated Themes Grid Filtering Logic =====
+      let itemsLimit = 4;
+      let activeCategoryTheme = 'all';
+      let showAllThemes = false;
+
+      function applyFilterAndLimitThemes() {
+          let filteredItems = $('.theme-item-col');
+          if (activeCategoryTheme !== 'all') {
+              filteredItems = $('.theme-item-col[data-category="' + activeCategoryTheme + '"]');
+          }
+
+          $('.theme-item-col').addClass('d-none');
+
+          if (showAllThemes) {
+              filteredItems.removeClass('d-none');
+              $('.view-all-themes-btn-wrap').addClass('d-none');
+          } else {
+              filteredItems.slice(0, itemsLimit).removeClass('d-none');
+              if (filteredItems.length > itemsLimit) {
+                  $('.view-all-themes-btn-wrap').removeClass('d-none');
+              } else {
+                  $('.view-all-themes-btn-wrap').addClass('d-none');
+              }
+          }
+      }
+
+      $('.theme-filter-btn, .theme-filter-dropdown-item').on('click', function(e) {
+          e.preventDefault();
+          $('.theme-filter-btn').removeClass('active');
+          if ($(this).hasClass('theme-filter-dropdown-item')) {
+              $('#moreCategoriesDropdown').addClass('active');
+          } else {
+              $(this).addClass('active');
+          }
+          activeCategoryTheme = $(this).data('category').toLowerCase().trim();
+          showAllThemes = false;
+          applyFilterAndLimitThemes();
+      });
+
+      $('#view-all-themes-btn').on('click', function(e) {
+          e.preventDefault();
+          showAllThemes = true;
+          applyFilterAndLimitThemes();
+      });
+
+      applyFilterAndLimitThemes();
   });
 </script>
 @endsection
