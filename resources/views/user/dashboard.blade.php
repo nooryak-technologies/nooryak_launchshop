@@ -358,12 +358,38 @@
     font-weight: 500;
 }
 
-/* ===== BOTTOM ROW (5 cols) ===== */
+/* ===== BOTTOM ROW ===== */
 .bottom-row {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 16px;
     margin-bottom: 16px;
+}
+.bottom-row .bottom-card {
+    grid-column: span 6;
+}
+
+/* For laptop screens (1201px to 1600px) */
+@media (min-width: 1201px) and (max-width: 1600px) {
+    .bottom-row .bottom-card:nth-child(1),
+    .bottom-row .bottom-card:nth-child(2) {
+        grid-column: span 3; /* Row 1: 2 columns */
+    }
+    .bottom-row .bottom-card:nth-child(3),
+    .bottom-row .bottom-card:nth-child(4),
+    .bottom-row .bottom-card:nth-child(5) {
+        grid-column: span 2; /* Row 2: 3 columns */
+    }
+}
+
+/* For large desktop screens (above 1600px) */
+@media (min-width: 1601px) {
+    .bottom-row {
+        grid-template-columns: repeat(5, 1fr);
+    }
+    .bottom-row .bottom-card {
+        grid-column: span 1 !important;
+    }
 }
 .bottom-card {
     background: #fff;
@@ -520,6 +546,7 @@
     .plan-banner { flex-direction: column; gap: 16px; }
     .plan-current-card, .plan-limit-card, .orders-month-card { width: 100%; flex: unset; }
     .bottom-row { grid-template-columns: repeat(2, 1fr); }
+    .bottom-row .bottom-card { grid-column: span 1 !important; }
     .charts-row { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 991px) {
@@ -533,6 +560,7 @@
     .stat-card-value { font-size: 22px; }
     .charts-row { grid-template-columns: 1fr; }
     .bottom-row { grid-template-columns: 1fr; }
+    .bottom-row .bottom-card { grid-column: span 1 !important; }
 }
 @media (max-width: 576px) {
     .plan-limit-card { flex-direction: column; align-items: flex-start; gap: 16px; }
@@ -804,10 +832,7 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
       <div class="stat-card-left">
         <p class="stat-card-title">{{ __('Total Products') }}</p>
         <div class="stat-card-value">{{ $total_items }}</div>
-        <div class="stat-card-trend">
-          <i class="fas fa-arrow-up" style="font-size:10px;"></i> 12.5%
-          <span class="trend-neutral">{{ __('vs last month') }}</span>
-        </div>
+
       </div>
       <div class="stat-card-icon">
         <i class="fas fa-cube"></i>
@@ -818,10 +843,7 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
       <div class="stat-card-left">
         <p class="stat-card-title">{{ __('Orders') }}</p>
         <div class="stat-card-value">{{ $total_orders }}</div>
-        <div class="stat-card-trend">
-          <i class="fas fa-arrow-up" style="font-size:10px;"></i> 33.3%
-          <span class="trend-neutral">{{ __('vs last month') }}</span>
-        </div>
+
       </div>
       <div class="stat-card-icon">
         <i class="fas fa-shopping-bag"></i>
@@ -832,10 +854,7 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
       <div class="stat-card-left">
         <p class="stat-card-title">{{ __('Customers') }}</p>
         <div class="stat-card-value">{{ $total_customers }}</div>
-        <div class="stat-card-trend">
-          <i class="fas fa-arrow-up" style="font-size:10px;"></i> 100%
-          <span class="trend-neutral">{{ __('vs last month') }}</span>
-        </div>
+
       </div>
       <div class="stat-card-icon">
         <i class="fas fa-users"></i>
@@ -846,10 +865,7 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
       <div class="stat-card-left">
         <p class="stat-card-title">{{ __('Revenue') }}</p>
         <div class="stat-card-value">{{ $user_currency ? $user_currency->symbol : '₹' }}{{ number_format($total_revenue, 2) }}</div>
-        <div class="stat-card-trend">
-          <i class="fas fa-arrow-up" style="font-size:10px;"></i> 28.7%
-          <span class="trend-neutral">{{ __('vs last month') }}</span>
-        </div>
+
       </div>
       <div class="stat-card-icon">
         <i class="fas fa-rupee-sign"></i>
@@ -863,10 +879,7 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
       <div class="stat-card-left">
         <p class="stat-card-title">{{ __('Conversion Rate') }}</p>
         <div class="stat-card-value">{{ $conversion_rate }}%</div>
-        <div class="stat-card-trend">
-          <i class="fas fa-arrow-up" style="font-size:10px;"></i> 8.4%
-          <span class="trend-neutral">{{ __('vs last month') }}</span>
-        </div>
+
       </div>
       <div class="stat-card-icon">
         <i class="fas fa-chart-line"></i>
@@ -877,10 +890,7 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
       <div class="stat-card-left">
         <p class="stat-card-title">{{ __('Subscribers') }}</p>
         <div class="stat-card-value">{{ $total_subscribers }}</div>
-        <div class="stat-card-trend">
-          <i class="fas fa-arrow-up" style="font-size:10px;"></i> 100%
-          <span class="trend-neutral">{{ __('vs last month') }}</span>
-        </div>
+
       </div>
       <div class="stat-card-icon">
         <i class="fas fa-envelope"></i>
@@ -891,10 +901,7 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
       <div class="stat-card-left">
         <p class="stat-card-title">{{ __('Blogs') }}</p>
         <div class="stat-card-value">{{ $blogs }}</div>
-        <div class="stat-card-trend">
-          <i class="fas fa-minus" style="font-size:10px;"></i> 0%
-          <span class="trend-neutral">{{ __('vs last month') }}</span>
-        </div>
+
       </div>
       <div class="stat-card-icon">
         <i class="fas fa-file-alt"></i>
@@ -905,10 +912,7 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
       <div class="stat-card-left">
         <p class="stat-card-title">{{ __('Custom Pages') }}</p>
         <div class="stat-card-value">{{ $total_custom_pages }}</div>
-        <div class="stat-card-trend">
-          <i class="fas fa-minus" style="font-size:10px;"></i> 0%
-          <span class="trend-neutral">{{ __('vs last month') }}</span>
-        </div>
+
       </div>
       <div class="stat-card-icon">
         <i class="fas fa-file"></i>
