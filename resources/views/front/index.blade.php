@@ -13,6 +13,13 @@
   .template-card-modern:hover .scrolling-img {
       transform: translateY(calc(-100% + 380px)) !important;
   }
+  /* Shorten the card preview container for the 4-column duplicated section on Home */
+  #templates-duplicate .card-image-wrap {
+      height: 280px !important;
+  }
+  #templates-duplicate .template-card-modern:hover .scrolling-img {
+      transform: translateY(calc(-100% + 280px)) !important;
+  }
   .btn-template-action.admin-btn {
       background: #0e1b3d;
       color: #ffffff;
@@ -465,32 +472,38 @@
                 <i class="fas fa-palette me-2"></i>{{ __('50+ Premium Themes') }}
               </span>
             </div>
-            <h2 class="section-title mb-3" data-aos="fade-up" style="font-size: 38px; font-weight: 800; color: #1E2335;">{{ __('Professional Themes for Every Industry (Scrolling Style)') }}</h2>
+            <h2 class="section-title mb-3 text-center" data-aos="fade-up" style="font-size: 38px; font-weight: 800; color: #1E2335;">{{ __('Professional Themes for Every Industry') }}</h2>
             <p class="section-subtitle-text" data-aos="fade-up" style="font-size: 16px; color: #718096; max-width: 600px; margin: 0 auto 30px;">{{ __('Explore our optimized scrolling templates built for speed, responsiveness, and conversions.') }}</p>
           </div>
         </div>
 
-        <!-- Search & Category Filter Section -->
-        <div class="templates-filter-section mb-50" data-aos="fade-up" data-aos-delay="100">
-          <div class="row g-4 align-items-center">
-            <div class="col-lg-4">
-              <div class="search-box-custom">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" id="templateSearch" class="form-control" placeholder="Search templates by name...">
-              </div>
-            </div>
-            <div class="col-lg-8">
-              <div class="templates-tabs-wrapper">
-                <button type="button" class="tab-btn active" data-filter="all">{{ __('All Templates') }}</button>
-                <button type="button" class="tab-btn" data-filter="fashion">{{ __('Fashion') }}</button>
-                <button type="button" class="tab-btn" data-filter="clothing">{{ __('Clothing') }}</button>
-                <button type="button" class="tab-btn" data-filter="grocery">{{ __('Grocery') }}</button>
-                <button type="button" class="tab-btn" data-filter="electronics">{{ __('Electronics') }}</button>
-                <button type="button" class="tab-btn" data-filter="beauty">{{ __('Beauty') }}</button>
-                <button type="button" class="tab-btn" data-filter="multipurpose">{{ __('Multipurpose') }}</button>
-                <button type="button" class="tab-btn" data-filter="others">{{ __('Others') }}</button>
-              </div>
-            </div>
+        <!-- Filter Buttons for the second grid -->
+        <div class="row mb-50 templates-filter-section" data-aos="fade-up" data-aos-delay="100">
+          <div class="col-12 theme-filter-scroll-wrapper d-flex justify-content-center align-items-center gap-2 flex-wrap">
+            <button class="theme-filter-btn theme-filter-btn-duplicate active" data-filter="all">
+              <i class="fas fa-th-large me-2"></i>{{ __('All Themes') }}
+            </button>
+            <button class="theme-filter-btn theme-filter-btn-duplicate" data-filter="fashion">
+              <i class="fas fa-tshirt me-2"></i>{{ __('Fashion') }}
+            </button>
+            <button class="theme-filter-btn theme-filter-btn-duplicate" data-filter="clothing">
+              <i class="fas fa-tshirt me-2"></i>{{ __('Clothing') }}
+            </button>
+            <button class="theme-filter-btn theme-filter-btn-duplicate" data-filter="grocery">
+              <i class="fas fa-shopping-cart me-2"></i>{{ __('Grocery') }}
+            </button>
+            <button class="theme-filter-btn theme-filter-btn-duplicate" data-filter="electronics">
+              <i class="fas fa-laptop me-2"></i>{{ __('Electronics') }}
+            </button>
+            <button class="theme-filter-btn theme-filter-btn-duplicate" data-filter="beauty">
+              <i class="fas fa-magic me-2"></i>{{ __('Beauty') }}
+            </button>
+            <button class="theme-filter-btn theme-filter-btn-duplicate" data-filter="multipurpose">
+              <i class="fas fa-shopping-bag me-2"></i>{{ __('Multipurpose') }}
+            </button>
+            <button class="theme-filter-btn theme-filter-btn-duplicate" data-filter="others">
+              <i class="fas fa-folder me-2"></i>{{ __('Others') }}
+            </button>
           </div>
         </div>
 
@@ -542,10 +555,10 @@
                 $purchaseUrl = route('front.pricing') . '?template=' . urlencode($template->username);
               @endphp
               
-              <div class="col-lg-4 col-md-6 template-card-item mb-4" data-category="{{ $category }}" data-search="{{ strtolower(trim($displayName . ' ' . ($template->shop_name ?? '') . ' ' . $template->username . ' ' . ($themeName ?? '') . ' ' . $category)) }}">
+              <div class="col-lg-3 col-md-6 col-sm-12 template-card-item mb-4" data-category="{{ $category }}" data-search="{{ strtolower(trim($displayName . ' ' . ($template->shop_name ?? '') . ' ' . $template->username . ' ' . ($themeName ?? '') . ' ' . $category)) }}">
                 <div class="template-card-modern">
                   <!-- Image Wrapper with scroll hover effect -->
-                  <div class="card-image-wrap" style="height: 380px !important; overflow: hidden; position: relative;">
+                  <div class="card-image-wrap" style="height: 280px !important; overflow: hidden; position: relative;">
                     <span class="category-badge {{ $badgeClass }}">{{ $displayName }}</span>
                     <a href="{{ $previewUrl }}" target="_blank" class="image-viewport" style="display: block; height: 100%; overflow: hidden;">
                       @if (!empty($template->template_img))
@@ -582,6 +595,13 @@
               </div>
             @endforeach
           </div>
+        </div>
+
+        <!-- View All Themes Button Wrap for Duplicate Grid -->
+        <div class="view-all-themes-btn-wrap-duplicate d-none" data-aos="fade-up" style="display: flex; justify-content: center; margin-top: 30px;">
+          <button id="view-all-themes-btn-duplicate" class="btn-view-all-themes">
+            {{ __('View All Themes') }} <i class="fas fa-arrow-right ms-2"></i>
+          </button>
         </div>
 
       </div>
@@ -1290,54 +1310,51 @@
 @section('scripts')
 <script>
   $(document).ready(function() {
-    // ===== Duplicated Templates Grid Filtering Logic =====
-    var activeFilter = 'all';
-    var searchQuery = '';
+    // ===== Duplicated Templates Grid Filtering and Limit Logic =====
+    var activeFilterThemes = 'all';
+    var itemsLimitThemes = 4;
+    var showAllThemes = false;
 
     function filterTemplates() {
-        var showCount = 0;
-        var searchTerms = searchQuery.split(/\s+/).filter(Boolean);
+        // Get all template items in the duplicated section
+        var filteredItems = $('.template-card-item');
+        if (activeFilterThemes !== 'all') {
+            filteredItems = $('.template-card-item[data-category="' + activeFilterThemes + '"]');
+        }
 
-        $('.template-card-item').each(function() {
-            var category = $(this).attr('data-category');
-            var searchText = $(this).attr('data-search') ? $(this).attr('data-search').toLowerCase() : '';
-            var matchCategory = (activeFilter === 'all' || category === activeFilter);
-            
-            var matchSearch = true;
-            for (var i = 0; i < searchTerms.length; i++) {
-                if (searchText.indexOf(searchTerms[i]) === -1) {
-                    matchSearch = false;
-                    break;
-                }
-            }
+        // Hide all items first
+        $('.template-card-item').addClass('d-none');
 
-            if (matchCategory && matchSearch) {
-                $(this).removeClass('d-none');
-                showCount++;
+        if (showAllThemes) {
+            filteredItems.removeClass('d-none');
+            $('.view-all-themes-btn-wrap-duplicate').addClass('d-none');
+        } else {
+            filteredItems.slice(0, itemsLimitThemes).removeClass('d-none');
+            if (filteredItems.length > itemsLimitThemes) {
+                $('.view-all-themes-btn-wrap-duplicate').removeClass('d-none');
             } else {
-                $(this).addClass('d-none');
+                $('.view-all-themes-btn-wrap-duplicate').addClass('d-none');
             }
-        });
+        }
     }
 
-    $('#templateSearch').on('input', function() {
-        searchQuery = $.trim($(this).val()).toLowerCase();
-        if (searchQuery !== '') {
-            $('.tab-btn').removeClass('active');
-            $('.tab-btn[data-filter="all"]').addClass('active');
-            activeFilter = 'all';
-        }
+    $('.theme-filter-btn-duplicate').on('click', function(e) {
+        e.preventDefault();
+        $('.theme-filter-btn-duplicate').removeClass('active');
+        $(this).addClass('active');
+        activeFilterThemes = $(this).data('filter').toLowerCase().trim();
+        showAllThemes = false;
         filterTemplates();
     });
 
-    $('.tab-btn').on('click', function() {
-        $('.tab-btn').removeClass('active');
-        $(this).addClass('active');
-        activeFilter = $(this).data('filter');
-        searchQuery = '';
-        $('#templateSearch').val('');
+    $('#view-all-themes-btn-duplicate').on('click', function(e) {
+        e.preventDefault();
+        showAllThemes = true;
         filterTemplates();
     });
+
+    // Run initially
+    filterTemplates();
     // 1. Template filter and show balance logic
     let itemsLimit = 4;
     let activeCategory = 'all';
@@ -1372,15 +1389,15 @@
     }
 
     // Category button click
-    $('.theme-filter-btn, .theme-filter-dropdown-item').on('click', function(e) {
+    $('#templates .theme-filter-btn, #templates .theme-filter-dropdown-item').on('click', function(e) {
       e.preventDefault();
       
       // Remove active classes
-      $('.theme-filter-btn').removeClass('active');
+      $('#templates .theme-filter-btn').removeClass('active');
       
       // If it is a dropdown item, add active to the dropdown toggle button
       if ($(this).hasClass('theme-filter-dropdown-item')) {
-        $('#moreCategoriesDropdown').addClass('active');
+        $('#templates #moreCategoriesDropdown').addClass('active');
       } else {
         $(this).addClass('active');
       }
