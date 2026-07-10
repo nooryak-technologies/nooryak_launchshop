@@ -371,250 +371,291 @@
             <div class="main-form signup-form-card">
               <form id="authForm" action="{{ route('front.checkout.view') }}" method="post" enctype="multipart/form-data">
                 @csrf
-                <div class="title mb-25 d-flex justify-content-between align-items-center">
-                  <div>
-                    <h3 class="mb-0">{{ __('Signup') }}</h3>
-                    <p class="mb-0 mt-1">{{ __('Create your account to start your store') }}</p>
+
+                <!-- Screen 1: Mobile Verification -->
+                <div id="screen-1">
+                  <div class="title mb-25 d-flex justify-content-between align-items-center">
+                    <div>
+                      <h3 class="mb-0">{{ __('Create an account !') }}</h3>
+                      <p class="mb-0 mt-1">{{ __('Register to continue to') }} {{ $bs->website_title }}.</p>
+                    </div>
+                    <div>
+                      <a href="{{ route('user.login') }}" class="btn-login-link">
+                        <i class="fal fa-sign-in-alt"></i> {{ __('Login') }}
+                      </a>
+                    </div>
                   </div>
-                  <div>
-                    <a href="{{ route('user.login') }}" class="btn-login-link">
-                      <i class="fal fa-sign-in-alt"></i> {{ __('Login') }}
-                    </a>
+
+                  <!-- Name Input -->
+                  <div class="form-group mb-20">
+                    <label class="form-label font-weight-bold small mb-2" style="color: #475569; display: block; text-align: left;">
+                      {{ __('Name') }} *
+                    </label>
+                    <div style="position: relative;">
+                      <span style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 15px;"><i class="fal fa-user"></i></span>
+                      <input class="form-control" type="text" name="first_name" id="first_name" placeholder="{{ __('Enter your name') }}" value="{{ old('first_name') }}" required style="padding-left: 46px !important;">
+                    </div>
+                    @error('first_name')
+                      <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
+                    @enderror
+                  </div>
+
+                  <!-- Country Code + Phone Input -->
+                  <div class="form-group mb-20">
+                    <label class="form-label font-weight-bold small mb-2" style="color: #475569; display: block; text-align: left;">
+                      {{ __('Phone Number') }} *
+                    </label>
+                    <div class="row g-2 align-items-center">
+                      <div class="col-3 col-sm-2">
+                        <input class="form-control" type="text" name="country_code" id="country_code" value="{{ old('country_code', '+91') }}"
+                          placeholder="{{ __('Code') }}" required inputmode="numeric">
+                        @error('country_code')
+                          <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
+                        @enderror
+                      </div>
+                      <div class="col-9 col-sm-10">
+                        <input class="form-control" type="number" name="phone" id="phone_number" value="{{ old('phone') }}"
+                          placeholder="81234 56789" required min="0" step="1" inputmode="numeric">
+                        @error('phone')
+                          <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
+                        @enderror
+                      </div>
+                    </div>
+                    <div id="phone-feedback" class="small mt-2" style="font-weight: 600; text-align: left;"></div>
+                  </div>
+
+                  <!-- Get OTP Button -->
+                  <button type="button" class="btn primary-btn w-100 py-3 mb-20" id="btn-send-otp" style="font-size: 16px; font-weight: 600; border-radius: 8px;">
+                    {{ __('Get OTP') }}
+                  </button>
+
+                  <!-- OTP Input Field (hidden initially) -->
+                  <div class="form-group mb-20 d-none" id="otp-group">
+                    <label class="form-label font-weight-bold small mb-2" style="color: #475569; display: block; text-align: left;">
+                      {{ __('Enter OTP sent to your Mobile Number') }} *
+                    </label>
+                    <div class="row g-2 align-items-center">
+                      <div class="col-8 col-sm-9">
+                        <input class="form-control" type="text" id="otp_code" placeholder="Enter 6-digit OTP" maxlength="6" inputmode="numeric">
+                      </div>
+                      <div class="col-4 col-sm-3">
+                        <button type="button" class="btn w-100 py-2" id="btn-verify-otp" style="height: 50px !important; border-radius: 8px; font-weight: 600; font-size: 14px; background-color: var(--primary-color, #ff5a2c); border-color: var(--primary-color, #ff5a2c); color: #fff;">
+                          {{ __('Submit') }}
+                        </button>
+                      </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                      <span id="otp-timer" class="small text-muted" style="font-weight: 600;"></span>
+                      <button type="button" class="btn btn-link p-0 small d-none" id="btn-resend-otp" style="color: var(--primary-color, #ff5a2c); font-weight: 600; text-decoration: none;">
+                        {{ __('Resend OTP') }}
+                      </button>
+                    </div>
+                    <div id="otp-feedback" class="small mt-2" style="font-weight: 600; text-align: left;"></div>
                   </div>
                 </div>
 
-                <!-- Plan Switcher Card -->
-                <div class="selected-plan-card mb-15">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                      <span class="plan-label">{{ __('Selected Plan') }}</span>
-                      <div class="d-flex align-items-center" style="gap: 8px;">
-                        <h4 class="plan-title" id="display-plan-title" style="margin: 0;">{{ __($package->title) }}</h4>
-                        <span id="display-plan-term-badge" class="term-badge badge-{{ strtolower($package->term) }}">{{ __($package->term) }}</span>
-                      </div>
-                      <div class="plan-price-display mt-2" id="display-plan-price-wrap">
-                        @if($status == 'trial')
-                          <span class="price-amount" style="font-size: 24px; font-weight: 800; color: #ff5a2c;">{{ __('Free Trial') }}</span>
-                          <span class="price-term text-muted" style="font-size: 14px; font-weight: 500;">({{ $package->trial_days }} {{ __('days') }})</span>
-                        @else
-                          <span class="price-amount" style="font-size: 24px; font-weight: 800; color: #ff5a2c;">{{ $package->price == 0 ? __('Free') : format_price($package->price) }}</span>
-                          <span class="price-term text-muted" style="font-size: 14px; font-weight: 500;">/ {{ __($package->term) }}</span>
-                        @endif
-                      </div>
+                <!-- Screen 2: Shop Details & Plan Selection -->
+                <div id="screen-2" class="d-none">
+                  <div class="title mb-25">
+                    <h3 class="mb-0">{{ __('Complete Signup') }}</h3>
+                    <p class="mb-0 mt-1">{{ __('Provide your shop and account details') }}</p>
+                  </div>
+
+                  <!-- Verified Summary alert -->
+                  <div class="alert alert-success d-flex justify-content-between align-items-center p-3 mb-20" style="border-radius: 10px; background-color: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.15); margin-bottom: 20px;">
+                    <div style="text-align: left;">
+                      <p class="mb-0 small text-muted font-weight-bold" style="font-size: 10px; text-transform: uppercase;">{{ __('VERIFIED CONTACT') }}</p>
+                      <h6 class="mb-0 font-weight-bold text-dark" id="summary-verified-info" style="font-size: 14px; margin-top: 2px;"></h6>
                     </div>
-                    <button type="button" class="btn-change-plan btn-sm" id="btn-toggle-plans">
-                      {{ __('Change Plan') }}
+                    <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none font-weight-bold" id="btn-edit-contact" style="color: var(--primary-color, #ff5a2c);">
+                      {{ __('Edit') }}
                     </button>
                   </div>
-                  
-                  <!-- Expanded Plan Picker Panel -->
-                  <div class="plan-picker-panel mt-15 d-none" id="plan-picker-panel">
-                    <label class="form-label small font-weight-bold mb-2 text-secondary">{{ __('Choose Another Plan') }}</label>
-                    <div class="plan-options-list">
-                      @foreach($packages as $pkg)
-                        @php
-                          $features = !empty($pkg->features) ? json_decode($pkg->features, true) : [];
-                          $pkgHasSubdomain = is_array($features) && in_array('Subdomain', $features);
-                        @endphp
-                        <div class="plan-option-item {{ $pkg->id == $package->id ? 'active' : '' }}" 
-                             data-id="{{ $pkg->id }}"
-                             data-title="{{ $pkg->title }}"
-                             data-price-val="{{ $pkg->price }}"
-                             data-term="{{ __($pkg->term) }}"
-                             data-is-trial="{{ $pkg->is_trial }}"
-                             data-trial-days="{{ $pkg->trial_days }}"
-                             data-price-formatted="{{ format_price($pkg->price) }}"
-                             data-trial-price-formatted="{{ __('Free Trial') }} ({{ $pkg->trial_days }} {{ __('days') }})"
-                             data-has-subdomain="{{ $pkgHasSubdomain ? 'true' : 'false' }}">
-                          <div class="plan-option-header d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center" style="gap: 8px;">
-                              <span class="plan-opt-name">{{ $pkg->title }}</span>
-                              <span class="term-badge badge-{{ strtolower($pkg->term) }}">{{ __($pkg->term) }}</span>
-                            </div>
-                            <span class="plan-opt-price">
-                              <span class="price-amount" style="font-size: 16px;">{{ $pkg->price == 0 ? __('Free') : format_price($pkg->price) }}</span>
-                            </span>
-                          </div>
-                          
-                          <!-- Switch for Trial vs Regular if trial is supported -->
-                          @if($pkg->is_trial == 1 && $pkg->price > 0)
-                            <div class="plan-opt-type-toggle mt-2 d-flex justify-content-end" style="gap: 12px;">
-                              <label class="toggle-btn-label">
-                                <input type="radio" name="plan_type_opt_{{ $pkg->id }}" value="trial" {{ ($pkg->id == $package->id && $status == 'trial') ? 'checked' : '' }}>
-                                <span>{{ __('Free Trial') }}</span>
-                              </label>
-                              <label class="toggle-btn-label">
-                                <input type="radio" name="plan_type_opt_{{ $pkg->id }}" value="regular" {{ ($pkg->id == $package->id && $status == 'regular') ? 'checked' : '' }} {{ ($pkg->id != $package->id) ? 'checked' : '' }}>
-                                <span>{{ __('Purchase') }}</span>
-                              </label>
-                            </div>
+
+                  <!-- Plan Switcher Card -->
+                  <div class="selected-plan-card mb-15">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <span class="plan-label">{{ __('Selected Plan') }}</span>
+                        <div class="d-flex align-items-center" style="gap: 8px;">
+                          <h4 class="plan-title" id="display-plan-title" style="margin: 0;">{{ __($package->title) }}</h4>
+                          <span id="display-plan-term-badge" class="term-badge badge-{{ strtolower($package->term) }}">{{ __($package->term) }}</span>
+                        </div>
+                        <div class="plan-price-display mt-2" id="display-plan-price-wrap">
+                          @if($status == 'trial')
+                            <span class="price-amount" style="font-size: 24px; font-weight: 800; color: #ff5a2c;">{{ __('Free Trial') }}</span>
+                            <span class="price-term text-muted" style="font-size: 14px; font-weight: 500;">({{ $package->trial_days }} {{ __('days') }})</span>
+                          @else
+                            <span class="price-amount" style="font-size: 24px; font-weight: 800; color: #ff5a2c;">{{ $package->price == 0 ? __('Free') : format_price($package->price) }}</span>
+                            <span class="price-term text-muted" style="font-size: 14px; font-weight: 500;">/ {{ __($package->term) }}</span>
                           @endif
                         </div>
-                      @endforeach
-                    </div>
-                  </div>
-                </div>
-<br>
-                <!-- Template Switcher Card -->
-                <div class="selected-plan-card mb-20" id="selected-template-card">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center" style="gap: 12px;">
-                      <!-- Image Thumbnail wrapper -->
-                      <img src="{{ !empty($selectedTemplateImg) ? asset('assets/front/img/template-previews/' . $selectedTemplateImg) : '' }}" 
-                           alt="{{ $selectedTemplateName }}" 
-                           class="selected-template-thumb"
-                           id="display-template-img"
-                           style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover; border: 1px solid #e2e8f0; {{ empty($selectedTemplateImg) ? 'display: none;' : '' }}">
-                      
-                      <!-- Fallback storefront icon wrapper -->
-                      <div class="selected-template-icon-wrap" 
-                           id="display-template-icon"
-                           style="width: 48px; height: 48px; border-radius: 8px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; color: #475569; border: 1px solid #e2e8f0; {{ !empty($selectedTemplateImg) ? 'display: none;' : '' }}">
-                        <i class="fal fa-store" style="font-size: 20px;"></i>
                       </div>
-                      
-                      <div>
-                        <span class="plan-label">{{ __('Selected Template') }}</span>
-                        <h4 class="plan-title" id="display-template-name" style="font-size: 16px;">{{ $selectedTemplateName }}</h4>
-                      </div>
+                      <button type="button" class="btn-change-plan btn-sm" id="btn-toggle-plans">
+                        {{ __('Change Plan') }}
+                      </button>
                     </div>
-                    <button type="button" class="btn-change-plan btn-sm" id="btn-toggle-templates">
-                      {{ __('Change') }}
-                    </button>
-                  </div>
-
-                  <!-- Expanded Template Picker Panel -->
-                  <div class="plan-picker-panel mt-15 d-none" id="template-picker-panel">
-                    <label class="form-label small font-weight-bold mb-2 text-secondary">{{ __('Choose Another Template') }}</label>
-                    <div class="plan-options-list">
-                      @foreach($templates as $tpl)
-                        <div class="plan-option-item template-option-item {{ $tpl->username == $selected_template ? 'active' : '' }}" 
-                             data-username="{{ $tpl->username }}"
-                             data-name="{{ $tpl->display_name }}"
-                             data-img="{{ !empty($tpl->template_img) ? asset('assets/front/img/template-previews/' . $tpl->template_img) : '' }}">
-                          <div class="plan-option-header d-flex justify-content-between align-items-center">
-                            <span class="plan-opt-name">{{ $tpl->display_name }}</span>
+                    
+                    <!-- Expanded Plan Picker Panel -->
+                    <div class="plan-picker-panel mt-15 d-none" id="plan-picker-panel">
+                      <label class="form-label small font-weight-bold mb-2 text-secondary">{{ __('Choose Another Plan') }}</label>
+                      <div class="plan-options-list">
+                        @foreach($packages as $pkg)
+                          @php
+                            $features = !empty($pkg->features) ? json_decode($pkg->features, true) : [];
+                            $pkgHasSubdomain = is_array($features) && in_array('Subdomain', $features);
+                          @endphp
+                          <div class="plan-option-item {{ $pkg->id == $package->id ? 'active' : '' }}" 
+                               data-id="{{ $pkg->id }}"
+                               data-title="{{ $pkg->title }}"
+                               data-price-val="{{ $pkg->price }}"
+                               data-term="{{ __($pkg->term) }}"
+                               data-is-trial="{{ $pkg->is_trial }}"
+                               data-trial-days="{{ $pkg->trial_days }}"
+                               data-price-formatted="{{ format_price($pkg->price) }}"
+                               data-trial-price-formatted="{{ __('Free Trial') }} ({{ $pkg->trial_days }} {{ __('days') }})"
+                               data-has-subdomain="{{ $pkgHasSubdomain ? 'true' : 'false' }}">
+                            <div class="plan-option-header d-flex justify-content-between align-items-center">
+                              <div class="d-flex align-items-center" style="gap: 8px;">
+                                <span class="plan-opt-name">{{ $pkg->title }}</span>
+                                <span class="term-badge badge-{{ strtolower($pkg->term) }}">{{ __($pkg->term) }}</span>
+                              </div>
+                              <span class="plan-opt-price">
+                                <span class="price-amount" style="font-size: 16px;">{{ $pkg->price == 0 ? __('Free') : format_price($pkg->price) }}</span>
+                              </span>
+                            </div>
+                            
+                            <!-- Switch for Trial vs Regular if trial is supported -->
+                            @if($pkg->is_trial == 1 && $pkg->price > 0)
+                              <div class="plan-opt-type-toggle mt-2 d-flex justify-content-end" style="gap: 12px;">
+                                <label class="toggle-btn-label">
+                                  <input type="radio" name="plan_type_opt_{{ $pkg->id }}" value="trial" {{ ($pkg->id == $package->id && $status == 'trial') ? 'checked' : '' }}>
+                                  <span>{{ __('Free Trial') }}</span>
+                                </label>
+                                <label class="toggle-btn-label">
+                                  <input type="radio" name="plan_type_opt_{{ $pkg->id }}" value="regular" {{ ($pkg->id == $package->id && $status == 'regular') ? 'checked' : '' }} {{ ($pkg->id != $package->id) ? 'checked' : '' }}>
+                                  <span>{{ __('Purchase') }}</span>
+                                </label>
+                              </div>
+                            @endif
                           </div>
+                        @endforeach
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+
+                  <!-- Template Switcher Card -->
+                  <div class="selected-plan-card mb-20" id="selected-template-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="d-flex align-items-center" style="gap: 12px;">
+                        <!-- Image Thumbnail wrapper -->
+                        <img src="{{ !empty($selectedTemplateImg) ? asset('assets/front/img/template-previews/' . $selectedTemplateImg) : '' }}" 
+                             alt="{{ $selectedTemplateName }}" 
+                             class="selected-template-thumb"
+                             id="display-template-img"
+                             style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover; border: 1px solid #e2e8f0; {{ empty($selectedTemplateImg) ? 'display: none;' : '' }}">
+                        
+                        <!-- Fallback storefront icon wrapper -->
+                        <div class="selected-template-icon-wrap" 
+                             id="display-template-icon"
+                             style="width: 48px; height: 48px; border-radius: 8px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; color: #475569; border: 1px solid #e2e8f0; {{ !empty($selectedTemplateImg) ? 'display: none;' : '' }}">
+                          <i class="fal fa-store" style="font-size: 20px;"></i>
                         </div>
-                      @endforeach
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Subdomain Input Group (Looks like Home Page) -->
-                <div class="form-group mb-20">
-                  <label class="form-label font-weight-bold small mb-2" style="color: #475569; display: block; text-align: left;">
-                    <span id="subdomain-label-text">{{ $hasSubdomain ? __('Create Your Subdomain') : __('Username') }}</span> *
-                  </label>
-                  <div class="subdomain-input-group" id="subdomain-input-group" style="border: 1px solid #cbd5e1; box-shadow: none;">
-                    <span class="domain-prefix" id="subdomain-prefix" style="padding: 12px 10px 12px 15px; font-size: 14px; background: #f8fafc; border-right: 1px solid #cbd5e1; color: #94a3b8; font-weight: 500; display: {{ $hasSubdomain ? 'flex' : 'none' }}; align-items: center;">https://</span>
-                    <input type="text" class="form-control" name="username" placeholder="{{ $hasSubdomain ? __('mystore') : __('Username') }}"
-                      value="{{ old('username') }}" required autocomplete="off" style="border: none !important; height: auto !important; padding: 12px 15px !important; font-size: 14px !important; flex-grow: 1; outline: none !important; box-shadow: none !important;">
-                    <span class="domain-ext" id="subdomain-ext" style="padding: 12px 15px; font-size: 14px; color: #475569; font-weight: 700; background: #f8fafc; border-left: 1px solid #cbd5e1; display: {{ $hasSubdomain ? 'flex' : 'none' }}; align-items: center;">.{{ env('WEBSITE_HOST') }}</span>
-                  </div>
-                  <div id="usernameAvailable" class="small mt-2" style="font-weight: 600; text-align: left;"></div>
-                  @error('username')
-                    <p class="text-danger small mb-0 mt-1" style="text-align: left;">{{ $message }}</p>
-                  @enderror
-                </div>
-
-                <!-- Email Input -->
-                <div class="form-group mb-20">
-                  <input class="form-control" type="email" name="email" value="{{ old('email') }}"
-                    placeholder="{{ __('Email Address') }}" required>
-                  @error('email')
-                    <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
-                  @enderror
-                </div>
-
-                <!-- Country Code + Phone Input -->
-                <div class="form-group mb-20">
-                  <div class="row g-2 align-items-center">
-                    <div class="col-3 col-sm-2">
-                      <input class="form-control" type="text" name="country_code" id="country_code" value="{{ old('country_code', '+91') }}"
-                        placeholder="{{ __('Code') }}" required inputmode="numeric">
-                      @error('country_code')
-                        <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
-                      @enderror
-                    </div>
-                    <div class="col-6 col-sm-7">
-                      <input class="form-control" type="number" name="phone" id="phone_number" value="{{ old('phone') }}"
-                        placeholder="{{ __('Phone Number') }}" required min="0" step="1" inputmode="numeric">
-                      @error('phone')
-                        <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
-                      @enderror
-                    </div>
-                    <div class="col-3 col-sm-3">
-                      <button type="button" class="btn w-100 py-2 btn-verify-phone" id="btn-send-otp" style="height: 50px !important; border-radius: 8px; font-weight: 600; font-size: 14px; border: 1.5px solid var(--primary-color, #ff5a2c); color: var(--primary-color, #ff5a2c); background-color: transparent; transition: all 0.3s ease;">
-                        {{ __('Verify') }}
+                        
+                        <div>
+                          <span class="plan-label">{{ __('Selected Template') }}</span>
+                          <h4 class="plan-title" id="display-template-name" style="font-size: 16px;">{{ $selectedTemplateName }}</h4>
+                        </div>
+                      </div>
+                      <button type="button" class="btn-change-plan btn-sm" id="btn-toggle-templates">
+                        {{ __('Change') }}
                       </button>
                     </div>
-                  </div>
-                  <div id="phone-feedback" class="small mt-2" style="font-weight: 600; text-align: left;"></div>
-                </div>
 
-                <!-- OTP Input Field (hidden initially) -->
-                <div class="form-group mb-20 d-none" id="otp-group">
-                  <label class="form-label font-weight-bold small mb-2" style="color: #475569; display: block; text-align: left;">
-                    {{ __('Enter OTP sent to your Mobile Number') }} *
-                  </label>
-                  <div class="row g-2 align-items-center">
-                    <div class="col-8 col-sm-9">
-                      <input class="form-control" type="text" id="otp_code" placeholder="Enter 6-digit OTP" maxlength="6" inputmode="numeric">
+                    <!-- Expanded Template Picker Panel -->
+                    <div class="plan-picker-panel mt-15 d-none" id="template-picker-panel">
+                      <label class="form-label small font-weight-bold mb-2 text-secondary">{{ __('Choose Another Template') }}</label>
+                      <div class="plan-options-list">
+                        @foreach($templates as $tpl)
+                          <div class="plan-option-item template-option-item {{ $tpl->username == $selected_template ? 'active' : '' }}" 
+                               data-username="{{ $tpl->username }}"
+                               data-name="{{ $tpl->display_name }}"
+                               data-img="{{ !empty($tpl->template_img) ? asset('assets/front/img/template-previews/' . $tpl->template_img) : '' }}">
+                            <div class="plan-option-header d-flex justify-content-between align-items-center">
+                              <span class="plan-opt-name">{{ $tpl->display_name }}</span>
+                            </div>
+                          </div>
+                        @endforeach
+                      </div>
                     </div>
-                    <div class="col-4 col-sm-3">
-                      <button type="button" class="btn w-100 py-2" id="btn-verify-otp" style="height: 50px !important; border-radius: 8px; font-weight: 600; font-size: 14px; background-color: var(--primary-color, #ff5a2c); border-color: var(--primary-color, #ff5a2c); color: #fff;">
-                        {{ __('Submit') }}
+                  </div>
+
+                  <!-- Subdomain Input Group -->
+                  <div class="form-group mb-20">
+                    <label class="form-label font-weight-bold small mb-2" style="color: #475569; display: block; text-align: left;">
+                      <span id="subdomain-label-text">{{ $hasSubdomain ? __('Create Your Subdomain') : __('Username') }}</span> *
+                    </label>
+                    <div class="subdomain-input-group" id="subdomain-input-group" style="border: 1px solid #cbd5e1; box-shadow: none;">
+                      <span class="domain-prefix" id="subdomain-prefix" style="padding: 12px 10px 12px 15px; font-size: 14px; background: #f8fafc; border-right: 1px solid #cbd5e1; color: #94a3b8; font-weight: 500; display: {{ $hasSubdomain ? 'flex' : 'none' }}; align-items: center;">https://</span>
+                      <input type="text" class="form-control" name="username" placeholder="{{ $hasSubdomain ? __('mystore') : __('Username') }}"
+                        value="{{ old('username') }}" required autocomplete="off" style="border: none !important; height: auto !important; padding: 12px 15px !important; font-size: 14px !important; flex-grow: 1; outline: none !important; box-shadow: none !important;">
+                      <span class="domain-ext" id="subdomain-ext" style="padding: 12px 15px; font-size: 14px; color: #475569; font-weight: 700; background: #f8fafc; border-left: 1px solid #cbd5e1; display: {{ $hasSubdomain ? 'flex' : 'none' }}; align-items: center;">.{{ env('WEBSITE_HOST') }}</span>
+                    </div>
+                    <div id="usernameAvailable" class="small mt-2" style="font-weight: 600; text-align: left;"></div>
+                    @error('username')
+                      <p class="text-danger small mb-0 mt-1" style="text-align: left;">{{ $message }}</p>
+                    @enderror
+                  </div>
+
+                  <!-- Email Input -->
+                  <div class="form-group mb-20">
+                    <input class="form-control" type="email" name="email" value="{{ old('email') }}"
+                      placeholder="{{ __('Email Address') }}" required>
+                    @error('email')
+                      <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
+                    @enderror
+                  </div>
+
+                  <!-- Password Input -->
+                  <div class="form-group mb-20">
+                    <div style="position: relative;">
+                      <input class="form-control" id="password" type="password" name="password"
+                        placeholder="{{ __('Password') }}" required style="padding-right: 44px;">
+                      <button type="button" class="btn-pwd-toggle" onclick="togglePasswordVisibility('password')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #94a3b8; cursor: pointer; padding: 4px; font-size: 16px; transition: color 0.2s;" onmouseover="this.style.color='#ff5a2c'" onmouseout="this.style.color='#94a3b8'">
+                        <i class="fal fa-eye" id="password-eye-icon"></i>
                       </button>
                     </div>
+                    @error('password')
+                      <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
+                    @enderror
                   </div>
-                  <div class="d-flex justify-content-between align-items-center mt-2">
-                    <span id="otp-timer" class="small text-muted" style="font-weight: 600;"></span>
-                    <button type="button" class="btn btn-link p-0 small d-none" id="btn-resend-otp" style="color: var(--primary-color, #ff5a2c); font-weight: 600; text-decoration: none;">
-                      {{ __('Resend OTP') }}
-                    </button>
+
+                  <!-- Confirm Password Input -->
+                  <div class="form-group mb-25">
+                    <div style="position: relative;">
+                      <input class="form-control" id="password-confirm" type="password"
+                        placeholder="{{ __('Confirm Password') }}" name="password_confirmation" required
+                        autocomplete="new-password" style="padding-right: 44px;">
+                      <button type="button" class="btn-pwd-toggle" onclick="togglePasswordVisibility('password-confirm')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #94a3b8; cursor: pointer; padding: 4px; font-size: 16px; transition: color 0.2s;" onmouseover="this.style.color='#ff5a2c'" onmouseout="this.style.color='#94a3b8'">
+                        <i class="fal fa-eye" id="password-confirm-eye-icon"></i>
+                      </button>
+                    </div>
+                    @error('password')
+                      <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
+                    @enderror
                   </div>
-                  <div id="otp-feedback" class="small mt-2" style="font-weight: 600; text-align: left;"></div>
-                </div>
+                  <br>
 
-                <!-- Password Input -->
-                <div class="form-group mb-20">
-                  <div style="position: relative;">
-                    <input class="form-control" id="password" type="password" name="password"
-                      placeholder="{{ __('Password') }}" required style="padding-right: 44px;">
-                    <button type="button" class="btn-pwd-toggle" onclick="togglePasswordVisibility('password')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #94a3b8; cursor: pointer; padding: 4px; font-size: 16px; transition: color 0.2s;" onmouseover="this.style.color='#ff5a2c'" onmouseout="this.style.color='#94a3b8'">
-                      <i class="fal fa-eye" id="password-eye-icon"></i>
-                    </button>
+                  <!-- Hidden Values -->
+                  <div>
+                    <input type="hidden" name="status" value="{{ $status }}">
+                    <input type="hidden" name="id" value="{{ $id }}">
+                    <input type="hidden" name="selected_template" value="{{ $selected_template ?? '' }}">
                   </div>
-                  @error('password')
-                    <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
-                  @enderror
-                </div>
 
-                <!-- Confirm Password Input -->
-                <div class="form-group mb-25">
-                  <div style="position: relative;">
-                    <input class="form-control" id="password-confirm" type="password"
-                      placeholder="{{ __('Confirm Password') }}" name="password_confirmation" required
-                      autocomplete="new-password" style="padding-right: 44px;">
-                    <button type="button" class="btn-pwd-toggle" onclick="togglePasswordVisibility('password-confirm')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #94a3b8; cursor: pointer; padding: 4px; font-size: 16px; transition: color 0.2s;" onmouseover="this.style.color='#ff5a2c'" onmouseout="this.style.color='#94a3b8'">
-                      <i class="fal fa-eye" id="password-confirm-eye-icon"></i>
-                    </button>
-                  </div>
-                  @error('password')
-                    <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
-                  @enderror
+                  <button type="submit" class="btn primary-btn w-100 py-3" style="font-size: 16px; font-weight: 600; border-radius: 8px;"> {{ __('Continue') }} </button>
                 </div>
-                <br>
-
-                <!-- Hidden Values -->
-                <div>
-                  <input type="hidden" name="status" value="{{ $status }}">
-                  <input type="hidden" name="id" value="{{ $id }}">
-                  <input type="hidden" name="selected_template" value="{{ $selected_template ?? '' }}">
-                </div>
-
-                <button type="submit" class="btn primary-btn w-100 py-3" style="font-size: 16px; font-weight: 600; border-radius: 8px;"> {{ __('Continue') }} </button>
               </form>
             </div>
           </div>
@@ -813,8 +854,16 @@
 
       $('#btn-send-otp').on('click', function(e) {
         e.preventDefault();
+        let nameVal = $('#first_name').val().trim();
         let phoneVal = $('#phone_number').val().trim();
         let countryCode = $('#country_code').val().trim();
+
+        if (!nameVal) {
+          $('#phone-feedback').html('<span class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ __("Please enter your name first.") }}</span>');
+          $('#first_name').addClass('is-invalid');
+          return;
+        }
+        $('#first_name').removeClass('is-invalid');
 
         if (!phoneVal) {
           $('#phone-feedback').html('<span class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ __("Please enter a valid phone number.") }}</span>');
@@ -881,6 +930,8 @@
         e.preventDefault();
         let enteredOtp = $('#otp_code').val().trim();
         let phoneVal = $('#phone_number').val().trim();
+        let countryCode = $('#country_code').val().trim();
+        let nameVal = $('#first_name').val().trim();
 
         if (!enteredOtp) {
           $('#otp-feedback').html('<span class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ __("Please enter the OTP.") }}</span>');
@@ -900,9 +951,13 @@
             $('#otp-group').addClass('d-none');
             $('#phone-feedback').html('<span class="text-success" style="font-size: 15px;"><i class="fas fa-check-circle"></i> ' + response.message + '</span>');
             
+            // Set verified info summary
+            $('#summary-verified-info').text(nameVal + ' (' + countryCode + ' ' + phoneVal + ')');
+
             // Make fields readonly and change verify button state
             $('#phone_number').prop('readonly', true);
             $('#country_code').prop('readonly', true);
+            $('#first_name').prop('readonly', true);
             
             $('#btn-send-otp')
               .prop('disabled', true)
@@ -912,6 +967,12 @@
                 'color': '#10b981',
                 'background-color': 'rgba(16, 185, 129, 0.05)'
               });
+
+            // Smooth transition to screen-2
+            setTimeout(function() {
+              $('#screen-1').addClass('d-none');
+              $('#screen-2').removeClass('d-none');
+            }, 800);
           } else {
             $('#otp-feedback').html('<span class="text-danger"><i class="fas fa-times-circle"></i> ' + response.message + '</span>');
           }
@@ -919,6 +980,34 @@
           let msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : '{{ __("Invalid OTP. Please try again.") }}';
           $('#otp-feedback').html('<span class="text-danger"><i class="fas fa-times-circle"></i> ' + msg + '</span>');
         });
+      });
+
+      // Edit contact callback to transition back to screen-1
+      $('#btn-edit-contact').on('click', function(e) {
+        e.preventDefault();
+        isPhoneVerified = false;
+        
+        // Reset inputs
+        $('#phone_number').prop('readonly', false);
+        $('#country_code').prop('readonly', false);
+        $('#first_name').prop('readonly', false);
+        
+        $('#btn-send-otp')
+          .prop('disabled', false)
+          .text('{{ __("Get OTP") }}')
+          .css({
+            'border-color': '',
+            'color': '',
+            'background-color': ''
+          });
+          
+        $('#phone-feedback').html('');
+        $('#otp-feedback').html('');
+        $('#otp_code').val('');
+        
+        // Switch screens
+        $('#screen-2').addClass('d-none');
+        $('#screen-1').removeClass('d-none');
       });
 
       // Prevent signup form submission if phone is not verified

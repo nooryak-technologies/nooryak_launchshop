@@ -57,6 +57,7 @@ Route::domain($domain)->group(function () {
 
         Route::get('/login', 'User\Auth\LoginController@showLoginForm')->name('user.login');
         Route::post('/login', 'User\Auth\LoginController@login')->name('user.login.submit');
+        Route::post('/login/otp', 'User\Auth\LoginController@loginWithOtp')->name('user.login.otp.submit');
         Route::post('/register/submit', 'User\Auth\RegisterController@register')->name('user-register-submit')->middleware('Demo');
         Route::get('/register/mode/{mode}/verify/{token}', 'User\Auth\RegisterController@token')->name('user-register-token');
 

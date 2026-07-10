@@ -664,6 +664,7 @@
       @csrf
 
       {{-- Hidden fields --}}
+      <input type="hidden" name="first_name"        value="{{ $data['first_name'] }}">
       <input type="hidden" name="category"          value="{{ $data['category'] }}">
       <input type="hidden" name="username"          value="{{ $data['username'] }}">
       <input type="hidden" name="password"          value="{{ $data['password'] }}">

@@ -388,6 +388,7 @@ class CheckoutController extends Controller
         $user = User::where('username', $request['username']);
         if ($user->count() == 0) {
             $user = User::create([
+                'first_name' => $request['first_name'],
                 'shop_name' => $request['shop_name'],
                 'email' => $request['email'],
                 'country_code' => $request['country_code'],
@@ -402,6 +403,10 @@ class CheckoutController extends Controller
                 'verification_link' => $token,
                 'category_id' => $request['category'],
             ]);
+            
+            $user->email_verified = 1;
+            $user->email_verified_at = date('Y-m-d H:i:s');
+            $user->save();
 
             //customize
             $langCount = User\Language::where('user_id', $user->id)->count();

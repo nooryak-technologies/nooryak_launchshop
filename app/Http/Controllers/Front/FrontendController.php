@@ -500,6 +500,7 @@ class FrontendController extends Controller
     {
        
         $this->validate($request, [
+            'first_name' => 'required|max:255',
             'username' => 'required|max:10|alpha_num|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8|confirmed',
@@ -514,6 +515,7 @@ class FrontendController extends Controller
         $seo = Seo::where('language_id', $currentLang->id)->first();
         $be = $currentLang->basic_extended;
         $data['bex'] = $be;
+        $data['first_name'] = $request->first_name;
         $data['username'] = $request->username;
         $data['email'] = $request->email;
         $data['password'] = $request->password;

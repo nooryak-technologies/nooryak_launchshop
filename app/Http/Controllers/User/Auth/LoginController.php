@@ -10,6 +10,8 @@ use App\Models\Language;
 use Config;
 use App\Models\BasicSetting as BS;
 use App\Models\Seo;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -59,7 +61,7 @@ class LoginController extends Controller
 
 
         $rules = [
-            'email'   => 'required|email',
+            'email'    => 'required',
             'password' => 'required'
         ];
 
@@ -73,11 +75,39 @@ class LoginController extends Controller
         $request->validate($rules, $messages);
         //--- Validation Section Ends
 
+        // Resolve user by Email or Phone number
+        $loginField = $request->email;
+        if (filter_var($loginField, FILTER_VALIDATE_EMAIL)) {
+            $credentials = [
+                'email' => $loginField,
+                'password' => $request->password
+            ];
+        } else {
+            // Find by phone number
+            $phone = preg_replace('/[^0-9]/', '', $loginField);
+            $user = User::where('phone', $phone)
+                ->orWhere(DB::raw("CONCAT(country_code, phone)"), $phone)
+                ->orWhere(DB::raw("CONCAT(REPLACE(country_code, '+', ''), phone)"), $phone)
+                ->first();
+            
+            if ($user) {
+                $credentials = [
+                    'email' => $user->email,
+                    'password' => $request->password
+                ];
+            } else {
+                $credentials = [
+                    'email' => '',
+                    'password' => $request->password
+                ];
+            }
+        }
+
         // Attempt to log the user in
-        if (Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password])) {
+        if (Auth::guard('web')->attempt($credentials)) {
 
             // Check If Email is verified or not
-            if (Auth::guard('web')->user()->email_verified == 0 || Auth::guard('web')->user()->email_verified == 0) {
+            if (Auth::guard('web')->user()->email_verified == 0) {
                 Auth::guard('web')->logout();
 
                 return back()->with('err', __('Your Email is not Verified').'!');
@@ -97,5 +127,82 @@ class LoginController extends Controller
     {
         Auth::guard('web')->logout();
         return redirect('/');
+    }
+
+    public function loginWithOtp(Request $request)
+    {
+        $request->validate([
+            'phone' => 'required',
+            'otp'   => 'required'
+        ]);
+
+        $phone = $request->phone;
+        $otp = $request->otp;
+
+        $sessionOtp = Session::get('otp_code');
+        $sessionPhone = Session::get('otp_phone');
+        $sessionExpiresAt = Session::get('otp_expires_at');
+
+        if (!$sessionOtp || !$sessionPhone || !$sessionExpiresAt) {
+            return response()->json([
+                'success' => false,
+                'message' => __('No OTP request found. Please request a new OTP.')
+            ], 400);
+        }
+
+        if (time() > $sessionExpiresAt) {
+            return response()->json([
+                'success' => false,
+                'message' => __('OTP has expired. Please request a new OTP.')
+            ], 400);
+        }
+
+        $cleanPhone = preg_replace('/[^0-9]/', '', $phone);
+        $cleanSessionPhone = preg_replace('/[^0-9]/', '', $sessionPhone);
+
+        if ($otp != $sessionOtp || substr($cleanPhone, -10) !== substr($cleanSessionPhone, -10)) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Invalid OTP. Please try again.')
+            ], 400);
+        }
+
+        // Find user by phone number
+        $user = User::where('phone', $cleanPhone)
+            ->orWhere(DB::raw("CONCAT(country_code, phone)"), $cleanPhone)
+            ->orWhere(DB::raw("CONCAT(REPLACE(country_code, '+', ''), phone)"), $cleanPhone)
+            ->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => __('No account found with this phone number.')
+            ], 400);
+        }
+
+        if ($user->status == '0') {
+            return response()->json([
+                'success' => false,
+                'message' => __('Your account is disabled.')
+            ], 400);
+        }
+
+        // Log the user in
+        Auth::guard('web')->login($user);
+
+        // Clear OTP sessions
+        Session::forget(['otp_code', 'otp_phone', 'otp_expires_at']);
+
+        if (Session::has('link')) {
+            $redirectUrl = Session::get('link');
+            Session::forget('link');
+        } else {
+            $redirectUrl = route('user-dashboard');
+        }
+
+        return response()->json([
+            'success' => true,
+            'redirect' => $redirectUrl
+        ]);
     }
 }

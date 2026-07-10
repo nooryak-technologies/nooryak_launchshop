@@ -403,65 +403,122 @@
         <form id="authForm" action="{{ route('user.login') }}" method="post" enctype="multipart/form-data">
           @csrf
 
-          {{-- Email --}}
-          <div class="login-field-group">
-            <label class="login-field-label" for="loginEmail">{{ __('Email Address') }}</label>
-            <div class="login-input-wrap">
-              <i class="fal fa-envelope field-icon"></i>
-              <input type="email" id="loginEmail" name="email" class="login-input-field"
-                placeholder="{{ __('you@example.com') }}" required>
-            </div>
-            @if (Session::has('err'))
-              <p class="text-danger small mt-1">{{ Session::get('err') }}</p>
-            @endif
-            @error('email')
-              <p class="text-danger small mt-1">{{ $message }}</p>
-            @enderror
+          {{-- Tab Switcher --}}
+          <div class="login-type-switch mb-30" style="display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 12px;">
+            <button type="button" class="btn btn-link p-0 text-decoration-none" id="tab-password" style="font-weight: 700; color: var(--primary-color, #ff5a2c); border-bottom: 2px solid var(--primary-color, #ff5a2c); padding-bottom: 8px; font-size: 15px; background: none; border-top: none; border-left: none; border-right: none; outline: none; box-shadow: none;">
+              {{ __('Password Login') }}
+            </button>
+            <button type="button" class="btn btn-link p-0 text-decoration-none text-muted" id="tab-otp" style="font-weight: 700; padding-bottom: 8px; font-size: 15px; margin-left: 20px; background: none; border: none; outline: none; box-shadow: none;">
+              {{ __('OTP Login') }}
+            </button>
           </div>
 
-          {{-- Password --}}
-          <div class="login-field-group">
-            <label class="login-field-label" for="loginPassword">{{ __('Password') }}</label>
-            <div class="login-input-wrap">
-              <i class="fal fa-lock field-icon"></i>
-              <input type="password" id="loginPassword" name="password" class="login-input-field"
-                placeholder="{{ __('Enter your password') }}" required>
-              <button type="button" class="pass-toggle-btn" onclick="togglePassword()">
-                <i class="fal fa-eye" id="passEyeIcon"></i>
-              </button>
-            </div>
-            @error('password')
-              <p class="text-danger small mt-1">{{ $message }}</p>
-            @enderror
-          </div>
-
-          {{-- Recaptcha --}}
-          @if ($bs->is_recaptcha == 1)
-            <div class="mb-4">
-              {!! NoCaptcha::renderJs() !!}
-              {!! NoCaptcha::display() !!}
-              @if ($errors->has('g-recaptcha-response'))
-                @php $errmsg = $errors->first('g-recaptcha-response'); @endphp
-                <p class="text-danger small mt-2">{{ __($errmsg) }}</p>
+          {{-- Password Login Wrapper --}}
+          <div id="password-login-wrap">
+            {{-- Email or Phone Number --}}
+            <div class="login-field-group">
+              <label class="login-field-label" for="loginEmail">{{ __('Email or Phone Number') }}</label>
+              <div class="login-input-wrap">
+                <i class="fal fa-envelope field-icon"></i>
+                <input type="text" id="loginEmail" name="email" class="login-input-field"
+                  placeholder="{{ __('Enter email or phone number') }}" required>
+              </div>
+              @if (Session::has('err'))
+                <p class="text-danger small mt-1">{{ Session::get('err') }}</p>
               @endif
+              @error('email')
+                <p class="text-danger small mt-1">{{ $message }}</p>
+              @enderror
             </div>
-          @endif
 
-          {{-- Links Row --}}
-          <div class="login-links-row">
-            <a href="{{ route('user.forgot.password.form') }}" class="login-forgot-link">
-              {{ __('Forgot your password?') }}
-            </a>
-            <span class="login-signup-text">
-              {{ __("Don't have an account?") }}
-              <a href="{{ route('front.pricing') }}">{{ __('Sign Up') }}</a>
-            </span>
+            {{-- Password --}}
+            <div class="login-field-group">
+              <label class="login-field-label" for="loginPassword">{{ __('Password') }}</label>
+              <div class="login-input-wrap">
+                <i class="fal fa-lock field-icon"></i>
+                <input type="password" id="loginPassword" name="password" class="login-input-field"
+                  placeholder="{{ __('Enter your password') }}" required>
+                <button type="button" class="pass-toggle-btn" onclick="togglePassword()">
+                  <i class="fal fa-eye" id="passEyeIcon"></i>
+                </button>
+              </div>
+              @error('password')
+                <p class="text-danger small mt-1">{{ $message }}</p>
+              @enderror
+            </div>
+
+            {{-- Recaptcha --}}
+            @if ($bs->is_recaptcha == 1)
+              <div class="mb-4">
+                {!! NoCaptcha::renderJs() !!}
+                {!! NoCaptcha::display() !!}
+                @if ($errors->has('g-recaptcha-response'))
+                  @php $errmsg = $errors->first('g-recaptcha-response'); @endphp
+                  <p class="text-danger small mt-2">{{ __($errmsg) }}</p>
+                @endif
+              </div>
+            @endif
+
+            {{-- Links Row --}}
+            <div class="login-links-row">
+              <a href="{{ route('user.forgot.password.form') }}" class="login-forgot-link">
+                {{ __('Forgot your password?') }}
+              </a>
+              <span class="login-signup-text">
+                {{ __("Don't have an account?") }}
+                <a href="{{ route('front.pricing') }}">{{ __('Sign Up') }}</a>
+              </span>
+            </div>
+
+            {{-- Submit --}}
+            <button type="submit" class="login-submit-btn">
+              <i class="fas fa-sign-in-alt"></i> {{ __('Sign In') }}
+            </button>
           </div>
 
-          {{-- Submit --}}
-          <button type="submit" class="login-submit-btn">
-            <i class="fas fa-sign-in-alt"></i> {{ __('Sign In') }}
-          </button>
+          {{-- OTP Login Wrapper --}}
+          <div id="otp-login-wrap" class="d-none">
+            <!-- Country Code & Phone -->
+            <div class="login-field-group mb-20">
+              <label class="login-field-label">{{ __('Phone Number') }}</label>
+              <div class="row g-2 align-items-center">
+                <div class="col-3 col-sm-3">
+                  <input class="login-input-field" type="text" id="otp_country_code" value="+91" placeholder="{{ __('Code') }}" required inputmode="numeric" style="height: 50px; text-align: center; border-radius: 8px; border: 1.5px solid #cbd5e1; width: 100%;">
+                </div>
+                <div class="col-9 col-sm-9">
+                  <input class="login-input-field" type="number" id="otp_phone" placeholder="81234 56789" required min="0" step="1" inputmode="numeric" style="height: 50px; border-radius: 8px; border: 1.5px solid #cbd5e1; width: 100%;">
+                </div>
+              </div>
+              <div id="otp-phone-feedback" class="small mt-2" style="font-weight: 600; text-align: left;"></div>
+            </div>
+
+            <!-- Get OTP button -->
+            <button type="button" class="login-submit-btn mb-20" id="btn-login-send-otp" style="background-color: transparent; border: 1.5px solid var(--primary-color, #ff5a2c); color: var(--primary-color, #ff5a2c); font-weight: 600;">
+              {{ __('Get OTP') }}
+            </button>
+
+            <!-- OTP Code input -->
+            <div class="login-field-group d-none" id="login-otp-code-group" style="margin-top: 20px;">
+              <label class="login-field-label" for="login_otp_code">{{ __('Enter 6-digit OTP') }} *</label>
+              <div class="row g-2 align-items-center">
+                <div class="col-8 col-sm-9">
+                  <input class="login-input-field" type="text" id="login_otp_code" placeholder="Enter OTP" maxlength="6" inputmode="numeric" style="height: 50px; border-radius: 8px; border: 1.5px solid #cbd5e1; width: 100%;">
+                </div>
+                <div class="col-4 col-sm-3">
+                  <button type="button" class="btn w-100 py-2" id="btn-login-submit-otp" style="height: 50px !important; border-radius: 8px; font-weight: 600; font-size: 14px; background-color: var(--primary-color, #ff5a2c); border-color: var(--primary-color, #ff5a2c); color: #fff;">
+                    {{ __('Sign In') }}
+                  </button>
+                </div>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mt-2">
+                <span id="login-otp-timer" class="small text-muted" style="font-weight: 600;"></span>
+                <button type="button" class="btn btn-link p-0 small d-none" id="btn-login-resend-otp" style="color: var(--primary-color, #ff5a2c); font-weight: 600; text-decoration: none; border: none; background: none;">
+                  {{ __('Resend OTP') }}
+                </button>
+              </div>
+              <div id="login-otp-feedback" class="small mt-2" style="font-weight: 600; text-align: left;"></div>
+            </div>
+          </div>
 
         </form>
       </div>
@@ -484,5 +541,127 @@
       icon.classList.replace('fa-eye-slash', 'fa-eye');
     }
   }
+
+  $(document).ready(function() {
+    // Tab switching logic
+    $('#tab-password').on('click', function(e) {
+      e.preventDefault();
+      $(this).css({
+        'color': 'var(--primary-color, #ff5a2c)',
+        'border-bottom': '2px solid var(--primary-color, #ff5a2c)'
+      }).removeClass('text-muted');
+      $('#tab-otp').css({
+        'color': '',
+        'border-bottom': 'none'
+      }).addClass('text-muted');
+      $('#password-login-wrap').removeClass('d-none');
+      $('#otp-login-wrap').addClass('d-none');
+    });
+
+    $('#tab-otp').on('click', function(e) {
+      e.preventDefault();
+      $(this).css({
+        'color': 'var(--primary-color, #ff5a2c)',
+        'border-bottom': '2px solid var(--primary-color, #ff5a2c)'
+      }).removeClass('text-muted');
+      $('#tab-password').css({
+        'color': '',
+        'border-bottom': 'none'
+      }).addClass('text-muted');
+      $('#password-login-wrap').addClass('d-none');
+      $('#otp-login-wrap').removeClass('d-none');
+    });
+
+    // OTP timer logic
+    let loginCountdownSeconds = 120;
+    let loginOtpTimer = null;
+
+    function startLoginOtpTimer() {
+      clearInterval(loginOtpTimer);
+      loginCountdownSeconds = 120;
+      $('#login-otp-timer').removeClass('d-none').text('{{ __("Resend OTP in") }} ' + loginCountdownSeconds + 's');
+      $('#btn-login-resend-otp').addClass('d-none');
+      
+      loginOtpTimer = setInterval(function() {
+        loginCountdownSeconds--;
+        if (loginCountdownSeconds <= 0) {
+          clearInterval(loginOtpTimer);
+          $('#login-otp-timer').addClass('d-none');
+          $('#btn-login-resend-otp').removeClass('d-none');
+        } else {
+          $('#login-otp-timer').text('{{ __("Resend OTP in") }} ' + loginCountdownSeconds + 's');
+        }
+      }, 1000);
+    }
+
+    // Request Login OTP
+    $('#btn-login-send-otp, #btn-login-resend-otp').on('click', function(e) {
+      e.preventDefault();
+      let phoneVal = $('#otp_phone').val().trim();
+      let countryCode = $('#otp_country_code').val().trim();
+
+      if (!phoneVal) {
+        $('#otp-phone-feedback').html('<span class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ __("Please enter a valid phone number.") }}</span>');
+        $('#otp_phone').addClass('is-invalid');
+        return;
+      }
+
+      $('#otp_phone').removeClass('is-invalid');
+      $('#otp-phone-feedback').html('<span class="text-info"><i class="fas fa-spinner fa-spin"></i> {{ __("Sending OTP...") }}</span>');
+      let $btn = $('#btn-login-send-otp');
+      $btn.prop('disabled', true);
+
+      $.post("{{ route('front.otp.send') }}", {
+        _token: "{{ csrf_token() }}",
+        phone_number: phoneVal,
+        country_code: countryCode
+      }, function(response) {
+        if (response.success) {
+          $('#otp-phone-feedback').html('<span class="text-success"><i class="fas fa-check-circle"></i> ' + response.message + '</span>');
+          $('#login-otp-code-group').removeClass('d-none');
+          $btn.text('{{ __("Sent") }}');
+          startLoginOtpTimer();
+        } else {
+          $('#otp-phone-feedback').html('<span class="text-danger"><i class="fas fa-times-circle"></i> ' + response.message + '</span>');
+          $btn.prop('disabled', false);
+        }
+      }).fail(function(xhr) {
+        let msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : '{{ __("Failed to send OTP. Please try again.") }}';
+        $('#otp-phone-feedback').html('<span class="text-danger"><i class="fas fa-times-circle"></i> ' + msg + '</span>');
+        $btn.prop('disabled', false);
+      });
+    });
+
+    // Submit and verify login OTP
+    $('#btn-login-submit-otp').on('click', function(e) {
+      e.preventDefault();
+      let enteredOtp = $('#login_otp_code').val().trim();
+      let phoneVal = $('#otp_phone').val().trim();
+      let countryCode = $('#otp_country_code').val().trim();
+
+      if (!enteredOtp) {
+        $('#login-otp-feedback').html('<span class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ __("Please enter the OTP.") }}</span>');
+        return;
+      }
+
+      $('#login-otp-feedback').html('<span class="text-info"><i class="fas fa-spinner fa-spin"></i> {{ __("Verifying & Logging in...") }}</span>');
+
+      $.post("{{ route('user.login.otp.submit') }}", {
+        _token: "{{ csrf_token() }}",
+        phone: countryCode + phoneVal,
+        otp: enteredOtp
+      }, function(response) {
+        if (response.success) {
+          $('#login-otp-feedback').html('<span class="text-success"><i class="fas fa-check-circle"></i> {{ __("Login successful! Redirecting...") }}</span>');
+          window.location.href = response.redirect;
+        } else {
+          $('#login-otp-feedback').html('<span class="text-danger"><i class="fas fa-times-circle"></i> ' + response.message + '</span>');
+        }
+      }).fail(function(xhr) {
+        let msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : '{{ __("Invalid OTP or Account not found.") }}';
+        $('#login-otp-feedback').html('<span class="text-danger"><i class="fas fa-times-circle"></i> ' + msg + '</span>');
+      });
+    });
+  });
 </script>
 @endsection
