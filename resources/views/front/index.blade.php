@@ -1118,6 +1118,9 @@
               <div class="row g-4 justify-content-center">
                 @foreach ($packages as $index => $package)
                   @php
+                    if (strtolower($term) == 'monthly' && (strtolower($package->title) == 'standard' || strtolower($package->title) == 'premium')) {
+                        continue;
+                    }
                     // Plan icon & subtitle based on price order
                     $planTitle    = __($package->title);
                     $planSubtitle = $package->term ? ucfirst(strtolower($package->term)) . ' plan' : '';
