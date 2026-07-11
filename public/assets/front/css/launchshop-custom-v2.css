@@ -7303,13 +7303,10 @@ i[id$="EyeIcon"]:hover {
         box-shadow: 0 4px 12px rgba(255, 90, 44, 0.3) !important;
         -webkit-box-shadow: 0 4px 12px rgba(255, 90, 44, 0.3) !important;
         transition: all 0.2s ease !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
-        gap: 4px !important;
         z-index: 100000 !important;
         text-decoration: none !important;
+        position: absolute !important;
+        display: block !important;
     }
 
     .header-area .main-responsive-nav .main-responsive-menu.mean-container a.meanmenu-reveal:hover {
@@ -7318,14 +7315,37 @@ i[id$="EyeIcon"]:hover {
         box-shadow: 0 6px 16px rgba(255, 90, 44, 0.4) !important;
     }
 
+    /* Top and Bottom lines using pseudo-elements */
+    .header-area .main-responsive-nav .main-responsive-menu.mean-container a.meanmenu-reveal::before,
+    .header-area .main-responsive-nav .main-responsive-menu.mean-container a.meanmenu-reveal::after {
+        content: "" !important;
+        display: block !important;
+        background: #ffffff !important;
+        height: 3px !important;
+        width: 20px !important;
+        border-radius: 3px !important;
+        position: absolute !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .header-area .main-responsive-nav .main-responsive-menu.mean-container a.meanmenu-reveal::before {
+        top: 13px !important;
+    }
+
+    .header-area .main-responsive-nav .main-responsive-menu.mean-container a.meanmenu-reveal::after {
+        bottom: 13px !important;
+    }
+
     /* Style for the Close 'X' character inside the reveal button */
     .header-area .main-responsive-nav .main-responsive-menu.mean-container a.meanmenu-reveal.meanclose {
         background: var(--color-primary, #ff5a2c) !important;
-        /* Remove gradient when showing close X */
         color: #ffffff !important;
         font-weight: 700 !important;
         font-size: 18px !important;
-        line-height: 1 !important;
+        line-height: 42px !important;
+        text-align: center !important;
     }
 
     .header-area .main-responsive-nav .main-responsive-menu.mean-container a.meanmenu-reveal.meanclose:hover {
@@ -7334,19 +7354,27 @@ i[id$="EyeIcon"]:hover {
         box-shadow: 0 6px 16px rgba(255, 90, 44, 0.4) !important;
     }
 
-    /* Show the spans for hamburger menu lines when closed */
+    /* Show the middle span when closed */
     .header-area .main-responsive-nav .main-responsive-menu.mean-container a.meanmenu-reveal span {
         display: block !important;
         background: #ffffff !important;
         height: 3px !important;
         width: 20px !important;
         border-radius: 3px !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
         margin: 0 !important;
-        position: static !important;
     }
 
-    /* Hide the spans when meanclose is active to show close 'X' */
+    /* Hide spans and pseudo-elements when meanclose is active to show close 'X' */
     .header-area .main-responsive-nav .main-responsive-menu.mean-container a.meanmenu-reveal.meanclose span {
+        display: none !important;
+    }
+
+    .header-area .main-responsive-nav .main-responsive-menu.mean-container a.meanmenu-reveal.meanclose::before,
+    .header-area .main-responsive-nav .main-responsive-menu.mean-container a.meanmenu-reveal.meanclose::after {
         display: none !important;
     }
 

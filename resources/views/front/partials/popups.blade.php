@@ -185,14 +185,12 @@ if ($currentLang->popups()->count() > 0) {
                     
                     <!-- Desc -->
                     <p class="modern-offer-desc">
-                        Start your ecommerce site with a free trial, pick a ready-made theme, and get your branded subdomain in minutes.
+                        Start your ecommerce site, pick a ready-made theme, and start selling today.
                     </p>
                     
                     <!-- Peach Ribbon -->
                     <div class="modern-offer-ribbon">
-                        <span>14-Day Free Trial</span>
-                        <span class="divider">+</span>
-                        <span>Free Subdomain</span>
+                        <span>No Coding Required</span>
                         <span class="divider">+</span>
                         <span>Premium Themes</span>
                     </div>

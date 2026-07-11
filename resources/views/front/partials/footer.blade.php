@@ -5,7 +5,7 @@
       <div class="row">
         <div class="col-lg-3 col-md-12">
           <div class="footer-widget" data-aos="fade-up" data-aos-delay="100">
-            <div class="mb-4">
+            <div style="margin-bottom: 8px;">
               <a href="{{ route('front.index') }}">
                 <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
                   data-src="{{ asset('assets/front/img/' . $bs->footer_logo) }}" alt="Logo">
@@ -50,7 +50,7 @@
                 $numbers = explode(',', $be->contact_numbers);
               @endphp
               <li>
-                <i class="fal fa-phone"></i>
+                <i class="fal fa-phone" style="transform: scaleX(-1); display: inline-block;"></i>
                 {!! implode(
                     '<br>',
                     array_map(fn($num) => '<a href="tel:' . trim($num) . '" class="me-1">' . trim($num) . '</a>', $numbers),
