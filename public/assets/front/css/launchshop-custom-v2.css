@@ -7292,14 +7292,7 @@ i[id$="EyeIcon"]:hover {
 
     /* Hamburger toggle button - orange square (Mockup 2) */
     .header-area .main-responsive-nav .main-responsive-menu.mean-container a.meanmenu-reveal {
-        background:
-            linear-gradient(to bottom,
-                #ffffff 0px, #ffffff 2.5px,
-                transparent 2.5px, transparent 6.5px,
-                #ffffff 6.5px, #ffffff 9px,
-                transparent 9px, transparent 13px,
-                #ffffff 13px, #ffffff 15.5px) no-repeat center/20px 15.5px,
-            var(--color-primary, #ff5a2c) !important;
+        background: var(--color-primary, #ff5a2c) !important;
         border-radius: 12px !important;
         width: 42px !important;
         height: 42px !important;
@@ -7311,21 +7304,16 @@ i[id$="EyeIcon"]:hover {
         -webkit-box-shadow: 0 4px 12px rgba(255, 90, 44, 0.3) !important;
         transition: all 0.2s ease !important;
         display: flex !important;
+        flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
+        gap: 4px !important;
         z-index: 100000 !important;
         text-decoration: none !important;
     }
 
     .header-area .main-responsive-nav .main-responsive-menu.mean-container a.meanmenu-reveal:hover {
-        background:
-            linear-gradient(to bottom,
-                #ffffff 0px, #ffffff 2.5px,
-                transparent 2.5px, transparent 6.5px,
-                #ffffff 6.5px, #ffffff 9px,
-                transparent 9px, transparent 13px,
-                #ffffff 13px, #ffffff 15.5px) no-repeat center/20px 15.5px,
-            var(--color-primary2, #e0451a) !important;
+        background: var(--color-primary2, #e0451a) !important;
         transform: translateY(-50%) scale(1.05) !important;
         box-shadow: 0 6px 16px rgba(255, 90, 44, 0.4) !important;
     }
@@ -7346,8 +7334,19 @@ i[id$="EyeIcon"]:hover {
         box-shadow: 0 6px 16px rgba(255, 90, 44, 0.4) !important;
     }
 
-    /* Hide the inner spans completely to avoid nesting/overlap bugs */
+    /* Show the spans for hamburger menu lines when closed */
     .header-area .main-responsive-nav .main-responsive-menu.mean-container a.meanmenu-reveal span {
+        display: block !important;
+        background: #ffffff !important;
+        height: 3px !important;
+        width: 20px !important;
+        border-radius: 3px !important;
+        margin: 0 !important;
+        position: static !important;
+    }
+
+    /* Hide the spans when meanclose is active to show close 'X' */
+    .header-area .main-responsive-nav .main-responsive-menu.mean-container a.meanmenu-reveal.meanclose span {
         display: none !important;
     }
 

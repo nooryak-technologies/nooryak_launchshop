@@ -5,7 +5,7 @@
       <div class="row">
         <div class="col-lg-3 col-md-12">
           <div class="footer-widget" data-aos="fade-up" data-aos-delay="100">
-            <div class="">
+            <div class="mb-4">
               <a href="{{ route('front.index') }}">
                 <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
                   data-src="{{ asset('assets/front/img/' . $bs->footer_logo) }}" alt="Logo">

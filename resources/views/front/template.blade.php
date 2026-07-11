@@ -202,6 +202,27 @@
     margin: 0;
     font-weight: 500;
   }
+  @media (max-width: 575px) {
+    .steps-stats-section .stats-bar-card {
+      padding: 16px 10px !important;
+    }
+    .steps-stats-section .stat-item-wrap {
+      gap: 6px !important;
+      justify-content: flex-start;
+    }
+    .steps-stats-section .stat-bar-icon-box {
+      width: 32px !important;
+      height: 32px !important;
+      font-size: 14px !important;
+      border-radius: 8px !important;
+    }
+    .steps-stats-section .stat-bar-val {
+      font-size: 16px !important;
+    }
+    .steps-stats-section .stat-bar-lbl {
+      font-size: 10px !important;
+    }
+  }
 </style>
 @endsection
 
@@ -448,46 +469,46 @@
         <div class="stats-bar-card mt-5 mb-5" style="border: 1px solid #f1f5f9; border-radius: 16px; padding: 24px 30px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03); background: #ffffff;">
           <div class="row align-items-center justify-content-between g-4">
             <!-- Stat Item 1 -->
-            <div class="col-lg-3 col-md-6 col-sm-6 d-flex align-items-center justify-content-start justify-content-lg-center">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-6 d-flex align-items-center justify-content-start justify-content-lg-center">
               <div class="stat-item-wrap d-flex align-items-center" style="gap: 16px;">
                 <div class="stat-bar-icon-box stat-icon-orange">
                   <i class="fas fa-store"></i>
                 </div>
                 <div class="stat-bar-info">
-                  <h3 class="stat-bar-val">2,500+</h3>
+                  <h3 class="stat-bar-val">250+</h3>
                   <p class="stat-bar-lbl">{{ __('Live Stores') }}</p>
                 </div>
               </div>
             </div>
             
             <!-- Stat Item 2 -->
-            <div class="col-lg-3 col-md-6 col-sm-6 d-flex align-items-center justify-content-start justify-content-lg-center">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-6 d-flex align-items-center justify-content-start justify-content-lg-center">
               <div class="stat-item-wrap d-flex align-items-center" style="gap: 16px;">
                 <div class="stat-bar-icon-box stat-icon-pink">
                   <i class="fas fa-users"></i>
                 </div>
                 <div class="stat-bar-info">
-                  <h3 class="stat-bar-val">8,000+</h3>
+                  <h3 class="stat-bar-val">5,000+</h3>
                   <p class="stat-bar-lbl">{{ __('Happy Merchants') }}</p>
                 </div>
               </div>
             </div>
             
             <!-- Stat Item 3 -->
-            <div class="col-lg-3 col-md-6 col-sm-6 d-flex align-items-center justify-content-start justify-content-lg-center">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-6 d-flex align-items-center justify-content-start justify-content-lg-center">
               <div class="stat-item-wrap d-flex align-items-center" style="gap: 16px;">
                 <div class="stat-bar-icon-box stat-icon-blue">
                   <i class="fas fa-gem"></i>
                 </div>
                 <div class="stat-bar-info">
-                  <h3 class="stat-bar-val">50+</h3>
+                  <h3 class="stat-bar-val">15+</h3>
                   <p class="stat-bar-lbl">{{ __('Premium Themes') }}</p>
                 </div>
               </div>
             </div>
             
             <!-- Stat Item 4 -->
-            <div class="col-lg-3 col-md-6 col-sm-6 d-flex align-items-center justify-content-start justify-content-lg-center">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-6 d-flex align-items-center justify-content-start justify-content-lg-center">
               <div class="stat-item-wrap d-flex align-items-center" style="gap: 16px;">
                 <div class="stat-bar-icon-box stat-icon-green">
                   <i class="fas fa-check-circle"></i>
