@@ -1118,9 +1118,6 @@
               <div class="row g-4 justify-content-center">
                 @foreach ($packages as $index => $package)
                   @php
-                    if (strtolower($term) == 'monthly' && (strtolower($package->title) == 'standard' || strtolower($package->title) == 'premium')) {
-                        continue;
-                    }
                     // Plan icon & subtitle based on price order
                     $planTitle    = __($package->title);
                     $planSubtitle = $package->term ? ucfirst(strtolower($package->term)) . ' plan' : '';
@@ -1170,7 +1167,7 @@
                           <span class="currency-symbol">{{ $be->base_currency_symbol }}</span>
                         @endif
                         @if ($package->price != 0)
-                          <span class="period">/ {{ strtolower($term) == 'lifetime' ? 'one-time' : 'month' }}</span>
+                          <span class="period">/ {{ strtolower($term) == 'lifetime' ? 'one-time' : (strtolower($term) == 'yearly' ? 'year' : 'month') }}</span>
                         @endif
                       </div>
                       
