@@ -9177,7 +9177,7 @@ iframe[id^="tawkchat-"],
     .header-area.is-sticky {
         left: 2.5% !important;
         right: 2.5% !important;
-        width: 95% !important;
+        /* width: 95% !important; */
     }
 
     .header-area .main-navbar .nav-item {
