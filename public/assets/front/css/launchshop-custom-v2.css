@@ -9270,6 +9270,18 @@ iframe[id^="tawkchat-"],
     vertical-align: middle;
 }
 
+@media (min-width: 1400px) {
+
+    .container,
+    .container-lg,
+    .container-md,
+    .container-sm,
+    .container-xl,
+    .container-xxl {
+        max-width: 1284px !important;
+    }
+}
+
 /* Hero Badge Overrides */
 .hero-badge {
     background: #fff5f2 !important;
