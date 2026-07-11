@@ -1,6 +1,6 @@
 <!-- Footer Area -->
 <footer class="footer-area aaaaaa">
-  <div class="footer-top pt-120 pb-90">
+  <div class="footer-top pt-120 ">
     <div class="container">
       <div class="row">
         <div class="col-lg-3 col-md-12">

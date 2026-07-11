@@ -9106,7 +9106,14 @@ iframe[id^="tawkchat-"],
 
     /* ── Hero Wrapper Top Spacing to Offset Floating Header ── */
     .hero-wrapper {
-        margin-top: 70px !important;
+        margin-top: 95px !important;
+    }
+
+    /* ── Inner Page wrappers padding to offset floating header above 1600px ── */
+    .modern-templates-page-wrapper,
+    .modern-contact-page-wrapper,
+    .modern-pricing-page-wrapper {
+        padding-top: 130px !important;
     }
 }
 
