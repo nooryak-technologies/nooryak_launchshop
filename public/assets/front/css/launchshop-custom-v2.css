@@ -7239,17 +7239,6 @@ i[id$="EyeIcon"]:hover {
         z-index: 10000 !important;
     }
 
-    @media (min-width: 768px) and (max-width: 991px) {
-        .header-area .main-responsive-nav .main-responsive-menu {
-            max-width: 720px !important;
-        }
-    }
-    @media (min-width: 992px) and (max-width: 1199px) {
-        .header-area .main-responsive-nav .main-responsive-menu {
-            max-width: 960px !important;
-        }
-    }
-
     /* When the mobile menu drawer is open, disable the capsule's background, border, shadow, and backdrop-filter to prevent blurring the drawer and reveal button children */
     .header-area .main-responsive-nav .main-responsive-menu.mean-container:has(a.meanclose) {
         background: transparent !important;
@@ -8910,10 +8899,9 @@ iframe[id^="tawkchat-"],
     .header-area,
     .header-area.is-sticky {
         top: 20px !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        width: calc(100% - 30px) !important;
-        max-width: 1140px !important;
+        left: 5% !important;
+        right: 5% !important;
+        width: 90% !important;
         margin: 0 auto !important;
         border-radius: 50px !important;
         background: rgba(255, 255, 255, 0.95) !important;
@@ -8984,10 +8972,6 @@ iframe[id^="tawkchat-"],
 }
 
 @media (min-width: 1550px) {
-    .header-area,
-    .header-area.is-sticky {
-        max-width: 1584px !important;
-    }
 
     .header-area .main-navbar .navbar .navbar-brand img,
     .header-area.is-sticky .main-navbar .navbar .navbar-brand img {
