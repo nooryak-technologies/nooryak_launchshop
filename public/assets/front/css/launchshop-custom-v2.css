@@ -10867,10 +10867,9 @@ iframe[id^="tawkchat-"],
 
     .header-area,
     .header-area.is-sticky {
-        top: 15px !important;
-        left: 1% !important;
-        right: 1% !important;
-        width: 98% !important;
+        top: 20px !important;
+        left: 2.5% !important;
+        right: 2.5% !important;
         margin: 0 auto !important;
         border-radius: 50px !important;
         background: rgba(255, 255, 255, 0.95) !important;
