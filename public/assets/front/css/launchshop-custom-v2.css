@@ -8995,7 +8995,7 @@ iframe[id^="tawkchat-"],
     .container-sm,
     .container-xl,
     .container-xxl {
-        max-width: 1584px;
+        max-width: 1334px;
     }
 }
 
@@ -9209,6 +9209,7 @@ iframe[id^="tawkchat-"],
 
 /* Extra compact styling for 1199px to 1250px range to prevent wrapping */
 @media (min-width: 1199px) and (max-width: 1250px) {
+
     .header-area,
     .header-area.is-sticky {
         left: 1.5% !important;
@@ -10842,11 +10843,12 @@ iframe[id^="tawkchat-"],
 
 /* Custom media query for 992px to 1199px to display desktop sticky capsule header and prevent wrapping */
 @media (min-width: 992px) and (max-width: 1199px) {
+
     /* Hide mobile menu, show desktop menu */
     .header-area .main-responsive-nav {
         display: none !important;
     }
-    
+
     .header-area .main-navbar {
         display: block !important;
     }
