@@ -10937,9 +10937,94 @@ iframe[id^="tawkchat-"],
 
 }
 
-/* Media query for widths below 991px to add top space to the hero banner and prevent overlap */
-@media (max-width: 991px) {
+/* Media query for widths below 767px to add top space to the hero banner */
+@media (max-width: 768px) {
+    .hero-wrapper {
+        padding-top: 40px !important;
+    }
+}
+
+/* Media query for 768px to 991px range to add top space to the hero banner */
+@media (min-width: 768px) and (max-width: 991px) {
+
+    /* Top padding to clear the floating header */
     .hero-wrapper {
         padding-top: 120px !important;
+        padding-bottom: 60px !important;
+    }
+
+    /* Make both hero columns full-width and centered */
+    .hero-wrapper .row {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    /* Text column: full width, centered, stacked first */
+    .hero-wrapper .col-lg-5,
+    .hero-wrapper .col-xl-5 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+        order: 1 !important;
+        text-align: center !important;
+        margin-bottom: 40px !important;
+    }
+
+    /* Mockup column: full width, centered, stacked second */
+    .hero-wrapper .col-lg-7,
+    .hero-wrapper .col-xl-7 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+        order: 2 !important;
+        text-align: center !important;
+    }
+
+    /* Center the hero badge */
+    .hero-content .hero-badge {
+        display: inline-flex !important;
+        margin: 0 auto 20px auto !important;
+    }
+
+    /* Center the hero title */
+    .hero-content .hero-title {
+        font-size: 44px !important;
+        text-align: center !important;
+        line-height: 1.2 !important;
+    }
+
+    /* Center the hero description text */
+    .hero-content .hero-text {
+        text-align: center !important;
+        font-size: 16px !important;
+        max-width: 600px !important;
+        margin: 0 auto 28px auto !important;
+    }
+
+    /* Center the CTA buttons */
+    .hero-content .hero-btns {
+        justify-content: center !important;
+        flex-wrap: wrap !important;
+        gap: 12px !important;
+        margin-bottom: 28px !important;
+    }
+
+    /* Center the hero feature icons row */
+    .hero-content .hero-features {
+        justify-content: center !important;
+        flex-wrap: wrap !important;
+        gap: 12px !important;
+    }
+
+    /* Mockup image full width */
+    .hero-mockup-wrapper {
+        width: 100% !important;
+        max-width: 700px !important;
+        margin: 0 auto !important;
+    }
+
+    .hero-mockup-wrapper img {
+        width: 100% !important;
+        max-width: 100% !important;
     }
 }
