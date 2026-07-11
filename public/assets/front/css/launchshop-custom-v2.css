@@ -3562,8 +3562,14 @@ i[id$="EyeIcon"]:hover {
 }
 
 .pricing-card-modern.popular {
-    border: 2px solid #ff5a2c;
-    box-shadow: 0 20px 40px rgba(255, 90, 44, 0.05);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    box-shadow:
+        0 0 0 2px #ff5a2c,
+        0 20px 50px rgba(255, 90, 44, 0.18),
+        inset 0 0 0 2px rgba(255, 90, 44, 0.08);
+    position: relative;
+    transform: translateY(-6px);
 }
 
 .pricing-card-modern.enterprise {
@@ -3794,9 +3800,18 @@ i[id$="EyeIcon"]:hover {
     box-shadow: 0 2px 6px rgba(255, 90, 44, 0.3);
 }
 
-/* Pricing Card Popular Solid Orange style */
+/* Pricing Card Popular Orange Gradient style */
 .pricing-card-modern.popular {
-    border: 2px solid #ff5a2c !important;
+    border: 2px solid transparent !important;
+    background:
+        linear-gradient(#ffffff, #ffffff) padding-box,
+        linear-gradient(135deg, #ff5a2c 0%, #ff8c42 50%, #ff5a2c 100%) border-box !important;
+    box-shadow:
+        0 0 0 0 transparent,
+        0 24px 60px rgba(255, 90, 44, 0.22),
+        0 4px 16px rgba(255, 90, 44, 0.10) !important;
+    transform: translateY(-8px) !important;
+    transition: all 0.3s ease !important;
 }
 
 .pricing-card-modern.popular .pricing-title {
@@ -3816,7 +3831,8 @@ i[id$="EyeIcon"]:hover {
 }
 
 .pricing-card-modern.popular .pricing-feature-toggle {
-    color: var(--ls-primary) !important;
+    color: #ff5a2c !important;
+    font-weight: 700;
 }
 
 .pricing-card-modern.popular .pricing-features-extra ul li span,
@@ -3881,7 +3897,8 @@ i[id$="EyeIcon"]:hover {
 
 .pricing-card-modern.expanded .pricing-feature-toggle {
     background: transparent;
-    color: var(--ls-gray);
+    color: #64748b;
+    opacity: 0.8;
 }
 
 /* Extra features expanded panel */

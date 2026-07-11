@@ -224,8 +224,8 @@
                     @if ($totalExtra > 0)
                       <div class="pricing-feature-more">
                         <button type="button" class="pricing-feature-toggle" aria-expanded="false">
-                          <span class="show-more-label">+ {{ $totalExtra }} more</span>
-                          <span class="show-less-label d-none">Show less</span>
+                          <span class="show-more-label">See More Features <i class="fas fa-chevron-down" style="font-size:10px;"></i></span>
+                          <span class="show-less-label d-none">See Less Features <i class="fas fa-chevron-up" style="font-size:10px;"></i></span>
                         </button>
 
                         <div class="pricing-features-extra" aria-hidden="true">
