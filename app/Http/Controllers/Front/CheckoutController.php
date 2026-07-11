@@ -597,6 +597,19 @@ class CheckoutController extends Controller
         } else {
             $user = $user->first();
         }
+
+        // Mark the verified phone lead as purchased (if one exists for this number)
+        try {
+            $cleanPhone = preg_replace('/[^0-9]/', '', $request['phone'] ?? '');
+            $cleanCode  = preg_replace('/[^0-9]/', '', $request['country_code'] ?? '');
+            if ($cleanPhone) {
+                $fullPhone = (strpos($cleanPhone, $cleanCode) === 0) ? $cleanPhone : $cleanCode . $cleanPhone;
+                \App\Models\VerifiedPhoneLead::where('phone', $fullPhone)->update(['purchased' => true]);
+            }
+        } catch (\Exception $leadEx) {
+            \Log::warning('VerifiedPhoneLead purchase mark failed: ' . $leadEx->getMessage());
+        }
+
         session()->flash('new_user_username', $user->username);
         return $user;
     }

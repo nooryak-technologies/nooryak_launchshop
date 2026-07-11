@@ -28,6 +28,32 @@
   <div class="row">
     <div class="col-md-12">
 
+      {{-- Tab Navigation --}}
+      <ul class="nav nav-tabs mb-3" id="registeredUsersTabs" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link {{ request()->input('active_tab') !== 'verified' ? 'active' : '' }}"
+            id="registered-tab" href="{{ route('admin.register.user') }}" role="tab">
+            <i class="fas fa-users mr-1"></i> {{ __('Registered Customers') }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {{ request()->input('active_tab') === 'verified' ? 'active' : '' }}"
+            id="verified-tab" href="{{ route('admin.register.user', ['active_tab' => 'verified', 'lead_filter' => request()->input('lead_filter', 'all')]) }}" role="tab">
+            <i class="fas fa-phone-square-alt mr-1"></i> {{ __('Verified Users') }}
+            @php
+              try { $leadCount = \App\Models\VerifiedPhoneLead::count(); } catch(\Exception $e) { $leadCount = 0; }
+            @endphp
+            @if($leadCount > 0)
+              <span class="badge badge-info ml-1">{{ $leadCount }}</span>
+            @endif
+          </a>
+        </li>
+      </ul>
+
+      {{-- ============================================================= --}}
+      {{-- TAB 1 : Registered Customers --}}
+      {{-- ============================================================= --}}
+      @if(request()->input('active_tab') !== 'verified')
       <div class="card">
         <div class="card-header">
           <div class="row">
@@ -213,6 +239,116 @@
           </div>
         </div>
       </div>
+      @endif
+
+      {{-- ============================================================= --}}
+      {{-- TAB 2 : Verified Users (Phone OTP leads) --}}
+      {{-- ============================================================= --}}
+      @if(request()->input('active_tab') === 'verified')
+      <div class="card">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col-lg-6">
+              <div class="card-title">
+                <i class="fas fa-phone-square-alt mr-1 text-info"></i>
+                {{ __('Verified Users') }}
+                <small class="text-muted ml-2">{{ __('Users who requested OTP during registration') }}</small>
+              </div>
+            </div>
+            <div class="col-lg-6 mt-2 mt-lg-0 d-flex justify-content-end align-items-center gap-3">
+              {{-- Filter Dropdown --}}
+              <form action="{{ route('admin.register.user') }}" method="GET" class="d-flex align-items-center gap-2">
+                <input type="hidden" name="active_tab" value="verified">
+                <select name="lead_filter" class="form-control form-control-sm" onchange="this.form.submit()" style="min-width:170px;">
+                  <option value="all" {{ $leadFilter === 'all' ? 'selected' : '' }}>{{ __('All Verified Users') }}</option>
+                  <option value="purchased" {{ $leadFilter === 'purchased' ? 'selected' : '' }}>{{ __('Purchased Plan') }}</option>
+                  <option value="not_purchased" {{ $leadFilter === 'not_purchased' ? 'selected' : '' }}>{{ __('Not Purchased') }}</option>
+                </select>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          @php
+            $tableReady = true;
+            try { \App\Models\VerifiedPhoneLead::first(); } catch(\Exception $e) { $tableReady = false; }
+          @endphp
+          @if(!$tableReady)
+            <div class="alert alert-warning">
+              <i class="fas fa-exclamation-triangle mr-1"></i>
+              {{ __('The verified_phone_leads table does not exist yet. Please run the migration or execute the SQL below.') }}
+              <pre class="mt-2 bg-light p-2" style="font-size:12px;">CREATE TABLE IF NOT EXISTS `verified_phone_leads` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) NOT NULL UNIQUE,
+  `country_code` varchar(255) DEFAULT NULL,
+  `purchased` tinyint(1) NOT NULL DEFAULT 0,
+  `otp_sent_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;</pre>
+            </div>
+          @elseif($verifiedLeads->total() === 0)
+            <h3 class="text-center text-muted py-4">
+              <i class="fas fa-phone-slash d-block mb-2" style="font-size:48px;"></i>
+              {{ __('No verified phone leads found') }}
+            </h3>
+          @else
+            <div class="table-responsive">
+              <table class="table table-striped mt-3">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>{{ __('Name') }}</th>
+                    <th>{{ __('Phone Number') }}</th>
+                    <th>{{ __('Country Code') }}</th>
+                    <th>{{ __('Plan Status') }}</th>
+                    <th>{{ __('OTP Sent At') }}</th>
+                    <th>{{ __('Registered At') }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach($verifiedLeads as $lead)
+                  <tr>
+                    <td>{{ $lead->id }}</td>
+                    <td>{{ $lead->name ?: '-' }}</td>
+                    <td>
+                      <strong>{{ $lead->phone }}</strong>
+                    </td>
+                    <td>{{ $lead->country_code ?: '-' }}</td>
+                    <td>
+                      @if($lead->purchased)
+                        <span class="badge badge-success px-2 py-1">
+                          <i class="fas fa-check mr-1"></i>{{ __('Purchased') }}
+                        </span>
+                      @else
+                        <span class="badge badge-warning px-2 py-1">
+                          <i class="fas fa-clock mr-1"></i>{{ __('Not Purchased') }}
+                        </span>
+                      @endif
+                    </td>
+                    <td>{{ $lead->otp_sent_at ? $lead->otp_sent_at->format('d M Y, h:i A') : '-' }}</td>
+                    <td>{{ $lead->created_at ? $lead->created_at->format('d M Y') : '-' }}</td>
+                  </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
+          @endif
+        </div>
+        @if(isset($verifiedLeads) && $verifiedLeads->total() > 0)
+        <div class="card-footer">
+          <div class="row">
+            <div class="d-inline-block mx-auto">
+              {{ $verifiedLeads->appends(['active_tab' => 'verified', 'lead_filter' => $leadFilter])->links() }}
+            </div>
+          </div>
+        </div>
+        @endif
+      </div>
+      @endif
+
     </div>
   </div>
 

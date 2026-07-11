@@ -101,7 +101,17 @@ class RegisterUserController extends Controller
 
         $categories = UserCategory::where('language_id', $language->id)->get();
 
-        return view('admin.register_user.index', compact('users', 'gateways', 'packages', 'categories'));
+        // Verified phone leads (users who sent OTP but may not have purchased a plan)
+        $leadFilter = $request->input('lead_filter', 'all'); // all | purchased | not_purchased
+        $verifiedLeadsQuery = \App\Models\VerifiedPhoneLead::orderBy('otp_sent_at', 'DESC');
+        if ($leadFilter === 'purchased') {
+            $verifiedLeadsQuery->where('purchased', true);
+        } elseif ($leadFilter === 'not_purchased') {
+            $verifiedLeadsQuery->where('purchased', false);
+        }
+        $verifiedLeads = $verifiedLeadsQuery->paginate(10, ['*'], 'leads_page');
+
+        return view('admin.register_user.index', compact('users', 'gateways', 'packages', 'categories', 'verifiedLeads', 'leadFilter'));
     }
 
     public function view($id)

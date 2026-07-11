@@ -278,6 +278,21 @@ class FrontendController extends Controller
                 Session::put('otp_phone', $phone);
                 Session::put('otp_expires_at', time() + 120);
 
+                // Save / update phone lead in DB for admin visibility
+                try {
+                    $name = $request->input('name', '');
+                    \App\Models\VerifiedPhoneLead::updateOrCreate(
+                        ['phone' => $mobileNo],
+                        [
+                            'name'         => $name,
+                            'country_code' => $countryCode,
+                            'otp_sent_at'  => now(),
+                        ]
+                    );
+                } catch (\Exception $leadEx) {
+                    Log::warning('VerifiedPhoneLead save failed: ' . $leadEx->getMessage());
+                }
+
                 return response()->json([
                     'success' => true,
                     'message' => __('OTP sent successfully!')
@@ -358,8 +373,17 @@ class FrontendController extends Controller
 
     public function selectTemplate($status, $id)
     {
+        // If the session is a secret/demo login (template admin preview), auto-logout so the
+        // visitor can proceed through the purchase registration flow instead of being
+        // redirected to the (demo) user dashboard.
         if (Auth::check()) {
-            return redirect()->route('user.plan.extend.index');
+            if (Session::get('secrect_login')) {
+                Auth::logout();
+                Session::forget('secrect_login');
+                // Continue with the normal flow below instead of redirecting
+            } else {
+                return redirect()->route('user.plan.extend.index');
+            }
         }
 
         $package = Package::findOrFail($id);
@@ -396,8 +420,15 @@ class FrontendController extends Controller
 
     public function step1($status, $id)
     {
+        // Same secret-login guard as selectTemplate: auto-logout demo admin visitors
         if (Auth::check()) {
-            return redirect()->route('user.plan.extend.index');
+            if (Session::get('secrect_login')) {
+                Auth::logout();
+                Session::forget('secrect_login');
+                // Continue with the normal flow below
+            } else {
+                return redirect()->route('user.plan.extend.index');
+            }
         }
         $data['status'] = $status;
         $data['id'] = $id;
