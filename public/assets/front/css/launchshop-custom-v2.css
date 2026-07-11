@@ -10839,3 +10839,93 @@ iframe[id^="tawkchat-"],
         margin: 0 !important;
     }
 }
+
+/* Custom media query for 992px to 1199px to display desktop sticky capsule header and prevent wrapping */
+@media (min-width: 992px) and (max-width: 1199px) {
+    /* Hide mobile menu, show desktop menu */
+    .header-area .main-responsive-nav {
+        display: none !important;
+    }
+    
+    .header-area .main-navbar {
+        display: block !important;
+    }
+
+    .header-area,
+    .header-area.is-sticky {
+        top: 15px !important;
+        left: 1% !important;
+        right: 1% !important;
+        width: 98% !important;
+        margin: 0 auto !important;
+        border-radius: 50px !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(10px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(10px) saturate(180%) !important;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3) !important;
+        border: 1px solid rgba(0, 0, 0, 0.05) !important;
+        padding: 0 !important;
+        height: 60px !important;
+        display: flex !important;
+        align-items: center !important;
+        transition: all 0.3s ease-in-out !important;
+        animation: none !important;
+    }
+
+    .header-area .main-navbar,
+    .header-area .main-navbar .container-fluid,
+    .header-area .main-navbar .navbar,
+    .header-area.is-sticky .main-navbar,
+    .header-area.is-sticky .main-navbar .container-fluid,
+    .header-area.is-sticky .main-navbar .navbar {
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
+
+    .header-area .main-navbar .navbar .navbar-brand,
+    .header-area.is-sticky .main-navbar .navbar .navbar-brand {
+        padding-left: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        width: auto !important;
+    }
+
+    .header-area .main-navbar .navbar .navbar-brand img,
+    .header-area.is-sticky .main-navbar .navbar .navbar-brand img {
+        max-height: 54px !important;
+    }
+
+    .header-area .main-navbar .navbar .side-option,
+    .header-area.is-sticky .main-navbar .navbar .side-option {
+        padding-right: 10px !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .header-area .side-option .btn-ls-primary,
+    .header-area .side-option .btn-ls-outline,
+    .header-area.is-sticky .side-option .btn-ls-primary,
+    .header-area.is-sticky .side-option .btn-ls-outline {
+        padding: 5px 10px !important;
+        font-size: 11.5px !important;
+        border-radius: 30px !important;
+    }
+
+    .header-area .main-navbar .nav-item {
+        margin-left: 4px !important;
+        margin-right: 4px !important;
+    }
+
+    .navbar-nav .nav-link,
+    .header-area .navbar-nav .nav-link,
+    .header-area.is-sticky .navbar-nav .nav-link {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        font-size: 12px !important;
+        white-space: nowrap !important;
+        line-height: 60px !important;
+    }
+}
