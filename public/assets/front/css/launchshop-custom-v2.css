@@ -8894,7 +8894,7 @@ iframe[id^="tawkchat-"],
 }
 
 /* Floating Sticky Header Capsule on Scroll (Desktop) */
-@media (min-width: 1200px) {
+@media (min-width: 1199px) {
 
     .header-area,
     .header-area.is-sticky {
@@ -9170,8 +9170,8 @@ iframe[id^="tawkchat-"],
     }
 }
 
-/* Fix header collapsing/wrapping on medium desktop screens (1200px to 1549px) */
-@media (min-width: 1200px) and (max-width: 1549px) {
+/* Fix header collapsing/wrapping on medium desktop screens (1199px to 1549px) */
+@media (min-width: 1199px) and (max-width: 1549px) {
 
     .header-area,
     .header-area.is-sticky {
@@ -9204,6 +9204,47 @@ iframe[id^="tawkchat-"],
 
     .header-area .side-option {
         padding-right: 15px !important;
+    }
+}
+
+/* Extra compact styling for 1199px to 1250px range to prevent wrapping */
+@media (min-width: 1199px) and (max-width: 1250px) {
+    .header-area,
+    .header-area.is-sticky {
+        left: 1.5% !important;
+        right: 1.5% !important;
+        width: 97% !important;
+        height: 65px !important;
+    }
+
+    .header-area .main-navbar .navbar .navbar-brand img,
+    .header-area.is-sticky .main-navbar .navbar .navbar-brand img {
+        max-height: 62px !important;
+    }
+
+    .header-area .main-navbar .nav-item {
+        margin-left: 6px !important;
+        margin-right: 6px !important;
+    }
+
+    .navbar-nav .nav-link,
+    .header-area .navbar-nav .nav-link,
+    .header-area.is-sticky .navbar-nav .nav-link {
+        font-size: 13px !important;
+        white-space: nowrap !important;
+        line-height: 65px !important;
+    }
+
+    .header-area .side-option .btn-ls-primary,
+    .header-area .side-option .btn-ls-outline,
+    .header-area.is-sticky .side-option .btn-ls-primary,
+    .header-area.is-sticky .side-option .btn-ls-outline {
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+    }
+
+    .header-area .side-option {
+        padding-right: 10px !important;
     }
 }
 
