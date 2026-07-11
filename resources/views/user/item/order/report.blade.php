@@ -152,12 +152,7 @@
                 <div class="content">
                   <div class="label">{{ __('Total Orders') }}</div>
                   <div class="value">{{ $orders->total() }}</div>
-                  <div class="trend-wrapper">
-                    <span class="trend-badge trend-up">
-                      <i class="fas fa-arrow-up"></i> 12.5%
-                    </span>
-                    <span>vs last 7 days</span>
-                  </div>
+
                 </div>
               </div>
             </div>
@@ -173,12 +168,7 @@
                   <div class="value">
                     {{ $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}{{ number_format($total, 2) }}{{ $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
                   </div>
-                  <div class="trend-wrapper">
-                    <span class="trend-badge trend-up">
-                      <i class="fas fa-arrow-up"></i> 8.3%
-                    </span>
-                    <span>vs last 7 days</span>
-                  </div>
+
                 </div>
               </div>
             </div>
@@ -194,12 +184,7 @@
                   <div class="value">
                     {{ $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}{{ $orders->total() > 0 ? number_format($total / $orders->total(), 2) : '0.00' }}{{ $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
                   </div>
-                  <div class="trend-wrapper">
-                    <span class="trend-badge trend-up">
-                      <i class="fas fa-arrow-up"></i> 5.8%
-                    </span>
-                    <span>vs last 7 days</span>
-                  </div>
+
                 </div>
               </div>
             </div>
@@ -215,12 +200,7 @@
                   <div class="value">
                     {{ $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}{{ number_format($total * 0.02, 2) }}{{ $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
                   </div>
-                  <div class="trend-wrapper">
-                    <span class="trend-badge trend-down">
-                      <i class="fas fa-arrow-down"></i> 2.4%
-                    </span>
-                    <span>vs last 7 days</span>
-                  </div>
+
                 </div>
               </div>
             </div>

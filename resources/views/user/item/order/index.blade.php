@@ -79,12 +79,7 @@
             <div class="content">
               <div class="label">{{ __('Total Orders') }}</div>
               <div class="value">{{ $totalOrders }}</div>
-              <div class="trend-wrapper">
-                <span class="trend-badge trend-up">
-                  <i class="fas fa-arrow-up"></i> 12.5%
-                </span>
-                <span>vs last 7 days</span>
-              </div>
+
             </div>
           </div>
         </div>
@@ -100,12 +95,7 @@
               <div class="value">
                 {{ $userBs && $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}{{ number_format($totalRevenue, 2) }}{{ $userBs && $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
               </div>
-              <div class="trend-wrapper">
-                <span class="trend-badge trend-up">
-                  <i class="fas fa-arrow-up"></i> 8.3%
-                </span>
-                <span>vs last 7 days</span>
-              </div>
+
             </div>
           </div>
         </div>
@@ -119,12 +109,7 @@
             <div class="content">
               <div class="label">{{ __('Pending Orders') }}</div>
               <div class="value">{{ $pendingOrders }}</div>
-              <div class="trend-wrapper">
-                <span class="trend-badge trend-down">
-                  <i class="fas fa-arrow-down"></i> 5.8%
-                </span>
-                <span>vs last 7 days</span>
-              </div>
+
             </div>
           </div>
         </div>
@@ -138,12 +123,7 @@
             <div class="content">
               <div class="label">{{ __('Completed Orders') }}</div>
               <div class="value">{{ $completedOrders }}</div>
-              <div class="trend-wrapper">
-                <span class="trend-badge trend-up">
-                  <i class="fas fa-arrow-up"></i> 10.2%
-                </span>
-                <span>vs last 7 days</span>
-              </div>
+
             </div>
           </div>
         </div>
