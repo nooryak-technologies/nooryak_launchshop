@@ -8995,7 +8995,7 @@ iframe[id^="tawkchat-"],
     .container-sm,
     .container-xl,
     .container-xxl {
-        max-width: 1334px;
+        max-width: 1584px;
     }
 }
 
@@ -9177,7 +9177,7 @@ iframe[id^="tawkchat-"],
     .header-area.is-sticky {
         left: 2.5% !important;
         right: 2.5% !important;
-        /* width: 95% !important; */
+        width: 95% !important;
     }
 
     .header-area .main-navbar .nav-item {
@@ -9209,7 +9209,6 @@ iframe[id^="tawkchat-"],
 
 /* Extra compact styling for 1199px to 1250px range to prevent wrapping */
 @media (min-width: 1199px) and (max-width: 1250px) {
-
     .header-area,
     .header-area.is-sticky {
         left: 1.5% !important;
@@ -9268,18 +9267,6 @@ iframe[id^="tawkchat-"],
     justify-content: center;
     margin-right: 8px;
     vertical-align: middle;
-}
-
-@media (min-width: 1400px) {
-
-    .container,
-    .container-lg,
-    .container-md,
-    .container-sm,
-    .container-xl,
-    .container-xxl {
-        max-width: 1200px !important;
-    }
 }
 
 /* Hero Badge Overrides */
@@ -10853,16 +10840,15 @@ iframe[id^="tawkchat-"],
     }
 }
 
-/* Custom media query for 992px to 1199px to display desktop sticky capsule header and prevent wrapping */
+/* Media query for 992px to 1199px range to force desktop capsule header */
 @media (min-width: 992px) and (max-width: 1199px) {
-
-    /* Hide mobile menu, show desktop menu */
     .header-area .main-responsive-nav {
         display: none !important;
     }
 
-    .header-area .main-navbar {
-        display: block !important;
+    .header-area .main-navbar,
+    .header-area .side-option {
+        display: flex !important;
     }
 
     .header-area,
@@ -10876,7 +10862,7 @@ iframe[id^="tawkchat-"],
         background: rgba(255, 255, 255, 0.95) !important;
         backdrop-filter: blur(10px) saturate(180%) !important;
         -webkit-backdrop-filter: blur(10px) saturate(180%) !important;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3) !important;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25) !important;
         border: 1px solid rgba(0, 0, 0, 0.05) !important;
         padding: 0 !important;
         height: 60px !important;
@@ -10884,6 +10870,8 @@ iframe[id^="tawkchat-"],
         align-items: center !important;
         transition: all 0.3s ease-in-out !important;
         animation: none !important;
+        position: fixed !important;
+        z-index: 9999 !important;
     }
 
     .header-area .main-navbar,
@@ -10900,7 +10888,7 @@ iframe[id^="tawkchat-"],
 
     .header-area .main-navbar .navbar .navbar-brand,
     .header-area.is-sticky .main-navbar .navbar .navbar-brand {
-        padding-left: 0 !important;
+        padding-left: 0px !important;
         display: flex !important;
         align-items: center !important;
         width: auto !important;
@@ -10908,24 +10896,7 @@ iframe[id^="tawkchat-"],
 
     .header-area .main-navbar .navbar .navbar-brand img,
     .header-area.is-sticky .main-navbar .navbar .navbar-brand img {
-        max-height: 54px !important;
-    }
-
-    .header-area .main-navbar .navbar .side-option,
-    .header-area.is-sticky .main-navbar .navbar .side-option {
-        padding-right: 10px !important;
-        height: 100% !important;
-        display: flex !important;
-        align-items: center !important;
-    }
-
-    .header-area .side-option .btn-ls-primary,
-    .header-area .side-option .btn-ls-outline,
-    .header-area.is-sticky .side-option .btn-ls-primary,
-    .header-area.is-sticky .side-option .btn-ls-outline {
-        padding: 5px 10px !important;
-        font-size: 11.5px !important;
-        border-radius: 30px !important;
+        max-height: 55px !important;
     }
 
     .header-area .main-navbar .nav-item {
@@ -10936,10 +10907,25 @@ iframe[id^="tawkchat-"],
     .navbar-nav .nav-link,
     .header-area .navbar-nav .nav-link,
     .header-area.is-sticky .navbar-nav .nav-link {
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
         font-size: 12px !important;
         white-space: nowrap !important;
         line-height: 60px !important;
+    }
+
+    .header-area .side-option .btn-ls-primary,
+    .header-area .side-option .btn-ls-outline,
+    .header-area.is-sticky .side-option .btn-ls-primary,
+    .header-area.is-sticky .side-option .btn-ls-outline {
+        padding: 5px 12px !important;
+        font-size: 11px !important;
+        border-radius: 30px !important;
+    }
+
+    .header-area .side-option {
+        padding-right: 8px !important;
+    }
+
+    .hero-wrapper {
+        margin-top: 60px !important;
     }
 }
