@@ -1297,7 +1297,6 @@
                       <div class="card-btn-action">
                         @if ($package->is_trial === '1' && $package->price != 0)
                           @php
-                            $hrefTrial = $selectedTemplate 
                             $hrefPurchase = $selectedTemplate 
                               ? route('front.register.view', ['status' => 'regular', 'id' => $package->id]) . '?template=' . urlencode($selectedTemplate)
                               : route('front.select.template', ['status' => 'regular', 'id' => $package->id]);
