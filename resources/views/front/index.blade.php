@@ -200,20 +200,6 @@
     margin: 0;
     font-weight: 500;
   }
-  @media (max-width: 991px) {
-    .steps-stats-section .steps-content-wrap {
-      text-align: center !important;
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-      padding-left: 0 !important;
-    }
-    .steps-stats-section .step-item-custom {
-      align-self: stretch !important;
-      max-width: 450px !important;
-      margin: 0 auto 16px !important;
-    }
-  }
   @media (max-width: 575px) {
     .steps-stats-section .stats-bar-card {
       padding: 16px 10px !important;
