@@ -1142,7 +1142,7 @@
                         $iconClass    = 'scale';
                     }
                   @endphp
-                  <div class="col-sm-12 col-md-6 col-lg-3">
+                  <div class="col-sm-12 col-md-6 col-lg-3 {{ (strtolower($term) == 'monthly' && (strtolower($package->title) == 'standard' || strtolower($package->title) == 'premium')) ? 'd-none d-sm-block' : '' }}">
                     <div class="pricing-card-modern {{ $package->recommended == '1' ? 'popular' : '' }}">
                       @if ($package->recommended == '1')
                         <span class="card-ribbon-badge">{{ __('MOST POPULAR') }}</span>
@@ -1189,9 +1189,9 @@
                         if (!empty($package->categories_limit)) {
                             $limitFeatures[] = ['label' => 'Categories Limit : ' . ($package->categories_limit == 999999 ? 'Unlimited' : $package->categories_limit), 'active' => true];
                         }
-                        if (!empty($package->subcategories_limit)) {
-                            $limitFeatures[] = ['label' => 'Subcategories Limit : ' . ($package->subcategories_limit == 999999 ? 'Unlimited' : $package->subcategories_limit), 'active' => true];
-                        }
+                        // if (!empty($package->subcategories_limit)) {
+                        //     $limitFeatures[] = ['label' => 'Subcategories Limit : ' . ($package->subcategories_limit == 999999 ? 'Unlimited' : $package->subcategories_limit), 'active' => true];
+                        // }
                         $limitFeatures[] = ['label' => 'Products Limit : ' . ($package->product_limit == 999999 ? 'Unlimited' : $package->product_limit), 'active' => true];
                         if (!empty($package->order_limit)) {
                             $limitFeatures[] = ['label' => 'Orders Limit : ' . ($package->order_limit == 999999 ? 'Unlimited' : $package->order_limit), 'active' => true];
@@ -1335,7 +1335,7 @@
                 @endforeach
                 
                 <!-- Static Enterprise Column Card -->
-                <div class="col-sm-12 col-md-6 col-lg-3">
+                <div class="col-sm-12 col-md-6 col-lg-3 {{ strtolower($term) == 'monthly' ? 'd-none d-sm-block' : '' }}">
                   <div class="pricing-card-modern enterprise">
                     <div class="card-header-block">
                       <div class="icon-circle enterprise">
