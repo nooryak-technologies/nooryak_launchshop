@@ -10937,7 +10937,7 @@ iframe[id^="tawkchat-"],
 
 }
 
-/* Media query for widths below 991px (mobile and tablet) to add top space to the hero banner */
+/* Media query for widths below 991px to add top space to the hero banner and prevent overlap */
 @media (max-width: 991px) {
     .hero-wrapper {
         padding-top: 120px !important;
