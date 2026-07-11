@@ -10855,36 +10855,18 @@ iframe[id^="tawkchat-"],
 
 /* Custom media query for 992px to 1199px to display desktop sticky capsule header and prevent wrapping */
 @media (min-width: 992px) and (max-width: 1199px) {
+
     /* Hide mobile menu, show desktop menu */
     .header-area .main-responsive-nav {
         display: none !important;
     }
-    
-    /* Force original desktop menu & collapse to show despite meanmenu overrides */
+
     .header-area .main-navbar {
         display: block !important;
-        background: transparent !important;
-        box-shadow: none !important;
-        border: none !important;
-        width: 100% !important;
-    }
-    
-    .header-area .main-navbar .navbar-collapse.mean-menu {
-        display: flex !important;
-    }
-    
-    .header-area .main-navbar .navbar-nav {
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
     }
 
-    /* Style the header capsule to float and center */
     .header-area,
-    .header-area.is-sticky,
-    .header-inner-page,
-    .header-inner-page.is-sticky {
-        position: fixed !important;
+    .header-area.is-sticky {
         top: 15px !important;
         left: 1% !important;
         right: 1% !important;
@@ -10916,23 +10898,17 @@ iframe[id^="tawkchat-"],
         width: 100% !important;
     }
 
-    .header-area .main-navbar .container-fluid {
-        padding-left: 15px !important;
-        padding-right: 15px !important;
-    }
-
     .header-area .main-navbar .navbar .navbar-brand,
     .header-area.is-sticky .main-navbar .navbar .navbar-brand {
         padding-left: 0 !important;
         display: flex !important;
         align-items: center !important;
         width: auto !important;
-        margin-right: 10px !important;
     }
 
     .header-area .main-navbar .navbar .navbar-brand img,
     .header-area.is-sticky .main-navbar .navbar .navbar-brand img {
-        max-height: 48px !important;
+        max-height: 54px !important;
     }
 
     .header-area .main-navbar .navbar .side-option,
@@ -10941,15 +10917,14 @@ iframe[id^="tawkchat-"],
         height: 100% !important;
         display: flex !important;
         align-items: center !important;
-        margin-left: 10px !important;
     }
 
     .header-area .side-option .btn-ls-primary,
     .header-area .side-option .btn-ls-outline,
     .header-area.is-sticky .side-option .btn-ls-primary,
     .header-area.is-sticky .side-option .btn-ls-outline {
-        padding: 5px 12px !important;
-        font-size: 11px !important;
+        padding: 5px 10px !important;
+        font-size: 11.5px !important;
         border-radius: 30px !important;
     }
 
@@ -10963,7 +10938,7 @@ iframe[id^="tawkchat-"],
     .header-area.is-sticky .navbar-nav .nav-link {
         padding-top: 0 !important;
         padding-bottom: 0 !important;
-        font-size: 11.5px !important;
+        font-size: 12px !important;
         white-space: nowrap !important;
         line-height: 60px !important;
     }
