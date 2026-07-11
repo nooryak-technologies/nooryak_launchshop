@@ -1118,6 +1118,9 @@
               <div class="row g-4 justify-content-center">
                 @foreach ($packages as $index => $package)
                   @php
+                    if (strtolower($term) == 'monthly' && (strtolower($package->title) == 'standard' || strtolower($package->title) == 'premium')) {
+                        continue;
+                    }
                     // Plan icon & subtitle based on price order
                     $planTitle    = __($package->title);
                     $planSubtitle = $package->term ? ucfirst(strtolower($package->term)) . ' plan' : '';
@@ -1142,7 +1145,7 @@
                         $iconClass    = 'scale';
                     }
                   @endphp
-                  <div class="col-sm-12 col-md-6 col-lg-3 {{ (strtolower($term) == 'monthly' && (strtolower($package->title) == 'standard' || strtolower($package->title) == 'premium')) ? 'd-none d-sm-block' : '' }}">
+                  <div class="col-sm-12 col-md-6 col-lg-3">
                     <div class="pricing-card-modern {{ $package->recommended == '1' ? 'popular' : '' }}">
                       @if ($package->recommended == '1')
                         <span class="card-ribbon-badge">{{ __('MOST POPULAR') }}</span>
@@ -1334,64 +1337,66 @@
                   </div>
                 @endforeach
                 
-                <!-- Static Enterprise Column Card -->
-                <div class="col-sm-12 col-md-6 col-lg-3 {{ strtolower($term) == 'monthly' ? 'd-none d-sm-block' : '' }}">
-                  <div class="pricing-card-modern enterprise">
-                    <div class="card-header-block">
-                      <div class="icon-circle enterprise">
-                        <i class="fas fa-building"></i>
+                @if (strtolower($term) != 'monthly')
+                  <!-- Static Enterprise Column Card -->
+                  <div class="col-sm-12 col-md-6 col-lg-3">
+                    <div class="pricing-card-modern enterprise">
+                      <div class="card-header-block">
+                        <div class="icon-circle enterprise">
+                          <i class="fas fa-building"></i>
+                        </div>
+                        <div class="title-info">
+                          <h3>Enterprise</h3>
+                          <p class="subtitle">For large & global brands</p>
+                        </div>
                       </div>
-                      <div class="title-info">
-                        <h3>Enterprise</h3>
-                        <p class="subtitle">For large & global brands</p>
+                      
+                      <div class="price-section custom-price">
+                        <span class="price-value text-dark">Custom</span>
                       </div>
+                      <p class="billing-subtext">Tailored to your needs</p>
+                      
+                      <div class="features-list-block">
+                        <ul>
+                          <li>
+                            <span class="feat-check-circle"><i class="fas fa-check"></i></span>
+                            <span>Everything in Scale</span>
+                          </li>
+                          <li>
+                            <span class="feat-check-circle"><i class="fas fa-check"></i></span>
+                            <span>Unlimited Staff Accounts</span>
+                          </li>
+                          <li>
+                            <span class="feat-check-circle"><i class="fas fa-check"></i></span>
+                            <span>Dedicated Account Manager</span>
+                          </li>
+                          <li>
+                            <span class="feat-check-circle"><i class="fas fa-check"></i></span>
+                            <span>Custom Integrations</span>
+                          </li>
+                          <li>
+                            <span class="feat-check-circle"><i class="fas fa-check"></i></span>
+                            <span>SLA &amp; Uptime Guarantee</span>
+                          </li>
+                          <li>
+                            <span class="feat-check-circle"><i class="fas fa-check"></i></span>
+                            <span>Priority 24/7 Support</span>
+                          </li>
+                        </ul>
+                      </div>
+                      
+                      <div class="card-btn-action d-flex align-items-center gap-2">
+                        <a href="{{ route('front.contact') }}" class="btn-pricing-action btn-outline-dark flex-grow-1" style="margin-bottom:0;">
+                          Talk to Sales
+                        </a>
+                        <a href="https://wa.me/916374913298?text=Interested%20with%20CUSTOM%20Plan" target="_blank" class="btn-whatsapp-sales" title="WhatsApp Sales">
+                          <i class="fab fa-whatsapp"></i>
+                        </a>
+                      </div>
+                      <p class="trial-label text-center mt-2">Schedule a demo</p>
                     </div>
-                    
-                    <div class="price-section custom-price">
-                      <span class="price-value text-dark">Custom</span>
-                    </div>
-                    <p class="billing-subtext">Tailored to your needs</p>
-                    
-                    <div class="features-list-block">
-                      <ul>
-                        <li>
-                          <span class="feat-check-circle"><i class="fas fa-check"></i></span>
-                          <span>Everything in Scale</span>
-                        </li>
-                        <li>
-                          <span class="feat-check-circle"><i class="fas fa-check"></i></span>
-                          <span>Unlimited Staff Accounts</span>
-                        </li>
-                        <li>
-                          <span class="feat-check-circle"><i class="fas fa-check"></i></span>
-                          <span>Dedicated Account Manager</span>
-                        </li>
-                        <li>
-                          <span class="feat-check-circle"><i class="fas fa-check"></i></span>
-                          <span>Custom Integrations</span>
-                        </li>
-                        <li>
-                          <span class="feat-check-circle"><i class="fas fa-check"></i></span>
-                          <span>SLA &amp; Uptime Guarantee</span>
-                        </li>
-                        <li>
-                          <span class="feat-check-circle"><i class="fas fa-check"></i></span>
-                          <span>Priority 24/7 Support</span>
-                        </li>
-                      </ul>
-                    </div>
-                    
-                    <div class="card-btn-action d-flex align-items-center gap-2">
-                      <a href="{{ route('front.contact') }}" class="btn-pricing-action btn-outline-dark flex-grow-1" style="margin-bottom:0;">
-                        Talk to Sales
-                      </a>
-                      <a href="https://wa.me/{{ $bs->whatsapp_number }}?text=Interested%20with%20CUSTOM%20Plan" target="_blank" class="btn-whatsapp-sales" title="WhatsApp Sales">
-                        <i class="fab fa-whatsapp"></i>
-                      </a>
-                    </div>
-                    <p class="trial-label text-center mt-2">Schedule a demo</p>
                   </div>
-                </div>
+                @endif
               </div>
             </div>
           @endforeach
