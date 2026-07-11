@@ -10938,7 +10938,14 @@ iframe[id^="tawkchat-"],
 }
 
 /* Media query for widths below 767px to add top space to the hero banner */
-@media (max-width: 767px) {
+@media (max-width: 768px) {
+    .hero-wrapper {
+        padding-top: 40px !important;
+    }
+}
+
+/* Media query for 768px to 991px range to add top space to the hero banner */
+@media (min-width: 768px) and (max-width: 991px) {
     .hero-wrapper {
         padding-top: 120px !important;
     }
