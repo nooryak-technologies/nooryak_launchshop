@@ -14,8 +14,17 @@
       display: none !important;
   }
   .shops-hero {
-      padding-top: 140px !important;
+      padding-top: 50px !important;
   }
+@media (max-width: 1198px){
+
+.shops-hero {
+    padding-top: 95px !important;
+}
+
+}
+
+
 </style>
 @endsection
 
