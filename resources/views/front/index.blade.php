@@ -235,7 +235,7 @@
     <!-- Hero Section Start-->
     <section id="home" class="hero-wrapper">
       <div class="container">
-        <div class="row align-items-center">
+        <div class="row ">
           <div class="col-lg-5 col-xl-5 order-2 order-lg-1">
             <div class="hero-content" data-aos="fade-right">
               <div class="hero-badge">
