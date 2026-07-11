@@ -917,7 +917,8 @@
         $.post("{{ route('front.otp.send') }}", {
           _token: "{{ csrf_token() }}",
           phone_number: phoneVal,
-          country_code: countryCode
+          country_code: countryCode,
+          name: nameVal
         }, function(response) {
           if (response.success) {
             $('#phone-feedback').html('<span class="text-success"><i class="fas fa-check-circle"></i> ' + response.message + '</span>');
@@ -948,7 +949,8 @@
         $.post("{{ route('front.otp.send') }}", {
           _token: "{{ csrf_token() }}",
           phone_number: phoneVal,
-          country_code: countryCode
+          country_code: countryCode,
+          name: $('#first_name').val().trim()
         }, function(response) {
           if (response.success) {
             $('#phone-feedback').html('<span class="text-success"><i class="fas fa-check-circle"></i> ' + response.message + '</span>');
