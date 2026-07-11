@@ -248,9 +248,11 @@ class FrontendController extends Controller
         $cleanPhone = preg_replace('/[^0-9]/', '', $phone);
         $cleanCountryCode = preg_replace('/[^0-9]/', '', $countryCode);
 
-        $mobileNo = $cleanPhone;
-        if (strlen($mobileNo) == 10) {
-            $mobileNo = '91' . $mobileNo;
+        // Construct the full international number for WhatsApp API
+        if (strpos($cleanPhone, $cleanCountryCode) === 0) {
+            $mobileNo = $cleanPhone;
+        } else {
+            $mobileNo = $cleanCountryCode . $cleanPhone;
         }
 
         $otp = rand(100000, 999999);

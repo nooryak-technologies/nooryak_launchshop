@@ -234,10 +234,7 @@ if ($currentLang->popups()->count() > 0) {
                     
                     <!-- CTA Buttons -->
                     <div class="modern-cta-buttons">
-                        <a href="{{ route('front.pricing') }}" class="btn-ls-primary popup-close-btn-trigger popup-dismiss-permanent" data-popup_id="{{ $popup->id }}">
-                            Start Free Trial <i class="fas fa-arrow-right ms-2"></i>
-                        </a>
-                        <a href="{{ route('front.index') }}" class="btn-ls-outline popup-close-btn-trigger">
+                        <a href="{{ route('front.index') }}" class="btn-ls-outline popup-close-btn-trigger" style="flex: 1;">
                             <i class="fas fa-store me-2"></i> Explore Now
                         </a>
                     </div>

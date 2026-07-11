@@ -349,7 +349,21 @@
     border-radius: 0 6px 6px 0;
   }
 
+  /* intl-tel-input customizations */
+  .iti {
+    display: block !important;
+    width: 100%;
+  }
+  .iti__country-list {
+    text-align: left;
+  }
+  .iti--separate-dial-code .iti__selected-dial-code {
+    font-size: 14px;
+    color: #475569;
+    font-weight: 600;
+  }
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
 @endsection
 
 @section('content')
@@ -401,25 +415,17 @@
                   </div>
 
                   <!-- Country Code + Phone Input -->
-                  <div class="form-group mb-20">
+                  <div class="form-group mb-20 text-start" style="text-align: left;">
                     <label class="form-label font-weight-bold small mb-2" style="color: #475569; display: block; text-align: left;">
                       {{ __('Phone Number') }} *
                     </label>
-                    <div class="row g-2 align-items-center">
-                      <div class="col-3 col-sm-2">
-                        <input class="form-control" type="text" name="country_code" id="country_code" value="{{ old('country_code', '+91') }}"
-                          placeholder="{{ __('Code') }}" required inputmode="numeric">
-                        @error('country_code')
-                          <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
-                        @enderror
-                      </div>
-                      <div class="col-9 col-sm-10">
-                        <input class="form-control" type="number" name="phone" id="phone_number" value="{{ old('phone') }}"
-                          placeholder="81234 56789" required min="0" step="1" inputmode="numeric">
-                        @error('phone')
-                          <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
-                        @enderror
-                      </div>
+                    <div style="text-align: left;">
+                      <input type="hidden" name="country_code" id="country_code" value="{{ old('country_code', '+91') }}">
+                      <input class="form-control" type="tel" name="phone" id="phone_number" value="{{ old('phone') }}"
+                        placeholder="81234 56789" required style="width: 100%; text-align: left;" inputmode="numeric">
+                      @error('phone')
+                        <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
+                      @enderror
                     </div>
                     <div id="phone-feedback" class="small mt-2" style="font-weight: 600; text-align: left;"></div>
                   </div>
@@ -672,9 +678,41 @@
 @endsection
 
 @section('scripts')
+  <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
   <script>
     'use strict';
     $(document).ready(function() {
+      // Initialize intl-tel-input
+      const phoneInput = document.querySelector("#phone_number");
+      const countryCodeInput = document.querySelector("#country_code");
+      
+      const iti = window.intlTelInput(phoneInput, {
+        initialCountry: "in",
+        separateDialCode: true,
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
+      });
+
+      // Update hidden country_code input on country change
+      phoneInput.addEventListener("countrychange", function() {
+        const countryData = iti.getSelectedCountryData();
+        countryCodeInput.value = "+" + countryData.dialCode;
+      });
+
+      // Initialize value on load / fallback
+      setTimeout(function() {
+        let oldCode = "{{ old('country_code') }}";
+        if (oldCode) {
+          let dialCode = oldCode.replace('+', '');
+          let countryDataList = iti.getCountryData();
+          let matchedCountry = countryDataList.find(c => c.dialCode === dialCode);
+          if (matchedCountry) {
+            iti.setCountry(matchedCountry.iso2);
+          }
+        }
+        const countryData = iti.getSelectedCountryData();
+        countryCodeInput.value = "+" + countryData.dialCode;
+      }, 500);
+
       // Toggle plans picker panel
       $('#btn-toggle-plans').on('click', function(e) {
         e.preventDefault();

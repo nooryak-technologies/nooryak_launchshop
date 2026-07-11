@@ -42,6 +42,166 @@
       flex-direction: column !important;
       gap: 8px !important;
   }
+  /* Steps & Stats Section Styles */
+  .steps-stats-section {
+    background: #ffffff;
+    padding: 80px 0;
+    font-family: 'Outfit', 'Inter', sans-serif;
+  }
+  .rocket-visual-wrap {
+    position: relative;
+    display: inline-block;
+  }
+  .rocket-main-img {
+    max-width: 100%;
+    height: auto;
+    animation: floatRocket 4s ease-in-out infinite;
+  }
+  @keyframes floatRocket {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .steps-badge {
+    background: #fff5f2;
+    color: #ff5a2c;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 90, 44, 0.1);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+  .steps-main-title {
+    font-size: 38px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.25;
+  }
+  .step-item-custom {
+    gap: 16px;
+  }
+  .step-icon-container {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .step-icon-orange {
+    background: #fff5f2;
+    color: #ff5a2c;
+    border: 1px solid rgba(255, 90, 44, 0.15);
+  }
+  .step-icon-pink {
+    background: #fdf2f8;
+    color: #db2777;
+    border: 1px solid rgba(219, 39, 119, 0.15);
+  }
+  .step-icon-green {
+    background: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid rgba(22, 163, 74, 0.15);
+  }
+  .step-icon-blue {
+    background: #f0f9ff;
+    color: #2563eb;
+    border: 1px solid rgba(37, 99, 235, 0.15);
+  }
+  .step-text-container {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+  .step-item-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+  }
+  .step-item-desc {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.45;
+  }
+  .btn-start-journey {
+    background: #ff5a2c;
+    color: #ffffff !important;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 14px 28px;
+    border-radius: 50px;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 4px 14px rgba(255, 90, 44, 0.3);
+    transition: all 0.3s ease;
+    text-decoration: none !important;
+  }
+  .btn-start-journey:hover {
+    background: #e0481d;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 90, 44, 0.4);
+  }
+  .stats-bar-card {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 16px;
+    padding: 24px 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  }
+  .stat-item-wrap {
+    gap: 16px;
+  }
+  .stat-bar-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .stat-icon-orange {
+    background: #fff5f2;
+    color: #ff5a2c;
+  }
+  .stat-icon-pink {
+    background: #fdf2f8;
+    color: #db2777;
+  }
+  .stat-icon-blue {
+    background: #eff6ff;
+    color: #3b82f6;
+  }
+  .stat-icon-green {
+    background: #f0fdf4;
+    color: #16a34a;
+  }
+  .stat-bar-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+  .stat-bar-val {
+    font-size: 24px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+    line-height: 1.1;
+  }
+  .stat-bar-lbl {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0;
+    font-weight: 500;
+  }
 </style>
 @endsection
 
@@ -209,31 +369,134 @@
         </div>
       </div>
 
-      <!-- How it Works section -->
-      <div class="template-how-it-works-section mt-100" data-aos="fade-up">
-        <h2 class="section-title text-center">{{ __('How It Works') }}</h2>
-        <p class="section-subtitle text-center mb-5">{{ __('Get your professional e-commerce storefront live in three simple steps.') }}</p>
+      <!-- Steps & Stats section -->
+      <div class="steps-stats-section mt-100" data-aos="fade-up" style="background:#fff; border-top:1px solid #f1f5f9; padding-top:60px; margin-bottom:60px;">
+        <div class="row align-items-center mb-60">
+          <!-- Left Column: Rocket Image -->
+          <div class="col-lg-6 col-md-12 text-center position-relative mb-5 mb-lg-0">
+            <div class="rocket-visual-wrap">
+              <img src="{{ asset('images/rocket_leftside.png') }}" alt="Rocket Launch" class="img-fluid rocket-main-img" style="max-width: 85%;">
+            </div>
+          </div>
+          
+          <!-- Right Column: 4 Simple Steps -->
+          <div class="col-lg-6 col-md-12">
+            <div class="steps-content-wrap ps-lg-4 text-start">
+              <span class="steps-badge d-inline-block">{{ __('Simple Steps. Big Results.') }}</span>
+              <h2 class="steps-main-title mb-4" style="font-weight: 800; font-size: 34px; color: #1e293b;">{{ __('Launch your dream store in four simple steps.') }}</h2>
+              
+              <div class="steps-list mt-30">
+                <!-- Step 1 -->
+                <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
+                  <div class="step-icon-container step-icon-orange">
+                    <i class="fas fa-store"></i>
+                  </div>
+                  <div class="step-text-container">
+                    <h4 class="step-item-title">{{ __('1. Choose Your Theme') }}</h4>
+                    <p class="step-item-desc">{{ __('Pick a professional theme that matches your brand.') }}</p>
+                  </div>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
+                  <div class="step-icon-container step-icon-pink">
+                    <i class="fas fa-cog"></i>
+                  </div>
+                  <div class="step-text-container">
+                    <h4 class="step-item-title">{{ __('2. Customize & Setup') }}</h4>
+                    <p class="step-item-desc">{{ __('Add your products, customize design & settings.') }}</p>
+                  </div>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
+                  <div class="step-icon-container step-icon-green">
+                    <i class="fas fa-credit-card"></i>
+                  </div>
+                  <div class="step-text-container">
+                    <h4 class="step-item-title">{{ __('3. Configure Payments') }}</h4>
+                    <p class="step-item-desc">{{ __('Set up payment methods and shipping options.') }}</p>
+                  </div>
+                </div>
+                
+                <!-- Step 4 -->
+                <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
+                  <div class="step-icon-container step-icon-blue">
+                    <i class="fas fa-rocket"></i>
+                  </div>
+                  <div class="step-text-container">
+                    <h4 class="step-item-title">{{ __('4. Launch Your Store') }}</h4>
+                    <p class="step-item-desc">{{ __('Your store is live! Start selling and growing.') }}</p>
+                  </div>
+                </div>
+              </div>
+              
+              @php
+                $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
+                $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
+              @endphp
+              <div class="mt-4" style="text-align: left;">
+                <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-start-journey">
+                  {{ __('Start Your Journey') }} <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
         
-        <div class="row g-4">
-          <div class="col-md-4">
-            <div class="how-works-card">
-              <div class="step-number">1</div>
-              <h4>Choose a Design</h4>
-              <p>Explore our optimized templates, view live previews, and pick the perfect layout for your business.</p>
+        <!-- Stats Bar at the Bottom -->
+        <div class="stats-bar-card mt-5 mb-5" style="border: 1px solid #f1f5f9; border-radius: 16px; padding: 24px 30px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03); background: #ffffff;">
+          <div class="row align-items-center justify-content-between g-4">
+            <!-- Stat Item 1 -->
+            <div class="col-lg-3 col-md-6 col-sm-6 d-flex align-items-center justify-content-start justify-content-lg-center">
+              <div class="stat-item-wrap d-flex align-items-center" style="gap: 16px;">
+                <div class="stat-bar-icon-box stat-icon-orange">
+                  <i class="fas fa-store"></i>
+                </div>
+                <div class="stat-bar-info">
+                  <h3 class="stat-bar-val">2,500+</h3>
+                  <p class="stat-bar-lbl">{{ __('Live Stores') }}</p>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="col-md-4">
-            <div class="how-works-card">
-              <div class="step-number">2</div>
-              <h4>Select Your Plan</h4>
-              <p>Pick a plan matching your size and features. Get a 14-day free trial on our premium plans.</p>
+            
+            <!-- Stat Item 2 -->
+            <div class="col-lg-3 col-md-6 col-sm-6 d-flex align-items-center justify-content-start justify-content-lg-center">
+              <div class="stat-item-wrap d-flex align-items-center" style="gap: 16px;">
+                <div class="stat-bar-icon-box stat-icon-pink">
+                  <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-bar-info">
+                  <h3 class="stat-bar-val">8,000+</h3>
+                  <p class="stat-bar-lbl">{{ __('Happy Merchants') }}</p>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="col-md-4">
-            <div class="how-works-card">
-              <div class="step-number">3</div>
-              <h4>Customize & Launch</h4>
-              <p>Configure payments, upload products, link your domain, and start selling globally.</p>
+            
+            <!-- Stat Item 3 -->
+            <div class="col-lg-3 col-md-6 col-sm-6 d-flex align-items-center justify-content-start justify-content-lg-center">
+              <div class="stat-item-wrap d-flex align-items-center" style="gap: 16px;">
+                <div class="stat-bar-icon-box stat-icon-blue">
+                  <i class="fas fa-gem"></i>
+                </div>
+                <div class="stat-bar-info">
+                  <h3 class="stat-bar-val">50+</h3>
+                  <p class="stat-bar-lbl">{{ __('Premium Themes') }}</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Stat Item 4 -->
+            <div class="col-lg-3 col-md-6 col-sm-6 d-flex align-items-center justify-content-start justify-content-lg-center">
+              <div class="stat-item-wrap d-flex align-items-center" style="gap: 16px;">
+                <div class="stat-bar-icon-box stat-icon-green">
+                  <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-bar-info">
+                  <h3 class="stat-bar-val">98%</h3>
+                  <p class="stat-bar-lbl">{{ __('Customer Satisfaction') }}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

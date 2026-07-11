@@ -924,9 +924,17 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
   <div class="charts-row">
     {{-- Sales Overview --}}
     <div class="chart-card">
-      <div class="chart-card-title">
-        {{ __('Sales Overview') }}
-        <span class="chart-subtitle">{{ __('Last 30 Days') }}</span>
+      <div class="chart-card-title-wrap" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;width:100%;">
+        <div class="chart-card-title" style="margin:0;">
+          {{ __('Sales Overview') }}
+          <span class="chart-subtitle" id="sales-overview-subtitle" style="display:block;">{{ __('Last 30 Days') }}</span>
+        </div>
+        <select class="chart-filter-select" data-chart-type="sales_overview" style="font-size:11px;font-weight:600;color:#4B5563;border:1px solid #E5E7EB;border-radius:6px;padding:4px 8px;background:#FFF;outline:none;cursor:pointer;">
+          <option value="7">{{ __('7 Days') }}</option>
+          <option value="30" selected>{{ __('30 Days') }}</option>
+          <option value="90">{{ __('90 Days') }}</option>
+          <option value="365">{{ __('This Year') }}</option>
+        </select>
       </div>
       <div style="position:relative;height:180px;width:100%;">
         <canvas id="salesOverviewChart"></canvas>
@@ -935,7 +943,15 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
 
     {{-- Revenue Analytics --}}
     <div class="chart-card">
-      <div class="chart-card-title">{{ __('Revenue Analytics') }}</div>
+      <div class="chart-card-title-wrap" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;width:100%;">
+        <div class="chart-card-title" style="margin:0;">{{ __('Revenue Analytics') }}</div>
+        <select class="chart-filter-select" data-chart-type="revenue_analytics" style="font-size:11px;font-weight:600;color:#4B5563;border:1px solid #E5E7EB;border-radius:6px;padding:4px 8px;background:#FFF;outline:none;cursor:pointer;">
+          <option value="7">{{ __('7 Days') }}</option>
+          <option value="30" selected>{{ __('30 Days') }}</option>
+          <option value="90">{{ __('90 Days') }}</option>
+          <option value="365">{{ __('This Year') }}</option>
+        </select>
+      </div>
       <div style="position:relative;height:155px;width:100%;">
         <canvas id="revenueAnalyticsChart"></canvas>
       </div>
@@ -943,7 +959,15 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
 
     {{-- Order Trend --}}
     <div class="chart-card">
-      <div class="chart-card-title">{{ __('Order Trend') }}</div>
+      <div class="chart-card-title-wrap" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;width:100%;">
+        <div class="chart-card-title" style="margin:0;">{{ __('Order Trend') }}</div>
+        <select class="chart-filter-select" data-chart-type="order_trend" style="font-size:11px;font-weight:600;color:#4B5563;border:1px solid #E5E7EB;border-radius:6px;padding:4px 8px;background:#FFF;outline:none;cursor:pointer;">
+          <option value="7">{{ __('7 Days') }}</option>
+          <option value="30" selected>{{ __('30 Days') }}</option>
+          <option value="90">{{ __('90 Days') }}</option>
+          <option value="365">{{ __('This Year') }}</option>
+        </select>
+      </div>
       <div style="position:relative;height:180px;width:100%;">
         <canvas id="orderTrendChart"></canvas>
       </div>
@@ -951,7 +975,15 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
 
     {{-- Traffic Sources --}}
     <div class="chart-card">
-      <div class="chart-card-title">{{ __('Traffic Sources') }}</div>
+      <div class="chart-card-title-wrap" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;width:100%;">
+        <div class="chart-card-title" style="margin:0;">{{ __('Traffic Sources') }}</div>
+        <select class="chart-filter-select" data-chart-type="traffic_sources" style="font-size:11px;font-weight:600;color:#4B5563;border:1px solid #E5E7EB;border-radius:6px;padding:4px 8px;background:#FFF;outline:none;cursor:pointer;">
+          <option value="7">{{ __('7 Days') }}</option>
+          <option value="30" selected>{{ __('30 Days') }}</option>
+          <option value="90">{{ __('90 Days') }}</option>
+          <option value="365">{{ __('This Year') }}</option>
+        </select>
+      </div>
       <div style="position:relative;height:155px;width:100%;">
         <canvas id="trafficSourcesChart"></canvas>
       </div>
@@ -1183,7 +1215,7 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
   // --- Sales Overview (Line) ---
   var ctxSales = document.getElementById('salesOverviewChart');
   if(ctxSales){
-    new Chart(ctxSales, {
+    window.salesOverviewChart = new Chart(ctxSales, {
       type: 'line',
       data: {
         labels: {!! json_encode($chart_sales_labels) !!},
@@ -1217,7 +1249,7 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
     var cart = {{ $revenue_analytics_cart }};
     var ship = {{ $revenue_analytics_shipping }};
     var tax  = {{ $revenue_analytics_tax }};
-    new Chart(ctxRev, {
+    window.revenueAnalyticsChart = new Chart(ctxRev, {
       type: 'doughnut',
       data: {
         labels: ['{{ __("Orders") }}','{{ __("Shipping") }}','{{ __("Others") }}'],
@@ -1245,7 +1277,7 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
   // --- Order Trend (Bar) ---
   var ctxOrd = document.getElementById('orderTrendChart');
   if(ctxOrd){
-    new Chart(ctxOrd, {
+    window.orderTrendChart = new Chart(ctxOrd, {
       type: 'bar',
       data: {
         labels: {!! json_encode($chart_sales_labels) !!},
@@ -1273,7 +1305,7 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
   var ctxTraffic = document.getElementById('trafficSourcesChart');
   if(ctxTraffic){
     var tv = {{ $total_visits }};
-    new Chart(ctxTraffic, {
+    window.trafficSourcesChart = new Chart(ctxTraffic, {
       type: 'doughnut',
       data: {
         labels: ['{{ __("Direct") }}','{{ __("Search") }}','{{ __("Social") }}','{{ __("Referral") }}'],
@@ -1297,6 +1329,54 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
       }
     });
   }
+
+  // --- AJAX filtering ---
+  $('.chart-filter-select').on('change', function() {
+    var chartType = $(this).data('chart-type');
+    var days = $(this).val();
+
+    if (chartType === 'sales_overview') {
+      var subtitleText = days == 365 ? '{{ __("This Year") }}' : '{{ __("Last") }} ' + days + ' {{ __("Days") }}';
+      $('#sales-overview-subtitle').text(subtitleText);
+    }
+
+    $.ajax({
+      url: "{{ route('user-dashboard') }}",
+      type: 'GET',
+      data: { days: days },
+      dataType: 'json',
+      success: function(data) {
+        if (chartType === 'sales_overview' && window.salesOverviewChart) {
+          window.salesOverviewChart.data.labels = data.chart_sales_labels;
+          window.salesOverviewChart.data.datasets[0].data = data.chart_sales_values;
+          window.salesOverviewChart.update();
+        }
+        if (chartType === 'revenue_analytics' && window.revenueAnalyticsChart) {
+          window.revenueAnalyticsChart.data.datasets[0].data = [
+            data.revenue_analytics_cart,
+            data.revenue_analytics_shipping,
+            data.revenue_analytics_tax
+          ];
+          window.revenueAnalyticsChart.update();
+        }
+        if (chartType === 'order_trend' && window.orderTrendChart) {
+          window.orderTrendChart.data.labels = data.chart_sales_labels;
+          window.orderTrendChart.data.datasets[0].data = data.chart_order_values;
+          window.orderTrendChart.update();
+        }
+        if (chartType === 'traffic_sources' && window.trafficSourcesChart) {
+          var tv = data.total_visits;
+          window.trafficSourcesChart.data.datasets[0].data = [
+            Math.round(tv*0.435),
+            Math.round(tv*0.304),
+            Math.round(tv*0.174),
+            Math.round(tv*0.087)
+          ];
+          window.trafficSourcesChart.update();
+        }
+      }
+    });
+  });
 })();
 </script>
 @endsection
