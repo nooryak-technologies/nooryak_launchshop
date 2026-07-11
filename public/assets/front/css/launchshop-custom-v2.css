@@ -10867,9 +10867,10 @@ iframe[id^="tawkchat-"],
 
     .header-area,
     .header-area.is-sticky {
-        top: 20px !important;
-        left: 2.5% !important;
-        right: 2.5% !important;
+        top: 15px !important;
+        left: 1% !important;
+        right: 1% !important;
+        width: 98% !important;
         margin: 0 auto !important;
         border-radius: 50px !important;
         background: rgba(255, 255, 255, 0.95) !important;
@@ -10907,7 +10908,7 @@ iframe[id^="tawkchat-"],
 
     .header-area .main-navbar .navbar .navbar-brand img,
     .header-area.is-sticky .main-navbar .navbar .navbar-brand img {
-        max-height: 48px !important;
+        max-height: 54px !important;
     }
 
     .header-area .main-navbar .navbar .side-option,
@@ -10923,13 +10924,13 @@ iframe[id^="tawkchat-"],
     .header-area.is-sticky .side-option .btn-ls-primary,
     .header-area.is-sticky .side-option .btn-ls-outline {
         padding: 5px 10px !important;
-        font-size: 11px !important;
+        font-size: 11.5px !important;
         border-radius: 30px !important;
     }
 
     .header-area .main-navbar .nav-item {
-        margin-left: 2px !important;
-        margin-right: 2px !important;
+        margin-left: 4px !important;
+        margin-right: 4px !important;
     }
 
     .navbar-nav .nav-link,
@@ -10937,9 +10938,7 @@ iframe[id^="tawkchat-"],
     .header-area.is-sticky .navbar-nav .nav-link {
         padding-top: 0 !important;
         padding-bottom: 0 !important;
-        padding-left: 6px !important;
-        padding-right: 6px !important;
-        font-size: 11px !important;
+        font-size: 12px !important;
         white-space: nowrap !important;
         line-height: 60px !important;
     }
