@@ -643,7 +643,7 @@
                     </svg>
                   </div>
                   <div class="feat-content">
-                    <div class="feat-title">{{ __('Launch') }}</div>
+                    <div class="feat-title">{{ __('Launch store') }}</div>
                     <div class="feat-sub">{{ __('Instantly') }}</div>
                   </div>
                 </div>
