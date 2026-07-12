@@ -858,7 +858,7 @@
           <div class="col-12 text-center">
             <div class="templates-badge-wrap" data-aos="fade-up">
               <span class="templates-badge">
-                <i class="fas fa-palette me-2"></i>{{ __('50+ Premium Themes') }}
+                <i class="fas fa-palette me-2"></i>{{ __('15+ Premium Themes') }}
               </span>
             </div>
             <h2 class="section-title mb-3" data-aos="fade-up" style="font-size: 38px; font-weight: 800; color: #1E2335;">{{ __('Professional Themes for Every Industry') }}</h2>
@@ -1008,7 +1008,7 @@
           <div class="col-12 text-center">
             <div class="templates-badge-wrap" data-aos="fade-up">
               <span class="templates-badge">
-                <i class="fas fa-palette me-2"></i>{{ __('50+ Premium Themes') }}
+                <i class="fas fa-palette me-2"></i>{{ __('15+ Premium Themes') }}
               </span>
             </div>
             <h2 class="section-title mb-3 text-center" data-aos="fade-up" style="font-size: 38px; font-weight: 800; color: #1E2335;">{{ __('Professional Themes for Every Industry') }}</h2>
@@ -1320,7 +1320,7 @@
               $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
               $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
             @endphp
-            <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-dashboard-explore px-4 py-3 d-inline-flex align-items-center gap-2">
+            <a href="{{ route('front.templates.view') }}" class="btn-dashboard-explore px-4 py-3 d-inline-flex align-items-center gap-2">
               {{ __('Explore Dashboard') }} <i class="fas fa-arrow-right"></i>
             </a>
           </div>
