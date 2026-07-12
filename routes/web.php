@@ -123,7 +123,3 @@ Route::domain($domain)->group(function () {
         Route::any('membership/cancel', 'Front\CheckoutController@cancelPayment')->name('membership.cancel');
     });
 });
-
-Route::get('/dump-packages', function() {
-    return response()->json(\DB::table('packages')->get());
-});
