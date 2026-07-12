@@ -125,14 +125,14 @@
   /* Recommended (Standard) → golden gradient card */
   .pricing-card-v2.card-recommended {
     background: linear-gradient(160deg, #b8600a 0%, #d4860f 100%);
-    border-color: #d4860f;
+    border: 2px solid #ff5a2c;
     box-shadow: 0 12px 40px rgba(212,134,15,0.25);
     color: #fff;
   }
   /* Best Value (Premium) → orange gradient card */
   .pricing-card-v2.card-best-value {
     background: linear-gradient(160deg, #ff5a2c 0%, #ff8c00 100%);
-    border-color: #ff5a2c;
+    border: 2px solid #d4860f;
     box-shadow: 0 12px 40px rgba(255,90,44,0.25);
     color: #fff;
   }
@@ -140,6 +140,27 @@
   .pricing-card-v2.card-enterprise {
     background: #ffffff;
   }
+  .plan-v2-wa-btn {
+    width: 50px;
+    height: 48px;
+    border-radius: 12px;
+    background: #25D366;
+    color: #fff !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    transition: transform 0.2s, background-color 0.2s;
+    flex-shrink: 0;
+    text-decoration: none !important;
+    border: none;
+    margin-top: auto;
+  }
+  .plan-v2-wa-btn:hover {
+    background: #20ba58;
+    transform: scale(1.05);
+  }
+
 
   /* Top badge */
   .plan-top-badge {
@@ -603,9 +624,13 @@
                       <li><i class="fas fa-check fi-check"></i><span>SLA &amp; Uptime Guarantee</span></li>
                       <li><i class="fas fa-check fi-check"></i><span>Priority 24/7 Support</span></li>
                     </ul>
-                    <div style="display:flex;gap:8px;margin-top:auto;">
-                      <a href="{{ route('front.contact') }}" class="plan-v2-btn" style="flex:1;">Talk to Sales</a>
+                    <div style="display:flex;gap:8px;margin-top:auto;width:100%;">
+                      <a href="{{ route('front.contact') }}" class="plan-v2-btn" style="flex:1;margin-top:0;">Talk to Sales</a>
+                      <a href="https://wa.me/6374913298?text=Hi%2C%20I%20want%20to%20enquire%20about%20the%20Enterprise%20Plan%20for%20LaunchShop." target="_blank" class="plan-v2-wa-btn">
+                        <i class="fab fa-whatsapp"></i>
+                      </a>
                     </div>
+
                   </div>
                 @endif
 
