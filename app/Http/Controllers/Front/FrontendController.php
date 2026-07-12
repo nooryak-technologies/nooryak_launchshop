@@ -242,7 +242,7 @@ class FrontendController extends Controller
             'country_code' => 'required'
         ]);
 
-        $phone = $request->phone_number;
+        $phone = ltrim($request->phone_number, '0');
         $countryCode = $request->country_code;
         $name = $request->input('name', '');
 
@@ -340,7 +340,7 @@ class FrontendController extends Controller
         ]);
 
         $otp = $request->otp;
-        $phone = $request->phone_number;
+        $phone = ltrim($request->phone_number, '0');
 
         $sessionOtp = Session::get('otp_code');
         $sessionPhone = Session::get('otp_phone');
@@ -543,7 +543,7 @@ class FrontendController extends Controller
     {
         if ($request->has('phone')) {
             $request->merge([
-                'phone' => preg_replace('/[^0-9]/', '', $request->phone),
+                'phone' => ltrim(preg_replace('/[^0-9]/', '', $request->phone), '0'),
             ]);
         }
        

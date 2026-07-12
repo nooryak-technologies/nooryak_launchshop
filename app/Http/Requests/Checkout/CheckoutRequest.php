@@ -51,14 +51,11 @@ class CheckoutRequest extends FormRequest
         ];
     }
 
-    /**
-     * Prepare the data for validation.
-     */
     protected function prepareForValidation(): void
     {
         if ($this->has('phone')) {
             $this->merge([
-                'phone' => preg_replace('/[^0-9]/', '', $this->phone),
+                'phone' => ltrim(preg_replace('/[^0-9]/', '', $this->phone), '0'),
             ]);
         }
     }
