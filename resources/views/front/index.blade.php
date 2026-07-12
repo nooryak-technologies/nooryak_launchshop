@@ -1480,7 +1480,7 @@
                       {{-- Extra features (collapsed) --}}
                       @php $hasExtra = (count($extraLimits) > 0 || count($allPf) > 0); @endphp
                       @if($hasExtra)
-                        <div class="plan-v2-extra-features" id="extra-{{ $package->id }}">
+                        <div class="plan-v2-extra-features" id="extra-{{ strtolower($term) }}-{{ $package->id }}">
                           <ul class="plan-v2-features" style="margin-bottom:8px;">
                             @foreach($extraLimits as $ef)
                               <li><i class="fas fa-check fi-check"></i><span>{{ $ef }}</span></li>
@@ -1501,10 +1501,11 @@
                           </ul>
                         </div>
                         <button type="button" class="plan-v2-see-more"
-                                onclick="togglePlanFeatures('{{ $package->id }}', this)">
+                                onclick="togglePlanFeatures('{{ strtolower($term) }}-{{ $package->id }}', this)">
                           <span class="see-more-txt">See More Features</span>
                           <i class="fas fa-arrow-right see-more-icon" style="font-size:11px;"></i>
                         </button>
+
                       @endif
 
                       {{-- CTA --}}
