@@ -710,7 +710,11 @@
         let val = $(this).val();
         let cleanVal = val.replace(/^0+/, '');
         if (val !== cleanVal) {
-          $(this).val(cleanVal);
+          if (typeof iti !== 'undefined' && iti) {
+            iti.setNumber(cleanVal);
+          } else {
+            $(this).val(cleanVal);
+          }
         }
       });
       
@@ -735,6 +739,15 @@
 
       // Initialize value on load / fallback
       setTimeout(function() {
+        // Strip leading zeros in case browser autofilled it after ready
+        let currentPhoneVal = $('#phone_number').val();
+        if (currentPhoneVal) {
+          let cleanPhoneVal = currentPhoneVal.replace(/^0+/, '');
+          if (currentPhoneVal !== cleanPhoneVal) {
+            iti.setNumber(cleanPhoneVal);
+          }
+        }
+
         let oldCode = countryCodeInput.value;
         if (oldCode) {
           let dialCode = oldCode.replace('+', '');
