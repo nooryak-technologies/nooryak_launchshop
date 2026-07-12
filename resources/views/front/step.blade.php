@@ -695,9 +695,24 @@
     'use strict';
     let isPhoneVerified = {!! session('phone_verified') ? 'true' : 'false' !!};
     $(document).ready(function() {
+      // Clean leading zeros on load before intl-tel-input initialization
+      let initialPhoneVal = $('#phone_number').val();
+      if (initialPhoneVal) {
+        $('#phone_number').val(initialPhoneVal.trim().replace(/^0+/, ''));
+      }
+
       // Initialize intl-tel-input
       const phoneInput = document.querySelector("#phone_number");
       const countryCodeInput = document.querySelector("#country_code");
+
+      // Strip leading zeros in real-time on typing, pasting, or autofill
+      $('#phone_number').on('input change blur keyup', function() {
+        let val = $(this).val();
+        let cleanVal = val.replace(/^0+/, '');
+        if (val !== cleanVal) {
+          $(this).val(cleanVal);
+        }
+      });
       
       const iti = window.intlTelInput(phoneInput, {
         initialCountry: "in",
