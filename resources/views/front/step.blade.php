@@ -710,11 +710,10 @@
         let val = $(this).val();
         let cleanVal = val.replace(/^0+/, '');
         if (val !== cleanVal) {
-          if (typeof iti !== 'undefined' && iti) {
-            iti.setNumber(cleanVal);
-          } else {
-            $(this).val(cleanVal);
-          }
+          $(this).val(cleanVal);
+          // Dispatch native events for intl-tel-input to pick up
+          this.dispatchEvent(new Event('input'));
+          this.dispatchEvent(new Event('change'));
         }
       });
       
@@ -744,7 +743,9 @@
         if (currentPhoneVal) {
           let cleanPhoneVal = currentPhoneVal.replace(/^0+/, '');
           if (currentPhoneVal !== cleanPhoneVal) {
-            iti.setNumber(cleanPhoneVal);
+            $('#phone_number').val(cleanPhoneVal);
+            phoneInput.dispatchEvent(new Event('input'));
+            phoneInput.dispatchEvent(new Event('change'));
           }
         }
 
