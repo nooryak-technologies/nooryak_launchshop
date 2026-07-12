@@ -1331,7 +1331,12 @@
 
     <!-- Pricing Section Start -->
     <section class="pricing-section pb-120">
+      @php
+        $selectedTemplate = request()->query('template');
+      @endphp
       <div class="container">
+
+
         <div class="row">
           <div class="col-12 text-center">
             <div class="section-subtitle" data-aos="fade-up">{{ @$homeSec->pricing_section_title ?: 'Simple. Transparent. Scalable.' }}</div>
