@@ -381,6 +381,12 @@
 
                 @foreach ($packages as $index => $package)
                   @php
+                    if (strtolower($term) == 'monthly' && (strtolower($package->title) == 'standard' || strtolower($package->title) == 'premium')) {
+                        $package = \App\Models\Package::where('status', '1')
+                            ->where('term', 'yearly')
+                            ->where('title', $package->title)
+                            ->first() ?: $package;
+                    }
                     $titleKey    = strtolower($package->title);
 
                     $isRecommended = ($titleKey == 'standard');
@@ -392,7 +398,7 @@
                     $planSubtitle = $subtitles[$titleKey] ?? ucfirst($titleKey).' plan';
 
                     // Period label
-                    $periodLabel = strtolower($term) == 'lifetime' ? 'one-time' : (strtolower($term) == 'yearly' ? 'year' : 'month');
+                    $periodLabel = strtolower($package->term) == 'lifetime' ? 'one-time' : (strtolower($package->term) == 'yearly' ? 'year' : 'month');
 
                     // Features
                     $limitFeatures = [];
@@ -448,14 +454,15 @@
                       @endif
                     </div>
                     <p class="plan-v2-billing-note">
-                      @if(strtolower($term)=='yearly')
+                      @if(strtolower($package->term)=='yearly')
                         Billed yearly at {{ $be->base_currency_symbol }}{{ number_format($package->price * 12, 0) }}
-                      @elseif(strtolower($term)=='monthly')
+                      @elseif(strtolower($package->term)=='monthly')
                         Billed monthly
                       @else
                         One-time access fee
                       @endif
                     </p>
+
 
                     <hr class="plan-v2-divider">
 
