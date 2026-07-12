@@ -43,6 +43,8 @@ use App\Models\User\UserShopSetting;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class CheckoutController extends Controller
 {
@@ -566,6 +568,11 @@ class CheckoutController extends Controller
             $footer->background_image =  null;
             $footer->save();
 
+            // Get package details
+            $packageObj  = Package::find($request['package_id']);
+            $planName    = $packageObj ? $packageObj->title : 'Your Plan';
+            $planPrice   = $packageObj ? ($be->base_currency_symbol . $packageObj->price) : '';
+
             //send verification email to user
             $mailer = new MegaMailer();
             $data = [
@@ -577,10 +584,22 @@ class CheckoutController extends Controller
                 'templateType' => 'email_verification',
                 'type' => 'emailVerification',
                 'password' => $password,
+                'package_title' => $planName,
                 'login_link' => route('user.login')
             ];
             $mailer->mailFromAdmin($data);
-            
+
+            // ── WhatsApp welcome message with plan details ──
+            try {
+                $cleanPhone  = preg_replace('/[^0-9]/', '', $request['phone'] ?? '');
+                $cleanCode   = preg_replace('/[^0-9]/', '', $request['country_code'] ?? '');
+                $mobileNo    = (strpos($cleanPhone, $cleanCode) === 0) ? $cleanPhone : $cleanCode . $cleanPhone;
+                $this->sendWelcomeWhatsApp($mobileNo, $request['username'], $password, $planName, $planPrice);
+            } catch (\Exception $waEx) {
+                Log::warning('Welcome WhatsApp send failed: ' . $waEx->getMessage());
+            }
+
+
             // Automatically seed template catalog for new user
             try {
                 $seedArgs = [
@@ -716,4 +735,35 @@ class CheckoutController extends Controller
             return redirect()->route('user.plan.extend.checkout', ['package_id' => $requestData['package_id']])->withInput($requestData);
         }
     }
+
+    /**
+     * Send a welcome WhatsApp message with account credentials after registration.
+     */
+    private function sendWelcomeWhatsApp(string $mobileNo, string $username, string $password, string $planName, string $planPrice): void
+    {
+        $message = "🎉 *Welcome to LaunchShop!*\n\n"
+            . "Your store account has been created successfully.\n\n"
+            . "👤 *Username:* " . $username . "\n"
+            . "🔑 *Password:* " . $password . "\n"
+            . "📦 *Plan:* " . $planName . ($planPrice ? " (" . $planPrice . ")" : "") . "\n\n"
+            . "🔗 *Login to your store dashboard:*\n"
+            . route('user.login') . "\n\n"
+            . "Need help? Chat with us anytime.\n"
+            . "– Team LaunchShop 🚀";
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer 544e86838c5c75aaa9bf171a9a4c566c',
+        ])->withoutVerifying()->post('https://2fa.tehub.in/api/whatsapp.php', [
+            'to'      => $mobileNo,
+            'message' => $message,
+            'type'    => 'general',
+        ]);
+
+        Log::info('Welcome WhatsApp send response:', [
+            'phone'    => $mobileNo,
+            'status'   => $response->status(),
+            'response' => $response->json(),
+        ]);
+    }
 }
+

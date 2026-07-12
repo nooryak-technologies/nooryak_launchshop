@@ -73,10 +73,15 @@ class MegaMailer
 
         if ($data['templateType'] == 'email_verification' && array_key_exists('password', $data)) {
             $login_link = array_key_exists('login_link', $data) ? $data['login_link'] : route('user.login');
+            $plan_info = '';
+            if (array_key_exists('package_title', $data) && !empty($data['package_title'])) {
+                $plan_info = '<p style="margin: 0 0 6px 0; font-size: 14px; color: #334155;"><strong>Purchased Plan:</strong> ' . htmlspecialchars($data['package_title']) . '</p>';
+            }
             $credentials_card = '
             <div style="margin-top: 30px; padding: 20px; background-color: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
-                <h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700;">Your Account Credentials</h4>
-                <p style="margin: 0 0 6px 0; font-size: 14px; color: #334155;"><strong>Email:</strong> ' . $data['toMail'] . '</p>
+                <h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700;">Your Account Credentials & Plan Details</h4>
+                ' . $plan_info . '
+                <p style="margin: 0 0 6px 0; font-size: 14px; color: #334155;"><strong>Email/Username:</strong> ' . $data['toMail'] . '</p>
                 <p style="margin: 0 0 16px 0; font-size: 14px; color: #334155;"><strong>Password:</strong> ' . $data['password'] . '</p>
                 <a href="' . $login_link . '" style="display: inline-block; padding: 10px 18px; font-size: 13px; font-weight: bold; color: #ffffff; background-color: #0f172a; border-radius: 6px; text-decoration: none;">Login to Your Account</a>
             </div>';
