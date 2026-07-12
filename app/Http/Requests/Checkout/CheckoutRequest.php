@@ -50,4 +50,16 @@ class CheckoutRequest extends FormRequest
             'receipt.required' => 'The receipt field image is required when instruction required receipt image'
         ];
     }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('phone')) {
+            $this->merge([
+                'phone' => preg_replace('/[^0-9]/', '', $this->phone),
+            ]);
+        }
+    }
 }

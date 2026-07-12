@@ -541,6 +541,11 @@ class FrontendController extends Controller
 
     public function checkout(Request $request)
     {
+        if ($request->has('phone')) {
+            $request->merge([
+                'phone' => preg_replace('/[^0-9]/', '', $request->phone),
+            ]);
+        }
        
         $this->validate($request, [
             'first_name' => 'required|max:255',
