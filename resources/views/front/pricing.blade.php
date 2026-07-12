@@ -108,7 +108,7 @@
     flex: 1 1 220px;
     max-width: 270px;
     background: #ffffff;
-    border: 1.5px solid #e2e8f0;
+   border: 2px solid #252627;
     border-radius: 20px;
     padding: 28px 22px 24px;
     display: flex;
@@ -139,7 +139,6 @@
   /* Enterprise white card */
   .pricing-card-v2.card-enterprise {
     background: #ffffff;
-    border-color: #e2e8f0;
   }
 
   /* Top badge */
@@ -156,8 +155,9 @@
     letter-spacing: 1px;
     text-transform: uppercase;
   }
-  .badge-recommended { background: linear-gradient(135deg, #b8600a, #d4860f); color: #fff; }
-  .badge-best-value   { background: linear-gradient(135deg, #ff5a2c, #ff8c00); color: #fff; }
+  .badge-recommended { background: linear-gradient(135deg, #ff5a2c, #ff8c00); color: #fff; }
+  .badge-best-value   { background: linear-gradient(135deg, #b8600a, #d4860f); color: #fff; }
+
 
   /* Plan title */
   .plan-v2-title {
@@ -417,28 +417,29 @@
       <div class="pricing-v2-section" data-aos="fade-up">
 
         <!-- Toggle -->
-        <div class="pricing-toggle-wrap" style="position: relative; display: inline-flex; flex-direction: column; align-items: center; margin-bottom: 48px; width: 100%;">
-          @if(in_array('yearly', array_map('strtolower', (array)$terms)))
-            <div class="yearly-save-tooltip">Save up to 67% yearly!</div>
-          @endif
-          <ul class="pricing-pill-tabs nav" id="pricing-tabs" role="tablist" style="margin: 0 auto;">
-
-            @foreach ($terms as $term)
-              <li class="nav-item" role="presentation">
-                <button class="nav-link {{ $loop->first ? 'active' : '' }}"
-                        id="{{ strtolower($term) }}-tab"
-                        data-bs-toggle="pill"
-                        data-bs-target="#tab-{{ strtolower($term) }}"
-                        type="button"
-                        role="tab"
-                        aria-selected="{{ $loop->first ? 'true' : 'false' }}">
-                  {{ __($term) }}
-                </button>
-              </li>
-            @endforeach
-
-          </ul>
+        <div class="pricing-toggle-wrap" style="text-align: center; margin-bottom: 48px; width: 100%;">
+          <div style="position: relative; display: inline-block;">
+            @if(in_array('yearly', array_map('strtolower', (array)$terms)))
+              <div class="yearly-save-tooltip">Save up to 67% yearly!</div>
+            @endif
+            <ul class="pricing-pill-tabs nav" id="pricing-tabs" role="tablist" style="margin: 0 auto;">
+              @foreach ($terms as $term)
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link {{ $loop->first ? 'active' : '' }}"
+                          id="{{ strtolower($term) }}-tab"
+                          data-bs-toggle="pill"
+                          data-bs-target="#tab-{{ strtolower($term) }}"
+                          type="button"
+                          role="tab"
+                          aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+                    {{ __($term) }}
+                  </button>
+                </li>
+              @endforeach
+            </ul>
+          </div>
         </div>
+
 
         <!-- Cards -->
         <div class="tab-content" id="pricing-tabs-content">
