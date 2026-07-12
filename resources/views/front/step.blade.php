@@ -702,17 +702,19 @@
 
       // Initialize value on load / fallback
       setTimeout(function() {
-        let oldCode = "{{ old('country_code') }}";
+        let oldCode = countryCodeInput.value;
         if (oldCode) {
           let dialCode = oldCode.replace('+', '');
-          let countryDataList = iti.getCountryData();
+          let countryDataList = (window.intlTelInputGlobals && typeof window.intlTelInputGlobals.getCountryData === 'function') ? window.intlTelInputGlobals.getCountryData() : [];
           let matchedCountry = countryDataList.find(c => c.dialCode === dialCode);
           if (matchedCountry) {
             iti.setCountry(matchedCountry.iso2);
           }
         }
         const countryData = iti.getSelectedCountryData();
-        countryCodeInput.value = "+" + countryData.dialCode;
+        if (countryData) {
+          countryCodeInput.value = "+" + countryData.dialCode;
+        }
       }, 500);
 
       // Toggle plans picker panel
