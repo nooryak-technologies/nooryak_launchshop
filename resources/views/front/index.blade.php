@@ -600,7 +600,7 @@
           <div class="col-lg-5 col-xl-5 order-2 order-lg-1">
             <div class="hero-content" data-aos="fade-right">
               <div class="hero-badge">
-                <i class="fas fa-bolt" style="margin-right: 8px;"></i> {{ __('Your Platform, Your Success Icon') }}
+                <span style="font-weight:800; margin-right:4px;">#1</span> Platform – LaunchShop
               </div>
               
               <h1 class="hero-title">Launch Your  <br><span>Online Store In</span> Just 2 minutes</h1>
@@ -1320,9 +1320,18 @@
               $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
               $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
             @endphp
-            <a href="{{ route('front.templates.view') }}" class="btn-dashboard-explore px-4 py-3 d-inline-flex align-items-center gap-2">
-              {{ __('Explore Dashboard') }} <i class="fas fa-arrow-right"></i>
+            @php
+              $firstTemplate = $templates->first();
+            @endphp
+            @if($firstTemplate)
+            <a href="{{ route('front.templates.autologin', $firstTemplate->username) }}" target="_blank" class="btn-dashboard-explore px-4 py-3 d-inline-flex align-items-center gap-2">
+              {{ __('Launch Store') }} <i class="fas fa-arrow-right"></i>
             </a>
+            @else
+            <a href="{{ route('front.templates.view') }}" class="btn-dashboard-explore px-4 py-3 d-inline-flex align-items-center gap-2">
+              {{ __('Launch Store') }} <i class="fas fa-arrow-right"></i>
+            </a>
+            @endif
           </div>
         </div>
 
