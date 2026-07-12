@@ -286,6 +286,17 @@
           padding-bottom: 0px !important;
       }
   }
+
+  /* ── Extra-large screens (≥ 1600px) ── */
+  @media (min-width: 1600px) {
+      .contact-hero-row {
+          padding-top: 33px;
+      }
+      .modern-contact-page-wrapper {
+          padding-top: 51px;
+      }
+  }
+
 </style>
 @endsection
 

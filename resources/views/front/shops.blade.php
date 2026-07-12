@@ -24,6 +24,12 @@
 
 }
 
+@media (min-width: 1600px) {
+  .shops-hero {
+      padding-top: 130px !important;
+  }
+}
+
 
 </style>
 @endsection
