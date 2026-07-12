@@ -258,7 +258,7 @@
     padding: 10px 28px;
     font-size: 15px;
     font-weight: 600;
-    color: #aaa;
+    color: #fff;
     background: transparent;
     transition: all 0.25s ease;
     position: relative;
@@ -283,10 +283,11 @@
   .pricing-cards-row {
     display: flex;
     gap: 16px;
-    align-items: stretch;
+    align-items: flex-start;
     flex-wrap: wrap;
     justify-content: center;
   }
+
   .pricing-card-v2 {
     flex: 1 1 220px;
     max-width: 270px;
@@ -1365,12 +1366,10 @@
                           role="tab"
                           aria-selected="{{ $loop->first ? 'true' : 'false' }}">
                     {{ __($term) }}
-                    @if(strtolower($term) == 'yearly')
-                      <span class="badge-yearly-pill">BEST VALUE</span>
-                    @endif
                   </button>
                 </li>
               @endforeach
+
             </ul>
           </div>
 
