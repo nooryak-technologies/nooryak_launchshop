@@ -683,6 +683,7 @@
   <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
   <script>
     'use strict';
+    let isPhoneVerified = {!! session('phone_verified') ? 'true' : 'false' !!};
     $(document).ready(function() {
       // Initialize intl-tel-input
       const phoneInput = document.querySelector("#phone_number");
@@ -693,6 +694,13 @@
         separateDialCode: true,
         utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
       });
+
+      // Remove required attribute if phone is already verified to prevent hidden form control validation errors
+      if (isPhoneVerified) {
+        $('#first_name').removeAttr('required').prop('readonly', true);
+        $('#phone_number').removeAttr('required').prop('readonly', true);
+        $('#country_code').prop('readonly', true);
+      }
 
       // Update hidden country_code input on country change
       phoneInput.addEventListener("countrychange", function() {
@@ -872,7 +880,6 @@
       });
 
       // Phone OTP Verification Logic
-      let isPhoneVerified = {!! session('phone_verified') ? 'true' : 'false' !!};
       let countdownSeconds = 120;
       let otpTimer = null;
 
@@ -999,9 +1006,9 @@
             $('#summary-verified-info').text(nameVal + ' (' + countryCode + ' ' + phoneVal + ')');
 
             // Make fields readonly and change verify button state
-            $('#phone_number').prop('readonly', true);
+            $('#phone_number').prop('readonly', true).removeAttr('required');
             $('#country_code').prop('readonly', true);
-            $('#first_name').prop('readonly', true);
+            $('#first_name').prop('readonly', true).removeAttr('required');
             
             $('#btn-send-otp')
               .prop('disabled', true)
@@ -1032,9 +1039,9 @@
         isPhoneVerified = false;
         
         // Reset inputs
-        $('#phone_number').prop('readonly', false);
+        $('#phone_number').prop('readonly', false).attr('required', true);
         $('#country_code').prop('readonly', false);
-        $('#first_name').prop('readonly', false);
+        $('#first_name').prop('readonly', false).attr('required', true);
         
         $('#btn-send-otp')
           .prop('disabled', false)
