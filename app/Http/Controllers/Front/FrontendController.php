@@ -366,6 +366,7 @@ class FrontendController extends Controller
         if ($otp == $sessionOtp && substr($cleanPhone, -10) === substr($cleanSessionPhone, -10)) {
             Session::put('phone_verified', true);
             Session::put('verified_phone', $phone);
+            Session::put('phone_verified_at', time());
 
             Session::forget(['otp_code', 'otp_phone', 'otp_expires_at']);
 
@@ -430,6 +431,11 @@ class FrontendController extends Controller
 
     public function step1($status, $id)
     {
+        // Clear phone verification session if it has expired (3 minutes / 180 seconds)
+        if (Session::has('phone_verified') && (time() - Session::get('phone_verified_at', 0)) > 180) {
+            Session::forget(['phone_verified', 'verified_phone', 'phone_verified_at']);
+        }
+
         // Same secret-login guard as selectTemplate: auto-logout demo admin visitors
         if (Auth::check()) {
             if (Session::get('secrect_login')) {
@@ -541,6 +547,16 @@ class FrontendController extends Controller
 
     public function checkout(Request $request)
     {
+        // Clear phone verification session if it has expired (3 minutes / 180 seconds)
+        if (Session::has('phone_verified') && (time() - Session::get('phone_verified_at', 0)) > 180) {
+            Session::forget(['phone_verified', 'verified_phone', 'phone_verified_at']);
+        }
+
+        // Validate backend phone verification status
+        if (!Session::get('phone_verified') || Session::get('verified_phone') !== $request->phone) {
+            return redirect()->back()->withErrors(['phone' => __('Please verify your phone number first.')])->withInput();
+        }
+
         if ($request->has('phone')) {
             $request->merge([
                 'phone' => ltrim(preg_replace('/[^0-9]/', '', $request->phone), '0'),
