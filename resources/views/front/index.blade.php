@@ -1323,7 +1323,9 @@
         @endphp
         @includeIf('front.additional-section', ['data' => $cusWorkProcessContent, 'possition' => $cusWorkProcess->possition])
       @endif
+    @endforeach
   @endif
+
 
   @if ($bs->pricing_section == 1)
 
