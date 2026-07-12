@@ -386,6 +386,16 @@
               <form id="authForm" action="{{ route('front.checkout.view') }}" method="post" enctype="multipart/form-data">
                 @csrf
 
+                @if ($errors->any())
+                  <div class="alert alert-danger mb-20" style="border-radius: 10px; text-align: left; font-size: 14px; font-weight: 600; background-color: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.15); color: #ef4444; padding: 15px;">
+                    <ul style="margin: 0; padding-left: 20px; list-style-type: disc;">
+                      @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                      @endforeach
+                    </ul>
+                  </div>
+                @endif
+
                 <!-- Screen 1: Mobile Verification -->
                 <div id="screen-1" class="{{ session('phone_verified') ? 'd-none' : '' }}">
                   <div class="title mb-25 d-flex justify-content-between align-items-center">
