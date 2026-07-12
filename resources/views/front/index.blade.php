@@ -244,12 +244,14 @@
   }
   .pricing-pill-tabs {
     display: inline-flex;
-    background: #1e1e1e;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
     border-radius: 50px;
     padding: 5px;
     gap: 4px;
     list-style: none;
     margin: 0 auto;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.05);
   }
   .pricing-pill-tabs .nav-item { margin: 0; }
   .pricing-pill-tabs .nav-link {
@@ -257,8 +259,8 @@
     border-radius: 50px;
     padding: 10px 28px;
     font-size: 15px;
-    font-weight: 600;
-    color: #fff;
+    font-weight: 700;
+    color: #475569;
     background: transparent;
     transition: all 0.25s ease;
     position: relative;
@@ -268,18 +270,40 @@
   }
   .pricing-pill-tabs .nav-link.active {
     background: linear-gradient(135deg, #ff5a2c, #ff8c00);
-    color: #fff;
-    box-shadow: 0 4px 16px rgba(255,90,44,0.35);
+    color: #fff !important;
+    box-shadow: 0 4px 16px rgba(255,90,44,0.3);
   }
-  .pricing-pill-tabs .nav-link .badge-yearly-pill {
-    background: rgba(255,255,255,0.25);
+
+  /* ── Discount Tooltip ── */
+  .yearly-save-tooltip {
+    background: #10b981;
     color: #fff;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 10px;
-    letter-spacing: 0.5px;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 30px;
+    position: absolute;
+    top: -42px;
+    right: -10px;
+    box-shadow: 0 4px 12px rgba(16,185,129,0.3);
+    z-index: 10;
+    animation: floatTooltip 3s ease-in-out infinite;
   }
+  .yearly-save-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 75%;
+    transform: translateX(-50%);
+    border-width: 6px 6px 0;
+    border-style: solid;
+    border-color: #10b981 transparent transparent;
+  }
+  @keyframes floatTooltip {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
   .pricing-cards-row {
     display: flex;
     gap: 16px;
@@ -291,35 +315,35 @@
   .pricing-card-v2 {
     flex: 1 1 220px;
     max-width: 270px;
-    background: #1a1a1a;
-    border: 1.5px solid #2a2a2a;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
     border-radius: 20px;
     padding: 28px 22px 24px;
     display: flex;
     flex-direction: column;
     position: relative;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    color: #e5e7eb;
+    color: #1e293b;
   }
   .pricing-card-v2:hover {
     transform: translateY(-4px);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
   }
   .pricing-card-v2.card-recommended {
-    background: linear-gradient(160deg, #ff5a2c 0%, #ff8c00 100%);
-    border-color: #ff5a2c;
-    box-shadow: 0 12px 40px rgba(255,90,44,0.35);
+    background: linear-gradient(160deg, #b8600a 0%, #d4860f 100%);
+    border-color: #d4860f;
+    box-shadow: 0 12px 40px rgba(212,134,15,0.25);
     color: #fff;
   }
   .pricing-card-v2.card-best-value {
-    background: linear-gradient(160deg, #b8600a 0%, #d4860f 100%);
-    border-color: #d4860f;
-    box-shadow: 0 12px 40px rgba(212,134,15,0.35);
+    background: linear-gradient(160deg, #ff5a2c 0%, #ff8c00 100%);
+    border-color: #ff5a2c;
+    box-shadow: 0 12px 40px rgba(255,90,44,0.25);
     color: #fff;
   }
   .pricing-card-v2.card-enterprise {
-    background: #111;
-    border-color: #333;
+    background: #ffffff;
+    border-color: #e2e8f0;
   }
   .plan-top-badge {
     position: absolute;
@@ -334,33 +358,53 @@
     letter-spacing: 1px;
     text-transform: uppercase;
   }
-  .badge-recommended { background: linear-gradient(135deg,#ff5a2c,#ff8c00); color:#fff; }
-  .badge-best-value   { background: linear-gradient(135deg,#f59e0b,#d97706); color:#fff; }
+  .badge-recommended { background: linear-gradient(135deg, #b8600a, #d4860f); color: #fff; }
+  .badge-best-value   { background: linear-gradient(135deg, #ff5a2c, #ff8c00); color: #fff; }
   .plan-v2-title {
     font-size: 22px;
     font-weight: 800;
     margin: 12px 0 4px;
-    color: inherit;
+    color: #0f172a;
     text-align: center;
+  }
+  .card-recommended .plan-v2-title,
+  .card-best-value  .plan-v2-title {
+    color: #ffffff;
   }
   .plan-v2-subtitle {
     font-size: 12px;
-    opacity: 0.75;
+    color: #64748b;
     text-align: center;
     margin-bottom: 14px;
+  }
+  .card-recommended .plan-v2-subtitle,
+  .card-best-value  .plan-v2-subtitle {
+    color: rgba(255,255,255,0.85);
   }
   .plan-v2-price-block {
     text-align: center;
     margin-bottom: 6px;
   }
-  .plan-v2-currency { font-size: 18px; font-weight: 700; vertical-align: top; margin-top: 6px; display: inline-block; }
-  .plan-v2-amount   { font-size: 44px; font-weight: 900; line-height: 1; }
-  .plan-v2-period   { font-size: 13px; font-weight: 500; opacity: 0.8; }
+  .plan-v2-currency { font-size: 18px; font-weight: 700; vertical-align: top; margin-top: 6px; display: inline-block; color: #475569; }
+  .plan-v2-amount   { font-size: 44px; font-weight: 900; line-height: 1; color: #0f172a; }
+  .plan-v2-period   { font-size: 13px; font-weight: 500; color: #475569; }
+  .card-recommended .plan-v2-currency,
+  .card-recommended .plan-v2-amount,
+  .card-recommended .plan-v2-period,
+  .card-best-value .plan-v2-currency,
+  .card-best-value .plan-v2-amount,
+  .card-best-value .plan-v2-period {
+    color: #ffffff;
+  }
   .plan-v2-billing-note {
     font-size: 11px;
-    opacity: 0.7;
+    color: #64748b;
     text-align: center;
     margin-bottom: 18px;
+  }
+  .card-recommended .plan-v2-billing-note,
+  .card-best-value  .plan-v2-billing-note {
+    color: rgba(255,255,255,0.8);
   }
   .plan-v2-features {
     list-style: none;
@@ -374,28 +418,61 @@
     gap: 8px;
     font-size: 13px;
     padding: 4px 0;
-    color: inherit;
-    opacity: 0.9;
+    color: #334155;
+  }
+  .card-recommended .plan-v2-features li,
+  .card-best-value  .plan-v2-features li {
+    color: #ffffff;
   }
   .plan-v2-features li .fi-check {
-    color: #22c55e;
-    font-size: 13px;
+    background: #ff5a2c;
+    color: #fff;
+    border-radius: 50%;
+    padding: 3px;
+    font-size: 8px;
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
-    margin-top: 1px;
+    margin-top: 2px;
   }
   .card-recommended .plan-v2-features li .fi-check,
   .card-best-value  .plan-v2-features li .fi-check {
-    color: #fff;
+    background: transparent;
+    color: #ffffff;
+    padding: 0;
+    width: auto;
+    height: auto;
+    font-size: 13px;
   }
   .plan-v2-features li .fi-times {
+    background: #f1f5f9;
     color: #ef4444;
-    font-size: 13px;
+    border-radius: 50%;
+    padding: 3px;
+    font-size: 8px;
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
-    margin-top: 1px;
+    margin-top: 2px;
+  }
+  .card-recommended .plan-v2-features li .fi-times,
+  .card-best-value  .plan-v2-features li .fi-times {
+    background: transparent;
+    color: rgba(255,255,255,0.6);
+    padding: 0;
+    width: auto;
+    height: auto;
+    font-size: 13px;
   }
   .plan-v2-features li.feat-disabled > span:last-child {
     text-decoration: line-through;
-    opacity: 0.5;
+    opacity: 0.6;
   }
   .plan-v2-see-more {
     background: none;
@@ -408,15 +485,11 @@
     align-items: center;
     gap: 5px;
     transition: opacity 0.2s;
-    color: inherit;
-    opacity: 0.9;
+    color: #ff5a2c;
     margin-bottom: 14px;
   }
   .card-recommended .plan-v2-see-more,
   .card-best-value  .plan-v2-see-more { color: #fff; }
-  .plan-v2-see-more:not(.card-recommended .plan-v2-see-more):not(.card-best-value .plan-v2-see-more) {
-    color: #ff8c00;
-  }
   .plan-v2-extra-features {
     display: none;
     overflow: hidden;
@@ -439,46 +512,43 @@
   }
   .btn-v2-outline {
     background: transparent;
-    border-color: #444;
-    color: #e5e7eb;
-  }
-  .btn-v2-outline:hover { background: #333; color: #fff; border-color: #555; }
-  .card-recommended .plan-v2-btn {
-    background: #fff;
+    border-color: #ff5a2c;
     color: #ff5a2c;
-    border-color: #fff;
   }
-  .card-recommended .plan-v2-btn:hover { background: #ffe8e0; }
-  .card-best-value .plan-v2-btn {
+  .btn-v2-outline:hover { background: #ff5a2c; color: #fff; }
+  .card-recommended .plan-v2-btn {
     background: #fff;
     color: #b8600a;
     border-color: #fff;
   }
-  .card-best-value .plan-v2-btn:hover { background: #fef3c7; }
+  .card-recommended .plan-v2-btn:hover { background: #fef3c7; }
+  .card-best-value .plan-v2-btn {
+    background: #fff;
+    color: #ff5a2c;
+    border-color: #fff;
+  }
+  .card-best-value .plan-v2-btn:hover { background: #ffe8e0; }
   .card-enterprise .plan-v2-btn {
-    background: linear-gradient(135deg,#ff5a2c,#ff8c00);
+    background: #ff5a2c;
     color: #fff;
-    border-color: transparent;
+    border-color: #ff5a2c;
   }
-  .card-enterprise .plan-v2-btn:hover { opacity: 0.9; }
-  .pricing-card-v2 .feat-disabled span:last-child {
-    text-decoration: line-through;
-    color: #ef4444;
-    opacity: 0.6;
-  }
+  .card-enterprise .plan-v2-btn:hover { background: #e04d24; border-color: #e04d24; }
+
   .plan-v2-divider {
     border: none;
-    border-top: 1px solid rgba(255,255,255,0.12);
+    border-top: 1px solid #e2e8f0;
     margin: 14px 0 14px;
   }
-  .pricing-card-v2:not(.card-recommended):not(.card-best-value):not(.card-enterprise) .plan-v2-divider {
-    border-top-color: rgba(255,255,255,0.08);
+  .card-recommended .plan-v2-divider,
+  .card-best-value .plan-v2-divider {
+    border-top-color: rgba(255,255,255,0.12);
   }
   .pricing-v2-trust {
     text-align: center;
     margin-top: 28px;
     font-size: 13px;
-    color: #888;
+    color: #64748b;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1351,11 +1421,12 @@
         <div class="pricing-v2-section" data-aos="fade-up">
 
           <!-- Toggle -->
-          <div class="pricing-toggle-wrap">
+          <div class="pricing-toggle-wrap" style="position: relative; display: inline-flex; flex-direction: column; align-items: center; margin-bottom: 48px; width: 100%;">
             @if(in_array('yearly', array_map('strtolower', (array)$terms)))
-              <div class="pricing-save-badge">💥 Save up to 67% yearly!</div><br>
+              <div class="yearly-save-tooltip">Save up to 67% yearly!</div>
             @endif
-            <ul class="pricing-pill-tabs nav" id="pricing-tabs" role="tablist">
+            <ul class="pricing-pill-tabs nav" id="pricing-tabs" role="tablist" style="margin: 0 auto;">
+
               @foreach ($terms as $term)
                 <li class="nav-item" role="presentation">
                   <button class="nav-link {{ $loop->first ? 'active' : '' }}"
