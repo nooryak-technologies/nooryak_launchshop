@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Helpers;
+// namespace App\Http\Helpers;
 
-use App\Models\BasicExtended;
-use App\Models\EmailTemplate;
-use App\Models\Language;
-use App\Models\User\UserEmailTemplate;
-use Illuminate\Support\Facades\Session;
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+// use App\Models\BasicExtended;
+// use App\Models\EmailTemplate;
+// use App\Models\Language;
+// use App\Models\User\UserEmailTemplate;
+// use Illuminate\Support\Facades\Session;
+// use PHPMailer\PHPMailer\PHPMailer;
+// use PHPMailer\PHPMailer\Exception;
 use Config;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Mail;
