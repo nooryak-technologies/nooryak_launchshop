@@ -8910,8 +8910,8 @@ iframe[id^="tawkchat-"],
     width: auto !important;
 }
 
-/* Floating Sticky Header Capsule on Scroll (Desktop) */
-@media (min-width: 1199px) {
+/* Floating Sticky Header Capsule on Scroll (Desktop 1199px–1599px) */
+@media (min-width: 1199px) and (max-width: 1599px) {
 
     .header-area,
     .header-area.is-sticky {
@@ -8933,6 +8933,11 @@ iframe[id^="tawkchat-"],
         transition: all 0.3s ease-in-out !important;
         animation: none !important;
         /* Disable default slideDown animation for smooth transition */
+    }
+
+    /* Offset content so it is not hidden behind the floating sticky header (top:20px + height:70px = 90px) */
+    body {
+        padding-top: 90px !important;
     }
 
     .header-area .main-navbar,
@@ -9121,9 +9126,19 @@ iframe[id^="tawkchat-"],
         margin-left: auto !important;
     }
 
-    /* ── Hero Wrapper Top Spacing to Offset Floating Header ── */
+    /* ── Page Top Spacing to Offset Floating Fixed Header (top:20px + height:70px = 90px) ── */
     .hero-wrapper {
-        margin-top: 70px !important;
+        margin-top: 90px !important;
+    }
+    /* All other page hero/wrapper sections that immediately follow the fixed header */
+    .modern-pricing-page-wrapper,
+    .modern-templates-page-wrapper,
+    .modern-contact-page-wrapper,
+    .shops-hero,
+    .page-title-area,
+    .breadcrumb-area,
+    .inner-banner {
+        padding-top: 90px !important;
     }
 }
 
