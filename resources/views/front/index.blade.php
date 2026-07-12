@@ -220,8 +220,10 @@
     .steps-stats-section .stat-bar-lbl {
       font-size: 10px !important;
     }
+  }
 
   /* ── Pricing V2 styling ── */
+
   .pricing-v2-section {
     padding: 60px 0 100px;
   }
