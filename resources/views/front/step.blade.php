@@ -387,7 +387,7 @@
                 @csrf
 
                 <!-- Screen 1: Mobile Verification -->
-                <div id="screen-1">
+                <div id="screen-1" class="{{ session('phone_verified') ? 'd-none' : '' }}">
                   <div class="title mb-25 d-flex justify-content-between align-items-center">
                     <div>
                       <h3 class="mb-0">{{ __('Create an account !') }}</h3>
@@ -407,7 +407,7 @@
                     </label>
                     <div style="position: relative;">
                       <span style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 15px;"><i class="fal fa-user"></i></span>
-                      <input class="form-control" type="text" name="first_name" id="first_name" placeholder="{{ __('Enter your name') }}" value="{{ old('first_name') }}" required style="padding-left: 46px !important;">
+                      <input class="form-control" type="text" name="first_name" id="first_name" placeholder="{{ __('Enter your name') }}" value="{{ old('first_name', session('otp_name')) }}" required style="padding-left: 46px !important;">
                     </div>
                     @error('first_name')
                       <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
@@ -420,8 +420,8 @@
                       {{ __('Phone Number') }} *
                     </label>
                     <div style="text-align: left;">
-                      <input type="hidden" name="country_code" id="country_code" value="{{ old('country_code', '+91') }}">
-                      <input class="form-control" type="tel" name="phone" id="phone_number" value="{{ old('phone') }}"
+                      <input type="hidden" name="country_code" id="country_code" value="{{ old('country_code', session('otp_country_code', '+91')) }}">
+                      <input class="form-control" type="tel" name="phone" id="phone_number" value="{{ old('phone', session('phone_verified') ? session('verified_phone') : session('otp_phone')) }}"
                         placeholder="81234 56789" required style="width: 100%; text-align: left;" inputmode="numeric">
                       @error('phone')
                         <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
@@ -461,17 +461,19 @@
                 </div>
 
                 <!-- Screen 2: Shop Details & Plan Selection -->
-                <div id="screen-2" class="d-none">
+                <div id="screen-2" class="{{ session('phone_verified') ? '' : 'd-none' }}">
                   <div class="title mb-25">
                     <h3 class="mb-0">{{ __('Complete Signup') }}</h3>
-                    <p class="mb-0 mt-1">{{ __('Provide your shop and account details') }}</p>
+                    <p class="mb-0 mt-1{{ session('phone_verified') ? ' d-none' : '' }}">{{ __('Provide your shop and account details') }}</p>
                   </div>
 
                   <!-- Verified Summary alert -->
                   <div class="alert alert-success d-flex justify-content-between align-items-center p-3 mb-20" style="border-radius: 10px; background-color: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.15); margin-bottom: 20px;">
                     <div style="text-align: left;">
                       <p class="mb-0 small text-muted font-weight-bold" style="font-size: 10px; text-transform: uppercase;">{{ __('VERIFIED CONTACT') }}</p>
-                      <h6 class="mb-0 font-weight-bold text-dark" id="summary-verified-info" style="font-size: 14px; margin-top: 2px;"></h6>
+                      <h6 class="mb-0 font-weight-bold text-dark" id="summary-verified-info" style="font-size: 14px; margin-top: 2px;">
+                        {{ session('otp_name') }} ({{ session('otp_country_code') }} {{ session('verified_phone') }})
+                      </h6>
                     </div>
                     <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none font-weight-bold" id="btn-edit-contact" style="color: var(--primary-color, #ff5a2c);">
                       {{ __('Edit') }}
@@ -868,7 +870,7 @@
       });
 
       // Phone OTP Verification Logic
-      let isPhoneVerified = false;
+      let isPhoneVerified = {!! session('phone_verified') ? 'true' : 'false' !!};
       let countdownSeconds = 120;
       let otpTimer = null;
 

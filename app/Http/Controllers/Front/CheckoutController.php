@@ -589,14 +589,21 @@ class CheckoutController extends Controller
             ];
             $mailer->mailFromAdmin($data);
 
-            // ── WhatsApp welcome message with plan details ──
+            // ── WhatsApp welcome message with store and plan details ──
             try {
                 $cleanPhone  = preg_replace('/[^0-9]/', '', $request['phone'] ?? '');
                 $cleanCode   = preg_replace('/[^0-9]/', '', $request['country_code'] ?? '');
                 $mobileNo    = (strpos($cleanPhone, $cleanCode) === 0) ? $cleanPhone : $cleanCode . $cleanPhone;
-                $this->sendWelcomeWhatsApp($mobileNo, $request['username'], $password, $planName, $planPrice);
+                $this->sendWelcomeWhatsApp($mobileNo, $request['username'], $password, $planName, $planPrice, $user->shop_name, $user->email, $user->phone);
             } catch (\Exception $waEx) {
                 Log::warning('Welcome WhatsApp send failed: ' . $waEx->getMessage());
+            }
+
+            // ── Send separate beautifully formatted credentials email ──
+            try {
+                $mailer->sendWelcomeCredentialsEmail($user, $password, $planName, $planPrice);
+            } catch (\Exception $emailEx) {
+                Log::warning('Welcome credentials email send failed: ' . $emailEx->getMessage());
             }
 
 
@@ -737,15 +744,27 @@ class CheckoutController extends Controller
     }
 
     /**
-     * Send a welcome WhatsApp message with account credentials after registration.
+     * Send a welcome WhatsApp message with account credentials and store details after registration.
      */
-    private function sendWelcomeWhatsApp(string $mobileNo, string $username, string $password, string $planName, string $planPrice): void
+    private function sendWelcomeWhatsApp(string $mobileNo, string $username, string $password, string $planName, string $planPrice, string $shopName, string $email, string $phone): void
     {
+        $storeLiveLink = '';
+        $host = request()->getHost();
+        if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
+            $storeLiveLink = 'http://' . $username . '.localhost:8000';
+        } else {
+            $storeLiveLink = 'https://' . $username . '.' . $host;
+        }
+
         $message = "🎉 *Welcome to LaunchShop!*\n\n"
             . "Your store account has been created successfully.\n\n"
+            . "👤 *Store Name:* " . $shopName . "\n"
             . "👤 *Username:* " . $username . "\n"
+            . "📧 *Email:* " . $email . "\n"
+            . "📞 *Phone Number:* " . $phone . "\n"
             . "🔑 *Password:* " . $password . "\n"
             . "📦 *Plan:* " . $planName . ($planPrice ? " (" . $planPrice . ")" : "") . "\n\n"
+            . "🔗 *Store Live Link:* " . $storeLiveLink . "\n"
             . "🔗 *Login to your store dashboard:*\n"
             . route('user.login') . "\n\n"
             . "Need help? Chat with us anytime.\n"

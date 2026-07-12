@@ -244,6 +244,16 @@ class FrontendController extends Controller
 
         $phone = $request->phone_number;
         $countryCode = $request->country_code;
+        $name = $request->input('name', '');
+
+        // Persist typed data in session immediately
+        Session::put('otp_phone', $phone);
+        Session::put('otp_country_code', $countryCode);
+        Session::put('otp_name', $name);
+
+        // Reset verified status since they are initiating a new verification
+        Session::forget('phone_verified');
+        Session::forget('verified_phone');
 
         $cleanPhone = preg_replace('/[^0-9]/', '', $phone);
         $cleanCountryCode = preg_replace('/[^0-9]/', '', $countryCode);

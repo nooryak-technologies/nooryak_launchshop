@@ -713,7 +713,7 @@
                   <div class="co-input-wrap">
                     <i class="fal fa-store co-input-icon"></i>
                     <input id="shop_name" type="text" class="co-input" name="shop_name"
-                      placeholder="{{ __('My Awesome Store') }}" value="{{ old('shop_name') }}" required>
+                      placeholder="{{ __('My Awesome Store') }}" value="{{ old('shop_name', ucfirst($data['username'] ?? '')) }}" required>
                   </div>
                   @if ($errors->has('shop_name'))
                     <p class="co-error">{{ $errors->first('shop_name') }}</p>

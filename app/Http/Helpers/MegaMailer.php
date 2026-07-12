@@ -295,4 +295,136 @@ class MegaMailer
             return back();
         }
     }
+
+    /**
+     * Send a beautifully formatted welcome email containing credentials and plan details.
+     */
+    public function sendWelcomeCredentialsEmail($user, $password, $planName, $planPrice)
+    {
+        if (session()->has('lang')) {
+            $currentLang = Language::where('code', session()->get('lang'))->first();
+        } else {
+            $currentLang = Language::where('is_default', 1)->first();
+        }
+        $be = $currentLang->basic_extended;
+        $bs = $currentLang->basic_setting;
+
+        $storeLiveLink = '';
+        $host = request()->getHost();
+        if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
+            $storeLiveLink = 'http://' . $user->username . '.localhost:8000';
+        } else {
+            $storeLiveLink = 'https://' . $user->username . '.' . $host;
+        }
+        $loginLink = route('user.login');
+
+        // Build premium HTML email template inline
+        $html = '
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <style>
+                body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #f1f5f9; margin: 0; padding: 20px; color: #1e293b; }
+                .card { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #e2e8f0; }
+                .header { background: linear-gradient(135deg, #ff5a2c, #ff8c00); padding: 30px; text-align: center; color: #ffffff; }
+                .header h1 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
+                .content { padding: 30px; }
+                .welcome-msg { font-size: 16px; line-height: 1.6; color: #334155; margin-top: 0; }
+                .info-box { background: #f8fafc; border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0; margin-bottom: 24px; }
+                .info-row { display: flex; padding: 8px 0; border-bottom: 1px solid #f1f5f9; }
+                .info-row:last-child { border-bottom: none; }
+                .info-label { width: 140px; font-weight: 700; color: #475569; font-size: 14px; }
+                .info-value { flex: 1; color: #0f172a; font-size: 14px; word-break: break-all; }
+                .btn-group { text-align: center; margin-top: 10px; }
+                .btn { display: inline-block; padding: 12px 24px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 14px; transition: transform 0.2s; }
+                .btn-primary { background: #ff5a2c; color: #ffffff !important; margin-right: 10px; }
+                .btn-secondary { background: #0f172a; color: #ffffff !important; }
+                .footer { background: #f8fafc; padding: 20px; text-align: center; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0; }
+            </style>
+        </head>
+        <body>
+            <div class="card">
+                <div class="header">
+                    <h1>🎉 Welcome to ' . htmlspecialchars($bs->website_title) . '!</h1>
+                </div>
+                <div class="content">
+                    <p class="welcome-msg">Hi <strong>' . htmlspecialchars($user->first_name) . '</strong>,</p>
+                    <p class="welcome-msg">Your online store has been successfully created. Below are your store details, login credentials, and links to get started:</p>
+                    
+                    <div class="info-box">
+                        <div class="info-row">
+                            <div class="info-label">👤 Store Name:</div>
+                            <div class="info-value">' . htmlspecialchars($user->shop_name) . '</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">👤 Username:</div>
+                            <div class="info-value">' . htmlspecialchars($user->username) . '</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">📧 Email:</div>
+                            <div class="info-value">' . htmlspecialchars($user->email) . '</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">📞 Phone:</div>
+                            <div class="info-value">' . htmlspecialchars($user->phone) . '</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">🔑 Password:</div>
+                            <div class="info-value"><code>' . htmlspecialchars($password) . '</code></div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">📦 Plan:</div>
+                            <div class="info-value">' . htmlspecialchars($planName) . ($planPrice ? ' (' . $planPrice . ')' : '') . '</div>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <a href="' . $storeLiveLink . '" target="_blank" class="btn btn-primary">🔗 Visit Live Store</a>
+                        <a href="' . $loginLink . '" target="_blank" class="btn btn-secondary">🔗 Login Dashboard</a>
+                    </div>
+                </div>
+                <div class="footer">
+                    Need help? Chat with us anytime.<br>
+                    &copy; ' . date('Y') . ' ' . htmlspecialchars($bs->website_title) . '. All rights reserved.
+                </div>
+            </div>
+        </body>
+        </html>
+        ';
+
+        if ($be->is_smtp == 1) {
+            try {
+                $smtp = [
+                    'transport' => 'smtp',
+                    'host' => $be->smtp_host,
+                    'port' => $be->smtp_port,
+                    'encryption' => $be->encryption,
+                    'username' => $be->smtp_username,
+                    'password' => $be->smtp_password,
+                    'timeout' => null,
+                    'auth_mode' => null,
+                ];
+                Config::set('mail.mailers.smtp', $smtp);
+
+                $mailData = [
+                    'from_mail' => $be->from_mail,
+                    'from_name' => $be->from_name ?? $bs->website_title,
+                    'toMail' => $user->email,
+                    'subject' => '🎉 Welcome to ' . $bs->website_title . '! Your Store is Ready',
+                    'body' => $html
+                ];
+
+                Mail::send([], [], function (Message $message) use ($mailData) {
+                    $message->to($mailData['toMail'])
+                        ->from($mailData['from_mail'], $mailData['from_name'])
+                        ->subject($mailData['subject'])
+                        ->html($mailData['body'], 'text/html');
+                });
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::warning('SMTP Welcome credentials email failed: ' . $e->getMessage());
+            }
+        }
+    }
 }
+
