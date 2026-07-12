@@ -220,6 +220,273 @@
     .steps-stats-section .stat-bar-lbl {
       font-size: 10px !important;
     }
+
+  /* ── Pricing V2 styling ── */
+  .pricing-v2-section {
+    padding: 60px 0 100px;
+  }
+  .pricing-toggle-wrap {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .pricing-save-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #ff5a2c, #ff8c00);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+  }
+  .pricing-pill-tabs {
+    display: inline-flex;
+    background: #1e1e1e;
+    border-radius: 50px;
+    padding: 5px;
+    gap: 4px;
+    list-style: none;
+    margin: 0 auto;
+  }
+  .pricing-pill-tabs .nav-item { margin: 0; }
+  .pricing-pill-tabs .nav-link {
+    border: none;
+    border-radius: 50px;
+    padding: 10px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #aaa;
+    background: transparent;
+    transition: all 0.25s ease;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pricing-pill-tabs .nav-link.active {
+    background: linear-gradient(135deg, #ff5a2c, #ff8c00);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(255,90,44,0.35);
+  }
+  .pricing-pill-tabs .nav-link .badge-yearly-pill {
+    background: rgba(255,255,255,0.25);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    letter-spacing: 0.5px;
+  }
+  .pricing-cards-row {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .pricing-card-v2 {
+    flex: 1 1 220px;
+    max-width: 270px;
+    background: #1a1a1a;
+    border: 1.5px solid #2a2a2a;
+    border-radius: 20px;
+    padding: 28px 22px 24px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    color: #e5e7eb;
+  }
+  .pricing-card-v2:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+  }
+  .pricing-card-v2.card-recommended {
+    background: linear-gradient(160deg, #ff5a2c 0%, #ff8c00 100%);
+    border-color: #ff5a2c;
+    box-shadow: 0 12px 40px rgba(255,90,44,0.35);
+    color: #fff;
+  }
+  .pricing-card-v2.card-best-value {
+    background: linear-gradient(160deg, #b8600a 0%, #d4860f 100%);
+    border-color: #d4860f;
+    box-shadow: 0 12px 40px rgba(212,134,15,0.35);
+    color: #fff;
+  }
+  .pricing-card-v2.card-enterprise {
+    background: #111;
+    border-color: #333;
+  }
+  .plan-top-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 16px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .badge-recommended { background: linear-gradient(135deg,#ff5a2c,#ff8c00); color:#fff; }
+  .badge-best-value   { background: linear-gradient(135deg,#f59e0b,#d97706); color:#fff; }
+  .plan-v2-title {
+    font-size: 22px;
+    font-weight: 800;
+    margin: 12px 0 4px;
+    color: inherit;
+    text-align: center;
+  }
+  .plan-v2-subtitle {
+    font-size: 12px;
+    opacity: 0.75;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .plan-v2-price-block {
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .plan-v2-currency { font-size: 18px; font-weight: 700; vertical-align: top; margin-top: 6px; display: inline-block; }
+  .plan-v2-amount   { font-size: 44px; font-weight: 900; line-height: 1; }
+  .plan-v2-period   { font-size: 13px; font-weight: 500; opacity: 0.8; }
+  .plan-v2-billing-note {
+    font-size: 11px;
+    opacity: 0.7;
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  .plan-v2-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 4px;
+    flex: 1;
+  }
+  .plan-v2-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    padding: 4px 0;
+    color: inherit;
+    opacity: 0.9;
+  }
+  .plan-v2-features li .fi-check {
+    color: #22c55e;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .card-recommended .plan-v2-features li .fi-check,
+  .card-best-value  .plan-v2-features li .fi-check {
+    color: #fff;
+  }
+  .plan-v2-features li .fi-times {
+    color: #ef4444;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .plan-v2-features li.feat-disabled > span:last-child {
+    text-decoration: line-through;
+    opacity: 0.5;
+  }
+  .plan-v2-see-more {
+    background: none;
+    border: none;
+    padding: 6px 0;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: opacity 0.2s;
+    color: inherit;
+    opacity: 0.9;
+    margin-bottom: 14px;
+  }
+  .card-recommended .plan-v2-see-more,
+  .card-best-value  .plan-v2-see-more { color: #fff; }
+  .plan-v2-see-more:not(.card-recommended .plan-v2-see-more):not(.card-best-value .plan-v2-see-more) {
+    color: #ff8c00;
+  }
+  .plan-v2-extra-features {
+    display: none;
+    overflow: hidden;
+  }
+  .plan-v2-extra-features.open {
+    display: block;
+  }
+  .plan-v2-btn {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+    margin-top: auto;
+  }
+  .btn-v2-outline {
+    background: transparent;
+    border-color: #444;
+    color: #e5e7eb;
+  }
+  .btn-v2-outline:hover { background: #333; color: #fff; border-color: #555; }
+  .card-recommended .plan-v2-btn {
+    background: #fff;
+    color: #ff5a2c;
+    border-color: #fff;
+  }
+  .card-recommended .plan-v2-btn:hover { background: #ffe8e0; }
+  .card-best-value .plan-v2-btn {
+    background: #fff;
+    color: #b8600a;
+    border-color: #fff;
+  }
+  .card-best-value .plan-v2-btn:hover { background: #fef3c7; }
+  .card-enterprise .plan-v2-btn {
+    background: linear-gradient(135deg,#ff5a2c,#ff8c00);
+    color: #fff;
+    border-color: transparent;
+  }
+  .card-enterprise .plan-v2-btn:hover { opacity: 0.9; }
+  .pricing-card-v2 .feat-disabled span:last-child {
+    text-decoration: line-through;
+    color: #ef4444;
+    opacity: 0.6;
+  }
+  .plan-v2-divider {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    margin: 14px 0 14px;
+  }
+  .pricing-card-v2:not(.card-recommended):not(.card-best-value):not(.card-enterprise) .plan-v2-divider {
+    border-top-color: rgba(255,255,255,0.08);
+  }
+  .pricing-v2-trust {
+    text-align: center;
+    margin-top: 28px;
+    font-size: 13px;
+    color: #888;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .pricing-v2-trust span { display:flex; align-items:center; gap:6px; }
+  .pricing-v2-trust i { color: #22c55e; }
+  @media(max-width:768px) {
+    .pricing-card-v2 { max-width: 100%; flex: 1 1 300px; }
+    .pricing-cards-row { flex-direction: column; align-items: center; }
   }
 </style>
 @endsection
@@ -1056,11 +1323,10 @@
         @endphp
         @includeIf('front.additional-section', ['data' => $cusWorkProcessContent, 'possition' => $cusWorkProcess->possition])
       @endif
-    @endforeach
   @endif
 
-
   @if ($bs->pricing_section == 1)
+
     <!-- Pricing Section Start -->
     <section class="pricing-section pb-120">
       <div class="container">
@@ -1071,340 +1337,213 @@
           </div>
         </div>
 
-        @php
-          $selectedTemplate = request()->query('template');
-        @endphp
+        <!-- ─── PRICING V2 SECTION ─── -->
+        <div class="pricing-v2-section" data-aos="fade-up">
 
-        <!-- Toggle Tabs Section -->
-        <div class="pricing-toggle-area text-center mb-50">
-          <div class="toggle-container" data-aos="fade-up">
-            <ul class="nav nav-pills justify-content-center" id="pricing-tabs" role="tablist">
+          <!-- Toggle -->
+          <div class="pricing-toggle-wrap">
+            @if(in_array('yearly', array_map('strtolower', (array)$terms)))
+              <div class="pricing-save-badge">💥 Save up to 67% yearly!</div><br>
+            @endif
+            <ul class="pricing-pill-tabs nav" id="pricing-tabs" role="tablist">
               @foreach ($terms as $term)
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link {{ $loop->first ? 'active' : '' }}" 
-                          id="{{ strtolower($term) }}-tab" 
-                          data-bs-toggle="pill" 
-                          data-bs-target="#tab-{{ strtolower($term) }}" 
-                          type="button" 
-                          role="tab" 
-                          aria-controls="tab-{{ strtolower($term) }}" 
+                  <button class="nav-link {{ $loop->first ? 'active' : '' }}"
+                          id="{{ strtolower($term) }}-tab"
+                          data-bs-toggle="pill"
+                          data-bs-target="#tab-{{ strtolower($term) }}"
+                          type="button"
+                          role="tab"
                           aria-selected="{{ $loop->first ? 'true' : 'false' }}">
-                    {{ __("$term") }}
-                    @if (strtolower($term) == 'yearly')
-                      <span class="badge-best-value">{{ __('Best Value') }}</span>
+                    {{ __($term) }}
+                    @if(strtolower($term) == 'yearly')
+                      <span class="badge-yearly-pill">BEST VALUE</span>
                     @endif
                   </button>
                 </li>
               @endforeach
             </ul>
           </div>
-          <p class="toggle-subtext" data-aos="fade-up" data-aos-delay="100">Save up to 30% with yearly billing</p>
-        </div>
 
-        <!-- Pricing Cards content tabs -->
-        <div class="tab-content" id="pricing-tabs-content" data-aos="fade-up">
-          @foreach ($terms as $term)
-            @php
-              $packages = \App\Models\Package::where('status', '1')
-                  ->where('featured', '1')
-                  ->where('term', strtolower($term))
-                  ->orderBy('price', 'asc')
-                  ->get();
-            @endphp
-            <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" 
-                 id="tab-{{ strtolower($term) }}" 
-                 role="tabpanel" 
-                 aria-labelledby="{{ strtolower($term) }}-tab">
-              <div class="row g-4 justify-content-center">
-                @foreach ($packages as $index => $package)
-                  @php
-                    if (strtolower($term) == 'monthly' && (strtolower($package->title) == 'standard' || strtolower($package->title) == 'premium')) {
-                        continue;
-                    }
-                    // Plan icon & subtitle based on price order
-                    $planTitle    = __($package->title);
-                    $planSubtitle = $package->term ? ucfirst(strtolower($package->term)) . ' plan' : '';
-                    $planIcon     = 'fas fa-paper-plane';
-                    $iconClass    = 'starter';
+          <!-- Cards -->
+          <div class="tab-content" id="pricing-tabs-content">
+            @foreach ($terms as $term)
+              @php
+                $packages = \App\Models\Package::where('status', '1')->where('term', strtolower($term))->orderBy('price', 'asc')->get();
+              @endphp
+              <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}"
+                   id="tab-{{ strtolower($term) }}"
+                   role="tabpanel">
+                <div class="pricing-cards-row">
 
-                    if ($index == 0) {
-                        $planSubtitle = 'Perfect for getting started';
-                        $planIcon     = 'fas fa-paper-plane';
-                        $iconClass    = 'starter';
-                    } elseif ($index == 1) {
-                        $planSubtitle = 'Grow your business';
-                        $planIcon     = 'fas fa-rocket';
-                        $iconClass    = 'growth';
-                    } elseif ($index == 2) {
-                        $planSubtitle = 'For scaling stores';
-                        $planIcon     = 'fas fa-crown';
-                        $iconClass    = 'scale';
-                    } else {
-                        $planSubtitle = 'Advanced plan';
-                        $planIcon     = 'fas fa-gem';
-                        $iconClass    = 'scale';
-                    }
-                  @endphp
-                  <div class="col-sm-12 col-md-6 col-lg-3">
-                    <div class="pricing-card-modern {{ $package->recommended == '1' ? 'popular' : '' }}">
-                      @if ($package->recommended == '1')
-                        <span class="card-ribbon-badge">{{ __('MOST POPULAR') }}</span>
+                  @foreach ($packages as $index => $package)
+                    @php
+                      $titleKey    = strtolower($package->title);
+                      $isRecommended = ($titleKey == 'standard');
+                      $isBestValue   = ($titleKey == 'premium');
+                      $cardClass     = $isRecommended ? 'card-recommended' : ($isBestValue ? 'card-best-value' : '');
+
+                      // Subtitle
+                      $subtitles = ['basic'=>'Perfect for getting started','standard'=>'Grow your business','premium'=>'For scaling stores'];
+                      $planSubtitle = $subtitles[$titleKey] ?? ucfirst($titleKey).' plan';
+
+                      // Period label
+                      $periodLabel = strtolower($term) == 'lifetime' ? 'one-time' : (strtolower($term) == 'yearly' ? 'year' : 'month');
+
+                      // Features
+                      $limitFeatures = [];
+                      if (!empty($package->categories_limit)) $limitFeatures[] = 'Categories Limit : '.($package->categories_limit==999999?'Unlimited':$package->categories_limit);
+                      $limitFeatures[] = 'Products Limit : '.($package->product_limit==999999?'Unlimited':$package->product_limit);
+                      if (!empty($package->order_limit)) $limitFeatures[] = 'Orders Limit : '.($package->order_limit==999999?'Unlimited':$package->order_limit);
+                      if (!empty($package->language_limit)) $limitFeatures[] = 'Additional Languages : '.($package->language_limit==999999?'Unlimited':$package->language_limit);
+                      if (!empty($package->post_limit)) $limitFeatures[] = 'Posts Limit : '.($package->post_limit==999999?'Unlimited':$package->post_limit);
+                      if (!empty($package->number_of_custom_page)) $limitFeatures[] = 'Custom Pages : '.($package->number_of_custom_page==999999?'Unlimited':$package->number_of_custom_page);
+
+                      $pFeatures    = json_decode($package->features, true) ?: [];
+                      $visibleCount = 5;
+                      $visibleFeats = array_slice($limitFeatures, 0, $visibleCount);
+                      $extraLimits  = array_slice($limitFeatures, $visibleCount);
+                      $allPf        = $allPfeatures ?? [];
+
+                      // CTA href
+                      if ($package->is_trial === '1' && $package->price != 0) {
+                        $ctaHref = $selectedTemplate
+                          ? route('front.register.view', ['status'=>'regular','id'=>$package->id]).'?template='.urlencode($selectedTemplate)
+                          : route('front.select.template', ['status'=>'regular','id'=>$package->id]);
+                      } elseif ($package->price == 0) {
+                        $ctaHref = $selectedTemplate
+                          ? route('front.register.view', ['status'=>'regular','id'=>$package->id]).'?template='.urlencode($selectedTemplate)
+                          : route('front.select.template', ['status'=>'regular','id'=>$package->id]);
+                      } else {
+                        $ctaHref = $selectedTemplate
+                          ? route('front.register.view', ['status'=>'regular','id'=>$package->id]).'?template='.urlencode($selectedTemplate)
+                          : route('front.select.template', ['status'=>'regular','id'=>$package->id]);
+                      }
+                    @endphp
+
+                    <div class="pricing-card-v2 {{ $cardClass }}">
+
+                      {{-- Top badge --}}
+                      @if($isRecommended)
+                        <span class="plan-top-badge badge-recommended">RECOMMENDED</span>
+                      @elseif($isBestValue)
+                        <span class="plan-top-badge badge-best-value">BEST VALUE</span>
                       @endif
-                      
-                      <div class="card-header-block">
-                        <div class="icon-circle {{ $iconClass }}">
-                          <i class="{{ $planIcon }}"></i>
-                        </div>
-                        <div class="title-info">
-                          <h3>{{ $planTitle }}</h3>
-                          <p class="subtitle">{{ $planSubtitle }}</p>
-                        </div>
-                      </div>
-                      
-                      <div class="price-section">
-                        @if ($be->base_currency_symbol_position == 'left')
-                          <span class="currency-symbol">{{ $be->base_currency_symbol }}</span>
-                        @endif
-                        <span class="price-value">{{ $package->price == 0 ? __('Free') : number_format($package->price, 0) }}</span>
-                        @if ($be->base_currency_symbol_position == 'right')
-                          <span class="currency-symbol">{{ $be->base_currency_symbol }}</span>
-                        @endif
-                        @if ($package->price != 0)
-                          <span class="period">/ {{ strtolower($term) == 'lifetime' ? 'one-time' : (strtolower($term) == 'yearly' ? 'year' : 'month') }}</span>
+
+                      {{-- Title --}}
+                      <h3 class="plan-v2-title">{{ __($package->title) }}</h3>
+                      <p class="plan-v2-subtitle">{{ $planSubtitle }}</p>
+
+                      {{-- Price --}}
+                      <div class="plan-v2-price-block">
+                        @if($package->price == 0)
+                          <span class="plan-v2-amount">{{ __('Free') }}</span>
+                        @else
+                          <span class="plan-v2-currency">{{ $be->base_currency_symbol }}</span><span class="plan-v2-amount">{{ number_format($package->price, 0) }}</span>
+                          <span class="plan-v2-period"> / {{ $periodLabel }}</span>
                         @endif
                       </div>
-                      
-                      <p class="billing-subtext">
-                        @if (strtolower($term) == 'yearly')
+                      <p class="plan-v2-billing-note">
+                        @if(strtolower($term)=='yearly')
                           Billed yearly at {{ $be->base_currency_symbol }}{{ number_format($package->price * 12, 0) }}
-                        @elseif (strtolower($term) == 'monthly')
+                        @elseif(strtolower($term)=='monthly')
                           Billed monthly
                         @else
                           One-time access fee
                         @endif
                       </p>
-                      
-                      <!-- Feature lists - ALL from admin -->
-                      @php
-                        // Build the full list of limit-based features from DB fields
-                        $limitFeatures = [];
 
-                        if (!empty($package->categories_limit)) {
-                            $limitFeatures[] = ['label' => 'Categories Limit : ' . ($package->categories_limit == 999999 ? 'Unlimited' : $package->categories_limit), 'active' => true];
-                        }
-                        // if (!empty($package->subcategories_limit)) {
-                        //     $limitFeatures[] = ['label' => 'Subcategories Limit : ' . ($package->subcategories_limit == 999999 ? 'Unlimited' : $package->subcategories_limit), 'active' => true];
-                        // }
-                        $limitFeatures[] = ['label' => 'Products Limit : ' . ($package->product_limit == 999999 ? 'Unlimited' : $package->product_limit), 'active' => true];
-                        if (!empty($package->order_limit)) {
-                            $limitFeatures[] = ['label' => 'Orders Limit : ' . ($package->order_limit == 999999 ? 'Unlimited' : $package->order_limit), 'active' => true];
-                        }
-                        if (!empty($package->language_limit)) {
-                            $limitFeatures[] = ['label' => 'Additional Languages : ' . ($package->language_limit == 999999 ? 'Unlimited' : $package->language_limit), 'active' => true];
-                        }
-                        if (!empty($package->post_limit)) {
-                            $limitFeatures[] = ['label' => 'Posts Limit : ' . ($package->post_limit == 999999 ? 'Unlimited' : $package->post_limit), 'active' => true];
-                        }
-                        if (!empty($package->number_of_custom_page)) {
-                            $limitFeatures[] = ['label' => 'Custom Pages Limit : ' . ($package->number_of_custom_page == 999999 ? 'Unlimited' : $package->number_of_custom_page), 'active' => true];
-                        }
+                      <hr class="plan-v2-divider">
 
-                        // All toggled features from the JSON array
-                        $pFeatures = json_decode($package->features, true) ?: [];
+                      {{-- Visible features --}}
+                      <ul class="plan-v2-features">
+                        @foreach($visibleFeats as $feat)
+                          <li><i class="fas fa-check fi-check"></i><span>{{ $feat }}</span></li>
+                        @endforeach
+                      </ul>
 
-                        // How many to show initially (first 6 limit features)
-                        $visibleCount = 6;
-                        $visibleLimits = array_slice($limitFeatures, 0, $visibleCount);
-                        $extraLimits   = array_slice($limitFeatures, $visibleCount);
-
-                        // Total extra = extra limits + all master features (except Posts Limit) + AI fields
-                        $masterFeaturesToShow = collect($allPfeatures)->filter(function($f) {
-                            return $f !== 'Posts Limit';
-                        });
-                        $aiCount = (!empty($package->ai_engine) && in_array('AI Content & Image Generator', $pFeatures) ? 1 : 0)
-                                 + (!empty($package->ai_token_limit) && in_array('AI Content & Image Generator', $pFeatures) ? 1 : 0)
-                                 + (!empty($package->ai_image_limit) && in_array('AI Content & Image Generator', $pFeatures) ? 1 : 0);
-                        $totalExtra = count($extraLimits) + $masterFeaturesToShow->count() + $aiCount;
-                      @endphp
-
-                      <div class="features-list-block">
-                        <ul>
-                          @foreach ($visibleLimits as $lf)
-                            <li>
-                              <span class="feat-check-circle"><i class="fas fa-check"></i></span>
-                              <span>{{ $lf['label'] }}</span>
-                            </li>
-                          @endforeach
-                        </ul>
-                      </div>
-
-                      @if ($totalExtra > 0)
-                        <div class="pricing-feature-more">
-                          <button type="button" class="pricing-feature-toggle" aria-expanded="false">
-                            <span class="show-more-label">See More Features <i class="fas fa-chevron-down" style="font-size:10px;"></i></span>
-                            <span class="show-less-label d-none">See Less Features <i class="fas fa-chevron-up" style="font-size:10px;"></i></span>
-                          </button>
-
-                          <div class="pricing-features-extra" aria-hidden="true">
-                            <ul>
-                              {{-- Extra limit-based features --}}
-                              @foreach ($extraLimits as $lf)
-                                <li>
-                                  <span class="feat-check-circle"><i class="fas fa-check"></i></span>
-                                  <span>{{ $lf['label'] }}</span>
-                                </li>
-                              @endforeach
-
-                              {{-- All JSON feature flags with ticks/crosses --}}
-                              @foreach ($allPfeatures as $feature)
-                                @if ($feature !== 'Posts Limit')
-                                  @php
-                                    $hasFeature = is_array($pFeatures) && in_array($feature, $pFeatures);
-                                  @endphp
-                                  <li>
-                                    @if ($hasFeature)
-                                      <span class="feat-check-circle"><i class="fas fa-check"></i></span>
-                                    @else
-                                      <span class="feat-check-circle times"><i class="fas fa-times"></i></span>
-                                    @endif
-                                    <span>{{ $feature }}</span>
-                                  </li>
-                                  @if ($feature === 'AI Content & Image Generator' && $hasFeature)
-                                    @if (!empty($package->ai_engine))
-                                      <li class="pricing-feature-detail">
-                                        <span class="feat-check-circle detail"><i class="fas fa-microchip"></i></span>
-                                        <span>AI Engine : {{ strtoupper($package->ai_engine) }}</span>
-                                      </li>
-                                    @endif
-                                    @if (!empty($package->ai_token_limit))
-                                      <li class="pricing-feature-detail">
-                                        <span class="feat-check-circle detail"><i class="fas fa-coins"></i></span>
-                                        <span>AI Token Limit : {{ number_format($package->ai_token_limit) }}</span>
-                                      </li>
-                                    @endif
-                                    @if (!empty($package->ai_image_limit))
-                                      <li class="pricing-feature-detail">
-                                        <span class="feat-check-circle detail"><i class="fas fa-image"></i></span>
-                                        <span>AI Image Limit : {{ $package->ai_image_limit }}</span>
-                                      </li>
-                                    @endif
+                      {{-- Extra features (collapsed) --}}
+                      @php $hasExtra = (count($extraLimits) > 0 || count($allPf) > 0); @endphp
+                      @if($hasExtra)
+                        <div class="plan-v2-extra-features" id="extra-{{ $package->id }}">
+                          <ul class="plan-v2-features" style="margin-bottom:8px;">
+                            @foreach($extraLimits as $ef)
+                              <li><i class="fas fa-check fi-check"></i><span>{{ $ef }}</span></li>
+                            @endforeach
+                            @foreach($allPf as $feature)
+                              @if($feature !== 'Posts Limit')
+                                @php $has = is_array($pFeatures) && in_array($feature, $pFeatures); @endphp
+                                <li class="{{ !$has ? 'feat-disabled' : '' }}">
+                                  @if($has)
+                                    <i class="fas fa-check fi-check"></i>
+                                  @else
+                                    <i class="fas fa-times fi-times"></i>
                                   @endif
-                                @endif
-                              @endforeach
-                            </ul>
-                          </div>
+                                  <span>{{ $feature }}</span>
+                                </li>
+                              @endif
+                            @endforeach
+                          </ul>
                         </div>
+                        <button type="button" class="plan-v2-see-more"
+                                onclick="togglePlanFeatures('{{ $package->id }}', this)">
+                          <span class="see-more-txt">See More Features</span>
+                          <i class="fas fa-arrow-right see-more-icon" style="font-size:11px;"></i>
+                        </button>
                       @endif
 
-                      <!-- Call to action button -->
-                      <div class="card-btn-action">
-                        @if ($package->is_trial === '1' && $package->price != 0)
-                          @php
-                            $hrefPurchase = $selectedTemplate 
-                              ? route('front.register.view', ['status' => 'regular', 'id' => $package->id]) . '?template=' . urlencode($selectedTemplate)
-                              : route('front.select.template', ['status' => 'regular', 'id' => $package->id]);
-                          @endphp
-                          <a href="{{ $hrefPurchase }}" 
-                             class="btn-pricing-action btn-orange-filled d-block mt-2">
-                            Purchase Plan <i class="fas fa-shopping-cart ms-2" style="font-size: 11px;"></i>
-                          </a>
-                        @elseif ($package->price == 0)
-                          @php
-                            $href = $selectedTemplate 
-                              ? route('front.register.view', ['status' => 'regular', 'id' => $package->id]) . '?template=' . urlencode($selectedTemplate)
-                              : route('front.select.template', ['status' => 'regular', 'id' => $package->id]);
-                          @endphp
-                          <a href="{{ $href }}" 
-                             class="btn-pricing-action btn-orange-outline d-block">
-                             Get Started Free <i class="fas fa-chevron-right ms-2" style="font-size:11px;"></i>
-                          </a>
-                        @else
-                          @php
-                            $href = $selectedTemplate 
-                              ? route('front.register.view', ['status' => 'regular', 'id' => $package->id]) . '?template=' . urlencode($selectedTemplate)
-                              : route('front.select.template', ['status' => 'regular', 'id' => $package->id]);
-                          @endphp
-                          <a href="{{ $href }}" 
-                             class="btn-pricing-action btn-orange-filled d-block">
-                            Get Started <i class="fas fa-chevron-right ms-2" style="font-size:11px;"></i>
-                          </a>
-                        @endif
-                        <p class="trial-label mt-2">
-                          No credit card required
-                        </p>
+                      {{-- CTA --}}
+                      <a href="{{ $ctaHref }}" class="plan-v2-btn btn-v2-outline">
+                        {{ __('Get') }} {{ __($package->title) }}
+                      </a>
+
+                    </div><!-- /.pricing-card-v2 -->
+                  @endforeach
+
+                  @if(strtolower($term) != 'monthly')
+                    {{-- Enterprise card --}}
+                    <div class="pricing-card-v2 card-enterprise">
+                      <h3 class="plan-v2-title">Enterprise</h3>
+                      <p class="plan-v2-subtitle">For large &amp; global brands</p>
+                      <div class="plan-v2-price-block">
+                        <span class="plan-v2-amount" style="font-size:34px;">Custom</span>
+                      </div>
+                      <p class="plan-v2-billing-note">Tailored to your needs</p>
+                      <hr class="plan-v2-divider">
+                      <ul class="plan-v2-features">
+                        <li><i class="fas fa-check fi-check"></i><span>Everything in Scale</span></li>
+                        <li><i class="fas fa-check fi-check"></i><span>Unlimited Staff Accounts</span></li>
+                        <li><i class="fas fa-check fi-check"></i><span>Dedicated Account Manager</span></li>
+                        <li><i class="fas fa-check fi-check"></i><span>Custom Integrations</span></li>
+                        <li><i class="fas fa-check fi-check"></i><span>SLA &amp; Uptime Guarantee</span></li>
+                        <li><i class="fas fa-check fi-check"></i><span>Priority 24/7 Support</span></li>
+                      </ul>
+                      <div style="display:flex;gap:8px;margin-top:auto;">
+                        <a href="{{ route('front.contact') }}" class="plan-v2-btn" style="flex:1;">Talk to Sales</a>
                       </div>
                     </div>
-                  </div>
-                @endforeach
-                
-                @if (strtolower($term) != 'monthly')
-                  <!-- Static Enterprise Column Card -->
-                  <div class="col-sm-12 col-md-6 col-lg-3">
-                    <div class="pricing-card-modern enterprise">
-                      <div class="card-header-block">
-                        <div class="icon-circle enterprise">
-                          <i class="fas fa-building"></i>
-                        </div>
-                        <div class="title-info">
-                          <h3>Enterprise</h3>
-                          <p class="subtitle">For large & global brands</p>
-                        </div>
-                      </div>
-                      
-                      <div class="price-section custom-price">
-                        <span class="price-value text-dark">Custom</span>
-                      </div>
-                      <p class="billing-subtext">Tailored to your needs</p>
-                      
-                      <div class="features-list-block">
-                        <ul>
-                          <li>
-                            <span class="feat-check-circle"><i class="fas fa-check"></i></span>
-                            <span>Everything in Scale</span>
-                          </li>
-                          <li>
-                            <span class="feat-check-circle"><i class="fas fa-check"></i></span>
-                            <span>Unlimited Staff Accounts</span>
-                          </li>
-                          <li>
-                            <span class="feat-check-circle"><i class="fas fa-check"></i></span>
-                            <span>Dedicated Account Manager</span>
-                          </li>
-                          <li>
-                            <span class="feat-check-circle"><i class="fas fa-check"></i></span>
-                            <span>Custom Integrations</span>
-                          </li>
-                          <li>
-                            <span class="feat-check-circle"><i class="fas fa-check"></i></span>
-                            <span>SLA &amp; Uptime Guarantee</span>
-                          </li>
-                          <li>
-                            <span class="feat-check-circle"><i class="fas fa-check"></i></span>
-                            <span>Priority 24/7 Support</span>
-                          </li>
-                        </ul>
-                      </div>
-                      
-                      <div class="card-btn-action d-flex align-items-center gap-2">
-                        <a href="{{ route('front.contact') }}" class="btn-pricing-action btn-outline-dark flex-grow-1" style="margin-bottom:0;">
-                          Talk to Sales
-                        </a>
-                        <a href="https://wa.me/916374913298?text=Interested%20with%20CUSTOM%20Plan" target="_blank" class="btn-whatsapp-sales" title="WhatsApp Sales">
-                          <i class="fab fa-whatsapp"></i>
-                        </a>
-                      </div>
-                      <p class="trial-label text-center mt-2">Schedule a demo</p>
-                    </div>
-                  </div>
-                @endif
-              </div>
-            </div>
-          @endforeach
-        </div>
+                  @endif
+
+                </div><!-- /.pricing-cards-row -->
+
+                <!-- Trust row -->
+                <div class="pricing-v2-trust">
+                  <span><i class="fas fa-shield-alt"></i> 14-day money-back guarantee</span>
+                  <span><i class="fas fa-times-circle"></i> Cancel anytime</span>
+                  <span><i class="fas fa-lock"></i> Secure checkout</span>
+                </div>
+
+              </div><!-- /.tab-pane -->
+            @endforeach
+          </div><!-- /.tab-content -->
+
+        </div><!-- /.pricing-v2-section -->
+
       </div>
     </section>
-    <!-- Pricing Section End -->
   @endif
+
+
 
   @if (count($after_pricing) > 0)
     @foreach ($after_pricing as $cusPricing)
@@ -1605,7 +1744,27 @@
 
 @section('scripts')
 <script>
+  // ── New V2: See More Features toggle per card ──
+  function togglePlanFeatures(pkgId, btn) {
+    var $extra = document.getElementById('extra-' + pkgId);
+    var $txt   = btn.querySelector('.see-more-txt');
+    var $icon  = btn.querySelector('.see-more-icon');
+    if (!$extra) return;
+    if ($extra.classList.contains('open')) {
+      $extra.classList.remove('open');
+      $txt.textContent  = 'See More Features';
+      $icon.className   = 'fas fa-arrow-right see-more-icon';
+      $icon.style.fontSize = '11px';
+    } else {
+      $extra.classList.add('open');
+      $txt.textContent  = 'See Less Features';
+      $icon.className   = 'fas fa-arrow-up see-more-icon';
+      $icon.style.fontSize = '11px';
+    }
+  }
+
   $(document).ready(function() {
+
     // ===== Duplicated Templates Grid Filtering and Limit Logic =====
     var activeFilterThemes = 'all';
     var itemsLimitThemes = 4;
