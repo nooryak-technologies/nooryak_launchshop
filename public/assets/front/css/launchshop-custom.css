@@ -9233,3 +9233,24 @@ h6 {
         margin: 0 !important;
     }
 }
+
+/* ============================================================
+   EXTRA LARGE SCREENS (≥ 1600px) — Hero top-padding overrides
+   ============================================================ */
+@media (min-width: 1600px) {
+    .shops-hero {
+        padding-top: 130px !important;
+    }
+
+    .modern-pricing-page-wrapper {
+        padding-top: 51px;
+    }
+
+    .modern-templates-page-wrapper {
+        padding-top: 90px;
+    }
+
+    .contact-hero-row {
+        padding-top: 33px;
+    }
+}

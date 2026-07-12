@@ -8910,8 +8910,8 @@ iframe[id^="tawkchat-"],
     width: auto !important;
 }
 
-/* Floating Sticky Header Capsule on Scroll (Desktop 1199px–1599px) */
-@media (min-width: 1199px) and (max-width: 1599px) {
+/* Floating Sticky Header Capsule on Scroll (Desktop) */
+@media (min-width: 1199px) {
 
     .header-area,
     .header-area.is-sticky {
@@ -8933,11 +8933,6 @@ iframe[id^="tawkchat-"],
         transition: all 0.3s ease-in-out !important;
         animation: none !important;
         /* Disable default slideDown animation for smooth transition */
-    }
-
-    /* Offset content so it is not hidden behind the floating sticky header (top:20px + height:70px = 90px) */
-    body {
-        padding-top: 90px !important;
     }
 
     .header-area .main-navbar,
@@ -9126,19 +9121,9 @@ iframe[id^="tawkchat-"],
         margin-left: auto !important;
     }
 
-    /* ── Page Top Spacing to Offset Floating Fixed Header (top:20px + height:70px = 90px) ── */
+    /* ── Hero Wrapper Top Spacing to Offset Floating Header ── */
     .hero-wrapper {
-        margin-top: 90px !important;
-    }
-    /* All other page hero/wrapper sections that immediately follow the fixed header */
-    .modern-pricing-page-wrapper,
-    .modern-templates-page-wrapper,
-    .modern-contact-page-wrapper,
-    .shops-hero,
-    .page-title-area,
-    .breadcrumb-area,
-    .inner-banner {
-        padding-top: 90px !important;
+        margin-top: 70px !important;
     }
 }
 
@@ -11060,3 +11045,24 @@ iframe[id^="tawkchat-"],
         max-width: 100% !important;
     }
 }
+
+/* ============================================================
+   EXTRA LARGE SCREENS (≥ 1600px) — Hero top-padding overrides
+   ============================================================ */
+@media (min-width: 1600px) {
+    .shops-hero {
+        padding-top: 130px !important;
+    }
+
+    .modern-pricing-page-wrapper {
+        padding-top: 51px;
+    }
+
+    .modern-templates-page-wrapper {
+        padding-top: 90px;
+    }
+
+    .contact-hero-row {
+        padding-top: 33px;
+    }
+}
