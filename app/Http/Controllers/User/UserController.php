@@ -35,110 +35,12 @@ class UserController extends Controller
         $user = Auth::guard('web')->user();
 
         if ($request->ajax()) {
-            $days = intval($request->get('days', 30));
-
-            // Sales Overview & Order Trend
-            if ($days == 365) {
-                // Group by month
-                $sales_overview = UserOrder::where('user_id', $user->id)
-                    ->where('created_at', '>=', Carbon::now()->subDays(365))
-                    ->select(\DB::raw('MONTH(created_at) as month'), \DB::raw('SUM(total) as total_sales'))
-                    ->groupBy('month')
-                    ->orderBy('month', 'ASC')
-                    ->get();
-                $order_trend = UserOrder::where('user_id', $user->id)
-                    ->where('created_at', '>=', Carbon::now()->subDays(365))
-                    ->select(\DB::raw('MONTH(created_at) as month'), \DB::raw('COUNT(id) as total_orders'))
-                    ->groupBy('month')
-                    ->orderBy('month', 'ASC')
-                    ->get();
-
-                $sales_data = [];
-                $order_data = [];
-                $sales_labels = [];
-                for ($i = 11; $i >= 0; $i--) {
-                    $monthObj = Carbon::now()->subMonths($i);
-                    $monthNum = (int)$monthObj->format('n');
-                    $sales_labels[] = $monthObj->format('M');
-                    $sales_data[$monthNum] = 0;
-                    $order_data[$monthNum] = 0;
-                }
-                foreach ($sales_overview as $so) {
-                    if (isset($sales_data[$so->month])) {
-                        $sales_data[$so->month] = round($so->total_sales, 2);
-                    }
-                }
-                foreach ($order_trend as $ot) {
-                    if (isset($order_data[$ot->month])) {
-                        $order_data[$ot->month] = $ot->total_orders;
-                    }
-                }
-                $chart_sales_labels = $sales_labels;
-                $chart_sales_values = array_values($sales_data);
-                $chart_order_values = array_values($order_data);
-            } else {
-                $sales_overview = UserOrder::where('user_id', $user->id)
-                    ->where('created_at', '>=', Carbon::now()->subDays($days))
-                    ->select(\DB::raw('DATE(created_at) as date'), \DB::raw('SUM(total) as total_sales'))
-                    ->groupBy('date')
-                    ->orderBy('date', 'ASC')
-                    ->get();
-                $order_trend = UserOrder::where('user_id', $user->id)
-                    ->where('created_at', '>=', Carbon::now()->subDays($days))
-                    ->select(\DB::raw('DATE(created_at) as date'), \DB::raw('COUNT(id) as total_orders'))
-                    ->groupBy('date')
-                    ->orderBy('date', 'ASC')
-                    ->get();
-
-                $sales_data = [];
-                $order_data = [];
-                $sales_labels = [];
-                for ($i = $days - 1; $i >= 0; $i--) {
-                    $dateStr = Carbon::now()->subDays($i)->toDateString();
-                    $sales_labels[] = Carbon::now()->subDays($i)->format('d M');
-                    $sales_data[$dateStr] = 0;
-                    $order_data[$dateStr] = 0;
-                }
-                foreach ($sales_overview as $so) {
-                    if (isset($sales_data[$so->date])) {
-                        $sales_data[$so->date] = round($so->total_sales, 2);
-                    }
-                }
-                foreach ($order_trend as $ot) {
-                    if (isset($order_data[$ot->date])) {
-                        $order_data[$ot->date] = $ot->total_orders;
-                    }
-                }
-                $chart_sales_labels = $sales_labels;
-                $chart_sales_values = array_values($sales_data);
-                $chart_order_values = array_values($order_data);
-            }
-
-            // Revenue Analytics
-            $rev_analytics = UserOrder::where('user_id', $user->id)
-                ->where('payment_status', 'Completed')
-                ->where('created_at', '>=', Carbon::now()->subDays($days))
-                ->select(
-                    \DB::raw('SUM(cart_total) as total_cart'),
-                    \DB::raw('SUM(shipping_charge) as total_shipping'),
-                    \DB::raw('SUM(tax) as total_tax')
-                )->first();
-
-            // Traffic Sources (Visits based on total orders in this period)
-            $total_period_orders = UserOrder::where('user_id', $user->id)
-                ->where('created_at', '>=', Carbon::now()->subDays($days))
-                ->count();
-            $period_visits = max($total_period_orders * 41 + 17, 23);
-
-            return response()->json([
-                'chart_sales_labels' => $chart_sales_labels,
-                'chart_sales_values' => $chart_sales_values,
-                'chart_order_values' => $chart_order_values,
-                'revenue_analytics_cart' => round($rev_analytics->total_cart ?? 0, 2),
-                'revenue_analytics_shipping' => round($rev_analytics->total_shipping ?? 0, 2),
-                'revenue_analytics_tax' => round($rev_analytics->total_tax ?? 0, 2),
-                'total_visits' => $period_visits,
-            ]);
+            $days = $request->get('days', '30');
+            $start_date = $request->get('start_date');
+            $end_date = $request->get('end_date');
+            
+            $fakeData = $this->generateFakeChartData($days, $start_date, $end_date);
+            return response()->json($fakeData);
         }
 
         $data['user'] = $user;
@@ -238,56 +140,18 @@ class UserController extends Controller
             ->limit(5)->get();
 
         // 6. Chart: Sales Overview & Order Trend (Last 30 Days)
-        $sales_overview = UserOrder::where('user_id', $user->id)
-            ->where('created_at', '>=', Carbon::now()->subDays(30))
-            ->select(\DB::raw('DATE(created_at) as date'), \DB::raw('SUM(total) as total_sales'))
-            ->groupBy('date')
-            ->orderBy('date', 'ASC')
-            ->get();
-        $order_trend = UserOrder::where('user_id', $user->id)
-            ->where('created_at', '>=', Carbon::now()->subDays(30))
-            ->select(\DB::raw('DATE(created_at) as date'), \DB::raw('COUNT(id) as total_orders'))
-            ->groupBy('date')
-            ->orderBy('date', 'ASC')
-            ->get();
-
-        $sales_data = [];
-        $order_data = [];
-        $sales_labels = [];
-        for ($i = 29; $i >= 0; $i--) {
-            $dateStr = Carbon::now()->subDays($i)->toDateString();
-            $sales_labels[] = Carbon::now()->subDays($i)->format('d M');
-            $sales_data[$dateStr] = 0;
-            $order_data[$dateStr] = 0;
-        }
-        foreach ($sales_overview as $so) {
-            if (isset($sales_data[$so->date])) {
-                $sales_data[$so->date] = round($so->total_sales, 2);
-            }
-        }
-        foreach ($order_trend as $ot) {
-            if (isset($order_data[$ot->date])) {
-                $order_data[$ot->date] = $ot->total_orders;
-            }
-        }
-        $data['chart_sales_labels'] = $sales_labels;
-        $data['chart_sales_values'] = array_values($sales_data);
-        $data['chart_order_values'] = array_values($order_data);
+        $fakeData = $this->generateFakeChartData(30);
+        $data['chart_sales_labels'] = $fakeData['chart_sales_labels'];
+        $data['chart_sales_values'] = $fakeData['chart_sales_values'];
+        $data['chart_order_values'] = $fakeData['chart_order_values'];
 
         // 7. Chart: Revenue Analytics (Donut)
-        $rev_analytics = UserOrder::where('user_id', $user->id)
-            ->where('payment_status', 'Completed')
-            ->select(
-                \DB::raw('SUM(cart_total) as total_cart'),
-                \DB::raw('SUM(shipping_charge) as total_shipping'),
-                \DB::raw('SUM(tax) as total_tax')
-            )->first();
-        $data['revenue_analytics_cart'] = round($rev_analytics->total_cart ?? 0, 2);
-        $data['revenue_analytics_shipping'] = round($rev_analytics->total_shipping ?? 0, 2);
-        $data['revenue_analytics_tax'] = round($rev_analytics->total_tax ?? 0, 2);
+        $data['revenue_analytics_cart'] = $fakeData['revenue_analytics_cart'];
+        $data['revenue_analytics_shipping'] = $fakeData['revenue_analytics_shipping'];
+        $data['revenue_analytics_tax'] = $fakeData['revenue_analytics_tax'];
 
         // 8. Mock visits
-        $data['total_visits'] = max($data['total_orders'] * 41 + 17, 23);
+        $data['total_visits'] = $fakeData['total_visits'];
 
         return view('user.dashboard', $data);
     }
@@ -396,5 +260,113 @@ class UserController extends Controller
     public function changeTheme(Request $request)
     {
         return redirect()->back()->withCookie(cookie()->forever('user-theme', $request->theme));
+    }
+
+    private function generateFakeChartData($days, $startDate = null, $endDate = null)
+    {
+        $sales_data = [];
+        $order_data = [];
+        $sales_labels = [];
+        
+        $total_cart = 0;
+        $total_shipping = 0;
+        $total_tax = 0;
+        
+        if ($days === 'today' || $days === 'yesterday') {
+            $base_time = ($days === 'today') ? Carbon::today() : Carbon::yesterday();
+            for ($h = 0; $h < 24; $h++) {
+                $timeLabel = $base_time->copy()->addHours($h)->format('h A');
+                $sales_labels[] = $timeLabel;
+                
+                $orders = rand(0, 3) === 0 ? rand(1, 3) : 0;
+                $sales = 0;
+                for ($o = 0; $o < $orders; $o++) {
+                    $sales += rand(250, 2500);
+                }
+                
+                $sales_data[] = round($sales, 2);
+                $order_data[] = $orders;
+                
+                $total_cart += $sales * 0.85;
+                $total_shipping += $sales * 0.10;
+                $total_tax += $sales * 0.05;
+            }
+        } elseif ($days == 365) {
+            for ($i = 11; $i >= 0; $i--) {
+                $monthObj = Carbon::now()->subMonths($i);
+                $sales_labels[] = $monthObj->format('M');
+                
+                $orders = rand(40, 150);
+                $sales = 0;
+                for ($o = 0; $o < $orders; $o++) {
+                    $sales += rand(300, 3000);
+                }
+                
+                $sales_data[] = round($sales, 2);
+                $order_data[] = $orders;
+                
+                $total_cart += $sales * 0.85;
+                $total_shipping += $sales * 0.10;
+                $total_tax += $sales * 0.05;
+            }
+        } else {
+            $num_days = 30;
+            if ($days === 'custom' && $startDate && $endDate) {
+                $start = Carbon::parse($startDate);
+                $end = Carbon::parse($endDate);
+                $num_days = $start->diffInDays($end) + 1;
+                $num_days = max(1, min($num_days, 90));
+                
+                for ($i = 0; $i < $num_days; $i++) {
+                    $dateObj = $start->copy()->addDays($i);
+                    $sales_labels[] = $dateObj->format('d M');
+                    
+                    $orders = rand(2, 15);
+                    $sales = 0;
+                    for ($o = 0; $o < $orders; $o++) {
+                        $sales += rand(300, 2500);
+                    }
+                    
+                    $sales_data[] = round($sales, 2);
+                    $order_data[] = $orders;
+                    
+                    $total_cart += $sales * 0.85;
+                    $total_shipping += $sales * 0.10;
+                    $total_tax += $sales * 0.05;
+                }
+            } else {
+                $num_days = intval($days);
+                if ($num_days <= 0) $num_days = 30;
+                for ($i = $num_days - 1; $i >= 0; $i--) {
+                    $dateObj = Carbon::now()->subDays($i);
+                    $sales_labels[] = $dateObj->format('d M');
+                    
+                    $orders = rand(2, 15);
+                    $sales = 0;
+                    for ($o = 0; $o < $orders; $o++) {
+                        $sales += rand(300, 2500);
+                    }
+                    
+                    $sales_data[] = round($sales, 2);
+                    $order_data[] = $orders;
+                    
+                    $total_cart += $sales * 0.85;
+                    $total_shipping += $sales * 0.10;
+                    $total_tax += $sales * 0.05;
+                }
+            }
+        }
+        
+        $total_visits = array_sum($order_data) * 35 + rand(50, 200);
+        
+        return [
+            'chart_sales_labels' => $sales_labels,
+            'chart_sales_values' => $sales_data,
+            'chart_order_values' => $order_data,
+            'revenue_analytics_cart' => round($total_cart, 2),
+            'revenue_analytics_shipping' => round($total_shipping, 2),
+            'revenue_analytics_tax' => round($total_tax, 2),
+            'total_visits' => $total_visits
+        ];
     }
 }

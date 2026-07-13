@@ -413,6 +413,9 @@ if (!function_exists('user_currency')) {
 if (!function_exists('symbolPrice')) {
     function symbolPrice($position, $symbol, $price)
     {
+        if ($symbol == '$') {
+            $symbol = '₹';
+        }
         if ($position == 'left') {
             $value = $symbol . $price;
         } else {
@@ -426,6 +429,12 @@ if (!function_exists('symbolPrice')) {
 if (!function_exists('textPrice')) {
     function textPrice($position, $text, $price)
     {
+        if ($text == 'USD') {
+            $text = 'INR';
+        }
+        if ($text == '$') {
+            $text = '₹';
+        }
         if ($position == 'left') {
             $value = $text . ' ' . $price;
         } else {
@@ -442,10 +451,14 @@ if (!function_exists('currencyPrice')) {
     {
         $currency = UserCurrency::where('id', $currency_id)->first();
         if ($currency) {
+            $symbol = $currency->symbol;
+            if ($symbol == '$') {
+                $symbol = '₹';
+            }
             if ($currency->symbol_position == 'left') {
-                $value = $currency->symbol . $price;
+                $value = $symbol . $price;
             } else {
-                $value = $price . $currency->symbol;
+                $value = $price . $symbol;
             }
             return $value;
         }
@@ -458,10 +471,14 @@ if (!function_exists('currencyTextPrice')) {
     {
         $currency = UserCurrency::where('id', $currency_id)->first();
         if ($currency) {
+            $text = $currency->text;
+            if ($text == 'USD') {
+                $text = 'INR';
+            }
             if ($currency->text_position == 'left') {
-                $value = $currency->text . ' ' . $price;
+                $value = $text . ' ' . $price;
             } else {
-                $value = $price . ' ' . $currency->text;
+                $value = $price . ' ' . $text;
             }
             return $value;
         }
@@ -474,6 +491,9 @@ if (!function_exists('userSymbolPrice')) {
     {
         if (is_null($price)) {
             $price = 0;
+        }
+        if ($symbol == '$') {
+            $symbol = '₹';
         }
         if ($position == 'left') {
             $value = $symbol . $price;

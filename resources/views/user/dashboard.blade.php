@@ -962,17 +962,28 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
   <div class="charts-row">
     {{-- Sales Overview --}}
     <div class="chart-card">
-      <div class="chart-card-title-wrap" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;width:100%;">
+      <div class="chart-card-title-wrap" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;width:100%;flex-wrap:wrap;gap:8px;">
         <div class="chart-card-title" style="margin:0;">
           {{ __('Sales Overview') }}
           <span class="chart-subtitle" id="sales-overview-subtitle" style="display:block;">{{ __('Last 30 Days') }}</span>
         </div>
-        <select class="chart-filter-select" data-chart-type="sales_overview" style="font-size:11px;font-weight:600;color:#4B5563;border:1px solid #E5E7EB;border-radius:6px;padding:4px 8px;background:#FFF;outline:none;cursor:pointer;">
-          <option value="7">{{ __('7 Days') }}</option>
-          <option value="30" selected>{{ __('30 Days') }}</option>
-          <option value="90">{{ __('90 Days') }}</option>
-          <option value="365">{{ __('This Year') }}</option>
-        </select>
+        <div class="d-flex align-items-center" style="gap: 8px;">
+          <div class="custom-date-container d-none" style="align-items: center; gap: 4px;">
+            <input type="date" class="form-control form-control-sm start-date" style="width: 105px; font-size: 10px; height: 25px; padding: 2px 4px;">
+            <span style="font-size: 10px; color: #6b7280;">to</span>
+            <input type="date" class="form-control form-control-sm end-date" style="width: 105px; font-size: 10px; height: 25px; padding: 2px 4px;">
+            <button type="button" class="btn btn-primary btn-sm apply-custom-date" style="font-size: 10px; height: 25px; padding: 2px 6px; line-height: 1.2;">Apply</button>
+          </div>
+          <select class="chart-filter-select" data-chart-type="sales_overview" style="font-size:11px;font-weight:600;color:#4B5563;border:1px solid #E5E7EB;border-radius:6px;padding:4px 8px;background:#FFF;outline:none;cursor:pointer;">
+            <option value="today">{{ __('Today') }}</option>
+            <option value="yesterday">{{ __('Yesterday') }}</option>
+            <option value="7">{{ __('7 Days') }}</option>
+            <option value="30" selected>{{ __('30 Days') }}</option>
+            <option value="90">{{ __('90 Days') }}</option>
+            <option value="365">{{ __('This Year') }}</option>
+            <option value="custom">{{ __('Custom Date') }}</option>
+          </select>
+        </div>
       </div>
       <div style="position:relative;height:180px;width:100%;">
         <canvas id="salesOverviewChart"></canvas>
@@ -981,14 +992,25 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
 
     {{-- Revenue Analytics --}}
     <div class="chart-card">
-      <div class="chart-card-title-wrap" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;width:100%;">
+      <div class="chart-card-title-wrap" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;width:100%;flex-wrap:wrap;gap:8px;">
         <div class="chart-card-title" style="margin:0;">{{ __('Revenue Analytics') }}</div>
-        <select class="chart-filter-select" data-chart-type="revenue_analytics" style="font-size:11px;font-weight:600;color:#4B5563;border:1px solid #E5E7EB;border-radius:6px;padding:4px 8px;background:#FFF;outline:none;cursor:pointer;">
-          <option value="7">{{ __('7 Days') }}</option>
-          <option value="30" selected>{{ __('30 Days') }}</option>
-          <option value="90">{{ __('90 Days') }}</option>
-          <option value="365">{{ __('This Year') }}</option>
-        </select>
+        <div class="d-flex align-items-center" style="gap: 8px;">
+          <div class="custom-date-container d-none" style="align-items: center; gap: 4px;">
+            <input type="date" class="form-control form-control-sm start-date" style="width: 105px; font-size: 10px; height: 25px; padding: 2px 4px;">
+            <span style="font-size: 10px; color: #6b7280;">to</span>
+            <input type="date" class="form-control form-control-sm end-date" style="width: 105px; font-size: 10px; height: 25px; padding: 2px 4px;">
+            <button type="button" class="btn btn-primary btn-sm apply-custom-date" style="font-size: 10px; height: 25px; padding: 2px 6px; line-height: 1.2;">Apply</button>
+          </div>
+          <select class="chart-filter-select" data-chart-type="revenue_analytics" style="font-size:11px;font-weight:600;color:#4B5563;border:1px solid #E5E7EB;border-radius:6px;padding:4px 8px;background:#FFF;outline:none;cursor:pointer;">
+            <option value="today">{{ __('Today') }}</option>
+            <option value="yesterday">{{ __('Yesterday') }}</option>
+            <option value="7">{{ __('7 Days') }}</option>
+            <option value="30" selected>{{ __('30 Days') }}</option>
+            <option value="90">{{ __('90 Days') }}</option>
+            <option value="365">{{ __('This Year') }}</option>
+            <option value="custom">{{ __('Custom Date') }}</option>
+          </select>
+        </div>
       </div>
       <div style="position:relative;height:155px;width:100%;">
         <canvas id="revenueAnalyticsChart"></canvas>
@@ -997,14 +1019,25 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
 
     {{-- Order Trend --}}
     <div class="chart-card">
-      <div class="chart-card-title-wrap" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;width:100%;">
+      <div class="chart-card-title-wrap" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;width:100%;flex-wrap:wrap;gap:8px;">
         <div class="chart-card-title" style="margin:0;">{{ __('Order Trend') }}</div>
-        <select class="chart-filter-select" data-chart-type="order_trend" style="font-size:11px;font-weight:600;color:#4B5563;border:1px solid #E5E7EB;border-radius:6px;padding:4px 8px;background:#FFF;outline:none;cursor:pointer;">
-          <option value="7">{{ __('7 Days') }}</option>
-          <option value="30" selected>{{ __('30 Days') }}</option>
-          <option value="90">{{ __('90 Days') }}</option>
-          <option value="365">{{ __('This Year') }}</option>
-        </select>
+        <div class="d-flex align-items-center" style="gap: 8px;">
+          <div class="custom-date-container d-none" style="align-items: center; gap: 4px;">
+            <input type="date" class="form-control form-control-sm start-date" style="width: 105px; font-size: 10px; height: 25px; padding: 2px 4px;">
+            <span style="font-size: 10px; color: #6b7280;">to</span>
+            <input type="date" class="form-control form-control-sm end-date" style="width: 105px; font-size: 10px; height: 25px; padding: 2px 4px;">
+            <button type="button" class="btn btn-primary btn-sm apply-custom-date" style="font-size: 10px; height: 25px; padding: 2px 6px; line-height: 1.2;">Apply</button>
+          </div>
+          <select class="chart-filter-select" data-chart-type="order_trend" style="font-size:11px;font-weight:600;color:#4B5563;border:1px solid #E5E7EB;border-radius:6px;padding:4px 8px;background:#FFF;outline:none;cursor:pointer;">
+            <option value="today">{{ __('Today') }}</option>
+            <option value="yesterday">{{ __('Yesterday') }}</option>
+            <option value="7">{{ __('7 Days') }}</option>
+            <option value="30" selected>{{ __('30 Days') }}</option>
+            <option value="90">{{ __('90 Days') }}</option>
+            <option value="365">{{ __('This Year') }}</option>
+            <option value="custom">{{ __('Custom Date') }}</option>
+          </select>
+        </div>
       </div>
       <div style="position:relative;height:180px;width:100%;">
         <canvas id="orderTrendChart"></canvas>
@@ -1013,14 +1046,25 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
 
     {{-- Traffic Sources --}}
     <div class="chart-card">
-      <div class="chart-card-title-wrap" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;width:100%;">
+      <div class="chart-card-title-wrap" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;width:100%;flex-wrap:wrap;gap:8px;">
         <div class="chart-card-title" style="margin:0;">{{ __('Traffic Sources') }}</div>
-        <select class="chart-filter-select" data-chart-type="traffic_sources" style="font-size:11px;font-weight:600;color:#4B5563;border:1px solid #E5E7EB;border-radius:6px;padding:4px 8px;background:#FFF;outline:none;cursor:pointer;">
-          <option value="7">{{ __('7 Days') }}</option>
-          <option value="30" selected>{{ __('30 Days') }}</option>
-          <option value="90">{{ __('90 Days') }}</option>
-          <option value="365">{{ __('This Year') }}</option>
-        </select>
+        <div class="d-flex align-items-center" style="gap: 8px;">
+          <div class="custom-date-container d-none" style="align-items: center; gap: 4px;">
+            <input type="date" class="form-control form-control-sm start-date" style="width: 105px; font-size: 10px; height: 25px; padding: 2px 4px;">
+            <span style="font-size: 10px; color: #6b7280;">to</span>
+            <input type="date" class="form-control form-control-sm end-date" style="width: 105px; font-size: 10px; height: 25px; padding: 2px 4px;">
+            <button type="button" class="btn btn-primary btn-sm apply-custom-date" style="font-size: 10px; height: 25px; padding: 2px 6px; line-height: 1.2;">Apply</button>
+          </div>
+          <select class="chart-filter-select" data-chart-type="traffic_sources" style="font-size:11px;font-weight:600;color:#4B5563;border:1px solid #E5E7EB;border-radius:6px;padding:4px 8px;background:#FFF;outline:none;cursor:pointer;">
+            <option value="today">{{ __('Today') }}</option>
+            <option value="yesterday">{{ __('Yesterday') }}</option>
+            <option value="7">{{ __('7 Days') }}</option>
+            <option value="30" selected>{{ __('30 Days') }}</option>
+            <option value="90">{{ __('90 Days') }}</option>
+            <option value="365">{{ __('This Year') }}</option>
+            <option value="custom">{{ __('Custom Date') }}</option>
+          </select>
+        </div>
       </div>
       <div style="position:relative;height:155px;width:100%;">
         <canvas id="trafficSourcesChart"></canvas>
@@ -1372,9 +1416,28 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
   $('.chart-filter-select').on('change', function() {
     var chartType = $(this).data('chart-type');
     var days = $(this).val();
+    var card = $(this).closest('.chart-card-title-wrap');
+    var dateContainer = card.find('.custom-date-container');
+
+    if (days === 'custom') {
+      dateContainer.removeClass('d-none').addClass('d-flex');
+      return;
+    } else {
+      dateContainer.removeClass('d-flex').addClass('d-none');
+    }
+
+    var subtitleText = '';
+    if (days === 'today') {
+      subtitleText = '{{ __("Today") }}';
+    } else if (days === 'yesterday') {
+      subtitleText = '{{ __("Yesterday") }}';
+    } else if (days == 365) {
+      subtitleText = '{{ __("This Year") }}';
+    } else {
+      subtitleText = '{{ __("Last") }} ' + days + ' {{ __("Days") }}';
+    }
 
     if (chartType === 'sales_overview') {
-      var subtitleText = days == 365 ? '{{ __("This Year") }}' : '{{ __("Last") }} ' + days + ' {{ __("Days") }}';
       $('#sales-overview-subtitle').text(subtitleText);
     }
 
@@ -1384,37 +1447,73 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
       data: { days: days },
       dataType: 'json',
       success: function(data) {
-        if (chartType === 'sales_overview' && window.salesOverviewChart) {
-          window.salesOverviewChart.data.labels = data.chart_sales_labels;
-          window.salesOverviewChart.data.datasets[0].data = data.chart_sales_values;
-          window.salesOverviewChart.update();
-        }
-        if (chartType === 'revenue_analytics' && window.revenueAnalyticsChart) {
-          window.revenueAnalyticsChart.data.datasets[0].data = [
-            data.revenue_analytics_cart,
-            data.revenue_analytics_shipping,
-            data.revenue_analytics_tax
-          ];
-          window.revenueAnalyticsChart.update();
-        }
-        if (chartType === 'order_trend' && window.orderTrendChart) {
-          window.orderTrendChart.data.labels = data.chart_sales_labels;
-          window.orderTrendChart.data.datasets[0].data = data.chart_order_values;
-          window.orderTrendChart.update();
-        }
-        if (chartType === 'traffic_sources' && window.trafficSourcesChart) {
-          var tv = data.total_visits;
-          window.trafficSourcesChart.data.datasets[0].data = [
-            Math.round(tv*0.435),
-            Math.round(tv*0.304),
-            Math.round(tv*0.174),
-            Math.round(tv*0.087)
-          ];
-          window.trafficSourcesChart.update();
-        }
+        updateChartData(chartType, data);
       }
     });
   });
+
+  $('.apply-custom-date').on('click', function() {
+    var card = $(this).closest('.chart-card-title-wrap');
+    var select = card.find('.chart-filter-select');
+    var chartType = select.data('chart-type');
+    var startDate = card.find('.start-date').val();
+    var endDate = card.find('.end-date').val();
+
+    if (!startDate || !endDate) {
+      alert("Please select both start and end dates");
+      return;
+    }
+
+    var subtitleText = 'Custom: ' + startDate + ' to ' + endDate;
+    if (chartType === 'sales_overview') {
+      $('#sales-overview-subtitle').text(subtitleText);
+    }
+
+    $.ajax({
+      url: "{{ route('user-dashboard') }}",
+      type: 'GET',
+      data: { 
+        days: 'custom',
+        start_date: startDate,
+        end_date: endDate
+      },
+      dataType: 'json',
+      success: function(data) {
+        updateChartData(chartType, data);
+      }
+    });
+  });
+
+  function updateChartData(chartType, data) {
+    if (chartType === 'sales_overview' && window.salesOverviewChart) {
+      window.salesOverviewChart.data.labels = data.chart_sales_labels;
+      window.salesOverviewChart.data.datasets[0].data = data.chart_sales_values;
+      window.salesOverviewChart.update();
+    }
+    if (chartType === 'revenue_analytics' && window.revenueAnalyticsChart) {
+      window.revenueAnalyticsChart.data.datasets[0].data = [
+        data.revenue_analytics_cart,
+        data.revenue_analytics_shipping,
+        data.revenue_analytics_tax
+      ];
+      window.revenueAnalyticsChart.update();
+    }
+    if (chartType === 'order_trend' && window.orderTrendChart) {
+      window.orderTrendChart.data.labels = data.chart_sales_labels;
+      window.orderTrendChart.data.datasets[0].data = data.chart_order_values;
+      window.orderTrendChart.update();
+    }
+    if (chartType === 'traffic_sources' && window.trafficSourcesChart) {
+      var tv = data.total_visits;
+      window.trafficSourcesChart.data.datasets[0].data = [
+        Math.round(tv*0.435),
+        Math.round(tv*0.304),
+        Math.round(tv*0.174),
+        Math.round(tv*0.087)
+      ];
+      window.trafficSourcesChart.update();
+    }
+  }
 })();
 </script>
 @endsection

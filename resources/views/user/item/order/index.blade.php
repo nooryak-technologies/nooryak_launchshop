@@ -92,9 +92,13 @@
             </div>
             <div class="content">
               <div class="label">{{ __('Total Revenue') }}</div>
-              <div class="value">
-                {{ $userBs && $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}{{ number_format($totalRevenue, 2) }}{{ $userBs && $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
-              </div>
+                @php
+                  $symbol = $userBs ? $userBs->base_currency_symbol : '';
+                  if ($symbol == '$') {
+                      $symbol = '₹';
+                  }
+                @endphp
+                {{ $userBs && $userBs->base_currency_symbol_position == 'left' ? $symbol : '' }}{{ number_format($totalRevenue, 2) }}{{ $userBs && $userBs->base_currency_symbol_position == 'right' ? $symbol : '' }}
 
             </div>
           </div>
