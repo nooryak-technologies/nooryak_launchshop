@@ -197,6 +197,21 @@
               </div>
             </div>
 
+            @if ($order->gateway_type == 'offline' && !empty($order->receipt))
+            <div class="row mt-3 pt-3 border-top">
+              <div class="col-12" style="color: #64748b; font-weight: 600; margin-bottom: 8px;">
+                <i class="fas fa-file-invoice text-primary mr-1"></i> {{ __('Payment Receipt Proof') }} :
+              </div>
+              <div class="col-12 text-center">
+                <a href="{{ asset('assets/front/receipt/' . $order->receipt) }}" target="_blank" title="Click to view full receipt">
+                  <img src="{{ asset('assets/front/receipt/' . $order->receipt) }}" alt="Receipt Proof" 
+                    style="width: 100%; max-width: 180px; height: auto; border-radius: 8px; border: 1px solid rgba(0,0,0,0.12); padding: 4px; background: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.05);" />
+                </a>
+                <p class="text-muted mt-2 mb-0" style="font-size: 11px;">{{ __('Click image to view/download full resolution') }}</p>
+              </div>
+            </div>
+            @endif
+
           </div>
         </div>
       </div>
