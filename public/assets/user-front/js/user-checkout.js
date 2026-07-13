@@ -1,5 +1,27 @@
 'use strict';
 
+function updateUPIQRCode() {
+    let qrContainer = $("#dynamic-upi-qr");
+    if (qrContainer.length > 0) {
+        let upiID = qrContainer.attr('data-upi');
+        let grandTotal = parseFloat($(".grandTotal").attr('data'));
+        if (isNaN(grandTotal)) {
+            grandTotal = parseFloat($(".grandTotal").text().replace(/[^0-9.]/g, ''));
+        }
+        if (!isNaN(grandTotal)) {
+            let upiUrl = "upi://pay?pa=" + encodeURIComponent(upiID) + "&pn=Store&am=" + grandTotal.toFixed(2) + "&cu=INR";
+            let qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(upiUrl);
+            qrContainer.html(`
+                <div style="display: inline-block; padding: 10px; background: #fff; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 10px; width: 100%; max-width: 250px; margin-left: auto; margin-right: auto;">
+                    <h6 class="mb-2" style="font-weight: bold; color: #1e293b; font-size: 13px;">Scan to Pay with GPay/PhonePe/Paytm</h6>
+                    <img src="${qrUrl}" alt="UPI QR Code" style="width: 160px; height: 160px; display: block; margin: 0 auto;" />
+                    <p class="mt-2 mb-0" style="font-weight: bold; color: #2563eb; font-size: 14px;">Amount: ₹${grandTotal.toFixed(2)}</p>
+                </div>
+            `);
+        }
+    }
+}
+
 if (stripe_key) {
     // Set your Stripe public key
     var stripe = Stripe(stripe_key);
@@ -53,6 +75,7 @@ function applyCoupon() {
                         total +
                         (ucurrency_position == 'right' ? ucurrency_symbol : '')
                     );
+                    updateUPIQRCode();
                 });
             } else {
                 toastr["error"](data.message);
@@ -97,6 +120,8 @@ $(document).on('click', '.shipping-charge', function () {
         total +
         (ucurrency_position == 'right' ? ucurrency_symbol : '')
     );
+    $(".grandTotal").attr('data', total);
+    updateUPIQRCode();
 })
 
 
@@ -170,6 +195,15 @@ $("#payment-gateway").on('change', function () {
                                       <input type="file" name="receipt" value="" class="file-input" required>
                                       <p class="mb-0 text-warning">** Receipt image must be .jpg / .jpeg / .png</p>
                                    </div>`;
+                // Check if instructions has a UPI ID
+                let plainTextInstructions = data.instructions ? data.instructions.replace(/<[^>]*>/g, '') : '';
+                let upiMatch = plainTextInstructions.match(/[a-zA-Z0-9.\-_]+@[a-zA-Z0-9.\-_]+/);
+                if (upiMatch) {
+                    let upiID = upiMatch[0];
+                    let qrDiv = `<div id="dynamic-upi-qr" data-upi="${upiID}" class="text-center my-3"></div>`;
+                    instructions = `<div class="gateway-desc">${data.instructions}</div>` + qrDiv;
+                }
+
                 if (data.is_receipt == 1) {
                     $("#is_receipt").val(1);
                     let finalInstruction = instructions + description + receipt;
@@ -179,6 +213,7 @@ $("#payment-gateway").on('change', function () {
                     let finalInstruction = instructions + description;
                     instruction.html(finalInstruction);
                 }
+                updateUPIQRCode();
                 $('#instructions').fadeIn();
             },
             error: function (data) { }
