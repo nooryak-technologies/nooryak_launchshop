@@ -195,8 +195,9 @@ $("#payment-gateway").on('change', function () {
                                       <input type="file" name="receipt" value="" class="file-input" required>
                                       <p class="mb-0 text-warning">** Receipt image must be .jpg / .jpeg / .png</p>
                                    </div>`;
-                // Check if instructions has a UPI ID
-                let plainTextInstructions = data.instructions ? data.instructions.replace(/<[^>]*>/g, '') : '';
+                // Check if instructions or description has a UPI ID
+                let textToScan = (data.instructions ? data.instructions : '') + ' ' + (data.description ? data.description : '');
+                let plainTextInstructions = textToScan.replace(/<[^>]*>/g, '');
                 let upiMatch = plainTextInstructions.match(/[a-zA-Z0-9.\-_]+@[a-zA-Z0-9.\-_]+/);
                 if (upiMatch) {
                     let upiID = upiMatch[0];
