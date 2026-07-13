@@ -33,7 +33,7 @@ class Demo
 
         // Block writes for template-preview (secret login) sessions
         if (Session::get('secrect_login') == true && $isWriteMethod) {
-            session()->flash('warning', __('This is a template preview. CRUD operations are not allowed.'));
+            session()->flash('warning', __('This is template demo dashboard message'));
             return redirect()->back();
         }
 
