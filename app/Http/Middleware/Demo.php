@@ -32,7 +32,7 @@ class Demo
         }
 
         // Block writes for template-preview (secret login) sessions
-        if (Session::get('secrect_login') == true && $isWriteMethod) {
+        if (Session::get('secrect_login') == true && $isWriteMethod && !Auth::guard('admin')->check() && !$request->is('admin/*') && !$request->is('admin')) {
             session()->flash('warning', __('This is template demo dashboard message'));
             return redirect()->back();
         }

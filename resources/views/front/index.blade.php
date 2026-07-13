@@ -1177,11 +1177,11 @@
             @endphp
             @if($firstTemplate)
             <a href="{{ route('front.templates.autologin', $firstTemplate->username) }}" target="_blank" class="btn-dashboard-explore px-4 py-3 d-inline-flex align-items-center gap-2">
-              {{ __('Launch Store') }} <i class="fas fa-arrow-right"></i>
+              {{ __('Explore Dashboard ') }} <i class="fas fa-arrow-right"></i>
             </a>
             @else
             <a href="{{ route('front.templates.view') }}" class="btn-dashboard-explore px-4 py-3 d-inline-flex align-items-center gap-2">
-              {{ __('Launch Store') }} <i class="fas fa-arrow-right"></i>
+              {{ __('Explore Dashboard ') }} <i class="fas fa-arrow-right"></i>
             </a>
             @endif
           </div>
