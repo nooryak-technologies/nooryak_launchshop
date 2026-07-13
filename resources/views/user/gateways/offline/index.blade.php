@@ -148,3 +148,14 @@
   <!-- Edit Package Modal -->
   @includeIf('user.gateways.offline.edit')
 @endsection
+
+@section('scripts')
+<script>
+  $(document).ready(function() {
+    // Disable Bootstrap's focus trap so rich text editors (Summernote) inside modals can receive focus/typing
+    if ($.fn.modal && $.fn.modal.Constructor) {
+      $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+    }
+  });
+</script>
+@endsection
