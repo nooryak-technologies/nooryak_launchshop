@@ -37,7 +37,7 @@ class LanguageController extends Controller
         $language_limit = $current_package->language_limit;
         $total_languages = Language::where([['user_id', $user_id], ['type', '!=', 'admin']])->count();
 
-        if ($language_limit < $total_languages) {
+        if ($total_languages - 1 >= $language_limit) {
             Session::flash('warning', __('Custom language limit exceeded'));
             return "success";
         }
@@ -103,15 +103,7 @@ class LanguageController extends Controller
 
     public function edit($id)
     {
-        $user_id = Auth::guard('web')->user()->id;
-        $current_package = UserPermissionHelper::currentPackagePermission($user_id);
-        $language_limit = $current_package->language_limit;
-        $total_languages = Language::where([['user_id', $user_id], ['type', '!=', 'admin']])->count();
 
-        if ($language_limit < $total_languages) {
-            Session::flash('warning', __('Custom language limit exceeded'));
-            return back();
-        }
 
         if ($id > 0) {
             $data['language'] = Language::where('user_id', Auth::guard('web')->user()->id)->where('id', $id)->firstOrFail();
@@ -123,15 +115,7 @@ class LanguageController extends Controller
 
     public function update(Request $request)
     {
-        $user_id = Auth::guard('web')->user()->id;
-        $current_package = UserPermissionHelper::currentPackagePermission($user_id);
-        $language_limit = $current_package->language_limit;
-        $total_languages = Language::where([['user_id', $user_id], ['type', '!=', 'admin']])->count();
 
-        if ($language_limit < $total_languages) {
-            Session::flash('warning', __('Custom Language Limit Exceeded'));
-            return back();
-        }
 
         $language = Language::findOrFail($request->language_id);
 
@@ -174,15 +158,7 @@ class LanguageController extends Controller
 
     public function editKeyword($id)
     {
-        $user_id = Auth::guard('web')->user()->id;
-        $current_package = UserPermissionHelper::currentPackagePermission($user_id);
-        $language_limit = $current_package->language_limit;
-        $total_languages = Language::where([['user_id', $user_id], ['type', '!=', 'admin']])->count();
 
-        if ($language_limit < $total_languages) {
-            Session::flash('warning', __('Custom Language Limit Exceeded'));
-            return back();
-        }
         $data['la'] = Language::where('user_id', Auth::guard('web')->user()->id)->where('id', $id)->firstOrFail();
         $data['cus_keywords'] = json_decode($data['la']->keywords, true);
 
@@ -447,15 +423,7 @@ class LanguageController extends Controller
 
     public function default(Request $request, $id)
     {
-        $user_id = Auth::guard('web')->user()->id;
-        $current_package = UserPermissionHelper::currentPackagePermission($user_id);
-        $language_limit = $current_package->language_limit;
-        $total_languages = Language::where([['user_id', $user_id], ['type', '!=', 'admin']])->count();
 
-        if ($language_limit < $total_languages) {
-            Session::flash('warning', __('The custom language limit has been exceeded'));
-            return back();
-        }
 
         Language::where('is_default', 1)->where('user_id', Auth::guard('web')->user()->id)->update(['is_default' => 0]);
         $lang = Language::find($id);
@@ -466,15 +434,7 @@ class LanguageController extends Controller
 
     public function dashboardDefault(Request $request, $id)
     {
-        $user_id = Auth::guard('web')->user()->id;
-        $current_package = UserPermissionHelper::currentPackagePermission($user_id);
-        $language_limit = $current_package->language_limit;
-        $total_languages = Language::where([['user_id', $user_id], ['type', '!=', 'admin']])->count();
 
-        if ($language_limit < $total_languages) {
-            Session::flash('warning', __('The custom language limit has been exceeded'));
-            return back();
-        }
         $lang = Language::find($id);
 
         $adminLang = \App\Models\Language::where('code', $lang->code)->pluck('code')->first();
@@ -518,15 +478,7 @@ class LanguageController extends Controller
 
     public function addKeyword(Request $request)
     {
-        $user_id = Auth::guard('web')->user()->id;
-        $current_package = UserPermissionHelper::currentPackagePermission($user_id);
-        $language_limit = $current_package->language_limit;
-        $total_languages = Language::where([['user_id', $user_id], ['type', '!=', 'admin']])->count();
 
-        if ($language_limit < $total_languages) {
-            Session::flash('warning', __('Custom Language Limit Exceeded'));
-            return 'success';
-        }
 
         $user_id = Auth::guard('web')->user()->id;
         $rules = [

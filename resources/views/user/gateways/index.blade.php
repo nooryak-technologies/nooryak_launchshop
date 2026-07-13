@@ -13,6 +13,10 @@
       'user_id',
       \Illuminate\Support\Facades\Auth::guard('web')->user()->id,
   )->get();
+
+  $user = Auth::guard('web')->user();
+  $activePackage = \App\Http\Helpers\UserPermissionHelper::currentPackagePermission($user->id);
+  $packageName = $activePackage ? strtolower($activePackage->title) : '';
 @endphp
 @if (!empty($selLang) && $selLang->rtl == 1)
   @section('styles')
@@ -548,6 +552,7 @@
       </div>
     </div>
 
+    @if ($packageName === 'premium')
     {{-- Razorpay --}}
     <div class="col-lg-4">
       <div class="card">
@@ -622,6 +627,7 @@
         </form>
       </div>
     </div>
+    @endif
 
     {{-- Stripe --}}
     <div class="col-lg-4">
@@ -1255,6 +1261,7 @@
       </div>
     </div>
 
+    @if ($packageName === 'premium')
     {{-- Phonepe --}}
     <div class="col-lg-4">
       <div class="card">
@@ -1343,6 +1350,7 @@
         </form>
       </div>
     </div>
+    @endif
 
     {{-- iyzico --}}
     <div class="col-lg-4">

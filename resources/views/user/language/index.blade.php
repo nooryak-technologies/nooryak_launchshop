@@ -33,11 +33,13 @@
             </div>
             <div class="col-md-6">
               <div class="d-flex justify-content-end gap-3">
+                @if ($total_languages - 1 < $language_limit)
                 <a href="#" class="btn btn-primary float-right btn-sm" data-toggle="modal"
                   data-target="#createModal">
                   <i class="fas fa-plus"></i>
                   {{ __('Add Language') }}
                 </a>
+                @endif
 
                 <a href="#" class="btn btn-secondary float-right btn-sm mr-1 editBtn" data-toggle="modal"
                   data-target="#addModal">

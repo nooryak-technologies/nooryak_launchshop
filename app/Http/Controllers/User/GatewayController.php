@@ -203,6 +203,13 @@ class GatewayController extends Controller
 
     public function razorpayUpdate(Request $request)
     {
+        $user_id = Auth::guard('web')->user()->id;
+        $current_package = \App\Http\Helpers\UserPermissionHelper::currentPackagePermission($user_id);
+        $packageName = $current_package ? strtolower($current_package->title) : '';
+        if ($packageName !== 'premium') {
+            Session::flash('warning', __('This payment gateway is only available for Premium plan.'));
+            return back();
+        }
         $razorpay = UserPaymentGeteway::where([['user_id', Auth::guard('web')->user()->id], ['keyword', 'razorpay']])->first();
 
         if (empty($razorpay)) {
@@ -448,6 +455,13 @@ class GatewayController extends Controller
 
     public function phonepeUpdate(Request $request)
     {
+        $user_id = Auth::guard('web')->user()->id;
+        $current_package = \App\Http\Helpers\UserPermissionHelper::currentPackagePermission($user_id);
+        $packageName = $current_package ? strtolower($current_package->title) : '';
+        if ($packageName !== 'premium') {
+            Session::flash('warning', __('This payment gateway is only available for Premium plan.'));
+            return back();
+        }
         $phonepe = UserPaymentGeteway::where([['user_id', Auth::guard('web')->user()->id], ['keyword', 'phonepe']])->first();
         if (empty($phonepe)) {
             $phonepe = new UserPaymentGeteway();
