@@ -84,13 +84,15 @@
                                                         data-target="#editFeatureModal">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                                <form class="deleteform d-inline-block" action="{{ route('admin.package.features_delete') }}" method="post">
-                                                    @csrf
-                                                    <input type="hidden" name="feature_id" value="{{ $feature->id }}">
-                                                    <button type="submit" class="btn btn-danger btn-sm deletebtn">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
+                                                @if($feature->type === 'custom')
+                                                    <form class="deleteform d-inline-block" action="{{ route('admin.package.features_delete') }}" method="post">
+                                                        @csrf
+                                                        <input type="hidden" name="feature_id" value="{{ $feature->id }}">
+                                                        <button type="submit" class="btn btn-danger btn-sm deletebtn">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

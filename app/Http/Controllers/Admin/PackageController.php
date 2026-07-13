@@ -98,6 +98,10 @@ class PackageController extends Controller
         ]);
 
         $feature = PackageFeature::findOrFail($request->feature_id);
+        if ($feature->type !== 'custom') {
+            Session::flash('warning', __('Only custom features can be deleted.'));
+            return back();
+        }
         $feature->delete();
 
         Session::flash('success', __('Feature Deleted Successfully'));

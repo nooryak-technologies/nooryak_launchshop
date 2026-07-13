@@ -782,23 +782,55 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
 
       {{-- Container 2: Limit Container --}}
       <div class="plan-limit-card">
-        <div class="plan-features-col">
-          <div class="plan-feature-item">
-            <i class="fas fa-check-circle chk"></i>
-            <span>{{ $prodLimitLabel }}</span>
-          </div>
-          <div class="plan-feature-item">
-            <i class="fas fa-check-circle chk"></i>
-            <span>{{ $orderLimitLabel }}</span>
-          </div>
-          <div class="plan-feature-item">
-            <i class="fas fa-check-circle chk"></i>
-            <span>{{ __('Custom Domain') }}</span>
-          </div>
-          <div class="plan-feature-item">
-            <i class="fas fa-check-circle chk"></i>
-            <span>{{ __('Subdomain') }}</span>
-          </div>
+        @php
+          if (\Schema::hasTable('package_features')) {
+              $allFeatures = \App\Models\PackageFeature::orderBy('serial_number', 'asc')->get();
+          } else {
+              $allFeatures = collect();
+          }
+          
+          $activeFeatureLabels = [];
+          
+          if ($allFeatures->isEmpty()) {
+              $activeFeatureLabels[] = $prodLimitLabel;
+              $activeFeatureLabels[] = $orderLimitLabel;
+              
+              if (is_array($packageFeatures) && in_array('Custom Domain', $packageFeatures)) {
+                  $activeFeatureLabels[] = __('Custom Domain');
+              }
+              if (is_array($packageFeatures) && in_array('Subdomain', $packageFeatures)) {
+                  $activeFeatureLabels[] = __('Subdomain');
+              }
+          } else {
+              foreach ($allFeatures as $feature) {
+                  if ($feature->type === 'limit') {
+                      $limitVal = $current_package->{$feature->limit_key} ?? 0;
+                      if ($limitVal > 0 || $limitVal == 999999) {
+                          $formattedVal = ($limitVal == 999999) ? __('Unlimited') : $limitVal;
+                          if ($feature->limit_key === 'order_limit' && $limitVal != 999999) {
+                              $formattedVal .= '/' . ($current_package->term == 'monthly' ? 'm' : 'yr');
+                          }
+                          $activeFeatureLabels[] = str_replace('{limit}', $formattedVal, $feature->name);
+                      }
+                  } elseif ($feature->type === 'standard') {
+                      if (is_array($packageFeatures) && in_array($feature->keyword, $packageFeatures)) {
+                          $activeFeatureLabels[] = $feature->name;
+                      }
+                  } elseif ($feature->type === 'custom') {
+                      if (is_array($packageFeatures) && in_array($feature->name, $packageFeatures)) {
+                          $activeFeatureLabels[] = $feature->name;
+                      }
+                  }
+              }
+          }
+        @endphp
+        <div class="plan-features-col" style="max-height: 120px; overflow-y: auto; padding-right: 4px;">
+          @foreach($activeFeatureLabels as $label)
+            <div class="plan-feature-item">
+              <i class="fas fa-check-circle chk"></i>
+              <span>{{ __($label) }}</span>
+            </div>
+          @endforeach
         </div>
         <img src="{{ asset('images/right_side.png') }}" class="limit-right-img" alt="">
       </div>

@@ -502,15 +502,32 @@
                     $packageFormattedFeatures = [];
                     
                     if ($allFeatures->isEmpty()) {
-                        $limitFeatures = [];
-                        if (!empty($package->categories_limit)) $limitFeatures[] = ['text' => 'Categories Limit : '.($package->categories_limit==999999?'Unlimited':$package->categories_limit), 'has' => true];
-                        $limitFeatures[] = ['text' => 'Products Limit : '.($package->product_limit==999999?'Unlimited':$package->product_limit), 'has' => true];
-                        if (!empty($package->order_limit)) $limitFeatures[] = ['text' => 'Orders Limit : '.($package->order_limit==999999?'Unlimited':$package->order_limit), 'has' => true];
-                        if (!empty($package->language_limit)) $limitFeatures[] = ['text' => 'Additional Languages : '.($package->language_limit==999999?'Unlimited':$package->language_limit), 'has' => true];
-                        if (!empty($package->post_limit)) $limitFeatures[] = ['text' => 'Posts Limit : '.($package->post_limit==999999?'Unlimited':$package->post_limit), 'has' => true];
-                        if (!empty($package->number_of_custom_page)) $limitFeatures[] = ['text' => 'Custom Pages : '.($package->number_of_custom_page==999999?'Unlimited':$package->number_of_custom_page), 'has' => true];
+                        $packageFormattedFeatures = [];
                         
-                        $packageFormattedFeatures = $limitFeatures;
+                        $limitVal = $package->categories_limit ?? 0;
+                        if ($limitVal > 0 || $limitVal == 999999) {
+                            $packageFormattedFeatures[] = ['text' => 'Categories Limit : '.($limitVal==999999?'Unlimited':$limitVal), 'has' => true];
+                        }
+                        $limitVal = $package->product_limit ?? 0;
+                        if ($limitVal > 0 || $limitVal == 999999) {
+                            $packageFormattedFeatures[] = ['text' => 'Products Limit : '.($limitVal==999999?'Unlimited':$limitVal), 'has' => true];
+                        }
+                        $limitVal = $package->order_limit ?? 0;
+                        if ($limitVal > 0 || $limitVal == 999999) {
+                            $packageFormattedFeatures[] = ['text' => 'Orders Limit : '.($limitVal==999999?'Unlimited':$limitVal), 'has' => true];
+                        }
+                        $limitVal = $package->language_limit ?? 0;
+                        if ($limitVal > 0 || $limitVal == 999999) {
+                            $packageFormattedFeatures[] = ['text' => 'Additional Languages : '.($limitVal==999999?'Unlimited':$limitVal), 'has' => true];
+                        }
+                        $limitVal = $package->post_limit ?? 0;
+                        if ($limitVal > 0 || $limitVal == 999999) {
+                            $packageFormattedFeatures[] = ['text' => 'Posts Limit : '.($limitVal==999999?'Unlimited':$limitVal), 'has' => true];
+                        }
+                        $limitVal = $package->number_of_custom_page ?? 0;
+                        if ($limitVal > 0 || $limitVal == 999999) {
+                            $packageFormattedFeatures[] = ['text' => 'Custom Pages : '.($limitVal==999999?'Unlimited':$limitVal), 'has' => true];
+                        }
                         
                         $fallbackPills = [
                             'Custom Domain' => 'Custom Domain',
@@ -529,8 +546,9 @@
                         ];
                         foreach ($fallbackPills as $k => $name) {
                             if ($k !== 'Blog' && $k !== 'Custom Page') {
-                                $has = in_array($k, $pFeatures);
-                                $packageFormattedFeatures[] = ['text' => $name, 'has' => $has];
+                                if (in_array($k, $pFeatures)) {
+                                    $packageFormattedFeatures[] = ['text' => $name, 'has' => true];
+                                }
                             }
                         }
                     } else {
@@ -540,18 +558,23 @@
                             
                             if ($feature->type === 'limit') {
                                 $limitVal = $package->{$feature->limit_key} ?? 0;
-                                if ($limitVal > 0 || $limitVal == 999999) {
-                                    $has = true;
-                                    $formattedVal = ($limitVal == 999999) ? __('Unlimited') : $limitVal;
-                                    if ($feature->limit_key === 'order_limit' && $limitVal != 999999) {
-                                        $formattedVal .= '/' . ($package->term == 'monthly' ? 'm' : 'yr');
-                                    }
-                                    $text = str_replace('{limit}', $formattedVal, $text);
-                                } else {
-                                    $text = str_replace('{limit}', '0', $text);
+                                $formattedVal = ($limitVal == 999999) ? __('Unlimited') : $limitVal;
+                                if ($feature->limit_key === 'order_limit' && $limitVal != 999999) {
+                                    $formattedVal .= '/' . ($package->term == 'monthly' ? 'm' : 'yr');
                                 }
+                                $text = str_replace('{limit}', $formattedVal, $text);
+                                $has = ($limitVal > 0 || $limitVal == 999999);
                             } elseif ($feature->type === 'standard') {
                                 $has = in_array($feature->keyword, $pFeatures);
+                                if ($has && !empty($feature->limit_key)) {
+                                    $limitVal = $package->{$feature->limit_key} ?? 0;
+                                    $formattedVal = ($limitVal == 999999) ? __('Unlimited') : $limitVal;
+                                    $text = str_replace('{limit}', $formattedVal, $text);
+                                } elseif (!empty($feature->limit_key)) {
+                                    $limitVal = $package->{$feature->limit_key} ?? 0;
+                                    $formattedVal = ($limitVal == 999999) ? __('Unlimited') : $limitVal;
+                                    $text = str_replace('{limit}', $formattedVal, $text);
+                                }
                             } elseif ($feature->type === 'custom') {
                                 $has = in_array($feature->name, $pFeatures);
                             }
