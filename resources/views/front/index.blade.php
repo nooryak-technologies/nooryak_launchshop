@@ -1413,7 +1413,10 @@
                                'AI Content & Image Generator' => 'AI Content & Image Generator'
                            ];
                            foreach ($fallbackPills as $k => $name) {
-                               if ($k !== 'Blog' && $k !== 'Custom Page') {
+                                if ($k === 'AI Content & Image Generator') {
+                                    continue;
+                                }
+                                if ($k !== 'Blog' && $k !== 'Custom Page') {
                                    if (in_array($k, $pFeatures)) {
                                        $packageFormattedFeatures[] = ['text' => $name, 'has' => true];
                                    }
@@ -1421,6 +1424,9 @@
                            }
                        } else {
                             foreach ($allFeatures as $feature) {
+                                if ($feature->keyword === 'AI Content & Image Generator' || $feature->name === 'AI Content & Image Generator') {
+                                     continue;
+                                 }
                                 $has = false;
                                 $text = $feature->name;
                                 

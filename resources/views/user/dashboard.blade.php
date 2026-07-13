@@ -814,7 +814,13 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
                       }
                   } elseif ($feature->type === 'standard') {
                       if (is_array($packageFeatures) && in_array($feature->keyword, $packageFeatures)) {
-                          $activeFeatureLabels[] = $feature->name;
+                          $text = $feature->name;
+                          if (!empty($feature->limit_key)) {
+                              $limitVal = $current_package->{$feature->limit_key} ?? 0;
+                              $formattedVal = ($limitVal == 999999) ? __('Unlimited') : $limitVal;
+                              $text = str_replace('{limit}', $formattedVal, $text);
+                          }
+                          $activeFeatureLabels[] = $text;
                       }
                   } elseif ($feature->type === 'custom') {
                       if (is_array($packageFeatures) && in_array($feature->name, $packageFeatures)) {

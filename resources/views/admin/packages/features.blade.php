@@ -62,6 +62,9 @@
                                     </tr>
                                 @else
                                     @foreach($features as $feature)
+                                        @if($feature->keyword === 'AI Content & Image Generator' || $feature->name === 'AI Content & Image Generator')
+                                            @continue
+                                        @endif
                                         <tr data-id="{{ $feature->id }}">
                                             <td>
                                                 <span class="badge badge-secondary">{{ $feature->serial_number }}</span>

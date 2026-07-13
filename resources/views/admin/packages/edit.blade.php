@@ -164,7 +164,8 @@
                                                         ];
                                                     @endphp
                                                     @foreach($fallbackFeatures as $k => $name)
-                                                        <label class="selectgroup-item">
+                                                         @if($k === 'AI Content & Image Generator') @continue @endif
+                                                         <label class="selectgroup-item">
                                                             <input type="checkbox" name="features[]" value="{{ $k }}"
                                                                 class="selectgroup-input"
                                                                 @if (is_array($permissions) && in_array($k, $permissions)) checked @endif>
@@ -173,7 +174,8 @@
                                                     @endforeach
                                                 @else
                                                     @foreach($allFeatures as $feature)
-                                                        @php
+                                                         @if($feature->keyword === 'AI Content & Image Generator' || $feature->name === 'AI Content & Image Generator') @continue @endif
+                                                         @php
                                                             $val = $feature->keyword ?: $feature->name;
                                                         @endphp
                                                         <label class="selectgroup-item">

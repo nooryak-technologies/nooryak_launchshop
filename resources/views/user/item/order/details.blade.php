@@ -1,4 +1,12 @@
 @extends('user.layout')
+@php
+  $user = Auth::guard('web')->user();
+  $permissions = [];
+  if (!empty($user)) {
+      $permissions = \App\Http\Helpers\UserPermissionHelper::packagePermission($user->id);
+      $permissions = json_decode($permissions, true);
+  }
+@endphp
 @section('content')
   <div class="page-header">
     <h4 class="page-title">{{ __('Order Details') }}</h4>
@@ -339,6 +347,7 @@
       $shipping_gateways = App\Models\User\UserShippingGateway::where('user_id', Auth::guard('web')->user()->id)->where('status', 1)->get();
     @endphp
 
+    @if (is_array($permissions) && in_array('Order Tracking Feature', $permissions))
     <!-- Shipment Tracking (col-md-5) -->
     <div class="col-md-5">
       <div class="card card-premium">
@@ -477,6 +486,7 @@
         </div>
       </div>
     </div>
+    @endif
 
     <div class="col-lg-12">
       <div class="card card-premium">

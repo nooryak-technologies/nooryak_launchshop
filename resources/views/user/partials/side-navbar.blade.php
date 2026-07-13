@@ -331,12 +331,14 @@
               <p class="sub-item">{{ __('Shipping Charges') }}</p>
             </a>
           </li>
+          @if (is_array($permissions) && in_array('Shipping Integration', $permissions))
           <li class="nav-item @if (request()->routeIs('user.shipping_gateway.index')) active @endif">
             <a href="{{ route('user.shipping_gateway.index') }}">
               <i class="fas fa-truck"></i>
               <p class="sub-item">{{ __('Shipping Gateways') }}</p>
             </a>
           </li>
+          @endif
           <li class="nav-item @if (request()->routeIs('user-currency-index')) active @endif">
             <a href="{{ route('user-currency-index') }}">
               <i class="fas fa-money-bill-wave"></i>

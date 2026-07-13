@@ -23,6 +23,19 @@ class CouponController extends Controller
     public function store(Request $request)
     {
         $userId = Auth::guard('web')->user()->id;
+        
+        // Coupon Limit Check
+        $current_package = \App\Http\Helpers\UserPermissionHelper::currentPackagePermission($userId);
+        if ($current_package) {
+            $coupon_limit = $current_package->coupon_limit ?? 999999;
+            $count = UserCoupon::where('user_id', $userId)->count();
+            if ($count >= $coupon_limit) {
+                return response()->json([
+                    'code' => [__('You have reached your coupon limit under your current package.')]
+                ]);
+            }
+        }
+
         $rules = [
             'name' => 'required',
             'type' => 'required',
