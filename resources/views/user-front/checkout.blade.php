@@ -1,4 +1,12 @@
 @extends('user-front.layout')
+@php
+  $user = getUser();
+  $permissions = [];
+  if (!empty($user)) {
+      $permissions = \App\Http\Helpers\UserPermissionHelper::packagePermission($user->id);
+      $permissions = json_decode($permissions, true);
+  }
+@endphp
 @section('meta-description', !empty($seo) ? $seo->checkout_meta_description : '')
 @section('meta-keywords', !empty($seo) ? $seo->checkout_meta_keywords : '')
 @section('breadcrumb_title', $pageHeading->checkout_page ?? __('Checkout'))
@@ -464,6 +472,7 @@
                     @endphp
                   @endif
 
+                  @if (is_array($permissions) && in_array('GST Billing', $permissions))
                   <li class="d-flex justify-content-between">
                     <h5 class="mb-0">{{ $keywords['Tax'] ?? __('Tax') }}({{ $userShop->tax }}%)</h5>
                     <span class="price">
@@ -472,6 +481,7 @@
                     </span>
 
                   </li>
+                  @endif
                 </ul>
                 <hr>
                 <div class="total d-flex justify-content-between">

@@ -1004,7 +1004,14 @@ class ItemController extends Controller
         $shopsettings->disqus_comment_system = $request->disqus_comment_system;
         $shopsettings->catalog_mode = $request->catalog_mode;
         $shopsettings->time_format = $request->time_format;
-        $shopsettings->tax = $request->tax ? $request->tax : 0.00;
+        $user_id = Auth::guard('web')->user()->id;
+        $permissions = \App\Http\Helpers\UserPermissionHelper::packagePermission($user_id);
+        $permissions = json_decode($permissions, true);
+        if (is_array($permissions) && in_array('GST Billing', $permissions)) {
+            $shopsettings->tax = $request->tax ? $request->tax : 0.00;
+        } else {
+            $shopsettings->tax = 0.00;
+        }
         $shopsettings->save();
 
         Session::flash('success', __('Updated Successfully'));

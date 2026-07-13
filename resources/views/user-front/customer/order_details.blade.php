@@ -155,6 +155,7 @@
                                     </p>
                                   </td>
                                 </tr>
+                                @if ($data->tax > 0)
                                 <tr>
                                   <td>
                                     <p class="mb-0"> {{ $keywords['Tax'] ?? __('Tax') }}
@@ -167,6 +168,7 @@
                                     </p>
                                   </td>
                                 </tr>
+                                @endif
                                 <tr>
                                   <td>
                                     <p class="mb-0"> {{ $keywords['Paid Amount'] ?? __('Paid Amount') }} : </p>

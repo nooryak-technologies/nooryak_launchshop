@@ -270,9 +270,11 @@
               <strong>{{ $keywords['Discount'] ?? __('Discount') }}:</strong> {{ currencyTextPrice($order->currency_id, $order->discount) }}
             </div>
           @endif
+          @if ($order->tax > 0)
           <div class="info-text">
             <strong>{{ $keywords['Tax'] ?? __('Tax') }}:</strong> {{ currencyTextPrice($order->currency_id, $order->tax) }}
           </div>
+          @endif
           <div class="info-text">
             <strong>{{ $keywords['Paid Amount'] ?? __('Paid Amount') }}:</strong> {{ currencyTextPrice($order->currency_id, $order->total) }}
           </div>
@@ -336,10 +338,12 @@
           <td>{{ $keywords['Subtotal'] ?? __('Subtotal') }}</td>
           <td class="text-right bold">{{ currencyTextPrice($order->currency_id, $order->cart_total) }}</td>
         </tr>
+        @if ($order->tax > 0)
         <tr>
           <td>{{ $keywords['Tax'] ?? __('Tax') }}</td>
           <td class="text-right bold">{{ currencyTextPrice($order->currency_id, $order->tax) }}</td>
         </tr>
+        @endif
         <tr>
           <td>{{ $keywords['Shipping Charge'] ?? __('Shipping Charge') }}</td>
           <td class="text-right bold">{{ currencyTextPrice($order->currency_id, $order->shipping_charge) }}</td>

@@ -150,6 +150,7 @@
               </div>
             </div>
 
+            @if ($order->tax > 0)
             <div class="row mb-3">
               <div class="col-lg-6" style="color: #64748b; font-weight: 500;">
                 {{ __('Tax') }} ({{ is_null($order->tax_percentage) ? 0 : $order->tax_percentage }}%) :
@@ -162,6 +163,7 @@
                 @endif
               </div>
             </div>
+            @endif
 
             <div class="row mb-3">
               <div class="col-lg-6" style="color: #64748b; font-weight: 600;">

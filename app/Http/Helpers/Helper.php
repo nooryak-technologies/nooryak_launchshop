@@ -921,8 +921,15 @@ if (!function_exists('tax')) {
         } else {
             $user = getUser();
         }
+        
+        $permissions = \App\Http\Helpers\UserPermissionHelper::packagePermission($user->id);
+        $permissions = json_decode($permissions, true);
+        if (!is_array($permissions) || !in_array('GST Billing', $permissions)) {
+            return 0.00;
+        }
+
         $bex = UserShopSetting::where('user_id', $user->id)->first();
-        $tax = $bex->tax;
+        $tax = $bex ? $bex->tax : 0.00;
         if (session()->has('cart_' . $user->username) && !empty(session()->get('cart_' . $user->username))) {
             $tax = (cartSubTotal() * $tax) / 100;
         }
@@ -938,8 +945,15 @@ if (!function_exists('tax_percentage')) {
         } else {
             $user = getUser();
         }
+        
+        $permissions = \App\Http\Helpers\UserPermissionHelper::packagePermission($user->id);
+        $permissions = json_decode($permissions, true);
+        if (!is_array($permissions) || !in_array('GST Billing', $permissions)) {
+            return 0.00;
+        }
+
         $bex = UserShopSetting::where('user_id', $user->id)->first();
-        return $bex->tax;
+        return $bex ? $bex->tax : 0.00;
     }
 }
 

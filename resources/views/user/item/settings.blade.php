@@ -2,6 +2,12 @@
 @section('content')
   @php
     $type = request()->input('type');
+    $user = Auth::guard('web')->user();
+    $permissions = [];
+    if (!empty($user)) {
+        $permissions = \App\Http\Helpers\UserPermissionHelper::packagePermission($user->id);
+        $permissions = json_decode($permissions, true);
+    }
   @endphp
   <div class="page-header">
     <h4 class="page-title">{{ __('Shop Settings') }}</h4>
@@ -146,6 +152,7 @@
               </div>
             </div>
 
+            @if (is_array($permissions) && in_array('GST Billing', $permissions))
             <!-- Tax (%) -->
             <div class="py-4">
               <div class="row align-items-center">
@@ -165,6 +172,7 @@
                 </div>
               </div>
             </div>
+            @endif
 
           </form>
         </div>
