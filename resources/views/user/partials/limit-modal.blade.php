@@ -24,6 +24,7 @@
               $aiImageTotalLabel = $aiImageTotalLimit < 999999 ? $aiImageTotalLimit : __('Unlimited');
             @endphp
 
+            @if(false)
             <!-- AI Engine -->
             <li class="list-group-item border-0 p-3 shadow-sm d-flex justify-content-between align-items-center" style="border-radius: 12px; background: #ffffff; border: 1px solid rgba(0,0,0,0.06) !important;">
               <div class="d-flex align-items-center">
@@ -88,6 +89,7 @@
                 {{ $aiUsedImages }} / {{ $aiImageTotalLabel }}
               </span>
             </li>
+            @endif
 
             <!-- Categories check -->
             <li class="list-group-item border-0 p-3 shadow-sm d-flex justify-content-between align-items-center" style="border-radius: 12px; background: #ffffff; border: 1px solid rgba(0,0,0,0.06) !important;">
@@ -313,6 +315,9 @@
               @foreach ($permissions as $featureKey)
                 @php
                   $cleanKey = strtolower(trim($featureKey));
+                  if ($cleanKey === 'ai_content_and_image_generator' || $cleanKey === 'ai content and image generator' || str_contains($cleanKey, 'ai_content')) {
+                      continue;
+                  }
                   $iconData = $featureIcons[$cleanKey] ?? ['icon' => 'fa-check-circle', 'color' => '#28a745', 'bg' => 'rgba(40, 167, 69, 0.1)'];
                   $featureName = str_replace('_', ' ', $featureKey);
                 @endphp
