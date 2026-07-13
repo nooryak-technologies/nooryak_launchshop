@@ -17,7 +17,7 @@ class AddCouponLimitToPackages extends Migration
         if (Schema::hasTable('packages')) {
             if (!Schema::hasColumn('packages', 'coupon_limit')) {
                 Schema::table('packages', function (Blueprint $table) {
-                    $table->integer('coupon_limit')->default(0)->after('order_limit');
+                    $table->integer('coupon_limit')->default(0);
                 });
             }
         }
@@ -25,7 +25,7 @@ class AddCouponLimitToPackages extends Migration
         if (Schema::hasTable('memberships')) {
             if (!Schema::hasColumn('memberships', 'coupon_limit')) {
                 Schema::table('memberships', function (Blueprint $table) {
-                    $table->integer('coupon_limit')->default(0)->after('order_limit');
+                    $table->integer('coupon_limit')->default(0);
                 });
             }
         }
