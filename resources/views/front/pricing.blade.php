@@ -408,6 +408,11 @@
 @section('content')
 @php
   $selectedTemplate = request()->query('template');
+  if (\Schema::hasTable('package_features')) {
+      $allFeatures = \App\Models\PackageFeature::orderBy('serial_number', 'asc')->get();
+  } else {
+      $allFeatures = collect();
+  }
 @endphp
 
   <!-- Modern Pricing Page wrapper -->
@@ -491,23 +496,73 @@
                     $subtitles = ['basic'=>'Perfect for getting started','standard'=>'Grow your business','premium'=>'For scaling stores'];
                     $planSubtitle = $subtitles[$titleKey] ?? ucfirst($titleKey).' plan';
 
-                    // Period label
                     $periodLabel = strtolower($package->term) == 'lifetime' ? 'one-time' : (strtolower($package->term) == 'yearly' ? 'year' : 'month');
-
                     // Features
-                    $limitFeatures = [];
-                    if (!empty($package->categories_limit)) $limitFeatures[] = 'Categories Limit : '.($package->categories_limit==999999?'Unlimited':$package->categories_limit);
-                    $limitFeatures[] = 'Products Limit : '.($package->product_limit==999999?'Unlimited':$package->product_limit);
-                    if (!empty($package->order_limit)) $limitFeatures[] = 'Orders Limit : '.($package->order_limit==999999?'Unlimited':$package->order_limit);
-                    if (!empty($package->language_limit)) $limitFeatures[] = 'Additional Languages : '.($package->language_limit==999999?'Unlimited':$package->language_limit);
-                    if (!empty($package->post_limit)) $limitFeatures[] = 'Posts Limit : '.($package->post_limit==999999?'Unlimited':$package->post_limit);
-                    if (!empty($package->number_of_custom_page)) $limitFeatures[] = 'Custom Pages : '.($package->number_of_custom_page==999999?'Unlimited':$package->number_of_custom_page);
+                    $pFeatures = json_decode($package->features, true) ?: [];
+                    $packageFormattedFeatures = [];
+                    
+                    if ($allFeatures->isEmpty()) {
+                        $limitFeatures = [];
+                        if (!empty($package->categories_limit)) $limitFeatures[] = ['text' => 'Categories Limit : '.($package->categories_limit==999999?'Unlimited':$package->categories_limit), 'has' => true];
+                        $limitFeatures[] = ['text' => 'Products Limit : '.($package->product_limit==999999?'Unlimited':$package->product_limit), 'has' => true];
+                        if (!empty($package->order_limit)) $limitFeatures[] = ['text' => 'Orders Limit : '.($package->order_limit==999999?'Unlimited':$package->order_limit), 'has' => true];
+                        if (!empty($package->language_limit)) $limitFeatures[] = ['text' => 'Additional Languages : '.($package->language_limit==999999?'Unlimited':$package->language_limit), 'has' => true];
+                        if (!empty($package->post_limit)) $limitFeatures[] = ['text' => 'Posts Limit : '.($package->post_limit==999999?'Unlimited':$package->post_limit), 'has' => true];
+                        if (!empty($package->number_of_custom_page)) $limitFeatures[] = ['text' => 'Custom Pages : '.($package->number_of_custom_page==999999?'Unlimited':$package->number_of_custom_page), 'has' => true];
+                        
+                        $packageFormattedFeatures = $limitFeatures;
+                        
+                        $fallbackPills = [
+                            'Custom Domain' => 'Custom Domain',
+                            'Subdomain' => 'Subdomain',
+                            'QR Builder' => 'QR Builder',
+                            'Blog' => 'Blog',
+                            'Custom Page' => 'Custom Page',
+                            'Google Login' => 'Google Login',
+                            'Google Analytics' => 'Google Analytics',
+                            'Facebook Pixel' => 'Facebook Pixel',
+                            'Google Recaptcha' => 'Google Recaptcha',
+                            'WhatsApp Chat Button' => 'WhatsApp Chat Button',
+                            'Tawk to' => 'Tawk to',
+                            'Disqus' => 'Disqus',
+                            'AI Content & Image Generator' => 'AI Content & Image Generator'
+                        ];
+                        foreach ($fallbackPills as $k => $name) {
+                            if ($k !== 'Blog' && $k !== 'Custom Page') {
+                                $has = in_array($k, $pFeatures);
+                                $packageFormattedFeatures[] = ['text' => $name, 'has' => $has];
+                            }
+                        }
+                    } else {
+                        foreach ($allFeatures as $feature) {
+                            $has = false;
+                            $text = $feature->name;
+                            
+                            if ($feature->type === 'limit') {
+                                $limitVal = $package->{$feature->limit_key} ?? 0;
+                                if ($limitVal > 0 || $limitVal == 999999) {
+                                    $has = true;
+                                    $formattedVal = ($limitVal == 999999) ? __('Unlimited') : $limitVal;
+                                    if ($feature->limit_key === 'order_limit' && $limitVal != 999999) {
+                                        $formattedVal .= '/' . ($package->term == 'monthly' ? 'm' : 'yr');
+                                    }
+                                    $text = str_replace('{limit}', $formattedVal, $text);
+                                } else {
+                                    $text = str_replace('{limit}', '0', $text);
+                                }
+                            } elseif ($feature->type === 'standard') {
+                                $has = in_array($feature->keyword, $pFeatures);
+                            } elseif ($feature->type === 'custom') {
+                                $has = in_array($feature->name, $pFeatures);
+                            }
+                            
+                            $packageFormattedFeatures[] = ['text' => $text, 'has' => $has];
+                        }
+                    }
 
-                    $pFeatures    = json_decode($package->features, true) ?: [];
                     $visibleCount = 5;
-                    $visibleFeats = array_slice($limitFeatures, 0, $visibleCount);
-                    $extraLimits  = array_slice($limitFeatures, $visibleCount);
-                    $allPf        = $allPfeatures ?? [];
+                    $visibleFeats = array_slice($packageFormattedFeatures, 0, $visibleCount);
+                    $extraFeats   = array_slice($packageFormattedFeatures, $visibleCount);
 
                     // CTA href
                     if ($package->is_trial === '1' && $package->price != 0) {
@@ -563,30 +618,31 @@
                     {{-- Visible features --}}
                     <ul class="plan-v2-features">
                       @foreach($visibleFeats as $feat)
-                        <li><i class="fas fa-check fi-check"></i><span>{{ $feat }}</span></li>
+                        <li class="{{ !$feat['has'] ? 'feat-disabled' : '' }}">
+                          @if($feat['has'])
+                            <i class="fas fa-check fi-check"></i>
+                          @else
+                            <i class="fas fa-times fi-times"></i>
+                          @endif
+                          <span>{{ __($feat['text']) }}</span>
+                        </li>
                       @endforeach
                     </ul>
 
                     {{-- Extra features (collapsed) --}}
-                    @php $hasExtra = (count($extraLimits) > 0 || count($allPf) > 0); @endphp
+                    @php $hasExtra = (count($extraFeats) > 0); @endphp
                     @if($hasExtra)
                       <div class="plan-v2-extra-features" id="extra-{{ strtolower($term) }}-{{ $package->id }}">
                         <ul class="plan-v2-features" style="margin-bottom:8px;">
-                          @foreach($extraLimits as $ef)
-                            <li><i class="fas fa-check fi-check"></i><span>{{ $ef }}</span></li>
-                          @endforeach
-                          @foreach($allPf as $feature)
-                            @if($feature !== 'Posts Limit')
-                              @php $has = is_array($pFeatures) && in_array($feature, $pFeatures); @endphp
-                              <li class="{{ !$has ? 'feat-disabled' : '' }}">
-                                @if($has)
-                                  <i class="fas fa-check fi-check"></i>
-                                @else
-                                  <i class="fas fa-times fi-times"></i>
-                                @endif
-                                <span>{{ $feature }}</span>
-                              </li>
-                            @endif
+                          @foreach($extraFeats as $ef)
+                            <li class="{{ !$ef['has'] ? 'feat-disabled' : '' }}">
+                              @if($ef['has'])
+                                <i class="fas fa-check fi-check"></i>
+                              @else
+                                <i class="fas fa-times fi-times"></i>
+                              @endif
+                              <span>{{ __($ef['text']) }}</span>
+                            </li>
                           @endforeach
                         </ul>
                       </div>
@@ -595,7 +651,6 @@
                         <span class="see-more-txt">See More Features</span>
                         <i class="fas fa-arrow-right see-more-icon" style="font-size:11px;"></i>
                       </button>
-
                     @endif
 
                     {{-- CTA --}}
@@ -711,58 +766,70 @@
         // Build comparison rows
         $compareRows = [];
 
-        // Limit rows
-        $compareRows[] = [
-            'type' => 'limit',
-            'label' => 'Products Limit',
-            'key' => 'product_limit',
-            'ent_val' => 'Unlimited'
-        ];
-        $compareRows[] = [
-            'type' => 'limit',
-            'label' => 'Categories Limit',
-            'key' => 'categories_limit',
-            'ent_val' => 'Unlimited'
-        ];
-        // $compareRows[] = [
-        //     'type' => 'limit',
-        //     'label' => 'Subcategories Limit',
-        //     'key' => 'subcategories_limit',
-        //     'ent_val' => 'Unlimited'
-        // ];
-        $compareRows[] = [
-            'type' => 'limit',
-            'label' => 'Orders Limit',
-            'key' => 'order_limit',
-            'ent_val' => 'Unlimited'
-        ];
-        $compareRows[] = [
-            'type' => 'limit',
-            'label' => 'Additional Languages',
-            'key' => 'language_limit',
-            'ent_val' => 'Unlimited'
-        ];
-        $compareRows[] = [
-            'type' => 'limit',
-            'label' => 'Posts Limit',
-            'key' => 'post_limit',
-            'ent_val' => 'Unlimited'
-        ];
-        $compareRows[] = [
-            'type' => 'limit',
-            'label' => 'Custom Pages Limit',
-            'key' => 'number_of_custom_page',
-            'ent_val' => 'Unlimited'
-        ];
-
-        // Feature flags
-        foreach ($allPfeatures as $f) {
-            if ($f !== 'Posts Limit') {
-                $compareRows[] = [
-                    'type' => 'flag',
-                    'label' => $f,
-                    'ent_val' => true
-                ];
+        if ($allFeatures->isEmpty()) {
+            $compareRows[] = [
+                'type' => 'limit',
+                'label' => 'Products Limit',
+                'key' => 'product_limit',
+                'ent_val' => 'Unlimited'
+            ];
+            $compareRows[] = [
+                'type' => 'limit',
+                'label' => 'Categories Limit',
+                'key' => 'categories_limit',
+                'ent_val' => 'Unlimited'
+            ];
+            $compareRows[] = [
+                'type' => 'limit',
+                'label' => 'Orders Limit',
+                'key' => 'order_limit',
+                'ent_val' => 'Unlimited'
+            ];
+            $compareRows[] = [
+                'type' => 'limit',
+                'label' => 'Additional Languages',
+                'key' => 'language_limit',
+                'ent_val' => 'Unlimited'
+            ];
+            $compareRows[] = [
+                'type' => 'limit',
+                'label' => 'Posts Limit',
+                'key' => 'post_limit',
+                'ent_val' => 'Unlimited'
+            ];
+            $compareRows[] = [
+                'type' => 'limit',
+                'label' => 'Custom Pages Limit',
+                'key' => 'number_of_custom_page',
+                'ent_val' => 'Unlimited'
+            ];
+            foreach ($allPfeatures as $f) {
+                if ($f !== 'Posts Limit') {
+                    $compareRows[] = [
+                        'type' => 'flag',
+                        'label' => $f,
+                        'keyword' => $f,
+                        'ent_val' => true
+                    ];
+                }
+            }
+        } else {
+            foreach ($allFeatures as $feature) {
+                if ($feature->type === 'limit') {
+                    $compareRows[] = [
+                        'type' => 'limit',
+                        'label' => str_replace('{limit} ', '', $feature->name),
+                        'key' => $feature->limit_key,
+                        'ent_val' => 'Unlimited'
+                    ];
+                } else {
+                    $compareRows[] = [
+                        'type' => 'flag',
+                        'label' => $feature->name,
+                        'keyword' => $feature->keyword ?: $feature->name,
+                        'ent_val' => true
+                    ];
+                }
             }
         }
 
@@ -796,18 +863,18 @@
             <tbody>
               @foreach ($visibleCompareRows as $row)
                 <tr>
-                  <td>{{ $row['label'] }}</td>
+                  <td>{{ __($row['label']) }}</td>
                   @foreach ($comparePackages as $pkg)
                     <td class="text-center {{ $pkg->recommended == '1' ? 'highlight-column font-weight-bold text-dark' : '' }}">
                       @if ($row['type'] == 'limit')
                         @php
                           $val = $pkg->{$row['key']};
                         @endphp
-                        {{ $val == 999999 ? 'Unlimited' : ($val ?: '0') }}
+                        {{ $val == 999999 ? __('Unlimited') : ($val ?: '0') }}
                       @else
                         @php
                           $pkgFeats = json_decode($pkg->features, true) ?: [];
-                          $hasFeat = in_array($row['label'], $pkgFeats);
+                          $hasFeat = in_array($row['keyword'], $pkgFeats);
                         @endphp
                         @if ($hasFeat)
                           <span class="feat-check-circle"><i class="fas fa-check"></i></span>
@@ -825,18 +892,18 @@
               <tbody id="compare-features-hidden-rows" class="compare-rows-hidden">
                 @foreach ($hiddenCompareRows as $row)
                   <tr>
-                    <td>{{ $row['label'] }}</td>
+                    <td>{{ __($row['label']) }}</td>
                     @foreach ($comparePackages as $pkg)
                       <td class="text-center {{ $pkg->recommended == '1' ? 'highlight-column font-weight-bold text-dark' : '' }}">
                         @if ($row['type'] == 'limit')
                           @php
                             $val = $pkg->{$row['key']};
                           @endphp
-                          {{ $val == 999999 ? 'Unlimited' : ($val ?: '0') }}
+                          {{ $val == 999999 ? __('Unlimited') : ($val ?: '0') }}
                         @else
                           @php
                             $pkgFeats = json_decode($pkg->features, true) ?: [];
-                            $hasFeat = in_array($row['label'], $pkgFeats);
+                            $hasFeat = in_array($row['keyword'], $pkgFeats);
                           @endphp
                           @if ($hasFeat)
                             <span class="feat-check-circle"><i class="fas fa-check"></i></span>

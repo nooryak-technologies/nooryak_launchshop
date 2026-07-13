@@ -285,6 +285,10 @@ Route::domain($domain)->group(function () {
             // Package Settings routes
             Route::get('/package-features', 'Admin\PackageController@features')->name('admin.package.features');
             Route::post('/package/features/update', 'Admin\PackageController@updateFeatures')->name('admin.package.features_update');
+            Route::post('/package/features/store', 'Admin\PackageController@storeFeature')->name('admin.package.features_store');
+            Route::post('/package/features/update-single', 'Admin\PackageController@updateFeature')->name('admin.package.features_update_single');
+            Route::post('/package/features/delete', 'Admin\PackageController@deleteFeature')->name('admin.package.features_delete');
+            Route::post('/package/features/reorder', 'Admin\PackageController@reorderFeatures')->name('admin.package.features_reorder');
             // Package routes
             Route::get('packages', 'Admin\PackageController@index')->name('admin.package.index');
             Route::post('package/upload', 'Admin\PackageController@upload')->name('admin.package.upload');

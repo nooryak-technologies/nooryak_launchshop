@@ -8,6 +8,8 @@ use App\Http\Requests\Package\PackageUpdateRequest;
 use App\Models\BasicExtended;
 use App\Models\Language;
 use App\Models\Package;
+use App\Models\PackageFeature;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -33,24 +35,89 @@ class PackageController extends Controller
     }
     public function features()
     {
-        $be = BasicExtended::first();
-        $features = json_decode($be->package_features, true);
-        $data['features'] = $features;
+        if (Schema::hasTable('package_features')) {
+            $data['features'] = PackageFeature::orderBy('serial_number', 'asc')->get();
+        } else {
+            $data['features'] = collect();
+        }
 
         return view('admin.packages.features', $data);
     }
 
-    public function updateFeatures(Request $request)
+    public function storeFeature(Request $request)
     {
-        $features = $request->features ? json_encode($request->features) : NULL;
-        $bes = BasicExtended::all();
-        foreach ($bes as $key => $be) {
-            $be->package_features = $features;
-            $be->save();
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'type' => 'required|in:standard,limit,custom',
+            'keyword' => 'nullable|string|max:255',
+            'limit_key' => 'nullable|string|max:255',
+        ]);
+
+        $maxSerial = PackageFeature::max('serial_number') ?? 0;
+        
+        PackageFeature::create([
+            'name' => $request->name,
+            'type' => $request->type,
+            'keyword' => $request->keyword,
+            'limit_key' => $request->limit_key,
+            'serial_number' => $maxSerial + 10,
+        ]);
+
+        Session::flash('success', __('Feature Created Successfully'));
+        return back();
+    }
+
+    public function updateFeature(Request $request)
+    {
+        $request->validate([
+            'feature_id' => 'required|integer',
+            'name' => 'required|string|max:255',
+            'type' => 'required|in:standard,limit,custom',
+            'keyword' => 'nullable|string|max:255',
+            'limit_key' => 'nullable|string|max:255',
+            'serial_number' => 'required|integer',
+        ]);
+
+        $feature = PackageFeature::findOrFail($request->feature_id);
+        $feature->update([
+            'name' => $request->name,
+            'type' => $request->type,
+            'keyword' => $request->keyword,
+            'limit_key' => $request->limit_key,
+            'serial_number' => $request->serial_number,
+        ]);
+
+        Session::flash('success', __('Feature Updated Successfully'));
+        return back();
+    }
+
+    public function deleteFeature(Request $request)
+    {
+        $request->validate([
+            'feature_id' => 'required|integer',
+        ]);
+
+        $feature = PackageFeature::findOrFail($request->feature_id);
+        $feature->delete();
+
+        Session::flash('success', __('Feature Deleted Successfully'));
+        return back();
+    }
+
+    public function reorderFeatures(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer',
+        ]);
+
+        foreach ($request->ids as $index => $id) {
+            PackageFeature::where('id', $id)->update([
+                'serial_number' => ($index + 1) * 10
+            ]);
         }
 
-        Session::flash('success', __('Updated Successfully'));
-        return back();
+        return response()->json(['status' => 'success', 'message' => __('Order updated successfully')]);
     }
 
     /**

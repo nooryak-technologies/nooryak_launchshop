@@ -185,84 +185,54 @@
                                     <p id="errterm" class="mb-0 text-danger em"></p>
                                 </div>
                             </div>
+                            @php
+                                if (\Schema::hasTable('package_features')) {
+                                    $allFeatures = \App\Models\PackageFeature::whereIn('type', ['standard', 'custom'])->orderBy('serial_number', 'asc')->get();
+                                } else {
+                                    $allFeatures = collect();
+                                }
+                            @endphp
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-label">{{ __('Package Features') }}</label>
                                     <div class="selectgroup selectgroup-pills">
-                                        <label class="selectgroup-item">
-                                            <input type="checkbox" name="features[]" value="Custom Domain"
-                                                class="selectgroup-input">
-                                            <span class="selectgroup-button">{{ __('Custom Domain') }}</span>
-                                        </label>
-                                        <label class="selectgroup-item">
-                                            <input type="checkbox" name="features[]" value="Subdomain"
-                                                class="selectgroup-input">
-                                            <span class="selectgroup-button">{{ __('Subdomain') }}</span>
-                                        </label>
-                                        <label class="selectgroup-item">
-                                            <input type="checkbox" name="features[]" value="QR Builder"
-                                                class="selectgroup-input">
-                                            <span class="selectgroup-button">{{ __('QR Builder') }}</span>
-                                        </label>
-
-                                        <label class="selectgroup-item">
-                                            <input type="checkbox" name="features[]" id="post_limit_feature"
-                                                value="Blog" class="selectgroup-input">
-                                            <span class="selectgroup-button">{{ __('Blog') }}</span>
-                                        </label>
-                                        <label class="selectgroup-item">
-                                            <input type="checkbox" name="features[]" id="" value="Custom Page"
-                                                class="selectgroup-input">
-                                            <span class="selectgroup-button">{{ __('Custom Page') }}</span>
-                                        </label>
-
-                                        <label class="selectgroup-item">
-                                            <input type="checkbox" name="features[]" value="Google Login"
-                                                class="selectgroup-input">
-                                            <span class="selectgroup-button">{{ __('Google Login') }}</span>
-                                        </label>
-                                        <label class="selectgroup-item">
-                                            <input type="checkbox" name="features[]" value="Google Analytics"
-                                                class="selectgroup-input">
-                                            <span class="selectgroup-button">{{ __('Google Analytics') }}</span>
-                                        </label>
-                                        <label class="selectgroup-item">
-                                            <input type="checkbox" name="features[]" value="Facebook Pixel"
-                                                class="selectgroup-input">
-                                            <span class="selectgroup-button">{{ __('Facebook Pixel') }}</span>
-                                        </label>
-
-
-                                        <label class="selectgroup-item">
-                                            <input type="checkbox" name="features[]" value="Google Recaptcha"
-                                                class="selectgroup-input">
-                                            <span class="selectgroup-button">{{ __('Google Recaptcha') }}</span>
-                                        </label>
-
-                                        <label class="selectgroup-item">
-                                            <input type="checkbox" name="features[]" value="WhatsApp Chat Button"
-                                                class="selectgroup-input">
-                                            <span class="selectgroup-button">{{ __('WhatsApp Chat Button') }}</span>
-                                        </label>
-
-                                        <label class="selectgroup-item">
-                                            <input type="checkbox" name="features[]" value="Tawk to"
-                                                class="selectgroup-input">
-                                            <span class="selectgroup-button">{{ __('Tawk to') }}</span>
-                                        </label>
-
-                                        <label class="selectgroup-item">
-                                            <input type="checkbox" name="features[]" value="Disqus"
-                                                class="selectgroup-input">
-                                            <span class="selectgroup-button">{{ __('Disqus') }}</span>
-                                        </label>
-                                        <label class="selectgroup-item">
-                                            <input type="checkbox" name="features[]" value="AI Content & Image Generator"
-                                                class="selectgroup-input">
-                                            <span
-                                                class="selectgroup-button">{{ __('AI Content & Image Generator') }}</span>
-                                        </label>
-
+                                        @if($allFeatures->isEmpty())
+                                            @php
+                                                $fallbackFeatures = [
+                                                    'Custom Domain' => 'Custom Domain',
+                                                    'Subdomain' => 'Subdomain',
+                                                    'QR Builder' => 'QR Builder',
+                                                    'Blog' => 'Blog',
+                                                    'Custom Page' => 'Custom Page',
+                                                    'Google Login' => 'Google Login',
+                                                    'Google Analytics' => 'Google Analytics',
+                                                    'Facebook Pixel' => 'Facebook Pixel',
+                                                    'Google Recaptcha' => 'Google Recaptcha',
+                                                    'WhatsApp Chat Button' => 'WhatsApp Chat Button',
+                                                    'Tawk to' => 'Tawk to',
+                                                    'Disqus' => 'Disqus',
+                                                    'AI Content & Image Generator' => 'AI Content & Image Generator'
+                                                ];
+                                            @endphp
+                                            @foreach($fallbackFeatures as $k => $name)
+                                                <label class="selectgroup-item">
+                                                    <input type="checkbox" name="features[]" value="{{ $k }}"
+                                                        class="selectgroup-input">
+                                                    <span class="selectgroup-button">{{ __($name) }}</span>
+                                                </label>
+                                            @endforeach
+                                        @else
+                                            @foreach($allFeatures as $feature)
+                                                @php
+                                                    $val = $feature->keyword ?: $feature->name;
+                                                @endphp
+                                                <label class="selectgroup-item">
+                                                    <input type="checkbox" name="features[]" value="{{ $val }}"
+                                                        class="selectgroup-input">
+                                                    <span class="selectgroup-button">{{ __($feature->name) }}</span>
+                                                </label>
+                                            @endforeach
+                                        @endif
                                     </div>
                                 </div>
                             </div>
