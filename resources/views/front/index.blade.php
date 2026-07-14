@@ -1348,12 +1348,14 @@
 
                   @foreach ($packages as $index => $package)
                     @php
+                      /*
                       if (strtolower($term) == 'monthly' && (strtolower($package->title) == 'standard' || strtolower($package->title) == 'premium')) {
                           $package = \App\Models\Package::where('status', '1')
                               ->where('term', 'yearly')
                               ->where('title', $package->title)
                               ->first() ?: $package;
                       }
+                      */
                       $titleKey    = strtolower($package->title);
                       $isRecommended = ($titleKey == 'standard');
                       $isBestValue   = ($titleKey == 'premium');
