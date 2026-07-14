@@ -1054,9 +1054,9 @@ class FrontendController extends Controller
 
             \App\Models\User\UserOrder::where('user_id', $user->id)->delete();
 
-            $customer = \App\Models\User\Customer::where('user_id', $user->id)->first();
+            $customer = \App\Models\Customer::where('user_id', $user->id)->first();
             if (!$customer) {
-                $customer = \App\Models\User\Customer::create([
+                $customer = \App\Models\Customer::create([
                     'user_id' => $user->id,
                     'first_name' => 'Mohamed',
                     'last_name' => 'Imran',
