@@ -61,12 +61,46 @@
     <div class="col-md-12">
       @php
         $userId = Auth::guard('web')->user()->id;
-        $totalOrders = App\Models\User\UserOrder::where('user_id', $userId)->count();
-        $totalRevenue = App\Models\User\UserOrder::where('user_id', $userId)->where('payment_status', 'Completed')->sum('total');
-        $pendingOrders = App\Models\User\UserOrder::where('user_id', $userId)->where('order_status', 'pending')->count();
-        $completedOrders = App\Models\User\UserOrder::where('user_id', $userId)->where('order_status', 'completed')->count();
         $userBs = App\Models\User\BasicSetting::where('user_id', $userId)->first();
+        
+        $totalOrders = isset($totalOrders) ? $totalOrders : App\Models\User\UserOrder::where('user_id', $userId)->count();
+        $totalRevenue = isset($totalRevenue) ? $totalRevenue : App\Models\User\UserOrder::where('user_id', $userId)->where('payment_status', 'Completed')->sum('total');
+        $pendingOrders = isset($pendingOrders) ? $pendingOrders : App\Models\User\UserOrder::where('user_id', $userId)->where('order_status', 'pending')->count();
+        $completedOrders = isset($completedOrders) ? $completedOrders : App\Models\User\UserOrder::where('user_id', $userId)->where('order_status', 'completed')->count();
       @endphp
+
+      <!-- Stats Date Range Filter Dropdown -->
+      <div class="row align-items-center mb-3">
+        <div class="col-lg-12">
+          <form id="filterForm" action="{{ url()->current() }}" method="GET" class="form-inline float-right">
+            @if(request()->has('search'))
+              <input type="hidden" name="search" value="{{ request()->input('search') }}">
+            @endif
+            
+            <div class="d-flex align-items-center" style="gap: 10px; flex-wrap: wrap;">
+              <!-- Custom Date Range pickers -->
+              <div id="customDateRange" class="d-none align-items-center" style="gap: 6px;">
+                <input type="date" name="start_date" id="startDateInput" class="form-control form-control-sm" value="{{ request()->input('start_date') }}" style="height: 38px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                <span class="text-muted" style="font-size: 13px;">to</span>
+                <input type="date" name="end_date" id="endDateInput" class="form-control form-control-sm" value="{{ request()->input('end_date') }}" style="height: 38px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                <button type="submit" class="btn btn-primary btn-sm" style="height: 38px; border-radius: 8px; font-weight: 600; padding: 0 15px;">{{ __('Apply') }}</button>
+              </div>
+
+              <!-- Main Filter Dropdown -->
+              <select name="range" id="dateRangeSelect" class="form-control" style="height: 38px; border-radius: 8px; font-weight: 600; color: #1e293b; border: 1px solid #cbd5e1; cursor: pointer; padding: 0 10px;" onchange="handleRangeChange(this)">
+                <option value="all" {{ request()->input('range') == 'all' || !request()->has('range') ? 'selected' : '' }}>{{ __('All Time') }}</option>
+                <option value="today" {{ request()->input('range') == 'today' ? 'selected' : '' }}>{{ __('Today') }}</option>
+                <option value="yesterday" {{ request()->input('range') == 'yesterday' ? 'selected' : '' }}>{{ __('Yesterday') }}</option>
+                <option value="7" {{ request()->input('range') == '7' ? 'selected' : '' }}>{{ __('7 Days') }}</option>
+                <option value="30" {{ request()->input('range') == '30' ? 'selected' : '' }}>{{ __('30 Days') }}</option>
+                <option value="90" {{ request()->input('range') == '90' ? 'selected' : '' }}>{{ __('90 Days') }}</option>
+                <option value="365" {{ request()->input('range') == '365' ? 'selected' : '' }}>{{ __('This Year') }}</option>
+                <option value="custom" {{ request()->input('range') == 'custom' ? 'selected' : '' }}>{{ __('Custom Date') }}</option>
+              </select>
+            </div>
+          </form>
+        </div>
+      </div>
 
       <!-- Stats Grid Row -->
       <div class="row mb-3">
@@ -400,11 +434,39 @@
         <div class="card-footer">
           <div class="row">
             <div class="d-inline-block mx-auto">
-              {{ $orders->appends(['search' => request()->input('search')])->links() }}
+              {{ $orders->withQueryString()->links() }}
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+@endsection
+
+@section('scripts')
+<script>
+  function handleRangeChange(select) {
+    var range = select.value;
+    var customDiv = document.getElementById('customDateRange');
+    if (range === 'custom') {
+      customDiv.classList.remove('d-none');
+      customDiv.classList.add('d-flex');
+    } else {
+      customDiv.classList.remove('d-flex');
+      customDiv.classList.add('d-none');
+      document.getElementById('filterForm').submit();
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var select = document.getElementById('dateRangeSelect');
+    if (select && select.value === 'custom') {
+      var customDiv = document.getElementById('customDateRange');
+      if (customDiv) {
+        customDiv.classList.remove('d-none');
+        customDiv.classList.add('d-flex');
+      }
+    }
+  });
+</script>
 @endsection

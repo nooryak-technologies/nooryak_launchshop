@@ -28,53 +28,31 @@ class ItemOrderController extends Controller
 {
     public function all(Request $request)
     {
-        $search = $request->search;
-        $data['orders'] =
-            UserOrder::when($search, function ($query, $search) {
-                return $query->where('order_number', $search);
-            })->where('user_id', Auth::guard('web')->user()->id)
-            ->orderBy('id', 'DESC')->paginate(10);
+        $data = $this->getOrderData($request);
         return view('user.item.order.index', $data);
     }
 
     public function pending(Request $request)
     {
-        $search = $request->search;
-        $data['orders'] = UserOrder::when($search, function ($query, $search) {
-            return $query->where('order_number', $search);
-        })->where('user_id', Auth::guard('web')->user()->id)
-            ->where('order_status', 'pending')->orderBy('id', 'DESC')->paginate(10);
+        $data = $this->getOrderData($request, 'pending');
         return view('user.item.order.index', $data);
     }
 
     public function processing(Request $request)
     {
-        $search = $request->search;
-        $data['orders'] = UserOrder::where('order_status', 'processing')
-            ->when($search, function ($query, $search) {
-                return $query->where('order_number', $search);
-            })->where('user_id', Auth::guard('web')->user()->id)
-            ->orderBy('id', 'DESC')->paginate(10);
+        $data = $this->getOrderData($request, 'processing');
         return view('user.item.order.index', $data);
     }
 
     public function completed(Request $request)
     {
-        $search = $request->search;
-        $data['orders'] = UserOrder::where('order_status', 'completed')->when($search, function ($query, $search) {
-            return $query->where('order_number', $search);
-        })->where('user_id', Auth::guard('web')->user()->id)
-            ->orderBy('id', 'DESC')->paginate(10);
+        $data = $this->getOrderData($request, 'completed');
         return view('user.item.order.index', $data);
     }
 
     public function rejected(Request $request)
     {
-        $search = $request->search;
-        $data['orders'] = UserOrder::where('order_status', 'rejected')->when($search, function ($query, $search) {
-            return $query->where('order_number', $search);
-        })->where('user_id', Auth::guard('web')->user()->id)
-            ->orderBy('id', 'DESC')->paginate(10);
+        $data = $this->getOrderData($request, 'rejected');
         return view('user.item.order.index', $data);
     }
 
@@ -389,5 +367,77 @@ class ItemOrderController extends Controller
 
         Session::flash('success', __('Bulk orders processed successfully'));
         return response()->json(['status' => 'success']);
+    }
+
+    private function getOrderData(Request $request, $status = null)
+    {
+        $search = $request->search;
+        $userId = Auth::guard('web')->user()->id;
+
+        $baseQuery = UserOrder::where('user_id', $userId);
+        $filteredQuery = $this->applyRangeFilter(clone $baseQuery, $request);
+
+        $data['totalOrders'] = (clone $filteredQuery)->count();
+        $data['totalRevenue'] = (clone $filteredQuery)->where('payment_status', 'Completed')->sum('total');
+        $data['pendingOrders'] = (clone $filteredQuery)->where('order_status', 'pending')->count();
+        $data['completedOrders'] = (clone $filteredQuery)->where('order_status', 'completed')->count();
+
+        $listQuery = clone $filteredQuery;
+        if ($status) {
+            $listQuery->where('order_status', $status);
+        }
+
+        $data['orders'] = $listQuery
+            ->when($search, function ($query, $search) {
+                return $query->where('order_number', $search);
+            })
+            ->orderBy('id', 'DESC')
+            ->paginate(10);
+
+        return $data;
+    }
+
+    private function applyRangeFilter($query, Request $request)
+    {
+        $range = $request->get('range', 'all');
+        if ($range === 'all') {
+            return $query;
+        }
+
+        $startDate = null;
+        $endDate = null;
+
+        if ($range === 'today') {
+            $startDate = Carbon::today()->startOfDay();
+            $endDate = Carbon::today()->endOfDay();
+        } elseif ($range === 'yesterday') {
+            $startDate = Carbon::yesterday()->startOfDay();
+            $endDate = Carbon::yesterday()->endOfDay();
+        } elseif ($range === '7') {
+            $startDate = Carbon::now()->subDays(6)->startOfDay();
+            $endDate = Carbon::now()->endOfDay();
+        } elseif ($range === '30') {
+            $startDate = Carbon::now()->subDays(29)->startOfDay();
+            $endDate = Carbon::now()->endOfDay();
+        } elseif ($range === '90') {
+            $startDate = Carbon::now()->subDays(89)->startOfDay();
+            $endDate = Carbon::now()->endOfDay();
+        } elseif ($range === '365') {
+            $startDate = Carbon::now()->startOfYear();
+            $endDate = Carbon::now()->endOfYear();
+        } elseif ($range === 'custom') {
+            $startStr = $request->get('start_date');
+            $endStr = $request->get('end_date');
+            if ($startStr && $endStr) {
+                $startDate = Carbon::parse($startStr)->startOfDay();
+                $endDate = Carbon::parse($endStr)->endOfDay();
+            }
+        }
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+        return $query;
     }
 }
