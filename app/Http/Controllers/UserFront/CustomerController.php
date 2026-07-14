@@ -93,7 +93,7 @@ class CustomerController extends Controller
             $redirectUrl = route('customer.dashboard', getParam());
         }
 
-        $user = Socialite::driver($provider)->user();
+        $user = Socialite::driver($provider)->stateless()->user();
         if ($provider == 'facebook') {
             $user = json_decode(json_encode($user), true);
         } elseif ($provider == 'google') {
@@ -124,7 +124,6 @@ class CustomerController extends Controller
             }
             $customer->username = $provider_id;
             $customer->provider_id = $provider_id;
-            $customer->provider = $provider;
             $customer->user_id = $merchant->id;
             $customer->status = 1;
             $customer->email_verified =  1;
