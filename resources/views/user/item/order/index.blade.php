@@ -66,7 +66,9 @@
         $totalOrders = isset($totalOrders) ? $totalOrders : App\Models\User\UserOrder::where('user_id', $userId)->count();
         $totalRevenue = isset($totalRevenue) ? $totalRevenue : App\Models\User\UserOrder::where('user_id', $userId)->where('payment_status', 'Completed')->sum('total');
         $pendingOrders = isset($pendingOrders) ? $pendingOrders : App\Models\User\UserOrder::where('user_id', $userId)->where('order_status', 'pending')->count();
+        $processingOrders = isset($processingOrders) ? $processingOrders : App\Models\User\UserOrder::where('user_id', $userId)->where('order_status', 'processing')->count();
         $completedOrders = isset($completedOrders) ? $completedOrders : App\Models\User\UserOrder::where('user_id', $userId)->where('order_status', 'completed')->count();
+        $rejectedOrders = isset($rejectedOrders) ? $rejectedOrders : App\Models\User\UserOrder::where('user_id', $userId)->where('order_status', 'rejected')->count();
       @endphp
 
       <!-- Stats Date Range Filter Dropdown -->
@@ -105,7 +107,7 @@
       <!-- Stats Grid Row -->
       <div class="row mb-3">
         <!-- Total Orders Card -->
-        <div class="col-sm-6 col-md-3">
+        <div class="col-sm-6 col-md-4 col-xl-2">
           <div class="stat-card-premium">
             <div class="icon-circle icon-blue">
               <i class="fas fa-shopping-bag"></i>
@@ -113,13 +115,12 @@
             <div class="content">
               <div class="label">{{ __('Total Orders') }}</div>
               <div class="value">{{ $totalOrders }}</div>
-
             </div>
           </div>
         </div>
-
+ 
         <!-- Total Revenue Card -->
-        <div class="col-sm-6 col-md-3">
+        <div class="col-sm-6 col-md-4 col-xl-2">
           <div class="stat-card-premium">
             <div class="icon-circle icon-purple">
               <i class="fas fa-wallet"></i>
@@ -133,13 +134,12 @@
                   }
                 @endphp
                 {{ $userBs && $userBs->base_currency_symbol_position == 'left' ? $symbol : '' }}{{ number_format($totalRevenue, 2) }}{{ $userBs && $userBs->base_currency_symbol_position == 'right' ? $symbol : '' }}
-
             </div>
           </div>
         </div>
-
+ 
         <!-- Pending Orders Card -->
-        <div class="col-sm-6 col-md-3">
+        <div class="col-sm-6 col-md-4 col-xl-2">
           <div class="stat-card-premium">
             <div class="icon-circle icon-orange">
               <i class="fas fa-clock"></i>
@@ -147,13 +147,25 @@
             <div class="content">
               <div class="label">{{ __('Pending Orders') }}</div>
               <div class="value">{{ $pendingOrders }}</div>
-
             </div>
           </div>
         </div>
 
+        <!-- Processing Orders Card -->
+        <div class="col-sm-6 col-md-4 col-xl-2">
+          <div class="stat-card-premium">
+            <div class="icon-circle icon-yellow">
+              <i class="fas fa-spinner"></i>
+            </div>
+            <div class="content">
+              <div class="label">{{ __('Processing Orders') }}</div>
+              <div class="value">{{ $processingOrders }}</div>
+            </div>
+          </div>
+        </div>
+ 
         <!-- Completed Orders Card -->
-        <div class="col-sm-6 col-md-3">
+        <div class="col-sm-6 col-md-4 col-xl-2">
           <div class="stat-card-premium">
             <div class="icon-circle icon-green">
               <i class="fas fa-check-circle"></i>
@@ -161,7 +173,19 @@
             <div class="content">
               <div class="label">{{ __('Completed Orders') }}</div>
               <div class="value">{{ $completedOrders }}</div>
+            </div>
+          </div>
+        </div>
 
+        <!-- Rejected Orders Card -->
+        <div class="col-sm-6 col-md-4 col-xl-2">
+          <div class="stat-card-premium">
+            <div class="icon-circle icon-red">
+              <i class="fas fa-times-circle"></i>
+            </div>
+            <div class="content">
+              <div class="label">{{ __('Rejected Orders') }}</div>
+              <div class="value">{{ $rejectedOrders }}</div>
             </div>
           </div>
         </div>

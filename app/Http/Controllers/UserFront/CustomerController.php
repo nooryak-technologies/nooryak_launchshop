@@ -682,7 +682,7 @@ class CustomerController extends Controller
         $userCurrentLang = app('userCurrentLang');
         $data['pageHeading'] = $this->getUserPageHeading($userCurrentLang);
 
-        $data['orders'] = UserOrder::where('customer_id', Auth::guard('customer')->user()->id)->orderBy('id', 'DESC')->get();
+        $data['orders'] = UserOrder::where('customer_id', Auth::guard('customer')->user()->id)->orderBy('id', 'DESC')->paginate(10);
         return view('user-front.customer.order', $data);
     }
 

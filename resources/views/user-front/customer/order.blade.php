@@ -72,6 +72,13 @@
                 </div>
               </div>
             </div>
+            <div class="card-footer">
+              <div class="row">
+                <div class="d-inline-block mx-auto">
+                  {{ $orders->links() }}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

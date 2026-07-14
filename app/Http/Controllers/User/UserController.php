@@ -34,16 +34,16 @@ class UserController extends Controller
     {
         $user = Auth::guard('web')->user();
 
+        if ($user->preview_template == 1) {
+            $this->seedMockOrdersIfNecessary($user);
+        }
+
         if ($request->ajax()) {
             $days = $request->get('days', '30');
             $start_date = $request->get('start_date');
             $end_date = $request->get('end_date');
             
-            if ($user->preview_template == 1) {
-                $chartData = $this->generateFakeChartData($days, $start_date, $end_date);
-            } else {
-                $chartData = $this->generateRealChartData($user, $days, $start_date, $end_date);
-            }
+            $chartData = $this->generateRealChartData($user, $days, $start_date, $end_date);
             return response()->json($chartData);
         }
 
@@ -144,11 +144,7 @@ class UserController extends Controller
             ->limit(5)->get();
 
         // 6. Chart: Sales Overview & Order Trend (Last 30 Days)
-        if ($user->preview_template == 1) {
-            $chartData = $this->generateFakeChartData(30);
-        } else {
-            $chartData = $this->generateRealChartData($user, 30);
-        }
+        $chartData = $this->generateRealChartData($user, 30);
         $data['chart_sales_labels'] = $chartData['chart_sales_labels'];
         $data['chart_sales_values'] = $chartData['chart_sales_values'];
         $data['chart_order_values'] = $chartData['chart_order_values'];
@@ -487,5 +483,97 @@ class UserController extends Controller
             'revenue_analytics_tax' => round($total_tax, 2),
             'total_visits' => $total_visits
         ];
+    }
+
+    private function seedMockOrdersIfNecessary($user)
+    {
+        // Check if there are orders in the last 30 days
+        $thirtyDaysAgo = Carbon::now()->subDays(30)->startOfDay();
+        $recentOrdersCount = UserOrder::where('user_id', $user->id)
+            ->where('created_at', '>=', $thirtyDaysAgo)
+            ->count();
+
+        // If we already have 15 or more recent orders, don't re-seed
+        if ($recentOrdersCount >= 15) {
+            return;
+        }
+
+        // Otherwise, let's delete existing orders for clean state (only for preview_template == 1)
+        UserOrder::where('user_id', $user->id)->delete();
+
+        // Get or create a mock customer for this user
+        $customer = Customer::where('user_id', $user->id)->first();
+        if (!$customer) {
+            $customer = Customer::create([
+                'user_id' => $user->id,
+                'first_name' => 'Demo',
+                'last_name' => 'Customer',
+                'email' => 'customer@demo.com',
+                'phone' => '1234567890',
+                'status' => 1
+            ]);
+        }
+
+        $user_currency = UserCurrency::where('user_id', $user->id)->where('is_default', 1)->first();
+        if (!$user_currency) {
+            $user_currency = UserCurrency::where('user_id', $user->id)->first();
+        }
+        $currency_code = $user_currency ? $user_currency->code : 'INR';
+        $currency_sign = $user_currency ? $user_currency->symbol : '₹';
+
+        $firstNames = ['John', 'Emily', 'Michael', 'Sarah', 'David', 'Jessica', 'James', 'Ashley', 'Robert', 'Amanda'];
+        $lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Miller', 'Davis', 'Garcia', 'Rodriguez', 'Wilson'];
+        $gateways = ['Stripe', 'PayPal', 'Razorpay', 'Offline'];
+        $statuses = ['completed', 'pending', 'processing', 'rejected'];
+
+        // Seed 25 orders spread across the last 30 days
+        for ($i = 0; $i < 25; $i++) {
+            $daysAgo = rand(0, 29);
+            $orderDate = Carbon::now()->subDays($daysAgo)->subHours(rand(0, 23))->subMinutes(rand(0, 59));
+            
+            $cart_total = rand(250, 2500);
+            $tax = round($cart_total * 0.1, 2);
+            $shipping_charge = rand(0, 1) ? 0 : rand(20, 100);
+            $total = $cart_total + $tax + $shipping_charge;
+
+            $status = $statuses[array_rand($statuses)];
+            $payment_status = ($status == 'rejected') ? 'Pending' : 'Completed';
+
+            UserOrder::create([
+                'customer_id' => $customer->id,
+                'user_id' => $user->id,
+                'billing_country' => 'India',
+                'billing_fname' => $firstNames[array_rand($firstNames)],
+                'billing_lname' => $lastNames[array_rand($lastNames)],
+                'billing_address' => 'Demo Address ' . rand(1, 100),
+                'billing_city' => 'Delhi',
+                'billing_email' => 'customer' . rand(1, 100) . '@demo.com',
+                'billing_number' => '98765' . rand(10000, 99999),
+                'shipping_country' => 'India',
+                'shipping_fname' => $firstNames[array_rand($firstNames)],
+                'shipping_lname' => $lastNames[array_rand($lastNames)],
+                'shipping_address' => 'Demo Address ' . rand(1, 100),
+                'shipping_city' => 'Delhi',
+                'shipping_email' => 'customer' . rand(1, 100) . '@demo.com',
+                'shipping_number' => '98765' . rand(10000, 99999),
+                'cart_total' => $cart_total,
+                'discount' => 0,
+                'tax' => $tax,
+                'tax_percentage' => 10.00,
+                'total' => $total,
+                'method' => $gateways[array_rand($gateways)],
+                'gateway_type' => 'online',
+                'currency_code' => $currency_code,
+                'currency_sign' => $currency_sign,
+                'currency_id' => $user_currency ? $user_currency->id : 1,
+                'order_number' => strtoupper(\Illuminate\Support\Str::random(4)) . time() . rand(10, 99),
+                'shipping_method' => 'Standard Shipping',
+                'shipping_charge' => $shipping_charge,
+                'payment_status' => $payment_status,
+                'order_status' => $status,
+                'created_at' => $orderDate,
+                'updated_at' => $orderDate
+            ]);
+        }
     }
 }
