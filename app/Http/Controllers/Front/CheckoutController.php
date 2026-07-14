@@ -771,7 +771,7 @@ class CheckoutController extends Controller
             . "– Team LaunchShop 🚀";
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer 544e86838c5c75aaa9bf171a9a4c566c',
+            'Authorization' => 'Bearer 2bd902d9d5d57632dbd740888f93588d',
         ])->withoutVerifying()->post('https://2fa.tehub.in/api/whatsapp.php', [
             'to'      => $mobileNo,
             'message' => $message,
