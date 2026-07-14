@@ -12,6 +12,434 @@
   /* Hide breadcrumb */
   .page-title-area { display: none !important; }
 
+  /* ── Page wrapper ── */
+  .pricing-v2-section {
+    padding: 60px 0 100px;
+  }
+
+  /* ── Centered hero header ── */
+  .pricing-hero-center {
+    text-align: center;
+    padding: 56px 0 0;
+  }
+  .pricing-eyebrow-badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #ff5a2c;
+    margin-bottom: 14px;
+  }
+  .pricing-hero-center h1 {
+    font-size: 40px;
+    font-weight: 900;
+    color: #0f172a;
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+  .pricing-hero-center h1 span {
+    color: #ff5a2c;
+    font-style: italic;
+  }
+  .pricing-hero-center .subtitle {
+    font-size: 16px;
+    color: #64748b;
+    margin-bottom: 20px;
+  }
+  .pricing-save-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #e6faf2;
+    color: #059669;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 7px 18px;
+    border-radius: 30px;
+    margin-bottom: 36px;
+    border: 1.5px solid #a7f3d0;
+  }
+
+  /* ── Toggle pill tabs ── */
+  .pricing-toggle-wrap {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .pricing-pill-tabs {
+    display: inline-flex;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 50px;
+    padding: 5px;
+    gap: 4px;
+    list-style: none;
+    margin: 0 auto;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+  }
+  .pricing-pill-tabs .nav-item { margin: 0; }
+  .pricing-pill-tabs .nav-link {
+    border: none;
+    border-radius: 50px;
+    padding: 10px 28px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #475569;
+    background: transparent;
+    transition: all 0.25s ease;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pricing-pill-tabs .nav-link.active {
+    background: linear-gradient(135deg, #ff5a2c, #ff8c00);
+    color: #fff !important;
+    box-shadow: 0 4px 16px rgba(255,90,44,0.3);
+  }
+
+  /* monthly billing note tooltip */
+  .monthly-billing-note {
+    font-size: 13px;
+    color: #64748b;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .yearly-free-domain-note {
+    font-size: 13px;
+    color: #64748b;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .yearly-free-domain-note span { color: #ff5a2c; font-weight: 700; }
+
+  /* ── Cards grid ── */
+  .pricing-cards-row {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .pricing-card-v2 {
+    flex: 1 1 210px;
+    max-width: 260px;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 28px 22px 24px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    color: #1e293b;
+  }
+  .pricing-card-v2:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  }
+
+  /* Standard card → orange gradient (RECOMMENDED) */
+  .pricing-card-v2.card-recommended {
+    background: linear-gradient(160deg, #ff5a2c 0%, #ff8c00 100%);
+    border: 2px solid #ff5a2c;
+    box-shadow: 0 12px 40px rgba(255,90,44,0.25);
+    color: #fff;
+    transform: scale(1.02);
+  }
+  /* Premium card → orange gradient (BEST VALUE) */
+  .pricing-card-v2.card-best-value {
+    background: linear-gradient(160deg, #ff5a2c 0%, #ff8c00 100%);
+    border: 2px solid #ff8c00;
+    box-shadow: 0 12px 40px rgba(255,90,44,0.20);
+    color: #fff;
+  }
+  /* Enterprise white card */
+  .pricing-card-v2.card-enterprise {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+  }
+
+  .plan-v2-wa-btn {
+    width: 50px;
+    height: 48px;
+    border-radius: 12px;
+    background: #25D366;
+    color: #fff !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    transition: transform 0.2s, background-color 0.2s;
+    flex-shrink: 0;
+    text-decoration: none !important;
+    border: none;
+    margin-top: auto;
+  }
+  .plan-v2-wa-btn:hover {
+    background: #20ba58;
+    transform: scale(1.05);
+  }
+
+  /* Top badge */
+  .plan-top-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 16px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .badge-recommended { background: linear-gradient(135deg, #ff5a2c, #ff8c00); color: #fff; }
+  .badge-best-value   { background: linear-gradient(135deg, #ff8c00, #ffb300); color: #fff; }
+
+  /* Plan icon area */
+  .plan-v2-icon {
+    text-align: center;
+    font-size: 28px;
+    color: #ff5a2c;
+    margin-bottom: 4px;
+  }
+  .card-recommended .plan-v2-icon,
+  .card-best-value .plan-v2-icon { color: rgba(255,255,255,0.9); }
+
+  /* Plan title */
+  .plan-v2-title {
+    font-size: 22px;
+    font-weight: 800;
+    margin: 8px 0 4px;
+    color: #0f172a;
+    text-align: center;
+  }
+  .card-recommended .plan-v2-title,
+  .card-best-value  .plan-v2-title {
+    color: #ffffff;
+  }
+  .plan-v2-subtitle {
+    font-size: 12px;
+    color: #64748b;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .card-recommended .plan-v2-subtitle,
+  .card-best-value  .plan-v2-subtitle {
+    color: rgba(255,255,255,0.85);
+  }
+
+  /* Price block */
+  .plan-v2-price-block {
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .plan-v2-currency { font-size: 18px; font-weight: 700; vertical-align: top; margin-top: 8px; display: inline-block; color: #475569; }
+  .plan-v2-amount   { font-size: 42px; font-weight: 900; line-height: 1; color: #0f172a; }
+  .plan-v2-period   { font-size: 13px; font-weight: 500; color: #475569; }
+  .card-recommended .plan-v2-currency,
+  .card-recommended .plan-v2-amount,
+  .card-recommended .plan-v2-period,
+  .card-best-value .plan-v2-currency,
+  .card-best-value .plan-v2-amount,
+  .card-best-value .plan-v2-period {
+    color: #ffffff;
+  }
+
+  .plan-v2-billing-note {
+    font-size: 11px;
+    color: #64748b;
+    text-align: center;
+    margin-bottom: 18px;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  /* Monthly billing badge on basic */
+  .plan-monthly-badge {
+    display: inline-block;
+    background: #fff3f0;
+    color: #ff5a2c;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 20px;
+    border: 1px solid #ffd5c8;
+    margin-bottom: 12px;
+  }
+  .card-recommended .plan-v2-billing-note,
+  .card-best-value  .plan-v2-billing-note {
+    color: rgba(255,255,255,0.8);
+  }
+
+  /* Feature list */
+  .plan-v2-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 4px;
+    flex: 1;
+  }
+  .plan-v2-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    padding: 4px 0;
+    color: #334155;
+  }
+  .card-recommended .plan-v2-features li,
+  .card-best-value  .plan-v2-features li {
+    color: #ffffff;
+  }
+
+  /* Check icons */
+  .plan-v2-features li .fi-check {
+    color: #ff5a2c;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .card-recommended .plan-v2-features li .fi-check,
+  .card-best-value  .plan-v2-features li .fi-check {
+    color: #ffffff;
+  }
+  /* Unavailable features: line-through text, muted X icon */
+  .plan-v2-features li.feat-disabled {
+    opacity: 0.55;
+  }
+  .plan-v2-features li.feat-disabled > span:last-child {
+    text-decoration: line-through;
+  }
+  .plan-v2-features li .fi-times {
+    color: #ef4444;
+    font-size: 12px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .card-recommended .plan-v2-features li .fi-times,
+  .card-best-value  .plan-v2-features li .fi-times {
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* Free domain highlight row */
+  .plan-v2-features li.feat-free-domain {
+    color: #059669;
+    font-weight: 700;
+  }
+  .card-recommended .plan-v2-features li.feat-free-domain,
+  .card-best-value  .plan-v2-features li.feat-free-domain {
+    color: #a7f3d0;
+  }
+
+  /* See more toggle */
+  .plan-v2-see-more {
+    background: none;
+    border: none;
+    padding: 6px 0;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: opacity 0.2s;
+    color: #ff5a2c;
+    margin-bottom: 14px;
+  }
+  .card-recommended .plan-v2-see-more,
+  .card-best-value  .plan-v2-see-more { color: rgba(255,255,255,0.9); }
+  .plan-v2-extra-features {
+    display: none;
+    overflow: hidden;
+  }
+  .plan-v2-extra-features.open {
+    display: block;
+  }
+
+  /* CTA button */
+  .plan-v2-btn {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+    margin-top: auto;
+    cursor: pointer;
+  }
+  /* Basic card button – outline orange */
+  .btn-v2-outline {
+    background: transparent;
+    border-color: #ff5a2c;
+    color: #ff5a2c;
+  }
+  .btn-v2-outline:hover { background: #ff5a2c; color: #fff; }
+
+  /* Standard & Premium cards – white button */
+  .card-recommended .plan-v2-btn,
+  .card-best-value  .plan-v2-btn {
+    background: #ffffff;
+    color: #ff5a2c;
+    border-color: #ffffff;
+  }
+  .card-recommended .plan-v2-btn:hover,
+  .card-best-value  .plan-v2-btn:hover {
+    background: #ffe8e0;
+    color: #ff5a2c;
+  }
+
+  /* Enterprise card button */
+  .card-enterprise .plan-v2-btn {
+    background: transparent;
+    border-color: #334155;
+    color: #334155;
+  }
+  .card-enterprise .plan-v2-btn:hover { background: #334155; color: #fff; }
+
+  /* Divider line above features */
+  .plan-v2-divider {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 14px 0 14px;
+  }
+  .card-recommended .plan-v2-divider,
+  .card-best-value .plan-v2-divider {
+    border-top-color: rgba(255,255,255,0.2);
+  }
+
+  /* Trust row below cards */
+  .pricing-v2-trust {
+    text-align: center;
+    margin-top: 28px;
+    font-size: 13px;
+    color: #64748b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 36px;
+    flex-wrap: wrap;
+  }
+  .pricing-v2-trust span { display:flex; align-items:center; gap:8px; font-weight: 600; }
+  .pricing-v2-trust .trust-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+  .trust-icon.green { background: #e6faf2; color: #059669; }
+  .trust-icon.red   { background: #fee2e2; color: #ef4444; }
+  .trust-icon.blue  { background: #eff6ff; color: #3b82f6; }
+
+  /* Responsive */
+  @media(max-width:768px) {
+    .pricing-card-v2 { max-width: 100%; flex: 1 1 300px; }
+    .pricing-cards-row { flex-direction: column; align-items: center; }
+    .pricing-hero-center h1 { font-size: 28px; }
+    .card-recommended { transform: none; }
+  }
+</style>
+
   /* ── Pricing page wrapper ── */
   .pricing-v2-section {
     padding: 60px 0 100px;
@@ -419,51 +847,41 @@
   <div class="modern-pricing-page-wrapper pt-40 pb-120">
     <div class="container">
 
-      <!-- Hero Header Section -->
-      <div class="row align-items-center mb-60 pricing-hero-row">
-        <div class="col-lg-6 mb-lg-0">
-          <div class="pricing-hero-content" data-aos="fade-right">
-            <span class="pricing-plan-badge">{{ __('PRICING PLANS') }}</span>
-            <h1 class="pricing-hero-title">
-              Simple Pricing for <br><span>Every Stage</span> of Growth
-            </h1>
-            <p class="pricing-hero-desc">
-              Launch your store in minutes, pick a beautiful theme, get a free subdomain, and scale with confidence.
-            </p>
-            <div class="pricing-trust-pills">
-              <span class="trust-pill"><i class="fas fa-check-circle"></i> {{ __('No credit card required') }}</span>
-              <span class="trust-pill"><i class="fas fa-check-circle"></i> {{ __('14-day free trial') }}</span>
-              <span class="trust-pill"><i class="fas fa-check-circle"></i> {{ __('Cancel anytime') }}</span>
-            </div>
+      <!-- Hero Header Section – centered to match reference -->
+      <div class="pricing-hero-center" data-aos="fade-up">
+        <div class="pricing-eyebrow-badge">SIMPLE, TRANSPARENT PRICING</div>
+        <h1>Choose the <span>perfect plan</span> for your business</h1>
+        <p class="subtitle">Launch your store in minutes and scale as your business grows.</p>
+        @if(in_array('yearly', array_map('strtolower', (array)$terms)))
+          <div class="pricing-save-pill">
+            🏷️ Save up to 67% with yearly billing!
           </div>
-        </div>
+        @endif
       </div>
 
       <!-- ─── PRICING V2 SECTION ─── -->
       <div class="pricing-v2-section" data-aos="fade-up">
 
         <!-- Toggle -->
-        <div class="pricing-toggle-wrap" style="text-align: center; margin-bottom: 48px; width: 100%;">
-          <div style="position: relative; display: inline-block;">
-            @if(in_array('yearly', array_map('strtolower', (array)$terms)))
-              <div class="yearly-save-tooltip">Save up to 67% yearly!</div>
-            @endif
-            <ul class="pricing-pill-tabs nav" id="pricing-tabs" role="tablist" style="margin: 0 auto;">
-              @foreach ($terms as $term)
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link {{ $loop->first ? 'active' : '' }}"
-                          id="{{ strtolower($term) }}-tab"
-                          data-bs-toggle="pill"
-                          data-bs-target="#tab-{{ strtolower($term) }}"
-                          type="button"
-                          role="tab"
-                          aria-selected="{{ $loop->first ? 'true' : 'false' }}">
-                    {{ __($term) }}
-                  </button>
-                </li>
-              @endforeach
-            </ul>
-          </div>
+        <div class="pricing-toggle-wrap">
+          <ul class="pricing-pill-tabs nav" id="pricing-tabs" role="tablist">
+            @foreach ($terms as $term)
+              <li class="nav-item" role="presentation">
+                <button class="nav-link {{ $loop->first ? 'active' : '' }}"
+                        id="{{ strtolower($term) }}-tab"
+                        data-bs-toggle="pill"
+                        data-bs-target="#tab-{{ strtolower($term) }}"
+                        type="button"
+                        role="tab"
+                        aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+                  {{ __(ucfirst(strtolower($term))) }}
+                </button>
+              </li>
+            @endforeach
+          </ul>
+          @if(in_array('yearly', array_map('strtolower', (array)$terms)))
+            <p class="yearly-free-domain-note mt-3">🎁 All yearly plans include a <span>FREE custom domain</span> for 1 year</p>
+          @endif
         </div>
 
 
@@ -650,6 +1068,15 @@
                       <span class="plan-top-badge badge-best-value">BEST VALUE</span>
                     @endif
 
+                    {{-- Icon --}}
+                    <div class="plan-v2-icon">
+                      @if($titleKey == 'basic') <i class="fas fa-paper-plane"></i>
+                      @elseif($titleKey == 'standard') <i class="fas fa-rocket"></i>
+                      @elseif($titleKey == 'premium') <i class="fas fa-crown"></i>
+                      @else <i class="fas fa-building"></i>
+                      @endif
+                    </div>
+
                     {{-- Title --}}
                     <h3 class="plan-v2-title">{{ __($package->title) }}</h3>
                     <p class="plan-v2-subtitle">{{ $planSubtitle }}</p>
@@ -663,16 +1090,19 @@
                         <span class="plan-v2-period"> / {{ $periodLabel }}</span>
                       @endif
                     </div>
-                    <p class="plan-v2-billing-note">
-                      @if(strtolower($package->term)=='yearly')
-                        Billed yearly at {{ $be->base_currency_symbol }}{{ number_format($package->price * 12, 0) }}
-                      @elseif(strtolower($package->term)=='monthly')
-                        Billed monthly
-                      @else
-                        One-time access fee
-                      @endif
-                    </p>
-
+                    @if(strtolower($package->term)=='monthly')
+                      <div class="text-center mb-2">
+                        <span class="plan-monthly-badge">Monthly billing only</span>
+                      </div>
+                    @else
+                      <p class="plan-v2-billing-note">
+                        @if(strtolower($package->term)=='yearly')
+                          Billed yearly
+                        @else
+                          One-time access fee
+                        @endif
+                      </p>
+                    @endif
 
                     <hr class="plan-v2-divider">
 
@@ -714,26 +1144,26 @@
                       </button>
                     @endif
 
-                    {{-- CTA --}}
-                    <a href="{{ $ctaHref }}" class="plan-v2-btn btn-v2-outline">
-                      {{ __('Get') }} {{ __($package->title) }}
+                    {{-- CTA Button with correct name --}}
+                    <a href="{{ $ctaHref }}" class="plan-v2-btn {{ ($isRecommended || $isBestValue) ? '' : 'btn-v2-outline' }}">
+                      Select {{ __($package->title) }}
                     </a>
 
                   </div><!-- /.pricing-card-v2 -->
                 @endforeach
 
-                @if(strtolower($term) != 'monthly')
-                  {{-- Enterprise card --}}
+                {{-- Enterprise card always shown --}}
                   <div class="pricing-card-v2 card-enterprise">
+                    <div class="plan-v2-icon" style="color:#ff5a2c;"><i class="fas fa-building"></i></div>
                     <h3 class="plan-v2-title">Enterprise</h3>
                     <p class="plan-v2-subtitle">For large &amp; global brands</p>
                     <div class="plan-v2-price-block">
-                      <span class="plan-v2-amount" style="font-size:34px;">Custom</span>
+                      <span class="plan-v2-amount" style="font-size:34px;color:#0f172a;">Custom</span>
                     </div>
                     <p class="plan-v2-billing-note">Tailored to your needs</p>
                     <hr class="plan-v2-divider">
                     <ul class="plan-v2-features">
-                      <li><i class="fas fa-check fi-check"></i><span>Everything in Scale</span></li>
+                      <li><i class="fas fa-check fi-check"></i><span>Everything in Premium</span></li>
                       <li><i class="fas fa-check fi-check"></i><span>Unlimited Staff Accounts</span></li>
                       <li><i class="fas fa-check fi-check"></i><span>Dedicated Account Manager</span></li>
                       <li><i class="fas fa-check fi-check"></i><span>Custom Integrations</span></li>
@@ -746,18 +1176,26 @@
                         <i class="fab fa-whatsapp"></i>
                       </a>
                     </div>
-
                   </div>
-                @endif
 
               </div><!-- /.pricing-cards-row -->
 
               <!-- Trust row -->
-              <div class="pricing-v2-trust">
-                <span><i class="fas fa-shield-alt"></i> 14-day money-back guarantee</span>
-                <span><i class="fas fa-times-circle"></i> Cancel anytime</span>
-                <span><i class="fas fa-lock"></i> Secure checkout</span>
+              <div class="pricing-v2-trust mt-4">
+                <span>
+                  <span class="trust-icon green"><i class="fas fa-shield-alt"></i></span>
+                  <span><strong>14-Day Money Back Guarantee</strong><br><small>Risk-free, no questions asked</small></span>
+                </span>
+                <span>
+                  <span class="trust-icon red"><i class="fas fa-times"></i></span>
+                  <span><strong>Cancel Anytime</strong><br><small>No lock-in contracts</small></span>
+                </span>
+                <span>
+                  <span class="trust-icon blue"><i class="fas fa-lock"></i></span>
+                  <span><strong>Secure Checkout</strong><br><small>Your data is 100% safe</small></span>
+                </span>
               </div>
+              <p class="text-center mt-3" style="font-size:12px;color:#94a3b8;">Prices shown are exclusive of applicable taxes.</p>
 
             </div><!-- /.tab-pane -->
           @endforeach
@@ -818,11 +1256,16 @@
 
       <!-- Detailed compare plans section -->
       @php
-        $firstTerm = count($terms) > 0 ? strtolower($terms[0]) : 'monthly';
-        $comparePackages = \App\Models\Package::where('status', '1')
-            ->where('term', $firstTerm)
-            ->orderBy('price', 'asc')
-            ->get();
+        // Task 2: Show ALL plans – Basic (monthly) + Standard (yearly) + Premium (yearly)
+        $comparePackages = collect();
+        $basicPkg = \App\Models\Package::where('status','1')->where('title','Basic')->orderBy('price','asc')->first();
+        if ($basicPkg) $comparePackages->push($basicPkg);
+        $stdPkg = \App\Models\Package::where('status','1')->where('title','Standard')->where('term','yearly')->first();
+        if (!$stdPkg) $stdPkg = \App\Models\Package::where('status','1')->where('title','Standard')->first();
+        if ($stdPkg) $comparePackages->push($stdPkg);
+        $premPkg = \App\Models\Package::where('status','1')->where('title','Premium')->where('term','yearly')->first();
+        if (!$premPkg) $premPkg = \App\Models\Package::where('status','1')->where('title','Premium')->first();
+        if ($premPkg) $comparePackages->push($premPkg);
 
         // Build comparison rows
         $compareRows = [];
@@ -907,18 +1350,20 @@
           <table class="table compare-table">
             <thead>
               <tr>
-                <th style="width: 40%;">Features</th>
+                <th style="width: 35%;">Features</th>
                 @foreach ($comparePackages as $pkg)
-                  <th style="text-align: center;" class="{{ $pkg->recommended == '1' ? 'highlight-column-header' : '' }}">
-                    @if ($pkg->recommended == '1')
+                  <th style="text-align: center;" class="{{ strtolower($pkg->title) == 'standard' ? 'highlight-column-header' : '' }}">
+                    @if (strtolower($pkg->title) == 'standard')
                       <div class="highlight-wrapper">
-                        <i class="fas fa-crown text-orange me-1"></i> {{ __($pkg->title) }}
+                        <i class="fas fa-star text-orange me-1"></i> {{ __($pkg->title) }}
                       </div>
                     @else
                       {{ __($pkg->title) }}
                     @endif
+                    <div style="font-size:11px;font-weight:600;color:#94a3b8;">{{ strtolower($pkg->term) == 'monthly' ? 'Monthly' : 'Yearly' }}</div>
                   </th>
                 @endforeach
+                <th style="text-align:center;">Enterprise</th>
               </tr>
             </thead>
             <tbody>
@@ -926,11 +1371,9 @@
                 <tr>
                   <td>{{ __($row['label']) }}</td>
                   @foreach ($comparePackages as $pkg)
-                    <td class="text-center {{ $pkg->recommended == '1' ? 'highlight-column font-weight-bold text-dark' : '' }}">
+                    <td class="text-center {{ strtolower($pkg->title) == 'standard' ? 'highlight-column font-weight-bold text-dark' : '' }}">
                       @if ($row['type'] == 'limit')
-                        @php
-                          $val = $pkg->{$row['key']};
-                        @endphp
+                        @php $val = $pkg->{$row['key']}; @endphp
                         {{ $val == 999999 ? __('Unlimited') : ($val ?: '0') }}
                       @else
                         @php
@@ -945,21 +1388,27 @@
                       @endif
                     </td>
                   @endforeach
+                  {{-- Enterprise column: always ✓ for flag rows, Unlimited for limit rows --}}
+                  <td class="text-center">
+                    @if($row['type'] == 'limit')
+                      Unlimited
+                    @else
+                      <span class="feat-check-circle"><i class="fas fa-check"></i></span>
+                    @endif
+                  </td>
                 </tr>
               @endforeach
             </tbody>
             
             @if (count($hiddenCompareRows) > 0)
               <tbody id="compare-features-hidden-rows" class="compare-rows-hidden">
-                @foreach ($hiddenCompareRows as $row)
+                  @foreach ($hiddenCompareRows as $row)
                   <tr>
                     <td>{{ __($row['label']) }}</td>
                     @foreach ($comparePackages as $pkg)
-                      <td class="text-center {{ $pkg->recommended == '1' ? 'highlight-column font-weight-bold text-dark' : '' }}">
+                      <td class="text-center {{ strtolower($pkg->title) == 'standard' ? 'highlight-column font-weight-bold text-dark' : '' }}">
                         @if ($row['type'] == 'limit')
-                          @php
-                            $val = $pkg->{$row['key']};
-                          @endphp
+                          @php $val = $pkg->{$row['key']}; @endphp
                           {{ $val == 999999 ? __('Unlimited') : ($val ?: '0') }}
                         @else
                           @php
@@ -974,6 +1423,14 @@
                         @endif
                       </td>
                     @endforeach
+                    {{-- Enterprise column --}}
+                    <td class="text-center">
+                      @if($row['type'] == 'limit')
+                        Unlimited
+                      @else
+                        <span class="feat-check-circle"><i class="fas fa-check"></i></span>
+                      @endif
+                    </td>
                   </tr>
                 @endforeach
               </tbody>
