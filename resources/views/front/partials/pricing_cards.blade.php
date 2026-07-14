@@ -32,7 +32,7 @@
       @endforeach
     </ul>
     @if(in_array('yearly', array_map('strtolower', (array)$terms)))
-      <p class="yearly-free-domain-note mt-3">🎁 All yearly plans include a <span>FREE custom domain</span> for 1 year</p>
+      <p class="yearly-free-domain-note mt-3">🎁 Premium plans include a <span>FREE .in domain</span> for 1 year</p>
     @endif
   </div>
 
