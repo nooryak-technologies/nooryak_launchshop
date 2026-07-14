@@ -416,9 +416,9 @@
 
   /* Divider line above features */
   .plan-v2-divider {
-    border: none;
-    border-top: 1px solid #e2e8f0;
-    margin: 14px 0 14px;
+       border: none;
+    border-top: 1px solid #313233;
+    margin: 0px 0 14px;
   }
 
   /* Trust row below cards (mockup layout) */
@@ -492,10 +492,23 @@
     .monthly-billing-callout .callout-arrow {
       display: none !important;
     }
+    .pricing-card-v2 {
+      margin-bottom: 24px;
+    }
+  }
+  @media(max-width:991px) {
+    .pricing-card-v2 {
+      flex: 0 0 100% !important;
+      width: 100% !important;
+      max-width: 340px !important;
+      margin-bottom: 28px !important;
+    }
+    .pricing-cards-row {
+      flex-direction: column !important;
+      align-items: center !important;
+    }
   }
   @media(max-width:768px) {
-    .pricing-card-v2 { max-width: 100%; flex: 1 1 300px; }
-    .pricing-cards-row { flex-direction: column; align-items: center; }
     .pricing-hero-center h1 { font-size: 28px; }
     .card-recommended { transform: none; }
     .pricing-v2-trust {
