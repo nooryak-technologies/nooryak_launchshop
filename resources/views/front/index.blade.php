@@ -1340,6 +1340,44 @@
             @foreach ($terms as $term)
               @php
                 $packages = \App\Models\Package::where('status', '1')->where('term', strtolower($term))->orderBy('price', 'asc')->get();
+                if (strtolower($term) == 'monthly') {
+                    $newPackages = collect();
+                    
+                    // 1. Basic (monthly)
+                    $basicMonthly = $packages->first(function($p) {
+                        return strtolower($p->title) == 'basic';
+                    });
+                    if ($basicMonthly) {
+                        $newPackages->push($basicMonthly);
+                    } else {
+                        $anyBasic = \App\Models\Package::where('status', '1')->where('title', 'Basic')->first();
+                        if ($anyBasic) $newPackages->push($anyBasic);
+                    }
+                    
+                    // 2. Standard (yearly)
+                    $stdYearly = \App\Models\Package::where('status', '1')->where('term', 'yearly')->where('title', 'Standard')->first();
+                    if ($stdYearly) {
+                        $newPackages->push($stdYearly);
+                    } else {
+                        $stdMonthly = $packages->first(function($p) {
+                            return strtolower($p->title) == 'standard';
+                        });
+                        if ($stdMonthly) $newPackages->push($stdMonthly);
+                    }
+                    
+                    // 3. Premium (yearly)
+                    $premYearly = \App\Models\Package::where('status', '1')->where('term', 'yearly')->where('title', 'Premium')->first();
+                    if ($premYearly) {
+                        $newPackages->push($premYearly);
+                    } else {
+                        $premMonthly = $packages->first(function($p) {
+                            return strtolower($p->title) == 'premium';
+                        });
+                        if ($premMonthly) $newPackages->push($premMonthly);
+                    }
+                    
+                    $packages = $newPackages;
+                }
               @endphp
               <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}"
                    id="tab-{{ strtolower($term) }}"
@@ -1348,14 +1386,6 @@
 
                   @foreach ($packages as $index => $package)
                     @php
-                      /*
-                      if (strtolower($term) == 'monthly' && (strtolower($package->title) == 'standard' || strtolower($package->title) == 'premium')) {
-                          $package = \App\Models\Package::where('status', '1')
-                              ->where('term', 'yearly')
-                              ->where('title', $package->title)
-                              ->first() ?: $package;
-                      }
-                      */
                       $titleKey    = strtolower($package->title);
                       $isRecommended = ($titleKey == 'standard');
                       $isBestValue   = ($titleKey == 'premium');
