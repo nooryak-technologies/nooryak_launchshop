@@ -114,6 +114,15 @@ class CustomerController extends Controller
         // retrieve user via the email and merchant user_id
         $customer = Customer::where([['email', $email], ['provider_id', $provider_id], ['user_id', $merchant->id]])->first();
 
+        // If not found by provider_id, check if they already signed up with the same email
+        if (empty($customer)) {
+            $customer = Customer::where([['email', $email], ['user_id', $merchant->id]])->first();
+            if ($customer) {
+                $customer->provider_id = $provider_id;
+                $customer->save();
+            }
+        }
+
         // if doesn't exist, store the new user's info (email, name, avatar, provider_name, provider_id)
         if (empty($customer)) {
             $customer = new Customer();
