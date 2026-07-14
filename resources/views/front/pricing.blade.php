@@ -47,44 +47,7 @@
         </div>
       </div>
 
-      <!-- Trust Factors Highlights row -->
-      <div class="pricing-highlights-row mt-80" data-aos="fade-up">
-        <div class="highlight-item">
-          <div class="icon-box"><i class="far fa-calendar-check"></i></div>
-          <div class="text-box">
-            <strong>14-Day Free Trial</strong>
-            <span>Full access. No limits.</span>
-          </div>
-        </div>
-        <div class="highlight-item">
-          <div class="icon-box"><i class="far fa-credit-card"></i></div>
-          <div class="text-box">
-            <strong>No Credit Card</strong>
-            <span>Start instantly. No hassle.</span>
-          </div>
-        </div>
-        <div class="highlight-item">
-          <div class="icon-box"><i class="far fa-clock"></i></div>
-          <div class="text-box">
-            <strong>Cancel Anytime</strong>
-            <span>No lock-ins. No questions.</span>
-          </div>
-        </div>
-        <div class="highlight-item">
-          <div class="icon-box"><i class="fas fa-bolt"></i></div>
-          <div class="text-box">
-            <strong>Instant Setup</strong>
-            <span>Your store in minutes.</span>
-          </div>
-        </div>
-        <div class="highlight-item">
-          <div class="icon-box"><i class="far fa-shield-alt"></i></div>
-          <div class="text-box">
-            <strong>Secure & Reliable</strong>
-            <span>99.9% uptime. Always.</span>
-          </div>
-        </div>
-      </div>
+
 
       <!-- Detailed compare plans section -->
       @php
@@ -348,20 +311,6 @@
           <div class="col-lg-5 text-lg-end">
             <div class="cta-buttons-wrapper d-flex justify-content-lg-end justify-content-center">
               <div class="cta-btn-block">
-@php
-                  $trialPackage = \App\Models\Package::where('status','1')->where('is_trial','1')->orderBy('price','asc')->first();
-                  $trialLink = $trialPackage
-                    ? ($selectedTemplate 
-                        ? route('front.register.view', ['status' => 'trial', 'id' => $trialPackage->id]) . '?template=' . urlencode($selectedTemplate)
-                        : route('front.select.template', ['status' => 'trial', 'id' => $trialPackage->id]))
-                    : route('front.pricing');
-                @endphp
-                <a href="{{ $trialLink }}" class="btn-pricing-action btn-orange-filled px-4">
-                  Start Free Trial <i class="fas fa-arrow-right ms-2"></i>
-                </a>
-                <span class="btn-subtext">{{ $trialPackage ? $trialPackage->trial_days.'-day free trial' : '14-day free trial' }}</span>
-              </div>
-              <div class="cta-btn-block ms-3">
                 <a href="{{ route('front.templates.view') }}" class="btn-pricing-action btn-white-outline px-4">
                   Browse Themes
                 </a>

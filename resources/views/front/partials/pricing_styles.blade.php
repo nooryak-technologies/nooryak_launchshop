@@ -179,6 +179,11 @@
     box-shadow: 0 12px 30px rgba(0,0,0,0.08);
   }
 
+  /* Basic card → white bg, black border */
+  .pricing-card-v2.card-basic {
+    background: #ffffff;
+    border: 2px solid #000000;
+  }
   /* Standard card → very light orange background, orange border (RECOMMENDED) */
   .pricing-card-v2.card-recommended {
     background: #fffaf7;
@@ -194,10 +199,10 @@
     box-shadow: 0 12px 40px rgba(245,158,11,0.08);
     color: #1e293b;
   }
-  /* Enterprise white card */
+  /* Enterprise white card with black border */
   .pricing-card-v2.card-enterprise {
     background: #ffffff;
-    border: 1.5px solid #cbd5e1;
+    border: 2px solid #000000;
   }
 
   .plan-v2-wa-btn {
@@ -416,23 +421,63 @@
     margin: 14px 0 14px;
   }
 
-  /* Trust row below cards */
+  /* Trust row below cards (mockup layout) */
   .pricing-v2-trust {
-    text-align: center;
-    margin-top: 28px;
-    font-size: 13px;
-    color: #64748b;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
-    gap: 36px;
-    flex-wrap: wrap;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 48px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    width: 100%;
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+    flex-wrap: nowrap;
   }
-  .pricing-v2-trust span { display:flex; align-items:center; gap:8px; font-weight: 600; }
-  .pricing-v2-trust .trust-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; }
-  .trust-icon.green { background: #e6faf2; color: #059669; }
-  .trust-icon.red   { background: #fee2e2; color: #ef4444; }
-  .trust-icon.blue  { background: #eff6ff; color: #3b82f6; }
+  .pricing-v2-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    justify-content: flex-start;
+    padding: 0 24px;
+    text-align: left;
+  }
+  .pricing-v2-trust-item:not(:last-child) {
+    border-right: 1.5px solid #e2e8f0;
+  }
+  .pricing-v2-trust-item span {
+    font-size: 13px;
+    color: #475569;
+    line-height: 1.35;
+  }
+  .pricing-v2-trust-item span strong {
+    color: #0f172a;
+    font-weight: 700;
+  }
+  .pricing-v2-trust-item span small {
+    color: #64748b;
+    font-size: 11px;
+    display: block;
+    margin-top: 2px;
+  }
+  .pricing-v2-trust .trust-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .trust-icon.green  { background: #e6faf2; color: #10b981; }
+  .trust-icon.orange { background: #fff3f0; color: #ff5a2c; }
+  .trust-icon.purple { background: #f3e8ff; color: #a855f7; }
 
   /* Responsive */
   @media(max-width:1200px) {
@@ -453,5 +498,20 @@
     .pricing-cards-row { flex-direction: column; align-items: center; }
     .pricing-hero-center h1 { font-size: 28px; }
     .card-recommended { transform: none; }
+    .pricing-v2-trust {
+      flex-direction: column;
+      gap: 20px;
+      padding: 24px;
+    }
+    .pricing-v2-trust-item {
+      width: 100%;
+      justify-content: center;
+      padding: 0;
+    }
+    .pricing-v2-trust-item:not(:last-child) {
+      border-right: none;
+      border-bottom: 1.5px solid #e2e8f0;
+      padding-bottom: 16px;
+    }
   }
 </style>

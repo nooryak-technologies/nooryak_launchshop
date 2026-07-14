@@ -92,7 +92,8 @@
 
               $isRecommended = ($titleKey == 'standard');
               $isBestValue   = ($titleKey == 'premium');
-              $cardClass     = $isRecommended ? 'card-recommended' : ($isBestValue ? 'card-best-value' : '');
+              $isBasic       = ($titleKey == 'basic');
+              $cardClass     = $isRecommended ? 'card-recommended' : ($isBestValue ? 'card-best-value' : ($isBasic ? 'card-basic' : ''));
 
               // Subtitle
               $subtitles = ['basic'=>'Perfect for getting started','standard'=>'Grow your business','premium'=>'For scaling stores'];
@@ -355,19 +356,19 @@
         </div><!-- /.pricing-cards-row -->
 
         <!-- Trust row -->
-        <div class="pricing-v2-trust mt-4">
-          <span>
+        <div class="pricing-v2-trust mt-5">
+          <div class="pricing-v2-trust-item">
             <span class="trust-icon green"><i class="fas fa-shield-alt"></i></span>
             <span><strong>14-Day Money Back Guarantee</strong><br><small>Risk-free, no questions asked</small></span>
-          </span>
-          <span>
-            <span class="trust-icon red"><i class="fas fa-times"></i></span>
+          </div>
+          <div class="pricing-v2-trust-item">
+            <span class="trust-icon orange"><i class="fas fa-times"></i></span>
             <span><strong>Cancel Anytime</strong><br><small>No lock-in contracts</small></span>
-          </span>
-          <span>
-            <span class="trust-icon blue"><i class="fas fa-lock"></i></span>
+          </div>
+          <div class="pricing-v2-trust-item">
+            <span class="trust-icon purple"><i class="fas fa-lock"></i></span>
             <span><strong>Secure Checkout</strong><br><small>Your data is 100% safe</small></span>
-          </span>
+          </div>
         </div>
 
       </div>
