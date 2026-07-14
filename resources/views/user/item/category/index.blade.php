@@ -317,11 +317,7 @@
                             </div>
                         </div>
 
-                        <div class="d-flex flex-wrap gap-2 mb-3">
-                            <button type="button" class="btn btn-info btn-sm" id="aiGenerateCategoryNameBtn">
-                                <i class="fas fa-magic mr-1"></i> {{ __('Generate Category Name') }}
-                            </button>
-                        </div>
+
 
                         @foreach ($userLanguages as $lang)
                             <div class="form-group">
