@@ -40,7 +40,7 @@ class CustomerController extends Controller
         }
         Config::set('services.google.client_id', $basic_settings->google_client_id);
         Config::set('services.google.client_secret', $basic_settings->google_client_secret);
-        Config::set('services.google.redirect', route('customer.google.callback', $user->username));
+        Config::set('services.google.redirect', route('customer.google.callback', getParam()));
         if ($basic_settings->is_recaptcha == 1) {
             Config::set('captcha.sitekey', $basic_settings->google_recaptcha_site_key);
             Config::set('captcha.secret', $basic_settings->google_recaptcha_secret_key);
