@@ -191,7 +191,37 @@
                       $packageFormattedFeatures[] = ['text' => $text, 'has' => $has];
                   }
               }
-
+ 
+              // Post-process features to customize "Additional Languages" dynamically based on plan
+              $langLimit = intval($package->language_limit ?? 0);
+              
+              // Find if "Additional Languages" already exists in the formatted features
+              $foundLangKey = false;
+              foreach ($packageFormattedFeatures as $key => $feat) {
+                  if (stripos($feat['text'], 'Additional Languages') !== false || stripos($feat['text'], 'languages') !== false) {
+                      $foundLangKey = $key;
+                      break;
+                  }
+              }
+              
+              // Define the custom text and status based on the plan's language limit
+              $customText = 'Additional Languages';
+              if ($langLimit == 1) {
+                  $customText = '1 Additional Language';
+              } elseif ($langLimit > 1) {
+                  $customText = $langLimit . ' Additional Languages';
+              }
+              $customHas = ($langLimit > 0);
+              
+              if ($foundLangKey !== false) {
+                  // Override the existing feature
+                  $packageFormattedFeatures[$foundLangKey]['text'] = $customText;
+                  $packageFormattedFeatures[$foundLangKey]['has'] = $customHas;
+              } else {
+                  // If it doesn't exist, append it
+                  $packageFormattedFeatures[] = ['text' => $customText, 'has' => $customHas];
+              }
+ 
               $visibleCount = 5;
               $visibleFeats = array_slice($packageFormattedFeatures, 0, $visibleCount);
               $extraFeats   = array_slice($packageFormattedFeatures, $visibleCount);
