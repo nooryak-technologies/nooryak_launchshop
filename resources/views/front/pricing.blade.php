@@ -13,6 +13,9 @@
   .page-title-area { display: none !important; }
 
   /* ── Page wrapper ── */
+  .modern-pricing-page-wrapper {
+    background-color: #fafbfc !important;
+  }
   .pricing-v2-section {
     padding: 60px 0 100px;
   }
@@ -40,7 +43,10 @@
   }
   .pricing-hero-center h1 span {
     color: #ff5a2c;
-    font-style: italic;
+  }
+  .pricing-hero-center h1 strong {
+    color: #ff5a2c;
+    font-weight: 900;
   }
   .pricing-hero-center .subtitle {
     font-size: 16px;
@@ -93,18 +99,11 @@
     gap: 8px;
   }
   .pricing-pill-tabs .nav-link.active {
-    background: linear-gradient(135deg, #ff5a2c, #ff8c00);
+    background: #ff5a2c;
     color: #fff !important;
-    box-shadow: 0 4px 16px rgba(255,90,44,0.3);
+    box-shadow: 0 4px 16px rgba(255,90,44,0.25);
   }
 
-  /* monthly billing note tooltip */
-  .monthly-billing-note {
-    font-size: 13px;
-    color: #64748b;
-    text-align: center;
-    margin-bottom: 16px;
-  }
   .yearly-free-domain-note {
     font-size: 13px;
     color: #64748b;
@@ -113,6 +112,50 @@
   }
   .yearly-free-domain-note span { color: #ff5a2c; font-weight: 700; }
 
+  /* ── Monthly Billing Callout ── */
+  .monthly-billing-callout {
+    background: #fff5f2;
+    border: 1px solid #ffd5c8;
+    border-radius: 12px;
+    padding: 16px;
+    max-width: 200px;
+    position: relative;
+    margin-top: 40px;
+    flex: 0 0 200px;
+    text-align: left;
+    box-shadow: 0 4px 12px rgba(255,90,44,0.05);
+  }
+  .callout-icon-wrap {
+    background: #ff5a2c;
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .callout-title {
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+    color: #0f172a;
+  }
+  .callout-desc {
+    font-size: 11px;
+    margin: 0;
+    color: #475569;
+    line-height: 1.4;
+  }
+  .callout-arrow {
+    position: absolute;
+    right: -35px;
+    bottom: -20px;
+    z-index: 2;
+  }
+
   /* ── Cards grid ── */
   .pricing-cards-row {
     display: flex;
@@ -120,13 +163,14 @@
     align-items: flex-start;
     flex-wrap: wrap;
     justify-content: center;
+    position: relative;
   }
 
   .pricing-card-v2 {
     flex: 1 1 210px;
     max-width: 260px;
     background: #ffffff;
-    border: 1.5px solid #e2e8f0;
+    border: 1.5px solid #cbd5e1;
     border-radius: 20px;
     padding: 28px 22px 24px;
     display: flex;
@@ -134,38 +178,39 @@
     position: relative;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     color: #1e293b;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
   }
   .pricing-card-v2:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 30px rgba(0,0,0,0.08);
   }
 
-  /* Standard card → orange gradient (RECOMMENDED) */
+  /* Standard card → white bg, orange border (RECOMMENDED) */
   .pricing-card-v2.card-recommended {
-    background: linear-gradient(160deg, #ff5a2c 0%, #ff8c00 100%);
+    background: #ffffff;
     border: 2px solid #ff5a2c;
-    box-shadow: 0 12px 40px rgba(255,90,44,0.25);
-    color: #fff;
+    box-shadow: 0 12px 40px rgba(255,90,44,0.12);
+    color: #1e293b;
     transform: scale(1.02);
   }
-  /* Premium card → orange gradient (BEST VALUE) */
+  /* Premium card → white bg, gold border (BEST VALUE) */
   .pricing-card-v2.card-best-value {
-    background: linear-gradient(160deg, #ff5a2c 0%, #ff8c00 100%);
-    border: 2px solid #ff8c00;
-    box-shadow: 0 12px 40px rgba(255,90,44,0.20);
-    color: #fff;
+    background: #ffffff;
+    border: 2px solid #f59e0b;
+    box-shadow: 0 12px 40px rgba(245,158,11,0.08);
+    color: #1e293b;
   }
   /* Enterprise white card */
   .pricing-card-v2.card-enterprise {
     background: #ffffff;
-    border: 1.5px solid #e2e8f0;
+    border: 1.5px solid #cbd5e1;
   }
 
   .plan-v2-wa-btn {
     width: 50px;
     height: 48px;
     border-radius: 12px;
-    background: #25D366;
+    background: #22c55e;
     color: #fff !important;
     display: inline-flex;
     align-items: center;
@@ -178,7 +223,7 @@
     margin-top: auto;
   }
   .plan-v2-wa-btn:hover {
-    background: #20ba58;
+    background: #16a34a;
     transform: scale(1.05);
   }
 
@@ -196,18 +241,23 @@
     letter-spacing: 1px;
     text-transform: uppercase;
   }
-  .badge-recommended { background: linear-gradient(135deg, #ff5a2c, #ff8c00); color: #fff; }
-  .badge-best-value   { background: linear-gradient(135deg, #ff8c00, #ffb300); color: #fff; }
+  .badge-recommended { background: #ff5a2c; color: #fff; }
+  .badge-best-value   { background: #f59e0b; color: #fff; }
 
   /* Plan icon area */
   .plan-v2-icon {
     text-align: center;
-    font-size: 28px;
+    margin: 0 auto 12px;
+    width: 56px;
+    height: 56px;
+    background: #fff3f0;
     color: #ff5a2c;
-    margin-bottom: 4px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
   }
-  .card-recommended .plan-v2-icon,
-  .card-best-value .plan-v2-icon { color: rgba(255,255,255,0.9); }
 
   /* Plan title */
   .plan-v2-title {
@@ -217,19 +267,11 @@
     color: #0f172a;
     text-align: center;
   }
-  .card-recommended .plan-v2-title,
-  .card-best-value  .plan-v2-title {
-    color: #ffffff;
-  }
   .plan-v2-subtitle {
     font-size: 12px;
     color: #64748b;
     text-align: center;
     margin-bottom: 14px;
-  }
-  .card-recommended .plan-v2-subtitle,
-  .card-best-value  .plan-v2-subtitle {
-    color: rgba(255,255,255,0.85);
   }
 
   /* Price block */
@@ -237,17 +279,9 @@
     text-align: center;
     margin-bottom: 4px;
   }
-  .plan-v2-currency { font-size: 18px; font-weight: 700; vertical-align: top; margin-top: 8px; display: inline-block; color: #475569; }
+  .plan-v2-currency { font-size: 18px; font-weight: 700; vertical-align: top; margin-top: 8px; display: inline-block; color: #0f172a; }
   .plan-v2-amount   { font-size: 42px; font-weight: 900; line-height: 1; color: #0f172a; }
-  .plan-v2-period   { font-size: 13px; font-weight: 500; color: #475569; }
-  .card-recommended .plan-v2-currency,
-  .card-recommended .plan-v2-amount,
-  .card-recommended .plan-v2-period,
-  .card-best-value .plan-v2-currency,
-  .card-best-value .plan-v2-amount,
-  .card-best-value .plan-v2-period {
-    color: #ffffff;
-  }
+  .plan-v2-period   { font-size: 13px; font-weight: 500; color: #64748b; }
 
   .plan-v2-billing-note {
     font-size: 11px;
@@ -269,10 +303,6 @@
     border: 1px solid #ffd5c8;
     margin-bottom: 12px;
   }
-  .card-recommended .plan-v2-billing-note,
-  .card-best-value  .plan-v2-billing-note {
-    color: rgba(255,255,255,0.8);
-  }
 
   /* Feature list */
   .plan-v2-features {
@@ -289,10 +319,6 @@
     padding: 4px 0;
     color: #334155;
   }
-  .card-recommended .plan-v2-features li,
-  .card-best-value  .plan-v2-features li {
-    color: #ffffff;
-  }
 
   /* Check icons */
   .plan-v2-features li .fi-check {
@@ -300,10 +326,6 @@
     font-size: 13px;
     flex-shrink: 0;
     margin-top: 1px;
-  }
-  .card-recommended .plan-v2-features li .fi-check,
-  .card-best-value  .plan-v2-features li .fi-check {
-    color: #ffffff;
   }
   /* Unavailable features: line-through text, muted X icon */
   .plan-v2-features li.feat-disabled {
@@ -318,19 +340,11 @@
     flex-shrink: 0;
     margin-top: 1px;
   }
-  .card-recommended .plan-v2-features li .fi-times,
-  .card-best-value  .plan-v2-features li .fi-times {
-    color: rgba(255,255,255,0.5);
-  }
 
   /* Free domain highlight row */
   .plan-v2-features li.feat-free-domain {
     color: #059669;
     font-weight: 700;
-  }
-  .card-recommended .plan-v2-features li.feat-free-domain,
-  .card-best-value  .plan-v2-features li.feat-free-domain {
-    color: #a7f3d0;
   }
 
   /* See more toggle */
@@ -348,8 +362,6 @@
     color: #ff5a2c;
     margin-bottom: 14px;
   }
-  .card-recommended .plan-v2-see-more,
-  .card-best-value  .plan-v2-see-more { color: rgba(255,255,255,0.9); }
   .plan-v2-extra-features {
     display: none;
     overflow: hidden;
@@ -373,7 +385,7 @@
     margin-top: auto;
     cursor: pointer;
   }
-  /* Basic card button – outline orange */
+  /* Basic & Enterprise outline button */
   .btn-v2-outline {
     background: transparent;
     border-color: #ff5a2c;
@@ -381,36 +393,33 @@
   }
   .btn-v2-outline:hover { background: #ff5a2c; color: #fff; }
 
-  /* Standard & Premium cards – white button */
+  /* Standard & Premium solid orange button */
   .card-recommended .plan-v2-btn,
-  .card-best-value  .plan-v2-btn {
-    background: #ffffff;
-    color: #ff5a2c;
-    border-color: #ffffff;
+  .card-best-value .plan-v2-btn {
+    background: #ff5a2c;
+    color: #ffffff;
+    border-color: #ff5a2c;
   }
   .card-recommended .plan-v2-btn:hover,
-  .card-best-value  .plan-v2-btn:hover {
-    background: #ffe8e0;
-    color: #ff5a2c;
+  .card-best-value .plan-v2-btn:hover {
+    background: #e04d24;
+    border-color: #e04d24;
+    color: #ffffff;
   }
 
-  /* Enterprise card button */
+  /* Enterprise button */
   .card-enterprise .plan-v2-btn {
     background: transparent;
-    border-color: #334155;
+    border-color: #cbd5e1;
     color: #334155;
   }
-  .card-enterprise .plan-v2-btn:hover { background: #334155; color: #fff; }
+  .card-enterprise .plan-v2-btn:hover { background: #cbd5e1; color: #334155; }
 
   /* Divider line above features */
   .plan-v2-divider {
     border: none;
     border-top: 1px solid #e2e8f0;
     margin: 14px 0 14px;
-  }
-  .card-recommended .plan-v2-divider,
-  .card-best-value .plan-v2-divider {
-    border-top-color: rgba(255,255,255,0.2);
   }
 
   /* Trust row below cards */
@@ -432,6 +441,13 @@
   .trust-icon.blue  { background: #eff6ff; color: #3b82f6; }
 
   /* Responsive */
+  @media(max-width:1200px) {
+    .monthly-billing-callout {
+      flex: 1 1 100%;
+      max-width: 280px;
+      margin: 0 auto 20px;
+    }
+  }
   @media(max-width:768px) {
     .pricing-card-v2 { max-width: 100%; flex: 1 1 300px; }
     .pricing-cards-row { flex-direction: column; align-items: center; }
@@ -542,6 +558,24 @@
                  id="tab-{{ strtolower($term) }}"
                  role="tabpanel">
               <div class="pricing-cards-row">
+                <!-- Monthly Billing Callout Box -->
+                <div class="monthly-billing-callout">
+                  <div class="d-flex align-items-start gap-2">
+                    <div class="callout-icon-wrap">
+                      <i class="far fa-calendar-alt"></i>
+                    </div>
+                    <div class="callout-text">
+                      <h5 class="callout-title">Monthly Billing</h5>
+                      <p class="callout-desc">Only Basic plan is available with monthly billing.</p>
+                    </div>
+                  </div>
+                  <div class="callout-arrow d-none d-xl-block">
+                    <svg width="45" height="45" viewBox="0 0 45 45" fill="none" style="position: absolute; right: -35px; bottom: -20px;">
+                      <path d="M5,5 C20,5 32,15 35,32" stroke="#ff5a2c" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="4,4" />
+                      <path d="M30,27 L35,33 L38,26" stroke="#ff5a2c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </div>
+                </div>
 
                 @foreach ($packages as $index => $package)
                   @php
@@ -761,6 +795,7 @@
                   </div><!-- /.pricing-card-v2 -->
                 @endforeach
 
+                @if(strtolower($term) != 'monthly')
                 {{-- Enterprise card always shown --}}
                   <div class="pricing-card-v2 card-enterprise">
                     <div class="plan-v2-icon" style="color:#ff5a2c;"><i class="fas fa-building"></i></div>
@@ -786,6 +821,7 @@
                       </a>
                     </div>
                   </div>
+                @endif
 
               </div><!-- /.pricing-cards-row -->
 
