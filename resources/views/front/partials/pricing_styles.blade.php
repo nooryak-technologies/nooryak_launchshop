@@ -7,7 +7,7 @@
     background-color: #fafbfc !important;
   }
   .pricing-v2-section {
-    padding: 40px 0 100px;
+    /* padding: 40px 0 100px; */
   }
 
   /* ── Centered hero header ── */
