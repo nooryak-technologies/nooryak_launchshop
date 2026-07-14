@@ -192,8 +192,8 @@
                   }
               }
  
-              // Post-process features to customize "Additional Languages" dynamically based on plan
-              $langLimit = intval($package->language_limit ?? 0);
+              // Post-process features to customize "Additional Languages" dynamically based on plan title key
+              // Basic: strikeout, Standard: 1 Additional Language, Premium: 3 Additional Languages
               
               // Find if "Additional Languages" already exists in the formatted features
               $foundLangKey = false;
@@ -204,14 +204,16 @@
                   }
               }
               
-              // Define the custom text and status based on the plan's language limit
               $customText = 'Additional Languages';
-              if ($langLimit == 1) {
+              $customHas = false;
+              
+              if ($titleKey === 'standard') {
                   $customText = '1 Additional Language';
-              } elseif ($langLimit > 1) {
-                  $customText = $langLimit . ' Additional Languages';
+                  $customHas = true;
+              } elseif ($titleKey === 'premium') {
+                  $customText = '3 Additional Languages';
+                  $customHas = true;
               }
-              $customHas = ($langLimit > 0);
               
               if ($foundLangKey !== false) {
                   // Override the existing feature
