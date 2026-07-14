@@ -81,11 +81,16 @@ class CustomerController extends Controller
     public function authUserViaProvider($provider)
     {
         $keywords = Common::get_keywords();
+        $merchant = getUser();
+        if (!$merchant) {
+            return redirect()->route('front.index');
+        }
+
         if (Session::has('redirectTo')) {
             $redirectUrl = Session::get('redirectTo');
             Session::forget('redirectTo');
         } else {
-            return redirect()->route('customer.dashboard', getParam());
+            $redirectUrl = route('customer.dashboard', getParam());
         }
 
         $user = Socialite::driver($provider)->user();
@@ -106,8 +111,8 @@ class CustomerController extends Controller
         $provider_id = $user['id'];
 
 
-        // retrieve user via the email
-        $customer = Customer::where([['email', $email], ['provider_id', $provider_id]])->first();
+        // retrieve user via the email and merchant user_id
+        $customer = Customer::where([['email', $email], ['provider_id', $provider_id], ['user_id', $merchant->id]])->first();
 
         // if doesn't exist, store the new user's info (email, name, avatar, provider_name, provider_id)
         if (empty($customer)) {
@@ -120,6 +125,7 @@ class CustomerController extends Controller
             $customer->username = $provider_id;
             $customer->provider_id = $provider_id;
             $customer->provider = $provider;
+            $customer->user_id = $merchant->id;
             $customer->status = 1;
             $customer->email_verified =  1;
             $customer->email_verified_at =  Carbon::now();
