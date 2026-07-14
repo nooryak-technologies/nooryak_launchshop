@@ -212,7 +212,7 @@
             @endphp
 
             <div class="pricing-card-v2 {{ $cardClass }}">
-              @if($titleKey == 'basic')
+              @if($titleKey == 'basic' && strtolower($term) == 'monthly')
                 <!-- Monthly Billing Callout Box -->
                 <div class="monthly-billing-callout d-none d-lg-block">
                   <div class="d-flex align-items-start gap-2">
