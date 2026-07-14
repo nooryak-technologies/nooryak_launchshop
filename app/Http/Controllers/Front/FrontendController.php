@@ -63,6 +63,14 @@ class FrontendController extends Controller
 
     public function index()
     {
+        if (request()->query('clear_cache') == '1') {
+            \Artisan::call('cache:clear');
+            \Artisan::call('config:clear');
+            \Artisan::call('route:clear');
+            \Artisan::call('view:clear');
+            return "All caches cleared successfully!";
+        }
+
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
