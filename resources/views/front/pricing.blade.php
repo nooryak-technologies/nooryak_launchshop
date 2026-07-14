@@ -114,16 +114,17 @@
 
   /* ── Monthly Billing Callout ── */
   .monthly-billing-callout {
+    position: absolute;
+    left: -240px;
+    top: -45px;
+    width: 210px;
     background: #fff5f2;
     border: 1px solid #ffd5c8;
     border-radius: 12px;
     padding: 16px;
-    max-width: 200px;
-    position: relative;
-    margin-top: 40px;
-    flex: 0 0 200px;
-    text-align: left;
     box-shadow: 0 4px 12px rgba(255,90,44,0.05);
+    z-index: 10;
+    text-align: left;
   }
   .callout-icon-wrap {
     background: #ff5a2c;
@@ -151,8 +152,8 @@
   }
   .callout-arrow {
     position: absolute;
-    right: -35px;
-    bottom: -20px;
+    left: 20px;
+    bottom: -45px;
     z-index: 2;
   }
 
@@ -443,9 +444,15 @@
   /* Responsive */
   @media(max-width:1200px) {
     .monthly-billing-callout {
-      flex: 1 1 100%;
+      position: relative;
+      left: auto;
+      top: auto;
+      margin: 0 auto 24px;
+      width: 100%;
       max-width: 280px;
-      margin: 0 auto 20px;
+    }
+    .monthly-billing-callout .callout-arrow {
+      display: none !important;
     }
   }
   @media(max-width:768px) {
@@ -558,24 +565,6 @@
                  id="tab-{{ strtolower($term) }}"
                  role="tabpanel">
               <div class="pricing-cards-row">
-                <!-- Monthly Billing Callout Box -->
-                <div class="monthly-billing-callout">
-                  <div class="d-flex align-items-start gap-2">
-                    <div class="callout-icon-wrap">
-                      <i class="far fa-calendar-alt"></i>
-                    </div>
-                    <div class="callout-text">
-                      <h5 class="callout-title">Monthly Billing</h5>
-                      <p class="callout-desc">Only Basic plan is available with monthly billing.</p>
-                    </div>
-                  </div>
-                  <div class="callout-arrow d-none d-xl-block">
-                    <svg width="45" height="45" viewBox="0 0 45 45" fill="none" style="position: absolute; right: -35px; bottom: -20px;">
-                      <path d="M5,5 C20,5 32,15 35,32" stroke="#ff5a2c" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="4,4" />
-                      <path d="M30,27 L35,33 L38,26" stroke="#ff5a2c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                  </div>
-                </div>
 
                 @foreach ($packages as $index => $package)
                   @php
@@ -703,6 +692,26 @@
                   @endphp
 
                   <div class="pricing-card-v2 {{ $cardClass }}">
+                    @if($titleKey == 'basic')
+                      <!-- Monthly Billing Callout Box -->
+                      <div class="monthly-billing-callout d-none d-lg-block">
+                        <div class="d-flex align-items-start gap-2">
+                          <div class="callout-icon-wrap">
+                            <i class="far fa-calendar-alt"></i>
+                          </div>
+                          <div class="callout-text">
+                            <h5 class="callout-title">Monthly Billing</h5>
+                            <p class="callout-desc">Only Basic plan is available with monthly billing.</p>
+                          </div>
+                        </div>
+                        <div class="callout-arrow">
+                          <svg width="220" height="50" viewBox="0 0 220 50" fill="none">
+                            <path d="M10,0 C10,35 150,45 205,45" stroke="#ff5a2c" stroke-dasharray="4,4" stroke-width="1.5" stroke-linecap="round" />
+                            <path d="M197,39 L207,45 L197,51" stroke="#ff5a2c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                          </svg>
+                        </div>
+                      </div>
+                    @endif
 
                     {{-- Top badge --}}
                     @if($isRecommended)
