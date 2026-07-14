@@ -292,7 +292,7 @@ Route::domain($domain)->group(function () {
             ]);
             
             foreach ($orderItemsData as $oItem) {
-                \App\Models\User\UserOrderItem::create([
+                DB::table('user_order_items')->insert([
                     'user_order_id' => $order->id,
                     'user_id' => $user->id,
                     'customer_id' => $customer->id,
