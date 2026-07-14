@@ -97,14 +97,13 @@ class LimitCheck
     public static function packageFeaturesCount(int $user_id)
     {
         $user = User::find($user_id);
-        $prevTotalLang = Language::count();
 
         $featuresCount = [];
         $featuresCount['categories'] = $user->item_categories()->whereNotNull('unique_id')->distinct('unique_id')->count('unique_id')
             + $user->item_categories()->whereNull('unique_id')->count();
         $featuresCount['subcategories'] = $user->item_sub_categories()->whereNotNull('unique_id')->distinct('unique_id')->count('unique_id')
             + $user->item_sub_categories()->whereNull('unique_id')->count();
-        $featuresCount['languages'] = $user->languages->count() - $prevTotalLang;
+        $featuresCount['languages'] = max(0, $user->languages()->count() - 1);
         $featuresCount['items'] = $user->items->count();
         $featuresCount['orders'] = $user->orders()->count();
         $featuresCount['custome_page'] = $user->custome_page->count();
