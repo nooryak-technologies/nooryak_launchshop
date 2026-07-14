@@ -108,54 +108,39 @@
     color: #f97316;
   }
 
-  /* ── Monthly Only Billing note card positioned on the left ── */
-  .monthly-only-note-wrapper {
-    position: absolute;
-    left: -230px;
-    top: -50px;
-    width: 210px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    z-index: 100;
-  }
-  .monthly-only-note-card {
+  /* ── Monthly Only Billing note banner (inside flow) ── */
+  .monthly-only-note-banner {
+    width: 100%;
+    max-width: 540px;
+    margin: 0 auto 22px;
     background: #FFF5F2;
-    border: 1px solid #FFD3C4;
+    border: 1.5px solid #FFD3C4;
     border-radius: 12px;
-    padding: 12px 14px;
+    padding: 12px 18px;
     display: flex;
-    gap: 10px;
-    text-align: left;
-    box-shadow: 0 4px 12px rgba(255,90,44,0.06);
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: #475569;
+    box-shadow: 0 2px 8px rgba(255,90,44,0.06);
   }
-  .monthly-only-note-card i {
+  .monthly-only-note-banner i {
     color: #FF5A2C;
     font-size: 18px;
-    margin-top: 2px;
     flex-shrink: 0;
   }
-  .monthly-only-note-card strong {
+  .monthly-only-note-banner strong {
     display: block;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     color: #0f172a;
-    margin-bottom: 2px;
+    margin-bottom: 1px;
   }
-  .monthly-only-note-card span {
-    font-size: 11px;
-    color: #475569;
-    line-height: 1.35;
+  .monthly-only-note-banner span {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.4;
     display: block;
-  }
-  .dotted-arrow-svg {
-    margin-top: -6px;
-    margin-right: 24px;
-  }
-  @media (max-width: 1200px) {
-    .monthly-only-note-wrapper {
-      display: none;
-    }
   }
 
   /* ── Cards grid ── */
@@ -571,23 +556,13 @@
                  style="position: relative;">
 
               @if($isMonthlyTab)
-                <!-- Dotted Arrow Annotation Popup for Monthly Billing -->
-                <div class="monthly-only-note-wrapper">
-                  <div class="monthly-only-note-card">
-                    <i class="far fa-calendar-alt"></i>
-                    <div>
-                      <strong>Monthly Billing</strong>
-                      <span>Only Basic plan is available with monthly billing.</span>
-                    </div>
+                <!-- Monthly Billing Banner -->
+                <div class="monthly-only-note-banner" style="text-align:left;">
+                  <i class="far fa-calendar-alt"></i>
+                  <div>
+                    <strong>Monthly Billing</strong>
+                    <span>Only Basic plan is available with monthly billing. Standard &amp; Premium are shown at their yearly price.</span>
                   </div>
-                  <svg class="dotted-arrow-svg" width="80" height="60" viewBox="0 0 80 60">
-                    <path d="M 70 10 Q 35 15 15 50" fill="none" stroke="#FF5A2C" stroke-width="1.5" stroke-dasharray="4" marker-end="url(#arrow)" />
-                    <defs>
-                      <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#FF5A2C" />
-                      </marker>
-                    </defs>
-                  </svg>
                 </div>
               @endif
 
@@ -741,9 +716,15 @@
 
                     <hr class="plan-v2-divider">
 
-                    {{-- Features --}}
+                    {{-- Features: show first 5, rest hidden behind see more --}}
+                    @php
+                      $positiveList  = array_values($positiveFeatures);
+                      $visibleFeats  = array_slice($positiveList, 0, 5);
+                      $extraFeats    = array_slice($positiveList, 5);
+                    @endphp
+
                     <ul class="plan-v2-features">
-                      @foreach($positiveFeatures as $feat)
+                      @foreach($visibleFeats as $feat)
                         @php
                           $isDomain = (stripos($feat['text'], 'Domain') !== false);
                         @endphp
@@ -758,6 +739,36 @@
                         </li>
                       @endforeach
                     </ul>
+
+                    @if(count($extraFeats) > 0)
+                      <div class="plan-v2-extra-features" id="extra-{{ $package->id }}">
+                        <ul class="plan-v2-features">
+                          @foreach($extraFeats as $feat)
+                            @php
+                              $isDomain = (stripos($feat['text'], 'Domain') !== false);
+                            @endphp
+                            <li>
+                              @if($isDomain)
+                                <i class="fas fa-globe text-success fi-check"></i>
+                                <span style="color: #15803D; font-weight: 700;">{{ __($feat['text']) }}</span>
+                              @else
+                                <i class="fas fa-check fi-check"></i>
+                                <span>{{ __($feat['text']) }}</span>
+                              @endif
+                            </li>
+                          @endforeach
+                        </ul>
+                      </div>
+                      <button type="button"
+                              class="plan-v2-see-more"
+                              onclick="togglePlanFeatures('{{ $package->id }}', this)"
+                              style="display:flex; margin: 0 auto 14px;">
+                        <span class="see-more-txt">See More Features</span>
+                        <i class="fas fa-arrow-right see-more-icon" style="font-size:11px;"></i>
+                      </button>
+                    @else
+                      <div style="margin-bottom:14px;"></div>
+                    @endif
 
                     {{-- CTA --}}
                     <a href="{{ $ctaHref }}" class="plan-v2-btn {{ ($isRecommended || $isBestValue) ? 'btn-v2-solid' : 'btn-v2-outline' }}">
@@ -851,28 +862,27 @@
 
       <!-- Detailed compare plans section -->
       @php
-        $comparePackages = \App\Models\Package::where('status', '1')
-            ->where(function($query) {
-                $query->where(function($q) {
-                    $q->where('title', 'Basic')->where('term', 'monthly');
-                })->orWhere(function($q) {
-                    $q->where('title', 'Basic')->where('term', 'yearly');
-                })->orWhere(function($q) {
-                    $q->where('title', 'Standard')->where('term', 'yearly');
-                })->orWhere(function($q) {
-                    $q->where('title', 'Premium')->where('term', 'yearly');
-                });
-            })
-            ->orderByRaw("FIELD(title, 'Basic', 'Standard', 'Premium')")
-            ->orderByRaw("FIELD(term, 'monthly', 'yearly')")
-            ->get();
+        // Try to get the 4 specific plans for comparison
+        $compareBasicMonthly  = \App\Models\Package::where('status','1')->where('term','monthly')->orderBy('price','asc')->first();
+        $compareBasicYearly   = \App\Models\Package::where('status','1')->where('term','yearly')->orderBy('price','asc')->first();
+        $compareStdYearly     = \App\Models\Package::where('status','1')->where('term','yearly')->orderBy('price','asc')->skip(1)->first();
+        $comparePremYearly    = \App\Models\Package::where('status','1')->where('term','yearly')->orderByDesc('price')->first();
 
+        $comparePackages = collect();
+        if ($compareBasicMonthly)  $comparePackages->push($compareBasicMonthly);
+        if ($compareBasicYearly && $compareBasicYearly->id !== ($compareStdYearly->id ?? null) && $compareBasicYearly->id !== ($comparePremYearly->id ?? null))
+            $comparePackages->push($compareBasicYearly);
+        if ($compareStdYearly && $compareStdYearly->id !== ($comparePremYearly->id ?? null))
+            $comparePackages->push($compareStdYearly);
+        if ($comparePremYearly)
+            $comparePackages->push($comparePremYearly);
+
+        // Remove duplicates by id
+        $comparePackages = $comparePackages->unique('id')->values();
+
+        // If still empty, fall back to all active packages
         if ($comparePackages->isEmpty()) {
-            $firstTerm = count($terms) > 0 ? strtolower($terms[0]) : 'monthly';
-            $comparePackages = \App\Models\Package::where('status', '1')
-                ->where('term', $firstTerm)
-                ->orderBy('price', 'asc')
-                ->get();
+            $comparePackages = \App\Models\Package::where('status','1')->orderBy('price','asc')->get();
         }
 
         // Build comparison rows
