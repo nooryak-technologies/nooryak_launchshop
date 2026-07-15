@@ -1041,8 +1041,8 @@
                 <p class="text-white-50 mb-0">Get a professional identity for your store in seconds.</p>
               </div>
             </div>
-            <div class="subdomain-check-container mt-3 mt-lg-0">
-              <div class="subdomain-input-group" style="max-width: 100%;">
+            <div class="subdomain-check-container mt-3 mt-lg-0" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+              <div class="subdomain-input-group" style="max-width: 100%; flex-grow: 1;">
                 <span class="domain-prefix">https://</span>
                 <input type="text" id="subdomain-input" placeholder="mystore" value="mystore">
                 <span class="domain-ext">.launchshop.in</span>
@@ -1051,7 +1051,10 @@
                   <span class="d-inline d-md-none">Check</span>
                 </button>
               </div>
-              <div id="subdomain-status" class="subdomain-status-msg text-start mt-2" style="display: none;"></div>
+              <a href="#home-pricing-section" class="btn-subdomain-launch-now" style="background: #ffffff; color: #ff5a2c; border: 1.5px solid #ffffff; border-radius: 8px; padding: 12px 24px; font-size: 14px; font-weight: 700; text-decoration: none; white-space: nowrap; height: 50px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='#ff5a2c';this.style.color='#ffffff';this.style.borderColor='#ff5a2c';" onmouseout="this.style.background='#ffffff';this.style.color='#ff5a2c';this.style.borderColor='#ffffff';">
+                {{ __('Launch Now') }}
+              </a>
+              <div id="subdomain-status" class="subdomain-status-msg text-start mt-2" style="display: none; width: 100%;"></div>
             </div>
           </div>
         </div>

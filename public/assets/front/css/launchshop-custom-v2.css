@@ -1919,6 +1919,8 @@ i[id$="EyeIcon"]:hover {
 .subdomain-check-container {
     flex-grow: 1;
     display: flex;
+    align-items: center;
+    gap: 12px;
     justify-content: flex-end;
 }
 
@@ -2572,6 +2574,7 @@ i[id$="EyeIcon"]:hover {
         width: 100% !important;
         margin-top: 15px !important;
         justify-content: center !important;
+        flex-wrap: wrap !important;
     }
 
     .subdomain-input-group {
