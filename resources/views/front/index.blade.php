@@ -110,6 +110,11 @@
     color: #2563eb;
     border: 1px solid rgba(37, 99, 235, 0.15);
   }
+  .step-icon-purple {
+    background: #f5f3ff;
+    color: #7c3aed;
+    border: 1px solid rgba(124, 58, 237, 0.15);
+  }
   .step-text-container {
     display: flex;
     flex-direction: column;
@@ -423,71 +428,83 @@
           <span class="hiw-decor-dot right"></span>
         </div>
 
-        <!-- 5 Steps Row -->
+        <!-- 6 Steps Row -->
         <div class="hiw-steps-row" data-aos="fade-up">
 
           <!-- Step 1 -->
           <div class="hiw-step-item">
             <div class="hiw-step-icon-wrap">
-              <div class="hiw-step-circle hiw-circle-orange">
-                <i class="fas fa-paint-roller"></i>
+              <div class="hiw-step-circle hiw-circle-pink">
+                <i class="fas fa-clipboard-list"></i>
               </div>
               <div class="hiw-step-badge">1</div>
             </div>
-            <h4 class="hiw-step-title">{{ __('Choose a Theme') }}</h4>
-            <p class="hiw-step-desc">{{ __('Pick a professional theme that matches your brand.') }}</p>
+            <h4 class="hiw-step-title">{{ __('Select a Plan') }}</h4>
+            <p class="hiw-step-desc">{{ __('Choose the perfect pricing plan that fits your business needs.') }}</p>
           </div>
 
           <!-- Step 2 -->
           <div class="hiw-step-item">
             <div class="hiw-step-icon-wrap">
-              <div class="hiw-step-circle hiw-circle-purple">
-                <i class="fas fa-cog"></i>
+              <div class="hiw-step-circle hiw-circle-orange">
+                <i class="fas fa-paint-roller"></i>
               </div>
               <div class="hiw-step-badge">2</div>
             </div>
-            <h4 class="hiw-step-title">{{ __('Customize Your Store') }}</h4>
-            <p class="hiw-step-desc">{{ __('Edit colors, fonts, layout and content easily.') }}</p>
+            <h4 class="hiw-step-title">{{ __('Choose a Theme') }}</h4>
+            <p class="hiw-step-desc">{{ __('Pick a professional theme that matches your brand.') }}</p>
           </div>
 
           <!-- Step 3 -->
           <div class="hiw-step-item">
             <div class="hiw-step-icon-wrap">
-              <div class="hiw-step-circle hiw-circle-blue">
-                <i class="fas fa-box-open"></i>
+              <div class="hiw-step-circle hiw-circle-purple">
+                <i class="fas fa-cog"></i>
               </div>
               <div class="hiw-step-badge">3</div>
             </div>
-            <h4 class="hiw-step-title">{{ __('Add Products') }}</h4>
-            <p class="hiw-step-desc">{{ __('Upload products, set prices and manage inventory.') }}</p>
+            <h4 class="hiw-step-title">{{ __('Customize Your Store') }}</h4>
+            <p class="hiw-step-desc">{{ __('Edit colors, fonts, layout and content easily.') }}</p>
           </div>
 
           <!-- Step 4 -->
           <div class="hiw-step-item">
             <div class="hiw-step-icon-wrap">
-              <div class="hiw-step-circle hiw-circle-green">
-                <i class="fas fa-credit-card"></i>
+              <div class="hiw-step-circle hiw-circle-blue">
+                <i class="fas fa-box-open"></i>
               </div>
               <div class="hiw-step-badge">4</div>
             </div>
-            <h4 class="hiw-step-title">{{ __('Accept Payments') }}</h4>
-            <p class="hiw-step-desc">{{ __('Enable secure payments and shipping options.') }}</p>
+            <h4 class="hiw-step-title">{{ __('Add Products') }}</h4>
+            <p class="hiw-step-desc">{{ __('Upload products, set prices and manage inventory.') }}</p>
           </div>
 
           <!-- Step 5 -->
           <div class="hiw-step-item">
             <div class="hiw-step-icon-wrap">
+              <div class="hiw-step-circle hiw-circle-green">
+                <i class="fas fa-credit-card"></i>
+              </div>
+              <div class="hiw-step-badge">5</div>
+            </div>
+            <h4 class="hiw-step-title">{{ __('Accept Payments') }}</h4>
+            <p class="hiw-step-desc">{{ __('Enable secure payments and shipping options.') }}</p>
+          </div>
+
+          <!-- Step 6 -->
+          <div class="hiw-step-item">
+            <div class="hiw-step-icon-wrap">
               <div class="hiw-step-circle hiw-circle-orange">
                 <i class="fas fa-rocket"></i>
               </div>
-              <div class="hiw-step-badge">5</div>
+              <div class="hiw-step-badge">6</div>
             </div>
             <h4 class="hiw-step-title">{{ __('Start Selling') }}</h4>
             <p class="hiw-step-desc">{{ __('Publish your store and start growing your business.') }}</p>
           </div>
 
         </div>
-        <!-- /5 Steps Row -->
+        <!-- /6 Steps Row -->
 
       </div>
     </section>
@@ -500,7 +517,7 @@
     <!-- Duplicated Templates Section Start -->
     <section class="templates-section mt-80" id="templates-duplicate" style="background: #f8fafc; padding: 80px 0;">
       <div class="container">
-        <div class="row align-items-center mb-50">
+        <div class="row align-items-center mb-2">
           <div class="col-12 text-center">
             <div class="templates-badge-wrap" data-aos="fade-up">
               <span class="templates-badge">
@@ -508,7 +525,7 @@
               </span>
             </div>
             <h2 class="section-title mb-3 text-center" data-aos="fade-up" style="font-size: 38px; font-weight: 800; color: #1E2335;">{{ __('Professional Themes for Every Industry') }}</h2>
-            <p class="section-subtitle-text" data-aos="fade-up" style="font-size: 16px; color: #718096; max-width: 600px; margin: 0 auto 30px;">{{ __('Explore our optimized scrolling templates built for speed, responsiveness, and conversions.') }}</p>
+            <p class="section-subtitle-text" data-aos="fade-up" style="font-size: 16px; color: #718096; max-width: 600px; margin: 0 auto 10px; text-align: center !important;">{{ __('Explore our optimized scrolling templates built for speed, responsiveness, and conversions.') }}</p>
           </div>
         </div>
 
@@ -631,6 +648,28 @@
                 </div>
               </div>
             @endforeach
+
+            <!-- Theme Coming Soon 1 -->
+            <div class="col-lg-3 col-md-6 col-sm-12 template-card-item mb-4" data-category="all" data-search="coming soon theme template placeholder">
+              <div class="template-card-modern coming-soon-card" style="height: 100%; min-height: 480px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 40px 20px; text-align: center; transition: all 0.3s ease;">
+                <div class="mb-3" style="width: 60px; height: 60px; border-radius: 50%; background: #fff5f2; display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-magic" style="font-size: 24px; color: #ff5a2c;"></i>
+                </div>
+                <h3 style="font-size: 18px; font-weight: 700; color: #475569; margin-bottom: 8px;">Coming Soon</h3>
+                <p style="font-size: 13px; color: #94a3b8; max-width: 180px; margin-bottom: 0;">We are crafting new premium templates for your store.</p>
+              </div>
+            </div>
+
+            <!-- Theme Coming Soon 2 -->
+            <div class="col-lg-3 col-md-6 col-sm-12 template-card-item mb-4" data-category="all" data-search="coming soon theme template placeholder">
+              <div class="template-card-modern coming-soon-card" style="height: 100%; min-height: 480px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 40px 20px; text-align: center; transition: all 0.3s ease;">
+                <div class="mb-3" style="width: 60px; height: 60px; border-radius: 50%; background: #fff5f2; display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-magic" style="font-size: 24px; color: #ff5a2c;"></i>
+                </div>
+                <h3 style="font-size: 18px; font-weight: 700; color: #475569; margin-bottom: 8px;">Coming Soon</h3>
+                <p style="font-size: 13px; color: #94a3b8; max-width: 180px; margin-bottom: 0;">We are crafting new premium templates for your store.</p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -639,6 +678,17 @@
           <button id="view-all-themes-btn-duplicate" class="btn-view-all-themes">
             {{ __('View All Themes') }} <i class="fas fa-arrow-right ms-2"></i>
           </button>
+        </div>
+
+        @php
+          $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
+          $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
+        @endphp
+        <!-- Register For More Themes Button Wrap -->
+        <div class="register-more-themes-btn-wrap d-none" data-aos="fade-up" style="display: flex; justify-content: center; margin-top: 30px;">
+          <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-cta-launch px-5 py-3 d-inline-flex align-items-center gap-2" style="background:#ff5a2c; color:#fff; border-radius:30px; font-weight:700; text-decoration:none; box-shadow:0 4px 15px rgba(255,90,44,0.3);">
+            {{ __('Register For More Themes') }} <i class="fas fa-arrow-right"></i>
+          </a>
         </div>
 
       </div>
@@ -657,64 +707,71 @@
           </div>
         </div>
         
-        <!-- Right Column: 4 Simple Steps -->
+        <!-- Right Column: 5 Simple Steps -->
         <div class="col-lg-6 col-md-12">
           <div class="steps-content-wrap ps-lg-4 text-start">
             <span class="steps-badge d-inline-block">{{ __('Simple Steps. Big Results.') }}</span>
-            <h2 class="steps-main-title mb-4" style="font-weight: 800; font-size: 34px; color: #1e293b;">{{ __('Launch your dream store in four simple steps.') }}</h2>
+            <h2 class="steps-main-title mb-4" style="font-weight: 800; font-size: 34px; color: #1e293b;">{{ __('Launch your dream store in five simple steps.') }}</h2>
             
             <div class="steps-list mt-30">
               <!-- Step 1 -->
+              <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
+                <div class="step-icon-container step-icon-purple">
+                  <i class="fas fa-clipboard-list"></i>
+                </div>
+                <div class="step-text-container">
+                  <h4 class="step-item-title">{{ __('1. Select Your Plan') }}</h4>
+                  <p class="step-item-desc">{{ __('Choose the perfect pricing plan that fits your business needs.') }}</p>
+                </div>
+              </div>
+
+              <!-- Step 2 -->
               <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
                 <div class="step-icon-container step-icon-orange">
                   <i class="fas fa-store"></i>
                 </div>
                 <div class="step-text-container">
-                  <h4 class="step-item-title">{{ __('1. Choose Your Theme') }}</h4>
+                  <h4 class="step-item-title">{{ __('2. Choose Your Theme') }}</h4>
                   <p class="step-item-desc">{{ __('Pick a professional theme that matches your brand.') }}</p>
-                </div>
-              </div>
-              
-              <!-- Step 2 -->
-              <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
-                <div class="step-icon-container step-icon-pink">
-                  <i class="fas fa-cog"></i>
-                </div>
-                <div class="step-text-container">
-                  <h4 class="step-item-title">{{ __('2. Customize & Setup') }}</h4>
-                  <p class="step-item-desc">{{ __('Add your products, customize design & settings.') }}</p>
                 </div>
               </div>
               
               <!-- Step 3 -->
               <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
-                <div class="step-icon-container step-icon-green">
-                  <i class="fas fa-credit-card"></i>
+                <div class="step-icon-container step-icon-pink">
+                  <i class="fas fa-cog"></i>
                 </div>
                 <div class="step-text-container">
-                  <h4 class="step-item-title">{{ __('3. Configure Payments') }}</h4>
-                  <p class="step-item-desc">{{ __('Set up payment methods and shipping options.') }}</p>
+                  <h4 class="step-item-title">{{ __('3. Customize & Setup') }}</h4>
+                  <p class="step-item-desc">{{ __('Add your products, customize design & settings.') }}</p>
                 </div>
               </div>
               
               <!-- Step 4 -->
               <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
+                <div class="step-icon-container step-icon-green">
+                  <i class="fas fa-credit-card"></i>
+                </div>
+                <div class="step-text-container">
+                  <h4 class="step-item-title">{{ __('4. Configure Payments') }}</h4>
+                  <p class="step-item-desc">{{ __('Set up payment methods and shipping options.') }}</p>
+                </div>
+              </div>
+              
+              <!-- Step 5 -->
+              <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
                 <div class="step-icon-container step-icon-blue">
                   <i class="fas fa-rocket"></i>
                 </div>
                 <div class="step-text-container">
-                  <h4 class="step-item-title">{{ __('4. Launch Your Store') }}</h4>
+                  <h4 class="step-item-title">{{ __('5. Launch Your Store') }}</h4>
                   <p class="step-item-desc">{{ __('Your store is live! Start selling and growing.') }}</p>
                 </div>
               </div>
             </div>
             
-            @php
-              $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
-              $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
-            @endphp
             <div class="mt-4" style="text-align: left;">
-              <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-start-journey">
+              <a href="{{ route('front.pricing') }}" class="btn-start-journey">
                 {{ __('Start Your Journey') }} <i class="fas fa-arrow-right ms-2"></i>
               </a>
             </div>
@@ -1180,6 +1237,7 @@
         if (showAllThemes) {
             filteredItems.removeClass('d-none');
             $('.view-all-themes-btn-wrap-duplicate').addClass('d-none');
+            $('.register-more-themes-btn-wrap').removeClass('d-none');
         } else {
             filteredItems.slice(0, itemsLimitThemes).removeClass('d-none');
             if (filteredItems.length > itemsLimitThemes) {
@@ -1187,6 +1245,7 @@
             } else {
                 $('.view-all-themes-btn-wrap-duplicate').addClass('d-none');
             }
+            $('.register-more-themes-btn-wrap').addClass('d-none');
         }
     }
 

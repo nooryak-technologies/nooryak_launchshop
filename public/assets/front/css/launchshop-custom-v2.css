@@ -9740,6 +9740,12 @@ iframe[id^="tawkchat-"],
     background: #F0FDF4;
 }
 
+.hiw-circle-pink {
+    border-color: #FCA5A5;
+    color: #DC2626;
+    background: #FEF2F2;
+}
+
 .hiw-step-badge {
     position: absolute;
     bottom: -10px;
