@@ -60,7 +60,7 @@
   /* ── Toggle pill tabs ── */
   .pricing-toggle-wrap {
     text-align: center;
-    margin-bottom: 48px;
+    /* margin-bottom: 48px; */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -433,10 +433,11 @@
     margin-top: 48px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.02);
     width: 100%;
-    max-width: 960px;
+    max-width: 1100px;
     margin-left: auto;
     margin-right: auto;
     flex-wrap: nowrap;
+    box-sizing: border-box;
   }
   .pricing-v2-trust-item {
     display: flex;
@@ -514,17 +515,28 @@
     .pricing-v2-trust {
       flex-direction: column;
       gap: 20px;
-      padding: 24px;
+      padding: 24px 16px;
+      box-sizing: border-box;
     }
     .pricing-v2-trust-item {
       width: 100%;
-      justify-content: center;
-      padding: 0;
+      justify-content: flex-start;
+      padding-left: calc(50% - 115px);
+      box-sizing: border-box;
     }
     .pricing-v2-trust-item:not(:last-child) {
       border-right: none;
       border-bottom: 1.5px solid #e2e8f0;
       padding-bottom: 16px;
+    }
+    .plan-v2-features li {
+      justify-content: center;
+      text-align: center;
+    }
+    .plan-v2-see-more {
+      width: 100%;
+      justify-content: center;
+      display: flex;
     }
   }
 </style>
