@@ -311,7 +311,7 @@ class SeedDummyDataForAll extends Migration
                             'total' => $total,
                             'method' => $gateways[$i % count($gateways)],
                             'gateway_type' => 'online',
-                            'currency_code' => $userCurrency ? $userCurrency->code : 'INR',
+                            'currency_code' => $userCurrency ? $userCurrency->text : 'INR',
                             'currency_sign' => $userCurrency ? $userCurrency->symbol : '₹',
                             'currency_id' => $currencyId,
                             'order_number' => 'ORD' . $i . '-' . strtoupper(Str::random(6)),
