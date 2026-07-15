@@ -92,6 +92,16 @@
       --color-primary2: #{{ $bs->base_color_2 }};
       --color-primary-rgb: {{ rgb(htmlspecialchars($primaryColor)) }};
     }
+    body {
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+    }
+    img {
+      -webkit-user-drag: none !important;
+      user-drag: none !important;
+    }
   </style>
 
   <script>
@@ -580,7 +590,7 @@
     });
   </script>
 
-  <!-- Prevent Code & Theme Cloning (Anti-DevTools & Inspect Element) -->
+  <!-- Prevent Code & Theme Cloning (Anti-DevTools & Inspect Element & Anti-Copy) -->
   <script>
     (function() {
       function blockDevTools() {
@@ -597,6 +607,26 @@
               (e.ctrlKey && e.keyCode === 83)) {
             e.preventDefault();
             return false;
+          }
+        });
+
+        // Disable text copying (copy and cut)
+        document.addEventListener('copy', function(e) {
+          e.preventDefault();
+        });
+        document.addEventListener('cut', function(e) {
+          e.preventDefault();
+        });
+        
+        // Disable selection triggers
+        document.addEventListener('selectstart', function(e) {
+          e.preventDefault();
+        });
+
+        // Disable dragging of images
+        document.addEventListener('dragstart', function(e) {
+          if (e.target.tagName === 'IMG') {
+            e.preventDefault();
           }
         });
 
