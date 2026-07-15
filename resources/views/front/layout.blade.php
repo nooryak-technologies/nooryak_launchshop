@@ -593,6 +593,24 @@
   <!-- Prevent Code & Theme Cloning (Anti-DevTools & Inspect Element & Anti-Copy) -->
   <script>
     (function() {
+      // Developer bypass checks:
+      // 1. Auto-allow on localhost / local IP
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      // 2. Auto-allow if Laravel is in local environment or APP_DEBUG is true
+      const isLaravelDev = {{ config('app.env') === 'local' || config('app.debug') ? 'true' : 'false' }};
+      // 3. Secret URL debug query parameter override (?debug=true to enable, ?debug=false to disable)
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('debug') === 'true') {
+        localStorage.setItem('allow_inspect', 'true');
+      } else if (urlParams.get('debug') === 'false') {
+        localStorage.removeItem('allow_inspect');
+      }
+
+      // If any developer mode is active, completely skip all code & copy protection
+      if (isLocalhost || isLaravelDev || localStorage.getItem('allow_inspect') === 'true') {
+        return;
+      }
+
       function blockDevTools() {
         // Disable right-click context menu
         document.addEventListener('contextmenu', function(e) {
