@@ -20,7 +20,7 @@
 
 
 
-  <div id="faq" class="faq-area">
+  <div id="faq" class="faq-area py-5">
     <div class="container">
       <div class="accordion" id="faqAccordion">
         @if (count($faqs) == 0)

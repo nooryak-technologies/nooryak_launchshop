@@ -7180,6 +7180,10 @@ i[id$="EyeIcon"]:hover {
         padding-top: 110px !important;
     }
 
+    .page-title-area {
+        margin-top: 85px !important;
+    }
+
     /* Style the main header wrapper to float fixed on top of the viewport */
     .header-area,
     .header-inner-page {
