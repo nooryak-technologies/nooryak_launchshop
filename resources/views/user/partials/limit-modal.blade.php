@@ -239,7 +239,7 @@
             @endif
 
             <!-- Coupon limit check -->
-            @if (!is_null($package->coupon_limit))
+            @if (is_array($permissions) && in_array('Coupon code', $permissions))
               <li class="list-group-item border-0 p-3 shadow-sm d-flex justify-content-between align-items-center" style="border-radius: 12px; background: #ffffff; border: 1px solid rgba(0,0,0,0.06) !important;">
                 <div class="d-flex align-items-center">
                   <span class="d-inline-flex align-items-center justify-content-center mr-3" style="width: 38px; height: 38px; border-radius: 10px; background: rgba(139, 92, 246, 0.1); color: #8b5cf6; flex-shrink: 0;">
@@ -347,6 +347,9 @@
                 @php
                   $cleanKey = strtolower(trim($featureKey));
                   if ($cleanKey === 'ai_content_and_image_generator' || $cleanKey === 'ai content and image generator' || str_contains($cleanKey, 'ai_content')) {
+                      continue;
+                  }
+                  if (in_array($cleanKey, ['disqus', 'bank transfer integrations', 'facebook pixel', 'coupon code', 'coupon_code'])) {
                       continue;
                   }
                   $iconData = $featureIcons[$cleanKey] ?? ['icon' => 'fa-check-circle', 'color' => '#28a745', 'bg' => 'rgba(40, 167, 69, 0.1)'];

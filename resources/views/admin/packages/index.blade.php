@@ -187,7 +187,11 @@
                             </div>
                             @php
                                 if (\Schema::hasTable('package_features')) {
-                                    $allFeatures = \App\Models\PackageFeature::whereIn('type', ['standard', 'custom'])->orderBy('serial_number', 'asc')->get();
+                                    $allFeatures = \App\Models\PackageFeature::whereIn('type', ['standard', 'custom'])
+                                        ->whereNotIn('name', ['Disqus', 'Bank Transfer Integrations', 'Facebook Pixel'])
+                                        ->whereNotIn('keyword', ['Disqus', 'Bank Transfer Integrations', 'Facebook Pixel'])
+                                        ->orderBy('serial_number', 'asc')
+                                        ->get();
                                 } else {
                                     $allFeatures = collect();
                                 }
@@ -206,11 +210,9 @@
                                                     'Custom Page' => 'Custom Page',
                                                     'Google Login' => 'Google Login',
                                                     'Google Analytics' => 'Google Analytics',
-                                                    'Facebook Pixel' => 'Facebook Pixel',
                                                     'Google Recaptcha' => 'Google Recaptcha',
                                                     'WhatsApp Chat Button' => 'WhatsApp Chat Button',
                                                     'Tawk to' => 'Tawk to',
-                                                    'Disqus' => 'Disqus',
                                                     'AI Content & Image Generator' => 'AI Content & Image Generator'
                                                 ];
                                             @endphp

@@ -62,7 +62,7 @@
                                     </tr>
                                 @else
                                     @foreach($features as $feature)
-                                        @if($feature->keyword === 'AI Content & Image Generator' || $feature->name === 'AI Content & Image Generator')
+                                        @if($feature->keyword === 'AI Content & Image Generator' || $feature->name === 'AI Content & Image Generator' || in_array($feature->name, ['Disqus', 'Bank Transfer Integrations', 'Facebook Pixel']) || in_array($feature->keyword, ['Disqus', 'Bank Transfer Integrations', 'Facebook Pixel']))
                                             @continue
                                         @endif
                                         <tr data-id="{{ $feature->id }}">
