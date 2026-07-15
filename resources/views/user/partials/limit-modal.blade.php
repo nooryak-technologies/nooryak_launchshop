@@ -216,7 +216,7 @@
                   </span>
                   <span class="font-weight-600" style="font-size: 14px; color: #333;">
                     @if ($totalBlog > $blogLimit) <i class="fas fa-exclamation-triangle text-danger mr-1"></i> @endif
-                    {{ __('Post Left') }} <i class="fas fa-info-circle text-muted ml-1" style="font-size: 12px; opacity: 0.7;"></i>
+                    {{ __('Post/Blog Limit') }} <i class="fas fa-info-circle text-muted ml-1" style="font-size: 12px; opacity: 0.7;"></i>
                     @if ($blogLimit < 999999)
                       @if ($canAddBlog == 0)
                         <span class="ml-2 font-weight-bold text-danger" style="font-size: 13px;">{{ __('Limit is over') }}</span>
@@ -229,6 +229,37 @@
                 @if ($blogLimit < 999999)
                   <span class="badge font-weight-bold" style="background: {{ ($totalBlog > $blogLimit || $canAddBlog == 0) ? '#fd7e14' : '#0d6efd' }}; color: #ffffff; border-radius: 20px; padding: 6px 16px; font-size: 12px;">
                     {{ $totalBlog > $blogLimit ? 0 : $canAddBlog }}
+                  </span>
+                @else
+                  <span class="badge font-weight-bold" style="background: rgba(40, 167, 69, 0.15); color: #28a745; border: 1px solid rgba(40, 167, 69, 0.3); border-radius: 20px; padding: 6px 16px; font-size: 12px;">
+                    {{ __('Unlimited') }}
+                  </span>
+                @endif
+              </li>
+            @endif
+
+            <!-- Coupon limit check -->
+            @if (!is_null($package->coupon_limit))
+              <li class="list-group-item border-0 p-3 shadow-sm d-flex justify-content-between align-items-center" style="border-radius: 12px; background: #ffffff; border: 1px solid rgba(0,0,0,0.06) !important;">
+                <div class="d-flex align-items-center">
+                  <span class="d-inline-flex align-items-center justify-content-center mr-3" style="width: 38px; height: 38px; border-radius: 10px; background: rgba(139, 92, 246, 0.1); color: #8b5cf6; flex-shrink: 0;">
+                    <i class="fas fa-ticket-alt" style="font-size: 16px;"></i>
+                  </span>
+                  <span class="font-weight-600" style="font-size: 14px; color: #333;">
+                    @if ($totalCoupon > $couponLimit) <i class="fas fa-exclamation-triangle text-danger mr-1"></i> @endif
+                    {{ __('Coupons Left') }} <i class="fas fa-info-circle text-muted ml-1" style="font-size: 12px; opacity: 0.7;"></i>
+                    @if ($couponLimit < 999999)
+                      @if ($canAddCoupon == 0)
+                        <span class="ml-2 font-weight-bold text-danger" style="font-size: 13px;">{{ __('Limit is over') }}</span>
+                      @elseif($totalCoupon > $couponLimit)
+                        <span class="ml-2 font-weight-bold text-danger" style="font-size: 13px;">{{ __('Down Graded') }}</span>
+                      @endif
+                    @endif
+                  </span>
+                </div>
+                @if ($couponLimit < 999999)
+                  <span class="badge font-weight-bold" style="background: {{ ($totalCoupon > $couponLimit || $canAddCoupon == 0) ? '#fd7e14' : '#0d6efd' }}; color: #ffffff; border-radius: 20px; padding: 6px 16px; font-size: 12px;">
+                    {{ $totalCoupon > $couponLimit ? 0 : $canAddCoupon }}
                   </span>
                 @else
                   <span class="badge font-weight-bold" style="background: rgba(40, 167, 69, 0.15); color: #28a745; border: 1px solid rgba(40, 167, 69, 0.3); border-radius: 20px; padding: 6px 16px; font-size: 12px;">

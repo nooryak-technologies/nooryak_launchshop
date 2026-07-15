@@ -36,6 +36,10 @@
   $orderLimit = LimitCheck::orderLimit($userId);
   $totalOrder = $featureCount['orders'];
   $canAddOrder = $orderLimit - $totalOrder;
+  //coupon limit
+  $couponLimit = LimitCheck::couponLimit($userId);
+  $totalCoupon = $featureCount['coupons'];
+  $canAddCoupon = $couponLimit - $totalCoupon;
 
   $today = Carbon::now()->toDateString();
   $aiMembership = Membership::query()->select([
@@ -65,7 +69,7 @@
   $aiImagePurchased = max(0, (int) ($aiMembership?->ai_image_purchased ?? 0));
   $aiImageTotalLimit = $aiImageLimit + $aiImagePurchased;
 
-  if ($canAddCat < 0 || $canAddSubcat < 0 || $canAddItem < 0 || $canAddBlog < 0 || $canAddLang < 0 || $canAddPage < 0) {
+  if ($canAddCat < 0 || $canAddSubcat < 0 || $canAddItem < 0 || $canAddBlog < 0 || $canAddLang < 0 || $canAddPage < 0 || $canAddCoupon < 0) {
       $infoIcon = true;
   }
 @endphp

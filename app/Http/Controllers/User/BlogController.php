@@ -114,12 +114,9 @@ class BlogController extends Controller
         $current_package = UserPermissionHelper::currentPackagePermission($user_id);
 
         $post_limit = $current_package->post_limit;
-
         $total_post = Blog::where('user_id', $user_id)->count();
-        $total_post = $total_post + 1;
 
-
-        if ($post_limit <= $total_post) {
+        if ($post_limit != 999999 && $total_post >= $post_limit) {
             Session::flash('warning', __('The blog post limit has been exceeded'));
             return "success";
         }

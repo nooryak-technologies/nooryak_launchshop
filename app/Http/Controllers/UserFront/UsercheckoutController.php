@@ -50,9 +50,8 @@ class UsercheckoutController extends Controller
         $current_package = UserPermissionHelper::currentPackagePermission($user_id);
         $order_limit = $current_package->order_limit;
         $total_order = UserOrder::where('user_id', $user_id)->count();
-        $total_order = $total_order + 1;
 
-        if ($order_limit <= $total_order) {
+        if ($order_limit != 999999 && $total_order >= $order_limit) {
             return back()->with([
                 'alert-type' => 'warning',
                 'message' => __('Order Limit Exceeded')

@@ -91,6 +91,16 @@ class LimitCheck
         return isset($packageId) && isset($package) ? $package->order_limit : 0;
     }
 
+    public static function couponLimit($user_id)
+    {
+        $packageId =  self::current_package($user_id);
+
+        if (isset($packageId)) {
+            $package = Package::query()->select('coupon_limit')->findOrFail($packageId);
+        }
+        return isset($packageId) && isset($package) ? $package->coupon_limit : 0;
+    }
+
     /**
      * count all feates from here
      * */
@@ -108,6 +118,7 @@ class LimitCheck
         $featuresCount['orders'] = $user->orders()->count();
         $featuresCount['custome_page'] = $user->custome_page->count();
         $featuresCount['blogs'] = $user->blogs->count();
+        $featuresCount['coupons'] = \App\Models\User\UserCoupon::where('user_id', $user_id)->count();
 
         return $featuresCount;
     }

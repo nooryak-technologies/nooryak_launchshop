@@ -29,10 +29,8 @@ class CouponController extends Controller
         if ($current_package) {
             $coupon_limit = $current_package->coupon_limit ?? 999999;
             $count = UserCoupon::where('user_id', $userId)->count();
-            if ($count >= $coupon_limit) {
-                return response()->json([
-                    'code' => [__('You have reached your coupon limit under your current package.')]
-                ]);
+            if ($coupon_limit != 999999 && $count >= $coupon_limit) {
+                return response()->json('downgrade');
             }
         }
 
