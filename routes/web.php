@@ -337,6 +337,10 @@ Route::domain($domain)->group(function () {
         Route::get('/p/{slug}', 'Front\FrontendController@dynamicPage')->name('front.dynamicPage');
         Route::get('/success', 'Front\CheckoutController@paymentSuccess')->name('success.page');
         Route::get('/about', 'Front\FrontendController@about')->name('front.about');
+        Route::get('/privacy-policy', 'Front\FrontendController@privacyPolicy')->name('front.privacy-policy');
+        Route::get('/terms-conditions', 'Front\FrontendController@termsConditions')->name('front.terms-conditions');
+        Route::get('/refund-policy', 'Front\FrontendController@refundPolicy')->name('front.refund-policy');
+        Route::get('/shipping-policy', 'Front\FrontendController@shippingPolicy')->name('front.shipping-policy');
     });
 
     Route::group(['middleware' => ['web', 'guest', 'setlang']], function () {

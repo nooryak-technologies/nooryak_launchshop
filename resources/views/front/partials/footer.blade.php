@@ -32,7 +32,10 @@
               @foreach ($ulinks as $ulink)
                 <li><a href="{{ $ulink->url }}">{{ $ulink->name }}</a></li>
               @endforeach
-
+              <li><a href="{{ route('front.privacy-policy') }}">{{ __('Privacy Policy') }}</a></li>
+              <li><a href="{{ route('front.terms-conditions') }}">{{ __('Terms & Conditions') }}</a></li>
+              <li><a href="{{ route('front.refund-policy') }}">{{ __('Cancellation & Refund Policy') }}</a></li>
+              <li><a href="{{ route('front.shipping-policy') }}">{{ __('Shipping & Delivery Policy') }}</a></li>
             </ul>
           </div>
         </div>

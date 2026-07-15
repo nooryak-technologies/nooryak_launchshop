@@ -1157,4 +1157,52 @@ class FrontendController extends Controller
         return $pdf->stream('membership.pdf');
         
     }
+
+    public function privacyPolicy()
+    {
+        if (session()->has('lang')) {
+            $currentLang = Language::where('code', session()->get('lang'))->first();
+        } else {
+            $currentLang = Language::where('is_default', 1)->first();
+        }
+        $data['pageHeading'] = __('Privacy Policy');
+        $data['seo'] = Seo::where('language_id', $currentLang->id)->first();
+        return view('front.privacy-policy', $data);
+    }
+
+    public function termsConditions()
+    {
+        if (session()->has('lang')) {
+            $currentLang = Language::where('code', session()->get('lang'))->first();
+        } else {
+            $currentLang = Language::where('is_default', 1)->first();
+        }
+        $data['pageHeading'] = __('Terms & Conditions');
+        $data['seo'] = Seo::where('language_id', $currentLang->id)->first();
+        return view('front.terms-conditions', $data);
+    }
+
+    public function refundPolicy()
+    {
+        if (session()->has('lang')) {
+            $currentLang = Language::where('code', session()->get('lang'))->first();
+        } else {
+            $currentLang = Language::where('is_default', 1)->first();
+        }
+        $data['pageHeading'] = __('Cancellation & Refund Policy');
+        $data['seo'] = Seo::where('language_id', $currentLang->id)->first();
+        return view('front.refund-policy', $data);
+    }
+
+    public function shippingPolicy()
+    {
+        if (session()->has('lang')) {
+            $currentLang = Language::where('code', session()->get('lang'))->first();
+        } else {
+            $currentLang = Language::where('is_default', 1)->first();
+        }
+        $data['pageHeading'] = __('Shipping & Delivery Policy');
+        $data['seo'] = Seo::where('language_id', $currentLang->id)->first();
+        return view('front.shipping-policy', $data);
+    }
 }

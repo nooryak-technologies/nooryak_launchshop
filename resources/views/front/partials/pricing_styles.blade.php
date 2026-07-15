@@ -314,17 +314,17 @@
     display: flex;
     align-items: flex-start;
     gap: 8px;
-    font-size: 13px;
-    padding: 4px 0;
+    font-size: 15px;
+    padding: 5px 0;
     color: #334155;
   }
 
   /* Check icons */
   .plan-v2-features li .fi-check {
-    color: #ff5a2c;
-    font-size: 13px;
+    color: #10b981;
+    font-size: 14px;
     flex-shrink: 0;
-    margin-top: 1px;
+    margin-top: 2px;
   }
   /* Unavailable features: line-through text, muted X icon */
   .plan-v2-features li.feat-disabled {
@@ -332,12 +332,18 @@
   }
   .plan-v2-features li.feat-disabled > span:last-child {
     text-decoration: line-through;
+    text-decoration-color: #ef4444;
   }
   .plan-v2-features li .fi-times {
     color: #ef4444;
-    font-size: 12px;
+    font-size: 13px;
     flex-shrink: 0;
-    margin-top: 1px;
+    margin-top: 2px;
+  }
+  /* Premium free domain special class */
+  .plan-v2-features li.feat-free-domain-premium {
+    color: #059669 !important;
+    font-weight: 700;
   }
 
   /* Free domain highlight row */

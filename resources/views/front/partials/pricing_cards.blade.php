@@ -315,8 +315,13 @@
               {{-- Visible features --}}
               <ul class="plan-v2-features">
                 @foreach($visibleFeats as $feat)
-                  <li class="{{ !$feat['has'] ? 'feat-disabled' : '' }}">
-                    @if($feat['has'])
+                  @php
+                    $isPremiumFreeDomain = ($titleKey == 'premium' && (stripos($feat['text'], 'Free .in Domain') !== false || stripos($feat['text'], 'Free Domain') !== false));
+                  @endphp
+                  <li class="{{ !$feat['has'] ? 'feat-disabled' : '' }} {{ $isPremiumFreeDomain ? 'feat-free-domain-premium' : '' }}">
+                    @if($isPremiumFreeDomain)
+                      <i class="fas fa-globe fi-globe-premium" style="color: #10b981; font-size: 15px; flex-shrink: 0; margin-top: 2px;"></i>
+                    @elseif($feat['has'])
                       <i class="fas fa-check fi-check"></i>
                     @else
                       <i class="fas fa-times fi-times"></i>
@@ -332,8 +337,13 @@
                 <div class="plan-v2-extra-features" id="extra-{{ strtolower($term) }}-{{ $package->id }}">
                   <ul class="plan-v2-features" style="margin-bottom:8px;">
                     @foreach($extraFeats as $ef)
-                      <li class="{{ !$ef['has'] ? 'feat-disabled' : '' }}">
-                        @if($ef['has'])
+                      @php
+                        $isPremiumFreeDomainExtra = ($titleKey == 'premium' && (stripos($ef['text'], 'Free .in Domain') !== false || stripos($ef['text'], 'Free Domain') !== false));
+                      @endphp
+                      <li class="{{ !$ef['has'] ? 'feat-disabled' : '' }} {{ $isPremiumFreeDomainExtra ? 'feat-free-domain-premium' : '' }}">
+                        @if($isPremiumFreeDomainExtra)
+                          <i class="fas fa-globe fi-globe-premium" style="color: #10b981; font-size: 15px; flex-shrink: 0; margin-top: 2px;"></i>
+                        @elseif($ef['has'])
                           <i class="fas fa-check fi-check"></i>
                         @else
                           <i class="fas fa-times fi-times"></i>
