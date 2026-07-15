@@ -44,17 +44,55 @@
     margin-bottom: 24px;
   }
   .pricing-save-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: #e6faf2;
-    color: #059669;
+    position: relative;
+    display: inline-block;
+    background: #22c55e;
+    color: #ffffff;
     font-size: 13px;
     font-weight: 700;
-    padding: 7px 18px;
-    border-radius: 30px;
-    margin-bottom: 20px;
-    border: 1.5px solid #a7f3d0;
+    padding: 6px 14px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 10px rgba(34, 197, 94, 0.2);
+    align-self: center;
+    border: none;
+  }
+  .pricing-save-pill::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 70%;
+    transform: translateX(-50%);
+    border-width: 6px 6px 0;
+    border-style: solid;
+    border-color: #22c55e transparent;
+    display: block;
+    width: 0;
+  }
+
+  /* Premium Callout Box styling */
+  .premium-most-chosen-callout {
+    position: absolute;
+    right: -240px;
+    top: -55px;
+    width: 220px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 10px 25px rgba(245, 158, 11, 0.08);
+    z-index: 10;
+    text-align: left;
+  }
+  .callout-icon-wrap.star {
+    background: #f59e0b;
+    color: #fff;
+  }
+  .premium-most-chosen-callout .callout-arrow-left {
+    position: absolute;
+    right: 180px;
+    bottom: -35px;
+    z-index: 2;
   }
 
   /* ── Toggle pill tabs ── */
@@ -488,15 +526,14 @@
 
   /* Responsive */
   @media(max-width:1200px) {
-    .monthly-billing-callout {
-      position: relative;
-      left: auto;
-      top: auto;
-      margin: 0 auto 24px;
-      width: 100%;
-      max-width: 280px;
+    .monthly-billing-callout, .premium-most-chosen-callout {
+      position: static !important;
+      width: 100% !important;
+      margin-bottom: 20px !important;
+      margin-top: 10px !important;
+      display: block !important;
     }
-    .monthly-billing-callout .callout-arrow {
+    .monthly-billing-callout .callout-arrow, .premium-most-chosen-callout .callout-arrow-left {
       display: none !important;
     }
     .pricing-card-v2 {

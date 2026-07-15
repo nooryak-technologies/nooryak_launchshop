@@ -35,7 +35,7 @@
       @endforeach
     </ul>
     @if(in_array('yearly', array_map('strtolower', (array)$terms)))
-      <p class="yearly-free-domain-note mt-3">🎁 Premium plan includes a <span>FREE .in domain</span> for 1 year</p>
+      <p class="yearly-free-domain-note mt-3">🎁 Premium & Enterprise Plans include Free Domains For Every Year.</p>
     @endif
   </div>
 
@@ -255,13 +255,34 @@
                     </div>
                     <div class="callout-text">
                       <h5 class="callout-title">Monthly Billing</h5>
-                      <p class="callout-desc">Only Basic plan is available with monthly billing.</p>
+                      <p class="callout-desc">Only Basic plan is available with <strong>monthly billing</strong>.</p>
                     </div>
                   </div>
                   <div class="callout-arrow">
                     <svg width="220" height="50" viewBox="0 0 220 50" fill="none">
                       <path d="M10,0 C10,35 150,45 205,45" stroke="#ff5a2c" stroke-dasharray="4,4" stroke-width="1.5" stroke-linecap="round" />
                       <path d="M197,39 L207,45 L197,51" stroke="#ff5a2c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                    </svg>
+                  </div>
+                </div>
+              @endif
+
+              @if($titleKey == 'premium' && strtolower($term) == 'yearly')
+                <!-- Premium Callout Box (Most Chosen) -->
+                <div class="premium-most-chosen-callout d-none d-lg-block">
+                  <div class="d-flex align-items-start gap-2">
+                    <div class="callout-icon-wrap star">
+                      <i class="fas fa-star"></i>
+                    </div>
+                    <div class="callout-text">
+                      <h5 class="callout-title">Most People Choose</h5>
+                      <p class="callout-desc">Best value with all premium features and a free domain.</p>
+                    </div>
+                  </div>
+                  <div class="callout-arrow-left">
+                    <svg width="120" height="40" viewBox="0 0 120 40" fill="none">
+                      <path d="M110,0 C110,25 50,35 15,35" stroke="#f59e0b" stroke-dasharray="4,4" stroke-width="1.5" stroke-linecap="round" />
+                      <path d="M23,29 L13,35 L23,41" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
                     </svg>
                   </div>
                 </div>
@@ -298,7 +319,7 @@
               </div>
               @if(strtolower($package->term)=='monthly')
                 <div class="text-center mb-2">
-                  <span class="plan-monthly-badge">1999 billed yearly</span>
+                  <span class="plan-monthly-badge">Just ₹1999/Yearly</span>
                 </div>
               @else
                 <p class="plan-v2-billing-note">
@@ -380,6 +401,7 @@
               <p class="plan-v2-billing-note">Tailored to your needs</p>
               <hr class="plan-v2-divider">
               <ul class="plan-v2-features">
+                <li><i class="fas fa-globe fi-check" style="color: #10b981;"></i><span style="color: #10b981; font-weight: 700;">Free .com Domain Every Year</span></li>
                 <li><i class="fas fa-check fi-check"></i><span>Everything in Premium</span></li>
                 <li><i class="fas fa-check fi-check"></i><span>Unlimited Staff Accounts</span></li>
                 <li><i class="fas fa-check fi-check"></i><span>Dedicated Account Manager</span></li>
