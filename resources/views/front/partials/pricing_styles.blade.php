@@ -332,10 +332,10 @@
   }
   .plan-v2-features li.feat-disabled > span:last-child {
     text-decoration: line-through;
-    text-decoration-color: #ef4444;
+    text-decoration-color: #e80c0c;
   }
   .plan-v2-features li .fi-times {
-    color: #ef4444;
+    color: #e80c0c;
     font-size: 13px;
     flex-shrink: 0;
     margin-top: 2px;
