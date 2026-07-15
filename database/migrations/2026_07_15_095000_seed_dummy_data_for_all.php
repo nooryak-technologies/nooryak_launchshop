@@ -263,7 +263,7 @@ class SeedDummyDataForAll extends Migration
                                 'first_name' => 'Demo',
                                 'last_name' => 'Customer',
                                 'email' => 'customer@demo.com',
-                                'phone' => '1234567890',
+                                'contact_number' => '1234567890',
                                 'status' => 1,
                                 'created_at' => now(),
                                 'updated_at' => now()
