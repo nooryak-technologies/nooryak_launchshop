@@ -85,7 +85,7 @@ class UserController extends Controller
             }
             $data['next_package'] = $data['next_membership'] ? Package::query()->where('id', $data['next_membership']->package_id)->first() : null;
         }
-        $data['current_package'] = $data['current_membership'] ? Package::query()->where('id', $data['current_membership']->package_id)->first() : null;
+        $data['current_package'] = $data['current_membership'] ? \App\Http\Helpers\UserPermissionHelper::currentPackagePermission($user->id) : null;
         $data['package_count'] = $nextPackageCount;
 
         $user_currency = UserCurrency::where('is_default', 1)->where('user_id', $user->id)->first();
