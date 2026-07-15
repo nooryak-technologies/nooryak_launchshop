@@ -253,12 +253,7 @@
                 <a href="{{ route('front.pricing') }}" class="btn-ls-primary">
                   {{ __('Get Started Now') }}
                   <svg class="ms-2" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
-                    <!-- Ripple circle 1 -->
-                    <circle cx="12" cy="5" r="3" stroke="currentColor" stroke-width="1.5" opacity="0.3" stroke-dasharray="2 2" />
-                    <!-- Ripple circle 2 -->
-                    <circle cx="12" cy="5" r="5" stroke="currentColor" stroke-width="1.2" opacity="0.5" />
-                    <!-- Hand pointing finger -->
-                    <path d="M12 5V12C12 12.55 11.55 13 11 13C10.45 13 10 12.55 10 12V8.5C10 7.67 9.33 7 8.5 7C7.67 7 7 7.67 7 8.5V14.5C7 17.54 9.46 20 12.5 20H15.5C18.54 20 21 17.54 21 14.5V12.5C21 11.67 20.33 11 19.5 11C18.67 11 18 11.67 18 12.5V12C18 11.17 17.33 10.5 16.5 10.5C15.67 10.5 15 11.17 15 12V11.5C15 10.67 14.33 10 13.5 10C12.67 10 12 10.67 12 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                    <path d="M10 6V2.5a1.5 1.5 0 0 1 3 0v8.5a.5.5 0 0 0 .5.5.5.5 0 0 0 .5-.5V8.5a1.5 1.5 0 0 1 3 0v2.5a.5.5 0 0 0 .5.5.5.5 0 0 0 .5-.5V9.5a1.5 1.5 0 0 1 3 0v3.5a6 6 0 0 1-6 6h-2a6 6 0 0 1-6-6V11a2 2 0 0 1 2-2 1.5 1.5 0 0 1 1.5 1.5v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </a>
 

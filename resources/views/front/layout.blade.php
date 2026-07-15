@@ -580,6 +580,55 @@
     });
   </script>
 
+  <!-- Prevent Code & Theme Cloning (Anti-DevTools & Inspect Element) -->
+  <script>
+    (function() {
+      function blockDevTools() {
+        // Disable right-click context menu
+        document.addEventListener('contextmenu', function(e) {
+          e.preventDefault();
+        });
+        
+        // Disable keyboard shortcuts (F12, Ctrl+Shift+I/J/C, Ctrl+U, Ctrl+S)
+        document.addEventListener('keydown', function(e) {
+          if (e.keyCode === 123 || 
+              (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || 
+              (e.ctrlKey && e.keyCode === 85) || 
+              (e.ctrlKey && e.keyCode === 83)) {
+            e.preventDefault();
+            return false;
+          }
+        });
+
+        // Infinite debugger statements to freeze DevTools console & element inspector
+        setInterval(function() {
+          (function() {}["constructor"]("debugger")());
+        }, 100);
+
+        // Detect open/docked DevTools by window dimension differences
+        const threshold = 160;
+        setInterval(function() {
+          const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+          const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+          if (widthThreshold || heightThreshold) {
+            document.body.innerHTML = `
+              <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;background:#0f172a;color:#ffffff;font-family:sans-serif;text-align:center;padding:20px;z-index:999999;position:fixed;top:0;left:0;width:100%;">
+                <h1 style="font-size:28px;margin-bottom:10px;">Developer Tools Detected</h1>
+                <p style="color:#94a3b8;font-size:16px;">To protect proprietary templates, themes, and system code, inspecting this platform is not permitted.</p>
+              </div>
+            `;
+          }
+        }, 500);
+      }
+      
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', blockDevTools);
+      } else {
+        blockDevTools();
+      }
+    })();
+  </script>
+
 </body>
 
 </html>
