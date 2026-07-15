@@ -20,7 +20,7 @@
 
 
 
-  <div id="faq" class="faq-area pt-90 pb-90">
+  <div id="faq" class="faq-area">
     <div class="container">
       <div class="accordion" id="faqAccordion">
         @if (count($faqs) == 0)

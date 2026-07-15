@@ -12,7 +12,7 @@
 @endsection
 
 @section('content')
-  <div class="pt-90 pb-90">
+  <div class="">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-lg-10">
