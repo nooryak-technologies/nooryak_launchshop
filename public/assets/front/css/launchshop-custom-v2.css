@@ -1918,6 +1918,8 @@ i[id$="EyeIcon"]:hover {
 /* Subdomain Check banner styling */
 .subdomain-check-container {
     flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .subdomain-input-group {
@@ -2569,6 +2571,7 @@ i[id$="EyeIcon"]:hover {
     .subdomain-check-container {
         width: 100% !important;
         margin-top: 15px !important;
+        justify-content: center !important;
     }
 
     .subdomain-input-group {

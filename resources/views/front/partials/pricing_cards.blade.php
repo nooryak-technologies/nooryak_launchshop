@@ -14,7 +14,7 @@
 
   <!-- Toggle -->
   <div class="pricing-toggle-wrap">
-    @if(in_array('yearly', array_map('strtolower', (array)$terms)))
+    @if(in_array('yearly', array_map('strtolower', (array)$terms)) && empty($hidePill))
       <div class="pricing-save-pill">
         🏷️ Save up to 67% with yearly billing!
       </div>
@@ -35,7 +35,7 @@
       @endforeach
     </ul>
     @if(in_array('yearly', array_map('strtolower', (array)$terms)))
-      <p class="yearly-free-domain-note mt-3">🎁 Premium plans include a <span>FREE .in domain</span> for 1 year</p>
+      <p class="yearly-free-domain-note mt-3">🎁 Premium plan includes a <span>FREE .in domain</span> for 1 year</p>
     @endif
   </div>
 
@@ -298,7 +298,7 @@
               </div>
               @if(strtolower($package->term)=='monthly')
                 <div class="text-center mb-2">
-                  <span class="plan-monthly-badge">Monthly billing only</span>
+                  <span class="plan-monthly-badge">1999 billed yearly</span>
                 </div>
               @else
                 <p class="plan-v2-billing-note">

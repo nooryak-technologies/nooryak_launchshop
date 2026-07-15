@@ -745,7 +745,7 @@
                 <i class="fas fa-users"></i>
               </div>
               <div class="stat-bar-info">
-                <h3 class="stat-bar-val">5,000+</h3>
+                <h3 class="stat-bar-val">500+</h3>
                 <p class="stat-bar-lbl">{{ __('Happy Merchants') }}</p>
               </div>
             </div>
@@ -771,7 +771,7 @@
                 <i class="fas fa-check-circle"></i>
               </div>
               <div class="stat-bar-info">
-                <h3 class="stat-bar-val">98%</h3>
+                <h3 class="stat-bar-val">99.99%</h3>
                 <p class="stat-bar-lbl">{{ __('Customer Satisfaction') }}</p>
               </div>
             </div>
@@ -936,14 +936,7 @@
       <div class="container">
 
 
-        <div class="row">
-          <div class="col-12 text-center">
-            <div class="section-subtitle" data-aos="fade-up">{{ @$homeSec->pricing_section_title ?: 'Simple. Transparent. Scalable.' }}</div>
-            <h2 class="section-title" data-aos="fade-up">{{ @$homeSec->pricing_section_subtitle ?: 'Choose the Plan That Grows With You' }}</h2>
-          </div>
-        </div>
-
-        @include('front.partials.pricing_cards')
+        @include('front.partials.pricing_cards', ['hidePill' => true])
 
       </div>
     </section>
@@ -1102,9 +1095,6 @@
               <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
                 {{ __('Launch Your Store') }} <i class="fas fa-arrow-right"></i>
               </a>
-              <a href="#dashboard-showcase" class="btn-cta-check px-4 py-3 d-inline-flex align-items-center">
-                {{ __('Check Stores Launched') }}
-              </a>
             </div>
           </div>
 
@@ -1118,27 +1108,21 @@
 
       <!-- Trust Badges Banner -->
       <div class="cta-trust-banner py-4 px-3" data-aos="fade-up">
-        <div class="row g-3 justify-content-between align-items-center text-center">
+        <div class="d-flex flex-wrap align-items-center justify-content-center gap-sm-5 gap-3 text-center">
           
-          <div class="col-6 col-md-4">
-            <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
-              <span class="trust-icon"><i class="fas fa-rocket"></i></span>
-              <span class="trust-txt">{{ __('Launch Instantly') }}</span>
-            </div>
+          <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
+            <span class="trust-icon"><i class="fas fa-rocket"></i></span>
+            <span class="trust-txt">{{ __('Launch Instantly') }}</span>
           </div>
 
-          <div class="col-6 col-md-4">
-            <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
-              <span class="trust-icon"><i class="fas fa-shield-alt"></i></span>
-              <span class="trust-txt">{{ __('10-Days Money Back Guarantee') }}</span>
-            </div>
+          <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
+            <span class="trust-icon"><i class="fas fa-shield-alt"></i></span>
+            <span class="trust-txt">{{ __('10-Days Money Back Guarantee') }}</span>
           </div>
 
-          <div class="col-12 col-md-4">
-            <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
-              <span class="trust-icon"><i class="fas fa-headset"></i></span>
-              <span class="trust-txt">{{ __('24/7 Expert Support') }}</span>
-            </div>
+          <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
+            <span class="trust-icon"><i class="fas fa-headset"></i></span>
+            <span class="trust-txt">{{ __('24/7 Expert Support') }}</span>
           </div>
 
         </div>
