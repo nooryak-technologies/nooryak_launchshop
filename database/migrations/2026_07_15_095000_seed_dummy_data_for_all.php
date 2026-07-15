@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
-class SeedDummyDataForSathika extends Migration
+class SeedDummyDataForAll extends Migration
 {
     /**
      * Run the migrations.
