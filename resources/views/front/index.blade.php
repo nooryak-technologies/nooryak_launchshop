@@ -242,7 +242,7 @@
           <div class="col-lg-5 col-xl-5 order-2 order-lg-1">
             <div class="hero-content" data-aos="fade-right">
               <div class="hero-badge">
-                <span style="font-weight:800; margin-right:4px;">#1</span> Platform – LaunchShop
+                <span style="font-weight:800; margin-right:4px;">#1</span> Ecommerce Builder Platform For Success
               </div>
               
               <h1 class="hero-title">Launch Your  <br><span>Online Store In</span> Just 2 minutes</h1>
@@ -250,16 +250,23 @@
               <p class="hero-text">{{ __('Manage products, payments, and sales effortlessly. Everything you need to grow your business is just a click away. Start today and simplify your e-commerce journey.') }}</p>
               
               <div class="d-flex align-items-center gap-3 hero-btns">
-                <a href="{{ route('front.pricing') }}" class="btn-ls-primary">{{ __('Get Started Now') }} <i class="fas fa-arrow-right ms-2"></i></a>
+                <a href="{{ route('front.pricing') }}" class="btn-ls-primary">
+                  {{ __('Get Started Now') }}
+                  <svg class="ms-2" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
+                    <!-- Ripple circle 1 -->
+                    <circle cx="12" cy="5" r="3" stroke="currentColor" stroke-width="1.5" opacity="0.3" stroke-dasharray="2 2" />
+                    <!-- Ripple circle 2 -->
+                    <circle cx="12" cy="5" r="5" stroke="currentColor" stroke-width="1.2" opacity="0.5" />
+                    <!-- Hand pointing finger -->
+                    <path d="M12 5V12C12 12.55 11.55 13 11 13C10.45 13 10 12.55 10 12V8.5C10 7.67 9.33 7 8.5 7C7.67 7 7 7.67 7 8.5V14.5C7 17.54 9.46 20 12.5 20H15.5C18.54 20 21 17.54 21 14.5V12.5C21 11.67 20.33 11 19.5 11C18.67 11 18 11.67 18 12.5V12C18 11.17 17.33 10.5 16.5 10.5C15.67 10.5 15 11.17 15 12V11.5C15 10.67 14.33 10 13.5 10C12.67 10 12 10.67 12 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                  </svg>
+                </a>
 
-                <a href="{{ route('front.contact') }}" class="btn-ls-outline">
-                  <span class="btn-play-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="12" cy="12" r="12" fill="#0F172A"/>
-                      <path d="M10 8L16 12L10 16V8Z" fill="white"/>
-                    </svg>
+                <a href="{{ route('front.templates.view') }}" class="btn-ls-outline">
+                  <span class="btn-play-icon" style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: #0F172A; border-radius: 50%; color: white; font-size: 10px;">
+                    <i class="fas fa-shopping-cart" style="transform: translate(-0.5px, 0px);"></i>
                   </span>
-                  {{ __('Book a Demo') }}
+                  {{ __('Select a Theme') }}
                 </a>
               </div>
 
