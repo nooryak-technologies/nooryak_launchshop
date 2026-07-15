@@ -23,6 +23,9 @@ class LimitCheck
     }
     public static function blogLimit($user_id)
     {
+        if (self::isSathika($user_id)) {
+            return 100;
+        }
         $packageId =  self::current_package($user_id);
 
         if (isset($packageId)) {
@@ -33,6 +36,9 @@ class LimitCheck
 
     public static function itemLimit($user_id)
     {
+        if (self::isSathika($user_id)) {
+            return 600;
+        }
         $packageId =  self::current_package($user_id);
 
         if (isset($packageId)) {
@@ -43,6 +49,9 @@ class LimitCheck
 
     public static function catLimit($user_id)
     {
+        if (self::isSathika($user_id)) {
+            return 150;
+        }
         $packageId =  self::current_package($user_id);
 
         if (isset($packageId)) {
@@ -73,6 +82,9 @@ class LimitCheck
 
     public static function pageLimit($user_id)
     {
+        if (self::isSathika($user_id)) {
+            return 40;
+        }
         $packageId =  self::current_package($user_id);
 
         if (isset($packageId)) {
@@ -83,6 +95,9 @@ class LimitCheck
 
     public static function orderLimit($user_id)
     {
+        if (self::isSathika($user_id)) {
+            return 600;
+        }
         $packageId =  self::current_package($user_id);
 
         if (isset($packageId)) {
@@ -93,6 +108,9 @@ class LimitCheck
 
     public static function couponLimit($user_id)
     {
+        if (self::isSathika($user_id)) {
+            return 150;
+        }
         $packageId =  self::current_package($user_id);
 
         if (isset($packageId)) {
@@ -121,5 +139,11 @@ class LimitCheck
         $featuresCount['coupons'] = \App\Models\User\UserCoupon::where('user_id', $user_id)->count();
 
         return $featuresCount;
+    }
+
+    private static function isSathika($user_id)
+    {
+        $user = User::query()->select('email')->find($user_id);
+        return $user && $user->email === 'sathikaqiq121@gmail.com';
     }
 }

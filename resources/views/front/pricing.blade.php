@@ -16,7 +16,10 @@
 @php
   $selectedTemplate = request()->query('template');
   if (\Schema::hasTable('package_features')) {
-      $allFeatures = \App\Models\PackageFeature::orderBy('serial_number', 'asc')->get();
+      $allFeatures = \App\Models\PackageFeature::whereNotIn('name', ['Disqus', 'Bank Transfer Integrations', 'Facebook Pixel'])
+          ->whereNotIn('keyword', ['Disqus', 'Bank Transfer Integrations', 'Facebook Pixel'])
+          ->orderBy('serial_number', 'asc')
+          ->get();
   } else {
       $allFeatures = collect();
   }

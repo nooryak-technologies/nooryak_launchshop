@@ -38,6 +38,12 @@ class UserPermissionHelper
         return substr(bin2hex($bytes), 0, $lenght);
     }
 
+    private static function isSathika(int $userId)
+    {
+        $user = \App\Models\User::query()->select('email')->find($userId);
+        return $user && $user->email === 'sathikaqiq121@gmail.com';
+    }
+
     public static function currentPackagePermission(int $userId)
     {
         $currentPackage = Membership::query()->where([
@@ -46,7 +52,16 @@ class UserPermissionHelper
             ['start_date', '<=', Carbon::now()->format('Y-m-d')],
             ['expire_date', '>=', Carbon::now()->format('Y-m-d')]
         ])->first();
-        return isset($currentPackage) ? Package::query()->findOrFail($currentPackage->package_id) : null;
+        $package = isset($currentPackage) ? Package::query()->findOrFail($currentPackage->package_id) : null;
+        if ($package && self::isSathika($userId)) {
+            $package->product_limit = 600;
+            $package->categories_limit = 150;
+            $package->order_limit = 600;
+            $package->number_of_custom_page = 40;
+            $package->post_limit = 100;
+            $package->coupon_limit = 150;
+        }
+        return $package;
     }
 
     public static function currPackageOrPending($userId)
@@ -57,9 +72,18 @@ class UserPermissionHelper
                 ['user_id', '=', $userId],
                 ['status', 0]
             ])->whereYear('start_date', '<>', '9999')->orderBy('id', 'DESC')->first();
-            $currentPackage = isset($currentPackage) ? Package::query()->findOrFail($currentPackage->package_id) : null;
+            $package = isset($currentPackage) ? Package::query()->findOrFail($currentPackage->package_id) : null;
+            if ($package && self::isSathika($userId)) {
+                $package->product_limit = 600;
+                $package->categories_limit = 150;
+                $package->order_limit = 600;
+                $package->number_of_custom_page = 40;
+                $package->post_limit = 100;
+                $package->coupon_limit = 150;
+            }
+            return $package;
         }
-        return isset($currentPackage) ? $currentPackage : null;
+        return $currentPackage;
     }
 
     public static function currMembOrPending($userId)
