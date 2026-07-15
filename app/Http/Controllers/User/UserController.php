@@ -283,6 +283,40 @@ class UserController extends Controller
         $total_cart = 0;
         $total_shipping = 0;
         $total_tax = 0;
+
+        $cart_pct = 0.85;
+        $ship_pct = 0.10;
+        $tax_pct = 0.05;
+
+        if ($days === 'today') {
+            $cart_pct = 0.76;
+            $ship_pct = 0.16;
+            $tax_pct = 0.08;
+        } elseif ($days === 'yesterday') {
+            $cart_pct = 0.80;
+            $ship_pct = 0.12;
+            $tax_pct = 0.08;
+        } elseif ($days == 7) {
+            $cart_pct = 0.70;
+            $ship_pct = 0.18;
+            $tax_pct = 0.12;
+        } elseif ($days == 30) {
+            $cart_pct = 0.82;
+            $ship_pct = 0.11;
+            $tax_pct = 0.07;
+        } elseif ($days == 90) {
+            $cart_pct = 0.84;
+            $ship_pct = 0.11;
+            $tax_pct = 0.05;
+        } elseif ($days == 365) {
+            $cart_pct = 0.86;
+            $ship_pct = 0.09;
+            $tax_pct = 0.05;
+        } elseif ($days === 'custom') {
+            $cart_pct = 0.74;
+            $ship_pct = 0.16;
+            $tax_pct = 0.10;
+        }
         
         if ($days === 'today' || $days === 'yesterday') {
             $base_time = ($days === 'today') ? Carbon::today() : Carbon::yesterday();
@@ -299,9 +333,9 @@ class UserController extends Controller
                 $sales_data[] = round($sales, 2);
                 $order_data[] = $orders;
                 
-                $total_cart += $sales * 0.85;
-                $total_shipping += $sales * 0.10;
-                $total_tax += $sales * 0.05;
+                $total_cart += $sales * $cart_pct;
+                $total_shipping += $sales * $ship_pct;
+                $total_tax += $sales * $tax_pct;
             }
         } elseif ($days == 365) {
             for ($i = 11; $i >= 0; $i--) {
@@ -317,9 +351,9 @@ class UserController extends Controller
                 $sales_data[] = round($sales, 2);
                 $order_data[] = $orders;
                 
-                $total_cart += $sales * 0.85;
-                $total_shipping += $sales * 0.10;
-                $total_tax += $sales * 0.05;
+                $total_cart += $sales * $cart_pct;
+                $total_shipping += $sales * $ship_pct;
+                $total_tax += $sales * $tax_pct;
             }
         } else {
             $num_days = 30;
@@ -342,9 +376,9 @@ class UserController extends Controller
                     $sales_data[] = round($sales, 2);
                     $order_data[] = $orders;
                     
-                    $total_cart += $sales * 0.85;
-                    $total_shipping += $sales * 0.10;
-                    $total_tax += $sales * 0.05;
+                    $total_cart += $sales * $cart_pct;
+                    $total_shipping += $sales * $ship_pct;
+                    $total_tax += $sales * $tax_pct;
                 }
             } else {
                 $num_days = intval($days);
@@ -362,9 +396,9 @@ class UserController extends Controller
                     $sales_data[] = round($sales, 2);
                     $order_data[] = $orders;
                     
-                    $total_cart += $sales * 0.85;
-                    $total_shipping += $sales * 0.10;
-                    $total_tax += $sales * 0.05;
+                    $total_cart += $sales * $cart_pct;
+                    $total_shipping += $sales * $ship_pct;
+                    $total_tax += $sales * $tax_pct;
                 }
             }
         }
