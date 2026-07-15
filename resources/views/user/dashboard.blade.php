@@ -965,7 +965,6 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
       <div class="chart-card-title-wrap" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;width:100%;flex-wrap:wrap;gap:8px;">
         <div class="chart-card-title" style="margin:0;">
           {{ __('Sales Overview') }}
-          <span class="chart-subtitle" id="sales-overview-subtitle" style="display:block;">{{ __('Last 30 Days') }}</span>
         </div>
         <div class="d-flex align-items-center" style="gap: 8px;">
           <div class="custom-date-container d-none" style="align-items: center; gap: 4px;">
@@ -1426,20 +1425,7 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
       dateContainer.removeClass('d-flex').addClass('d-none');
     }
 
-    var subtitleText = '';
-    if (days === 'today') {
-      subtitleText = '{{ __("Today") }}';
-    } else if (days === 'yesterday') {
-      subtitleText = '{{ __("Yesterday") }}';
-    } else if (days == 365) {
-      subtitleText = '{{ __("This Year") }}';
-    } else {
-      subtitleText = '{{ __("Last") }} ' + days + ' {{ __("Days") }}';
-    }
 
-    if (chartType === 'sales_overview') {
-      $('#sales-overview-subtitle').text(subtitleText);
-    }
 
     $.ajax({
       url: "{{ route('user-dashboard') }}",
@@ -1464,10 +1450,7 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
       return;
     }
 
-    var subtitleText = 'Custom: ' + startDate + ' to ' + endDate;
-    if (chartType === 'sales_overview') {
-      $('#sales-overview-subtitle').text(subtitleText);
-    }
+
 
     $.ajax({
       url: "{{ route('user-dashboard') }}",

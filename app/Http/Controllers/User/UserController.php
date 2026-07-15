@@ -43,7 +43,11 @@ class UserController extends Controller
             $start_date = $request->get('start_date');
             $end_date = $request->get('end_date');
             
-            $chartData = $this->generateRealChartData($user, $days, $start_date, $end_date);
+            if ($user->preview_template == 1) {
+                $chartData = $this->generateFakeChartData($days, $start_date, $end_date);
+            } else {
+                $chartData = $this->generateRealChartData($user, $days, $start_date, $end_date);
+            }
             return response()->json($chartData);
         }
 
@@ -144,7 +148,11 @@ class UserController extends Controller
             ->limit(5)->get();
 
         // 6. Chart: Sales Overview & Order Trend (Last 30 Days)
-        $chartData = $this->generateRealChartData($user, 30);
+        if ($user->preview_template == 1) {
+            $chartData = $this->generateFakeChartData(30);
+        } else {
+            $chartData = $this->generateRealChartData($user, 30);
+        }
         $data['chart_sales_labels'] = $chartData['chart_sales_labels'];
         $data['chart_sales_values'] = $chartData['chart_sales_values'];
         $data['chart_order_values'] = $chartData['chart_order_values'];
