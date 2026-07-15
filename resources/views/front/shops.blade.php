@@ -89,9 +89,6 @@
             </p>
             
             <div class="shops-hero-btns">
-              <a href="{{ route('front.pricing') }}" class="btn-shops-primary">
-                {{ __('Start Free Trial') }} <i class="fas fa-arrow-right"></i>
-              </a>
               <a href="{{ route('front.templates.view') }}" class="btn-shops-outline">
                 {{ __('Explore Themes') }}
               </a>
@@ -99,7 +96,7 @@
 
             <div class="shops-hero-features">
               <span><i class="fas fa-check-circle"></i> {{ __('No credit card required') }}</span>
-              <span><i class="fas fa-check-circle"></i> {{ __('14-day free trial') }}</span>
+              <span><i class="fas fa-check-circle"></i> {{ __('10-Days Money Back Guarantee') }}</span>
               <span><i class="fas fa-check-circle"></i> {{ __('Cancel anytime') }}</span>
             </div>
           </div>
@@ -580,16 +577,13 @@
           <p class="shops-footer-cta-desc">{{ __('Join thousands of successful merchants and start your online journey today.') }}</p>
           
           <div class="shops-hero-btns">
-            <a href="{{ route('front.pricing') }}" class="btn-shops-primary">
-              {{ __('Start Free Trial') }} <i class="fas fa-arrow-right"></i>
-            </a>
             <a href="{{ route('front.templates.view') }}" class="btn-shops-outline">
               {{ __('Explore Themes') }}
             </a>
           </div>
 
           <div class="shops-footer-cta-features">
-            <span><i class="fas fa-check-circle"></i> 14-day free trial</span>
+            <span><i class="fas fa-check-circle"></i> 10-Days Money Back Guarantee</span>
             <span><i class="fas fa-check-circle"></i> No credit card required</span>
             <span><i class="fas fa-check-circle"></i> Cancel anytime</span>
           </div>

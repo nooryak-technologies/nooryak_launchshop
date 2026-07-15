@@ -402,7 +402,7 @@
         <div class="pricing-v2-trust mt-5">
           <div class="pricing-v2-trust-item">
             <span class="trust-icon green"><i class="fas fa-shield-alt"></i></span>
-            <span><strong>14-Day Money Back Guarantee</strong><br><small>Risk-free, no questions asked</small></span>
+            <span><strong>10-Days Money Back Guarantee</strong><br><small>Risk-free, no questions asked</small></span>
           </div>
           <div class="pricing-v2-trust-item">
             <span class="trust-icon orange"><i class="fas fa-times"></i></span>

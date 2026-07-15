@@ -1128,7 +1128,7 @@
           <div class="col-6 col-md-4">
             <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
               <span class="trust-icon"><i class="fas fa-shield-alt"></i></span>
-              <span class="trust-txt">{{ __('14-Days Money Back Guarantee') }}</span>
+              <span class="trust-txt">{{ __('10-Days Money Back Guarantee') }}</span>
             </div>
           </div>
 

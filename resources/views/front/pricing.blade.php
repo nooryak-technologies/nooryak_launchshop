@@ -308,7 +308,7 @@
             </div>
             <div class="cta-text">
               <h3>Ready to Launch Your Store?</h3>
-              <p>Join thousands of successful entrepreneurs. Start your free trial today — no credit card required.</p>
+              <p>Join thousands of successful entrepreneurs. 10-Days Money Back Guarantee — no credit card required.</p>
             </div>
           </div>
           <div class="col-lg-5 text-lg-end">

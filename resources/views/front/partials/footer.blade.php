@@ -30,7 +30,9 @@
             <h3>{{ $bs->useful_links_title }}</h3>
             <ul class="footer-links">
               @foreach ($ulinks as $ulink)
-                <li><a href="{{ $ulink->url }}">{{ $ulink->name }}</a></li>
+                @if (stripos($ulink->name, 'privacy') === false && stripos($ulink->name, 'terms') === false)
+                  <li><a href="{{ $ulink->url }}">{{ $ulink->name }}</a></li>
+                @endif
               @endforeach
               <li><a href="{{ route('front.privacy-policy') }}">{{ __('Privacy Policy') }}</a></li>
               <li><a href="{{ route('front.terms-conditions') }}">{{ __('Terms & Conditions') }}</a></li>
