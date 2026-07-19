@@ -749,24 +749,29 @@ class CheckoutController extends Controller
     private function sendWelcomeWhatsApp(string $mobileNo, string $username, string $password, string $planName, string $planPrice, string $shopName, string $email, string $phone): void
     {
         $storeLiveLink = '';
+        $loginLink = '';
         $host = request()->getHost();
+        $websiteHost = env('WEBSITE_HOST', 'launchshop.in');
+        $cleanWebsiteHost = str_replace('www.', '', $websiteHost);
+
         if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
             $storeLiveLink = 'http://' . $username . '.localhost:8000';
+            $loginLink = 'http://localhost:8000/login';
         } else {
-            $storeLiveLink = 'https://' . $username . '.' . $host;
+            $storeLiveLink = 'https://' . $username . '.' . $cleanWebsiteHost;
+            $loginLink = 'https://' . $cleanWebsiteHost . '/login';
         }
 
         $message = "🎉 *Welcome to LaunchShop!*\n\n"
             . "Your store account has been created successfully.\n\n"
             . "👤 *Store Name:* " . $shopName . "\n"
-            . "👤 *Username:* " . $username . "\n"
             . "📧 *Email:* " . $email . "\n"
             . "📞 *Phone Number:* " . $phone . "\n"
             . "🔑 *Password:* " . $password . "\n"
             . "📦 *Plan:* " . $planName . ($planPrice ? " (" . $planPrice . ")" : "") . "\n\n"
             . "🔗 *Store Live Link:* " . $storeLiveLink . "\n"
             . "🔗 *Login to your store dashboard:*\n"
-            . route('user.login') . "\n\n"
+            . $loginLink . "\n\n"
             . "Need help? Chat with us anytime.\n"
             . "– Team LaunchShop 🚀";
 

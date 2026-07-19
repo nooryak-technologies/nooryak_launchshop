@@ -280,7 +280,7 @@ class FrontendController extends Controller
                 'Authorization' => 'Bearer 3bf6211c4ba7000f46ea1cb9d2d0f78f',
             ])->withoutVerifying()->post('https://2fa.tehub.in/api/whatsapp.php', [
                 'to' => $mobileNo,
-                'message' => $otp . " is your verification OTP for LaunchShop. Please do not share it with anyone.",
+                'message' => "Your OTP verification code is " . $otp . " for LaunchShop Ecommerce - This code is valid for 5 minutes. Please do not share it with anyone.",
                 'type' => 'otp'
             ]);
 
@@ -294,7 +294,7 @@ class FrontendController extends Controller
             if ($response->successful() && isset($resData['success']) && $resData['success'] === true) {
                 Session::put('otp_code', $otp);
                 Session::put('otp_phone', $phone);
-                Session::put('otp_expires_at', time() + 120);
+                Session::put('otp_expires_at', time() + 300);
 
                 // Save / update phone lead in DB for admin visibility
                 try {
