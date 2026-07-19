@@ -277,7 +277,7 @@ class FrontendController extends Controller
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer b5c7c13a4e2dcd8da55753924a053ab6',
+                'Authorization' => 'Bearer 3bf6211c4ba7000f46ea1cb9d2d0f78f',
             ])->withoutVerifying()->post('https://2fa.tehub.in/api/whatsapp.php', [
                 'to' => $mobileNo,
                 'message' => $otp . " is your verification OTP for LaunchShop. Please do not share it with anyone.",
