@@ -8484,8 +8484,7 @@ i[id$="EyeIcon"]:hover {
 /* Floating WhatsApp button — LEFT on all devices */
 .floating-wpp,
 #WAButton,
-#WAButton .floating-wpp,
-#WAButton>div {
+#WAButton .floating-wpp {
     left: 15px !important;
     right: auto !important;
     position: fixed !important;
@@ -11149,10 +11148,14 @@ iframe[id^="tawkchat-"],
 }
 
 /* Popup Container */
+#WAButton .wa-chat-popup,
+.custom-wa-widget .wa-chat-popup,
 .wa-chat-popup {
-    position: absolute;
-    bottom: 72px;
-    left: 0;
+    position: absolute !important;
+    bottom: 72px !important;
+    left: 0 !important;
+    right: auto !important;
+    top: auto !important;
     width: 330px;
     border-radius: 24px;
     background-color: #ebf3f5;
@@ -11164,7 +11167,7 @@ iframe[id^="tawkchat-"],
     visibility: hidden;
     transform: translateY(20px) scale(0.95);
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    z-index: 5;
+    z-index: 99999 !important;
 }
 
 .wa-chat-popup.show {
