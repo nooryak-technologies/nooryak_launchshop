@@ -70,25 +70,40 @@
     width: 0;
   }
 
-  /* Standard Most Popular Callout Box (Right of Standard card on Monthly tab) */
+  /* Standard Most Popular Callout Box (Super Glowing & Vibrant) */
   .standard-most-popular-callout {
     position: absolute;
-       right: -316px;
+    right: -316px;
     top: -138px;
-    width: 210px;
-    background: #fff5f2;
-    border: 1px solid #ffd5c8;
-    border-radius: 12px;
+    width: 220px;
+    background: linear-gradient(135deg, #ffffff 0%, #fff3f0 100%);
+    border: 2px solid #ff5a2c;
+    border-radius: 14px;
     padding: 16px;
-    box-shadow: 0 4px 12px rgba(255, 90, 44, 0.05);
+    box-shadow: 0 12px 35px rgba(255, 90, 44, 0.25), 0 0 20px rgba(255, 90, 44, 0.15);
     z-index: 10;
     text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .standard-most-popular-callout:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 40px rgba(255, 90, 44, 0.3), 0 0 25px rgba(255, 90, 44, 0.25);
+  }
+  .standard-most-popular-callout .callout-title {
+    color: #ff5a2c;
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .standard-most-popular-callout .callout-icon-wrap {
+    background: linear-gradient(135deg, #ff5a2c 0%, #e0451a 100%) !important;
+    box-shadow: 0 4px 10px rgba(255, 90, 44, 0.35);
   }
   .standard-most-popular-callout .callout-arrow-left {
     position: absolute;
     right: 170px;
     bottom: -45px;
     z-index: 2;
+    filter: drop-shadow(0 2px 4px rgba(255, 90, 44, 0.2));
   }
 
   /* Enterprise Callout Box (Top of Enterprise card on Yearly tab) */

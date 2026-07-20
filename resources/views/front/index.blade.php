@@ -1051,7 +1051,11 @@
                   <span class="d-inline d-md-none">Check</span>
                 </button>
               </div>
-              <a href="{{ route('user.login') }}" class="btn-subdomain-launch-now" style="background: #ffffff; color: #ff5a2c; border: 1.5px solid #ffffff; border-radius: 8px; padding: 12px 24px; font-size: 14px; font-weight: 700; text-decoration: none; white-space: nowrap; height: 50px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='#ff5a2c';this.style.color='#ffffff';this.style.borderColor='#ff5a2c';" onmouseout="this.style.background='#ffffff';this.style.color='#ff5a2c';this.style.borderColor='#ffffff';">
+              @php
+                $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
+                $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
+              @endphp
+              <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-subdomain-launch-now" style="background: #ffffff; color: #ff5a2c; border: 1.5px solid #ffffff; border-radius: 8px; padding: 12px 24px; font-size: 14px; font-weight: 700; text-decoration: none; white-space: nowrap; height: 50px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='#ff5a2c';this.style.color='#ffffff';this.style.borderColor='#ff5a2c';" onmouseout="this.style.background='#ffffff';this.style.color='#ff5a2c';this.style.borderColor='#ffffff';">
                 {{ __('Launch Now') }}
               </a>
               <div id="subdomain-status" class="subdomain-status-msg text-start mt-2" style="display: none; width: 100%;"></div>
@@ -1166,7 +1170,7 @@
               <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
                 {{ __('Launch Your Store') }} <i class="fas fa-arrow-right"></i>
               </a>
-              <a href="{{ route('user.login') }}" class="btn-cta-check px-4 py-3 d-inline-flex align-items-center">
+              <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-cta-check px-4 py-3 d-inline-flex align-items-center">
                 {{ __('Launch Now') }}
               </a>
             </div>
@@ -1182,8 +1186,13 @@
 
       <!-- Trust Badges Banner -->
       <div class="cta-trust-banner py-4 px-3" data-aos="fade-up">
-        <div class="d-flex flex-wrap align-items-center justify-content-center gap-sm-5 gap-3 text-center">
+        <div class="d-flex flex-wrap align-items-center justify-content-around gap-4 text-center">
           
+          <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
+            <span class="trust-icon"><i class="fas fa-crown"></i></span>
+            <span class="trust-txt">{{ __('Premium Stores') }}</span>
+          </div>
+
           <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
             <span class="trust-icon"><i class="fas fa-rocket"></i></span>
             <span class="trust-txt">{{ __('Launch Instantly') }}</span>
@@ -1192,6 +1201,11 @@
           <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
             <span class="trust-icon"><i class="fas fa-shield-alt"></i></span>
             <span class="trust-txt">{{ __('10-Days Money Back Guarantee') }}</span>
+          </div>
+
+          <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
+            <span class="trust-icon"><i class="fas fa-chart-line"></i></span>
+            <span class="trust-txt">{{ __('Get High Conversions') }}</span>
           </div>
 
           <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
