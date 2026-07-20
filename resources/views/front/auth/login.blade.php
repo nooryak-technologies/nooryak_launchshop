@@ -481,22 +481,12 @@
             <!-- Country Code & Phone -->
             <div class="login-field-group mb-20">
               <label class="login-field-label">{{ __('Phone Number') }}</label>
-              <div class="row g-2 align-items-center">
-                <div class="col-4 col-sm-4">
-                  <div class="d-flex align-items-center justify-content-center gap-1" style="height: 50px; border-radius: 8px; border: 1.5px solid #cbd5e1; background: #f8fafc; padding: 0 8px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" width="22" height="16" style="border-radius: 2px; flex-shrink: 0; box-shadow: 0 0 1px rgba(0,0,0,0.3);">
-                      <path fill="#f93" d="M0 0h640v160H0z"/>
-                      <path fill="#fff" d="M0 160h640v160H0z"/>
-                      <path fill="#128807" d="M0 320h640v160H0z"/>
-                      <g transform="translate(320 240)">
-                        <circle r="70" fill="none" stroke="#008" stroke-width="8"/>
-                        <path fill="#008" d="M0 0l-5-70h10zm0 0l5 70h-10zm0 0l70-5v10zm0 0l-70 5v-10zm0 0l-53-46 7 7zm0 0l53 46-7-7zm0 0l46-53-7 7zm0 0l-46 53 7-7zm0 0l-46 53-7-7zm0 0l46-53 7 7zm0 0l53-46-7 7zm0 0l-53 46 7-7zm0 0l-68-18 2 10zm0 0l68 18-2-10zm0 0l18-68-10 2zm0 0l-18 68 10-2zm0 0l-18 68-10-2zm0 0l18-68 10 2zm0 0l68-18-2-10zm0 0l-68 18 2 10z"/>
-                      </g>
-                    </svg>
-                    <input type="text" id="otp_country_code" value="+91" placeholder="{{ __('Code') }}" inputmode="numeric" style="border: none; background: transparent; width: 45px; font-weight: 600; text-align: center; font-size: 14px; padding: 0; outline: none; color: #1e293b;">
-                  </div>
+              <div class="d-flex align-items-center gap-2">
+                <div class="d-flex align-items-center justify-content-center gap-1" style="height: 50px; border-radius: 8px; border: 1.5px solid #cbd5e1; background: #f8fafc; padding: 0 8px; flex-shrink: 0; width: 95px;">
+                  <img id="otp_flag_img" src="https://flagcdn.com/w40/in.png" alt="Flag" style="width: 22px; height: 15px; border-radius: 2px; object-fit: cover; flex-shrink: 0; box-shadow: 0 0 1px rgba(0,0,0,0.3);">
+                  <input type="text" id="otp_country_code" value="+91" placeholder="{{ __('Code') }}" inputmode="numeric" style="border: none; background: transparent; width: 45px; font-weight: 700; text-align: center; font-size: 14px; padding: 0; outline: none; color: #1e293b;">
                 </div>
-                <div class="col-8 col-sm-8">
+                <div style="flex: 1;">
                   <input class="login-input-field" type="number" id="otp_phone" placeholder="81234 56789" min="0" step="1" inputmode="numeric" style="height: 50px; border-radius: 8px; border: 1.5px solid #cbd5e1; width: 100%;">
                 </div>
               </div>
@@ -554,6 +544,39 @@
   }
 
   $(document).ready(function() {
+    // Dynamic country flag lookup based on calling code
+    const countryCodeMap = {
+      '91': 'in', '966': 'sa', '1': 'us', '44': 'gb', '971': 'ae', '968': 'om', '965': 'kw',
+      '974': 'qa', '973': 'bh', '880': 'bd', '92': 'pk', '94': 'lk', '977': 'np', '60': 'my',
+      '62': 'id', '65': 'sg', '20': 'eg', '49': 'de', '33': 'fr', '39': 'it', '34': 'es',
+      '61': 'au', '64': 'nz', '86': 'cn', '81': 'jp', '82': 'kr', '90': 'tr', '962': 'jo',
+      '961': 'lb', '964': 'iq', '967': 'ye', '212': 'ma', '213': 'dz', '216': 'tn', '27': 'za',
+      '234': 'ng', '254': 'ke', '55': 'br', '52': 'mx', '7': 'ru', '31': 'nl', '32': 'be',
+      '41': 'ch', '43': 'at', '46': 'se', '47': 'no', '45': 'dk', '351': 'pt', '30': 'gr',
+      '353': 'ie', '48': 'pl', '40': 'ro', '36': 'hu', '420': 'cz', '66': 'th', '84': 'vn', '63': 'ph'
+    };
+
+    function updateCountryFlag() {
+      var val = $('#otp_country_code').val().replace(/\D/g, '');
+      var iso = countryCodeMap[val];
+      if (!iso) {
+        for (var len = 3; len >= 1; len--) {
+          var prefix = val.substring(0, len);
+          if (countryCodeMap[prefix]) {
+            iso = countryCodeMap[prefix];
+            break;
+          }
+        }
+      }
+      if (iso) {
+        $('#otp_flag_img').attr('src', 'https://flagcdn.com/w40/' + iso + '.png').css('display', 'inline-block');
+      } else {
+        $('#otp_flag_img').css('display', 'none');
+      }
+    }
+
+    $('#otp_country_code').on('input keyup change blur', updateCountryFlag);
+    updateCountryFlag();
     // Tab switching logic
     $('#tab-password').on('click', function(e) {
       e.preventDefault();

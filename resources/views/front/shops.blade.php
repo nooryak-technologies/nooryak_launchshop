@@ -88,16 +88,25 @@
               Explore live stores across every industry and see how entrepreneurs are growing with Launchshop.in.
             </p>
             
-            <div class="shops-hero-btns">
-              <a href="{{ route('front.templates.view') }}" class="btn-shops-outline">
+            <div class="shops-hero-btns d-flex align-items-center flex-wrap gap-3 mb-4">
+              <a href="{{ route('front.pricing') }}" class="btn-shops-primary" style="background: #ff5a2c; color: #ffffff; padding: 12px 28px; border-radius: 12px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s ease; box-shadow: 0 4px 14px rgba(255, 90, 44, 0.25);" onmouseover="this.style.background='#e0451a';" onmouseout="this.style.background='#ff5a2c';">
+                {{ __('Get Started') }} <i class="fas fa-arrow-right"></i>
+              </a>
+              <a href="#shops-grid-section" class="btn-shops-outline" onclick="document.getElementById('shops-grid-section').scrollIntoView({behavior: 'smooth'}); return false;">
                 {{ __('Explore Themes') }}
               </a>
             </div>
 
-            <div class="shops-hero-features">
-              <span><i class="fas fa-check-circle"></i> {{ __('No credit card required') }}</span>
-              <span><i class="fas fa-check-circle"></i> {{ __('10-Days Money Back Guarantee') }}</span>
-              <span><i class="fas fa-check-circle"></i> {{ __('Cancel anytime') }}</span>
+            <div class="shops-hero-features d-flex align-items-center flex-wrap gap-4" style="margin-top: 24px;">
+              <span class="d-inline-flex align-items-center gap-2" style="font-size: 14px; font-weight: 600; color: #334155;">
+                <i class="fas fa-rocket" style="color: #ff5a2c; font-size: 16px;"></i> {{ __('Launch Instantly') }}
+              </span>
+              <span class="d-inline-flex align-items-center gap-2" style="font-size: 14px; font-weight: 600; color: #334155;">
+                <i class="fas fa-shield-alt" style="color: #ff5a2c; font-size: 16px;"></i> {{ __('10-Days Money Back Guarantee') }}
+              </span>
+              <span class="d-inline-flex align-items-center gap-2" style="font-size: 14px; font-weight: 600; color: #334155;">
+                <i class="fas fa-headset" style="color: #ff5a2c; font-size: 16px;"></i> {{ __('24/7 Expert Support') }}
+              </span>
             </div>
           </div>
         </div>
@@ -175,7 +184,7 @@
   <!--====== End Stats Banner Section ======-->
 
   <!--====== Start Shops Grid & Filter Section ======-->
-  <section class="shops-directory-list pb-80">
+  <section class="shops-directory-list pb-80" id="shops-grid-section">
     <div class="container">
       
       <!-- Filter and Search Form -->
