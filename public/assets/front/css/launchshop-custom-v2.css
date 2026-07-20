@@ -11088,4 +11088,308 @@ iframe[id^="tawkchat-"],
     .contact-hero-row {
         padding-top: 33px;
     }
+}
+
+/* ============================================================
+   CUSTOM WHATSAPP WIDGET & POPUP REVAMP (Task 1)
+   ============================================================ */
+.custom-wa-widget {
+    position: fixed;
+    left: 15px;
+    bottom: 15px;
+    z-index: 9999;
+    font-family: 'Outfit', 'Inter', sans-serif;
+}
+
+/* Float Button (Circle button) */
+.wa-float-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #25D366;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(37, 211, 102, 0.45);
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+    position: relative;
+    padding: 0;
+    z-index: 10;
+}
+
+.wa-float-btn:hover {
+    transform: scale(1.1) translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+}
+
+.wa-float-btn svg {
+    width: 28px;
+    height: 28px;
+}
+
+/* Pulse animation on float button */
+.wa-pulse {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid rgba(37, 211, 102, 0.5);
+    animation: wa-pulse-anim 2s ease-out infinite;
+    pointer-events: none;
+}
+
+@keyframes wa-pulse-anim {
+    0% { transform: scale(1); opacity: 0.7; }
+    70% { transform: scale(1.5); opacity: 0; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* Popup Container */
+.wa-chat-popup {
+    position: absolute;
+    bottom: 72px;
+    left: 0;
+    width: 320px;
+    border-radius: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px) scale(0.95);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 5;
+}
+
+.wa-chat-popup.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+/* Header */
+.wa-chat-header {
+    background-color: #078c73;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #ffffff;
+}
+
+.wa-header-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.wa-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+}
+
+.wa-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 4px;
+}
+
+.wa-status-text {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.wa-chat-name {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 2px;
+}
+
+.wa-online-status {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.85);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 500;
+}
+
+.wa-dot {
+    width: 7px;
+    height: 7px;
+    background-color: #22c55e;
+    border-radius: 50%;
+    display: inline-block;
+    animation: wa-dot-blink 1.5s infinite ease-in-out;
+}
+
+@keyframes wa-dot-blink {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+.wa-close-btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: #ffffff;
+    font-size: 20px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    line-height: 1;
+}
+
+.wa-close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Body / Chat Area */
+.wa-chat-body {
+    padding: 16px;
+    background-color: #f0f4f9;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Chat bubble */
+.wa-msg-bubble {
+    background-color: #ffffff;
+    padding: 12px 14px;
+    border-radius: 18px;
+    border-top-left-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    color: #334155;
+    font-size: 13.5px;
+    line-height: 1.5;
+    position: relative;
+    text-align: left;
+    margin-left: 8px;
+}
+
+.wa-msg-bubble::after {
+    content: "";
+    position: absolute;
+    left: -8px;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-top: 0px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-right: 10px solid #ffffff;
+}
+
+.wa-msg-time {
+    font-size: 10px;
+    color: #94a3b8;
+    text-align: right;
+    margin-top: 4px;
+}
+
+/* Quick Actions buttons */
+.wa-quick-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.wa-action-btn {
+    background-color: #ffffff;
+    color: #1e293b !important;
+    border: 1px solid #e2e8f0;
+    padding: 11px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    display: block;
+}
+
+.wa-action-btn:hover {
+    background-color: #f8fafc;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+    color: #ff5a2c !important;
+}
+
+/* Input Footer */
+.wa-chat-footer {
+    padding: 12px 16px;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.wa-chat-input {
+    flex: 1;
+    border: 1px solid #e2e8f0;
+    background-color: #f8fafc;
+    padding: 10px 16px;
+    border-radius: 24px;
+    font-size: 13px;
+    outline: none;
+    transition: all 0.2s ease;
+    color: #334155;
+}
+
+.wa-chat-input:focus {
+    border-color: #078c73;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(7, 140, 115, 0.08);
+}
+
+.wa-send-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #22c55e;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(34, 197, 94, 0.3);
+    padding: 0;
+}
+
+.wa-send-btn:hover {
+    background-color: #15803d;
+    transform: scale(1.05);
+}
+
+.wa-send-btn svg {
+    margin-left: 2px;
 }

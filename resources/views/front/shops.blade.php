@@ -318,7 +318,6 @@
                   <p class="shop-card-desc">{{ __($desc) }}</p>
                   <div class="shop-card-actions">
                     <a href="{{ detailsUrl($user) }}" class="btn-preview" target="_blank">{{ __('Preview Store') }}</a>
-                    <a href="{{ route('front.templates.view') }}" class="btn-theme">{{ __('View Theme') }}</a>
                   </div>
                 </div>
               </div>

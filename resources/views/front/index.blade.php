@@ -1051,7 +1051,7 @@
                   <span class="d-inline d-md-none">Check</span>
                 </button>
               </div>
-              <a href="#home-pricing-section" class="btn-subdomain-launch-now" style="background: #ffffff; color: #ff5a2c; border: 1.5px solid #ffffff; border-radius: 8px; padding: 12px 24px; font-size: 14px; font-weight: 700; text-decoration: none; white-space: nowrap; height: 50px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='#ff5a2c';this.style.color='#ffffff';this.style.borderColor='#ff5a2c';" onmouseout="this.style.background='#ffffff';this.style.color='#ff5a2c';this.style.borderColor='#ffffff';">
+              <a href="{{ route('user.login') }}" class="btn-subdomain-launch-now" style="background: #ffffff; color: #ff5a2c; border: 1.5px solid #ffffff; border-radius: 8px; padding: 12px 24px; font-size: 14px; font-weight: 700; text-decoration: none; white-space: nowrap; height: 50px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='#ff5a2c';this.style.color='#ffffff';this.style.borderColor='#ff5a2c';" onmouseout="this.style.background='#ffffff';this.style.color='#ff5a2c';this.style.borderColor='#ffffff';">
                 {{ __('Launch Now') }}
               </a>
               <div id="subdomain-status" class="subdomain-status-msg text-start mt-2" style="display: none; width: 100%;"></div>
@@ -1161,7 +1161,7 @@
               <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
                 {{ __('Launch Your Store') }} <i class="fas fa-arrow-right"></i>
               </a>
-              <a href="#home-pricing-section" class="btn-cta-check px-4 py-3 d-inline-flex align-items-center">
+              <a href="{{ route('user.login') }}" class="btn-cta-check px-4 py-3 d-inline-flex align-items-center">
                 {{ __('Launch Now') }}
               </a>
             </div>
