@@ -267,23 +267,17 @@
                 </div>
               @endif
 
-              @if($titleKey == 'premium' && strtolower($term) == 'yearly')
-                <!-- Premium Callout Box (Most Chosen) -->
-                <div class="premium-most-chosen-callout d-none d-lg-block">
+              @if($titleKey == 'standard')
+                <!-- Standard Recommended Callout Box -->
+                <div class="standard-callout-box d-none d-lg-block">
                   <div class="d-flex align-items-start gap-2">
-                    <div class="callout-icon-wrap star">
-                      <i class="fas fa-star"></i>
+                    <div class="callout-icon-wrap rocket" style="background:#ff5a2c; color:#fff;">
+                      <i class="fas fa-rocket"></i>
                     </div>
                     <div class="callout-text">
-                      <h5 class="callout-title">Most People Choose</h5>
-                      <p class="callout-desc">Best value with all premium features and a free domain.</p>
+                      <h5 class="callout-title">Most Popular</h5>
+                      <p class="callout-desc">Ideal balance for growing businesses with all essential tools.</p>
                     </div>
-                  </div>
-                  <div class="callout-arrow-left">
-                    <svg width="120" height="40" viewBox="0 0 120 40" fill="none">
-                      <path d="M110,0 C110,25 50,35 15,35" stroke="#f59e0b" stroke-dasharray="4,4" stroke-width="1.5" stroke-linecap="round" />
-                      <path d="M23,29 L13,35 L23,41" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-                    </svg>
                   </div>
                 </div>
               @endif
@@ -392,6 +386,24 @@
           @if(strtolower($term) != 'monthly')
           {{-- Enterprise card always shown --}}
             <div class="pricing-card-v2 card-enterprise">
+              <!-- Enterprise Callout Box (Most Chosen) -->
+              <div class="enterprise-callout-box d-none d-lg-block">
+                <div class="d-flex align-items-start gap-2">
+                  <div class="callout-icon-wrap star" style="background:#f59e0b; color:#fff;">
+                    <i class="fas fa-star"></i>
+                  </div>
+                  <div class="callout-text">
+                    <h5 class="callout-title">Most People Choose</h5>
+                    <p class="callout-desc">Best value with all premium features and a free domain.</p>
+                  </div>
+                </div>
+                <div class="callout-arrow-left">
+                  <svg width="120" height="40" viewBox="0 0 120 40" fill="none">
+                    <path d="M110,0 C110,25 50,35 15,35" stroke="#f59e0b" stroke-dasharray="4,4" stroke-width="1.5" stroke-linecap="round" />
+                    <path d="M23,29 L13,35 L23,41" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                  </svg>
+                </div>
+              </div>
               <div class="plan-v2-icon" style="color:#ff5a2c;"><i class="fas fa-building"></i></div>
               <h3 class="plan-v2-title">Enterprise</h3>
               <p class="plan-v2-subtitle">For large &amp; global brands</p>

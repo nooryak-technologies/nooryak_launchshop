@@ -1082,9 +1082,14 @@
                 <div class="swiper-slide">
                   <div class="testimonial-card h-100 mb-0">
                     <div class="testi-header">
-                      <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
-                        data-src="{{ $testimonial->image ? asset('assets/front/img/testimonials/' . $testimonial->image) : asset('assets/front/img/thumb-1.jpg') }}"
-                        alt="User">
+                      @php
+                        $isWoman = preg_match('/(sarah|priya|sneha|female|woman|lady|mary|jane|sara)/i', $testimonial->name . ' ' . $testimonial->designation);
+                        $defaultImg = $isWoman ? 'indian_woman.png' : 'indian_man.png';
+                        $imgFile = $testimonial->image ?: $defaultImg;
+                      @endphp
+                      <img class="lazyload" src="{{ asset('assets/front/img/testimonials/' . $imgFile) }}"
+                        data-src="{{ asset('assets/front/img/testimonials/' . $imgFile) }}"
+                        alt="{{ $testimonial->name }}">
                       <div>
                         <h4 class="testi-name">{{ $testimonial->name }}</h4>
                         <span class="testi-designation">{{ $testimonial->designation }}</span>

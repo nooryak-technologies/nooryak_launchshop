@@ -359,7 +359,7 @@
           <div class="ls-slide">
             <div class="merchant-profile-card">
               <div class="merchant-avatar">
-                <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ asset('assets/front/img/testimonials/aecbe1c13cb47add3d283d46f1418fdb50c78a09.png') }}" alt="Nooryak Khan">
+                <img class="lazyload" src="{{ asset('assets/front/img/testimonials/indian_man.png') }}" data-src="{{ asset('assets/front/img/testimonials/indian_man.png') }}" alt="Nooryak Khan">
               </div>
               <div class="merchant-info">
                 <h4 class="merchant-name">Nooryak Khan</h4>
@@ -373,7 +373,7 @@
           <div class="ls-slide">
             <div class="merchant-profile-card">
               <div class="merchant-avatar">
-                <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ asset('assets/front/img/testimonials/b9d4f3318e122b00074861c93e83b3bab652fb14.png') }}" alt="Priya Mehta">
+                <img class="lazyload" src="{{ asset('assets/front/img/testimonials/indian_woman.png') }}" data-src="{{ asset('assets/front/img/testimonials/indian_woman.png') }}" alt="Priya Mehta">
               </div>
               <div class="merchant-info">
                 <h4 class="merchant-name">Priya Mehta</h4>
@@ -387,7 +387,7 @@
           <div class="ls-slide">
             <div class="merchant-profile-card">
               <div class="merchant-avatar">
-                <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ asset('assets/front/img/testimonials/13fd6b3eeaa68a3cea83870f79ed4bfa83cd9bf6.png') }}" alt="Ayaan Patel">
+                <img class="lazyload" src="{{ asset('assets/front/img/testimonials/indian_man.png') }}" data-src="{{ asset('assets/front/img/testimonials/indian_man.png') }}" alt="Ayaan Patel">
               </div>
               <div class="merchant-info">
                 <h4 class="merchant-name">Ayaan Patel</h4>
@@ -401,7 +401,7 @@
           <div class="ls-slide">
             <div class="merchant-profile-card">
               <div class="merchant-avatar">
-                <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ asset('assets/front/img/testimonials/854159a46208ff0e663b6a8f3178225f90230946.png') }}" alt="Sneha Reddy">
+                <img class="lazyload" src="{{ asset('assets/front/img/testimonials/indian_woman.png') }}" data-src="{{ asset('assets/front/img/testimonials/indian_woman.png') }}" alt="Sneha Reddy">
               </div>
               <div class="merchant-info">
                 <h4 class="merchant-name">Sneha Reddy</h4>

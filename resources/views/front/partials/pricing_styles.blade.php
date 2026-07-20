@@ -70,17 +70,33 @@
     width: 0;
   }
 
-  /* Premium Callout Box styling */
-  .premium-most-chosen-callout {
+  /* Standard & Enterprise Callout Box styling */
+  .standard-callout-box {
     position: absolute;
-    right: -240px;
-    top: -55px;
+    top: -65px;
+    left: 50%;
+    transform: translateX(-50%);
     width: 220px;
+    background: #fff5f2;
+    border: 1px solid #ffd5c8;
+    border-radius: 12px;
+    padding: 14px 16px;
+    box-shadow: 0 10px 25px rgba(255, 90, 44, 0.12);
+    z-index: 10;
+    text-align: left;
+  }
+
+  .enterprise-callout-box {
+    position: absolute;
+    top: -65px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 230px;
     background: #fffbeb;
     border: 1px solid #fde68a;
     border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 10px 25px rgba(245, 158, 11, 0.08);
+    padding: 14px 16px;
+    box-shadow: 0 10px 25px rgba(245, 158, 11, 0.12);
     z-index: 10;
     text-align: left;
   }
@@ -88,10 +104,10 @@
     background: #f59e0b;
     color: #fff;
   }
-  .premium-most-chosen-callout .callout-arrow-left {
+  .enterprise-callout-box .callout-arrow-left {
     position: absolute;
-    right: 180px;
-    bottom: -35px;
+    right: 170px;
+    bottom: -32px;
     z-index: 2;
   }
 

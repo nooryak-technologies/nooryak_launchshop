@@ -482,10 +482,21 @@
             <div class="login-field-group mb-20">
               <label class="login-field-label">{{ __('Phone Number') }}</label>
               <div class="row g-2 align-items-center">
-                <div class="col-3 col-sm-3">
-                  <input class="login-input-field" type="text" id="otp_country_code" value="+91" placeholder="{{ __('Code') }}" inputmode="numeric" style="height: 50px; text-align: center; border-radius: 8px; border: 1.5px solid #cbd5e1; width: 100%;">
+                <div class="col-4 col-sm-4">
+                  <div class="d-flex align-items-center justify-content-center gap-1" style="height: 50px; border-radius: 8px; border: 1.5px solid #cbd5e1; background: #f8fafc; padding: 0 8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" width="22" height="16" style="border-radius: 2px; flex-shrink: 0; box-shadow: 0 0 1px rgba(0,0,0,0.3);">
+                      <path fill="#f93" d="M0 0h640v160H0z"/>
+                      <path fill="#fff" d="M0 160h640v160H0z"/>
+                      <path fill="#128807" d="M0 320h640v160H0z"/>
+                      <g transform="translate(320 240)">
+                        <circle r="70" fill="none" stroke="#008" stroke-width="8"/>
+                        <path fill="#008" d="M0 0l-5-70h10zm0 0l5 70h-10zm0 0l70-5v10zm0 0l-70 5v-10zm0 0l-53-46 7 7zm0 0l53 46-7-7zm0 0l46-53-7 7zm0 0l-46 53 7-7zm0 0l-46 53-7-7zm0 0l46-53 7 7zm0 0l53-46-7 7zm0 0l-53 46 7-7zm0 0l-68-18 2 10zm0 0l68 18-2-10zm0 0l18-68-10 2zm0 0l-18 68 10-2zm0 0l-18 68-10-2zm0 0l18-68 10 2zm0 0l68-18-2-10zm0 0l-68 18 2 10z"/>
+                      </g>
+                    </svg>
+                    <input type="text" id="otp_country_code" value="+91" placeholder="{{ __('Code') }}" inputmode="numeric" style="border: none; background: transparent; width: 45px; font-weight: 600; text-align: center; font-size: 14px; padding: 0; outline: none; color: #1e293b;">
+                  </div>
                 </div>
-                <div class="col-9 col-sm-9">
+                <div class="col-8 col-sm-8">
                   <input class="login-input-field" type="number" id="otp_phone" placeholder="81234 56789" min="0" step="1" inputmode="numeric" style="height: 50px; border-radius: 8px; border: 1.5px solid #cbd5e1; width: 100%;">
                 </div>
               </div>
