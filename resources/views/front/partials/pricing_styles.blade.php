@@ -70,22 +70,28 @@
     width: 0;
   }
 
-  /* Standard & Enterprise Callout Box styling */
-  .standard-callout-box {
+  /* Standard Most Popular Callout Box (Right of Standard card on Monthly tab) */
+  .standard-most-popular-callout {
     position: absolute;
-    top: -65px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 220px;
+    right: -240px;
+    top: -45px;
+    width: 210px;
     background: #fff5f2;
     border: 1px solid #ffd5c8;
     border-radius: 12px;
-    padding: 14px 16px;
-    box-shadow: 0 10px 25px rgba(255, 90, 44, 0.12);
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(255, 90, 44, 0.05);
     z-index: 10;
     text-align: left;
   }
+  .standard-most-popular-callout .callout-arrow-left {
+    position: absolute;
+    right: 170px;
+    bottom: -45px;
+    z-index: 2;
+  }
 
+  /* Enterprise Callout Box (Top of Enterprise card on Yearly tab) */
   .enterprise-callout-box {
     position: absolute;
     top: -65px;
@@ -542,14 +548,14 @@
 
   /* Responsive */
   @media(max-width:1200px) {
-    .monthly-billing-callout, .premium-most-chosen-callout {
+    .monthly-billing-callout, .premium-most-chosen-callout, .standard-most-popular-callout, .enterprise-callout-box {
       position: static !important;
       width: 100% !important;
       margin-bottom: 20px !important;
       margin-top: 10px !important;
       display: block !important;
     }
-    .monthly-billing-callout .callout-arrow, .premium-most-chosen-callout .callout-arrow-left {
+    .monthly-billing-callout .callout-arrow, .premium-most-chosen-callout .callout-arrow-left, .standard-most-popular-callout .callout-arrow-left, .enterprise-callout-box .callout-arrow-left {
       display: none !important;
     }
     .pricing-card-v2 {
