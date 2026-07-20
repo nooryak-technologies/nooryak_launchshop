@@ -186,7 +186,7 @@
       <div class="wa-chat-header">
         <div class="wa-header-info">
           <div class="wa-avatar">
-            <img src="{{ asset('assets/front/img/' . $bs->logo) }}" alt="Logo">
+            <img src="{{ asset('images/launchshop_icon.png') }}" alt="LaunchShop Logo">
           </div>
           <div class="wa-status-text">
             <span class="wa-chat-name">{{ $bs->whatsapp_header_title ?: $bs->website_title . ' Support' }}</span>
@@ -203,7 +203,7 @@
         <!-- Message Bubble -->
         <div class="wa-msg-bubble">
           <div class="wa-msg-text">
-            {!! !empty($bs->whatsapp_popup_message) ? $bs->whatsapp_popup_message : '👋 Welcome to ' . $bs->website_title . '! How can we help you today?' !!}
+            👋 Welcome to launchshop! How can we help you today?
           </div>
           <div class="wa-msg-time">Just now</div>
         </div>

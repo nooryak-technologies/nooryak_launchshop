@@ -280,7 +280,7 @@ class FrontendController extends Controller
                 'Authorization' => 'Bearer 3bf6211c4ba7000f46ea1cb9d2d0f78f',
             ])->withoutVerifying()->post('https://2fa.tehub.in/api/whatsapp.php', [
                 'to' => $mobileNo,
-                'message' => "Your OTP verification code is " . $otp . " for *Launchshop Ecommerce* - This code is valid for 5 minutes. Please do not share it with anyone.",
+                'message' => "Your OTP verification code is *" . $otp . "* for *Launchshop Ecommerce* - This code is valid for *5 minutes* - Please do not share it with anyone.",
                 'type' => 'general'
             ]);
 

@@ -70,11 +70,11 @@
     width: 0;
   }
 
-  /* Standard Most Popular Callout Box (Super Glowing & Vibrant) */
+  /* Standard Most Popular Callout Box (Positioned on Left side of Standard card, pointing right to RECOMMENDED) */
   .standard-most-popular-callout {
     position: absolute;
-    right: -316px;
-    top: -138px;
+    left: -240px;
+    top: -45px;
     width: 220px;
     background: linear-gradient(135deg, #ffffff 0%, #fff3f0 100%);
     border: 2px solid #ff5a2c;
@@ -98,9 +98,9 @@
     background: linear-gradient(135deg, #ff5a2c 0%, #e0451a 100%) !important;
     box-shadow: 0 4px 10px rgba(255, 90, 44, 0.35);
   }
-  .standard-most-popular-callout .callout-arrow-left {
+  .standard-most-popular-callout .callout-arrow-right {
     position: absolute;
-    right: 170px;
+    left: 170px;
     bottom: -45px;
     z-index: 2;
     filter: drop-shadow(0 2px 4px rgba(255, 90, 44, 0.2));
@@ -564,13 +564,18 @@
   /* Responsive */
   @media(max-width:1200px) {
     .monthly-billing-callout, .premium-most-chosen-callout, .standard-most-popular-callout, .enterprise-callout-box {
-      position: static !important;
+      position: relative !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      transform: none !important;
       width: 100% !important;
-      margin-bottom: 20px !important;
-      margin-top: 10px !important;
+      max-width: 320px !important;
+      margin: 0 auto 20px auto !important;
       display: block !important;
+      text-align: center !important;
     }
-    .monthly-billing-callout .callout-arrow, .premium-most-chosen-callout .callout-arrow-left, .standard-most-popular-callout .callout-arrow-left, .enterprise-callout-box .callout-arrow-left {
+    .monthly-billing-callout .callout-arrow, .premium-most-chosen-callout .callout-arrow-left, .standard-most-popular-callout .callout-arrow-left, .standard-most-popular-callout .callout-arrow-right, .enterprise-callout-box .callout-arrow-left {
       display: none !important;
     }
     .pricing-card-v2 {

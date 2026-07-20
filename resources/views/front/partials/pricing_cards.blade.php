@@ -268,7 +268,7 @@
               @endif
 
               @if($titleKey == 'standard' && strtolower($term) == 'monthly')
-                <!-- Standard Most Popular Callout Box (Monthly tab only) -->
+                <!-- Standard Most Popular Callout Box (Left of Standard card, pointing right to RECOMMENDED) -->
                 <div class="standard-most-popular-callout d-none d-lg-block">
                   <div class="d-flex align-items-start gap-2">
                     <div class="callout-icon-wrap rocket" style="background:#ff5a2c; color:#fff;">
@@ -279,10 +279,10 @@
                       <p class="callout-desc">Ideal balance for growing businesses with all essential tools.</p>
                     </div>
                   </div>
-                  <div class="callout-arrow-left">
+                  <div class="callout-arrow-right">
                     <svg width="220" height="50" viewBox="0 0 220 50" fill="none">
-                      <path d="M210,0 C210,35 70,45 15,45" stroke="#ff5a2c" stroke-dasharray="4,4" stroke-width="1.5" stroke-linecap="round" />
-                      <path d="M23,39 L13,45 L23,51" stroke="#ff5a2c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                      <path d="M10,0 C10,35 150,45 205,45" stroke="#ff5a2c" stroke-dasharray="4,4" stroke-width="1.5" stroke-linecap="round" />
+                      <path d="M197,39 L207,45 L197,51" stroke="#ff5a2c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
                     </svg>
                   </div>
                 </div>
