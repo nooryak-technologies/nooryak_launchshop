@@ -73,8 +73,8 @@
   /* Standard Most Popular Callout Box (Right of Standard card on Monthly tab) */
   .standard-most-popular-callout {
     position: absolute;
-    right: -240px;
-    top: -45px;
+       right: -316px;
+    top: -138px;
     width: 210px;
     background: #fff5f2;
     border: 1px solid #ffd5c8;
@@ -94,7 +94,7 @@
   /* Enterprise Callout Box (Top of Enterprise card on Yearly tab) */
   .enterprise-callout-box {
     position: absolute;
-    top: -65px;
+    top: -95px;
     left: 50%;
     transform: translateX(-50%);
     width: 230px;
