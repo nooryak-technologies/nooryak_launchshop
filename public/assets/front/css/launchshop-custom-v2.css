@@ -11165,15 +11165,19 @@ iframe[id^="tawkchat-"],
     overflow: hidden;
     opacity: 0;
     visibility: hidden;
+    pointer-events: none;
     transform: translateY(20px) scale(0.95);
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     z-index: 99999 !important;
 }
 
+#WAButton .wa-chat-popup.show,
+.custom-wa-widget .wa-chat-popup.show,
 .wa-chat-popup.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0) scale(1);
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: translateY(0) scale(1) !important;
 }
 
 /* Header */
