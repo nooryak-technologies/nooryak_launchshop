@@ -166,96 +166,73 @@
   @includeIf('front.partials.popups')
   {{-- Popups end --}}
 
-  {{-- WhatsApp Chat Button (dynamic via plugin when is_whatsapp=1) --}}
-  @if ($bs->is_whatsapp == 1)
-    @php
-      $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
-      $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
-    @endphp
-    <div id="WAButton" class="custom-wa-widget">
-      <!-- WhatsApp Float Button (the circle button) -->
-      <button type="button" class="wa-float-btn" aria-label="Open Chat">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="#fff">
-          <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
-        </svg>
-        <span class="wa-pulse"></span>
-      </button>
+  {{-- WhatsApp Chat Button (dynamic custom widget) --}}
+  @php
+    $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
+    $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
+  @endphp
+  <div id="WAButton" class="custom-wa-widget">
+    <!-- WhatsApp Float Button (the circle button) -->
+    <button type="button" class="wa-float-btn" aria-label="Open Chat">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="#fff">
+        <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
+      </svg>
+      <span class="wa-pulse"></span>
+    </button>
 
-      <!-- WhatsApp Chat Popup -->
-      <div class="wa-chat-popup">
-        <!-- Header -->
-        <div class="wa-chat-header">
-          <div class="wa-header-info">
-            <div class="wa-avatar">
-              <img src="{{ asset('assets/front/img/' . $bs->logo) }}" alt="Logo">
-            </div>
-            <div class="wa-status-text">
-              <span class="wa-chat-name">{{ $bs->whatsapp_header_title ?: $bs->website_title . ' Support' }}</span>
-              <span class="wa-online-status">
-                <span class="wa-dot"></span> Online
-              </span>
-            </div>
+    <!-- WhatsApp Chat Popup -->
+    <div class="wa-chat-popup">
+      <!-- Header -->
+      <div class="wa-chat-header">
+        <div class="wa-header-info">
+          <div class="wa-avatar">
+            <img src="{{ asset('assets/front/img/' . $bs->logo) }}" alt="Logo">
           </div>
-          <button type="button" class="wa-close-btn" aria-label="Close Chat">&times;</button>
-        </div>
-
-        <!-- Body -->
-        <div class="wa-chat-body">
-          <!-- Message Bubble -->
-          <div class="wa-msg-bubble">
-            <div class="wa-msg-text">
-              {!! !empty($bs->whatsapp_popup_message) ? $bs->whatsapp_popup_message : '👋 Welcome to ' . $bs->website_title . '! How can we help you today?' !!}
-            </div>
-            <div class="wa-msg-time">Just now</div>
-          </div>
-
-          <!-- Quick Action Buttons -->
-          <div class="wa-quick-actions">
-            <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="wa-action-btn">
-              Start My Online Store
-            </a>
-            <a href="https://api.whatsapp.com/send?phone=6374913298&text=Hi%2C%20I%20want%20to%20talk%20to%20an%20expert%20to%20help%20me%20get%20started." target="_blank" class="wa-action-btn wa-talk-expert">
-              Talk to Expert
-            </a>
-            <a href="{{ route('front.pricing') }}" class="wa-action-btn">
-              Pricing & Plans
-            </a>
+          <div class="wa-status-text">
+            <span class="wa-chat-name">{{ $bs->whatsapp_header_title ?: $bs->website_title . ' Support' }}</span>
+            <span class="wa-online-status">
+              <span class="wa-dot"></span> Online
+            </span>
           </div>
         </div>
+        <button type="button" class="wa-close-btn" aria-label="Close Chat">&times;</button>
+      </div>
 
-        <!-- Input Footer -->
-        <div class="wa-chat-footer">
-          <input type="text" class="wa-chat-input" placeholder="Type your message...">
-          <button type="button" class="wa-send-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="#fff">
-              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-            </svg>
-          </button>
+      <!-- Body -->
+      <div class="wa-chat-body">
+        <!-- Message Bubble -->
+        <div class="wa-msg-bubble">
+          <div class="wa-msg-text">
+            {!! !empty($bs->whatsapp_popup_message) ? $bs->whatsapp_popup_message : '👋 Welcome to ' . $bs->website_title . '! How can we help you today?' !!}
+          </div>
+          <div class="wa-msg-time">Just now</div>
+        </div>
+
+        <!-- Quick Action Buttons -->
+        <div class="wa-quick-actions">
+          <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="wa-action-btn">
+            Start My Online Store
+          </a>
+          <a href="https://api.whatsapp.com/send?phone=6374913298&text=Hi%2C%20I%20want%20to%20talk%20to%20an%20expert%20to%20help%20me%20get%20started." target="_blank" class="wa-action-btn wa-talk-expert">
+            Talk to Expert
+          </a>
+          <a href="{{ route('front.pricing') }}" class="wa-action-btn">
+            Pricing & Plans
+          </a>
         </div>
       </div>
+
+      <!-- Input Footer -->
+      <div class="wa-chat-footer">
+        <input type="text" class="wa-chat-input" placeholder="Type your message...">
+        <button type="button" class="wa-send-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="#fff">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+          </svg>
+        </button>
+      </div>
     </div>
-  @else
-    <div id="WAButton" style="position:fixed;left:18px;right:auto;bottom:22px;z-index:999;"></div>
-  @endif
-
-  {{-- ═══════════════════════════════════════════════════
-       LEFT SIDE FLOATING STACK  (bottom → top)
-       [WhatsApp]  bottom: 22px
-       [AI Chat]   bottom: 90px  (22 + 56 + 12 gap)
-       ═══════════════════════════════════════════════════ --}}
-
-  {{-- Static WhatsApp — shows when is_whatsapp plugin is OFF but number exists --}}
-  @if (!empty($bs->whatsapp_number) && $bs->is_whatsapp != 1)
-    <a href="https://wa.me/6374913298?text=Hi%2C%20I%20want%20to%20enquire%20about%20the%20LaunchShop.%20Please%20help%20me%20get%20started."
-       target="_blank" rel="noopener noreferrer"
-       class="fab-btn fab-whatsapp"
-       title="Chat on WhatsApp"
-       aria-label="Chat on WhatsApp">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="26" height="26" fill="#fff">
-        <path d="M24 4C13 4 4 13 4 24c0 3.6.97 7 2.66 9.9L4 44l10.37-2.63A19.9 19.9 0 0 0 24 44c11 0 20-9 20-20S35 4 24 4zm0 36a16 16 0 0 1-8.18-2.26l-.58-.35-6.16 1.56 1.6-5.98-.38-.6A16 16 0 1 1 24 40zm8.77-11.9c-.48-.24-2.83-1.4-3.27-1.56-.44-.16-.76-.24-1.08.24-.32.48-1.24 1.56-1.52 1.88-.28.32-.56.36-1.04.12-.48-.24-2.02-.74-3.85-2.36-1.42-1.26-2.38-2.82-2.66-3.3-.28-.48-.03-.74.21-.98.22-.22.48-.56.72-.84.24-.28.32-.48.48-.8.16-.32.08-.6-.04-.84-.12-.24-1.08-2.6-1.48-3.56-.38-.93-.78-.8-1.08-.82h-.92c-.32 0-.84.12-1.28.6-.44.48-1.68 1.64-1.68 4s1.72 4.64 1.96 4.96c.24.32 3.38 5.16 8.2 7.24 1.14.5 2.04.8 2.74 1.02 1.15.36 2.2.31 3.03.19.92-.14 2.83-1.16 3.23-2.28.4-1.12.4-2.08.28-2.28-.12-.2-.44-.32-.92-.56z"/>
-      </svg>
-    </a>
-  @endif
+  </div>
 
   <!-- {{-- AI Chat Button — always visible, above WhatsApp --}}
   <button type="button"
@@ -432,70 +409,68 @@
   </script>
 
   {{-- whatsapp init code --}}
-  @if ($bs->is_whatsapp == 1)
-    <script type="text/javascript">
-      $(function() {
-        var $widget = $('.custom-wa-widget');
-        var $floatBtn = $widget.find('.wa-float-btn');
-        var $popup = $widget.find('.wa-chat-popup');
-        var $closeBtn = $widget.find('.wa-close-btn');
-        var $sendBtn = $widget.find('.wa-send-btn');
-        var $input = $widget.find('.wa-chat-input');
+  <script type="text/javascript">
+    $(function() {
+      var $widget = $('.custom-wa-widget');
+      var $floatBtn = $widget.find('.wa-float-btn');
+      var $popup = $widget.find('.wa-chat-popup');
+      var $closeBtn = $widget.find('.wa-close-btn');
+      var $sendBtn = $widget.find('.wa-send-btn');
+      var $input = $widget.find('.wa-chat-input');
 
-        // Toggle popup
-        $floatBtn.on('click', function(e) {
-          e.stopPropagation();
-          $popup.toggleClass('show');
-          if ($popup.hasClass('show')) {
-            $input.focus();
-          }
-        });
+      // Toggle popup
+      $floatBtn.on('click', function(e) {
+        e.stopPropagation();
+        $popup.toggleClass('show');
+        if ($popup.hasClass('show')) {
+          $input.focus();
+        }
+      });
 
-        // Close popup
-        $closeBtn.on('click', function(e) {
-          e.stopPropagation();
-          $popup.removeClass('show');
-        });
+      // Close popup
+      $closeBtn.on('click', function(e) {
+        e.stopPropagation();
+        $popup.removeClass('show');
+      });
 
-        // Close popup when clicking outside the widget
-        $(document).on('click', function(e) {
-          if (!$(e.target).closest('.custom-wa-widget').length) {
-            $popup.removeClass('show');
-          }
-        });
-
-        // Send function
-        function sendMessage() {
-          var text = $.trim($input.val());
-          var phone = "6374913298";
-          var defaultMsg = "Hi, I want to enquire about the LaunchShop. Please help me get started.";
-          var message = text ? text : defaultMsg;
-          
-          var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-          var url = (isMobile ? 'https://api.whatsapp.com/send' : 'https://web.whatsapp.com/send') 
-                    + '?phone=' + phone + '&text=' + encodeURIComponent(message);
-          
-          window.open(url, '_blank');
-          $input.val('');
+      // Close popup when clicking outside the widget
+      $(document).on('click', function(e) {
+        if (!$(e.target).closest('.custom-wa-widget').length) {
           $popup.removeClass('show');
         }
+      });
 
-        // Send on click
-        $sendBtn.on('click', function(e) {
+      // Send function
+      function sendMessage() {
+        var text = $.trim($input.val());
+        var phone = "6374913298";
+        var defaultMsg = "Hi, I want to enquire about the LaunchShop. Please help me get started.";
+        var message = text ? text : defaultMsg;
+        
+        var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        var url = (isMobile ? 'https://api.whatsapp.com/send' : 'https://web.whatsapp.com/send') 
+                  + '?phone=' + phone + '&text=' + encodeURIComponent(message);
+        
+        window.open(url, '_blank');
+        $input.val('');
+        $popup.removeClass('show');
+      }
+
+      // Send on click
+      $sendBtn.on('click', function(e) {
+        e.preventDefault();
+        sendMessage();
+      });
+
+      // Send on Enter
+      $input.on('keypress', function(e) {
+        if (e.which === 13) {
           e.preventDefault();
           sendMessage();
-        });
-
-        // Send on Enter
-        $input.on('keypress', function(e) {
-          if (e.which === 13) {
-            e.preventDefault();
-            sendMessage();
-          }
-        });
+        }
       });
-    </script>
-  @endif
+    });
+  </script>
 
   @if ($bs->is_tawkto == 1)
     {{-- Force Tawk.to to left side via CSS on its injected containers --}}
