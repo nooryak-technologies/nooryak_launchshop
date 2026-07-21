@@ -88,7 +88,7 @@
               'subtitle' => $slide->subtitle,
               'text' => $slide->text,
               'primary_btn_name' => $slide->btn_name,
-              'primary_btn_url' => (!empty($slide->btn_url) && $slide->btn_url !== '#') ? $slide->btn_url : route('front.user.shop', getParam()),
+              'primary_btn_url' => route('front.user.shop', getParam()),
               'image_url' => !empty($slide->img) ? asset('assets/front/img/hero_slider/' . $slide->img) : null
             ];
           });
@@ -154,7 +154,7 @@
                 </div>
 
                 <div class="clothing-hero-actions">
-                  <a href="{{ (!empty($heroSlide['primary_btn_url']) && $heroSlide['primary_btn_url'] !== '#') ? $heroSlide['primary_btn_url'] : route('front.user.shop', getParam()) }}" class="clothing-btn-dark">
+                  <a href="{{ route('front.user.shop', getParam()) }}" class="clothing-btn-dark">
                     {{ !empty($heroSlide['primary_btn_name']) ? $heroSlide['primary_btn_name'] : __('SHOP MEN') }} <i class="fal fa-arrow-right"></i>
                   </a>
                   <a href="{{ route('front.user.shop', getParam()) }}" class="clothing-btn-light">{{ __('SHOP WOMEN') }} <i class="fal fa-arrow-right"></i></a>
