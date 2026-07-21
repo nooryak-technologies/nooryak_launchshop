@@ -156,7 +156,21 @@ document.addEventListener("DOMContentLoaded", () => {
     // header-next
     var getHeaderHeight = function () {
         var headerNext = $(".header-next");
-        headerNext.css("margin-top", "");
+        // Clothing / Urban theme uses header-v10 and has an absolute-positioned header,
+        // so skip the margin-top calculation for that theme only.
+        if ($(".header-v10").length > 0) {
+            headerNext.css("margin-top", "");
+        } else {
+            if ($(window).width() >= 1600) {
+                headerNext.css("margin-top", "");
+            } else {
+                var header = $(".header-mt-fix");
+                var headerHeight = header.height();
+                headerNext.css({
+                    "margin-top": headerHeight + "px"
+                });
+            }
+        }
     }
     getHeaderHeight();
 
