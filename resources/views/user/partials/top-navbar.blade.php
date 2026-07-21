@@ -216,7 +216,10 @@
         <li class="nav-item dropdown hidden-caret">
           <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
             <div class="avatar-sm">
-              @if (!empty(Auth::user()->photo))
+              @if (Session::has('staff_id'))
+                <img src="{{ asset('assets/admin/img/propics/blank_user.jpg') }}" alt="..."
+                  class="avatar-img rounded-circle">
+              @elseif (!empty(Auth::user()->photo))
                 <img src="{{ asset('assets/front/img/user/' . Auth::user()->photo) }}" alt="..."
                   class="avatar-img rounded-circle">
               @else
@@ -230,7 +233,10 @@
               <li>
                 <div class="user-box">
                   <div class="avatar-lg">
-                    @if (!empty(Auth::user()->photo))
+                    @if (Session::has('staff_id'))
+                      <img src="{{ asset('assets/admin/img/propics/blank_user.jpg') }}" alt="..."
+                        class="avatar-img rounded">
+                    @elseif (!empty(Auth::user()->photo))
                       <img src="{{ asset('assets/front/img/user/' . Auth::user()->photo) }}" alt="..."
                         class="avatar-img rounded">
                     @else
@@ -239,10 +245,15 @@
                     @endif
                   </div>
                   <div class="u-text">
-                    <h4>{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</h4>
-                    <p class="text-muted">{{ Auth::user()->email }}</p>
-                    <a href="{{ route('user-profile-update') }}"
-                      class="btn btn-xs btn-secondary btn-sm">{{ __('Edit Profile') }}</a>
+                    @if (Session::has('staff_id'))
+                      <h4>{{ Session::get('staff_name') }}</h4>
+                      <p class="text-muted"><span class="badge badge-info">{{ Session::get('staff_role') }}</span></p>
+                    @else
+                      <h4>{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</h4>
+                      <p class="text-muted">{{ Auth::user()->email }}</p>
+                      <a href="{{ route('user-profile-update') }}"
+                        class="btn btn-xs btn-secondary btn-sm">{{ __('Edit Profile') }}</a>
+                    @endif
                   </div>
                 </div>
               </li>

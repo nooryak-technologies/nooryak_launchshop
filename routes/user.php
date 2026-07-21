@@ -587,4 +587,25 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'userstatus', 'Demo',
         Route::get('', 'User\HomePageTextController@contentSection')->name('user.image_text_content.section');
     });
     Route::get('pages/remove-image/{language_id}', 'User\HomePageTextController@removeImage')->name('user.remove_image');
+
+    // Staff Management Routes
+    Route::prefix('staff-management')->group(function () {
+        Route::prefix('roles')->group(function () {
+            Route::get('/', 'User\RoleController@index')->name('user.role.index');
+            Route::post('/store', 'User\RoleController@store')->name('user.role.store');
+            Route::get('/edit/{id}', 'User\RoleController@edit')->name('user.role.edit');
+            Route::post('/update', 'User\RoleController@update')->name('user.role.update');
+            Route::post('/delete', 'User\RoleController@delete')->name('user.role.delete');
+        });
+
+        Route::prefix('staffs')->group(function () {
+            Route::get('/', 'User\StaffController@index')->name('user.staff.index');
+            Route::get('/create', 'User\StaffController@create')->name('user.staff.create');
+            Route::post('/store', 'User\StaffController@store')->name('user.staff.store');
+            Route::get('/edit/{id}', 'User\StaffController@edit')->name('user.staff.edit');
+            Route::post('/update', 'User\StaffController@update')->name('user.staff.update');
+            Route::post('/status', 'User\StaffController@status')->name('user.staff.status');
+            Route::post('/delete', 'User\StaffController@delete')->name('user.staff.delete');
+        });
+    });
 });

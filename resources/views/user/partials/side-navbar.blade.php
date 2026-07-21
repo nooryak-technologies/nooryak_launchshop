@@ -8,6 +8,16 @@
       $permissions = \App\Http\Helpers\UserPermissionHelper::packagePermission($user->id);
       $permissions = json_decode($permissions, true);
   }
+
+  if (!function_exists('hasStaffPerm')) {
+      function hasStaffPerm($permissionKey) {
+          if (!Session::has('staff_id')) {
+              return true;
+          }
+          $perms = Session::get('staff_permissions', []);
+          return is_array($perms) && in_array($permissionKey, $perms);
+      }
+  }
 @endphp
 <div class="sidebar sidebar-style-2" data-background-color="dark2">
   <div class="d-flex justify-content-end pt-3 pr-3 pb-0 d-lg-none" style="position: relative; z-index: 10000;">
@@ -19,7 +29,9 @@
     <div class="sidebar-content">
       <div class="user">
         <div class="avatar-sm float-left mr-2">
-          @if (!empty(Auth::user()->photo))
+          @if (Session::has('staff_id'))
+            <img src="{{ asset('assets/admin/img/propics/blank_user.jpg') }}" alt="..." class="avatar-img rounded">
+          @elseif (!empty(Auth::user()->photo))
             <img src="{{ asset('assets/front/img/user/' . Auth::user()->photo) }}" alt="..."
               class="avatar-img rounded">
           @else
@@ -29,8 +41,13 @@
         <div class="info">
           <a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
             <span>
-              {{ auth()->user()->first_name . ' ' . auth()->user()->last_name }}
-              <span class="user-level">{{ auth()->user()->username }}</span>
+              @if (Session::has('staff_id'))
+                {{ Session::get('staff_name') }}
+                <span class="user-level"><span class="badge badge-info">{{ Session::get('staff_role') }}</span></span>
+              @else
+                {{ auth()->user()->first_name . ' ' . auth()->user()->last_name }}
+                <span class="user-level">{{ auth()->user()->username }}</span>
+              @endif
               <span class="caret"></span>
             </span>
           </a>
@@ -353,7 +370,7 @@
           </li>
         @endif
         {{-- Registered Users --}}
-        @if (!is_null($package))
+        @if (!is_null($package) && hasStaffPerm('Registered Customers'))
           <li
             class="nav-item
          @if (request()->path() == 'user/register/users') active
@@ -363,6 +380,38 @@
               <i class="la flaticon-users"></i>
               <p>{{ __('Registered Customers') }}</p>
             </a>
+          </li>
+        @endif
+
+        {{-- Staff Management --}}
+        @if (!is_null($package) && hasStaffPerm('Staff Management'))
+          <li
+            class="nav-item
+              @if (request()->routeIs('user.role.*')) active
+              @elseif (request()->routeIs('user.staff.*')) active @endif">
+            <a data-toggle="collapse" href="#staffManagement">
+              <i class="fas fa-user-shield"></i>
+              <p>{{ __('Staff Management') }}</p>
+              <span class="caret"></span>
+            </a>
+            <div
+              class="collapse
+                @if (request()->routeIs('user.role.*')) show
+                @elseif (request()->routeIs('user.staff.*')) show @endif"
+              id="staffManagement">
+              <ul class="nav nav-collapse">
+                <li class="@if (request()->routeIs('user.role.*')) active @endif">
+                  <a href="{{ route('user.role.index') }}">
+                    <span class="sub-item">{{ __('Roles & Permissions') }}</span>
+                  </a>
+                </li>
+                <li class="@if (request()->routeIs('user.staff.*')) active @endif">
+                  <a href="{{ route('user.staff.index') }}">
+                    <span class="sub-item">{{ __('Manage Staff') }}</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
           </li>
         @endif
 

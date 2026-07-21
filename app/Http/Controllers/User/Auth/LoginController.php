@@ -105,6 +105,7 @@ class LoginController extends Controller
 
         // Attempt to log the user in
         if (Auth::guard('web')->attempt($credentials)) {
+            Session::forget(['staff_id', 'staff_name', 'staff_role', 'staff_permissions']);
 
             // Check If Email is verified or not
             if (Auth::guard('web')->user()->email_verified == 0) {
@@ -119,6 +120,35 @@ class LoginController extends Controller
             }
             return redirect($redirectUrl);
         }
+
+        // Attempt staff login
+        $staff = \App\Models\User\UserStaff::where('email', $loginField)
+            ->orWhere('username', $loginField)
+            ->first();
+
+        if ($staff && \Illuminate\Support\Facades\Hash::check($request->password, $staff->password)) {
+            if ($staff->status == 0) {
+                return back()->with('err', __('Your staff account is disabled'));
+            }
+
+            $merchant = $staff->merchant;
+            if ($merchant && $merchant->status == 1) {
+                Auth::guard('web')->login($merchant);
+
+                $permissions = [];
+                if ($staff->role && !empty($staff->role->permissions)) {
+                    $permissions = json_decode($staff->role->permissions, true);
+                }
+
+                Session::put('staff_id', $staff->id);
+                Session::put('staff_name', trim($staff->first_name . ' ' . $staff->last_name));
+                Session::put('staff_role', $staff->role ? $staff->role->name : 'Staff');
+                Session::put('staff_permissions', $permissions);
+
+                return redirect($redirectUrl);
+            }
+        }
+
         // if unsuccessful, then redirect back to the login with the form data
         return back()->with('err', __("Credentials Doesn't Match!"))->withInput();
     }
