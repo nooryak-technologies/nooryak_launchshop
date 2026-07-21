@@ -341,8 +341,8 @@ class ItemController extends Controller
             $data['cart'] = null;
         }
         $data['shippings'] = UserShippingCharge::where('user_id', $user->id)->where('language_id', $currentLanguage->id)->get();
-        $data['offlines'] = $user->preview_template == 1 ? collect([]) : UserOfflineGateway::where('user_id', $user->id)->get();
-        $data['payment_gateways'] = $user->preview_template == 1 ? collect([]) : UserPaymentGeteway::where('user_id', $user->id)->where('status', 1)->get();
+        $data['offlines'] = UserOfflineGateway::where('user_id', $user->id)->get();
+        $data['payment_gateways'] = UserPaymentGeteway::where('user_id', $user->id)->where('status', 1)->get();
         $data['discount'] = session()->has('user_coupon_' . $user->username) && !empty(session()->get('user_coupon_' . $user->username)) ? session()->get('user_coupon_' . $user->username) : 0;
         // determining the theme version selected
         $userBs = BasicSetting::where('user_id', $user->id)->first();
@@ -407,8 +407,8 @@ class ItemController extends Controller
             $data['cart'] = null;
         }
         $data['shippings'] = UserShippingCharge::where('user_id', $user->id)->where('language_id', $userCurrentLang->id)->get();
-        $data['offlines'] = $user->preview_template == 1 ? collect([]) : UserOfflineGateway::where('user_id', $user->id)->get();
-        $data['payment_gateways'] = $user->preview_template == 1 ? collect([]) : UserPaymentGeteway::where('user_id', $user->id)->where('status', 1)->get();
+        $data['offlines'] = UserOfflineGateway::where('user_id', $user->id)->get();
+        $data['payment_gateways'] = UserPaymentGeteway::where('user_id', $user->id)->where('status', 1)->get();
         $data['discount'] = session()->has('user_coupon_' . $user->username) && !empty(session()->get('user_coupon_' . $user->username)) ? session()->get('user_coupon_' . $user->username) : 0;
         // determining the theme version selected
         $userBs = BasicSetting::where('user_id', $user->id)->first();
