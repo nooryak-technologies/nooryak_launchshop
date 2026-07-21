@@ -34,6 +34,39 @@ class UserController extends Controller
     {
         $user = Auth::guard('web')->user();
 
+        if (Session::has('staff_id')) {
+            $perms = Session::get('staff_permissions', []);
+            if (!is_array($perms)) { $perms = []; }
+
+            $defaultLang = Language::where('is_default', 1)->first()->code ?? 'en';
+
+            if (in_array('Categories', $perms)) {
+                return redirect()->route('user.itemcategory.index', ['language' => $defaultLang]);
+            } elseif (in_array('Subcategories', $perms)) {
+                return redirect()->route('user.itemsubcategory.index', ['language' => $defaultLang]);
+            } elseif (in_array('Product Labels', $perms)) {
+                return redirect()->route('user.product.label.index', ['language' => $defaultLang]);
+            } elseif (in_array('Product Variants', $perms)) {
+                return redirect()->route('user.variant.index', ['language' => $defaultLang]);
+            } elseif (in_array('Products / Items', $perms) || in_array('Products', $perms) || in_array('Shop Management', $perms)) {
+                return redirect()->route('user.item.index', ['language' => $defaultLang]);
+            } elseif (in_array('Orders', $perms)) {
+                return redirect()->route('user.all.item.orders');
+            } elseif (in_array('Sales Report', $perms)) {
+                return redirect()->route('user.orders.report');
+            } elseif (in_array('Coupons', $perms)) {
+                return redirect()->route('user.coupon.index');
+            } elseif (in_array('Shipping Charges', $perms)) {
+                return redirect()->route('user.shipping.index', ['language' => $defaultLang]);
+            } elseif (in_array('Currencies', $perms)) {
+                return redirect()->route('user-currency-index');
+            } elseif (in_array('Registered Customers', $perms)) {
+                return redirect()->route('user.register.user');
+            } elseif (in_array('Staff Management', $perms)) {
+                return redirect()->route('user.staff.index');
+            }
+        }
+
         if ($user->preview_template == 1) {
             $this->seedMockOrdersIfNecessary($user);
         }

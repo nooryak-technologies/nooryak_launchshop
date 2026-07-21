@@ -110,6 +110,7 @@
             </form>
           </div>
         </div>
+        @if (!Session::has('staff_id'))
         <li class="nav-item
                 @if (request()->path() == 'user/dashboard') active @endif">
           <a href="{{ route('user-dashboard') }}">
@@ -117,6 +118,7 @@
             <p>{{ __('Dashboard') }}</p>
           </a>
         </li>
+        @endif
 
         @if (!is_null($package))
           {{-- START SHOP MANAGEMENT --}}
