@@ -38,9 +38,14 @@ class GatewayController extends Controller
         $data['phonepe'] = UserPaymentGeteway::where([['user_id', $user_id], ['keyword', 'phonepe']])->first();
 
         if (Auth::guard('web')->user()->preview_template == 1) {
+            $defaultActiveGateways = ['paytm', 'razorpay', 'stripe', 'phonepe', 'instamojo'];
             foreach ($data as $key => $gateway) {
                 if ($gateway && (empty($gateway->updated_at) || $gateway->created_at == $gateway->updated_at)) {
-                    $gateway->status = 0;
+                    if (in_array($key, $defaultActiveGateways)) {
+                        $gateway->status = 1;
+                    } else {
+                        $gateway->status = 0;
+                    }
                 }
             }
         }
