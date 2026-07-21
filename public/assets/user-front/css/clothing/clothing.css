@@ -760,7 +760,7 @@ body {
 .flash-sale-clothing {
   /*padding: 100px 0;*/
   background: var(--clothing-cream);
-      margin-top: 1rem;
+  margin-top: 1rem;
 }
 
 .flash-sale-clothing .flash-header {
@@ -1997,7 +1997,7 @@ body {
   .clothing-countdown {
     gap: 8px !important;
     justify-content: center !important;
-    width: 100% !important;
+    width: 84% !important;
   }
 
   .clothing-countdown .time-block {
