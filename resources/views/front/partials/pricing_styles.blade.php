@@ -109,8 +109,8 @@
   /* Basic Most Popular Callout Box (Top of Basic card on Yearly tab) */
   .basic-most-popular-callout {
     position: absolute;
-    top: -110px;
-    left: 50%;
+        top: -137px;
+    left: 63%;
     transform: translateX(-50%);
     width: 230px;
     background: linear-gradient(135deg, #ffffff 0%, #fff3f0 100%);

@@ -42,35 +42,38 @@
   }
   /* Animated Multi-Color Gradient Glowing Border for Dashboard Showcase */
   .simulated-dashboard-card {
-    position: relative;
-    padding: 6px;
-    border-radius: 20px;
-    background: linear-gradient(135deg, #ff5a2c, #10b981, #ec4899, #8b5cf6, #3b82f6, #ff5a2c);
-    background-size: 400% 400%;
-    animation: dashboardGlowingBorder 6s ease infinite;
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+    position: relative !important;
+    padding: 6px !important;
+    border-radius: 20px !important;
+    background: linear-gradient(135deg, #ff5a2c, #10b981, #ec4899, #8b5cf6, #3b82f6, #ff5a2c) !important;
+    background-size: 400% 400% !important;
+    animation: dashboardGlowingBorder 6s ease infinite !important;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15) !important;
+    z-index: 1 !important;
   }
   .simulated-dashboard-card::before {
-    content: '';
-    position: absolute;
-    top: -5px;
-    left: -5px;
-    right: -5px;
-    bottom: -5px;
-    border-radius: 24px;
-    background: linear-gradient(135deg, #ff5a2c, #10b981, #ec4899, #8b5cf6, #3b82f6, #ff5a2c);
-    background-size: 400% 400%;
-    animation: dashboardGlowingBorder 6s ease infinite;
-    z-index: -1;
-    filter: blur(16px);
-    opacity: 0.75;
+    content: '' !important;
+    position: absolute !important;
+    top: -5px !important;
+    left: -5px !important;
+    right: -5px !important;
+    bottom: -5px !important;
+    border-radius: 24px !important;
+    background: linear-gradient(135deg, #ff5a2c, #10b981, #ec4899, #8b5cf6, #3b82f6, #ff5a2c) !important;
+    background-size: 400% 400% !important;
+    animation: dashboardGlowingBorder 6s ease infinite !important;
+    z-index: -1 !important;
+    filter: blur(16px) !important;
+    opacity: 0.8 !important;
   }
   .simulated-dashboard-card img {
-    border-radius: 14px;
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: cover;
+    border-radius: 14px !important;
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    object-fit: cover !important;
+    position: relative !important;
+    z-index: 2 !important;
   }
   @keyframes dashboardGlowingBorder {
     0% {
@@ -271,9 +274,8 @@
     }
   }
 
-  /* ── Pricing V2 styling ── */
-  @include('front.partials.pricing_styles')
 </style>
+@include('front.partials.pricing_styles')
 @endsection
 @php
   $additional_section_status = json_decode($bs->additional_section_status, true);
