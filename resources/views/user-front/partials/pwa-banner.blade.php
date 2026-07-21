@@ -1,5 +1,5 @@
 <!-- PWA Sticky Bottom Install Banner -->
-<div id="pwa-install-banner" class="pwa-install-banner-bar">
+<div id="pwa-install-banner" class="pwa-install-banner-bar" style="display:none;">
   <div style="display:flex;align-items:center;gap:14px;">
     <img src="{{ !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png') }}"
          style="width:44px;height:44px;object-fit:contain;border-radius:10px;border:1px solid #e2e8f0;padding:2px;background:#fff;" alt="">
@@ -39,24 +39,34 @@
 </style>
 
 <script>
+  // Check if prompt was already captured in <head>
+  if (window.deferredPwaPrompt && !localStorage.getItem('pwa_dismissed')) {
+    var banner = document.getElementById('pwa-install-banner');
+    if (banner) banner.style.display = 'flex';
+  }
+
   function triggerPwaInstall() {
-    // Use the globally stored prompt captured early in <head>
     if (window.deferredPwaPrompt) {
-      window.deferredPwaPrompt.prompt(); // Shows native Chrome/Edge "Install app" dialog
+      // Triggers Chrome native "Install app" modal prompt directly
+      window.deferredPwaPrompt.prompt();
       window.deferredPwaPrompt.userChoice.then(function(result) {
         window.deferredPwaPrompt = null;
-        if (result.outcome === 'accepted') dismissPwaBanner();
+        if (result.outcome === 'accepted') {
+          dismissPwaBanner();
+        }
       });
+    } else {
+      alert("To install this app, tap your browser menu (⋮ or Share icon) and select 'Add to Home Screen' or 'Install App'.");
     }
-    // If prompt not available yet, do nothing (banner stays for next time)
   }
 
   function dismissPwaBanner() {
     var el = document.getElementById('pwa-install-banner');
     if (el) el.style.display = 'none';
+    try { localStorage.setItem('pwa_dismissed', '1'); } catch(e) {}
   }
 
-  // Register service worker (required for PWA installability)
+  // Register service worker
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
       navigator.serviceWorker.register('/sw.js')

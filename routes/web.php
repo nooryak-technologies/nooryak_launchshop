@@ -39,19 +39,40 @@ Route::get('/manifest.json', function () {
     $logo     = !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png');
     $color    = '#' . ($userBs->base_color ?? '007bff');
 
+    $logoExt  = strtolower(pathinfo(parse_url($logo, PHP_URL_PATH), PATHINFO_EXTENSION));
+    $mimeType = 'image/png';
+    if (in_array($logoExt, ['jpg', 'jpeg'])) {
+        $mimeType = 'image/jpeg';
+    } elseif ($logoExt === 'webp') {
+        $mimeType = 'image/webp';
+    } elseif ($logoExt === 'svg') {
+        $mimeType = 'image/svg+xml';
+    }
+
     $manifest = [
         'name'             => $shopName,
         'short_name'       => mb_substr($shopName, 0, 12),
         'description'      => 'Install ' . $shopName . ' for a faster shopping experience',
+        'id'               => $startUrl,
         'start_url'        => $startUrl,
-        'scope'            => $startUrl,
+        'scope'            => '/',
         'display'          => 'standalone',
         'background_color' => '#ffffff',
         'theme_color'      => $color,
         'orientation'      => 'portrait-primary',
         'icons'            => [
-            ['src' => $logo, 'sizes' => '192x192', 'type' => 'image/png', 'purpose' => 'any'],
-            ['src' => $logo, 'sizes' => '512x512',  'type' => 'image/png', 'purpose' => 'maskable'],
+            [
+                'src'     => $logo,
+                'sizes'   => '192x192',
+                'type'    => $mimeType,
+                'purpose' => 'any maskable'
+            ],
+            [
+                'src'     => $logo,
+                'sizes'   => '512x512',
+                'type'    => $mimeType,
+                'purpose' => 'any maskable'
+            ],
         ],
     ];
 
