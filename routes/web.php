@@ -20,7 +20,6 @@ Route::get('/myfatoorah/callback', 'MyFatoorahController@callback')->name('myfat
 Route::get('myfatoorah/cancel', 'MyFatoorahController@cancel')->name('myfatoorah.cancel');
 
 Route::get('/manifest.json', function () {
-    // Accept username via query param e.g. /manifest.json?u=manti
     $username = request('u');
     $user = null;
     $userBs = null;
@@ -28,7 +27,6 @@ Route::get('/manifest.json', function () {
     if ($username) {
         $user = \App\Models\User::where('username', $username)->first();
     }
-    // Fallback to getUser() if no param
     if (!$user) {
         $user = getUser();
     }
@@ -37,34 +35,24 @@ Route::get('/manifest.json', function () {
     }
 
     $shopName = !empty($userBs->website_title) ? $userBs->website_title : ($user->shop_name ?? ($user->username ?? 'LaunchShop'));
-    $startUrl = $user ? '/' . $user->username : '/';
-    $logo = !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png');
-    $color = '#' . ($userBs->base_color ?? '007bff');
+    $startUrl = $user ? '/' . $user->username . '/' : '/';
+    $logo     = !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png');
+    $color    = '#' . ($userBs->base_color ?? '007bff');
 
     $manifest = [
-        "name" => $shopName,
-        "short_name" => mb_substr($shopName, 0, 12),
-        "description" => "Install " . $shopName . " for a faster shopping experience",
-        "start_url" => $startUrl,
-        "scope" => $startUrl . '/',
-        "display" => "standalone",
-        "background_color" => "#ffffff",
-        "theme_color" => $color,
-        "orientation" => "portrait-primary",
-        "icons" => [
-            [
-                "src" => $logo,
-                "sizes" => "192x192",
-                "type" => "image/png",
-                "purpose" => "any"
-            ],
-            [
-                "src" => $logo,
-                "sizes" => "512x512",
-                "type" => "image/png",
-                "purpose" => "maskable"
-            ]
-        ]
+        'name'             => $shopName,
+        'short_name'       => mb_substr($shopName, 0, 12),
+        'description'      => 'Install ' . $shopName . ' for a faster shopping experience',
+        'start_url'        => $startUrl,
+        'scope'            => $startUrl,
+        'display'          => 'standalone',
+        'background_color' => '#ffffff',
+        'theme_color'      => $color,
+        'orientation'      => 'portrait-primary',
+        'icons'            => [
+            ['src' => $logo, 'sizes' => '192x192', 'type' => 'image/png', 'purpose' => 'any'],
+            ['src' => $logo, 'sizes' => '512x512',  'type' => 'image/png', 'purpose' => 'maskable'],
+        ],
     ];
 
     return response(json_encode($manifest), 200, [
