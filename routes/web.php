@@ -20,36 +20,55 @@ Route::get('/myfatoorah/callback', 'MyFatoorahController@callback')->name('myfat
 Route::get('myfatoorah/cancel', 'MyFatoorahController@cancel')->name('myfatoorah.cancel');
 
 Route::get('/manifest.json', function () {
-    $user = getUser();
+    // Accept username via query param e.g. /manifest.json?u=manti
+    $username = request('u');
+    $user = null;
     $userBs = null;
+
+    if ($username) {
+        $user = \App\Models\User::where('username', $username)->first();
+    }
+    // Fallback to getUser() if no param
+    if (!$user) {
+        $user = getUser();
+    }
     if ($user) {
         $userBs = \App\Models\User\BasicSetting::where('user_id', $user->id)->first();
     }
-    $shopName = !empty($userBs->website_title) ? $userBs->website_title : ($user->shop_name ?? ($user->username ?? 'LaunchShop'));
-    $logo = !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png');
 
-    return response()->json([
+    $shopName = !empty($userBs->website_title) ? $userBs->website_title : ($user->shop_name ?? ($user->username ?? 'LaunchShop'));
+    $startUrl = $user ? '/' . $user->username : '/';
+    $logo = !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png');
+    $color = '#' . ($userBs->base_color ?? '007bff');
+
+    $manifest = [
         "name" => $shopName,
         "short_name" => mb_substr($shopName, 0, 12),
-        "description" => "Install " . $shopName . " App for a faster shopping experience",
-        "start_url" => "/",
+        "description" => "Install " . $shopName . " for a faster shopping experience",
+        "start_url" => $startUrl,
+        "scope" => $startUrl . '/',
         "display" => "standalone",
         "background_color" => "#ffffff",
-        "theme_color" => "#" . ($userBs->base_color ?? "007bff"),
+        "theme_color" => $color,
+        "orientation" => "portrait-primary",
         "icons" => [
             [
                 "src" => $logo,
                 "sizes" => "192x192",
                 "type" => "image/png",
-                "purpose" => "any maskable"
+                "purpose" => "any"
             ],
             [
                 "src" => $logo,
                 "sizes" => "512x512",
                 "type" => "image/png",
-                "purpose" => "any maskable"
+                "purpose" => "maskable"
             ]
         ]
+    ];
+
+    return response(json_encode($manifest), 200, [
+        'Content-Type' => 'application/manifest+json',
     ]);
 });
 

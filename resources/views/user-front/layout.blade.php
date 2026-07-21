@@ -13,7 +13,7 @@
   <meta name="description" content="@yield('meta-description')">
   <meta name="keywords" content="@yield('meta-keywords')">
   <link rel="canonical" href="{{ canonicalUrl() }}">
-  <link rel="manifest" href="{{ url('/manifest.json') }}">
+  <link rel="manifest" href="{{ url('/manifest.json?u=' . $user->username) }}">
   <meta name="theme-color" content="#{{ $userBs->base_color ?? '007bff' }}">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
