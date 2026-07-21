@@ -268,7 +268,7 @@
               @endif
 
               @if($titleKey == 'standard')
-                <!-- Standard Most Popular Callout Box (Positioned on Left side of Standard card above Basic card) -->
+                <!-- Standard Most Popular Callout Box (Positioned on Right side of Standard card) -->
                 <div class="standard-most-popular-callout d-none d-lg-block">
                   <div class="d-flex align-items-start gap-2">
                     <div class="callout-icon-wrap rocket" style="background:#ff5a2c; color:#fff;">
@@ -279,31 +279,10 @@
                       <p class="callout-desc">Ideal balance for growing businesses with all essential tools.</p>
                     </div>
                   </div>
-                  <div class="callout-arrow">
+                  <div class="callout-arrow-left">
                     <svg width="220" height="50" viewBox="0 0 220 50" fill="none">
-                      <path d="M10,0 C10,35 150,45 205,45" stroke="#ff5a2c" stroke-dasharray="4,4" stroke-width="1.5" stroke-linecap="round" />
-                      <path d="M197,39 L207,45 L197,51" stroke="#ff5a2c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-                    </svg>
-                  </div>
-                </div>
-              @endif
-
-              @if($titleKey == 'premium' && strtolower($term) != 'monthly')
-                <!-- Premium Most Chosen Callout Box (Positioned top of Premium plan container) -->
-                <div class="premium-most-chosen-callout d-none d-lg-block">
-                  <div class="d-flex align-items-start gap-2">
-                    <div class="callout-icon-wrap star" style="background:#f59e0b; color:#fff;">
-                      <i class="fas fa-star"></i>
-                    </div>
-                    <div class="callout-text">
-                      <h5 class="callout-title">Most People Choose</h5>
-                      <p class="callout-desc">Best value with all premium features and a free domain.</p>
-                    </div>
-                  </div>
-                  <div class="callout-arrow-down">
-                    <svg width="40" height="25" viewBox="0 0 40 25" fill="none">
-                      <path d="M20,0 L20,18" stroke="#f59e0b" stroke-dasharray="4,4" stroke-width="1.5" stroke-linecap="round" />
-                      <path d="M14,12 L20,20 L26,12" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                      <path d="M210,0 C210,35 70,45 15,45" stroke="#ff5a2c" stroke-dasharray="4,4" stroke-width="1.5" stroke-linecap="round" />
+                      <path d="M23,39 L13,45 L23,51" stroke="#ff5a2c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
                     </svg>
                   </div>
                 </div>
@@ -413,6 +392,24 @@
           @if(strtolower($term) != 'monthly')
           {{-- Enterprise card always shown --}}
             <div class="pricing-card-v2 card-enterprise">
+              <!-- Enterprise Callout Box (Most Chosen) -->
+              <div class="enterprise-callout-box d-none d-lg-block">
+                <div class="d-flex align-items-start gap-2">
+                  <div class="callout-icon-wrap star" style="background:#f59e0b; color:#fff;">
+                    <i class="fas fa-star"></i>
+                  </div>
+                  <div class="callout-text">
+                    <h5 class="callout-title">Most People Choose</h5>
+                    <p class="callout-desc">Best value with all premium features and a free domain.</p>
+                  </div>
+                </div>
+                <div class="callout-arrow-left">
+                  <svg width="120" height="40" viewBox="0 0 120 40" fill="none">
+                    <path d="M110,0 C110,25 50,35 15,35" stroke="#f59e0b" stroke-dasharray="4,4" stroke-width="1.5" stroke-linecap="round" />
+                    <path d="M23,29 L13,35 L23,41" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                  </svg>
+                </div>
+              </div>
               <div class="plan-v2-icon" style="color:#ff5a2c;"><i class="fas fa-building"></i></div>
               <h3 class="plan-v2-title">Enterprise</h3>
               <p class="plan-v2-subtitle">For large &amp; global brands</p>
