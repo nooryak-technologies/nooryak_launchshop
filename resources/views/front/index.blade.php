@@ -40,50 +40,71 @@
       flex-direction: column !important;
       gap: 8px !important;
   }
-  /* Animated Multi-Color Gradient Glowing Border for Dashboard Showcase */
+  /* Animated Multi-Color Running Gradient Border for Dashboard Showcase */
   .simulated-dashboard-card {
     position: relative !important;
     padding: 6px !important;
     border-radius: 20px !important;
-    background: linear-gradient(135deg, #ff5a2c, #10b981, #ec4899, #8b5cf6, #3b82f6, #ff5a2c) !important;
-    background-size: 400% 400% !important;
-    animation: dashboardGlowingBorder 6s ease infinite !important;
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15) !important;
+    overflow: hidden !important;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18) !important;
     z-index: 1 !important;
   }
   .simulated-dashboard-card::before {
     content: '' !important;
     position: absolute !important;
-    top: -5px !important;
-    left: -5px !important;
-    right: -5px !important;
-    bottom: -5px !important;
+    width: 250% !important;
+    height: 250% !important;
+    top: -75% !important;
+    left: -75% !important;
+    background: conic-gradient(
+      from 0deg,
+      #ff5a2c 0deg,
+      #10b981 72deg,
+      #06b6d4 144deg,
+      #8b5cf6 216deg,
+      #ec4899 288deg,
+      #ff5a2c 360deg
+    ) !important;
+    animation: spinRunningBorder 3.5s linear infinite !important;
+    z-index: 0 !important;
+  }
+  .simulated-dashboard-card::after {
+    content: '' !important;
+    position: absolute !important;
+    top: -8px !important;
+    left: -8px !important;
+    right: -8px !important;
+    bottom: -8px !important;
     border-radius: 24px !important;
-    background: linear-gradient(135deg, #ff5a2c, #10b981, #ec4899, #8b5cf6, #3b82f6, #ff5a2c) !important;
-    background-size: 400% 400% !important;
-    animation: dashboardGlowingBorder 6s ease infinite !important;
+    background: conic-gradient(
+      from 0deg,
+      #ff5a2c 0deg,
+      #10b981 72deg,
+      #06b6d4 144deg,
+      #8b5cf6 216deg,
+      #ec4899 288deg,
+      #ff5a2c 360deg
+    ) !important;
+    animation: spinRunningBorder 3.5s linear infinite !important;
     z-index: -1 !important;
-    filter: blur(16px) !important;
-    opacity: 0.8 !important;
+    filter: blur(18px) !important;
+    opacity: 0.85 !important;
   }
   .simulated-dashboard-card img {
+    position: relative !important;
+    z-index: 2 !important;
     border-radius: 14px !important;
     width: 100% !important;
     height: auto !important;
     display: block !important;
     object-fit: cover !important;
-    position: relative !important;
-    z-index: 2 !important;
   }
-  @keyframes dashboardGlowingBorder {
+  @keyframes spinRunningBorder {
     0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
+      transform: rotate(0deg);
     }
     100% {
-      background-position: 0% 50%;
+      transform: rotate(360deg);
     }
   }
 
