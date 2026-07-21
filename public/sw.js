@@ -1,16 +1,26 @@
-var CACHE_NAME = 'pwa-store-v1';
+var CACHE_NAME = 'pwa-store-v2';
 
 self.addEventListener('install', function(event) {
   self.skipWaiting();
 });
 
 self.addEventListener('activate', function(event) {
-  event.waitUntil(self.clients.claim());
+  event.waitUntil(
+    caches.keys().then(function(names) {
+      return Promise.all(
+        names.filter(function(name) { return name !== CACHE_NAME; })
+          .map(function(name) { return caches.delete(name); })
+      );
+    }).then(function() {
+      return self.clients.claim();
+    })
+  );
 });
 
 self.addEventListener('fetch', function(event) {
-  // Only cache GET requests
-  if (event.request.method !== 'GET') return;
+  if (event.request.method !== 'GET') {
+    return;
+  }
 
   event.respondWith(
     fetch(event.request).catch(function() {

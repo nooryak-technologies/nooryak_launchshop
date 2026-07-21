@@ -19,67 +19,8 @@ Route::get('/check-payment', 'CronJobController@check_payment')->name('cron.chec
 Route::get('/myfatoorah/callback', 'MyFatoorahController@callback')->name('myfatoorah.success');
 Route::get('myfatoorah/cancel', 'MyFatoorahController@cancel')->name('myfatoorah.cancel');
 
-Route::get('/manifest.json', function () {
-    $username = request('u');
-    $user = null;
-    $userBs = null;
-
-    if ($username) {
-        $user = \App\Models\User::where('username', $username)->first();
-    }
-    if (!$user) {
-        $user = getUser();
-    }
-    if ($user) {
-        $userBs = \App\Models\User\BasicSetting::where('user_id', $user->id)->first();
-    }
-
-    $shopName = !empty($userBs->website_title) ? $userBs->website_title : ($user->shop_name ?? ($user->username ?? 'LaunchShop'));
-    $startUrl = $user ? '/' . $user->username : '/';
-    $logo     = !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png');
-    $color    = '#' . ($userBs->base_color ?? '007bff');
-
-    $logoExt  = strtolower(pathinfo(parse_url($logo, PHP_URL_PATH), PATHINFO_EXTENSION));
-    $mimeType = 'image/png';
-    if (in_array($logoExt, ['jpg', 'jpeg'])) {
-        $mimeType = 'image/jpeg';
-    } elseif ($logoExt === 'webp') {
-        $mimeType = 'image/webp';
-    } elseif ($logoExt === 'svg') {
-        $mimeType = 'image/svg+xml';
-    }
-
-    $manifest = [
-        'name'             => $shopName,
-        'short_name'       => mb_substr($shopName, 0, 12),
-        'description'      => 'Install ' . $shopName . ' for a faster shopping experience',
-        'id'               => $startUrl,
-        'start_url'        => $startUrl,
-        'scope'            => '/',
-        'display'          => 'standalone',
-        'background_color' => '#ffffff',
-        'theme_color'      => $color,
-        'orientation'      => 'portrait-primary',
-        'icons'            => [
-            [
-                'src'     => $logo,
-                'sizes'   => '192x192',
-                'type'    => $mimeType,
-                'purpose' => 'any maskable'
-            ],
-            [
-                'src'     => $logo,
-                'sizes'   => '512x512',
-                'type'    => $mimeType,
-                'purpose' => 'any maskable'
-            ],
-        ],
-    ];
-
-    return response(json_encode($manifest), 200, [
-        'Content-Type' => 'application/manifest+json',
-    ]);
-});
+Route::get('/manifest.json', 'PwaController@manifest');
+Route::get('/pwa-icon/{size}', 'PwaController@icon')->where('size', '[0-9]+');
 
 Route::get('/invoice', 'Front\FrontendController@invoice')
     ->name('front.invoice');

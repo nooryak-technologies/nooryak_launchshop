@@ -1,7 +1,7 @@
 <!-- PWA Sticky Bottom Install Banner -->
 <div id="pwa-install-banner" class="pwa-install-banner-bar" style="display:none;">
   <div style="display:flex;align-items:center;gap:14px;">
-    <img src="{{ !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png') }}"
+    <img src="{{ !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/673095353bc62.png') }}"
          style="width:44px;height:44px;object-fit:contain;border-radius:10px;border:1px solid #e2e8f0;padding:2px;background:#fff;" alt="">
     <div>
       <div style="font-size:13px;font-weight:700;color:#0f172a;line-height:1.3;">
@@ -27,6 +27,14 @@
   </div>
 </div>
 
+<div id="pwa-install-fallback" class="pwa-install-fallback" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="pwa-fallback-title">
+  <div class="pwa-install-fallback__panel">
+    <h3 id="pwa-fallback-title">{{ $keywords['Install App'] ?? __('Install App') }}</h3>
+    <p>{{ $keywords['To install this app, tap your browser menu and select Add to Home Screen or Install App.'] ?? __('To install this app, tap your browser menu (⋮ or Share icon) and select "Add to Home Screen" or "Install App".') }}</p>
+    <button type="button" onclick="closePwaInstallFallback()">OK</button>
+  </div>
+</div>
+
 <style>
 .pwa-install-banner-bar{
   position:fixed; bottom:0; left:0; right:0; z-index:999999;
@@ -36,28 +44,84 @@
   justify-content:space-between; gap:10px;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 }
+.pwa-install-fallback{
+  position:fixed; inset:0; z-index:1000000;
+  background:rgba(15,23,42,.55);
+  display:flex; align-items:center; justify-content:center;
+  padding:20px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+.pwa-install-fallback__panel{
+  width:100%; max-width:420px; background:#fff; color:#0f172a;
+  border-radius:12px; padding:24px; box-shadow:0 20px 50px rgba(0,0,0,.25);
+}
+.pwa-install-fallback__panel h3{
+  margin:0 0 10px; font-size:18px; font-weight:700;
+}
+.pwa-install-fallback__panel p{
+  margin:0 0 18px; font-size:14px; line-height:1.5; color:#475569;
+}
+.pwa-install-fallback__panel button{
+  background:#0f172a; color:#fff; border:none; border-radius:8px;
+  padding:10px 18px; font-size:14px; font-weight:600; cursor:pointer;
+}
 </style>
 
 <script>
-  // Check if prompt was already captured in <head>
-  if (window.deferredPwaPrompt && !localStorage.getItem('pwa_dismissed')) {
-    var banner = document.getElementById('pwa-install-banner');
-    if (banner) banner.style.display = 'flex';
+  window.pwaInstallLabel = @json($keywords['Install App'] ?? __('Install App'));
+
+  function isPwaInstalled() {
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  }
+
+  function updatePwaInstallUi() {
+    if (isPwaInstalled()) {
+      document.querySelectorAll('.pwa-install-nav-item, #pwa-install-banner, .get-our-app-widget').forEach(function(el) {
+        el.style.display = 'none';
+      });
+      return;
+    }
+
+    if (window.deferredPwaPrompt && !localStorage.getItem('pwa_dismissed')) {
+      var banner = document.getElementById('pwa-install-banner');
+      if (banner) banner.style.display = 'flex';
+    }
+  }
+
+  function injectPwaNavLinks() {
+    if (isPwaInstalled()) return;
+
+    var label = window.pwaInstallLabel || 'Install App';
+    var html = '<li class="nav-item pwa-install-nav-item menu-item"><a href="javascript:void(0)" class="nav-link menu-link" onclick="triggerPwaInstall();return false;">' + label + '</a></li>';
+
+    document.querySelectorAll('.mobile-nav > ul, nav.menu.mobile-nav ul, .main-nav nav.menu ul.menu-right, .main-nav nav.menu > ul.menu-right').forEach(function(ul) {
+      if (ul.querySelector('.pwa-install-nav-item')) return;
+      ul.insertAdjacentHTML('beforeend', html);
+    });
   }
 
   function triggerPwaInstall() {
+    if (isPwaInstalled()) return;
+
     if (window.deferredPwaPrompt) {
-      // Triggers Chrome native "Install app" modal prompt directly
       window.deferredPwaPrompt.prompt();
       window.deferredPwaPrompt.userChoice.then(function(result) {
         window.deferredPwaPrompt = null;
         if (result.outcome === 'accepted') {
           dismissPwaBanner();
+          updatePwaInstallUi();
         }
       });
-    } else {
-      alert("To install this app, tap your browser menu (⋮ or Share icon) and select 'Add to Home Screen' or 'Install App'.");
+      return;
     }
+
+    var fallback = document.getElementById('pwa-install-fallback');
+    if (fallback) fallback.style.display = 'flex';
+  }
+
+  function closePwaInstallFallback() {
+    var fallback = document.getElementById('pwa-install-fallback');
+    if (fallback) fallback.style.display = 'none';
   }
 
   function dismissPwaBanner() {
@@ -66,12 +130,25 @@
     try { localStorage.setItem('pwa_dismissed', '1'); } catch(e) {}
   }
 
-  // Register service worker
+  document.addEventListener('DOMContentLoaded', function() {
+    injectPwaNavLinks();
+    updatePwaInstallUi();
+  });
+
+  window.addEventListener('beforeinstallprompt', function() {
+    injectPwaNavLinks();
+    updatePwaInstallUi();
+  });
+
+  window.addEventListener('appinstalled', function() {
+    window.deferredPwaPrompt = null;
+    closePwaInstallFallback();
+    updatePwaInstallUi();
+  });
+
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js')
-        .then(function(r){ console.log('[PWA] SW registered', r.scope); })
-        .catch(function(e){ console.warn('[PWA] SW failed', e); });
-    });
+    navigator.serviceWorker.register('/sw.js')
+      .then(function(r){ console.log('[PWA] SW registered', r.scope); })
+      .catch(function(e){ console.warn('[PWA] SW failed', e); });
   }
 </script>
