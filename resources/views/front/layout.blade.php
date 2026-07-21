@@ -213,7 +213,7 @@
           <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="wa-action-btn">
             Start My Online Store
           </a>
-          <a href="https://api.whatsapp.com/send?phone=6374913298&text=Hi%2C%20I%20want%20to%20talk%20to%20an%20expert%20to%20help%20me%20get%20started." target="_blank" class="wa-action-btn wa-talk-expert">
+          <a href="https://api.whatsapp.com/send?phone=917200770351&text=Hi%2C%20I%20want%20to%20talk%20to%20an%20expert%20to%20help%20me%20get%20started." target="_blank" class="wa-action-btn wa-talk-expert">
             Talk to Expert
           </a>
           <a href="{{ route('front.pricing') }}" class="wa-action-btn">
@@ -443,7 +443,7 @@
       // Send function
       function sendMessage() {
         var text = $.trim($input.val());
-        var phone = "6374913298";
+        var phone = "917200770351";
         var defaultMsg = "Hi, I want to enquire about the LaunchShop. Please help me get started.";
         var message = text ? text : defaultMsg;
         

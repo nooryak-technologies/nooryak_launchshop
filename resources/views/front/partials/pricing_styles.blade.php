@@ -70,10 +70,10 @@
     width: 0;
   }
 
-  /* Standard Most Popular Callout Box (Positioned on Left side of Standard card, pointing right to RECOMMENDED) */
+  /* Standard Most Popular Callout Box (Positioned on Left side of Standard card above Basic card) */
   .standard-most-popular-callout {
     position: absolute;
-    left: -240px;
+    left: -230px;
     top: -45px;
     width: 220px;
     background: linear-gradient(135deg, #ffffff 0%, #fff3f0 100%);
@@ -98,16 +98,16 @@
     background: linear-gradient(135deg, #ff5a2c 0%, #e0451a 100%) !important;
     box-shadow: 0 4px 10px rgba(255, 90, 44, 0.35);
   }
-  .standard-most-popular-callout .callout-arrow-right {
+  .standard-most-popular-callout .callout-arrow {
     position: absolute;
-    left: 170px;
+    left: 20px;
     bottom: -45px;
     z-index: 2;
     filter: drop-shadow(0 2px 4px rgba(255, 90, 44, 0.2));
   }
 
-  /* Enterprise Callout Box (Top of Enterprise card on Yearly tab) */
-  .enterprise-callout-box {
+  /* Premium Most Chosen Callout Box (Top of Premium card container) */
+  .premium-most-chosen-callout {
     position: absolute;
     top: -95px;
     left: 50%;
@@ -121,15 +121,21 @@
     z-index: 10;
     text-align: left;
   }
+  .premium-most-chosen-callout .callout-title {
+    color: #d97706;
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .premium-most-chosen-callout .callout-arrow-down {
+    position: absolute;
+    left: 50%;
+    bottom: -24px;
+    transform: translateX(-50%);
+    z-index: 2;
+  }
   .callout-icon-wrap.star {
     background: #f59e0b;
     color: #fff;
-  }
-  .enterprise-callout-box .callout-arrow-left {
-    position: absolute;
-    right: 170px;
-    bottom: -32px;
-    z-index: 2;
   }
 
   /* ── Toggle pill tabs ── */
@@ -575,7 +581,7 @@
       display: block !important;
       text-align: center !important;
     }
-    .monthly-billing-callout .callout-arrow, .premium-most-chosen-callout .callout-arrow-left, .standard-most-popular-callout .callout-arrow-left, .standard-most-popular-callout .callout-arrow-right, .enterprise-callout-box .callout-arrow-left {
+    .monthly-billing-callout .callout-arrow, .premium-most-chosen-callout .callout-arrow-down, .standard-most-popular-callout .callout-arrow {
       display: none !important;
     }
     .pricing-card-v2 {
