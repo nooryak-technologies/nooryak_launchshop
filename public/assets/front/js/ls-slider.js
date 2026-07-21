@@ -63,7 +63,7 @@
     _stopAuto(id);
     var maxIdx = s.total - s.perView;
     if (maxIdx < 0) maxIdx = 0;
-    var next = s.current + dir * s.perView;
+    var next = s.current + dir;
     if (next > maxIdx) next = 0;
     if (next < 0)     next = maxIdx;
     s.current = next;
@@ -100,10 +100,9 @@
     }
     s.track.style.transform = 'translateX(' + offset + '%)';
 
-    var dots       = s.dotsEl.querySelectorAll('.ls-dot');
-    var activePage = Math.floor(s.current / s.perView);
+    var dots = s.dotsEl.querySelectorAll('.ls-dot');
     for (var j = 0; j < dots.length; j++) {
-      dots[j].classList.toggle('active', j === activePage);
+      dots[j].classList.toggle('active', j === s.current);
     }
   }
 
@@ -122,15 +121,16 @@
 
   function _buildDots(id, dotsEl, total, perView) {
     dotsEl.innerHTML = '';
-    var pages = Math.ceil(total / perView);
+    var maxIdx = total - perView;
+    if (maxIdx <= 0) return;
+    var pages = maxIdx + 1;
     for (var i = 0; i < pages; i++) {
       var d = document.createElement('button');
       d.className   = 'ls-dot' + (i === 0 ? ' active' : '');
       d.setAttribute('aria-label', 'Go to slide ' + (i + 1));
       (function (idx) {
         d.addEventListener('click', function () {
-          var s = lsState[id];
-          if (s) global.lsGoTo(id, idx * s.perView);
+          global.lsGoTo(id, idx);
         });
       })(i);
       dotsEl.appendChild(d);

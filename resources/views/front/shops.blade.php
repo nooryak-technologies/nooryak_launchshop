@@ -420,6 +420,34 @@
             </div>
           </div>
 
+          <!-- Slide 5 -->
+          <div class="ls-slide">
+            <div class="merchant-profile-card">
+              <div class="merchant-avatar">
+                <img class="lazyload" src="{{ asset('assets/front/img/testimonials/indian_man.png') }}" data-src="{{ asset('assets/front/img/testimonials/indian_man.png') }}" alt="Rahul Verma">
+              </div>
+              <div class="merchant-info">
+                <h4 class="merchant-name">Rahul Verma</h4>
+                <span class="merchant-role">Founder, TechGadgets</span>
+                <p class="merchant-quote">"3x revenue growth in just 6 months."</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 6 -->
+          <div class="ls-slide">
+            <div class="merchant-profile-card">
+              <div class="merchant-avatar">
+                <img class="lazyload" src="{{ asset('assets/front/img/testimonials/indian_woman.png') }}" data-src="{{ asset('assets/front/img/testimonials/indian_woman.png') }}" alt="Ananya Sharma">
+              </div>
+              <div class="merchant-info">
+                <h4 class="merchant-name">Ananya Sharma</h4>
+                <span class="merchant-role">Founder, DecorCraft</span>
+                <p class="merchant-quote">"Super fast setup and excellent conversion rates."</p>
+              </div>
+            </div>
+          </div>
+
         </div><!-- /.ls-slider-track -->
         </div><!-- /.ls-slider-viewport -->
 
@@ -690,8 +718,8 @@
 
   $(document).ready(function() {
     // Init sliders (lsInit comes from ls-slider.js loaded in layout)
-    lsInit('merchantSlider');
-    lsInit('testimonialSlider');
+    lsInit('merchantSlider', { autoMs: 3500 });
+    lsInit('testimonialSlider', { autoMs: 4000 });
 
     // Count-up stats
     lsInitCounters();

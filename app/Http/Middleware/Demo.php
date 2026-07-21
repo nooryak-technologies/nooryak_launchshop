@@ -27,7 +27,7 @@ class Demo
             || $request->isMethod('DELETE');
 
         // Block writes in DEMO_MODE
-        if (env('DEMO_MODE') == 'active' && $isWriteMethod) {
+        if (env('DEMO_MODE') == 'inactive' && $isWriteMethod) {
             session()->flash('warning', __('This is Demo version. You can not change anything.'));
             return redirect()->back();
         }
