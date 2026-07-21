@@ -42,6 +42,78 @@
       flex-direction: column !important;
       gap: 8px !important;
   }
+  /* Coming Soon Card Styles */
+  .coming-soon-card {
+      min-height: 440px !important;
+      border: 2px dashed #cbd5e1 !important;
+      background: #f8fafc !important;
+      box-shadow: none !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      border-radius: 16px !important;
+      padding: 30px 20px !important;
+      transition: all 0.3s ease !important;
+  }
+  .coming-soon-card:hover {
+      border-color: #ff5a2c !important;
+      background: #ffffff !important;
+      box-shadow: 0 10px 30px rgba(255, 90, 44, 0.08) !important;
+      transform: translateY(-4px) !important;
+  }
+  .coming-soon-inner {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      text-align: center !important;
+  }
+  .coming-soon-icon-box {
+      width: 64px !important;
+      height: 64px !important;
+      border-radius: 50% !important;
+      background: #fff5f2 !important;
+      color: #ff5a2c !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 24px !important;
+      margin-bottom: 20px !important;
+  }
+  .coming-soon-title {
+      font-size: 22px !important;
+      font-weight: 700 !important;
+      color: #1e293b !important;
+      margin-bottom: 10px !important;
+  }
+  .coming-soon-desc {
+      font-size: 14px !important;
+      color: #64748b !important;
+      margin: 0 !important;
+      max-width: 260px !important;
+      line-height: 1.5 !important;
+  }
+
+  /* Register For More Themes Button */
+  .btn-register-more-themes {
+      background: #ff5a2c !important;
+      color: #ffffff !important;
+      font-size: 16px !important;
+      font-weight: 700 !important;
+      padding: 14px 32px !important;
+      border-radius: 12px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      box-shadow: 0 4px 14px rgba(255, 90, 44, 0.3) !important;
+      transition: all 0.3s ease !important;
+      text-decoration: none !important;
+  }
+  .btn-register-more-themes:hover {
+      background: #e0481d !important;
+      color: #ffffff !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 6px 20px rgba(255, 90, 44, 0.4) !important;
+  }
   /* Steps & Stats Section Styles */
   .steps-stats-section {
     background: #ffffff;
@@ -360,6 +432,42 @@
             </div>
             
           @endforeach
+
+          <!-- Coming Soon Cards -->
+          <div class="col-lg-4 col-md-6 template-card-item" data-category="others" data-search="coming soon template new themes">
+            <div class="template-card-modern coming-soon-card">
+              <div class="coming-soon-inner">
+                <div class="coming-soon-icon-box">
+                  <i class="fas fa-wand-magic-sparkles"></i>
+                </div>
+                <h3 class="coming-soon-title">{{ __('Coming Soon') }}</h3>
+                <p class="coming-soon-desc">{{ __('We are crafting new premium templates for your store.') }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 template-card-item" data-category="others" data-search="coming soon template new themes">
+            <div class="template-card-modern coming-soon-card">
+              <div class="coming-soon-inner">
+                <div class="coming-soon-icon-box">
+                  <i class="fas fa-wand-magic-sparkles"></i>
+                </div>
+                <h3 class="coming-soon-title">{{ __('Coming Soon') }}</h3>
+                <p class="coming-soon-desc">{{ __('We are crafting new premium templates for your store.') }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Register For More Themes CTA Button -->
+          <div class="col-12 text-center mt-5 mb-4">
+            @php
+              $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
+              $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
+            @endphp
+            <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-register-more-themes">
+              {{ __('Register For More Themes') }} <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+          </div>
 
           <!-- Custom Banner (Shown at bottom after all templates) -->
           <div class="col-12 templates-mid-banner-col my-4">

@@ -75,9 +75,9 @@ class ItemController extends Controller
 
         $data = explode(',,,', $id);
         $id = (int)$data[0];
-        $qty = (int)$data[1];
-        $total = (float)$data[2];
-        $variant = json_decode($data[3], true);
+        $qty = isset($data[1]) ? (int)$data[1] : 1;
+        $total = isset($data[2]) ? (float)$data[2] : 0;
+        $variant = (isset($data[3]) && !empty($data[3])) ? json_decode($data[3], true) : [];
 
 
         $item = UserItem::findOrFail($id);
@@ -129,7 +129,11 @@ class ItemController extends Controller
                 ]
             ];
             Session::put('cart_' . $user->username, $cart);
-            return response()->json(['message' => $keywords['Item added to your cart successfully'] ?? __('Item added to your cart successfully')]);
+            if (request()->ajax()) {
+                return response()->json(['message' => $keywords['Item added to your cart successfully'] ?? __('Item added to your cart successfully')]);
+            }
+            Session::flash('success', $keywords['Item added to your cart successfully'] ?? __('Item added to your cart successfully'));
+            return redirect()->back();
         }
 
         // if cart not empty then check if this product (with same variation) exist then increment quantity
@@ -139,12 +143,18 @@ class ItemController extends Controller
                 //check stock if product exist in the cart
                 if (empty($variant)) {
                     if (((int)$cart[$key]['qty'] + $qty > $item->stock) && $item->type != 'digital') {
-                        return response()->json(['error' => $keywords['Out of Stock'] ?? __('Out of Stock')]);
+                        if (request()->ajax()) {
+                            return response()->json(['error' => $keywords['Out of Stock'] ?? __('Out of Stock')]);
+                        }
+                        return redirect()->back()->with('error', $keywords['Out of Stock'] ?? __('Out of Stock'));
                     }
                 } else {
                     foreach ($variant as $vant) {
                         if ((int)$cart[$key]['qty'] + $qty > $vant['stock']) {
-                            return response()->json(['error' => $vant['name'] . ' ' . $keywords['is Out of Stock'] ?? __('is Out of Stock')]);
+                            if (request()->ajax()) {
+                                return response()->json(['error' => $vant['name'] . ' ' . $keywords['is Out of Stock'] ?? __('is Out of Stock')]);
+                            }
+                            return redirect()->back()->with('error', $vant['name'] . ' ' . $keywords['is Out of Stock'] ?? __('is Out of Stock'));
                         }
                     }
                 }
@@ -153,7 +163,11 @@ class ItemController extends Controller
                 $cart[$key]['qty'] = (int)$cart[$key]['qty'] + $qty;
                 $cart[$key]['total'] = (float)$cart[$key]['total'] + $total;
                 Session::put('cart_' . $user->username, $cart);
-                return response()->json(['message' => $keywords['Item added to your cart successfully'] ?? __('Item added to your cart successfully')]);
+                if (request()->ajax()) {
+                    return response()->json(['message' => $keywords['Item added to your cart successfully'] ?? __('Item added to your cart successfully')]);
+                }
+                Session::flash('success', $keywords['Item added to your cart successfully'] ?? __('Item added to your cart successfully'));
+                return redirect()->back();
             }
         }
 
@@ -167,7 +181,11 @@ class ItemController extends Controller
             "total" => $total,
         ];
         Session::put('cart_' . $user->username, $cart);
-        return response()->json(['message' => $keywords['Item added to your cart successfully'] ?? __('Item added to your cart successfully')]);
+        if (request()->ajax()) {
+            return response()->json(['message' => $keywords['Item added to your cart successfully'] ?? __('Item added to your cart successfully')]);
+        }
+        Session::flash('success', $keywords['Item added to your cart successfully'] ?? __('Item added to your cart successfully'));
+        return redirect()->back();
     }
 
     public function addToWishlist($domain, $id)
