@@ -61,7 +61,7 @@
                           <td>
                             @if (!empty($permissions) && is_array($permissions))
                               @foreach ($permissions as $perm)
-                                <span class="badge badge-secondary mb-1">{{ $perm }}</span>
+                                <span class="badge badge-info mb-1 mr-1">{{ $perm }}</span>
                               @endforeach
                             @else
                               <span class="text-muted">{{ __('No permissions') }}</span>
@@ -108,41 +108,58 @@
             @csrf
             <div class="form-group">
               <label for="">{{ __('Role Name') }} *</label>
-              <input type="text" class="form-control" name="name" placeholder="{{ __('Enter role name e.g. Store Manager') }}">
+              <input type="text" class="form-control" name="name" placeholder="{{ __('Enter role name e.g. Catalog Manager') }}">
               <p id="errname" class="mb-0 text-danger em"></p>
             </div>
 
             <div class="form-group">
-              <label class="form-label"><strong>{{ __('Assign Permissions') }} *</strong></label>
+              <label class="form-label"><strong>{{ __('Assign Granular Permissions') }} *</strong></label>
               <p id="errpermissions" class="mb-2 text-danger em"></p>
 
-              <div class="row">
-                @php
-                  $allPermissions = [
-                      'Shop Management',
-                      'Products',
-                      'Orders',
-                      'Coupons',
-                      'Shipping Charges',
-                      'Shipping Gateways',
-                      'Currencies',
-                      'Shop Settings',
-                      'Registered Customers',
-                      'Pages',
-                      'Subscribers',
-                      'Staff Management'
-                  ];
-                @endphp
+              @php
+                $permissionGroups = [
+                    'Shop & Catalog Management' => [
+                        'Shop Management' => 'Full Shop Management (All items below)',
+                        'Products' => 'Full Products Access (Categories, Subcategories, Labels, Variants, Items)',
+                        'Categories' => 'Categories',
+                        'Subcategories' => 'Subcategories',
+                        'Product Labels' => 'Product Labels',
+                        'Product Variants' => 'Product Variants',
+                        'Products / Items' => 'Products / Items List',
+                        'Orders' => 'Orders Management',
+                        'Sales Report' => 'Sales Report',
+                    ],
+                    'Store Configuration & Marketing' => [
+                        'Coupons' => 'Coupons',
+                        'Shipping Charges' => 'Shipping Charges',
+                        'Shipping Gateways' => 'Shipping Gateways',
+                        'Currencies' => 'Currencies',
+                        'Shop Settings' => 'Shop Settings',
+                    ],
+                    'Customers & Administration' => [
+                        'Registered Customers' => 'Registered Customers',
+                        'Pages' => 'Pages & Content',
+                        'Subscribers' => 'Subscribers',
+                        'Staff Management' => 'Staff Management',
+                    ]
+                ];
+              @endphp
 
-                @foreach ($allPermissions as $perm)
-                  <div class="col-md-6 mb-2">
-                    <div class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" id="perm_{{ Str::slug($perm) }}" name="permissions[]" value="{{ $perm }}">
-                      <label class="custom-control-label" for="perm_{{ Str::slug($perm) }}">{{ __($perm) }}</label>
-                    </div>
+              @foreach ($permissionGroups as $groupTitle => $groupItems)
+                <div class="border rounded p-3 mb-3 bg-light">
+                  <h6 class="font-weight-bold text-primary mb-3 border-bottom pb-2">{{ __($groupTitle) }}</h6>
+                  <div class="row">
+                    @foreach ($groupItems as $key => $label)
+                      <div class="col-md-6 mb-2">
+                        <div class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="perm_{{ Str::slug($key) }}" name="permissions[]" value="{{ $key }}">
+                          <label class="custom-control-label" for="perm_{{ Str::slug($key) }}">{{ __($label) }}</label>
+                        </div>
+                      </div>
+                    @endforeach
                   </div>
-                @endforeach
-              </div>
+                </div>
+              @endforeach
             </div>
           </form>
         </div>

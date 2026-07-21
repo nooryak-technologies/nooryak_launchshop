@@ -15,7 +15,31 @@
               return true;
           }
           $perms = Session::get('staff_permissions', []);
-          return is_array($perms) && in_array($permissionKey, $perms);
+          if (!is_array($perms)) return false;
+
+          // Master / Parent permission overrides
+          if (in_array('Shop Management', $perms)) return true;
+
+          if ($permissionKey == 'Shop Management') {
+              $shopKeys = ['Categories', 'Subcategories', 'Product Labels', 'Product Variants', 'Products / Items', 'Products', 'Orders', 'Sales Report'];
+              foreach ($shopKeys as $key) {
+                  if (in_array($key, $perms)) return true;
+              }
+          }
+
+          if ($permissionKey == 'Products') {
+              if (in_array('Products', $perms)) return true;
+              $productKeys = ['Categories', 'Subcategories', 'Product Labels', 'Product Variants', 'Products / Items'];
+              foreach ($productKeys as $key) {
+                  if (in_array($key, $perms)) return true;
+              }
+          }
+
+          if (in_array('Products', $perms) && in_array($permissionKey, ['Categories', 'Subcategories', 'Product Labels', 'Product Variants', 'Products / Items'])) {
+              return true;
+          }
+
+          return in_array($permissionKey, $perms);
       }
   }
 @endphp
@@ -151,6 +175,7 @@
                 @elseif(request()->routeIs('user.variant.edit')) show @endif"
               id="category">
               <ul class="nav nav-collapse">
+                @if (hasStaffPerm('Products'))
                 <li class="submenu">
                   <a data-toggle="collapse" href="#productManagement"
                     aria-expanded="{{ request()->routeIs('user.itemcategory.index') ||
@@ -192,6 +217,7 @@
                       @elseif(request()->routeIs('user.variant.edit')) show @endif"
                     id="productManagement">
                     <ul class="nav nav-collapse subnav">
+                      @if (hasStaffPerm('Categories'))
                       <li
                         class="@if (request()->routeIs('user.itemcategory.index')) active
                           @elseif (request()->routeIs('user.category.variations')) active
@@ -200,6 +226,9 @@
                           <span class="sub-item">{{ __('Categories') }}</span>
                         </a>
                       </li>
+                      @endif
+
+                      @if (hasStaffPerm('Subcategories'))
                       <li
                         class="@if (request()->routeIs('user.itemsubcategory.index')) active
                           @elseif (request()->routeIs('user.subcategory.variations')) active
@@ -208,12 +237,17 @@
                           <span class="sub-item">{{ __('Subcategories') }}</span>
                         </a>
                       </li>
+                      @endif
+
+                      @if (hasStaffPerm('Product Labels'))
                       <li class="@if (request()->routeIs('user.product.label.index')) active @endif">
                         <a href="{{ route('user.product.label.index') . '?language=' . $defaultLang }}">
                           <span class="sub-item">{{ __('Labels') }}</span>
                         </a>
                       </li>
+                      @endif
 
+                      @if (hasStaffPerm('Product Variants'))
                       <li class="submenu">
                         <a data-toggle="collapse" href="#manageVariants"
                           aria-expanded="{{ request()->routeIs('user.variant.create') || request()->routeIs('user.variant.index') || request()->routeIs('user.variant.edit') ? 'true' : 'false' }}">
@@ -241,7 +275,9 @@
                           </ul>
                         </div>
                       </li>
+                      @endif
 
+                      @if (hasStaffPerm('Products / Items'))
                       <li class="submenu">
                         <a data-toggle="collapse" href="#MangeItems"
                           aria-expanded="{{ request()->routeIs('user.item.type') || request()->routeIs('user.item.create') || request()->routeIs('user.item.edit') || request()->routeIs('user.item.variations') || request()->routeIs('user.item.index') ? 'true' : 'false' }}">
@@ -275,11 +311,13 @@
                           </ul>
                         </div>
                       </li>
+                      @endif
                     </ul>
                   </div>
                 </li>
+                @endif
 
-
+                @if (hasStaffPerm('Orders'))
                 <li class="submenu">
                   <a data-toggle="collapse" href="#manageOrders"
                     aria-expanded="{{ request()->routeIs('user.all.item.orders') || request()->routeIs('user.pending.item.orders') || request()->routeIs('user.processing.item.orders') || request()->routeIs('user.completed.item.orders') || request()->routeIs('user.rejected.item.orders') || request()->routeIs('user.item.details') || request()->routeIs('user.orders.report') ? 'true' : 'false' }}">
@@ -322,14 +360,17 @@
                           <span class="sub-item">{{ __('Rejected Orders') }}</span>
                         </a>
                       </li>
+                      @if (hasStaffPerm('Sales Report'))
                       <li class="@if (request()->routeIs('user.orders.report')) active @endif">
                         <a href="{{ route('user.orders.report') }}">
                           <span class="sub-item">{{ __('Sales Report') }}</span>
                         </a>
                       </li>
+                      @endif
                     </ul>
                   </div>
                 </li>
+                @endif
               </ul>
             </div>
           </li>
