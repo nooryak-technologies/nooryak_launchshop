@@ -442,8 +442,8 @@ class Common
     {
         // first, get the mail template information from db
         $mailTemplate = UserEmailTemplate::where([['email_type', 'product_order'], ['user_id', $user->id]])->first();
-        $mailSubject = $mailTemplate->email_subject;
-        $mailBody = $mailTemplate->email_body;
+        $mailSubject = $mailTemplate ? $mailTemplate->email_subject : "Order Confirmation - {order_number}";
+        $mailBody = $mailTemplate ? $mailTemplate->email_body : "Hello {customer_name},<br><br>Thank you for your order {order_number}.<br><br>{order_link}<br><br>Best regards,<br>{website_title}";
 
         // second, send a password reset link to user via email
         $info = DB::table('basic_extendeds')
