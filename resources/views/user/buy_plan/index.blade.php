@@ -358,10 +358,6 @@
           </li>
           <li class="feature-item">
             <span class="feature-icon"><i class="fas fa-check"></i></span>
-            <span>{{ __('Subcategories Limit') }} : {{ $package->subcategories_limit != '999999' ? $package->subcategories_limit : __('Unlimited') }}</span>
-          </li>
-          <li class="feature-item">
-            <span class="feature-icon"><i class="fas fa-check"></i></span>
             <span>{{ __('Products Limit') }} : {{ $package->product_limit != '999999' ? $package->product_limit : __('Unlimited') }}</span>
           </li>
           <li class="feature-item">

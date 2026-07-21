@@ -67,14 +67,6 @@ class UserPermissionHelper
             $premiumPackage = Package::where('title', 'LIKE', '%Premium%')->first()
                 ?? Package::orderBy('id', 'DESC')->first();
             if ($premiumPackage) {
-                $premiumPackage->product_limit = 999999;
-                $premiumPackage->categories_limit = 999999;
-                $premiumPackage->subcategories_limit = 999999;
-                $premiumPackage->order_limit = 999999;
-                $premiumPackage->number_of_custom_page = 999999;
-                $premiumPackage->post_limit = 999999;
-                $premiumPackage->coupon_limit = 999999;
-                $premiumPackage->language_limit = 999999;
                 return $premiumPackage;
             }
         }

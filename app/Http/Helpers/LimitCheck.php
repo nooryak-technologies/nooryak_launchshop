@@ -31,106 +31,82 @@ class LimitCheck
     }
     public static function blogLimit($user_id)
     {
-        if (self::isDemoTheme($user_id)) {
-            return 999999;
-        }
         $packageId =  self::current_package($user_id);
 
         if (isset($packageId)) {
-            $package = Package::query()->select('post_limit')->findOrFail($packageId);
+            $package = Package::query()->select('post_limit')->find($packageId);
         }
-        return isset($packageId) && isset($package) ? $package->post_limit : 0;
+        return isset($package) ? $package->post_limit : 0;
     }
 
     public static function itemLimit($user_id)
     {
-        if (self::isDemoTheme($user_id)) {
-            return 999999;
-        }
         $packageId =  self::current_package($user_id);
 
         if (isset($packageId)) {
-            $package = Package::query()->select('product_limit')->findOrFail($packageId);
+            $package = Package::query()->select('product_limit')->find($packageId);
         }
-        return isset($packageId) && isset($package) ? $package->product_limit : 0;
+        return isset($package) ? $package->product_limit : 0;
     }
 
     public static function catLimit($user_id)
     {
-        if (self::isDemoTheme($user_id)) {
-            return 999999;
-        }
         $packageId =  self::current_package($user_id);
 
         if (isset($packageId)) {
-            $package = Package::query()->select('categories_limit')->findOrFail($packageId);
+            $package = Package::query()->select('categories_limit')->find($packageId);
         }
-        return isset($packageId) && isset($package) ? $package->categories_limit : 0;
+        return isset($package) ? $package->categories_limit : 0;
     }
 
     public static function subcatLimit($user_id)
     {
-        if (self::isDemoTheme($user_id)) {
-            return 999999;
-        }
         $packageId =  self::current_package($user_id);
 
         if (isset($packageId)) {
-            $package = Package::query()->select('subcategories_limit')->findOrFail($packageId);
+            $package = Package::query()->select('subcategories_limit')->find($packageId);
         }
-        return isset($packageId) && isset($package) ? $package->subcategories_limit : 0;
+        return isset($package) ? $package->subcategories_limit : 0;
     }
 
     public static function langLimit($user_id)
     {
-        if (self::isDemoTheme($user_id)) {
-            return 999999;
-        }
         $packageId =  self::current_package($user_id);
 
         if (isset($packageId)) {
-            $package = Package::query()->select('language_limit')->findOrFail($packageId);
+            $package = Package::query()->select('language_limit')->find($packageId);
         }
-        return isset($packageId) && isset($package) ? $package->language_limit : 0;
+        return isset($package) ? $package->language_limit : 0;
     }
 
     public static function pageLimit($user_id)
     {
-        if (self::isDemoTheme($user_id)) {
-            return 999999;
-        }
         $packageId =  self::current_package($user_id);
 
         if (isset($packageId)) {
-            $package = Package::query()->select('number_of_custom_page')->findOrFail($packageId);
+            $package = Package::query()->select('number_of_custom_page')->find($packageId);
         }
-        return isset($packageId) && isset($package) ? $package->number_of_custom_page : 0;
+        return isset($package) ? $package->number_of_custom_page : 0;
     }
 
     public static function orderLimit($user_id)
     {
-        if (self::isDemoTheme($user_id)) {
-            return 999999;
-        }
         $packageId =  self::current_package($user_id);
 
         if (isset($packageId)) {
-            $package = Package::query()->select('order_limit')->findOrFail($packageId);
+            $package = Package::query()->select('order_limit')->find($packageId);
         }
-        return isset($packageId) && isset($package) ? $package->order_limit : 0;
+        return isset($package) ? $package->order_limit : 0;
     }
 
     public static function couponLimit($user_id)
     {
-        if (self::isDemoTheme($user_id)) {
-            return 999999;
-        }
         $packageId =  self::current_package($user_id);
 
         if (isset($packageId)) {
-            $package = Package::query()->select('coupon_limit')->findOrFail($packageId);
+            $package = Package::query()->select('coupon_limit')->find($packageId);
         }
-        return isset($packageId) && isset($package) ? $package->coupon_limit : 0;
+        return isset($package) ? $package->coupon_limit : 0;
     }
 
     /**

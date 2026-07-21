@@ -120,35 +120,6 @@
               @endif
             </li>
 
-            <!-- Subcategories check -->
-            <li class="list-group-item border-0 p-3 shadow-sm d-flex justify-content-between align-items-center" style="border-radius: 12px; background: #ffffff; border: 1px solid rgba(0,0,0,0.06) !important;">
-              <div class="d-flex align-items-center">
-                <span class="d-inline-flex align-items-center justify-content-center mr-3" style="width: 38px; height: 38px; border-radius: 10px; background: rgba(232, 62, 140, 0.1); color: #e83e8c; flex-shrink: 0;">
-                  <i class="fas fa-folder-open" style="font-size: 16px;"></i>
-                </span>
-                <span class="font-weight-600" style="font-size: 14px; color: #333;">
-                  @if ($totalSubcat > $subcatLimit) <i class="fas fa-exclamation-triangle text-danger mr-1"></i> @endif
-                  {{ __('Subcategories Left') }} <i class="fas fa-info-circle text-muted ml-1" style="font-size: 12px; opacity: 0.7;"></i>
-                  @if ($subcatLimit < 999999)
-                    @if ($canAddSubcat == 0)
-                      <span class="ml-2 font-weight-bold text-danger" style="font-size: 13px;">{{ __('Limit is over') }}</span>
-                    @elseif($totalSubcat > $subcatLimit)
-                      <span class="ml-2 font-weight-bold text-danger" style="font-size: 13px;">{{ __('Down Graded') }}</span>
-                    @endif
-                  @endif
-                </span>
-              </div>
-              @if ($subcatLimit < 999999)
-                <span class="badge font-weight-bold" style="background: {{ ($totalSubcat > $subcatLimit || $canAddSubcat == 0) ? '#fd7e14' : '#0d6efd' }}; color: #ffffff; border-radius: 20px; padding: 6px 16px; font-size: 12px;">
-                  {{ $totalSubcat > $subcatLimit ? 0 : $canAddSubcat }}
-                </span>
-              @else
-                <span class="badge font-weight-bold" style="background: rgba(40, 167, 69, 0.15); color: #28a745; border: 1px solid rgba(40, 167, 69, 0.3); border-radius: 20px; padding: 6px 16px; font-size: 12px;">
-                  {{ __('Unlimited') }}
-                </span>
-              @endif
-            </li>
-
             <!-- Items limit check -->
             <li class="list-group-item border-0 p-3 shadow-sm d-flex justify-content-between align-items-center" style="border-radius: 12px; background: #ffffff; border: 1px solid rgba(0,0,0,0.06) !important;">
               <div class="d-flex align-items-center">
