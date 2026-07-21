@@ -278,7 +278,7 @@
     height: 65px !important;
     max-width: 65px !important;
     max-height: 65px !important;
-    margin: 0 auto !important;
+    /* margin: 0 auto !important; */
     border: 1px solid var(--border) !important;
     border-radius: 6px !important;
   }
