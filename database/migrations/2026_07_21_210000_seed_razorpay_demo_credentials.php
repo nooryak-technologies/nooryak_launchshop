@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use App\Models\User;
 
 return new class extends Migration
@@ -21,36 +22,52 @@ return new class extends Migration
             'text' => 'Pay via your Razorpay account.'
         ]);
 
-        // 1. Update Admin Payment Gateway for Razorpay
+        // 1. Update Admin Payment Gateway for Razorpay (check updated_at existence)
+        $adminUpdateData = [
+            'information' => $infoJson,
+            'status' => 1,
+        ];
+        if (Schema::hasColumn('payment_gateways', 'updated_at')) {
+            $adminUpdateData['updated_at'] = now();
+        }
+
         DB::table('payment_gateways')
             ->where('keyword', 'razorpay')
-            ->update([
-                'information' => $infoJson,
-                'status' => 1,
-                'updated_at' => now(),
-            ]);
+            ->update($adminUpdateData);
 
         // 2. Get all Demo Template accounts
         $demoUserIds = User::where('preview_template', 1)->pluck('id')->toArray();
+
+        $userGatewayData = [
+            'title' => 'Razorpay',
+            'name' => 'Razorpay',
+            'type' => 'automatic',
+            'information' => $infoJson,
+            'status' => 1,
+        ];
+        if (Schema::hasColumn('user_payment_gateways', 'updated_at')) {
+            $userGatewayData['updated_at'] = now();
+        }
 
         if (!empty($demoUserIds)) {
             foreach ($demoUserIds as $userId) {
                 DB::table('user_payment_gateways')
                     ->updateOrInsert(
                         ['user_id' => $userId, 'keyword' => 'razorpay'],
-                        [
-                            'title' => 'Razorpay',
-                            'name' => 'Razorpay',
-                            'type' => 'automatic',
-                            'information' => $infoJson,
-                            'status' => 1,
-                            'updated_at' => now(),
-                        ]
+                        $userGatewayData
                     );
             }
         }
 
         // Also update any existing user_payment_gateways for razorpay with empty keys
+        $userUpdateData = [
+            'information' => $infoJson,
+            'status' => 1,
+        ];
+        if (Schema::hasColumn('user_payment_gateways', 'updated_at')) {
+            $userUpdateData['updated_at'] = now();
+        }
+
         DB::table('user_payment_gateways')
             ->where('keyword', 'razorpay')
             ->where(function ($q) {
@@ -58,11 +75,7 @@ return new class extends Migration
                   ->orWhere('information', '')
                   ->orWhere('information', 'LIKE', '%""%');
             })
-            ->update([
-                'information' => $infoJson,
-                'status' => 1,
-                'updated_at' => now(),
-            ]);
+            ->update($userUpdateData);
     }
 
     /**
