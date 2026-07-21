@@ -384,7 +384,7 @@
         @endif
 
         {{-- Staff Management --}}
-        @if (!is_null($package) && hasStaffPerm('Staff Management'))
+        @if (!is_null($package) && !empty($permissions) && in_array('Staff Management', $permissions) && hasStaffPerm('Staff Management'))
           <li
             class="nav-item
               @if (request()->routeIs('user.role.*')) active

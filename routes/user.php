@@ -589,7 +589,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'userstatus', 'Demo',
     Route::get('pages/remove-image/{language_id}', 'User\HomePageTextController@removeImage')->name('user.remove_image');
 
     // Staff Management Routes
-    Route::prefix('staff-management')->group(function () {
+    Route::prefix('staff-management')->middleware('checkUserPermission:Staff Management')->group(function () {
         Route::prefix('roles')->group(function () {
             Route::get('/', 'User\RoleController@index')->name('user.role.index');
             Route::post('/store', 'User\RoleController@store')->name('user.role.store');
