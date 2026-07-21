@@ -135,11 +135,10 @@
     background: linear-gradient(135deg, #ff5a2c 0%, #e0451a 100%) !important;
     box-shadow: 0 4px 10px rgba(255, 90, 44, 0.35);
   }
-  .basic-most-popular-callout .callout-arrow-down {
+  .basic-most-popular-callout .callout-arrow-to-standard {
     position: absolute;
-    left: 50%;
-    bottom: -22px;
-    transform: translateX(-50%);
+    left: 80px;
+    bottom: -40px;
     z-index: 2;
     filter: drop-shadow(0 2px 4px rgba(255, 90, 44, 0.2));
   }
@@ -613,7 +612,7 @@
       display: block !important;
       text-align: center !important;
     }
-    .monthly-billing-callout .callout-arrow, .premium-most-chosen-callout .callout-arrow-left, .standard-most-popular-callout .callout-arrow-left, .standard-most-popular-callout .callout-arrow-right, .basic-most-popular-callout .callout-arrow-down, .enterprise-callout-box .callout-arrow-left {
+    .monthly-billing-callout .callout-arrow, .premium-most-chosen-callout .callout-arrow-left, .standard-most-popular-callout .callout-arrow-left, .standard-most-popular-callout .callout-arrow-right, .basic-most-popular-callout .callout-arrow-down, .basic-most-popular-callout .callout-arrow-to-standard, .enterprise-callout-box .callout-arrow-left {
       display: none !important;
     }
     .pricing-card-v2 {

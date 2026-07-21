@@ -278,9 +278,10 @@
                         <p class="callout-desc">Ideal balance for growing businesses with all essential tools.</p>
                       </div>
                     </div>
-                    <div class="callout-arrow-down">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 2V18M12 18L6 12M12 18L18 12" stroke="#ff5a2c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <div class="callout-arrow-to-standard">
+                      <svg width="180" height="45" viewBox="0 0 180 45" fill="none">
+                        <path d="M10,0 C10,30 120,40 165,40" stroke="#ff5a2c" stroke-dasharray="4,4" stroke-width="1.8" stroke-linecap="round" />
+                        <path d="M157,34 L167,40 L157,46" stroke="#ff5a2c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
                       </svg>
                     </div>
                   </div>

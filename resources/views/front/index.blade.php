@@ -40,6 +40,50 @@
       flex-direction: column !important;
       gap: 8px !important;
   }
+  /* Animated Multi-Color Gradient Glowing Border for Dashboard Showcase */
+  .simulated-dashboard-card {
+    position: relative;
+    padding: 6px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #ff5a2c, #10b981, #ec4899, #8b5cf6, #3b82f6, #ff5a2c);
+    background-size: 400% 400%;
+    animation: dashboardGlowingBorder 6s ease infinite;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+  }
+  .simulated-dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #ff5a2c, #10b981, #ec4899, #8b5cf6, #3b82f6, #ff5a2c);
+    background-size: 400% 400%;
+    animation: dashboardGlowingBorder 6s ease infinite;
+    z-index: -1;
+    filter: blur(16px);
+    opacity: 0.75;
+  }
+  .simulated-dashboard-card img {
+    border-radius: 14px;
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+  @keyframes dashboardGlowingBorder {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
   /* Steps & Stats Section Styles */
   .steps-stats-section {
     background: #ffffff;
