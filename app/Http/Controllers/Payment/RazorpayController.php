@@ -22,9 +22,21 @@ class RazorpayController extends Controller
     public function __construct()
     {
         $data = PaymentGateway::whereKeyword('razorpay')->first();
-        $paydata = $data->convertAutoData();
-        $this->keyId = $paydata['key'];
-        $this->keySecret = $paydata['secret'];
+        $keyId = 'rzp_test_T9UaATIMf1qeO8';
+        $keySecret = 'BQ9Z865NgRQrrIMCusfzmskZ';
+
+        if ($data) {
+            $paydata = $data->convertAutoData();
+            if (!empty($paydata['key'])) {
+                $keyId = $paydata['key'];
+            }
+            if (!empty($paydata['secret'])) {
+                $keySecret = $paydata['secret'];
+            }
+        }
+
+        $this->keyId = $keyId;
+        $this->keySecret = $keySecret;
         $this->api = new Api($this->keyId, $this->keySecret);
     }
 
