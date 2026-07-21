@@ -35,7 +35,7 @@ Route::get('/manifest.json', function () {
     }
 
     $shopName = !empty($userBs->website_title) ? $userBs->website_title : ($user->shop_name ?? ($user->username ?? 'LaunchShop'));
-    $startUrl = $user ? '/' . $user->username . '/' : '/';
+    $startUrl = $user ? '/' . $user->username : '/';
     $logo     = !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png');
     $color    = '#' . ($userBs->base_color ?? '007bff');
 

@@ -48,34 +48,57 @@
 <script>
   var deferredPwaPrompt = null;
 
-  // Always capture beforeinstallprompt
+  // Must be registered ASAP — before DOM content loaded
   window.addEventListener('beforeinstallprompt', function(e) {
     e.preventDefault();
     deferredPwaPrompt = e;
+    console.log('[PWA] beforeinstallprompt captured');
   });
 
   window.addEventListener('appinstalled', function() {
+    console.log('[PWA] App installed');
     dismissPwaBanner();
   });
 
   function triggerPwaInstall() {
     if (deferredPwaPrompt) {
-      // Native install dialog fires immediately
+      // Fire native browser "Install app" dialog directly
       deferredPwaPrompt.prompt();
       deferredPwaPrompt.userChoice.then(function(result) {
+        console.log('[PWA] User choice:', result.outcome);
         deferredPwaPrompt = null;
         if (result.outcome === 'accepted') dismissPwaBanner();
       });
     } else {
-      // Prompt not available yet – show install button in address bar hint
+      // deferredPwaPrompt not ready yet — open browser install menu
+      // Try to use the browser's own install UI if available (Edge/Chrome address bar install)
+      if (window.navigator && window.navigator.getInstalledRelatedApps) {
+        window.navigator.getInstalledRelatedApps().then(function(apps) {
+          if (apps.length > 0) {
+            dismissPwaBanner(); // Already installed
+          }
+        });
+      }
+      // Show the browser's built-in install prompt via keyboard shortcut hint
       var btn = document.getElementById('pwa-install-btn');
-      var orig = btn.innerHTML;
-      btn.innerHTML = '✓ Use browser menu → Install App';
-      btn.style.fontSize = '11px';
-      setTimeout(function() {
-        btn.innerHTML = orig;
-        btn.style.fontSize = '13px';
-      }, 3000);
+      if (btn) {
+        var orig = btn.innerHTML;
+        btn.innerHTML = '⏳ Loading install...';
+        // Wait 2 seconds and try again
+        setTimeout(function() {
+          if (deferredPwaPrompt) {
+            btn.innerHTML = orig;
+            deferredPwaPrompt.prompt();
+          } else {
+            btn.innerHTML = '📲 Open in browser menu → Install';
+            btn.style.fontSize = '11px';
+            setTimeout(function() {
+              btn.innerHTML = orig;
+              btn.style.fontSize = '13px';
+            }, 4000);
+          }
+        }, 2000);
+      }
     }
   }
 
@@ -84,7 +107,10 @@
     if (el) el.style.display = 'none';
   }
 
+  // Register service worker for PWA installability
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js').catch(function() {});
+    navigator.serviceWorker.register('/sw.js')
+      .then(function(reg) { console.log('[PWA] SW registered', reg.scope); })
+      .catch(function(e) { console.warn('[PWA] SW error', e); });
   }
 </script>
