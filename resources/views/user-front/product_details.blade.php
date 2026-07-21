@@ -669,13 +669,13 @@
     <style>
       .sticky-bottom-cart-bar {
         position: fixed;
-        bottom: -150px;
+        bottom: -180px;
         left: 0;
         width: 100%;
         background: #ffffff;
-        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.12);
         z-index: 998;
-        padding: 10px 15px;
+        padding: 8px 12px;
         transition: bottom 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         border-top: 1px solid #eaeaea;
       }
@@ -685,53 +685,68 @@
       .sticky-cart-wrapper {
         max-width: 540px;
         margin: 0 auto;
+        overflow: hidden;
+      }
+      .sticky-product-info {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        margin-bottom: 4px;
+        line-height: 1.2;
+        text-align: center;
       }
       .sticky-product-title {
-        font-size: 14px;
-        font-weight: 500;
+        font-size: 13px;
+        font-weight: 600;
         color: #333333;
+        display: inline;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .sticky-product-variant-sep {
         color: #999;
         margin: 0 4px;
       }
       .sticky-product-selected-variant {
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 500;
-        color: #777777;
+        color: #666666;
       }
       .sticky-cart-controls {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
-        margin-top: 8px;
+        gap: 8px;
+        margin-top: 2px;
       }
       .sticky-quantity {
         display: flex;
         align-items: center;
         border: 1px solid #e1e1e1;
         border-radius: 4px;
-        height: 38px;
+        height: 36px;
         background: #ffffff;
+        flex-shrink: 0;
       }
       .sticky-quantity .quantity-btn {
-        width: 32px;
+        width: 28px;
         height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 11px;
         color: #333333;
         user-select: none;
       }
       .sticky-quantity .quantity_field {
-        width: 36px;
+        width: 30px;
         height: 100%;
         border: none;
         text-align: center;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 600;
         color: #333333;
         padding: 0;
@@ -741,20 +756,24 @@
       .sticky-actions {
         flex: 1;
         display: flex;
-        gap: 8px;
+        gap: 6px;
+        min-width: 0;
       }
       .sticky-actions button {
         flex: 1;
-        height: 38px;
+        height: 36px;
         border: none;
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 700;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.2px;
         text-transform: uppercase;
-        padding: 0 12px;
+        padding: 0 6px;
         border-radius: 4px;
         transition: all 0.2s ease-in-out;
         outline: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .sticky-add-to-cart {
         background-color: #1e1e1e;
@@ -764,11 +783,36 @@
         background-color: #333333;
       }
       .sticky-buy-now {
-        background-color: #111111;
+        background-color: #0d6efd;
         color: #ffffff;
       }
       .sticky-buy-now:hover {
-        background-color: #222222;
+        background-color: #0b5ed7;
+      }
+
+      @media (max-width: 380px) {
+        .sticky-bottom-cart-bar {
+          padding: 6px 8px;
+        }
+        .sticky-product-title {
+          font-size: 11px;
+        }
+        .sticky-quantity {
+          height: 32px;
+        }
+        .sticky-quantity .quantity-btn {
+          width: 24px;
+        }
+        .sticky-quantity .quantity_field {
+          width: 26px;
+          font-size: 11px;
+        }
+        .sticky-actions button {
+          height: 32px;
+          font-size: 10px;
+          padding: 0 4px;
+          letter-spacing: 0;
+        }
       }
     </style>
   @endif
