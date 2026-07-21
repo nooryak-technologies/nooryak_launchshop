@@ -84,27 +84,42 @@
     flex-direction: row !important;
     align-items: center !important;
     justify-content: flex-end !important;
-    gap: 8px !important;
+    gap: 12px !important;
     margin-left: auto !important;
     padding: 0 !important;
+    margin-bottom: 0 !important;
   }
-  @media (max-width: 768px) {
+  .navbar-nav.topbar-nav .nav-item {
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+  }
+  #limitBtn {
+    display: inline-flex !important;
+    align-items: center !important;
+    white-space: nowrap !important;
+  }
+  @media (max-width: 991px) {
     .navbar-nav.topbar-nav {
-      gap: 6px !important;
+      gap: 8px !important;
       flex-wrap: wrap !important;
       justify-content: flex-end !important;
     }
-    .navbar-nav.topbar-nav .nav-item, 
-    .navbar-nav.topbar-nav li {
-      margin-right: 0 !important;
-      margin-left: 0 !important;
-    }
     .navbar-header {
-      padding: 0 5px !important;
+      padding: 0 8px !important;
     }
     .dropdown-user {
       right: 0 !important;
       left: auto !important;
+    }
+  }
+  @media (max-width: 576px) {
+    .navbar-nav.topbar-nav {
+      gap: 6px !important;
+    }
+    #limitBtn {
+      padding: 4px 10px !important;
+      font-size: 11px !important;
     }
   }
 </style>
@@ -135,22 +150,20 @@
   <nav class="navbar navbar-header navbar-expand-lg"
     @if (request()->cookie('user-theme') == 'dark') data-background-color="dark" @endif>
     <div class="container-fluid">
-      <ul class="navbar-nav topbar-nav ml-md-auto align-items-center flex-row flex-wrap justify-content-end">
-        @if (!is_null($currPackage) && Auth::guard('web')->user()->preview_template != 1)
-          <li class="nav-item mr-1 mb-1" id="limitDiv">
-            <a class="btn btn-{{ $infoIcon == true ? 'danger' : 'primary' }} whitespace-nowrap btn-sm font-weight-bold"
-              style="border-radius: 8px; padding: 5px 12px; box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);"
-              data-toggle="modal" data-target="#limitModal" href="javascript::void()" id="limitBtn">
-              @if ($infoIcon == true)
-                <span class="text-danger">
-                  <i class="fas fa-exclamation-triangle text-white"></i>
-                </span>
-              @endif
-              {{ __('Check Limit') }}
-            </a>
-          </li>
-        @endif
-        <li class="nav-item mr-1 mb-1">
+      <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
+        <li class="nav-item" id="limitDiv">
+          <a class="btn btn-{{ $infoIcon == true ? 'danger' : 'primary' }} whitespace-nowrap btn-sm font-weight-bold"
+            style="border-radius: 8px; padding: 6px 14px; box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);"
+            data-toggle="modal" data-target="#limitModal" href="javascript:void(0)" id="limitBtn">
+            @if ($infoIcon == true)
+              <span class="text-danger mr-1">
+                <i class="fas fa-exclamation-triangle text-white"></i>
+              </span>
+            @endif
+            {{ __('Check Limit') }}
+          </a>
+        </li>
+        <li class="nav-item">
           <form action="{{ route('user.theme.change') }}" class="form-inline" id="adminThemeForm">
             <div class="form-group py-0">
               <div class="selectgroup selectgroup-secondary selectgroup-pills d-flex align-items-center">
@@ -170,7 +183,7 @@
             </div>
           </form>
         </li>
-        <li class="nav-item mr-1 mb-1">
+        <li class="nav-item">
           @php
             if (Auth::user()->custom_domain_status == 1 && !empty(Auth::user()->custom_domain)) {
                 $domain = Auth::user()->custom_domain;
@@ -179,12 +192,12 @@
             }
           @endphp
           <a class="btn btn-sm btn-round d-inline-flex align-items-center justify-content-center profile-circle-btn" target="_blank"
-            style="width: 34px; height: 34px; border-radius: 50%; background: #ffffff; border: 1px solid #e2e8f0; color: #0d6efd; box-shadow: 0 2px 6px rgba(0,0,0,0.03);"
+            style="width: 36px; height: 36px; border-radius: 50%; background: #ffffff; border: 1px solid #e2e8f0; color: #0d6efd; box-shadow: 0 2px 6px rgba(0,0,0,0.03);"
             href="{{ route('front.user.detail.view', Auth::user()->username) }}" title="View Profile">
             <i class="fas fa-eye" style="font-size: 13px;"></i>
           </a>
         </li>
-        <li class="nav-item d-flex align-items-center mr-1 mb-1">
+        <li class="nav-item d-flex align-items-center">
           <label class="switch mb-0">
             <input type="checkbox" name="online_status" id="toggle-btn" data-toggle="toggle" data-on="1"
               data-off="0" @if (Auth::user()->online_status == 1) checked @endif>
@@ -200,7 +213,7 @@
             </h5>
           @endif
         </li>
-        <li class="nav-item dropdown hidden-caret mb-1">
+        <li class="nav-item dropdown hidden-caret">
           <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
             <div class="avatar-sm">
               @if (!empty(Auth::user()->photo))
