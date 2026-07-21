@@ -1,7 +1,7 @@
 <!-- PWA Sticky Bottom Install Banner -->
 <div id="pwa-install-banner" class="pwa-install-banner-bar" style="display:none;">
   <div style="display:flex;align-items:center;gap:14px;">
-    <img src="{{ !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/673095353bc62.png') }}"
+    <img src="{{ !empty($userBs->web_app_image) ? asset('assets/front/img/user/' . $userBs->web_app_image) : (!empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/673095353bc62.png')) }}"
          style="width:44px;height:44px;object-fit:contain;border-radius:10px;border:1px solid #e2e8f0;padding:2px;background:#fff;" alt="">
     <div>
       <div style="font-size:13px;font-weight:700;color:#0f172a;line-height:1.3;">

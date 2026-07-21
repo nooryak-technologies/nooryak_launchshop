@@ -132,6 +132,7 @@ class BasicController extends Controller
         $logo = $request->file('logo');
         $favicon = $request->file('favicon');
         $preloader = $request->file('preloader');
+        $webAppImage = $request->file('web_app_image');
         $allowedExts = array('jpg', 'png', 'jpeg', 'gif');
 
         $rules = [
@@ -162,6 +163,16 @@ class BasicController extends Controller
                         $ext = $preloader->getClientOriginalExtension();
                         if (!in_array($ext, $allowedExts)) {
                             return $fail(__("Only png, jpg, jpeg, gif image is allowed"));
+                        }
+                    }
+                },
+            ],
+            'web_app_image' => [
+                function ($attribute, $value, $fail) use ($webAppImage, $allowedExts) {
+                    if (!empty($webAppImage)) {
+                        $ext = $webAppImage->getClientOriginalExtension();
+                        if (!in_array($ext, $allowedExts)) {
+                            return $fail(__("Only png, jpg, jpeg image is allowed"));
                         }
                     }
                 },
@@ -197,9 +208,17 @@ class BasicController extends Controller
             $preloader_filename = $bss->preloader;
         }
 
+        if ($request->hasFile('web_app_image')) {
+            @unlink($dir . $bss->web_app_image);
+            $web_app_image_filename = Uploader::upload_picture($dir, $webAppImage);
+        } else {
+            $web_app_image_filename = $bss->web_app_image;
+        }
+
         BasicSetting::where('user_id', Auth::guard('web')->user()->id)->update([
             'base_currency_symbol_position' => $request->base_currency_symbol_position,
             'logo' => $filename,
+            'web_app_image' => $web_app_image_filename,
             'favicon' => $favicon_name,
             'preloader' => $preloader_filename,
             'preloader_status' => $request->preloader_status,
@@ -236,6 +255,11 @@ class BasicController extends Controller
             case 'preloader':
                 @unlink(public_path("assets/front/img/footer/") . $data->preloader);
                 $data->preloader = null;
+                break;
+
+            case 'web_app_image':
+                @unlink(public_path("assets/front/img/user/") . $data->web_app_image);
+                $data->web_app_image = null;
                 break;
         }
         $data->save();

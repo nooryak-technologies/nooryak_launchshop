@@ -142,6 +142,42 @@
               </div>
 
               <div class="col-lg-10 mx-auto">
+                <h3 class="text-warning">{{ __('Web App Install') }}</h3>
+                <hr class="divider">
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <div class="mb-2">
+                        <label for="webAppImage"><strong>{{ __('Web App Image') }}</strong></label>
+                      </div>
+                      <div class="showImage4 showImage-sm mb-3">
+                        <img
+                          src="{{ !empty($data->web_app_image) ? asset('assets/front/img/user/' . $data->web_app_image) : (!empty($data->logo) ? asset('assets/front/img/user/' . $data->logo) : asset('assets/admin/img/noimage.jpg')) }}"
+                          alt="..." class="img-thumbnail">
+                        @if (!empty($data->web_app_image))
+                          <x-remove-button url="{{ route('user.basic_settings.removeImage') }}" name="web_app_image"
+                            type="logo" />
+                        @endif
+                      </div>
+                      <div role="button" class="btn btn-primary btn-sm upload-btn" id="image4">
+                        {{ __('Choose Image') }}
+                        <input type="file" class="img-input" name="web_app_image" id="webAppImage">
+                      </div>
+                      <p class="text-muted mb-1" style="font-size:12px;">
+                        {{ __('Used when customers install your store as a mobile app.') }}
+                      </p>
+                      <p class="text-warning mb-0">
+                        {{ __('Square PNG or JPG, 512x512 recommended. Falls back to Logo if empty.') }}
+                      </p>
+                      @if ($errors->has('web_app_image'))
+                        <p id="errweb_app_image" class="mb-0 text-danger em">{{ $errors->first('web_app_image') }}</p>
+                      @endif
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-10 mx-auto">
                 <h3 class="text-warning">{{ __('Set Timezone') }}</h3>
                 <hr class="divider">
                 <div class="form-group">

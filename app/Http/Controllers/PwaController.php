@@ -114,7 +114,7 @@ class PwaController extends Controller
 
         $color = '#' . ltrim($userBs->base_color ?? '007bff', '#');
         $maskable = $request->boolean('maskable');
-        $logoPath = $this->resolveLogoPath($userBs);
+        $logoPath = $this->resolveIconPath($userBs);
 
         try {
             $image = $this->buildIcon($size, $logoPath, $color, $shopName, $maskable);
@@ -127,25 +127,33 @@ class PwaController extends Controller
         }
     }
 
-    protected function resolveLogoPath(?BasicSetting $userBs): ?string
+    protected function resolveIconPath(?BasicSetting $userBs): ?string
     {
-        if (!$userBs || empty($userBs->logo)) {
+        if (!$userBs) {
             return null;
         }
 
-        $path = public_path('assets/front/img/user/' . $userBs->logo);
+        foreach (['web_app_image', 'logo'] as $field) {
+            if (empty($userBs->{$field})) {
+                continue;
+            }
 
-        if (!is_file($path)) {
-            return null;
+            $path = public_path('assets/front/img/user/' . $userBs->{$field});
+
+            if (!is_file($path)) {
+                continue;
+            }
+
+            $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+            if (!in_array($ext, ['png', 'jpg', 'jpeg', 'webp', 'gif'], true)) {
+                continue;
+            }
+
+            return $path;
         }
 
-        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-
-        if (!in_array($ext, ['png', 'jpg', 'jpeg', 'webp', 'gif'], true)) {
-            return null;
-        }
-
-        return $path;
+        return null;
     }
 
     protected function buildIcon(int $size, ?string $logoPath, string $color, string $shopName, bool $maskable)
