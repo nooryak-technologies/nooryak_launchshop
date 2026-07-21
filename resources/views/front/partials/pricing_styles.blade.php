@@ -72,9 +72,9 @@
 
   /* Standard Most Popular Callout Box (Positioned on Right side of Standard card) */
   .standard-most-popular-callout {
-    position: absolute;
-    right: -240px;
-    top: -45px;
+      position: absolute;
+    right: -317px;
+    top: -144px;
     width: 220px;
     background: linear-gradient(135deg, #ffffff 0%, #fff3f0 100%);
     border: 2px solid #ff5a2c;
@@ -109,8 +109,8 @@
   /* Enterprise Callout Box (Top of Enterprise card on Yearly tab) */
   .enterprise-callout-box {
     position: absolute;
-    top: -95px;
-    left: 50%;
+     top: -110px;
+    left: 46%;
     transform: translateX(-50%);
     width: 230px;
     background: #fffbeb;
