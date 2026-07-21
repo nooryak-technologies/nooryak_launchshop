@@ -50,7 +50,8 @@
                         <th scope="col">{{ __('Username') }}</th>
                         <th scope="col">{{ __('Email') }}</th>
                         <th scope="col">{{ __('Role') }}</th>
-                        <th scope="col">{{ __('Status') }}</th>
+                        <th scope="col">{{ __('Account Status') }}</th>
+                        <th scope="col">{{ __('Login Indicator') }}</th>
                         <th scope="col">{{ __('Actions') }}</th>
                       </tr>
                     </thead>
@@ -84,6 +85,15 @@
                                 <option value="0" {{ $staff->status == 0 ? 'selected' : '' }}>{{ __('Deactive') }}</option>
                               </select>
                             </form>
+                          </td>
+                          <td>
+                            @if (!empty($staff->last_login_at))
+                              <span class="badge badge-success"><i class="fas fa-check-circle"></i> {{ __('Logged In') }}</span>
+                              <br>
+                              <small class="text-muted"><i class="fas fa-clock"></i> {{ \Carbon\Carbon::parse($staff->last_login_at)->diffForHumans() }}</small>
+                            @else
+                              <span class="badge badge-warning text-dark"><i class="fas fa-exclamation-triangle"></i> {{ __('Pending (Never Logged In)') }}</span>
+                            @endif
                           </td>
                           <td>
                             <a href="{{ route('user.staff.edit', $staff->id) }}" class="btn btn-secondary btn-sm editbtn me-1">

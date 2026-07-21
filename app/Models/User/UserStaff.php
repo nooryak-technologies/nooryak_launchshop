@@ -22,6 +22,7 @@ class UserStaff extends Authenticatable
         'phone',
         'image',
         'status',
+        'last_login_at',
     ];
 
     protected $hidden = [

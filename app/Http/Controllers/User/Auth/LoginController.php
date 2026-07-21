@@ -140,6 +140,9 @@ class LoginController extends Controller
                     $permissions = json_decode($staff->role->permissions, true);
                 }
 
+                $staff->last_login_at = \Carbon\Carbon::now();
+                $staff->save();
+
                 Session::put('staff_id', $staff->id);
                 Session::put('staff_name', trim($staff->first_name . ' ' . $staff->last_name));
                 Session::put('staff_role', $staff->role ? $staff->role->name : 'Staff');

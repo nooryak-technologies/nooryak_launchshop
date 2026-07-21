@@ -68,7 +68,34 @@ class StaffController extends Controller
 
         $staff->save();
 
-        Session::flash('success', __('Staff Member Created Successfully'));
+        // Send email with login credentials to staff email address
+        try {
+            $be = \App\Models\BasicExtended::first();
+            if ($be && $be->is_smtp == 1) {
+                $merchant = Auth::guard('web')->user();
+                $roleName = $staff->role ? $staff->role->name : 'Staff';
+                $loginUrl = route('user.login');
+
+                $mailData = [
+                    'smtp_status' => $be->is_smtp,
+                    'smtp_host' => $be->smtp_host,
+                    'smtp_port' => $be->smtp_port,
+                    'encryption' => $be->encryption,
+                    'smtp_username' => $be->smtp_username,
+                    'smtp_password' => $be->smtp_password,
+                    'from_mail' => $be->from_mail,
+                    'recipient' => $staff->email,
+                    'subject' => 'Staff Account Credentials - ' . ($merchant->website_title ?? 'Store Dashboard'),
+                    'body' => "Hello {$staff->first_name} {$staff->last_name},<br><br>You have been added as a staff member on <strong>" . ($merchant->website_title ?? 'our store') . "</strong>.<br><br>Here are your account login details:<br><strong>Login URL:</strong> <a href='{$loginUrl}'>{$loginUrl}</a><br><strong>Username:</strong> {$staff->username}<br><strong>Email:</strong> {$staff->email}<br><strong>Password:</strong> {$request->password}<br><strong>Assigned Role:</strong> {$roleName}<br><br>Please log in and access your assigned dashboard section.<br><br>Best regards,<br>" . ($merchant->website_title ?? 'Store Admin'),
+                ];
+
+                \App\Http\Helpers\BasicMailer::sendMail($mailData);
+            }
+        } catch (\Exception $e) {
+            // Continue execution if mailer encounters an issue
+        }
+
+        Session::flash('success', __('Staff Member Created Successfully. Credentials sent via Email.'));
         return response()->json(['status' => 'success'], 200);
     }
 
