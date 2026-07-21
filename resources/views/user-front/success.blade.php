@@ -4,7 +4,7 @@
 @section('page-title', $keywords['Payment Success'] ?? __('Payment Success'))
 
 @section('content')
-  <div class="purchase-message pb-100 pt-200">
+  <div class="purchase-message pb-100 ">
     <div class="container mx-auto">
       <div class="purchase-success text-center">
         <div class="success-icon-area">

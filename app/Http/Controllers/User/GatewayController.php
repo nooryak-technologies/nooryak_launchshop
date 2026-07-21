@@ -36,6 +36,15 @@ class GatewayController extends Controller
         $data['iyzico'] = UserPaymentGeteway::where([['user_id', $user_id], ['keyword', 'iyzico']])->first();
         $data['paytabs'] = UserPaymentGeteway::where([['user_id', $user_id], ['keyword', 'paytabs']])->first();
         $data['phonepe'] = UserPaymentGeteway::where([['user_id', $user_id], ['keyword', 'phonepe']])->first();
+
+        if (Auth::guard('web')->user()->preview_template == 1) {
+            foreach ($data as $key => $gateway) {
+                if ($gateway) {
+                    $gateway->status = 0;
+                }
+            }
+        }
+
         return view('user.gateways.index', $data);
     }
 

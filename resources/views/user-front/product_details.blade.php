@@ -480,7 +480,7 @@
           <div class="col-12">
             @if (count($related_product) > 0)
               <div class="product-slider mb-30 pb-10" id="product-details-slider"
-                data-slick='{"dots": true, "slidesToShow": 4}'>
+                data-slick='{"dots": true, "slidesToShow": 4, "slidesToScroll": 1, "responsive": [{"breakpoint": 1200, "settings": {"slidesToShow": 3, "slidesToScroll": 1}}, {"breakpoint": 992, "settings": {"slidesToShow": 2, "slidesToScroll": 1}}, {"breakpoint": 575, "settings": {"slidesToShow": 1, "slidesToScroll": 1}}]}'>
                 @foreach ($related_product as $item)
                   <div class="product-default product-center radius-xl">
                     <figure class="product-img">
