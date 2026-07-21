@@ -127,6 +127,7 @@
                 </button>
               </div>
             </form>
+            @includeIf('user-front.partials.pwa-app-button')
           </div>
         </div>
 

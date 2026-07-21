@@ -155,6 +155,7 @@
   @includeif('user-front.scripts')
   @yield('scripts')
   @includeIf('user-front.partials.plugins')
+  @includeIf('user-front.partials.pwa-banner')
 </body>
 
 </html>

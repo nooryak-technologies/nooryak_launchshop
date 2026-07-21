@@ -115,6 +115,7 @@
                 </a>
               @endforeach
             </div>
+            @includeIf('user-front.partials.pwa-app-button')
 
           </div>
         </div>
