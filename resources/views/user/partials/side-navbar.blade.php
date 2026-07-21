@@ -377,19 +377,23 @@
           {{-- END SHOP MANAGEMENT --}}
         @endif
         @if (!is_null($package))
+          @if (hasStaffPerm('Coupons'))
           <li class=" nav-item @if (request()->routeIs('user.coupon.index')) active @endif">
             <a href="{{ route('user.coupon.index') }}">
               <i class="fas fa-tags"></i>
               <p class="sub-item">{{ __('Coupons') }}</p>
             </a>
           </li>
+          @endif
+          @if (hasStaffPerm('Shipping Charges'))
           <li class="nav-item @if (request()->routeIs('user.shipping.index')) active @endif">
             <a href="{{ route('user.shipping.index') . '?language=' . $defaultLang }}">
               <i class="fas fa-shipping-fast"></i>
               <p class="sub-item">{{ __('Shipping Charges') }}</p>
             </a>
           </li>
-          @if (is_array($permissions) && in_array('Shipping Integration', $permissions))
+          @endif
+          @if (is_array($permissions) && in_array('Shipping Integration', $permissions) && hasStaffPerm('Shipping Gateways'))
           <li class="nav-item @if (request()->routeIs('user.shipping_gateway.index')) active @endif">
             <a href="{{ route('user.shipping_gateway.index') }}">
               <i class="fas fa-truck"></i>
@@ -397,18 +401,22 @@
             </a>
           </li>
           @endif
+          @if (hasStaffPerm('Currencies'))
           <li class="nav-item @if (request()->routeIs('user-currency-index')) active @endif">
             <a href="{{ route('user-currency-index') }}">
               <i class="fas fa-money-bill-wave"></i>
               <p class="sub-item">{{ __('Currencies') }}</p>
             </a>
           </li>
+          @endif
+          @if (hasStaffPerm('Shop Settings'))
           <li class="nav-item @if (request()->routeIs('user.item.settings')) active @endif">
             <a href="{{ route('user.item.settings') }}">
               <i class="fas fa-tools"></i>
               <p class="sub-item">{{ __('Shop Settings') }}</p>
             </a>
           </li>
+          @endif
         @endif
         {{-- Registered Users --}}
         @if (!is_null($package) && hasStaffPerm('Registered Customers'))
@@ -457,7 +465,7 @@
         @endif
 
         @if (!is_null($package))
-          @if (empty($admin->role) || (!empty($permissions) && in_array('Pages', $permissions)))
+          @if (hasStaffPerm('Pages') && (empty($admin->role) || (!empty($permissions) && in_array('Pages', $permissions))))
             {{-- Dynamic Pages --}}
             <li
               class="nav-item
@@ -1162,7 +1170,7 @@
           @endif
         @endif
 
-        @if (!is_null($package))
+        @if (!is_null($package) && hasStaffPerm('Subscribers'))
           {{-- Subscribers --}}
           <li
             class="nav-item
@@ -1197,6 +1205,7 @@
 
 
         {{-- membership --}}
+        @if (!Session::has('staff_id'))
         <li
           class="nav-item
           @if (request()->routeIs('user.payment-log.index')) active
@@ -1231,9 +1240,10 @@
             </ul>
           </div>
         </li>
+        @endif
 
         {{-- QR Builder --}}
-        @if (!empty($permissions) && in_array('QR Builder', $permissions))
+        @if (!empty($permissions) && in_array('QR Builder', $permissions) && hasStaffPerm('QR Builder'))
           <li
             class="nav-item
               @if (request()->routeIs('user.qrcode')) active
@@ -1265,7 +1275,7 @@
         @endif
 
 
-        @if (!is_null($package))
+        @if (!is_null($package) && hasStaffPerm('Shop Settings'))
           <li
             class="nav-item
                     @if (request()->routeIs('user.theme.version')) active
