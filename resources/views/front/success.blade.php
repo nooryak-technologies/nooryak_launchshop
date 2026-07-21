@@ -394,7 +394,7 @@
     ctaLink.href = storeUrl;
 
     if (hasSubdomain) {
-      msgEl.textContent = '{{ __("Your store is ready! You're being redirected to your new store.") }}';
+      msgEl.textContent = '{{ __("Your store is ready!") }}';
       ctaText.textContent = '{{ __("Open My Store Now") }}';
       storeWrap.style.display = 'block';
       storeUrlEl.textContent = username + '.{{ env("WEBSITE_HOST") }}';

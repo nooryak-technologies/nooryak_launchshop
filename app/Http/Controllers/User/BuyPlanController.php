@@ -59,6 +59,13 @@ class BuyPlanController extends Controller
         }
         
         $data['current_package'] = $data['current_membership'] ? Package::query()->where('id', $data['current_membership']->package_id)->first() : null;
+        if (Auth::guard('web')->user()->preview_template == 1) {
+            $premiumPackage = Package::where('title', 'LIKE', '%Premium%')->first()
+                ?? Package::orderBy('id', 'DESC')->first();
+            if ($premiumPackage) {
+                $data['current_package'] = $premiumPackage;
+            }
+        }
         $data['package_count'] = $nextPackageCount;
 
         return view('user.buy_plan.index', $data);

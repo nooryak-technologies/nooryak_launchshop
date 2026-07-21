@@ -10,8 +10,25 @@ use Exception;
 class UserPermissionHelper
 {
 
+    private static function isDemoTheme(int $userId)
+    {
+        $user = \App\Models\User::query()->select('preview_template', 'email')->find($userId);
+        if ($user && ($user->preview_template == 1 || self::isSathika($userId))) {
+            return true;
+        }
+        return false;
+    }
+
     public static function packagePermission(int $userId)
     {
+        if (self::isDemoTheme($userId)) {
+            $premiumPackage = Package::where('title', 'LIKE', '%Premium%')->first()
+                ?? Package::orderBy('id', 'DESC')->first();
+            if ($premiumPackage) {
+                return $premiumPackage->features;
+            }
+        }
+
         $currentPackage = Membership::query()
             ->with('package') // Eager load the package
             ->where('user_id', $userId)
@@ -46,6 +63,22 @@ class UserPermissionHelper
 
     public static function currentPackagePermission(int $userId)
     {
+        if (self::isDemoTheme($userId)) {
+            $premiumPackage = Package::where('title', 'LIKE', '%Premium%')->first()
+                ?? Package::orderBy('id', 'DESC')->first();
+            if ($premiumPackage) {
+                $premiumPackage->product_limit = 999999;
+                $premiumPackage->categories_limit = 999999;
+                $premiumPackage->subcategories_limit = 999999;
+                $premiumPackage->order_limit = 999999;
+                $premiumPackage->number_of_custom_page = 999999;
+                $premiumPackage->post_limit = 999999;
+                $premiumPackage->coupon_limit = 999999;
+                $premiumPackage->language_limit = 999999;
+                return $premiumPackage;
+            }
+        }
+
         $currentPackage = Membership::query()->where([
             ['user_id', '=', $userId],
             ['status', '=', 1],

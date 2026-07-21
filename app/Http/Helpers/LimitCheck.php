@@ -12,6 +12,14 @@ class LimitCheck
 {
     public static function current_package($user_id)
     {
+        if (self::isDemoTheme($user_id)) {
+            $premiumPackageId = Package::where('title', 'LIKE', '%Premium%')->value('id')
+                ?? Package::orderBy('id', 'DESC')->value('id');
+            if ($premiumPackageId) {
+                return $premiumPackageId;
+            }
+        }
+
         $id = Membership::query()->where([
             ['user_id', '=', $user_id],
             ['status', '=', 1],
@@ -23,8 +31,8 @@ class LimitCheck
     }
     public static function blogLimit($user_id)
     {
-        if (self::isSathika($user_id)) {
-            return 100;
+        if (self::isDemoTheme($user_id)) {
+            return 999999;
         }
         $packageId =  self::current_package($user_id);
 
@@ -36,8 +44,8 @@ class LimitCheck
 
     public static function itemLimit($user_id)
     {
-        if (self::isSathika($user_id)) {
-            return 600;
+        if (self::isDemoTheme($user_id)) {
+            return 999999;
         }
         $packageId =  self::current_package($user_id);
 
@@ -49,8 +57,8 @@ class LimitCheck
 
     public static function catLimit($user_id)
     {
-        if (self::isSathika($user_id)) {
-            return 150;
+        if (self::isDemoTheme($user_id)) {
+            return 999999;
         }
         $packageId =  self::current_package($user_id);
 
@@ -62,6 +70,9 @@ class LimitCheck
 
     public static function subcatLimit($user_id)
     {
+        if (self::isDemoTheme($user_id)) {
+            return 999999;
+        }
         $packageId =  self::current_package($user_id);
 
         if (isset($packageId)) {
@@ -72,6 +83,9 @@ class LimitCheck
 
     public static function langLimit($user_id)
     {
+        if (self::isDemoTheme($user_id)) {
+            return 999999;
+        }
         $packageId =  self::current_package($user_id);
 
         if (isset($packageId)) {
@@ -82,8 +96,8 @@ class LimitCheck
 
     public static function pageLimit($user_id)
     {
-        if (self::isSathika($user_id)) {
-            return 40;
+        if (self::isDemoTheme($user_id)) {
+            return 999999;
         }
         $packageId =  self::current_package($user_id);
 
@@ -95,8 +109,8 @@ class LimitCheck
 
     public static function orderLimit($user_id)
     {
-        if (self::isSathika($user_id)) {
-            return 600;
+        if (self::isDemoTheme($user_id)) {
+            return 999999;
         }
         $packageId =  self::current_package($user_id);
 
@@ -108,8 +122,8 @@ class LimitCheck
 
     public static function couponLimit($user_id)
     {
-        if (self::isSathika($user_id)) {
-            return 150;
+        if (self::isDemoTheme($user_id)) {
+            return 999999;
         }
         $packageId =  self::current_package($user_id);
 
@@ -141,9 +155,9 @@ class LimitCheck
         return $featuresCount;
     }
 
-    private static function isSathika($user_id)
+    private static function isDemoTheme($user_id)
     {
-        $user = User::query()->select('email')->find($user_id);
-        return $user && $user->email === 'sathikaqiq121@gmail.com';
+        $user = User::query()->select('preview_template', 'email')->find($user_id);
+        return $user && ($user->preview_template == 1 || $user->email === 'sathikaqiq121@gmail.com');
     }
 }
