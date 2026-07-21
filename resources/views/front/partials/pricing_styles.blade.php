@@ -106,6 +106,44 @@
     filter: drop-shadow(0 2px 4px rgba(255, 90, 44, 0.2));
   }
 
+  /* Basic Most Popular Callout Box (Top of Basic card on Yearly tab) */
+  .basic-most-popular-callout {
+    position: absolute;
+    top: -110px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 230px;
+    background: linear-gradient(135deg, #ffffff 0%, #fff3f0 100%);
+    border: 2px solid #ff5a2c;
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 12px 35px rgba(255, 90, 44, 0.25), 0 0 20px rgba(255, 90, 44, 0.15);
+    z-index: 10;
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .basic-most-popular-callout:hover {
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 16px 40px rgba(255, 90, 44, 0.3), 0 0 25px rgba(255, 90, 44, 0.25);
+  }
+  .basic-most-popular-callout .callout-title {
+    color: #ff5a2c;
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .basic-most-popular-callout .callout-icon-wrap {
+    background: linear-gradient(135deg, #ff5a2c 0%, #e0451a 100%) !important;
+    box-shadow: 0 4px 10px rgba(255, 90, 44, 0.35);
+  }
+  .basic-most-popular-callout .callout-arrow-down {
+    position: absolute;
+    left: 50%;
+    bottom: -22px;
+    transform: translateX(-50%);
+    z-index: 2;
+    filter: drop-shadow(0 2px 4px rgba(255, 90, 44, 0.2));
+  }
+
   /* Enterprise Callout Box (Top of Enterprise card on Yearly tab) */
   .enterprise-callout-box {
     position: absolute;
@@ -563,7 +601,7 @@
 
   /* Responsive */
   @media(max-width:1200px) {
-    .monthly-billing-callout, .premium-most-chosen-callout, .standard-most-popular-callout, .enterprise-callout-box {
+    .monthly-billing-callout, .premium-most-chosen-callout, .standard-most-popular-callout, .basic-most-popular-callout, .enterprise-callout-box {
       position: relative !important;
       top: 0 !important;
       left: 0 !important;
@@ -575,7 +613,7 @@
       display: block !important;
       text-align: center !important;
     }
-    .monthly-billing-callout .callout-arrow, .premium-most-chosen-callout .callout-arrow-left, .standard-most-popular-callout .callout-arrow-left, .standard-most-popular-callout .callout-arrow-right, .enterprise-callout-box .callout-arrow-left {
+    .monthly-billing-callout .callout-arrow, .premium-most-chosen-callout .callout-arrow-left, .standard-most-popular-callout .callout-arrow-left, .standard-most-popular-callout .callout-arrow-right, .basic-most-popular-callout .callout-arrow-down, .enterprise-callout-box .callout-arrow-left {
       display: none !important;
     }
     .pricing-card-v2 {

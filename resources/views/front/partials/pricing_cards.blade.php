@@ -246,29 +246,49 @@
             @endphp
 
             <div class="pricing-card-v2 {{ $cardClass }}">
-              @if($titleKey == 'basic' && strtolower($term) == 'monthly')
-                <!-- Monthly Billing Callout Box -->
-                <div class="monthly-billing-callout d-none d-lg-block">
-                  <div class="d-flex align-items-start gap-2">
-                    <div class="callout-icon-wrap">
-                      <i class="far fa-calendar-alt"></i>
+              @if($titleKey == 'basic')
+                @if(strtolower($term) == 'monthly')
+                  <!-- Monthly Billing Callout Box -->
+                  <div class="monthly-billing-callout d-none d-lg-block">
+                    <div class="d-flex align-items-start gap-2">
+                      <div class="callout-icon-wrap">
+                        <i class="far fa-calendar-alt"></i>
+                      </div>
+                      <div class="callout-text">
+                        <h5 class="callout-title">Monthly Billing</h5>
+                        <p class="callout-desc">Only Basic plan is available with <strong>monthly billing</strong>.</p>
+                      </div>
                     </div>
-                    <div class="callout-text">
-                      <h5 class="callout-title">Monthly Billing</h5>
-                      <p class="callout-desc">Only Basic plan is available with <strong>monthly billing</strong>.</p>
+                    <div class="callout-arrow">
+                      <svg width="220" height="50" viewBox="0 0 220 50" fill="none">
+                        <path d="M10,0 C10,35 150,45 205,45" stroke="#ff5a2c" stroke-dasharray="4,4" stroke-width="1.5" stroke-linecap="round" />
+                        <path d="M197,39 L207,45 L197,51" stroke="#ff5a2c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                      </svg>
                     </div>
                   </div>
-                  <div class="callout-arrow">
-                    <svg width="220" height="50" viewBox="0 0 220 50" fill="none">
-                      <path d="M10,0 C10,35 150,45 205,45" stroke="#ff5a2c" stroke-dasharray="4,4" stroke-width="1.5" stroke-linecap="round" />
-                      <path d="M197,39 L207,45 L197,51" stroke="#ff5a2c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-                    </svg>
+                @else
+                  <!-- Basic Most Popular Callout Box (Top of Basic card on Yearly tab) -->
+                  <div class="basic-most-popular-callout d-none d-lg-block">
+                    <div class="d-flex align-items-start gap-2">
+                      <div class="callout-icon-wrap rocket" style="background:#ff5a2c; color:#fff;">
+                        <i class="fas fa-rocket"></i>
+                      </div>
+                      <div class="callout-text">
+                        <h5 class="callout-title">Most Popular</h5>
+                        <p class="callout-desc">Ideal balance for growing businesses with all essential tools.</p>
+                      </div>
+                    </div>
+                    <div class="callout-arrow-down">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 2V18M12 18L6 12M12 18L18 12" stroke="#ff5a2c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
                   </div>
-                </div>
+                @endif
               @endif
 
-              @if($titleKey == 'standard')
-                <!-- Standard Most Popular Callout Box (Positioned on Right side of Standard card) -->
+              @if($titleKey == 'standard' && strtolower($term) == 'monthly')
+                <!-- Standard Most Popular Callout Box (Positioned on Right side of Standard card on Monthly tab) -->
                 <div class="standard-most-popular-callout d-none d-lg-block">
                   <div class="d-flex align-items-start gap-2">
                     <div class="callout-icon-wrap rocket" style="background:#ff5a2c; color:#fff;">
