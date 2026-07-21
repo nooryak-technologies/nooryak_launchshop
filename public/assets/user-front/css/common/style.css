@@ -7500,3 +7500,22 @@ html[dir="rtl"] #product-details-slider .slick-track {
         font-size: 12px !important;
     }
 }
+
+/* Fix header logo overlapping with page title / breadcrumb area on mobile */
+@media only screen and (max-width: 991.98px) {
+    .page-title-area,
+    .page-title-area.header-next,
+    .header-next {
+        margin-top: 90px !important;
+        padding-top: 20px !important;
+    }
+}
+
+@media only screen and (max-width: 575.98px) {
+    .page-title-area,
+    .page-title-area.header-next,
+    .header-next {
+        margin-top: 80px !important;
+        padding-top: 15px !important;
+    }
+}
