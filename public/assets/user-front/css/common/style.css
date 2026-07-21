@@ -7082,3 +7082,59 @@ html[dir="rtl"] #product-details-slider .slick-track {
         order: 1 !important;
     }
 }
+
+/* Product Details Thumbnail Image 15px Gap for All Demo Themes & Templates */
+.product-single .product-single-default .slick-list.draggable,
+.product-single-default .slider-thumbnails .slick-list,
+.product-single-default .slider-thumbnails2 .slick-list {
+    padding: 6px 0 !important;
+}
+
+.product-single .product-single-default .slick-list.draggable .slick-slide,
+.product-single-default .slider-thumbnails .slick-slide,
+.product-single-default .slider-thumbnails2 .slick-slide {
+    padding-right: 15px !important;
+    box-sizing: border-box !important;
+}
+
+.product-single .product-single-default .thumbnail-img.radius-md,
+.product-single-default .slider-thumbnails .thumbnail-img,
+.product-single-default .slider-thumbnails2 .thumbnail-img,
+.product-single-default .slider-thumbnails .lazy-container,
+.product-single-default .slider-thumbnails2 .lazy-container {
+    margin-right: 0 !important;
+    border-radius: 8px !important;
+}
+
+/* Universal Countdown Timer Alignment Fix on Mobile */
+@media only screen and (max-width: 575px) {
+    .product-countdown {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+        margin: 6px auto !important;
+    }
+
+    .product-countdown .count {
+        width: 32px !important;
+        height: 32px !important;
+        padding: 2px !important;
+        font-size: 8px !important;
+        border-radius: 50% !important;
+        margin-inline-end: 4px !important;
+        margin-right: 4px !important;
+    }
+
+    .product-countdown .count span:first-child,
+    .product-countdown .count-value {
+        font-size: 10px !important;
+        line-height: 1 !important;
+        margin-bottom: 1px !important;
+    }
+
+    .product-countdown .count-period {
+        font-size: 7.5px !important;
+        line-height: 1 !important;
+    }
+}

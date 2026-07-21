@@ -1013,30 +1013,17 @@ product-default css
 
 /* product-countdown */
 .product-default-9 .product-countdown {
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
     align-items: center;
-    -webkit-box-pack: start;
-    -ms-flex-pack: start;
-    justify-content: left;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto;
 }
 
 .product-default-9 .product-countdown .count {
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
     align-items: center;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
     justify-content: center;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
     flex-direction: column;
     width: 40px;
     height: 40px;
@@ -1054,8 +1041,37 @@ product-default css
 }
 
 .product-default-9 .product-countdown .count:not(:last-child) {
-    -webkit-margin-end: 10px;
-    margin-inline-end: 10px;
+    margin-inline-end: 8px;
+    margin-right: 8px;
+}
+
+@media (max-width: 575.98px) {
+    .product-default-9 .product-countdown {
+        justify-content: center !important;
+        width: 100% !important;
+        margin: 6px auto !important;
+    }
+    .product-default-9 .product-countdown .count {
+        width: 32px !important;
+        height: 32px !important;
+        padding: 2px !important;
+        font-size: 8px !important;
+        border-radius: 50% !important;
+    }
+    .product-default-9 .product-countdown .count:not(:last-child) {
+        margin-inline-end: 4px !important;
+        margin-right: 4px !important;
+    }
+    .product-default-9 .product-countdown span:first-child,
+    .product-default-9 .product-countdown .count-value {
+        font-size: 10px !important;
+        line-height: 1 !important;
+        margin-bottom: 1px !important;
+    }
+    .product-default-9 .product-countdown .count-period {
+        font-size: 7.5px !important;
+        line-height: 1 !important;
+    }
 }
 
 .product-default-9 .product-countdown .count-value {
