@@ -10,8 +10,8 @@
                 <div class="hero-content">
                   <h2 class=" title mb-10">{{ $hero_slider->title }}</h2>
                   <p class="description lc-2 mb-20">{{ $hero_slider->subtitle }}</p>
-                  @if (!is_null($hero_slider->btn_name) && !is_null($hero_slider->btn_url))
-                    <a href="{{ $hero_slider->btn_url }}"
+                  @if (!is_null($hero_slider->btn_name))
+                    <a href="{{ (!empty($hero_slider->btn_url) && $hero_slider->btn_url !== '#') ? $hero_slider->btn_url : route('front.user.shop', getParam()) }}"
                       class="btn btn-primary btn-md radius-30">{{ $hero_slider->btn_name }}</a>
                   @endif
                 </div>

@@ -2,6 +2,9 @@
   @if (!is_null($userBe) && $userBe->breadcrumb)
     <img class="bg-img" src="{{ asset('assets/front/images/placeholder.png') }}"
       data-src="{{ asset('assets/front/img/user/' . $userBe->breadcrumb) }}" alt="Banner">
+  @else
+    <img class="bg-img" src="{{ asset('assets/front/images/placeholder.png') }}"
+      data-src="{{ asset('assets/front/img/shop_banner_bg.png') }}" alt="Banner">
   @endif
   <div class="container">
     <div class="row align-items-center justify-content-between">

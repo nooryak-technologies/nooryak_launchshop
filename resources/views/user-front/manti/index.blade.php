@@ -44,7 +44,7 @@
                     <p class="text-lg lc-3" data-animation="animate__fadeInDown" data-delay=".2s">
                       {{ $hero_slider->text }}
                     </p>
-                    <a href="{{ $hero_slider->btn_url }}" class="btn btn-lg btn-primary radius-sm icon-end"
+                    <a href="{{ (!empty($hero_slider->btn_url) && $hero_slider->btn_url !== '#') ? $hero_slider->btn_url : route('front.user.shop', getParam()) }}" class="btn btn-lg btn-primary radius-sm icon-end"
                       data-animation="animate__fadeInUp" data-delay=".3s">
                       {{ $hero_slider->btn_name }}
                     </a>
