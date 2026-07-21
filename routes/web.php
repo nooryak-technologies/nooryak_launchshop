@@ -19,6 +19,40 @@ Route::get('/check-payment', 'CronJobController@check_payment')->name('cron.chec
 Route::get('/myfatoorah/callback', 'MyFatoorahController@callback')->name('myfatoorah.success');
 Route::get('myfatoorah/cancel', 'MyFatoorahController@cancel')->name('myfatoorah.cancel');
 
+Route::get('/manifest.json', function () {
+    $user = getUser();
+    $userBs = null;
+    if ($user) {
+        $userBs = \App\Models\User\BasicSetting::where('user_id', $user->id)->first();
+    }
+    $shopName = !empty($userBs->website_title) ? $userBs->website_title : ($user->shop_name ?? ($user->username ?? 'LaunchShop'));
+    $logo = !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png');
+
+    return response()->json([
+        "name" => $shopName,
+        "short_name" => mb_substr($shopName, 0, 12),
+        "description" => "Install " . $shopName . " App for a faster shopping experience",
+        "start_url" => "/",
+        "display" => "standalone",
+        "background_color" => "#ffffff",
+        "theme_color" => "#" . ($userBs->base_color ?? "007bff"),
+        "icons" => [
+            [
+                "src" => $logo,
+                "sizes" => "192x192",
+                "type" => "image/png",
+                "purpose" => "any maskable"
+            ],
+            [
+                "src" => $logo,
+                "sizes" => "512x512",
+                "type" => "image/png",
+                "purpose" => "any maskable"
+            ]
+        ]
+    ]);
+});
+
 Route::get('/invoice', 'Front\FrontendController@invoice')
     ->name('front.invoice');
 
