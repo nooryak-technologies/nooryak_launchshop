@@ -1,9 +1,8 @@
-<!-- PWA Sticky Bottom Install Banner – Always Visible -->
+<!-- PWA Sticky Bottom Install Banner -->
 <div id="pwa-install-banner" class="pwa-install-banner-bar">
   <div style="display:flex;align-items:center;gap:14px;">
     <img src="{{ !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png') }}"
-         style="width:44px;height:44px;object-fit:contain;border-radius:10px;border:1px solid #e2e8f0;padding:2px;background:#fff;"
-         alt="">
+         style="width:44px;height:44px;object-fit:contain;border-radius:10px;border:1px solid #e2e8f0;padding:2px;background:#fff;" alt="">
     <div>
       <div style="font-size:13px;font-weight:700;color:#0f172a;line-height:1.3;">
         Add {{ $userBs->website_title ?? ($user->shop_name ?? $user->username) }} to Home Screen
@@ -29,77 +28,27 @@
 </div>
 
 <style>
-.pwa-install-banner-bar {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  z-index: 999999;
-  background: #ffffff;
-  border-top: 2px solid #e2e8f0;
-  box-shadow: 0 -4px 20px rgba(0,0,0,.12);
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+.pwa-install-banner-bar{
+  position:fixed; bottom:0; left:0; right:0; z-index:999999;
+  background:#fff; border-top:2px solid #e2e8f0;
+  box-shadow:0 -4px 20px rgba(0,0,0,.12);
+  padding:10px 20px; display:flex; align-items:center;
+  justify-content:space-between; gap:10px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 }
 </style>
 
 <script>
-  var deferredPwaPrompt = null;
-
-  // Must be registered ASAP — before DOM content loaded
-  window.addEventListener('beforeinstallprompt', function(e) {
-    e.preventDefault();
-    deferredPwaPrompt = e;
-    console.log('[PWA] beforeinstallprompt captured');
-  });
-
-  window.addEventListener('appinstalled', function() {
-    console.log('[PWA] App installed');
-    dismissPwaBanner();
-  });
-
   function triggerPwaInstall() {
-    if (deferredPwaPrompt) {
-      // Fire native browser "Install app" dialog directly
-      deferredPwaPrompt.prompt();
-      deferredPwaPrompt.userChoice.then(function(result) {
-        console.log('[PWA] User choice:', result.outcome);
-        deferredPwaPrompt = null;
+    // Use the globally stored prompt captured early in <head>
+    if (window.deferredPwaPrompt) {
+      window.deferredPwaPrompt.prompt(); // Shows native Chrome/Edge "Install app" dialog
+      window.deferredPwaPrompt.userChoice.then(function(result) {
+        window.deferredPwaPrompt = null;
         if (result.outcome === 'accepted') dismissPwaBanner();
       });
-    } else {
-      // deferredPwaPrompt not ready yet — open browser install menu
-      // Try to use the browser's own install UI if available (Edge/Chrome address bar install)
-      if (window.navigator && window.navigator.getInstalledRelatedApps) {
-        window.navigator.getInstalledRelatedApps().then(function(apps) {
-          if (apps.length > 0) {
-            dismissPwaBanner(); // Already installed
-          }
-        });
-      }
-      // Show the browser's built-in install prompt via keyboard shortcut hint
-      var btn = document.getElementById('pwa-install-btn');
-      if (btn) {
-        var orig = btn.innerHTML;
-        btn.innerHTML = '⏳ Loading install...';
-        // Wait 2 seconds and try again
-        setTimeout(function() {
-          if (deferredPwaPrompt) {
-            btn.innerHTML = orig;
-            deferredPwaPrompt.prompt();
-          } else {
-            btn.innerHTML = '📲 Open in browser menu → Install';
-            btn.style.fontSize = '11px';
-            setTimeout(function() {
-              btn.innerHTML = orig;
-              btn.style.fontSize = '13px';
-            }, 4000);
-          }
-        }, 2000);
-      }
     }
+    // If prompt not available yet, do nothing (banner stays for next time)
   }
 
   function dismissPwaBanner() {
@@ -107,10 +56,12 @@
     if (el) el.style.display = 'none';
   }
 
-  // Register service worker for PWA installability
+  // Register service worker (required for PWA installability)
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-      .then(function(reg) { console.log('[PWA] SW registered', reg.scope); })
-      .catch(function(e) { console.warn('[PWA] SW error', e); });
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js')
+        .then(function(r){ console.log('[PWA] SW registered', r.scope); })
+        .catch(function(e){ console.warn('[PWA] SW failed', e); });
+    });
   }
 </script>
