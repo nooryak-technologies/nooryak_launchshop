@@ -7083,27 +7083,100 @@ html[dir="rtl"] #product-details-slider .slick-track {
     }
 }
 
-/* Product Details Thumbnail Image 15px Gap for All Demo Themes & Templates */
-.product-single .product-single-default .slick-list.draggable,
-.product-single-default .slider-thumbnails .slick-list,
-.product-single-default .slider-thumbnails2 .slick-list {
-    padding: 6px 0 !important;
-}
-
-.product-single .product-single-default .slick-list.draggable .slick-slide,
-.product-single-default .slider-thumbnails .slick-slide,
-.product-single-default .slider-thumbnails2 .slick-slide {
-    padding-right: 15px !important;
+/* Universal 15px Slider Gap Across All Demo Themes & Templates */
+.slick-slider .slick-list.draggable .slick-slide,
+.slick-slider .slick-slide,
+.cat-slider .slick-slide,
+.product-slider .slick-slide {
+    padding-left: 7.5px !important;
+    padding-right: 7.5px !important;
     box-sizing: border-box !important;
 }
 
-.product-single .product-single-default .thumbnail-img.radius-md,
-.product-single-default .slider-thumbnails .thumbnail-img,
-.product-single-default .slider-thumbnails2 .thumbnail-img,
-.product-single-default .slider-thumbnails .lazy-container,
-.product-single-default .slider-thumbnails2 .lazy-container {
-    margin-right: 0 !important;
-    border-radius: 8px !important;
+.slick-slider .slick-list,
+.cat-slider .slick-list,
+.product-slider .slick-list {
+    margin-left: -7.5px !important;
+    margin-right: -7.5px !important;
+}
+
+/* Fix Product Card Hover Icon Collapsing Across All Themes */
+.product-default-10 .btn-icon-group,
+.product-default-9 .btn-icon-group,
+.product-default .btn-icon-group {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    left: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    z-index: 10 !important;
+    width: auto !important;
+    height: auto !important;
+}
+
+.product-default-10 .btn-icon-group .btn-icon,
+.product-default-10 .btn-icon-group a,
+.product-default-10 .btn-icon-group button,
+.product-default-9 .btn-icon-group .btn-icon,
+.product-default-9 .btn-icon-group a,
+.product-default-9 .btn-icon-group button,
+.product-default .btn-icon-group .btn-icon,
+.product-default .btn-icon-group a,
+.product-default .btn-icon-group button {
+    width: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    max-height: 36px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #ffffff !important;
+    color: #111111 !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12) !important;
+    border: 1px solid #e2e8f0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1 !important;
+    flex-shrink: 0 !important;
+    font-size: 14px !important;
+}
+
+.product-default-10 .btn-icon-group .btn-icon:hover,
+.product-default-10 .btn-icon-group a:hover,
+.product-default-10 .btn-icon-group button:hover,
+.product-default .btn-icon-group .btn-icon:hover,
+.product-default .btn-icon-group a:hover,
+.product-default .btn-icon-group button:hover {
+    background: #111111 !important;
+    color: #ffffff !important;
+    border-color: #111111 !important;
+}
+
+/* Large Screen > 1600px Unwanted Space Removal */
+@media (min-width: 1600px) {
+    .product-default-10 .product-img,
+    .product-default .product-img {
+        aspect-ratio: 4/4.5 !important;
+        max-height: 380px !important;
+    }
+    .product-default-10,
+    .product-default {
+        height: auto !important;
+        justify-content: flex-start !important;
+    }
+    .product-default-10 .product-details,
+    .product-default .product-details {
+        padding: 12px 15px !important;
+        flex-grow: 0 !important;
+    }
+    .cl-section {
+        padding: 40px 0 !important;
+    }
 }
 
 /* Universal Countdown Timer Alignment Fix on Mobile */
