@@ -773,6 +773,38 @@ Category css
     color: currentColor;
 }
 
+.cat-slider-skinflow .slick-slide {
+    padding: 0 10px !important;
+}
+
+@media (max-width: 991.98px) {
+    .cat-slider-skinflow .slick-slide {
+        padding: 0 12px !important;
+    }
+    .category.category-9 .category-item .category-image {
+        width: 95px !important;
+        height: 95px !important;
+        margin-bottom: 12px !important;
+    }
+    .category.category-9 .category-item .title {
+        font-size: 13px !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .cat-slider-skinflow .slick-slide {
+        padding: 0 10px !important;
+    }
+    .category.category-9 .category-item .category-image {
+        width: 78px !important;
+        height: 78px !important;
+        margin-bottom: 8px !important;
+    }
+    .category.category-9 .category-item .title {
+        font-size: 12px !important;
+    }
+}
+
 .category.category-9 .category-item:hover .category-image img {
     transform: scale(1.3);
 }

@@ -6273,10 +6273,10 @@ figure.product-img.skeleton.skeleton-big-img {
 }
 
 .product-grid-card-image {
-    width: calc(100% - 40px);
+    /* width: calc(100% - 40px);
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 14px;
+    margin-bottom: 14px; */
 }
 
 @media screen and (min-device-width: 992px) and (max-device-width: 1199px) {}

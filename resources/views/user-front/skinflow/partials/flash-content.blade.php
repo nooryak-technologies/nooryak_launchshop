@@ -12,7 +12,7 @@
 
     <div class="row gx-0 border justify-content-center">
       @for ($skeleton = 1; $skeleton <= 3; $skeleton++)
-        <div class="col-lg-4 col-sm-6">
+        <div class="col-6 col-sm-6 col-lg-4">
           <div class="product-default-9 {{ $skeleton == 2 ? 'active' : '' }}">
             <figure class="product-img skeleton skeleton-big-img">
             </figure>
@@ -55,7 +55,7 @@
     <div class="row gx-0 border justify-content-center">
       @if (count($flash_items) > 0)
         @foreach ($flash_items as $item)
-          <div class="col-lg-4 col-sm-6">
+          <div class="col-6 col-sm-6 col-lg-4">
             <!-- product-default -->
             @php $i = $loop->iteration; @endphp
 
