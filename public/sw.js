@@ -1,3 +1,5 @@
+var CACHE_NAME = 'pwa-store-v1';
+
 self.addEventListener('install', function(event) {
   self.skipWaiting();
 });
@@ -7,5 +9,12 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
-  // Service worker fetch handler required for PWA installability criteria
+  // Only cache GET requests
+  if (event.request.method !== 'GET') return;
+
+  event.respondWith(
+    fetch(event.request).catch(function() {
+      return caches.match(event.request);
+    })
+  );
 });
