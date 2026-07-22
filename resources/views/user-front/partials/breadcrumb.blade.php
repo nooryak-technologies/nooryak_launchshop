@@ -1,4 +1,5 @@
-<div class="page-title-area header-next {{ (request()->routeIs('customer.success.page') || request()->routeIs('customer.itemcheckout.offline.success')) ? 'success-breadcrumb' : '' }}">
+@if (!request()->routeIs('customer.success.page') && !request()->routeIs('customer.itemcheckout.offline.success'))
+<div class="page-title-area header-next">
   @if (!is_null($userBe) && $userBe->breadcrumb)
     <img class="bg-img" src="{{ asset('assets/front/images/placeholder.png') }}"
       data-src="{{ asset('assets/front/img/user/' . $userBe->breadcrumb) }}" alt="Banner">
@@ -38,3 +39,4 @@
     </div>
   </div>
 </div>
+@endif
