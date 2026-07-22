@@ -994,7 +994,7 @@ if (!function_exists('detailsUrl')) {
 
     function detailsUrl($user)
     {
-        return '//' . env('WEBSITE_HOST') . '/' . $user->username;
+        return '//' . strtolower($user->username) . '.' . env('WEBSITE_HOST');
     }
 }
 
