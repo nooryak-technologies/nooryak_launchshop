@@ -120,7 +120,7 @@
     @endif
 
 
-    @if (!request()->routeIs('front.user.detail.view'))
+    @if (!request()->routeIs('front.user.detail.view') && !request()->routeIs('customer.success.page') && !request()->routeIs('customer.itemcheckout.offline.success'))
       @includeIf('user-front.partials.breadcrumb')
     @endif
 

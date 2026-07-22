@@ -85,23 +85,35 @@
 
               <!-- Action Buttons -->
               <div class="btn-icon-group">
+                <a href="javascript:void(0)"
+                  class="btn btn-icon cart-link"
+                  data-href="{{ route('front.user.add.cart', ['id' => $flash_item->item_id, getParam()]) }}"
+                  data-title="{{ $flash_item->title }}"
+                  data-item_id="{{ $flash_item->item_id }}"
+                  data-current_price="{{ currency_converter($flash_info['status'] ? $flash_info['amount'] : $flash_item->current_price) }}"
+                  data-variations="{{ check_variation($flash_item->item_id) > 0 ? 'yes' : 'no' }}"
+                  data-totalvari="{{ check_variation($flash_item->item_id) }}"
+                  data-language_id="{{ $uLang }}"
+                  title="{{ $keywords['Add to Cart'] ?? __('Add to Cart') }}">
+                  <i class="fal fa-shopping-cart"></i>
+                </a>
                 <a href="{{ route('customer.wishlist', getParam()) }}"
                   class="btn btn-icon add_to_wishlist"
                   data-item_id="{{ $flash_item->item_id }}"
                   title="{{ $keywords['Add to Wishlist'] ?? __('Add to Wishlist') }}">
                   <i class="fal fa-heart"></i>
                 </a>
-                <a href="{{ route('front.user.compare', getParam()) }}"
-                  class="btn btn-icon add_to_compare"
-                  data-id="{{ $flash_item->item_id }}"
-                  title="{{ $keywords['Add to Compare'] ?? __('Add to Compare') }}">
-                  <i class="fal fa-random"></i>
-                </a>
                 <a href="javascript:void(0)"
                   class="btn btn-icon quick-view"
                   data-item_id="{{ $flash_item->item_id }}"
                   title="{{ $keywords['Quick View'] ?? __('Quick View') }}">
                   <i class="fal fa-eye"></i>
+                </a>
+                <a href="{{ route('front.user.compare', getParam()) }}"
+                  class="btn btn-icon add_to_compare"
+                  data-id="{{ $flash_item->item_id }}"
+                  title="{{ $keywords['Add to Compare'] ?? __('Add to Compare') }}">
+                  <i class="fal fa-random"></i>
                 </a>
               </div>
 
@@ -126,7 +138,6 @@
             </figure>
 
             <div class="product-details">
-              <span class="product-category">{{ $flash_item->category }}</span>
               <h3 class="product-title lc-1">
                 <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $flash_item->slug]) }}">
                   {{ $flash_item->title }}
