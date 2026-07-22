@@ -115,7 +115,7 @@
                      <div class="btn-icon-group btn-inline mb-10">
                        <a href="#" class="btn btn-sm btn-icon radius-0 w-auto icon-start hover-hide"
                          data-bs-toggle="tooltip" data-bs-placement="top" title="Add to Cart"><i
-                           class="fal fa-shopping-bag"></i> {{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}
+                           class="fal fa-shopping-bag"></i>
                        </a>
                        <div class="hover-show">
                          @if ($shop_settings->catalog_mode != 1)
