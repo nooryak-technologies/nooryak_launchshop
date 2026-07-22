@@ -159,6 +159,7 @@ Route::group(['domain' => $domain, 'prefix' => $prefix, 'middleware' => ['userVi
     Route::get('/user/changelanguage', 'Front\FrontendController@changeUserLanguage')->name('changeUserLanguage');
 
     Route::post('/product/payment/instruction', 'UserFront\UsercheckoutController@paymentInstruction')->name('product.payment.paymentInstruction');
+    Route::post('/push', 'UserFront\PushController@store')->name('front.user.push-notification.store_endpoint');
 
     Route::prefix('order')->group(function () {
         Route::get('paypal/success', "User\Payment\PaypalController@successPayment")->name('customer.itemcheckout.paypal.success');
@@ -191,6 +192,5 @@ Route::group(['domain' => $domain, 'prefix' => $prefix, 'middleware' => ['userVi
         Route::get('/offline/success', 'UserFront\UsercheckoutController@offlineSuccess')->name('customer.itemcheckout.offline.success');
 
         Route::post('paytm/payment-status', "User\Payment\PaytmController@paymentStatus")->name('customer.itemcheckout.paytm.status');
-        Route::post('/push', 'UserFront\PushController@store')->name('front.user.push-notification.store_endpoint');
     });
 });
