@@ -64,101 +64,6 @@
   gap: 5px;
 }
 .cl-view-all:hover { color: #555; }
-
-/* Product Card Style Overrides (Reference Image 3) */
-.product-default-10 {
-  background: #ffffff !important;
-  border: 1px solid #eaeaea !important;
-  border-radius: 16px !important;
-  padding: 12px !important;
-  transition: all 0.3s ease !important;
-  text-align: center !important;
-  height: 100% !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: space-between !important;
-}
-.product-default-10:hover {
-  box-shadow: 0 10px 25px rgba(0,0,0,0.06) !important;
-}
-.product-default-10 .product-img {
-  border-radius: 12px !important;
-  overflow: hidden !important;
-  margin-bottom: 10px !important;
-  position: relative !important;
-}
-.product-default-10 .product-details {
-  padding: 4px 0 0 !important;
-  text-align: center !important;
-}
-.product-default-10 .product-title {
-  font-size: 15px !important;
-  font-weight: 700 !important;
-  line-height: 1.3 !important;
-  margin-bottom: 6px !important;
-}
-.product-default-10 .product-price {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  margin-bottom: 6px !important;
-}
-
-/* Hide rating & category */
-.product-default-10 .product-category,
-.product-default-10 .product-rating {
-  display: none !important;
-}
-
-/* Action Buttons Row (Reference Image 3) */
-.product-action-row {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  margin-top: 10px !important;
-}
-.product-action-row .action-btn {
-  width: 38px !important;
-  height: 38px !important;
-  background: #f4f4f6 !important;
-  border-radius: 8px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  color: #444444 !important;
-  font-size: 14px !important;
-  text-decoration: none !important;
-  transition: all 0.2s ease !important;
-  border: none !important;
-  flex-shrink: 0 !important;
-}
-.product-action-row .action-btn:hover {
-  background: #0f172a !important;
-  color: #ffffff !important;
-}
-
-/* Mobile 2 Columns Layout */
-@media (max-width: 767px) {
-  .products-row-clothing {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 12px !important;
-  }
-  .product-default-10 {
-    padding: 8px !important;
-    border-radius: 12px !important;
-  }
-  .product-action-row {
-    gap: 5px !important;
-  }
-  .product-action-row .action-btn {
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 12px !important;
-    border-radius: 6px !important;
-  }
-}
 </style>
 @endsection
 
@@ -343,8 +248,31 @@
                     <span class="badge-sale">SALE</span>
                   @endif
                 </div>
+                {{-- Action icons --}}
+                <div class="btn-icon-group">
+                  <a href="{{ route('front.user.add.wishlist', ['id' => $product->id, getParam()]) }}" class="btn-icon" title="Wishlist"><i class="fal fa-heart"></i></a>
+                  <a href="{{ route('front.user.add.compare', ['id' => $product->id, getParam()]) }}" class="btn-icon" title="Compare"><i class="fal fa-random"></i></a>
+                </div>
+                {{-- Quick add to cart --}}
+                @if($shop_settings->catalog_mode != 1)
+                @php
+                  $hasVari = check_variation($product->id);
+                @endphp
+                <div class="add-to-cart-overlay">
+                  <a href="javascript:void(0)"
+                     class="btn-add-to-cart cart-link"
+                     data-href="{{ route('front.user.add.cart', ['id' => $product->id, getParam()]) }}"
+                     data-title="{{ $pContent->title }}"
+                     data-item_id="{{ $product->id }}"
+                     data-current_price="{{ currency_converter($fi['status'] ? $fi['amount'] : $product->current_price) }}"
+                     data-variations="{{ $hasVari > 0 ? 'yes' : 'no' }}"
+                     data-totalvari="{{ $hasVari }}"
+                     data-language_id="{{ $uLang }}">
+                     {{ $hasVari > 0 ? ($keywords['Select Options'] ?? __('Select Options')) : ($keywords['ADD TO CART'] ?? __('ADD TO CART')) }}
+                  </a>
+                </div>
+                @endif
               </div>
-
               {{-- Product details --}}
               <div class="product-details">
                 <h3 class="product-title">
@@ -356,44 +284,6 @@
                     <span class="old-price">{{ symbolPrice($userCurrentCurr->symbol_position,$userCurrentCurr->symbol,currency_converter($product->previous_price)) }}</span>
                   @endif
                 </div>
-
-                {{-- Action buttons row (Reference Image 3) --}}
-                @if($shop_settings->catalog_mode != 1)
-                  @php $hasVari = check_variation($product->id); @endphp
-                  <div class="product-action-row">
-                    <a href="javascript:void(0)"
-                       class="action-btn cart-link"
-                       title="{{ $keywords['Add to Cart'] ?? __('Add to Cart') }}"
-                       data-href="{{ route('front.user.add.cart', ['id' => $product->id, getParam()]) }}"
-                       data-title="{{ $pContent->title }}"
-                       data-item_id="{{ $product->id }}"
-                       data-current_price="{{ currency_converter($fi['status'] ? $fi['amount'] : $product->current_price) }}"
-                       data-variations="{{ $hasVari > 0 ? 'yes' : 'no' }}"
-                       data-totalvari="{{ $hasVari }}"
-                       data-language_id="{{ $uLang }}">
-                       <i class="fal fa-shopping-cart"></i>
-                    </a>
-                    <a href="{{ route('front.user.add.wishlist', ['id' => $product->id, getParam()]) }}"
-                       class="action-btn btn-wishlist"
-                       data-url="{{ route('front.user.add.wishlist', ['id' => $product->id, getParam()]) }}"
-                       title="{{ $keywords['Wishlist'] ?? __('Wishlist') }}">
-                       <i class="fal fa-heart"></i>
-                    </a>
-                    <a href="javascript:void(0)"
-                       class="action-btn quick-view-link"
-                       data-url="{{ route('front.user.productDetails.quickview', ['slug' => $pContent->slug, getParam()]) }}"
-                       data-slug="{{ $pContent->slug }}"
-                       title="{{ $keywords['Quick View'] ?? __('Quick View') }}">
-                       <i class="fal fa-eye"></i>
-                    </a>
-                    <a href="{{ route('front.user.add.compare', ['id' => $product->id, getParam()]) }}"
-                       class="action-btn btn-compare"
-                       onclick="addToCompare('{{ route('front.user.add.compare', ['id' => $product->id, getParam()]) }}'); return false;"
-                       title="{{ $keywords['Compare'] ?? __('Compare') }}">
-                       <i class="fal fa-random"></i>
-                    </a>
-                  </div>
-                @endif
               </div>
             </div>
           @endforeach
@@ -477,6 +367,28 @@
                     <span class="badge-sale">SALE</span>
                   @endif
                 </div>
+                <div class="btn-icon-group">
+                  <a href="{{ route('front.user.add.wishlist', ['id' => $bProd->id, getParam()]) }}" class="btn-icon"><i class="fal fa-heart"></i></a>
+                  <a href="{{ route('front.user.add.compare', ['id' => $bProd->id, getParam()]) }}" class="btn-icon"><i class="fal fa-random"></i></a>
+                </div>
+                @if($shop_settings->catalog_mode != 1)
+                @php
+                  $hasVari2 = check_variation($bProd->id);
+                @endphp
+                <div class="add-to-cart-overlay">
+                  <a href="javascript:void(0)"
+                     class="btn-add-to-cart cart-link"
+                     data-href="{{ route('front.user.add.cart', ['id' => $bProd->id, getParam()]) }}"
+                     data-title="{{ $bCont->title }}"
+                     data-item_id="{{ $bProd->id }}"
+                     data-current_price="{{ currency_converter($fi2['status'] ? $fi2['amount'] : $bProd->current_price) }}"
+                     data-variations="{{ $hasVari2 > 0 ? 'yes' : 'no' }}"
+                     data-totalvari="{{ $hasVari2 }}"
+                     data-language_id="{{ $uLang }}">
+                     {{ $hasVari2 > 0 ? ($keywords['Select Options'] ?? __('Select Options')) : ($keywords['ADD TO CART'] ?? __('ADD TO CART')) }}
+                  </a>
+                </div>
+                @endif
               </div>
               <div class="product-details">
                 <h3 class="product-title">
@@ -488,42 +400,9 @@
                     <span class="old-price">{{ symbolPrice($userCurrentCurr->symbol_position,$userCurrentCurr->symbol,currency_converter($bProd->previous_price)) }}</span>
                   @endif
                 </div>
-
-                {{-- Action buttons row (Reference Image 3) --}}
-                @if($shop_settings->catalog_mode != 1)
-                  @php $hasVari2 = check_variation($bProd->id); @endphp
-                  <div class="product-action-row">
-                    <a href="javascript:void(0)"
-                       class="action-btn cart-link"
-                       title="{{ $keywords['Add to Cart'] ?? __('Add to Cart') }}"
-                       data-href="{{ route('front.user.add.cart', ['id' => $bProd->id, getParam()]) }}"
-                       data-title="{{ $bCont->title }}"
-                       data-item_id="{{ $bProd->id }}"
-                       data-current_price="{{ currency_converter($fi2['status'] ? $fi2['amount'] : $bProd->current_price) }}"
-                       data-variations="{{ $hasVari2 > 0 ? 'yes' : 'no' }}"
-                       data-totalvari="{{ $hasVari2 }}"
-                       data-language_id="{{ $uLang }}">
-                       <i class="fal fa-shopping-cart"></i>
-                    </a>
-                    <a href="{{ route('front.user.add.wishlist', ['id' => $bProd->id, getParam()]) }}"
-                       class="action-btn btn-wishlist"
-                       data-url="{{ route('front.user.add.wishlist', ['id' => $bProd->id, getParam()]) }}"
-                       title="{{ $keywords['Wishlist'] ?? __('Wishlist') }}">
-                       <i class="fal fa-heart"></i>
-                    </a>
-                    <a href="javascript:void(0)"
-                       class="action-btn quick-view-link"
-                       data-url="{{ route('front.user.productDetails.quickview', ['slug' => $bCont->slug, getParam()]) }}"
-                       data-slug="{{ $bCont->slug }}"
-                       title="{{ $keywords['Quick View'] ?? __('Quick View') }}">
-                       <i class="fal fa-eye"></i>
-                    </a>
-                    <a href="{{ route('front.user.add.compare', ['id' => $bProd->id, getParam()]) }}"
-                       class="action-btn btn-compare"
-                       onclick="addToCompare('{{ route('front.user.add.compare', ['id' => $bProd->id, getParam()]) }}'); return false;"
-                       title="{{ $keywords['Compare'] ?? __('Compare') }}">
-                       <i class="fal fa-random"></i>
-                    </a>
+                @if($bProd->rating > 0)
+                  <div class="product-rating mt-1">
+                    @for($r=1;$r<=5;$r++)<i class="{{ $r<=round($bProd->rating)?'fas':'far' }} fa-star"></i>@endfor
                   </div>
                 @endif
               </div>
