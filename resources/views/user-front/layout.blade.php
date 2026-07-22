@@ -18,7 +18,7 @@
   <meta name="theme-color" content="#{{ $userBs->base_color ?? '007bff' }}">
 
   {{-- PWA: capture beforeinstallprompt EARLY (fires before DOM ready, before bottom scripts) --}}
-  @if (empty($user->preview_template) || $user->preview_template != 1)
+  @if (empty($user->preview_template) || $user->preview_template != 1 || request()->getHost() != env('WEBSITE_HOST'))
   <script>
     window.deferredPwaPrompt = null;
     window.addEventListener('beforeinstallprompt', function(e) {
