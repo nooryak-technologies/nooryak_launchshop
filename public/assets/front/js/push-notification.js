@@ -1,17 +1,21 @@
 'use strict';
 
-$(window).on('load', function () {
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
   initSW();
-});
+} else {
+  window.addEventListener('DOMContentLoaded', initSW);
+}
 
 function initSW() {
+  console.log("Push notifications: initSW called");
+
   if (!('serviceWorker' in navigator)) {
-    // service worker does not support
+    console.warn("Push notifications: Service Worker is not supported in this browser.");
     return;
   }
 
   if (!('PushManager' in window)) {
-    // push does not support
+    console.warn("Push notifications: PushManager is not supported in this browser.");
     return;
   }
 
@@ -24,15 +28,23 @@ function initSW() {
   // register the service worker
   navigator.serviceWorker.register('/sw.js')
     .then(() => {
+      console.log("Push notifications: Service worker registered successfully.");
       initPush();
     })
     .catch((error) => {
-      console.error("Service worker registration failed:", error);
+      console.error("Push notifications: Service worker registration failed:", error);
     });
 }
 
 function initPush() {
+  console.log("Push notifications: initPush called, current permission:", Notification.permission);
   if (!navigator.serviceWorker.ready) {
+    console.warn("Push notifications: Service Worker is not ready.");
+    return;
+  }
+
+  if (Notification.permission === 'denied') {
+    console.warn("Push notifications: Permission is denied. Prompt will not show.");
     return;
   }
 
@@ -45,8 +57,9 @@ function initPush() {
       permissionResult.then(resolve, reject);
     }
   }).then((permissionResult) => {
+    console.log("Push notifications: User selection:", permissionResult);
     if (permissionResult !== 'granted') {
-      
+      return;
     }
 
     subscribeGuest();
@@ -54,6 +67,7 @@ function initPush() {
 }
 
 function subscribeGuest() {
+  console.log("Push notifications: Subscribing user...");
   navigator.serviceWorker.ready
     .then((registration) => {
       const subscribeOptions = {
@@ -64,9 +78,11 @@ function subscribeGuest() {
       return registration.pushManager.subscribe(subscribeOptions);
     })
     .then((pushSubscription) => {
+      console.log("Push notifications: Subscription object generated successfully:", pushSubscription);
       storePushSubscription(pushSubscription);
     })
     .catch(error => {
+      console.error("Push notifications: Subscription failed:", error);
     });
 }
 
@@ -100,6 +116,9 @@ function storePushSubscription(pushSubscription) {
     }
   }).then((response) => {
     return response.json();
+  }).then((data) => {
+    console.log("Push notifications: Subscription stored successfully in database:", data);
   }).catch((error) => {
+    console.error("Push notifications: Failed to store subscription in database:", error);
   });
 }
