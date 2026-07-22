@@ -35,7 +35,7 @@
 <!-- Main script JS -->
 <script src="{{ asset('assets/user-front/js/shop.js') }}"></script>
 
-<script src="{{ asset('assets/user-front/js/script.js') }}"></script>
+<script src="{{ asset('assets/user-front/js/script.js?v=1.0.4') }}"></script>
 <script src="{{ asset('assets/user-front/js/cart.js') }}"></script>
 
 <!-- Custom Category Slider Script -->

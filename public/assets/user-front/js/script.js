@@ -532,7 +532,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 var minutes = Math.floor((timeLeft - (days * 86400) - (hours * 3600)) / 60);
                 var seconds = Math.floor(timeLeft - (days * 86400) - (hours * 3600) - (minutes * 60));
 
+                if (days > 2) {
+                    days = 2;
+                }
+
                 // Add leading zeros if necessary
+                days = days < 10 ? "0" + days : days;
                 hours = hours < 10 ? "0" + hours : hours;
                 minutes = minutes < 10 ? "0" + minutes : minutes;
                 seconds = seconds < 10 ? "0" + seconds : seconds;
