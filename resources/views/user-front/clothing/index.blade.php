@@ -528,30 +528,6 @@
                 @endif
               </div>
             </div>
-                     data-totalvari="{{ $hasVari2 }}"
-                     data-language_id="{{ $uLang }}">
-                     {{ $hasVari2 > 0 ? ($keywords['Select Options'] ?? __('Select Options')) : ($keywords['ADD TO CART'] ?? __('ADD TO CART')) }}
-                  </a>
-                </div>
-                @endif
-              </div>
-              <div class="product-details">
-                <h3 class="product-title">
-                  <a href="{{ route('front.user.productDetails',[getParam(),'slug'=>$bCont->slug]) }}">{{ $bCont->title }}</a>
-                </h3>
-                <div class="product-price">
-                  <span class="new-price">{{ $dp2 }}</span>
-                  @if($bProd->previous_price > $bProd->current_price)
-                    <span class="old-price">{{ symbolPrice($userCurrentCurr->symbol_position,$userCurrentCurr->symbol,currency_converter($bProd->previous_price)) }}</span>
-                  @endif
-                </div>
-                @if($bProd->rating > 0)
-                  <div class="product-rating mt-1">
-                    @for($r=1;$r<=5;$r++)<i class="{{ $r<=round($bProd->rating)?'fas':'far' }} fa-star"></i>@endfor
-                  </div>
-                @endif
-              </div>
-            </div>
           @endforeach
         </div>
       @endif
