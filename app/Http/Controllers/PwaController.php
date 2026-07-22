@@ -132,7 +132,7 @@ class PwaController extends Controller
             return null;
         }
 
-        foreach (['web_app_image', 'logo'] as $field) {
+        foreach (['web_app_image', 'favicon', 'logo'] as $field) {
             if (empty($userBs->{$field})) {
                 continue;
             }
@@ -145,7 +145,7 @@ class PwaController extends Controller
 
             $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
-            if (!in_array($ext, ['png', 'jpg', 'jpeg', 'webp', 'gif'], true)) {
+            if (!in_array($ext, ['png', 'jpg', 'jpeg', 'webp', 'gif', 'ico'], true)) {
                 continue;
             }
 
@@ -163,17 +163,45 @@ class PwaController extends Controller
             return $canvas;
         }
 
-        $padding = (int) round($size * 0.12);
-        $target = $size - ($padding * 2);
-
         $logo = Image::make($logoPath);
-        $logo->resize($target, $target, function ($constraint) {
-            $constraint->aspectRatio();
-            $constraint->upsize();
-        });
+        $w = $logo->width();
+        $h = $logo->height();
 
-        $x = (int) (($size - $logo->width()) / 2);
-        $y = (int) (($size - $logo->height()) / 2);
+        if ($w <= 0 || $h <= 0) {
+            return $canvas;
+        }
+
+        $aspectRatio = $w / $h;
+
+        if ($aspectRatio > 1.2) {
+            // Horizontal logo: scale width to 92% of canvas width
+            $targetWidth = (int) round($size * 0.92);
+            $targetHeight = (int) round($targetWidth / $aspectRatio);
+            if ($targetHeight > (int) round($size * 0.85)) {
+                $targetHeight = (int) round($size * 0.85);
+                $targetWidth = (int) round($targetHeight * $aspectRatio);
+            }
+            $logo->resize($targetWidth, $targetHeight);
+        } elseif ($aspectRatio < 0.8) {
+            // Vertical logo: scale height to 92% of canvas height
+            $targetHeight = (int) round($size * 0.92);
+            $targetWidth = (int) round($targetHeight * $aspectRatio);
+            if ($targetWidth > (int) round($size * 0.85)) {
+                $targetWidth = (int) round($size * 0.85);
+                $targetHeight = (int) round($targetWidth / $aspectRatio);
+            }
+            $logo->resize($targetWidth, $targetHeight);
+        } else {
+            // Square or near-square logo: scale to 88% of canvas
+            $targetWidth = (int) round($size * 0.88);
+            $targetHeight = (int) round($size * 0.88);
+            $logo->resize($targetWidth, $targetHeight, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+        }
+
+        $x = (int) round(($size - $logo->width()) / 2);
+        $y = (int) round(($size - $logo->height()) / 2);
 
         return $canvas->insert($logo, 'top-left', $x, $y);
     }
