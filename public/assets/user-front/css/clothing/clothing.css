@@ -591,8 +591,7 @@ body {
 
 /* Action Buttons - always visible horizontal row at bottom */
 .product-default-10 .btn-icon-group,
-.product-default-10 .btn-icon-group.btn-inline,
-.product-default .btn-icon-group.btn-inline {
+.product-default-10 .btn-icon-group.btn-inline {
   position: static !important;
   display: flex !important;
   flex-direction: row !important;
@@ -613,10 +612,7 @@ body {
 .product-default-10 .btn-icon,
 .product-default-10 .btn-icon-group.btn-inline .btn-icon,
 .product-default-10 .btn-icon-group.btn-inline a.btn,
-.product-default-10 .btn-icon-group.btn-inline button.btn,
-.product-default .btn-icon-group.btn-inline .btn-icon,
-.product-default .btn-icon-group.btn-inline a.btn,
-.product-default .btn-icon-group.btn-inline button.btn {
+.product-default-10 .btn-icon-group.btn-inline button.btn {
   width: 40px !important;
   height: 40px !important;
   border-radius: 4px !important;
@@ -635,10 +631,7 @@ body {
 .product-default-10 .btn-icon:hover,
 .product-default-10 .btn-icon-group.btn-inline .btn-icon:hover,
 .product-default-10 .btn-icon-group.btn-inline a.btn:hover,
-.product-default-10 .btn-icon-group.btn-inline button.btn:hover,
-.product-default .btn-icon-group.btn-inline .btn-icon:hover,
-.product-default .btn-icon-group.btn-inline a.btn:hover,
-.product-default .btn-icon-group.btn-inline button.btn:hover {
+.product-default-10 .btn-icon-group.btn-inline button.btn:hover {
   background: #000000 !important;
   color: #ffffff !important;
   border-color: #000000 !important;
