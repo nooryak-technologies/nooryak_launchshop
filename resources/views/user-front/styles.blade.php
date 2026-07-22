@@ -657,6 +657,29 @@
     display: inline-flex !important;
     align-items: center !important;
   }
+/* ── Product Card Image Hover Zoom Fix (Prevent Image Hiding / Blank White Hover) ── */
+.product-default:hover .product-img .default-img,
+.product-default-10:hover .product-img .default-img,
+.product-grid-card:hover .product-img .default-img,
+.product-default:hover .product-img img,
+.product-default-10:hover .product-img img,
+.product-grid-card:hover .product-img img,
+.product-default:hover img.default-img,
+.product-default-10:hover img.default-img {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: scale(1.05) !important;
+  transition: transform 0.4s ease, opacity 0s !important;
+}
+
+.hover-img,
+.product-img .hover-img,
+.product-default:hover .product-img .hover-img,
+.product-default-10:hover .product-img .hover-img,
+.product-grid-card:hover .product-img .hover-img {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
 }
 </style>
 
