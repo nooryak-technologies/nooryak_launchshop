@@ -107,20 +107,20 @@
 
               <!-- Add to Cart Overlay -->
               @if((isset($shop_settings) ? $shop_settings->catalog_mode : ($shopSet->catalog_mode ?? 0)) != 1)
+                @php $hasVariF = check_variation($flash_item->item_id); @endphp
                 <div class="add-to-cart-overlay">
-                  @if(check_variation($flash_item->item_id) == 0)
-                    <button type="button"
-                      class="btn-add-to-cart add_to_cart"
-                      data-item_id="{{ $flash_item->item_id }}">
-                      <i class="fal fa-shopping-bag" style="margin-right:6px;"></i>
-                      {{ $keywords['Add to Cart'] ?? __('Add to Cart') }}
-                    </button>
-                  @else
-                    <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $flash_item->slug]) }}"
-                      class="btn-add-to-cart">
-                      {{ $keywords['Select Options'] ?? __('Select Options') }}
-                    </a>
-                  @endif
+                  <a href="javascript:void(0)"
+                     class="btn-add-to-cart cart-link"
+                     data-href="{{ route('front.user.add.cart', ['id' => $flash_item->item_id, getParam()]) }}"
+                     data-title="{{ $flash_item->title }}"
+                     data-item_id="{{ $flash_item->item_id }}"
+                     data-current_price="{{ currency_converter($flash_info['status'] ? $flash_info['amount'] : $flash_item->current_price) }}"
+                     data-variations="{{ $hasVariF > 0 ? 'yes' : 'no' }}"
+                     data-totalvari="{{ $hasVariF }}"
+                     data-language_id="{{ $uLang }}">
+                     <i class="fal fa-shopping-bag" style="margin-right:6px;"></i>
+                     {{ $hasVariF > 0 ? ($keywords['Select Options'] ?? __('Select Options')) : ($keywords['Add to Cart'] ?? __('Add to Cart')) }}
+                  </a>
                 </div>
               @endif
             </figure>

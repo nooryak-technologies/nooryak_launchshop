@@ -125,20 +125,20 @@
 
                 <!-- Add to Cart Overlay -->
                 @if($shopSet->catalog_mode != 1)
+                  @php $hasVariP = check_variation($product->id); @endphp
                   <div class="add-to-cart-overlay">
-                    @if(check_variation($product->id) == 0)
-                      <button type="button"
-                        class="btn-add-to-cart add_to_cart"
-                        data-item_id="{{ $product->id }}">
-                        <i class="fal fa-shopping-bag" style="margin-right:6px;"></i>
-                        {{ $keywords['Add to Cart'] ?? __('Add to Cart') }}
-                      </button>
-                    @else
-                      <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $pContent->slug]) }}"
-                        class="btn-add-to-cart">
-                        {{ $keywords['Select Options'] ?? __('Select Options') }}
-                      </a>
-                    @endif
+                    <a href="javascript:void(0)"
+                       class="btn-add-to-cart cart-link"
+                       data-href="{{ route('front.user.add.cart', ['id' => $product->id, getParam()]) }}"
+                       data-title="{{ $pContent->title }}"
+                       data-item_id="{{ $product->id }}"
+                       data-current_price="{{ currency_converter($flash_i['status'] ? $flash_i['amount'] : $product->current_price) }}"
+                       data-variations="{{ $hasVariP > 0 ? 'yes' : 'no' }}"
+                       data-totalvari="{{ $hasVariP }}"
+                       data-language_id="{{ $uLang }}">
+                       <i class="fal fa-shopping-bag" style="margin-right:6px;"></i>
+                       {{ $hasVariP > 0 ? ($keywords['Select Options'] ?? __('Select Options')) : ($keywords['Add to Cart'] ?? __('Add to Cart')) }}
+                    </a>
                   </div>
                 @endif
               </figure>

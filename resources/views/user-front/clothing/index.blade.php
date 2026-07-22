@@ -255,8 +255,21 @@
                 </div>
                 {{-- Quick add to cart --}}
                 @if($shop_settings->catalog_mode != 1)
+                @php
+                  $hasVari = check_variation($product->id);
+                @endphp
                 <div class="add-to-cart-overlay">
-                  <a href="{{ route('front.user.add.cart', ['id' => $product->id, getParam()]) }}" class="btn-add-to-cart">ADD TO CART</a>
+                  <a href="javascript:void(0)"
+                     class="btn-add-to-cart cart-link"
+                     data-href="{{ route('front.user.add.cart', ['id' => $product->id, getParam()]) }}"
+                     data-title="{{ $pContent->title }}"
+                     data-item_id="{{ $product->id }}"
+                     data-current_price="{{ currency_converter($fi['status'] ? $fi['amount'] : $product->current_price) }}"
+                     data-variations="{{ $hasVari > 0 ? 'yes' : 'no' }}"
+                     data-totalvari="{{ $hasVari }}"
+                     data-language_id="{{ $uLang }}">
+                     {{ $hasVari > 0 ? ($keywords['Select Options'] ?? __('Select Options')) : ($keywords['ADD TO CART'] ?? __('ADD TO CART')) }}
+                  </a>
                 </div>
                 @endif
               </div>
@@ -359,8 +372,21 @@
                   <a href="{{ route('front.user.add.compare', ['id' => $bProd->id, getParam()]) }}" class="btn-icon"><i class="fal fa-random"></i></a>
                 </div>
                 @if($shop_settings->catalog_mode != 1)
+                @php
+                  $hasVari2 = check_variation($bProd->id);
+                @endphp
                 <div class="add-to-cart-overlay">
-                  <a href="{{ route('front.user.add.cart', ['id' => $bProd->id, getParam()]) }}" class="btn-add-to-cart">ADD TO CART</a>
+                  <a href="javascript:void(0)"
+                     class="btn-add-to-cart cart-link"
+                     data-href="{{ route('front.user.add.cart', ['id' => $bProd->id, getParam()]) }}"
+                     data-title="{{ $bCont->title }}"
+                     data-item_id="{{ $bProd->id }}"
+                     data-current_price="{{ currency_converter($fi2['status'] ? $fi2['amount'] : $bProd->current_price) }}"
+                     data-variations="{{ $hasVari2 > 0 ? 'yes' : 'no' }}"
+                     data-totalvari="{{ $hasVari2 }}"
+                     data-language_id="{{ $uLang }}">
+                     {{ $hasVari2 > 0 ? ($keywords['Select Options'] ?? __('Select Options')) : ($keywords['ADD TO CART'] ?? __('ADD TO CART')) }}
+                  </a>
                 </div>
                 @endif
               </div>

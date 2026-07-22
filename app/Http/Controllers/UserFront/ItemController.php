@@ -100,6 +100,17 @@ class ItemController extends Controller
         //check product flash amount
         $flash_info = flashAmountStatus($item->id, $item->current_price);
         $product_current_price = $flash_info['amount'];
+        $unitPrice = (float) (currency_converter($product_current_price, $item->id));
+
+        if ($total <= 0) {
+            $variantPrice = 0;
+            if (!empty($variant)) {
+                foreach ($variant as $vant) {
+                    $variantPrice += (float) ($vant['price'] ?? 0);
+                }
+            }
+            $total = ($unitPrice + $variantPrice) * $qty;
+        }
         //check product flash amount end
         // if cart is empty then this the first product
 
@@ -124,7 +135,7 @@ class ItemController extends Controller
                     "user_id" => $user_id,
                     "qty" => (int)$qty,
                     "variations" => $variant,
-                    "product_price" => (float) (currency_converter($product_current_price, $item->id)),
+                    "product_price" => $unitPrice,
                     "total" => $total,
                 ]
             ];
@@ -177,7 +188,7 @@ class ItemController extends Controller
             "user_id" => $user_id,
             "qty" => (int)$qty,
             "variations" => $variant,
-            "product_price" => (float)(currency_converter($product_current_price, $item->id)),
+            "product_price" => $unitPrice,
             "total" => $total,
         ];
         Session::put('cart_' . $user->username, $cart);

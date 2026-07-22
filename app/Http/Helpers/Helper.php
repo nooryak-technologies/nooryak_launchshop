@@ -841,7 +841,11 @@ if (!function_exists('cartTotal')) {
                     return $item['user_id'] == $user_id;
                 });
                 foreach ($cart as $key => $cartItem) {
-                    $total += $cartItem['total'];
+                    $itemTotal = (float)($cartItem['total'] ?? 0);
+                    if ($itemTotal <= 0 && isset($cartItem['product_price']) && isset($cartItem['qty'])) {
+                        $itemTotal = (float)$cartItem['product_price'] * (int)$cartItem['qty'];
+                    }
+                    $total += $itemTotal;
                 }
             }
         }
