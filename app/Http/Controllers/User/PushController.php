@@ -63,7 +63,7 @@ class PushController extends Controller
     {
         $user_id = Auth::user()->id;
         $subscribers_count = Guest::where('user_id', $user_id)
-            ->whereHas('subscriptions')
+            ->whereHas('pushSubscriptions')
             ->count();
 
         return view('user.pushnotification.send', compact('subscribers_count'));
@@ -84,7 +84,7 @@ class PushController extends Controller
         $buttonURL = $request->button_url;
 
         $subscribers = Guest::where('user_id', $user_id)
-            ->whereHas('subscriptions')
+            ->whereHas('pushSubscriptions')
             ->get();
 
         if ($subscribers->isEmpty()) {
