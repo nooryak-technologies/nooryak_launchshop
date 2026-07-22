@@ -1205,3 +1205,44 @@ if (!function_exists('canonicalUrl')) {
         return $canonicalUrl;
     }
 }
+
+if (!function_exists('hasStaffPerm')) {
+    function hasStaffPerm($permissionKey) {
+        if (!Session::has('staff_id')) {
+            return true;
+        }
+        $perms = Session::get('staff_permissions', []);
+        if (!is_array($perms)) return false;
+
+        // Master / Parent permission overrides
+        if (in_array('Shop Management', $perms)) return true;
+
+        $itemsKeys = ['Products / Items', 'Items', 'Products Management', 'Product Management'];
+        $productKeys = array_merge(['Products', 'Categories', 'Subcategories', 'Product Labels', 'Product Variants'], $itemsKeys);
+
+        if ($permissionKey == 'Shop Management') {
+            $shopKeys = array_merge($productKeys, ['Orders', 'Sales Report']);
+            foreach ($shopKeys as $key) {
+                if (in_array($key, $perms)) return true;
+            }
+        }
+
+        if ($permissionKey == 'Products') {
+            foreach ($productKeys as $key) {
+                if (in_array($key, $perms)) return true;
+            }
+        }
+
+        if (in_array('Products', $perms) && in_array($permissionKey, array_merge(['Categories', 'Subcategories', 'Product Labels', 'Product Variants'], $itemsKeys))) {
+            return true;
+        }
+
+        if (in_array($permissionKey, $itemsKeys) || $permissionKey == 'Products / Items' || $permissionKey == 'Items') {
+            foreach ($itemsKeys as $ik) {
+                if (in_array($ik, $perms)) return true;
+            }
+        }
+
+        return in_array($permissionKey, $perms);
+    }
+}

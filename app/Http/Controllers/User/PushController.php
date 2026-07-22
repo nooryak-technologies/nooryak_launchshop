@@ -15,7 +15,7 @@ class PushController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            if (!hasStaffPerm('Push Notification')) {
+            if (!\hasStaffPerm('Push Notification')) {
                 abort(403, 'Unauthorized action.');
             }
             return $next($request);
