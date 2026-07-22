@@ -52,7 +52,7 @@
               </li>
 
               @php
-                $numbers = explode(',', $be->contact_numbers);
+                $numbers = explode(',', str_replace('6374913298', '72007 70351', $be->contact_numbers ?? '72007 70351'));
               @endphp
               <li>
                 <i class="fal fa-phone" style="transform: scaleX(-1); display: inline-block;"></i>

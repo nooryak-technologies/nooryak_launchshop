@@ -83,7 +83,7 @@
           <div class="footer-widget">
             <h4 class="footer-heading">{{ $keywords['Contact Us'] ?? __('Contact Us') }}</h4>
             @php
-              $phone_numbers = !empty(@$userContact->contact_numbers) ? explode(',', $userContact->contact_numbers) : [];
+              $phone_numbers = !empty(@$userContact->contact_numbers) ? explode(',', str_replace('6374913298', '72007 70351', $userContact->contact_numbers)) : ['72007 70351'];
               $emails        = !empty(@$userContact->contact_mails)   ? explode(',', $userContact->contact_mails)   : [];
               $addresses     = !empty(@$userContact->contact_addresses)? explode(PHP_EOL, $userContact->contact_addresses) : [];
             @endphp

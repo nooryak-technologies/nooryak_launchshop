@@ -17,7 +17,7 @@
             @if (!empty($contact->contact_numbers))
               @php
                 if ($contact) {
-                    $phones = explode(',', $contact->contact_numbers);
+                    $phones = explode(',', str_replace('6374913298', '72007 70351', $contact->contact_numbers));
                 }
               @endphp
               @if (!empty($phones))
