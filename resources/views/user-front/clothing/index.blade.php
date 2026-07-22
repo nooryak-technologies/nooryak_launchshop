@@ -234,26 +234,26 @@
                   @endif
                 </p>
 
+                <div class="hero-visual-frame">
+                  @if(!empty($heroSlide['image_url']))
+                    <img class="lazyload blur-up"
+                      src="{{ asset('assets/front/images/placeholder.png') }}"
+                      data-src="{{ $heroSlide['image_url'] }}"
+                      alt="hero banner">
+                  @else
+                    <img class="lazyload blur-up"
+                      src="{{ asset('assets/front/images/placeholder.png') }}"
+                      data-src="{{ asset('assets/user-front/images/fashion/banner/banner-1.jpg') }}"
+                      alt="hero banner">
+                  @endif
+                </div>
+
                 <div class="clothing-hero-actions">
                   <a href="{{ route('front.user.shop', getParam()) }}" class="clothing-btn-dark">
                     {{ !empty($heroSlide['primary_btn_name']) ? $heroSlide['primary_btn_name'] : __('SHOP MEN') }} <i class="fal fa-arrow-right"></i>
                   </a>
                   <a href="{{ route('front.user.shop', getParam()) }}" class="clothing-btn-light">{{ __('SHOP WOMEN') }} <i class="fal fa-arrow-right"></i></a>
                 </div>
-              </div>
-
-              <div class="hero-visual-frame">
-                @if(!empty($heroSlide['image_url']))
-                  <img class="lazyload blur-up"
-                    src="{{ asset('assets/front/images/placeholder.png') }}"
-                    data-src="{{ $heroSlide['image_url'] }}"
-                    alt="hero banner">
-                @else
-                  <img class="lazyload blur-up"
-                    src="{{ asset('assets/front/images/placeholder.png') }}"
-                    data-src="{{ asset('assets/user-front/images/fashion/banner/banner-1.jpg') }}"
-                    alt="hero banner">
-                @endif
               </div>
             </div>
           </div>

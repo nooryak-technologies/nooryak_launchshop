@@ -155,96 +155,12 @@
       display: none !important;
     }
 
-    /* Hero Banner Image & Shell Layout (Laptop & Widescreen Optimization) */
-    .clothing-hero-shell {
-      position: relative !important;
-      display: flex !important;
-      flex-direction: row !important;
-      align-items: center !important;
-      border-radius: 16px !important;
-      overflow: hidden !important;
-      width: 100% !important;
-      height: 380px !important;
-      background: #f5f3ef !important;
-    }
-
-    @media (min-width: 1200px) {
-      .clothing-hero-shell {
-        height: 410px !important;
-      }
-    }
-
-    @media (max-width: 991px) {
-      .clothing-hero-shell {
-        height: 320px !important;
-        min-height: 320px !important;
-      }
-    }
-
-    .clothing-hero-slider .slick-list,
-    .clothing-hero-slider .slick-track,
-    .clothing-hero-slide {
-      border-radius: 16px !important;
-      overflow: hidden !important;
-    }
-
-    .hero-visual-frame {
-      position: absolute !important;
-      inset: 0 !important;
-      width: 100% !important;
-      height: 100% !important;
-      z-index: 1 !important;
-      border-radius: 16px !important;
-      overflow: hidden !important;
-    }
-
-    .hero-visual-frame img {
-      width: 100% !important;
-      height: 100% !important;
-      display: block !important;
-      object-fit: cover !important;
-      object-position: center top !important; /* Always keeps top of heads / hats 100% visible */
-      position: absolute !important;
-      inset: 0 !important;
-    }
-
-    .hero-visual-frame::after {
-      content: '' !important;
-      position: absolute !important;
-      inset: 0 !important;
-      background: linear-gradient(to right, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.45) 45%, transparent 80%) !important;
-      pointer-events: none !important;
-      z-index: 2 !important;
-    }
-
-    .clothing-hero-copy {
-      position: relative !important;
-      z-index: 3 !important;
-      display: flex !important;
-      flex-direction: column !important;
-      justify-content: center !important;
-      padding: 30px 45px !important;
-      max-width: 500px !important;
-      width: 100% !important;
-      text-align: left !important;
-    }
-
-    @media (min-width: 1200px) {
-      .clothing-hero-copy {
-        padding: 40px 55px !important;
-        max-width: 540px !important;
-      }
-    }
-
     @media (max-width: 767px) {
       .product-default,
       .product-default-10,
       .product-grid-card {
         padding: 8px !important;
         border-radius: 12px !important;
-      }
-      .clothing-hero-copy {
-        padding: 24px 20px !important;
       }
     }
   </style>
