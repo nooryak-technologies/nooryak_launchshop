@@ -589,80 +589,65 @@ body {
   padding: 4px 10px;
 }
 
-/* Action Buttons - always visible vertical column on right */
-.product-default-10 .btn-icon-group {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  opacity: 1;
-  transform: translateX(0);
-  transition: var(--clothing-transition);
+/* Action Buttons - always visible horizontal row at bottom */
+.product-default-10 .btn-icon-group,
+.product-default-10 .btn-icon-group.btn-inline,
+.product-default .btn-icon-group.btn-inline {
+  position: static !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 12px 15px 15px !important;
+  background: #ffffff !important;
+  opacity: 1 !important;
+  transform: none !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  border-top: 1px solid #f0eedf !important;
+  margin-top: 10px !important;
   z-index: 4;
 }
 
-.product-default-10:hover .btn-icon-group {
-  opacity: 1;
-  transform: translateX(0);
+.product-default-10 .btn-icon,
+.product-default-10 .btn-icon-group.btn-inline .btn-icon,
+.product-default-10 .btn-icon-group.btn-inline a.btn,
+.product-default-10 .btn-icon-group.btn-inline button.btn,
+.product-default .btn-icon-group.btn-inline .btn-icon,
+.product-default .btn-icon-group.btn-inline a.btn,
+.product-default .btn-icon-group.btn-inline button.btn {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 4px !important;
+  border: 1px solid #e2ded5 !important;
+  background: #f7f5f0 !important;
+  color: #333333 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 14px !important;
+  transition: all 0.2s ease-in-out !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
 }
 
-.product-default-10 .btn-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid var(--clothing-border);
-  background: rgba(255,255,255,0.95);
-  color: var(--clothing-black);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  transition: var(--clothing-transition);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-  cursor: pointer;
+.product-default-10 .btn-icon:hover,
+.product-default-10 .btn-icon-group.btn-inline .btn-icon:hover,
+.product-default-10 .btn-icon-group.btn-inline a.btn:hover,
+.product-default-10 .btn-icon-group.btn-inline button.btn:hover,
+.product-default .btn-icon-group.btn-inline .btn-icon:hover,
+.product-default .btn-icon-group.btn-inline a.btn:hover,
+.product-default .btn-icon-group.btn-inline button.btn:hover {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border-color: #000000 !important;
 }
 
-.product-default-10 .btn-icon:hover {
-  background: var(--clothing-black);
-  color: var(--clothing-white);
-  border-color: var(--clothing-black);
-}
-
-/* Add to Cart */
+/* Hide Add to Cart Overlay banner entirely */
+.add-to-cart-overlay,
 .product-default-10 .add-to-cart-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  transform: translateY(100%);
-  transition: var(--clothing-transition);
-  z-index: 4;
-}
-
-.product-default-10:hover .add-to-cart-overlay {
-  transform: translateY(0);
-}
-
-.product-default-10 .btn-add-to-cart {
-  display: block;
-  width: 100%;
-  padding: 13px 16px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  text-align: center;
-  background: var(--clothing-black);
-  color: var(--clothing-white);
-  border: none;
-  cursor: pointer;
-  transition: var(--clothing-transition);
-}
-
-.product-default-10 .btn-add-to-cart:hover {
-  background: var(--clothing-primary);
+  display: none !important;
 }
 
 /* Product Details */
@@ -675,12 +660,19 @@ body {
   background: #ffffff !important;
 }
 
-/* Hide category and rating on clothing product cards */
-.product-default-10 .product-category {
+/* Hide category and rating on clothing product cards globally */
+.product-default-10 .product-category,
+.product-default .product-category,
+.product-category,
+.category {
   display: none !important;
 }
 
-.product-default-10 .product-rating {
+.product-default-10 .product-rating,
+.product-default .product-ratings,
+.product-default .ratings-total,
+.product-ratings,
+.ratings-total {
   display: none !important;
 }
 

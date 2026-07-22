@@ -82,59 +82,6 @@
               <div class="product-badge">
                 <span class="badge-sale">{{ $keywords['SALE'] ?? __('SALE') }}</span>
               </div>
-
-              <!-- Action Buttons -->
-              <div class="btn-icon-group">
-                <a href="javascript:void(0)"
-                  class="btn btn-icon cart-link"
-                  data-href="{{ route('front.user.add.cart', ['id' => $flash_item->item_id, getParam()]) }}"
-                  data-title="{{ $flash_item->title }}"
-                  data-item_id="{{ $flash_item->item_id }}"
-                  data-current_price="{{ currency_converter($flash_info['status'] ? $flash_info['amount'] : $flash_item->current_price) }}"
-                  data-variations="{{ check_variation($flash_item->item_id) > 0 ? 'yes' : 'no' }}"
-                  data-totalvari="{{ check_variation($flash_item->item_id) }}"
-                  data-language_id="{{ $uLang }}"
-                  title="{{ $keywords['Add to Cart'] ?? __('Add to Cart') }}">
-                  <i class="fal fa-shopping-cart"></i>
-                </a>
-                <a href="{{ route('customer.wishlist', getParam()) }}"
-                  class="btn btn-icon add_to_wishlist"
-                  data-item_id="{{ $flash_item->item_id }}"
-                  title="{{ $keywords['Add to Wishlist'] ?? __('Add to Wishlist') }}">
-                  <i class="fal fa-heart"></i>
-                </a>
-                <a href="javascript:void(0)"
-                  class="btn btn-icon quick-view"
-                  data-item_id="{{ $flash_item->item_id }}"
-                  title="{{ $keywords['Quick View'] ?? __('Quick View') }}">
-                  <i class="fal fa-eye"></i>
-                </a>
-                <a href="{{ route('front.user.compare', getParam()) }}"
-                  class="btn btn-icon add_to_compare"
-                  data-id="{{ $flash_item->item_id }}"
-                  title="{{ $keywords['Add to Compare'] ?? __('Add to Compare') }}">
-                  <i class="fal fa-random"></i>
-                </a>
-              </div>
-
-              <!-- Add to Cart Overlay -->
-              @if((isset($shop_settings) ? $shop_settings->catalog_mode : ($shopSet->catalog_mode ?? 0)) != 1)
-                @php $hasVariF = check_variation($flash_item->item_id); @endphp
-                <div class="add-to-cart-overlay">
-                  <a href="javascript:void(0)"
-                     class="btn-add-to-cart cart-link"
-                     data-href="{{ route('front.user.add.cart', ['id' => $flash_item->item_id, getParam()]) }}"
-                     data-title="{{ $flash_item->title }}"
-                     data-item_id="{{ $flash_item->item_id }}"
-                     data-current_price="{{ currency_converter($flash_info['status'] ? $flash_info['amount'] : $flash_item->current_price) }}"
-                     data-variations="{{ $hasVariF > 0 ? 'yes' : 'no' }}"
-                     data-totalvari="{{ $hasVariF }}"
-                     data-language_id="{{ $uLang }}">
-                     <i class="fal fa-shopping-bag" style="margin-right:6px;"></i>
-                     {{ $hasVariF > 0 ? ($keywords['Select Options'] ?? __('Select Options')) : ($keywords['Add to Cart'] ?? __('Add to Cart')) }}
-                  </a>
-                </div>
-              @endif
             </figure>
 
             <div class="product-details">
@@ -149,6 +96,42 @@
                   <span class="old-price">{{ $old_price }}</span>
                 @endif
               </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="btn-icon-group btn-inline">
+              @if((isset($shop_settings) ? $shop_settings->catalog_mode : ($shopSet->catalog_mode ?? 0)) != 1)
+                <a href="javascript:void(0)"
+                  class="btn btn-icon cart-link"
+                  data-href="{{ route('front.user.add.cart', ['id' => $flash_item->item_id, getParam()]) }}"
+                  data-title="{{ $flash_item->title }}"
+                  data-item_id="{{ $flash_item->item_id }}"
+                  data-current_price="{{ currency_converter($flash_info['status'] ? $flash_info['amount'] : $flash_item->current_price) }}"
+                  data-variations="{{ check_variation($flash_item->item_id) > 0 ? 'yes' : 'no' }}"
+                  data-totalvari="{{ check_variation($flash_item->item_id) }}"
+                  data-language_id="{{ $uLang }}"
+                  title="{{ $keywords['Add to Cart'] ?? __('Add to Cart') }}">
+                  <i class="far fa-shopping-cart"></i>
+                </a>
+              @endif
+              <a href="{{ route('customer.wishlist', getParam()) }}"
+                class="btn btn-icon add_to_wishlist"
+                data-item_id="{{ $flash_item->item_id }}"
+                title="{{ $keywords['Add to Wishlist'] ?? __('Add to Wishlist') }}">
+                <i class="fal fa-heart"></i>
+              </a>
+              <a href="javascript:void(0)"
+                class="btn btn-icon quick-view"
+                data-item_id="{{ $flash_item->item_id }}"
+                title="{{ $keywords['Quick View'] ?? __('Quick View') }}">
+                <i class="fal fa-eye"></i>
+              </a>
+              <a href="{{ route('front.user.compare', getParam()) }}"
+                class="btn btn-icon add_to_compare"
+                data-id="{{ $flash_item->item_id }}"
+                title="{{ $keywords['Add to Compare'] ?? __('Add to Compare') }}">
+                <i class="fal fa-random"></i>
+              </a>
             </div>
           </div>
         @endforeach
