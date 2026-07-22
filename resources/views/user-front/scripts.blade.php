@@ -1,6 +1,7 @@
 <script>
   "use strict";
   var mainurl = "{{ route('front.user.detail.view', getParam()) }}";
+  var vapid_public_key = "{{ env('VAPID_PUBLIC_KEY') }}";
   var textPosition = "{{ $userBs->base_currency_text_position }}";
   var currSymbol = "{{ currency_sign() }}";
   var currValue = "{{ currency_value() }}";
@@ -37,6 +38,7 @@
 
 <script src="{{ asset('assets/user-front/js/script.js?v=1.0.4') }}"></script>
 <script src="{{ asset('assets/user-front/js/cart.js') }}"></script>
+<script src="{{ asset('assets/front/js/push-notification.js') }}"></script>
 
 <!-- Custom Category Slider Script -->
 <script>

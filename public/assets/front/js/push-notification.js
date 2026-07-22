@@ -15,6 +15,11 @@ function initSW() {
     return;
   }
 
+  // Ensure VAPID keys are configured and available before running push registration
+  if (typeof vapid_public_key === 'undefined' || !vapid_public_key) {
+    return;
+  }
+
   // register the service worker
   navigator.serviceWorker.register('sw.js')
     .then(() => {
