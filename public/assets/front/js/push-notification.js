@@ -75,7 +75,51 @@ function subscribeGuest() {
         applicationServerKey: urlBase64ToUint8Array(vapid_public_key)
       };
 
-      return registration.pushManager.subscribe(subscribeOptions);
+      return registration.pushManager.getSubscription()
+        .then((existingSubscription) => {
+          if (existingSubscription) {
+            console.log("Push notifications: Existing subscription found, verifying VAPID keys...");
+            var currentKey = urlBase64ToUint8Array(vapid_public_key);
+            var existingKey = new Uint8Array(existingSubscription.options.applicationServerKey);
+            var keysMatch = true;
+            if (currentKey.length !== existingKey.length) {
+              keysMatch = false;
+            } else {
+              for (var i = 0; i < currentKey.length; i++) {
+                if (currentKey[i] !== existingKey[i]) {
+                  keysMatch = false;
+                  break;
+                }
+              }
+            }
+
+            if (!keysMatch) {
+              console.log("Push notifications: VAPID keys changed, unsubscribing existing subscription...");
+              return existingSubscription.unsubscribe().then(() => {
+                console.log("Push notifications: Unsubscribed old subscription successfully. Resubscribing...");
+                return registration.pushManager.subscribe(subscribeOptions);
+              });
+            }
+
+            console.log("Push notifications: Existing subscription VAPID keys match current keys.");
+            return existingSubscription;
+          }
+
+          console.log("Push notifications: No existing subscription found. Subscribing...");
+          return registration.pushManager.subscribe(subscribeOptions);
+        })
+        .catch((error) => {
+          console.warn("Push notifications: Subscription check failed, attempting auto-unsubscribe recovery...", error);
+          return registration.pushManager.getSubscription().then((existingSubscription) => {
+            if (existingSubscription) {
+              return existingSubscription.unsubscribe().then(() => {
+                console.log("Push notifications: Recovered by unsubscribing. Subscribing with new key...");
+                return registration.pushManager.subscribe(subscribeOptions);
+              });
+            }
+            throw error;
+          });
+        });
     })
     .then((pushSubscription) => {
       console.log("Push notifications: Subscription object generated successfully:", pushSubscription);
