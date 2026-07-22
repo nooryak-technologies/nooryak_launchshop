@@ -16,7 +16,7 @@
   <div class="pricing-toggle-wrap">
     @if(in_array('yearly', array_map('strtolower', (array)$terms)) && empty($hidePill))
       <div class="pricing-save-pill">
-        🏷️ Save up to 67% with yearly billing!
+        🏷️ Save up to 60% with yearly billing!
       </div>
     @endif
     <ul class="pricing-pill-tabs nav" id="pricing-tabs" role="tablist">
@@ -99,7 +99,11 @@
               $cardClass     = $isRecommended ? 'card-recommended' : ($isBestValue ? 'card-best-value' : ($isBasic ? 'card-basic' : ''));
 
               // Subtitle
-              $subtitles = ['basic'=>'Perfect for getting started','standard'=>'Grow your business','premium'=>'For scaling stores'];
+              $subtitles = [
+                  'basic' => 'Start your own online store',
+                  'standard' => 'Elevate Your E-commerce Journey with this Starter Plan.',
+                  'premium' => 'Best for Small Business Owners.'
+              ];
               $planSubtitle = $subtitles[$titleKey] ?? ucfirst($titleKey).' plan';
 
               $periodLabel = strtolower($package->term) == 'lifetime' ? 'one-time' : (strtolower($package->term) == 'yearly' ? 'year' : 'month');
@@ -433,7 +437,7 @@
               </div>
               <div class="plan-v2-icon" style="color:#ff5a2c;"><i class="fas fa-building"></i></div>
               <h3 class="plan-v2-title">Enterprise</h3>
-              <p class="plan-v2-subtitle">For large &amp; global brands</p>
+              <p class="plan-v2-subtitle">Kickstart Your E-commerce Business.</p>
               <div class="plan-v2-price-block">
                 <span class="plan-v2-amount" style="font-size:34px;color:#0f172a;">Custom</span>
               </div>
