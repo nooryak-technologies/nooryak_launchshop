@@ -46,33 +46,26 @@
                     <span class="badge-sale">{{ $keywords['SALE'] ?? __('SALE') }}</span>
                   @endif
                 </div>
+              </figure>
 
-                <div class="btn-icon-group">
-                  <a href="{{ route('customer.wishlist', getParam()) }}"
-                    class="btn btn-icon add_to_wishlist"
-                    data-item_id="{{ $item->id }}"
-                    title="{{ $keywords['Wishlist'] ?? __('Wishlist') }}">
-                    <i class="fal fa-heart"></i>
-                  </a>
-                  <a href="javascript:void(0)"
-                    class="btn btn-icon quick-view"
-                    data-item_id="{{ $item->id }}"
-                    title="{{ $keywords['Quick View'] ?? __('Quick View') }}">
-                    <i class="fal fa-eye"></i>
-                  </a>
-                  <a href="{{ route('front.user.compare', getParam()) }}"
-                    class="btn btn-icon add_to_compare"
-                    data-id="{{ $item->id }}"
-                    title="{{ $keywords['Compare'] ?? __('Compare') }}">
-                    <i class="fal fa-random"></i>
-                  </a>
+              <div class="product-details">
+                <h3 class="product-title lc-1">
+                  <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $itemContent->slug]) }}">{{ $itemContent->title }}</a>
+                </h3>
+                <div class="product-price">
+                  <span class="new-price">{{ $tr_new }}</span>
+                  @if($item->previous_price > 0)
+                    <span class="old-price">{{ $tr_old }}</span>
+                  @endif
                 </div>
 
+                {{-- Action buttons row (Reference Image 3) --}}
                 @if($shopSet->catalog_mode != 1)
                   @php $hasVariT = check_variation($item->id); @endphp
-                  <div class="add-to-cart-overlay">
+                  <div class="product-action-row">
                     <a href="javascript:void(0)"
-                       class="btn-add-to-cart cart-link"
+                       class="action-btn cart-link"
+                       title="{{ $keywords['Add to Cart'] ?? __('Add to Cart') }}"
                        data-href="{{ route('front.user.add.cart', ['id' => $item->id, getParam()]) }}"
                        data-title="{{ $itemContent->title }}"
                        data-item_id="{{ $item->id }}"
@@ -80,31 +73,29 @@
                        data-variations="{{ $hasVariT > 0 ? 'yes' : 'no' }}"
                        data-totalvari="{{ $hasVariT }}"
                        data-language_id="{{ $uLang }}">
-                       <i class="fal fa-shopping-bag" style="margin-right:6px;"></i>
-                       {{ $hasVariT > 0 ? ($keywords['Select Options'] ?? __('Select Options')) : ($keywords['Add to Cart'] ?? __('Add to Cart')) }}
+                       <i class="fal fa-shopping-cart"></i>
+                    </a>
+                    <a href="{{ route('front.user.add.wishlist', ['id' => $item->id, getParam()]) }}"
+                       class="action-btn btn-wishlist"
+                       data-url="{{ route('front.user.add.wishlist', ['id' => $item->id, getParam()]) }}"
+                       title="{{ $keywords['Wishlist'] ?? __('Wishlist') }}">
+                       <i class="fal fa-heart"></i>
+                    </a>
+                    <a href="javascript:void(0)"
+                       class="action-btn quick-view-link"
+                       data-url="{{ route('front.user.quick_view', getParam()) }}"
+                       data-slug="{{ $itemContent->slug }}"
+                       title="{{ $keywords['Quick View'] ?? __('Quick View') }}">
+                       <i class="fal fa-eye"></i>
+                    </a>
+                    <a href="{{ route('front.user.add.compare', ['id' => $item->id, getParam()]) }}"
+                       class="action-btn btn-compare"
+                       onclick="addToCompare('{{ route('front.user.add.compare', ['id' => $item->id, getParam()]) }}'); return false;"
+                       title="{{ $keywords['Compare'] ?? __('Compare') }}">
+                       <i class="fal fa-random"></i>
                     </a>
                   </div>
                 @endif
-              </figure>
-
-              <div class="product-details">
-                <h3 class="product-title lc-1">
-                  <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $itemContent->slug]) }}">{{ $itemContent->title }}</a>
-                </h3>
-                @if($item->rating > 0)
-                  <div class="product-rating">
-                    @for($r = 1; $r <= 5; $r++)
-                      <i class="{{ $r <= $item->rating ? 'fas' : 'far' }} fa-star"></i>
-                    @endfor
-                    <span>({{ $item->rating }})</span>
-                  </div>
-                @endif
-                <div class="product-price">
-                  <span class="new-price">{{ $tr_new }}</span>
-                  @if($item->previous_price > 0)
-                    <span class="old-price">{{ $tr_old }}</span>
-                  @endif
-                </div>
               </div>
             </div>
           </div>
