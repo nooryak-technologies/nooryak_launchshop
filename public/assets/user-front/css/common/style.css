@@ -7274,7 +7274,7 @@ html[dir="rtl"] #product-details-slider .slick-track {
     margin: 0 0 8px 0 !important;
 }
 
-.product-list-card .product-action .btn-icon-group > div {
+.product-list-card .product-action .btn-icon-group>div {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
@@ -7450,6 +7450,7 @@ html[dir="rtl"] #product-details-slider .slick-track {
 
 /* Related Products Mobile View - Clean Compact Layout & Scaled Image */
 @media only screen and (max-width: 575.98px) {
+
     .product-details-related-products .product-slider,
     #product-details-slider {
         margin-left: 0 !important;
@@ -7535,6 +7536,7 @@ html[dir="rtl"] #product-details-slider .slick-track {
 
 /* Fix header logo overlapping with page title / breadcrumb area on mobile */
 @media only screen and (max-width: 991.98px) {
+
     .page-title-area,
     .page-title-area.header-next,
     .header-next {
@@ -7544,6 +7546,7 @@ html[dir="rtl"] #product-details-slider .slick-track {
 }
 
 @media only screen and (max-width: 575.98px) {
+
     .page-title-area,
     .page-title-area.header-next,
     .header-next {
