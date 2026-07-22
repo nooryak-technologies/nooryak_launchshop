@@ -68,6 +68,101 @@
       --font-family-body: "Jost", sans-serif;
       --font-family-heading: "Cormorant Garamond", serif;
     }
+
+    /* Urban/Clothing theme product card full cover and hover fixes */
+    .product-default,
+    .product-default-10,
+    .product-grid-card {
+      background: #ffffff !important;
+      border: 1px solid #eaeaea !important;
+      border-radius: 16px !important;
+      padding: 12px !important;
+      transition: all 0.3s ease !important;
+      text-align: center !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      height: 100% !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+    }
+
+    .product-default:hover,
+    .product-default-10:hover,
+    .product-grid-card:hover {
+      box-shadow: 0 10px 25px rgba(0,0,0,0.06) !important;
+    }
+
+    /* Full image cover styling */
+    .product-default .product-img,
+    .product-default-10 .product-img,
+    .product-grid-card .product-img,
+    .product-grid-card .product-grid-card-image {
+      border-radius: 12px !important;
+      overflow: hidden !important;
+      margin-bottom: 10px !important;
+      position: relative !important;
+      width: 100% !important;
+      display: block !important;
+      background: #f8f8f8 !important;
+      aspect-ratio: 1 / 1 !important;
+    }
+
+    .product-default .product-img a,
+    .product-default-10 .product-img a,
+    .product-grid-card .product-img a,
+    .product-grid-card .product-grid-card-image a {
+      display: block !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .product-default .product-img img,
+    .product-default-10 .product-img img,
+    .product-grid-card .product-img img,
+    .product-grid-card .product-grid-card-image img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      aspect-ratio: 1 / 1 !important;
+      border-radius: 12px !important;
+      display: block !important;
+      transition: transform 0.4s ease !important;
+    }
+
+    /* Smooth zoom on hover instead of blank/grey box overlay */
+    .product-default:hover .product-img img,
+    .product-default-10:hover .product-img img,
+    .product-grid-card:hover .product-img img {
+      transform: scale(1.04) !important;
+    }
+
+    /* Disable hover image overlay/placeholder swap */
+    .hover-img,
+    .product-img .hover-img,
+    .product-img::after,
+    .product-img::before {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+    }
+
+    /* Hide rating & category on Urban theme */
+    .product-category,
+    .product-rating,
+    .product-ratings,
+    .ratings-total {
+      display: none !important;
+    }
+
+    @media (max-width: 767px) {
+      .product-default,
+      .product-default-10,
+      .product-grid-card {
+        padding: 8px !important;
+        border-radius: 12px !important;
+      }
+    }
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

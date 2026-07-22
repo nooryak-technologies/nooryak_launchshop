@@ -10,16 +10,14 @@
         </figure>
 
         <div class="product-details">
-          @if ($userBs->theme != 'clothing')
-            <a href="javascript:void(0)" class="category" data-slug="{{ $item->category_slug }}">
-              <span class="product-category text-sm">{{ $item->category_name }}</span>
-            </a>
-          @endif
+          <a href="javascript:void(0)" class="category" data-slug="{{ $item->category_slug }}">
+            <span class="product-category text-sm">{{ $item->category_name }}</span>
+          </a>
           <h4 class="product-title lc-2">
             <a
               href="{{ route('front.user.productDetails', [getParam(), 'slug' => $item->product_slug]) }}">{{ $item->title }}</a>
           </h4>
-          @if ($userBs->theme != 'clothing' && $shop_settings->item_rating_system == 1)
+          @if ($shop_settings->item_rating_system == 1)
             <div class="d-flex justify-content-center align-items-center">
               <div class="product-ratings rate text-xsm">
                 <div class="rating" style="width:{{ $item->rating * 20 }}%"></div>
@@ -52,55 +50,8 @@
               @endif
             @endif
           </div>
-
-          @if ($userBs->theme == 'clothing')
-            {{-- Action buttons row (Reference Image 1) --}}
-            @if ($shop_settings->catalog_mode != 1)
-              @php $hasVariShop = check_variation($item->item_id); @endphp
-              <div class="product-action-row d-flex align-items-center justify-content-center gap-2 mt-2">
-                <a href="javascript:void(0)"
-                   class="action-btn cart-link"
-                   title="{{ $keywords['Add to Cart'] ?? __('Add to Cart') }}"
-                   data-href="{{ route('front.user.add.cart', ['id' => $item->item_id, getParam()]) }}"
-                   data-title="{{ $item->title }}"
-                   data-item_id="{{ $item->item_id }}"
-                   data-current_price="{{ currency_converter($product_current_price) }}"
-                   data-variations="{{ $hasVariShop > 0 ? 'yes' : 'no' }}"
-                   data-totalvari="{{ $hasVariShop }}"
-                   data-language_id="{{ $uLang }}">
-                   <i class="fal fa-shopping-cart"></i>
-                </a>
-                @php
-                  $customer_id = Auth::guard('customer')->check() ? Auth::guard('customer')->user()->id : null;
-                  $checkWishList = $customer_id ? checkWishList($item->item_id, $customer_id) : false;
-                @endphp
-                <a href="{{ route('front.user.add.wishlist', ['id' => $item->item_id, getParam()]) }}"
-                   class="action-btn btn-wish {{ $checkWishList ? 'remove-wish active' : 'add-to-wish' }}"
-                   data-item_id="{{ $item->item_id }}"
-                   data-url="{{ route('front.user.add.wishlist', ['id' => $item->item_id, getParam()]) }}"
-                   data-removeUrl="{{ route('front.user.remove.wishlist', ['id' => $item->item_id, getParam()]) }}"
-                   title="{{ $keywords['Wishlist'] ?? __('Wishlist') }}">
-                   <i class="fal fa-heart"></i>
-                </a>
-                <a href="javascript:void(0)"
-                   class="action-btn quick-view-link"
-                   data-item_id="{{ $item->item_id }}"
-                   data-url="{{ route('front.user.productDetails.quickview', ['slug' => $item->product_slug, getParam()]) }}"
-                   title="{{ $keywords['Quick View'] ?? __('Quick View') }}">
-                   <i class="fal fa-eye"></i>
-                </a>
-                <a href="{{ route('front.user.add.compare', ['id' => $item->item_id, getParam()]) }}"
-                   class="action-btn btn-compare"
-                   onclick="addToCompare('{{ route('front.user.add.compare', ['id' => $item->item_id, getParam()]) }}'); return false;"
-                   title="{{ $keywords['Compare'] ?? __('Compare') }}">
-                   <i class="fal fa-random"></i>
-                </a>
-              </div>
-            @endif
-          @endif
         </div>
 
-        @if ($userBs->theme != 'clothing')
         <div class="btn-icon-group btn-inline">
 
           @if ($shop_settings->catalog_mode != 1)
@@ -135,7 +86,6 @@
             title="{{ $keywords['Add to Wishlist'] ?? __('Add to Wishlist') }}"><i class="fal fa-heart"></i></a>
 
         </div>
-        @endif
         @php
           $item_label = DB::table('labels')->where('id', $item->label_id)->first();
           $label = $item_label->name ?? null;

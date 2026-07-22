@@ -482,15 +482,14 @@
               <div class="product-slider mb-30 pb-10" id="product-details-slider"
                 data-slick='{"dots": true, "slidesToShow": 4, "slidesToScroll": 1, "responsive": [{"breakpoint": 1200, "settings": {"slidesToShow": 3, "slidesToScroll": 1}}, {"breakpoint": 992, "settings": {"slidesToShow": 2, "slidesToScroll": 1}}, {"breakpoint": 575, "settings": {"slidesToShow": 2, "slidesToScroll": 1}}]}'>
                 @foreach ($related_product as $item)
-                  <div class="product-default product-center radius-xl me-2 ms-2">
-                    <figure class="product-img">
-                      <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $item->slug]) }}"
-                        class="lazy-container ratio ratio-1-1">
+                  <div class="product-default product-default-10 product-center radius-xl me-2 ms-2">
+                    <div class="product-img">
+                      <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $item->slug]) }}">
                         <img class="lazyload default-img" src="{{ asset('assets/front/images/placeholder.png') }}"
                           data-src="{{ asset('assets/front/img/user/items/thumbnail/' . $item->item->thumbnail) }}"
                           alt="Product">
                       </a>
-                    </figure>
+                    </div>
                     <div class="product-details text-center">
                       @if($userBs->theme != 'clothing')
                         <a href="{{ route('front.user.shop', ['category' => $item->category->slug, getParam()]) }}">
