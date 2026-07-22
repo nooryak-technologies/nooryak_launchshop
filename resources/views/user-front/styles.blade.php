@@ -155,12 +155,87 @@
       display: none !important;
     }
 
+    /* Hero Banner Image & Shell Layout (Matching Reference Image 2) */
+    .clothing-hero-shell {
+      position: relative !important;
+      display: flex !important;
+      align-items: center !important;
+      border-radius: 16px !important;
+      overflow: hidden !important;
+      min-height: 380px !important;
+      max-height: 460px !important;
+      background: #f5f3ef !important;
+    }
+
+    @media (min-width: 992px) {
+      .clothing-hero-shell {
+        height: 420px !important;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .clothing-hero-shell {
+        min-height: 320px !important;
+        height: auto !important;
+      }
+    }
+
+    .clothing-hero-slider .slick-list,
+    .clothing-hero-slider .slick-track,
+    .clothing-hero-slide {
+      border-radius: 16px !important;
+      overflow: hidden !important;
+    }
+
+    .hero-visual-frame {
+      position: absolute !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      z-index: 1 !important;
+      border-radius: 16px !important;
+      overflow: hidden !important;
+    }
+
+    .hero-visual-frame img {
+      width: 100% !important;
+      height: 100% !important;
+      display: block !important;
+      object-fit: cover !important;
+      object-position: center 18% !important; /* Prevents heads from being cut off at the top */
+      position: absolute !important;
+      inset: 0 !important;
+    }
+
+    .hero-visual-frame::after {
+      content: '' !important;
+      position: absolute !important;
+      inset: 0 !important;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.45) 45%, transparent 80%) !important;
+      pointer-events: none !important;
+      z-index: 2 !important;
+    }
+
+    .clothing-hero-copy {
+      position: relative !important;
+      z-index: 3 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      padding: 40px 50px !important;
+      max-width: 520px !important;
+      width: 100% !important;
+    }
+
     @media (max-width: 767px) {
       .product-default,
       .product-default-10,
       .product-grid-card {
         padding: 8px !important;
         border-radius: 12px !important;
+      }
+      .clothing-hero-copy {
+        padding: 24px 20px !important;
       }
     }
   </style>
