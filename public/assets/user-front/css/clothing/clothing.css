@@ -2680,7 +2680,7 @@ body {
 }
 
 /* Responsive Overrides */
-@media(max-width:1199px) {
+@media(max-width:991px) {
 
   .clothing-hero-slider .slick-list,
   .clothing-hero-slider .slick-track {

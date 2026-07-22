@@ -610,15 +610,15 @@
   margin-bottom: 20px !important;
 }
 
-/* ── Remove large-screen margin-top offset below header for all templates (above 1600px) ── */
-@media (min-width: 1600px) {
+/* ── Remove margin-top offset below header for all desktop screens (above 1200px) ── */
+@media (min-width: 1200px) {
   .header-next {
     margin-top: 0 !important;
   }
 }
 
-/* ── Ensure header-top is a single line on desktop screens (min-width: 1600px) ── */
-@media (min-width: 1600px) {
+/* ── Ensure header-top is a single line on all desktop screens from 1200px ── */
+@media (min-width: 1200px) {
   .header-top .row {
     display: flex !important;
     justify-content: space-between !important;
