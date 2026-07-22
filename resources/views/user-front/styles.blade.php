@@ -164,20 +164,20 @@
       border-radius: 16px !important;
       overflow: hidden !important;
       width: 100% !important;
-      height: 480px !important;
+      height: 380px !important;
       background: #f5f3ef !important;
     }
 
     @media (min-width: 1200px) {
       .clothing-hero-shell {
-        height: 520px !important;
+        height: 410px !important;
       }
     }
 
     @media (max-width: 991px) {
       .clothing-hero-shell {
-        height: 400px !important;
-        min-height: 400px !important;
+        height: 320px !important;
+        min-height: 320px !important;
       }
     }
 
