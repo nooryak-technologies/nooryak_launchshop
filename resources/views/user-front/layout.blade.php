@@ -18,6 +18,7 @@
   <meta name="theme-color" content="#{{ $userBs->base_color ?? '007bff' }}">
 
   {{-- PWA: capture beforeinstallprompt EARLY (fires before DOM ready, before bottom scripts) --}}
+  @if (empty($user->preview_template) || $user->preview_template != 1)
   <script>
     window.deferredPwaPrompt = null;
     window.addEventListener('beforeinstallprompt', function(e) {
@@ -37,6 +38,7 @@
       navigator.serviceWorker.register('/sw.js').catch(function() {});
     }
   </script>
+  @endif
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">

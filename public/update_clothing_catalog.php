@@ -439,7 +439,7 @@ foreach ($productsData as $product) {
 // 8b. Update User Contact Info
 echo "<h3>Step 4.5: Updating contact information...</h3>";
 $updatedContacts = DB::table('user_contacts')->where('user_id', $uid)->update([
-    'contact_numbers' => '6374913298',
+    'contact_numbers' => '72007 70351',
     'contact_mails' => 'nooryaktechnologies@gmail.com',
     'contact_addresses' => 'Triplicane, Chennai, IND'
 ]);

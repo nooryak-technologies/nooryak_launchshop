@@ -25,7 +25,7 @@ return new class extends Migration
 
         if (Schema::hasTable('user_contacts')) {
             DB::table('user_contacts')->whereIn('user_id', $userIds)->update([
-                'contact_numbers' => '6374913298',
+                'contact_numbers' => '72007 70351',
                 'contact_mails' => 'nooryaktechnologies@gmail.com',
                 'contact_addresses' => 'Triplicane, Chennai, IND'
             ]);

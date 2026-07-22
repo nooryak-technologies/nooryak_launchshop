@@ -1,3 +1,4 @@
+@if (empty($user->preview_template) || $user->preview_template != 1)
 <!-- PWA Sticky Bottom Install Banner -->
 <div id="pwa-install-banner" class="pwa-install-banner-bar" style="display:none;">
   <div style="display:flex;align-items:center;gap:14px;">
@@ -152,3 +153,4 @@
       .catch(function(e){ console.warn('[PWA] SW failed', e); });
   }
 </script>
+@endif
