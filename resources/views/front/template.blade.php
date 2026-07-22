@@ -438,7 +438,7 @@
             <div class="template-card-modern coming-soon-card">
               <div class="coming-soon-inner">
                 <div class="coming-soon-icon-box">
-                  <i class="fas fa-wand-magic-sparkles"></i>
+                  <i class="fas fa-magic"></i>
                 </div>
                 <h3 class="coming-soon-title">{{ __('Coming Soon') }}</h3>
                 <p class="coming-soon-desc">{{ __('We are crafting new premium templates for your store.') }}</p>
@@ -450,7 +450,7 @@
             <div class="template-card-modern coming-soon-card">
               <div class="coming-soon-inner">
                 <div class="coming-soon-icon-box">
-                  <i class="fas fa-wand-magic-sparkles"></i>
+                  <i class="fas fa-magic"></i>
                 </div>
                 <h3 class="coming-soon-title">{{ __('Coming Soon') }}</h3>
                 <p class="coming-soon-desc">{{ __('We are crafting new premium templates for your store.') }}</p>
