@@ -4,6 +4,16 @@
 @section('page-title', $keywords['Payment Success'] ?? __('Payment Success'))
 
 @section('content')
+  <style>
+    .purchase-message {
+      margin-top: 180px !important;
+    }
+    @media only screen and (max-width: 991.98px) {
+      .purchase-message {
+        margin-top: 120px !important;
+      }
+    }
+  </style>
   <div class="purchase-message pb-100 ">
     <div class="container mx-auto">
       <div class="purchase-success text-center">
