@@ -391,6 +391,14 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'userstatus', 'Demo',
     Route::post('/subscriber/delete', 'User\SubscriberController@delete')->name('user.subscriber.delete');
     Route::post('/subscriber/bulk-delete', 'User\SubscriberController@bulkDelete')->name('user.subscriber.bulk.delete');
 
+    // User Push Notification Routes (Premium only)
+    Route::group(['middleware' => 'checkUserPermission:Push Notification'], function () {
+        Route::get('/pushnotification/settings', 'User\PushController@settings')->name('user.pushnotification.settings');
+        Route::post('/pushnotification/update/settings', 'User\PushController@updateSettings')->name('user.pushnotification.updateSettings');
+        Route::get('/pushnotification/send', 'User\PushController@send')->name('user.pushnotification.send');
+        Route::post('/push', 'User\PushController@push')->name('user.pushnotification.push');
+    });
+
 
     Route::prefix('pages/blog')->middleware('checkUserPermission:Blog')->group(function () {
         //user blog categories

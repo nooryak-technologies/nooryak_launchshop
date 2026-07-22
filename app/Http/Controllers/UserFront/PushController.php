@@ -24,10 +24,12 @@ class PushController extends Controller
         $endpoint = $request->endpoint;
         $token = $request->keys['auth'];
         $key = $request->keys['p256dh'];
-        $user = Guest::firstOrCreate([
-            'endpoint' => $endpoint
+        $tenant = getUser();
+        $guest = Guest::firstOrCreate([
+            'endpoint' => $endpoint,
+            'user_id' => $tenant->id
         ]);
-        $user->updatePushSubscription($endpoint, $key, $token);
+        $guest->updatePushSubscription($endpoint, $key, $token);
 
         return response()->json(['success' => true],200);
     }

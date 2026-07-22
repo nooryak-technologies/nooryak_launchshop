@@ -48,9 +48,22 @@ class PushDemo extends Notification
      */
     public function toWebPush($notifiable, $notification)
     {
+        $icon = 'assets/front/img/pushnotification_icon.png';
+        if (isset($notifiable->user_id)) {
+            $userIcon = 'assets/front/img/user/push_icon_' . $notifiable->user_id . '.png';
+            if (file_exists(public_path($userIcon))) {
+                $icon = $userIcon;
+            } else {
+                $userBs = \DB::table('user_basic_settings')->where('user_id', $notifiable->user_id)->first();
+                if ($userBs && !empty($userBs->web_app_image)) {
+                    $icon = 'assets/front/img/user/' . $userBs->web_app_image;
+                }
+            }
+        }
+
         $push = (new WebPushMessage)
                 ->title($this->title)
-                ->icon('assets/front/img/pushnotification_icon.png')
+                ->icon(url($icon))
                 ->action($this->buttonText, $this->buttonURL);
 
         if (!empty($this->message)) {

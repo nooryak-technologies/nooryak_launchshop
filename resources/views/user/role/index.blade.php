@@ -120,7 +120,7 @@
                 $permissionGroups = [
                     'Shop & Catalog Management' => [
                         'Shop Management' => 'Full Shop Management (All items below)',
-                        'Products' => 'Full Products Access (Categories, Subcategories, Labels, Variants, Items)',
+                        'Products' => 'Full Products Access',
                         'Categories' => 'Categories',
                         'Subcategories' => 'Subcategories',
                         'Product Labels' => 'Product Labels',
@@ -140,6 +140,7 @@
                         'Registered Customers' => 'Registered Customers',
                         'Pages' => 'Pages & Content',
                         'Subscribers' => 'Subscribers',
+                        'Push Notification' => 'Push Notification',
                         'Staff Management' => 'Staff Management',
                     ]
                 ];

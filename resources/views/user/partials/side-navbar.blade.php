@@ -453,6 +453,38 @@
           </li>
         @endif
 
+        {{-- Push Notification --}}
+        @if (is_array($permissions) && in_array('Push Notification', $permissions) && hasStaffPerm('Push Notification'))
+          <li
+            class="nav-item
+              @if (request()->routeIs('user.pushnotification.settings')) active
+              @elseif (request()->routeIs('user.pushnotification.send')) active @endif">
+            <a data-toggle="collapse" href="#pushNotification">
+              <i class="fas fa-bell"></i>
+              <p>{{ __('Push Notification') }}</p>
+              <span class="caret"></span>
+            </a>
+            <div
+              class="collapse
+                @if (request()->routeIs('user.pushnotification.settings')) show
+                @elseif (request()->routeIs('user.pushnotification.send')) show @endif"
+              id="pushNotification">
+              <ul class="nav nav-collapse">
+                <li class="@if (request()->routeIs('user.pushnotification.settings')) active @endif">
+                  <a href="{{ route('user.pushnotification.settings') }}">
+                    <span class="sub-item">{{ __('Settings') }}</span>
+                  </a>
+                </li>
+                <li class="@if (request()->routeIs('user.pushnotification.send')) active @endif">
+                  <a href="{{ route('user.pushnotification.send') }}">
+                    <span class="sub-item">{{ __('Send Notification') }}</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+        @endif
+
         {{-- Staff Management --}}
         @if (!is_null($package) && !empty($permissions) && in_array('Staff Management', $permissions) && hasStaffPerm('Staff Management'))
           <li

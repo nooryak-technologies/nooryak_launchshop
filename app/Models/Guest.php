@@ -13,6 +13,7 @@ class Guest extends Model
 
     protected $fillable = [
         'endpoint',
+        'user_id',
     ];
 
     /**
