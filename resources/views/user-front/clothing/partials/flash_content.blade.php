@@ -121,7 +121,7 @@
                   </a>
                   <a href="javascript:void(0)"
                      class="action-btn quick-view-link"
-                     data-url="{{ route('front.user.quick_view', getParam()) }}"
+                     data-url="{{ route('front.user.productDetails.quickview', ['slug' => $flash_item->slug, getParam()]) }}"
                      data-slug="{{ $flash_item->slug }}"
                      title="{{ $keywords['Quick View'] ?? __('Quick View') }}">
                      <i class="fal fa-eye"></i>

@@ -381,7 +381,7 @@
                     </a>
                     <a href="javascript:void(0)"
                        class="action-btn quick-view-link"
-                       data-url="{{ route('front.user.quick_view', getParam()) }}"
+                       data-url="{{ route('front.user.productDetails.quickview', ['slug' => $pContent->slug, getParam()]) }}"
                        data-slug="{{ $pContent->slug }}"
                        title="{{ $keywords['Quick View'] ?? __('Quick View') }}">
                        <i class="fal fa-eye"></i>
@@ -513,7 +513,7 @@
                     </a>
                     <a href="javascript:void(0)"
                        class="action-btn quick-view-link"
-                       data-url="{{ route('front.user.quick_view', getParam()) }}"
+                       data-url="{{ route('front.user.productDetails.quickview', ['slug' => $bCont->slug, getParam()]) }}"
                        data-slug="{{ $bCont->slug }}"
                        title="{{ $keywords['Quick View'] ?? __('Quick View') }}">
                        <i class="fal fa-eye"></i>
