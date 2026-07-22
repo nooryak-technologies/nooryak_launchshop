@@ -190,6 +190,10 @@
       var m = Math.floor((diff % 3600000) / 60000);
       var s = Math.floor((diff % 60000) / 1000);
 
+      if (d > 2) {
+        d = 2;
+      }
+
       var fd = document.getElementById('cf-days');
       var fh = document.getElementById('cf-hours');
       var fm = document.getElementById('cf-minutes');
