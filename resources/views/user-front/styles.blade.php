@@ -155,28 +155,29 @@
       display: none !important;
     }
 
-    /* Hero Banner Image & Shell Layout (Matching Reference Image 2) */
+    /* Hero Banner Image & Shell Layout (Laptop & Widescreen Optimization) */
     .clothing-hero-shell {
       position: relative !important;
       display: flex !important;
+      flex-direction: row !important;
       align-items: center !important;
       border-radius: 16px !important;
       overflow: hidden !important;
-      min-height: 380px !important;
-      max-height: 460px !important;
+      width: 100% !important;
+      height: 380px !important;
       background: #f5f3ef !important;
     }
 
-    @media (min-width: 992px) {
+    @media (min-width: 1200px) {
       .clothing-hero-shell {
-        height: 420px !important;
+        height: 410px !important;
       }
     }
 
-    @media (max-width: 767px) {
+    @media (max-width: 991px) {
       .clothing-hero-shell {
+        height: 320px !important;
         min-height: 320px !important;
-        height: auto !important;
       }
     }
 
@@ -202,7 +203,7 @@
       height: 100% !important;
       display: block !important;
       object-fit: cover !important;
-      object-position: center 18% !important; /* Prevents heads from being cut off at the top */
+      object-position: center top !important; /* Always keeps top of heads / hats 100% visible */
       position: absolute !important;
       inset: 0 !important;
     }
@@ -222,9 +223,17 @@
       display: flex !important;
       flex-direction: column !important;
       justify-content: center !important;
-      padding: 40px 50px !important;
-      max-width: 520px !important;
+      padding: 30px 45px !important;
+      max-width: 500px !important;
       width: 100% !important;
+      text-align: left !important;
+    }
+
+    @media (min-width: 1200px) {
+      .clothing-hero-copy {
+        padding: 40px 55px !important;
+        max-width: 540px !important;
+      }
     }
 
     @media (max-width: 767px) {
