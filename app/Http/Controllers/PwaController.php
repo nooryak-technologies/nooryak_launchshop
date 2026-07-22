@@ -69,7 +69,7 @@ class PwaController extends Controller
             'scope'            => $urls['scope'],
             'display'          => 'standalone',
             'background_color' => '#ffffff',
-            'theme_color'      => $color,
+            'theme_color'      => '#ffffff',
             'orientation'      => 'portrait-primary',
             'categories'       => ['shopping'],
             'icons'            => [
@@ -112,16 +112,15 @@ class PwaController extends Controller
             ? $userBs->website_title
             : ($user ? ($user->shop_name ?? $user->username) : 'LaunchShop');
 
-        $color = '#' . ltrim($userBs->base_color ?? '007bff', '#');
         $maskable = $request->boolean('maskable');
         $logoPath = $this->resolveIconPath($userBs);
 
         try {
-            $image = $this->buildIcon($size, $logoPath, $color, $shopName, $maskable);
+            $image = $this->buildIcon($size, $logoPath, '#ffffff', $shopName, $maskable);
 
             return $image->response('png', 90)->header('Cache-Control', 'public, max-age=604800');
         } catch (\Throwable $e) {
-            $image = Image::canvas($size, $size, $color);
+            $image = Image::canvas($size, $size, '#ffffff');
 
             return $image->response('png', 90)->header('Cache-Control', 'public, max-age=604800');
         }
@@ -158,13 +157,13 @@ class PwaController extends Controller
 
     protected function buildIcon(int $size, ?string $logoPath, string $color, string $shopName, bool $maskable)
     {
-        $canvas = Image::canvas($size, $size, $color);
+        $canvas = Image::canvas($size, $size, '#ffffff');
 
         if (!$logoPath) {
             return $canvas;
         }
 
-        $padding = $maskable ? (int) round($size * 0.1) : 0;
+        $padding = (int) round($size * 0.12);
         $target = $size - ($padding * 2);
 
         $logo = Image::make($logoPath);

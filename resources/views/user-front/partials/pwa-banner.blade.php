@@ -31,7 +31,7 @@
 <div id="pwa-install-fallback" class="pwa-install-fallback" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="pwa-fallback-title">
   <div class="pwa-install-fallback__panel">
     <h3 id="pwa-fallback-title">{{ $keywords['Install App'] ?? __('Install App') }}</h3>
-    <p>{{ $keywords['To install this app, tap your browser menu and select Add to Home Screen or Install App.'] ?? __('To install this app, tap your browser menu (⋮ or Share icon) and select "Add to Home Screen" or "Install App".') }}</p>
+    <p id="pwa-fallback-desc">{{ $keywords['To install this app, tap your browser menu and select Add to Home Screen or Install App.'] ?? __('To install this app, tap your browser menu (⋮ or Share icon) and select "Add to Home Screen" or "Install App".') }}</p>
     <button type="button" onclick="closePwaInstallFallback()">OK</button>
   </div>
 </div>
@@ -72,14 +72,26 @@
   window.pwaInstallLabel = @json($keywords['Install App'] ?? __('Install App'));
 
   function isPwaInstalled() {
-    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    return window.matchMedia('(display-mode: standalone)').matches ||
+           window.navigator.standalone === true ||
+           localStorage.getItem('pwa_installed') === '1';
+  }
+
+  function checkInstalledRelatedApps() {
+    if ('getInstalledRelatedApps' in navigator) {
+      navigator.getInstalledRelatedApps().then(function(apps) {
+        if (apps && apps.length > 0) {
+          try { localStorage.setItem('pwa_installed', '1'); } catch(e) {}
+          updatePwaInstallUi();
+        }
+      }).catch(function() {});
+    }
   }
 
   function updatePwaInstallUi() {
     if (isPwaInstalled()) {
-      document.querySelectorAll('.pwa-install-nav-item, #pwa-install-banner, .get-our-app-widget').forEach(function(el) {
-        el.style.display = 'none';
-      });
+      var banner = document.getElementById('pwa-install-banner');
+      if (banner) banner.style.display = 'none';
       return;
     }
 
@@ -90,8 +102,6 @@
   }
 
   function injectPwaNavLinks() {
-    if (isPwaInstalled()) return;
-
     var label = window.pwaInstallLabel || 'Install App';
     var html = '<li class="nav-item pwa-install-nav-item menu-item"><a href="javascript:void(0)" class="nav-link menu-link" onclick="triggerPwaInstall();return false;">' + label + '</a></li>';
 
@@ -101,23 +111,41 @@
     });
   }
 
+  function showPwaFallback(title, message) {
+    var titleEl = document.getElementById('pwa-fallback-title');
+    var descEl = document.getElementById('pwa-fallback-desc');
+    var fallback = document.getElementById('pwa-install-fallback');
+    if (titleEl) titleEl.textContent = title;
+    if (descEl) descEl.textContent = message;
+    if (fallback) fallback.style.display = 'flex';
+  }
+
   function triggerPwaInstall() {
-    if (isPwaInstalled()) return;
+    if (isPwaInstalled() || localStorage.getItem('pwa_installed') === '1') {
+      showPwaFallback(
+        @json($keywords['App Already Installed'] ?? __('App Already Installed')),
+        @json($keywords['You have already installed this app. Please open it from your home screen or app menu.'] ?? __('You have already installed this app. Please open it from your home screen or app menu.'))
+      );
+      return;
+    }
 
     if (window.deferredPwaPrompt) {
       window.deferredPwaPrompt.prompt();
       window.deferredPwaPrompt.userChoice.then(function(result) {
-        window.deferredPwaPrompt = null;
         if (result.outcome === 'accepted') {
+          try { localStorage.setItem('pwa_installed', '1'); } catch(e) {}
           dismissPwaBanner();
           updatePwaInstallUi();
         }
+        window.deferredPwaPrompt = null;
       });
       return;
     }
 
-    var fallback = document.getElementById('pwa-install-fallback');
-    if (fallback) fallback.style.display = 'flex';
+    showPwaFallback(
+      @json($keywords['Install App'] ?? __('Install App')),
+      @json($keywords['To install this app, tap your browser menu (⋮ or Share icon) and select "Add to Home Screen" or "Install App".'] ?? __('To install this app, tap your browser menu (⋮ or Share icon) and select "Add to Home Screen" or "Install App".'))
+    );
   }
 
   function closePwaInstallFallback() {
@@ -133,6 +161,7 @@
 
   document.addEventListener('DOMContentLoaded', function() {
     injectPwaNavLinks();
+    checkInstalledRelatedApps();
     updatePwaInstallUi();
   });
 
@@ -142,6 +171,7 @@
   });
 
   window.addEventListener('appinstalled', function() {
+    try { localStorage.setItem('pwa_installed', '1'); } catch(e) {}
     window.deferredPwaPrompt = null;
     closePwaInstallFallback();
     updatePwaInstallUi();
