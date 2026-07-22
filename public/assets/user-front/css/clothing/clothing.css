@@ -3267,3 +3267,17 @@ body {
 .request-loader.show::after {
   display: block;
 }
+
+/* Related products slider on mobile details page */
+@media (max-width: 575px) {
+  #product-details-slider .slick-slide {
+    padding: 0 5px !important;
+  }
+  #product-details-slider .product-default-10 {
+    margin-bottom: 0 !important;
+  }
+  #product-details-slider {
+    margin-left: -5px !important;
+    margin-right: -5px !important;
+  }
+}
