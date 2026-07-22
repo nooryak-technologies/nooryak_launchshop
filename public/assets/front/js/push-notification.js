@@ -5,27 +5,29 @@ $(window).on('load', function () {
 });
 
 function initSW() {
-  if (!'serviceWorker' in navigator) {
+  if (!('serviceWorker' in navigator)) {
     // service worker does not support
     return;
   }
 
-  if (!'PushManager' in window) {
+  if (!('PushManager' in window)) {
     // push does not support
     return;
   }
 
   // Ensure VAPID keys are configured and available before running push registration
   if (typeof vapid_public_key === 'undefined' || !vapid_public_key) {
+    console.warn("Push notifications: VAPID public key is not set or empty.");
     return;
   }
 
   // register the service worker
-  navigator.serviceWorker.register('sw.js')
+  navigator.serviceWorker.register('/sw.js')
     .then(() => {
       initPush();
     })
     .catch((error) => {
+      console.error("Service worker registration failed:", error);
     });
 }
 
