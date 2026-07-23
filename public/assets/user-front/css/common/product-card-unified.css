@@ -56,6 +56,7 @@
   margin: 0 !important;
   border-bottom: 1px solid #f0ede8 !important;
   order: 1;
+  --bs-aspect-ratio: 133.3333% !important;
 }
 
 /* Allow figure children to participate in card flex when buttons live inside figure */
