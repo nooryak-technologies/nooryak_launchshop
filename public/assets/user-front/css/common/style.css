@@ -7123,9 +7123,9 @@ html[dir="rtl"] #product-details-slider .slick-track {
 .product-default-9 .btn-icon-group,
 .product-default:not(.product-list-card) .btn-icon-group {
     /* position: absolute !important; */
-    top: 12px !important;
-    right: 12px !important;
-    left: auto !important;
+    /* top: 12px !important; */
+    /* right: 12px !important; */
+    /* left: auto !important; */
     display: flex !important;
     /* flex-direction: column !important; */
     gap: 8px !important;
