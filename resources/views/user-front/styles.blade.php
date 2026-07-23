@@ -11,7 +11,7 @@
 <!-- Main Style CSS -->
 <link rel="stylesheet" href="{{ asset('assets/user-front/css/common/style.css?v=1.0.2') }}">
 <link rel="stylesheet" href="{{ asset('assets/user-front/css/common/header-1.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/zoom-fix.css?v=1.1.2') }}">
+<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/zoom-fix.css?v=1.1.3') }}">
 <link rel="stylesheet" href="{{ asset('assets/user-front/css/tinymce-content.css') }}">
 
 @if ($userBs->theme == 'vegetables')
@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/fashion/custom-styles.css') }}">
 @elseif ($userBs->theme == 'electronics')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/home-4.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/custom-styles.css?v=1.0.1') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/custom-styles.css?v=1.0.2') }}">
 @elseif ($userBs->theme == 'kids')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/kids/home-5.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/kids/custom-styles.css') }}">

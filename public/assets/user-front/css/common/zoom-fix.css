@@ -260,9 +260,9 @@ section>.container {
 }
 
 /* Style shop grid product card buttons to match reference style (Square shape, light background, primary colored icons) with high specificity */
-.product-default.product-grid-card:not(.product-list-card) .btn-icon-group .btn-icon,
-.product-default.product-grid-card:not(.product-list-card) .btn-icon-group a,
-.product-default.product-grid-card:not(.product-list-card) .btn-icon-group button {
+.product-default.product-grid-card:not(.product-list-card):not(.product-center) .btn-icon-group .btn-icon,
+.product-default.product-grid-card:not(.product-list-card):not(.product-center) .btn-icon-group a,
+.product-default.product-grid-card:not(.product-list-card):not(.product-center) .btn-icon-group button {
   width: 38px !important;
   min-width: 38px !important;
   max-width: 38px !important;
@@ -284,9 +284,9 @@ section>.container {
   font-size: 15px !important;
 }
 
-.product-default.product-grid-card:not(.product-list-card) .btn-icon-group .btn-icon:hover,
-.product-default.product-grid-card:not(.product-list-card) .btn-icon-group a:hover,
-.product-default.product-grid-card:not(.product-list-card) .btn-icon-group button:hover {
+.product-default.product-grid-card:not(.product-list-card):not(.product-center) .btn-icon-group .btn-icon:hover,
+.product-default.product-grid-card:not(.product-list-card):not(.product-center) .btn-icon-group a:hover,
+.product-default.product-grid-card:not(.product-list-card):not(.product-center) .btn-icon-group button:hover {
   background: var(--color-primary) !important;
   color: #ffffff !important;
   border-color: var(--color-primary) !important;
@@ -305,7 +305,7 @@ section>.container {
   padding-bottom: 0 !important;
 }
 
-.product-default.product-grid-card .product-details {
+.product-default.product-grid-card:not(.product-center) .product-details {
   flex-grow: 1 !important;
   display: flex !important;
   flex-direction: column !important;
@@ -317,12 +317,12 @@ section>.container {
 }
 
 /* Reduce bottom margin of price tag to remove unwanted whitespace gap above the buttons */
-.product-default.product-grid-card .product-price {
+.product-default.product-grid-card:not(.product-center) .product-price {
   margin-bottom: 8px !important;
   margin-top: 5px !important;
 }
 
-.product-default.product-grid-card:not(.product-list-card) .btn-icon-group {
+.product-default.product-grid-card:not(.product-list-card):not(.product-center) .btn-icon-group {
   position: static !important;
   margin-top: auto !important;
   width: 100% !important;
