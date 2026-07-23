@@ -406,7 +406,7 @@ class Common
             'attachment' => $fileName,
             'customer_name' => $order->billing_fname,
             'order_number' => $order->order_number,
-            'order_link' => !empty($order->customer_id) ? "<strong>Order Details:</strong> <a href='" . route('customer.orders-details', ['id' => $order->id, getParam()]) . "'>" . route('customer.orders-details', ['id' => $order->id, getParam()]) . "</a>" : "",
+           
             'website_title' => $data['userBs']->website_title,
             'templateType' => 'product_order',
             'type' => 'productOrder'
