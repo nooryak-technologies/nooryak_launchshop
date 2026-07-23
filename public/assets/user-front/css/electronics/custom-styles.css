@@ -267,3 +267,142 @@
     font-size: 14px;
   }
 }
+
+/* ==========================================================================
+   Electronics Theme — Product Card Button Interaction
+   - Default: Shows "Add to Cart" pill button at the bottom
+   - On hover: Slides up to reveal full icon group (quick view, compare, wishlist)
+   ========================================================================== */
+
+/* --- Card container: flex column with overflow hidden for slide animation --- */
+.product-default.product-grid-card.product-center {
+  position: relative !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* --- Wrapper that holds BOTH the cart button row and the icons row --- */
+.product-default.product-grid-card.product-center .btn-icon-group.btn-inline {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  transform: translateY(0) !important;
+  transition: transform 0.3s ease !important;
+  z-index: 10 !important;
+  gap: 0 !important;
+}
+
+/* --- Row 1 (default visible): Add to Cart pill button --- */
+.product-default.product-grid-card.product-center .btn-icon-group.btn-inline .elec-cart-row {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 10px 16px 14px !important;
+  background: #ffffff !important;
+}
+
+/* The cart link styled as a pill button matching reference */
+.product-default.product-grid-card.product-center .btn-icon-group.btn-inline .cart-link.elec-cart-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 22px !important;
+  border-radius: 50px !important;
+  border: 1px solid var(--color-primary, #e94560) !important;
+  background: transparent !important;
+  color: var(--color-primary, #e94560) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: unset !important;
+  max-width: unset !important;
+  min-height: unset !important;
+  max-height: unset !important;
+  letter-spacing: 0.3px !important;
+  transition: all 0.2s ease !important;
+  box-shadow: none !important;
+}
+
+.product-default.product-grid-card.product-center .btn-icon-group.btn-inline .cart-link.elec-cart-pill:hover {
+  background: var(--color-primary, #e94560) !important;
+  color: #ffffff !important;
+}
+
+.product-default.product-grid-card.product-center .btn-icon-group.btn-inline .cart-link.elec-cart-pill i {
+  font-size: 13px !important;
+}
+
+/* --- Row 2 (hidden below): icon buttons row --- */
+.product-default.product-grid-card.product-center .btn-icon-group.btn-inline .elec-icons-row {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 10px 10px 14px !important;
+  background: #ffffff !important;
+  /* Hide off-screen below */
+  transform: translateY(100%) !important;
+  transition: transform 0.3s ease !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+}
+
+/* --- On hover: slide icons up and cart row up (out of view) --- */
+.product-default.product-grid-card.product-center:hover .btn-icon-group.btn-inline .elec-cart-row {
+  transform: translateY(-100%) !important;
+  transition: transform 0.3s ease !important;
+}
+
+.product-default.product-grid-card.product-center:hover .btn-icon-group.btn-inline .elec-icons-row {
+  transform: translateY(0) !important;
+}
+
+/* --- Icon buttons inside the icon row --- */
+.product-default.product-grid-card.product-center .btn-icon-group.btn-inline .elec-icons-row .btn-icon,
+.product-default.product-grid-card.product-center .btn-icon-group.btn-inline .elec-icons-row a,
+.product-default.product-grid-card.product-center .btn-icon-group.btn-inline .elec-icons-row button {
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  max-width: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  border-radius: 50% !important;
+  border: 1px solid var(--color-primary, #e94560) !important;
+  background: #ffffff !important;
+  color: var(--color-primary, #e94560) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 13px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transition: all 0.2s ease !important;
+  box-shadow: none !important;
+}
+
+.product-default.product-grid-card.product-center .btn-icon-group.btn-inline .elec-icons-row .btn-icon:hover,
+.product-default.product-grid-card.product-center .btn-icon-group.btn-inline .elec-icons-row a:hover,
+.product-default.product-grid-card.product-center .btn-icon-group.btn-inline .elec-icons-row button:hover {
+  background: var(--color-primary, #e94560) !important;
+  color: #ffffff !important;
+}
+
+/* --- Extra space at bottom of card to accommodate the always-visible cart row --- */
+.product-default.product-grid-card.product-center .product-details {
+  padding-bottom: 62px !important; /* reserve room for the absolute cart row */
+}
+
