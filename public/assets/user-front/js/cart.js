@@ -352,7 +352,20 @@ var optionsSingle = {
     cssEase: 'linear',
     asNavFor: ".slider-thumbnails",
     rtl: $('html').attr('dir') === 'rtl',
-    infinite: false
+    infinite: false,
+    swipe: false,
+    draggable: false,
+    touchMove: false,
+    responsive: [
+        {
+            breakpoint: 992,
+            settings: {
+                swipe: true,
+                draggable: true,
+                touchMove: true
+            }
+        }
+    ]
 }
 
 var optionsThumb = {

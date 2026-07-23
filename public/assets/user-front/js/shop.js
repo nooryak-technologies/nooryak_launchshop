@@ -37,7 +37,17 @@
         swipe: false,
         draggable: false,
         touchMove: false,
-        infinite: false
+        infinite: false,
+        responsive: [
+            {
+                breakpoint: 992,
+                settings: {
+                    swipe: true,
+                    draggable: true,
+                    touchMove: true
+                }
+            }
+        ]
     });
     // Product SIngle SLider Nav
     proSingleNav.slick({
@@ -117,7 +127,17 @@
         swipe: false,
         draggable: false,
         touchMove: false,
-        infinite: false
+        infinite: false,
+        responsive: [
+            {
+                breakpoint: 992,
+                settings: {
+                    swipe: true,
+                    draggable: true,
+                    touchMove: true
+                }
+            }
+        ]
     });
     // Product SIngle SLider Nav
     proSingleNav2.slick({
