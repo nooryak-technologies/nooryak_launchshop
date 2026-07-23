@@ -563,6 +563,258 @@
     align-items: center !important;
   }
 }
+
+/* --- Universal bottom-positioned product card action buttons (All Themes) --- */
+.product-default,
+.product-default-2,
+.product-default-3,
+.product-default-4,
+.product-default-7,
+.product-default-7-v2,
+.product-default-8,
+.product-default-9,
+.product-default-10,
+.product-default-tab-card,
+.product-grid-card,
+.product-center {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding-bottom: 64px !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    border: 1px solid #f1f5f9 !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.product-default:hover,
+.product-default-2:hover,
+.product-default-3:hover,
+.product-default-4:hover,
+.product-default-7:hover,
+.product-default-7-v2:hover,
+.product-default-8:hover,
+.product-default-9:hover,
+.product-default-10:hover,
+.product-default-tab-card:hover,
+.product-grid-card:hover,
+.product-center:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Style for the button group positioned at the bottom */
+.product-default .btn-icon-group,
+.product-default-2 .btn-icon-group,
+.product-default-3 .btn-icon-group,
+.product-default-4 .btn-icon-group,
+.product-default-7 .btn-icon-group,
+.product-default-7-v2 .btn-icon-group,
+.product-default-8 .btn-icon-group,
+.product-default-9 .btn-icon-group,
+.product-default-10 .btn-icon-group,
+.product-default-tab-card .btn-icon-group,
+.product-grid-card .btn-icon-group,
+.product-center .btn-icon-group {
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    width: 100% !important;
+    height: 52px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin: 0 !important;
+    padding: 8px 12px !important;
+    background: #ffffff !important;
+    border-top: 1px solid #f1f5f9 !important;
+    border-radius: 0 0 12px 12px !important;
+    z-index: 10 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+}
+
+/* Square/Rounded border button layout styles */
+.product-default .btn-icon-group .btn-icon,
+.product-default .btn-icon-group a.btn,
+.product-default .btn-icon-group button.btn,
+.product-default .btn-icon-group a,
+.product-default .btn-icon-group button,
+.product-default-2 .btn-icon-group .btn-icon,
+.product-default-2 .btn-icon-group a,
+.product-default-2 .btn-icon-group button,
+.product-default-3 .btn-icon-group .btn-icon,
+.product-default-3 .btn-icon-group a,
+.product-default-3 .btn-icon-group button,
+.product-default-7 .btn-icon-group .btn-icon,
+.product-default-7 .btn-icon-group a,
+.product-default-7 .btn-icon-group button,
+.product-default-7-v2 .btn-icon-group .btn-icon,
+.product-default-7-v2 .btn-icon-group a,
+.product-default-7-v2 .btn-icon-group button,
+.product-default-8 .btn-icon-group .btn-icon,
+.product-default-8 .btn-icon-group a,
+.product-default-8 .btn-icon-group button,
+.product-default-9 .btn-icon-group .btn-icon,
+.product-default-9 .btn-icon-group a,
+.product-default-9 .btn-icon-group button,
+.product-default-10 .btn-icon-group .btn-icon,
+.product-default-10 .btn-icon-group a,
+.product-default-10 .btn-icon-group button,
+.product-default-tab-card .btn-icon-group .btn-icon,
+.product-default-tab-card .btn-icon-group a,
+.product-default-tab-card .btn-icon-group button,
+.product-grid-card .btn-icon-group .btn-icon,
+.product-grid-card .btn-icon-group a,
+.product-grid-card .btn-icon-group button,
+.product-center .btn-icon-group .btn-icon,
+.product-center .btn-icon-group a,
+.product-center .btn-icon-group button {
+    width: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    max-height: 36px !important;
+    border-radius: 6px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #f8fafc !important;
+    color: #475569 !important;
+    border: 1px solid #e2e8f0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+    line-height: 1 !important;
+    box-shadow: none !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Hover state styling */
+.product-default .btn-icon-group .btn-icon:hover,
+.product-default .btn-icon-group a:hover,
+.product-default .btn-icon-group button:hover,
+.product-default-2 .btn-icon-group .btn-icon:hover,
+.product-default-2 .btn-icon-group a:hover,
+.product-default-2 .btn-icon-group button:hover,
+.product-default-3 .btn-icon-group .btn-icon:hover,
+.product-default-3 .btn-icon-group a:hover,
+.product-default-3 .btn-icon-group button:hover,
+.product-default-7 .btn-icon-group .btn-icon:hover,
+.product-default-7 .btn-icon-group a:hover,
+.product-default-7 .btn-icon-group button:hover,
+.product-default-7-v2 .btn-icon-group .btn-icon:hover,
+.product-default-7-v2 .btn-icon-group a:hover,
+.product-default-7-v2 .btn-icon-group button:hover,
+.product-default-8 .btn-icon-group .btn-icon:hover,
+.product-default-8 .btn-icon-group a:hover,
+.product-default-8 .btn-icon-group button:hover,
+.product-default-9 .btn-icon-group .btn-icon:hover,
+.product-default-9 .btn-icon-group a:hover,
+.product-default-9 .btn-icon-group button:hover,
+.product-default-10 .btn-icon-group .btn-icon:hover,
+.product-default-10 .btn-icon-group a:hover,
+.product-default-10 .btn-icon-group button:hover,
+.product-default-tab-card .btn-icon-group .btn-icon:hover,
+.product-default-tab-card .btn-icon-group a:hover,
+.product-default-tab-card .btn-icon-group button:hover,
+.product-grid-card .btn-icon-group .btn-icon:hover,
+.product-grid-card .btn-icon-group a:hover,
+.product-grid-card .btn-icon-group button:hover,
+.product-center .btn-icon-group .btn-icon:hover,
+.product-center .btn-icon-group a:hover,
+.product-center .btn-icon-group button:hover {
+    background: var(--color-primary, #ff5a2c) !important;
+    color: #ffffff !important;
+    border-color: var(--color-primary, #ff5a2c) !important;
+}
+
+/* Mobile responsive fixes */
+@media only screen and (max-width: 575.98px) {
+    .product-default,
+    .product-default-2,
+    .product-default-3,
+    .product-default-4,
+    .product-default-7,
+    .product-default-7-v2,
+    .product-default-8,
+    .product-default-9,
+    .product-default-10,
+    .product-default-tab-card,
+    .product-grid-card,
+    .product-center {
+        padding-bottom: 50px !important;
+    }
+    
+    .product-default .btn-icon-group,
+    .product-default-2 .btn-icon-group,
+    .product-default-3 .btn-icon-group,
+    .product-default-4 .btn-icon-group,
+    .product-default-7 .btn-icon-group,
+    .product-default-7-v2 .btn-icon-group,
+    .product-default-8 .btn-icon-group,
+    .product-default-9 .btn-icon-group,
+    .product-default-10 .btn-icon-group,
+    .product-default-tab-card .btn-icon-group,
+    .product-grid-card .btn-icon-group,
+    .product-center .btn-icon-group {
+        height: 42px !important;
+        padding: 4px 6px !important;
+        gap: 6px !important;
+    }
+    
+    .product-default .btn-icon-group .btn-icon,
+    .product-default .btn-icon-group a.btn,
+    .product-default .btn-icon-group button.btn,
+    .product-default .btn-icon-group a,
+    .product-default .btn-icon-group button,
+    .product-default-2 .btn-icon-group .btn-icon,
+    .product-default-2 .btn-icon-group a,
+    .product-default-2 .btn-icon-group button,
+    .product-default-3 .btn-icon-group .btn-icon,
+    .product-default-3 .btn-icon-group a,
+    .product-default-3 .btn-icon-group button,
+    .product-default-7 .btn-icon-group .btn-icon,
+    .product-default-7 .btn-icon-group a,
+    .product-default-7 .btn-icon-group button,
+    .product-default-7-v2 .btn-icon-group .btn-icon,
+    .product-default-7-v2 .btn-icon-group a,
+    .product-default-7-v2 .btn-icon-group button,
+    .product-default-8 .btn-icon-group .btn-icon,
+    .product-default-8 .btn-icon-group a,
+    .product-default-8 .btn-icon-group button,
+    .product-default-9 .btn-icon-group .btn-icon,
+    .product-default-9 .btn-icon-group a,
+    .product-default-9 .btn-icon-group button,
+    .product-default-10 .btn-icon-group .btn-icon,
+    .product-default-10 .btn-icon-group a,
+    .product-default-10 .btn-icon-group button,
+    .product-default-tab-card .btn-icon-group .btn-icon,
+    .product-default-tab-card .btn-icon-group a,
+    .product-default-tab-card .btn-icon-group button,
+    .product-grid-card .btn-icon-group .btn-icon,
+    .product-grid-card .btn-icon-group a,
+    .product-grid-card .btn-icon-group button,
+    .product-center .btn-icon-group .btn-icon,
+    .product-center .btn-icon-group a,
+    .product-center .btn-icon-group button {
+        width: 30px !important;
+        min-width: 30px !important;
+        max-width: 30px !important;
+        height: 30px !important;
+        min-height: 30px !important;
+        max-height: 30px !important;
+        border-radius: 4px !important;
+        font-size: 11px !important;
+    }
+}
 </style>
 
 @yield('styles')
