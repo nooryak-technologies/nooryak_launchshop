@@ -33,7 +33,6 @@
         arrows: false,
         fade: true,
         cssEase: 'linear',
-        asNavFor: ".slider-thumbnails",
         swipe: false,
         draggable: false,
         touchMove: false
@@ -45,8 +44,7 @@
         slidesToShow: 4,
         slidesToScroll: 1,
         dots: false,
-        focusOnSelect: true,
-        asNavFor: ".product-single-slider",
+        focusOnSelect: false,
         prevArrow: '<button type="button" class="btn-icon slider-btn slider-prev"><i class="fal fa-angle-left"></i></button>',
         nextArrow: '<button type="button" class="btn-icon slider-btn slider-next"><i class="fal fa-angle-left"></i></span>',
         responsive: [
@@ -60,6 +58,14 @@
                 }
             }
         ]
+    });
+
+    $(document).on('click', '.slider-thumbnails .slick-slide', function () {
+        var index = $(this).data('slick-index');
+        if (typeof index !== 'undefined') {
+            proSingleSlider.slick('slickGoTo', index);
+            proSingleNav.slick('slickGoTo', index);
+        }
     });
 
     proSingleSlider.on("beforeChange", function (event, slick, currentSlide, nextSlide) {
@@ -99,7 +105,6 @@
         dots: true,
         fade: true,
         cssEase: 'linear',
-        asNavFor: ".slider-thumbnails2",
         rtl: $('html').attr('dir') === 'rtl',
         swipe: false,
         draggable: false,
@@ -112,8 +117,7 @@
         slidesToShow: 5,
         slidesToScroll: 1,
         dots: false,
-        focusOnSelect: true,
-        asNavFor: ".product-single-slider2",
+        focusOnSelect: false,
         prevArrow: '<button type="button" class="btn-icon slider-btn slider-prev"><i class="fal fa-angle-left"></i></button>',
         nextArrow: '<button type="button" class="btn-icon slider-btn slider-next"><i class="fal fa-angle-left"></i></span>',
         responsive: [
@@ -127,6 +131,14 @@
                 }
             }
         ]
+    });
+
+    $(document).on('click', '.slider-thumbnails2 .slick-slide', function () {
+        var index = $(this).data('slick-index');
+        if (typeof index !== 'undefined') {
+            proSingleSlider2.slick('slickGoTo', index);
+            proSingleNav2.slick('slickGoTo', index);
+        }
     });
 
     $(".product-single-slider2").on('setPosition afterChange', function (event, slick, currentSlide) {
