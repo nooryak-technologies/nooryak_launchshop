@@ -7127,7 +7127,7 @@ html[dir="rtl"] #product-details-slider .slick-track {
     right: 12px !important;
     left: auto !important;
     display: flex !important;
-    flex-direction: column !important;
+    /* flex-direction: column !important; */
     gap: 8px !important;
     z-index: 10 !important;
     width: auto !important;
