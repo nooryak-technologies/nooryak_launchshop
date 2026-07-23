@@ -7505,8 +7505,8 @@ html[dir="rtl"] #product-details-slider .slick-track {
     .product-details-related-products .product-img img {
         width: 100% !important;
         height: 100% !important;
-        object-fit: contain !important;
-        position: static !important;
+        /* object-fit: contain !important; */
+        /* position: static !important; */
     }
 
     .product-details-related-products .product-title {
