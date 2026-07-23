@@ -7121,18 +7121,43 @@ html[dir="rtl"] #product-details-slider .slick-track {
 /* Fix Product Card Hover Icon Collapsing Across All Themes (Grid View) */
 .product-default-10 .btn-icon-group,
 .product-default-9 .btn-icon-group,
-.product-default:not(.product-list-card) .btn-icon-group {
+.product-default:not(.product-list-card):not(.product-inline) .btn-icon-group {
     position: absolute !important;
-    bottom: 0px !important;
-    right: 43px !important;
+    bottom: 12px !important;
+    right: 12px !important;
     left: auto !important;
     display: flex !important;
-    /* flex-direction: column !important; */
+    flex-direction: row !important;
     gap: 8px !important;
     z-index: 10 !important;
     width: auto !important;
-    margin-bottom: 2rem;
+    margin-bottom: 0 !important;
     height: auto !important;
+}
+
+/* ============================================================
+   Top Rated / Inline Product Cards — btn-icon-group fix
+   Restore static horizontal row layout (not absolute positioned)
+   ============================================================ */
+.product-default.product-inline:not(.product-list-card) .btn-icon-group,
+.product-default.product-inline:not(.product-list-card) .product-details > .btn-icon-group {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    left: auto !important;
+    bottom: auto !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 10px 0 0 0 !important;
+    margin: 0 !important;
+    width: auto !important;
+    background: transparent !important;
+    border-top: none !important;
+    z-index: 4 !important;
 }
 
 .product-default-10 .btn-icon-group .btn-icon,
@@ -7141,16 +7166,16 @@ html[dir="rtl"] #product-details-slider .slick-track {
 .product-default-9 .btn-icon-group .btn-icon,
 .product-default-9 .btn-icon-group a,
 .product-default-9 .btn-icon-group button,
-.product-default:not(.product-list-card) .btn-icon-group .btn-icon,
-.product-default:not(.product-list-card) .btn-icon-group a,
-.product-default:not(.product-list-card) .btn-icon-group button {
+.product-default:not(.product-list-card):not(.product-inline) .btn-icon-group .btn-icon,
+.product-default:not(.product-list-card):not(.product-inline) .btn-icon-group a,
+.product-default:not(.product-list-card):not(.product-inline) .btn-icon-group button {
     width: 36px !important;
-    min-width: 49px !important;
+    min-width: 36px !important;
     max-width: 36px !important;
     height: 36px !important;
     min-height: 36px !important;
     max-height: 36px !important;
-    border-radius: 23% !important;
+    border-radius: 50% !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -7163,6 +7188,31 @@ html[dir="rtl"] #product-details-slider .slick-track {
     line-height: 1 !important;
     flex-shrink: 0 !important;
     font-size: 14px !important;
+}
+
+/* Top Rated inline card icon buttons */
+.product-default.product-inline:not(.product-list-card) .btn-icon-group .btn-icon,
+.product-default.product-inline:not(.product-list-card) .btn-icon-group a.btn,
+.product-default.product-inline:not(.product-list-card) .btn-icon-group button.btn {
+    width: 34px !important;
+    min-width: 34px !important;
+    max-width: 34px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    max-height: 34px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #ffffff !important;
+    color: #333333 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10) !important;
+    border: 1px solid #e2e8f0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1 !important;
+    flex-shrink: 0 !important;
+    font-size: 13px !important;
 }
 
 .product-default-10 .btn-icon-group .btn-icon:hover,
