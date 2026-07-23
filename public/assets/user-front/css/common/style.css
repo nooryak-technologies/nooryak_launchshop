@@ -3422,7 +3422,7 @@ input[type="radio"]:checked+.form-check-label::after {
 
 .product-default .btn-icon-group.btn-absolute {
     position: absolute;
-    8 right: 20px;
+    right: 20px;
     bottom: 25px;
 }
 
