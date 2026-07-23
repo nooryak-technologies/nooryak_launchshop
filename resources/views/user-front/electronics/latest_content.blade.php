@@ -186,55 +186,46 @@
 
                           <div class="btn-icon-group btn-inline btn-icon-group-sm">
                             @if ($shop_settings->catalog_mode != 1)
-                              <a href="#"
-                                class="btn btn-sm btn-icon color-primary ms-0 rounded-pill w-auto icon-start hover-hide"
-                                data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}"><i
-                                  class="fal fa-shopping-bag"></i> {{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}
-                              </a>
+                              <a class="btn btn-icon rounded-pill cart-link cursor-pointer"
+                                data-title="{{ $latest_items[$k]->itemContents[0]->title }}"
+                                data-current_price="{{ currency_converter($product_current_price) }}"
+                                data-item_id="{{ $latest_items[$k]->id }}" data-language_id="{{ $uLang }}"
+                                data-totalVari="{{ check_variation($latest_items[$k]->id) }}"
+                                data-variations="{{ check_variation($latest_items[$k]->id) > 0 ? 'yes' : null }}"
+                                data-href="{{ route('front.user.add.cart', ['id' => $latest_items[$k]->id, getParam()]) }}"
+                                data-bs-toggle="tooltip" data-placement="top"
+                                title="{{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}"><i
+                                  class="far fa-shopping-cart "></i></a>
                             @endif
-                            <div class="hover-show">
-                              @if ($shop_settings->catalog_mode != 1)
-                                <a class="btn btn-icon rounded-pill cart-link cursor-pointer"
-                                  data-title="{{ $latest_items[$k]->itemContents[0]->title }}"
-                                  data-current_price="{{ currency_converter($product_current_price) }}"
-                                  data-item_id="{{ $latest_items[$k]->id }}" data-language_id="{{ $uLang }}"
-                                  data-totalVari="{{ check_variation($latest_items[$k]->id) }}"
-                                  data-variations="{{ check_variation($latest_items[$k]->id) > 0 ? 'yes' : null }}"
-                                  data-href="{{ route('front.user.add.cart', ['id' => $latest_items[$k]->id, getParam()]) }}"
-                                  data-bs-toggle="tooltip" data-placement="top"
-                                  title="{{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}"><i
-                                    class="far fa-shopping-cart "></i></a>
-                              @endif
 
-                              <a href="javascript:void(0)" class="btn btn-icon rounded-pill quick-view-link"
-                                data-bs-toggle="tooltip" data-bs-placement="top"
-                                data-slug="{{ $latest_items[$k]->itemContents[0]->slug }}"
-                                data-url="{{ route('front.user.productDetails.quickview', ['slug' => $latest_items[$k]->itemContents[0]->slug, getParam()]) }}"
-                                title="{{ $keywords['Quick View'] ?? __('Quick View') }}"><i class="fal fa-eye"></i>
-                              </a>
+                            <a href="javascript:void(0)" class="btn btn-icon rounded-pill quick-view-link"
+                              data-bs-toggle="tooltip" data-bs-placement="top"
+                              data-slug="{{ $latest_items[$k]->itemContents[0]->slug }}"
+                              data-url="{{ route('front.user.productDetails.quickview', ['slug' => $latest_items[$k]->itemContents[0]->slug, getParam()]) }}"
+                              title="{{ $keywords['Quick View'] ?? __('Quick View') }}"><i class="fal fa-eye"></i>
+                            </a>
 
-                              <a class="btn btn-icon rounded-pill" data-bs-toggle="tooltip"
-                                onclick="addToCompare('{{ route('front.user.add.compare', ['id' => $latest_items[$k]->id, getParam()]) }}')"
-                                data-bs-placement="top" title="{{ $keywords['Compare'] ?? __('Compare') }}"><i
-                                  class="fal fa-random"></i></a>
-                              @php
-                                $customer_id = Auth::guard('customer')->check()
-                                    ? Auth::guard('customer')->user()->id
-                                    : null;
-                                $checkWishList = $customer_id
-                                    ? checkWishList($latest_items[$k]->id, $customer_id)
-                                    : false;
-                              @endphp
-                              <a href="#"
-                                class="btn btn-icon rounded-pill {{ $checkWishList ? 'remove-wish active' : 'add-to-wish' }}"
-                                data-bs-toggle="tooltip" data-bs-placement="top"
-                                data-item_id="{{ $latest_items[$k]->id }}"
-                                data-href="{{ route('front.user.add.wishlist', ['id' => $latest_items[$k]->id, getParam()]) }}"
-                                data-removeurl="{{ route('front.user.remove.wishlist', ['id' => $latest_items[$k]->id, getParam()]) }}"
-                                title="{{ $keywords['Add to Wishlist'] ?? __('Add to Wishlist') }}"><i
-                                  class="fal fa-heart"></i>
-                              </a>
-                            </div>
+                            <a class="btn btn-icon rounded-pill" data-bs-toggle="tooltip"
+                              onclick="addToCompare('{{ route('front.user.add.compare', ['id' => $latest_items[$k]->id, getParam()]) }}')"
+                              data-bs-placement="top" title="{{ $keywords['Compare'] ?? __('Compare') }}"><i
+                                class="fal fa-random"></i></a>
+                            @php
+                              $customer_id = Auth::guard('customer')->check()
+                                  ? Auth::guard('customer')->user()->id
+                                  : null;
+                              $checkWishList = $customer_id
+                                  ? checkWishList($latest_items[$k]->id, $customer_id)
+                                  : false;
+                            @endphp
+                            <a href="#"
+                              class="btn btn-icon rounded-pill {{ $checkWishList ? 'remove-wish active' : 'add-to-wish' }}"
+                              data-bs-toggle="tooltip" data-bs-placement="top"
+                              data-item_id="{{ $latest_items[$k]->id }}"
+                              data-href="{{ route('front.user.add.wishlist', ['id' => $latest_items[$k]->id, getParam()]) }}"
+                              data-removeurl="{{ route('front.user.remove.wishlist', ['id' => $latest_items[$k]->id, getParam()]) }}"
+                              title="{{ $keywords['Add to Wishlist'] ?? __('Add to Wishlist') }}"><i
+                                class="fal fa-heart"></i>
+                            </a>
                           </div>
                         </div>
                       </div>
@@ -298,57 +289,49 @@
                             </div>
 
                             <div class="btn-icon-group btn-inline btn-icon-group-sm">
+
                               @if ($shop_settings->catalog_mode != 1)
-                                <a href="#"
-                                  class="btn btn-sm btn-icon color-primary ms-0 rounded-pill w-auto icon-start hover-hide"
-                                  data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}"><i
-                                    class="fal fa-shopping-bag"></i> {{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}
-                                </a>
-                              @endif
-                              <div class="hover-show">
-                                @if ($shop_settings->catalog_mode != 1)
-                                  <a class="btn btn-icon rounded-pill cart-link cursor-pointer"
-                                    data-title="{{ $latest_items[$k + 1]->itemContents[0]->title }}"
-                                    data-current_price="{{ currency_converter($product_current_price) }}"
-                                    data-item_id="{{ $latest_items[$k + 1]->id }}"
-                                    data-language_id="{{ $uLang }}"
-                                    data-totalVari="{{ check_variation($latest_items[$k + 1]->id) }}"
-                                    data-variations="{{ check_variation($latest_items[$k + 1]->id) > 0 ? 'yes' : null }}"
-                                    data-href="{{ route('front.user.add.cart', ['id' => $latest_items[$k + 1]->id, getParam()]) }}"
-                                    data-bs-toggle="tooltip" data-placement="top"
-                                    title="{{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}"><i
-                                      class="far fa-shopping-cart "></i></a>
-                                @endif
-
-                                <a href="javascript:void(0)" class="btn btn-icon rounded-pill quick-view-link"
-                                  data-bs-toggle="tooltip" data-bs-placement="top"
-                                  data-slug="{{ $latest_items[$k + 1]->itemContents[0]->slug }}"
-                                  data-url="{{ route('front.user.productDetails.quickview', ['slug' => $latest_items[$k + 1]->itemContents[0]->slug, getParam()]) }}"
-                                  title="{{ $keywords['Quick View'] ?? __('Quick View') }}"><i class="fal fa-eye"></i>
-                                </a>
-
-                                <a class="btn btn-icon rounded-pill" data-bs-toggle="tooltip"
-                                  onclick="addToCompare('{{ route('front.user.add.compare', ['id' => $latest_items[$k + 1]->id, getParam()]) }}')"
-                                  data-bs-placement="top" title="{{ $keywords['Compare'] ?? __('Compare') }}"><i
-                                    class="fal fa-random"></i></a>
-                                @php
-                                  $customer_id = Auth::guard('customer')->check()
-                                      ? Auth::guard('customer')->user()->id
-                                      : null;
-                                  $checkWishList = $customer_id
-                                      ? checkWishList($latest_items[$k + 1]->id, $customer_id)
-                                      : false;
-                                @endphp
-                                <a href="#"
-                                  class="btn btn-icon rounded-pill {{ $checkWishList ? 'remove-wish active' : 'add-to-wish' }}"
-                                  data-bs-toggle="tooltip" data-bs-placement="top"
+                                <a class="btn btn-icon rounded-pill cart-link cursor-pointer"
+                                  data-title="{{ $latest_items[$k + 1]->itemContents[0]->title }}"
+                                  data-current_price="{{ currency_converter($product_current_price) }}"
                                   data-item_id="{{ $latest_items[$k + 1]->id }}"
-                                  data-href="{{ route('front.user.add.wishlist', ['id' => $latest_items[$k + 1]->id, getParam()]) }}"
-                                  data-removeurl="{{ route('front.user.remove.wishlist', ['id' => $latest_items[$k + 1]->id, getParam()]) }}"
-                                  title="{{ $keywords['Add to Wishlist'] ?? __('Add to Wishlist') }}"><i
-                                    class="fal fa-heart"></i>
-                                </a>
-                              </div>
+                                  data-language_id="{{ $uLang }}"
+                                  data-totalVari="{{ check_variation($latest_items[$k + 1]->id) }}"
+                                  data-variations="{{ check_variation($latest_items[$k + 1]->id) > 0 ? 'yes' : null }}"
+                                  data-href="{{ route('front.user.add.cart', ['id' => $latest_items[$k + 1]->id, getParam()]) }}"
+                                  data-bs-toggle="tooltip" data-placement="top"
+                                  title="{{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}"><i
+                                    class="far fa-shopping-cart "></i></a>
+                              @endif
+
+                              <a href="javascript:void(0)" class="btn btn-icon rounded-pill quick-view-link"
+                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                data-slug="{{ $latest_items[$k + 1]->itemContents[0]->slug }}"
+                                data-url="{{ route('front.user.productDetails.quickview', ['slug' => $latest_items[$k + 1]->itemContents[0]->slug, getParam()]) }}"
+                                title="{{ $keywords['Quick View'] ?? __('Quick View') }}"><i class="fal fa-eye"></i>
+                              </a>
+
+                              <a class="btn btn-icon rounded-pill" data-bs-toggle="tooltip"
+                                onclick="addToCompare('{{ route('front.user.add.compare', ['id' => $latest_items[$k + 1]->id, getParam()]) }}')"
+                                data-bs-placement="top" title="{{ $keywords['Compare'] ?? __('Compare') }}"><i
+                                  class="fal fa-random"></i></a>
+                              @php
+                                $customer_id = Auth::guard('customer')->check()
+                                    ? Auth::guard('customer')->user()->id
+                                    : null;
+                                $checkWishList = $customer_id
+                                    ? checkWishList($latest_items[$k + 1]->id, $customer_id)
+                                    : false;
+                              @endphp
+                              <a href="#"
+                                class="btn btn-icon rounded-pill {{ $checkWishList ? 'remove-wish active' : 'add-to-wish' }}"
+                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                data-item_id="{{ $latest_items[$k + 1]->id }}"
+                                data-href="{{ route('front.user.add.wishlist', ['id' => $latest_items[$k + 1]->id, getParam()]) }}"
+                                data-removeurl="{{ route('front.user.remove.wishlist', ['id' => $latest_items[$k + 1]->id, getParam()]) }}"
+                                title="{{ $keywords['Add to Wishlist'] ?? __('Add to Wishlist') }}"><i
+                                  class="fal fa-heart"></i>
+                              </a>
                             </div>
                           </div>
                         </div>
@@ -412,57 +395,49 @@
                             </div>
 
                             <div class="btn-icon-group btn-inline btn-icon-group-sm">
+
                               @if ($shop_settings->catalog_mode != 1)
-                                <a href="#"
-                                  class="btn btn-sm btn-icon color-primary ms-0 rounded-pill w-auto icon-start hover-hide"
-                                  data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}"><i
-                                    class="fal fa-shopping-bag"></i> {{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}
-                                </a>
-                              @endif
-                              <div class="hover-show">
-                                @if ($shop_settings->catalog_mode != 1)
-                                  <a class="btn btn-icon rounded-pill cart-link cursor-pointer"
-                                    data-title="{{ $latest_items[$k + 2]->itemContents[0]->title }}"
-                                    data-current_price="{{ currency_converter($product_current_price) }}"
-                                    data-item_id="{{ $latest_items[$k + 2]->id }}"
-                                    data-language_id="{{ $uLang }}"
-                                    data-totalVari="{{ check_variation($latest_items[$k + 2]->id) }}"
-                                    data-variations="{{ check_variation($latest_items[$k + 2]->id) > 0 ? 'yes' : null }}"
-                                    data-href="{{ route('front.user.add.cart', ['id' => $latest_items[$k + 2]->id, getParam()]) }}"
-                                    data-bs-toggle="tooltip" data-placement="top"
-                                    title="{{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}"><i
-                                      class="far fa-shopping-cart "></i></a>
-                                @endif
-
-                                <a href="javascript:void(0)" class="btn btn-icon rounded-pill quick-view-link"
-                                  data-bs-toggle="tooltip" data-bs-placement="top"
-                                  data-slug="{{ $latest_items[$k + 2]->itemContents[0]->slug }}"
-                                  data-url="{{ route('front.user.productDetails.quickview', ['slug' => $latest_items[$k + 2]->itemContents[0]->slug, getParam()]) }}"
-                                  title="{{ $keywords['Quick View'] ?? __('Quick View') }}"><i class="fal fa-eye"></i>
-                                </a>
-
-                                <a class="btn btn-icon rounded-pill" data-bs-toggle="tooltip"
-                                  onclick="addToCompare('{{ route('front.user.add.compare', ['id' => $latest_items[$k + 2]->id, getParam()]) }}')"
-                                  data-bs-placement="top" title="{{ $keywords['Compare'] ?? __('Compare') }}"><i
-                                    class="fal fa-random"></i></a>
-                                @php
-                                  $customer_id = Auth::guard('customer')->check()
-                                      ? Auth::guard('customer')->user()->id
-                                      : null;
-                                  $checkWishList = $customer_id
-                                      ? checkWishList($latest_items[$k + 2]->id, $customer_id)
-                                      : false;
-                                @endphp
-                                <a href="javascript:void(0)"
-                                  class="btn btn-icon rounded-pill {{ $checkWishList ? 'remove-wish active' : 'add-to-wish' }}"
-                                  data-bs-toggle="tooltip" data-bs-placement="top"
+                                <a class="btn btn-icon rounded-pill cart-link cursor-pointer"
+                                  data-title="{{ $latest_items[$k + 2]->itemContents[0]->title }}"
+                                  data-current_price="{{ currency_converter($product_current_price) }}"
                                   data-item_id="{{ $latest_items[$k + 2]->id }}"
-                                  data-href="{{ route('front.user.add.wishlist', ['id' => $latest_items[$k + 2]->id, getParam()]) }}"
-                                  data-removeurl="{{ route('front.user.remove.wishlist', ['id' => $latest_items[$k + 2]->id, getParam()]) }}"
-                                  title="{{ $keywords['Add to Wishlist'] ?? __('Add to Wishlist') }}"><i
-                                    class="fal fa-heart"></i>
-                                </a>
-                              </div>
+                                  data-language_id="{{ $uLang }}"
+                                  data-totalVari="{{ check_variation($latest_items[$k + 2]->id) }}"
+                                  data-variations="{{ check_variation($latest_items[$k + 2]->id) > 0 ? 'yes' : null }}"
+                                  data-href="{{ route('front.user.add.cart', ['id' => $latest_items[$k + 2]->id, getParam()]) }}"
+                                  data-bs-toggle="tooltip" data-placement="top"
+                                  title="{{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}"><i
+                                    class="far fa-shopping-cart "></i></a>
+                              @endif
+
+                              <a href="javascript:void(0)" class="btn btn-icon rounded-pill quick-view-link"
+                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                data-slug="{{ $latest_items[$k + 2]->itemContents[0]->slug }}"
+                                data-url="{{ route('front.user.productDetails.quickview', ['slug' => $latest_items[$k + 2]->itemContents[0]->slug, getParam()]) }}"
+                                title="{{ $keywords['Quick View'] ?? __('Quick View') }}"><i class="fal fa-eye"></i>
+                              </a>
+
+                              <a class="btn btn-icon rounded-pill" data-bs-toggle="tooltip"
+                                onclick="addToCompare('{{ route('front.user.add.compare', ['id' => $latest_items[$k + 2]->id, getParam()]) }}')"
+                                data-bs-placement="top" title="{{ $keywords['Compare'] ?? __('Compare') }}"><i
+                                  class="fal fa-random"></i></a>
+                              @php
+                                $customer_id = Auth::guard('customer')->check()
+                                    ? Auth::guard('customer')->user()->id
+                                    : null;
+                                $checkWishList = $customer_id
+                                    ? checkWishList($latest_items[$k + 2]->id, $customer_id)
+                                    : false;
+                              @endphp
+                              <a href="javascript:void(0)"
+                                class="btn btn-icon rounded-pill {{ $checkWishList ? 'remove-wish active' : 'add-to-wish' }}"
+                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                data-item_id="{{ $latest_items[$k + 2]->id }}"
+                                data-href="{{ route('front.user.add.wishlist', ['id' => $latest_items[$k + 2]->id, getParam()]) }}"
+                                data-removeurl="{{ route('front.user.remove.wishlist', ['id' => $latest_items[$k + 2]->id, getParam()]) }}"
+                                title="{{ $keywords['Add to Wishlist'] ?? __('Add to Wishlist') }}"><i
+                                  class="fal fa-heart"></i>
+                              </a>
                             </div>
                           </div>
                         </div>
@@ -527,57 +502,48 @@
 
                             <div class="btn-icon-group btn-inline btn-icon-group-sm">
                               @if ($shop_settings->catalog_mode != 1)
-                                <a href="#"
-                                  class="btn btn-sm btn-icon color-primary ms-0 rounded-pill w-auto icon-start hover-hide"
-                                  data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}"><i
-                                    class="fal fa-shopping-bag"></i> {{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}
-                                </a>
-                              @endif
-                              <div class="hover-show">
-                                @if ($shop_settings->catalog_mode != 1)
-                                  <a class="btn btn-icon rounded-pill cart-link cursor-pointer"
-                                    data-title="{{ $latest_items[$k + 3]->itemContents[0]->title }}"
-                                    data-current_price="{{ currency_converter($product_current_price) }}"
-                                    data-item_id="{{ $latest_items[$k + 3]->id }}"
-                                    data-language_id="{{ $uLang }}"
-                                    data-totalVari="{{ check_variation($latest_items[$k + 3]->id) }}"
-                                    data-totalVari="{{ check_variation($latest_items[$k + 3]->id) }}"
-                                    data-variations="{{ check_variation($latest_items[$k + 3]->id) > 0 ? 'yes' : null }}"
-                                    data-href="{{ route('front.user.add.cart', ['id' => $latest_items[$k + 3]->id, getParam()]) }}"
-                                    data-bs-toggle="tooltip" data-placement="top"
-                                    title="{{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}"><i
-                                      class="far fa-shopping-cart "></i></a>
-                                @endif
-
-                                <a href="javascript:void(0)" class="btn btn-icon rounded-pill quick-view-link"
-                                  data-bs-toggle="tooltip" data-bs-placement="top"
-                                  data-slug="{{ $latest_items[$k + 3]->itemContents[0]->slug }}"
-                                  data-url="{{ route('front.user.productDetails.quickview', ['slug' => $latest_items[$k + 3]->itemContents[0]->slug, getParam()]) }}"
-                                  title="{{ $keywords['Quick View'] ?? __('Quick View') }}"><i class="fal fa-eye"></i>
-                                </a>
-
-                                <a class="btn btn-icon rounded-pill" data-bs-toggle="tooltip"
-                                  onclick="addToCompare('{{ route('front.user.add.compare', ['id' => $latest_items[$k + 3]->id, getParam()]) }}')"
-                                  data-bs-placement="top" title="{{ $keywords['Compare'] ?? __('Compare') }}"><i
-                                    class="fal fa-random"></i></a>
-                                @php
-                                  $customer_id = Auth::guard('customer')->check()
-                                      ? Auth::guard('customer')->user()->id
-                                      : null;
-                                  $checkWishList = $customer_id
-                                      ? checkWishList($latest_items[$k + 3]->id, $customer_id)
-                                      : false;
-                                @endphp
-                                <a href="javascript:void(0)"
-                                  class="btn btn-icon rounded-pill {{ $checkWishList ? 'remove-wish active' : 'add-to-wish' }}"
-                                  data-bs-toggle="tooltip" data-bs-placement="top"
+                                <a class="btn btn-icon rounded-pill cart-link cursor-pointer"
+                                  data-title="{{ $latest_items[$k + 3]->itemContents[0]->title }}"
+                                  data-current_price="{{ currency_converter($product_current_price) }}"
                                   data-item_id="{{ $latest_items[$k + 3]->id }}"
-                                  data-href="{{ route('front.user.add.wishlist', ['id' => $latest_items[$k + 3]->id, getParam()]) }}"
-                                  data-removeurl="{{ route('front.user.remove.wishlist', ['id' => $latest_items[$k + 3]->id, getParam()]) }}"
-                                  title="{{ $keywords['Add to Wishlist'] ?? __('Add to Wishlist') }}"><i
-                                    class="fal fa-heart"></i>
-                                </a>
-                              </div>
+                                  data-language_id="{{ $uLang }}"
+                                  data-totalVari="{{ check_variation($latest_items[$k + 3]->id) }}"
+                                  data-totalVari="{{ check_variation($latest_items[$k + 3]->id) }}"
+                                  data-variations="{{ check_variation($latest_items[$k + 3]->id) > 0 ? 'yes' : null }}"
+                                  data-href="{{ route('front.user.add.cart', ['id' => $latest_items[$k + 3]->id, getParam()]) }}"
+                                  data-bs-toggle="tooltip" data-placement="top"
+                                  title="{{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}"><i
+                                    class="far fa-shopping-cart "></i></a>
+                              @endif
+
+                              <a href="javascript:void(0)" class="btn btn-icon rounded-pill quick-view-link"
+                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                data-slug="{{ $latest_items[$k + 3]->itemContents[0]->slug }}"
+                                data-url="{{ route('front.user.productDetails.quickview', ['slug' => $latest_items[$k + 3]->itemContents[0]->slug, getParam()]) }}"
+                                title="{{ $keywords['Quick View'] ?? __('Quick View') }}"><i class="fal fa-eye"></i>
+                              </a>
+
+                              <a class="btn btn-icon rounded-pill" data-bs-toggle="tooltip"
+                                onclick="addToCompare('{{ route('front.user.add.compare', ['id' => $latest_items[$k + 3]->id, getParam()]) }}')"
+                                data-bs-placement="top" title="{{ $keywords['Compare'] ?? __('Compare') }}"><i
+                                  class="fal fa-random"></i></a>
+                              @php
+                                $customer_id = Auth::guard('customer')->check()
+                                    ? Auth::guard('customer')->user()->id
+                                    : null;
+                                $checkWishList = $customer_id
+                                    ? checkWishList($latest_items[$k + 3]->id, $customer_id)
+                                    : false;
+                              @endphp
+                              <a href="javascript:void(0)"
+                                class="btn btn-icon rounded-pill {{ $checkWishList ? 'remove-wish active' : 'add-to-wish' }}"
+                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                data-item_id="{{ $latest_items[$k + 3]->id }}"
+                                data-href="{{ route('front.user.add.wishlist', ['id' => $latest_items[$k + 3]->id, getParam()]) }}"
+                                data-removeurl="{{ route('front.user.remove.wishlist', ['id' => $latest_items[$k + 3]->id, getParam()]) }}"
+                                title="{{ $keywords['Add to Wishlist'] ?? __('Add to Wishlist') }}"><i
+                                  class="fal fa-heart"></i>
+                              </a>
                             </div>
                           </div>
                         </div>
