@@ -39,7 +39,7 @@
               if($order->order_status == 'completed')  { $statusClass = 'ot-status-completed';  $statusIcon = 'fa-check-circle'; }
               if($order->order_status == 'rejected')   { $statusClass = 'ot-status-rejected';   $statusIcon = 'fa-times-circle'; }
             @endphp
-            <a href="{{ route('customer.order-tracking', array_merge(['order_id' => $order->id], getParamArr())) }}"
+            <a href="{{ route('customer.order-tracking', ['order_id' => $order->id, getParam()]) }}"
                class="ot-order-row text-decoration-none d-block">
               <div class="ot-order-card d-flex align-items-center justify-content-between flex-wrap gap-2">
                 <div class="d-flex align-items-center gap-3">
