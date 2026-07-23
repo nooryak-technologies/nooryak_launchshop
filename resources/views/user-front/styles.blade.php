@@ -75,7 +75,7 @@
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/clothing/clothing.css?v=1.0.4') }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/clothing/custom-styles.css?v=1.0.4') }}">
 @endif
-<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/product-card-unified.css?v=1.0.4') }}">
+<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/product-card-unified.css?v=1.0.5') }}">
 <!--====== Style css ======-->
 
 <!--====== RTL css ======-->

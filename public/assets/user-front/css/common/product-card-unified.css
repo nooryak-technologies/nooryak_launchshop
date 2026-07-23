@@ -56,7 +56,6 @@
   margin: 0 !important;
   border-bottom: 1px solid #f0ede8 !important;
   order: 1;
-  --bs-aspect-ratio: 133.3333% !important;
 }
 
 /* Allow figure children to participate in card flex when buttons live inside figure */
@@ -329,17 +328,100 @@
   .product-default-10 .btn-icon,
   .product-default:not(.product-list-card) .btn-icon-group .btn-icon,
   .product-default:not(.product-list-card) .btn-icon-group a.btn,
-  .product-default:not(.product-list-card) .btn-icon-group button.btn {
-    width: 32px !important;
-    height: 32px !important;
-    min-width: 32px !important;
-    max-width: 32px !important;
+  .product-default:not(.product-list-card) .btn-icon-group button.btn,
+  .product-grid-card .btn-icon-group .btn-icon {
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    max-width: 30px !important;
     font-size: 11px !important;
   }
 
   .product-default-10 .btn-icon-group,
-  .product-default:not(.product-list-card) .btn-icon-group {
+  .product-default:not(.product-list-card) .btn-icon-group,
+  .product-grid-card .btn-icon-group {
     gap: 5px !important;
     padding: 10px 8px 12px !important;
   }
+}
+
+/* ============================================================
+   Action buttons re-ordering and styling overrides
+   ============================================================ */
+.btn-icon-group {
+  display: flex !important;
+  flex-direction: row !important;
+}
+
+/* 1. Add to Cart */
+.btn-icon-group .cart-link {
+  order: 1 !important;
+}
+
+/* 2. Wishlist */
+.btn-icon-group .btn-wish,
+.btn-icon-group .add-to-wish,
+.btn-icon-group .remove-wish {
+  order: 2 !important;
+}
+
+/* 3. Quick View */
+.btn-icon-group .quick-view-link {
+  order: 3 !important;
+}
+
+/* 4. Compare */
+.btn-icon-group a:not(.cart-link):not(.btn-wish):not(.add-to-wish):not(.remove-wish):not(.quick-view-link),
+.btn-icon-group button:not(.cart-link):not(.btn-wish):not(.add-to-wish):not(.remove-wish):not(.quick-view-link) {
+  order: 4 !important;
+}
+
+/* Typography Overrides */
+.product-grid-card.product-default .product-details .product-title,
+.product-default:not(.product-list-card) .product-title,
+.product-default:not(.product-list-card) .product-title a {
+  font-family: var(--font-family-heading), "Cormorant Garamond", "Merriweather", serif !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  color: #111111 !important;
+  text-transform: none !important;
+}
+
+.product-default-10 .product-price,
+.product-default:not(.product-list-card) .product-price,
+.product-center:not(.product-list-card) .product-price {
+  font-family: var(--font-family-body), "Jost", "Inter", sans-serif !important;
+  margin-top: 4px !important;
+  margin-bottom: 4px !important;
+}
+
+/* Action group border-top and box sizing alignment */
+.product-default-10 .btn-icon-group,
+.product-default:not(.product-list-card) > .btn-icon-group,
+.product-grid-card > .btn-icon-group {
+  border-top: 1px solid #e5e1db !important; /* thin light gray border above icons */
+  padding: 15px 15px 15px !important;
+  gap: 10px !important;
+}
+
+/* Button boxes background, border, and size */
+.product-default-10 .btn-icon,
+.product-default:not(.product-list-card) .btn-icon-group .btn-icon,
+.product-grid-card .btn-icon-group .btn-icon {
+  background: #fdfbf7 !important;
+  border: 1px solid #e5e1db !important;
+  border-radius: 4px !important;
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  max-width: 42px !important;
+  color: #111111 !important;
+}
+
+.product-default-10 .btn-icon:hover,
+.product-default:not(.product-list-card) .btn-icon-group .btn-icon:hover,
+.product-grid-card .btn-icon-group .btn-icon:hover {
+  background: #111111 !important;
+  color: #ffffff !important;
+  border-color: #111111 !important;
 }
