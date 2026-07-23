@@ -297,27 +297,27 @@ section > .container {
     justify-content: flex-start !important;
     padding-left: 15px !important;
     padding-right: 15px !important;
-    padding-bottom: 0px !important; /* Remove bottom padding to pull buttons closer */
+    padding-bottom: 0 !important;
 }
 
-/* Reduce bottom margin of price tag to remove unwanted whitespace gap above the buttons */
+/* Remove default price margin to eliminate gap above icon bar */
 .product-default.product-grid-card .product-price {
-    margin-bottom: 8px !important;
-    margin-top: 5px !important;
+    margin-bottom: 0 !important;
+    margin-top: 4px !important;
 }
 
 .product-default.product-grid-card:not(.product-list-card) .btn-icon-group {
     position: static !important;
-    margin-top: auto !important;
+    margin-top: 0 !important;
     width: 100% !important;
     display: flex !important;
     flex-direction: row !important;
     justify-content: center !important;
     align-items: center !important;
     gap: 8px !important;
-    padding: 8px 10px 12px !important; /* Reduced padding to make it compact */
+    padding: 10px 10px 12px !important;
     background: #ffffff !important;
-    border-top: 1px solid #f0eedf !important;
+    border-top: none !important; /* No divider line */
     box-sizing: border-box !important;
     order: 3 !important;
     opacity: 1 !important;
