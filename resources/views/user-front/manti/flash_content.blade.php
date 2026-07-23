@@ -83,7 +83,7 @@
         @endphp
         <div class="col-lg-4">
           <!-- product-default -->
-          <div class="product-default product_first_item product-default-2 radius-md mb-20">
+          <div class="product-default product_first_item product-default-2 radius-md mb-20 has-countdown">
             <div class="product-details pt-30">
               <h3 class="product-title lc-2">
                 <a
@@ -203,7 +203,7 @@
             @foreach ($flash_items->skip(1) as $item)
               <div class="col-lg-4 col-md-6">
                 <!-- product-default -->
-                <div class="product-default product-default-2 radius-md mb-30">
+                <div class="product-default product-default-2 radius-md mb-30 has-countdown">
                   <figure class="product-img mb-20">
                     <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $item->slug]) }}"
                       class="lazy-container ratio ratio-1-1" tabindex="0">
