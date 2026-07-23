@@ -3454,8 +3454,8 @@ input[type="radio"]:checked+.form-check-label::after {
 }
 
 .product-default .btn-icon-group.btn-inline .hover-show:last-child {
-    -webkit-transform: translateX(-50px);
-    transform: translateX(-50px);
+    /* -webkit-transform: translateX(-50px); */
+    /* transform: translateX(-50px); */
 }
 
 .product-default .line {
@@ -3480,12 +3480,12 @@ input[type="radio"]:checked+.form-check-label::after {
     background-color: var(--color-primary);
 } */
 
-.product-default:hover .btn-icon-group .hover-show {
+/* .product-default:hover .btn-icon-group .hover-show {
     opacity: 1;
     visibility: visible;
     -webkit-transform: translate(0);
     transform: translate(0);
-}
+} */
 
 .product-default:hover .btn-icon-group.btn-inline .hover-show {
     opacity: 1;
