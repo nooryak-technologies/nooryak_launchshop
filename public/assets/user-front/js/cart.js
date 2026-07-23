@@ -350,7 +350,6 @@ var optionsSingle = {
     dots: true,
     fade: true,
     cssEase: 'linear',
-    asNavFor: ".slider-thumbnails",
     rtl: $('html').attr('dir') === 'rtl',
     infinite: false,
     swipe: false,
@@ -373,10 +372,8 @@ var optionsThumb = {
     verticalSwiping: true,
     slidesToShow: 5,
     slidesToScroll: 1,
-    asNavFor: '.product-image-slider',
     dots: false,
-    focusOnSelect: true,
-    asNavFor: ".product-single-slider",
+    focusOnSelect: false,
     prevArrow: '<button type="button" class="btn-icon slider-btn slider-prev"><i class="fal fa-angle-left"></i></button>',
     nextArrow: '<button type="button" class="btn-icon slider-btn slider-next"><i class="fal fa-angle-left"></i></button>',
     infinite: false
@@ -423,6 +420,23 @@ $("body").on('click', '.quick-view-link', function (e) {
                             cursor: "crosshair",
                             scrollZoom: false,
                         });
+                    }
+                    if (typeof currentSlide !== 'undefined') {
+                        $('.slider-thumbnails .slick-slide').removeClass('slick-current slick-active');
+                        $('.slider-thumbnails .slick-slide[data-slick-index="' + currentSlide + '"]').addClass('slick-current slick-active');
+                    }
+                });
+
+                $(document).on('click', '.slider-thumbnails .slick-slide', function () {
+                    var index = $(this).data('slick-index');
+                    if (typeof index !== 'undefined') {
+                        var slickObj = $(".product-single-slider").slick('getSlick');
+                        var slideCount = slickObj.slideCount;
+                        var realIndex = (index % slideCount + slideCount) % slideCount;
+                        $(".product-single-slider").slick('slickGoTo', realIndex);
+
+                        $('.slider-thumbnails .slick-slide').removeClass('slick-current slick-active');
+                        $(this).addClass('slick-current slick-active');
                     }
                 });
 

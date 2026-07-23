@@ -33,7 +33,6 @@
         arrows: false,
         fade: true,
         cssEase: 'linear',
-        asNavFor: ".slider-thumbnails",
         swipe: false,
         draggable: false,
         touchMove: false,
@@ -80,7 +79,15 @@
             var slideCount = slickObj.slideCount;
             var realIndex = (index % slideCount + slideCount) % slideCount;
             proSingleSlider.slick('slickGoTo', realIndex);
+
+            $('.slider-thumbnails .slick-slide').removeClass('slick-current slick-active');
+            $(this).addClass('slick-current slick-active');
         }
+    });
+
+    proSingleSlider.on('afterChange', function (event, slick, currentSlide) {
+        $('.slider-thumbnails .slick-slide').removeClass('slick-current slick-active');
+        $('.slider-thumbnails .slick-slide[data-slick-index="' + currentSlide + '"]').addClass('slick-current slick-active');
     });
 
     proSingleSlider.on("beforeChange", function (event, slick, currentSlide, nextSlide) {
@@ -122,7 +129,6 @@
         dots: true,
         fade: true,
         cssEase: 'linear',
-        asNavFor: ".slider-thumbnails2",
         rtl: $('html').attr('dir') === 'rtl',
         swipe: false,
         draggable: false,
@@ -170,7 +176,15 @@
             var slideCount = slickObj.slideCount;
             var realIndex = (index % slideCount + slideCount) % slideCount;
             proSingleSlider2.slick('slickGoTo', realIndex);
+
+            $('.slider-thumbnails2 .slick-slide').removeClass('slick-current slick-active');
+            $(this).addClass('slick-current slick-active');
         }
+    });
+
+    proSingleSlider2.on('afterChange', function (event, slick, currentSlide) {
+        $('.slider-thumbnails2 .slick-slide').removeClass('slick-current slick-active');
+        $('.slider-thumbnails2 .slick-slide[data-slick-index="' + currentSlide + '"]').addClass('slick-current slick-active');
     });
 
     $(".product-single-slider2").on('setPosition afterChange', function (event, slick, currentSlide) {
