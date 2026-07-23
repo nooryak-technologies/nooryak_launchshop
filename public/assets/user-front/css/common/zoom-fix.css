@@ -297,7 +297,13 @@ section > .container {
     justify-content: flex-start !important;
     padding-left: 15px !important;
     padding-right: 15px !important;
-    padding-bottom: 15px !important;
+    padding-bottom: 0px !important; /* Remove bottom padding to pull buttons closer */
+}
+
+/* Reduce bottom margin of price tag to remove unwanted whitespace gap above the buttons */
+.product-default.product-grid-card .product-price {
+    margin-bottom: 8px !important;
+    margin-top: 5px !important;
 }
 
 .product-default.product-grid-card:not(.product-list-card) .btn-icon-group {
@@ -309,7 +315,7 @@ section > .container {
     justify-content: center !important;
     align-items: center !important;
     gap: 8px !important;
-    padding: 12px 10px 15px !important;
+    padding: 8px 10px 12px !important; /* Reduced padding to make it compact */
     background: #ffffff !important;
     border-top: 1px solid #f0eedf !important;
     box-sizing: border-box !important;
