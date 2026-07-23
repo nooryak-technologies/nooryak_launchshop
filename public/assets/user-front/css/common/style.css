@@ -7229,16 +7229,25 @@ html[dir="rtl"] #product-details-slider .slick-track {
 /* ============================================================
    TARGETED FIX: Trending This Week (.product-default-2)
    & Shop Page (.product-grid-card) — btn-icon-group only
+   Always visible · centered row · bottom of card
    Does NOT affect any other section.
    ============================================================ */
 
-/* ── Layout: reset btn-icon-group to visible static row ─────── */
+/* ── Give the card enough bottom space for the button row ─── */
+.product-default.product-default-2,
+.product-grid-card {
+    padding-bottom: 62px !important;
+    position: relative !important;
+    overflow: visible !important;
+}
+
+/* ── Position btn-icon-group absolutely at bottom-center ─── */
 .product-default.product-default-2 > .btn-icon-group,
 .product-default.product-default-2 .btn-icon-group,
 .product-grid-card > .btn-icon-group,
 .product-grid-card .btn-icon-group {
     position: absolute !important;
-    bottom: 12px !important;
+    bottom: 14px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
     right: auto !important;
@@ -7255,21 +7264,11 @@ html[dir="rtl"] #product-details-slider .slick-track {
     background: transparent !important;
     border-top: none !important;
     z-index: 10 !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-    transition: opacity 0.25s ease, visibility 0.25s ease !important;
-}
-
-/* ── Show buttons on card hover ──────────────────────────────── */
-.product-default.product-default-2:hover > .btn-icon-group,
-.product-default.product-default-2:hover .btn-icon-group,
-.product-grid-card:hover > .btn-icon-group,
-.product-grid-card:hover .btn-icon-group {
     opacity: 1 !important;
     visibility: visible !important;
 }
 
-/* ── Individual icon buttons ─────────────────────────────────── */
+/* ── Individual icon buttons ─────────────────────────────── */
 .product-default.product-default-2 .btn-icon-group .btn,
 .product-default.product-default-2 .btn-icon-group a.btn,
 .product-default.product-default-2 .btn-icon-group button.btn,
@@ -7298,7 +7297,7 @@ html[dir="rtl"] #product-details-slider .slick-track {
     transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important;
 }
 
-/* ── Hover state for individual buttons ──────────────────────── */
+/* ── Hover state for individual buttons ──────────────────── */
 .product-default.product-default-2 .btn-icon-group .btn:hover,
 .product-default.product-default-2 .btn-icon-group a.btn:hover,
 .product-default.product-default-2 .btn-icon-group button.btn:hover,
