@@ -781,11 +781,13 @@ Category css
     .cat-slider-skinflow .slick-slide {
         padding: 0 12px !important;
     }
+
     .category.category-9 .category-item .category-image {
         width: 95px !important;
         height: 95px !important;
         margin-bottom: 12px !important;
     }
+
     .category.category-9 .category-item .title {
         font-size: 13px !important;
     }
@@ -795,11 +797,13 @@ Category css
     .cat-slider-skinflow .slick-slide {
         padding: 0 10px !important;
     }
+
     .category.category-9 .category-item .category-image {
         width: 78px !important;
         height: 78px !important;
         margin-bottom: 8px !important;
     }
+
     .category.category-9 .category-item .title {
         font-size: 12px !important;
     }
@@ -1051,6 +1055,7 @@ product-default css
         width: 100% !important;
         margin: 6px auto !important;
     }
+
     .product-default-9 .product-countdown .count {
         width: 32px !important;
         height: 32px !important;
@@ -1058,16 +1063,19 @@ product-default css
         font-size: 8px !important;
         border-radius: 50% !important;
     }
+
     .product-default-9 .product-countdown .count:not(:last-child) {
         margin-inline-end: 4px !important;
         margin-right: 4px !important;
     }
+
     .product-default-9 .product-countdown span:first-child,
     .product-default-9 .product-countdown .count-value {
         font-size: 10px !important;
         line-height: 1 !important;
         margin-bottom: 1px !important;
     }
+
     .product-default-9 .product-countdown .count-period {
         font-size: 7.5px !important;
         line-height: 1 !important;
@@ -1238,6 +1246,13 @@ product-default css
     width: 100%;
     background: rgba(0, 0, 0, 0.5);
     z-index: -1;
+}
+
+@media screen and (max-width: 768px) {
+    .product-default-tab-card .product-details::after {
+        background: rgba(0, 0, 0, 0.1);
+
+    }
 }
 
 .product-default-tab-card .btn-icon-group {
