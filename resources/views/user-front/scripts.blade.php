@@ -34,7 +34,7 @@
 <script src="{{ asset('assets/user-front/js/aos.min.js') }}"></script>
 
 <!-- Main script JS -->
-<script src="{{ asset('assets/user-front/js/shop.js?v=1.0.2') }}"></script>
+<script src="{{ asset('assets/user-front/js/shop.js?v=1.0.3') }}"></script>
 
 <script src="{{ asset('assets/user-front/js/script.js?v=1.0.4') }}"></script>
 <script src="{{ asset('assets/user-front/js/cart.js') }}"></script>

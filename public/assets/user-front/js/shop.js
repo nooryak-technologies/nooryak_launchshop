@@ -33,6 +33,7 @@
         arrows: false,
         fade: true,
         cssEase: 'linear',
+        asNavFor: ".slider-thumbnails",
         swipe: false,
         draggable: false,
         touchMove: false
@@ -63,8 +64,10 @@
     $(document).on('click', '.slider-thumbnails .slick-slide', function () {
         var index = $(this).data('slick-index');
         if (typeof index !== 'undefined') {
-            proSingleSlider.slick('slickGoTo', index);
-            proSingleNav.slick('slickGoTo', index);
+            var slickObj = proSingleSlider.slick('getSlick');
+            var slideCount = slickObj.slideCount;
+            var realIndex = (index % slideCount + slideCount) % slideCount;
+            proSingleSlider.slick('slickGoTo', realIndex);
         }
     });
 
@@ -105,6 +108,7 @@
         dots: true,
         fade: true,
         cssEase: 'linear',
+        asNavFor: ".slider-thumbnails2",
         rtl: $('html').attr('dir') === 'rtl',
         swipe: false,
         draggable: false,
@@ -136,8 +140,10 @@
     $(document).on('click', '.slider-thumbnails2 .slick-slide', function () {
         var index = $(this).data('slick-index');
         if (typeof index !== 'undefined') {
-            proSingleSlider2.slick('slickGoTo', index);
-            proSingleNav2.slick('slickGoTo', index);
+            var slickObj = proSingleSlider2.slick('getSlick');
+            var slideCount = slickObj.slideCount;
+            var realIndex = (index % slideCount + slideCount) % slideCount;
+            proSingleSlider2.slick('slickGoTo', realIndex);
         }
     });
 
