@@ -184,16 +184,9 @@
           </form>
         </li>
         <li class="nav-item">
-          @php
-            if (Auth::user()->custom_domain_status == 1 && !empty(Auth::user()->custom_domain)) {
-                $domain = Auth::user()->custom_domain;
-            } else {
-                $domain = Auth::user()->username . '.' . env('WEBSITE_HOST');
-            }
-          @endphp
           <a class="btn btn-sm btn-round d-inline-flex align-items-center justify-content-center profile-circle-btn" target="_blank"
             style="width: 36px; height: 36px; border-radius: 50%; background: #ffffff; border: 1px solid #e2e8f0; color: #0d6efd; box-shadow: 0 2px 6px rgba(0,0,0,0.03);"
-            href="{{ route('front.user.detail.view', Auth::user()->username) }}" title="View Profile">
+            href="{{ detailsUrl(Auth::user()) }}" title="View Profile">
             <i class="fas fa-eye" style="font-size: 13px;"></i>
           </a>
         </li>

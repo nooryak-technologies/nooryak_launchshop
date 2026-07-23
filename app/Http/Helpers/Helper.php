@@ -994,6 +994,12 @@ if (!function_exists('detailsUrl')) {
 
     function detailsUrl($user)
     {
+        if (is_object($user) && method_exists($user, 'custom_domains')) {
+            $customDomain = getCdomain($user);
+            if ($customDomain !== false) {
+                return '//' . ltrim($customDomain, '/');
+            }
+        }
         return '//' . strtolower($user->username) . '.' . env('WEBSITE_HOST');
     }
 }
