@@ -3427,13 +3427,13 @@ input[type="radio"]:checked+.form-check-label::after {
 }
 
 .product-default .btn-icon-group.btn-absolute .hover-show {
-    -webkit-transform: translateY(50px);
-    transform: translateY(50px);
+    /* -webkit-transform: translateY(50px);
+    transform: translateY(50px); */
 }
 
 .product-default .btn-icon-group.btn-absolute .hover-show:nth-child(1) {
-    -webkit-transition-delay: 0.2s;
-    transition-delay: 0.2s;
+    /* -webkit-transition-delay: 0.2s;
+    transition-delay: 0.2s; */
 }
 
 .product-default .btn-icon-group.btn-inline .btn-icon {
@@ -3449,8 +3449,9 @@ input[type="radio"]:checked+.form-check-label::after {
 }
 
 .product-default .btn-icon-group.btn-inline .hover-show:first-child {
-    -webkit-transform: translateX(50px);
+    /* -webkit-transform: translateX(50px);
     transform: translateX(50px);
+ */
 }
 
 .product-default .btn-icon-group.btn-inline .hover-show:last-child {
@@ -3536,11 +3537,11 @@ input[type="radio"]:checked+.form-check-label::after {
 .product-default-2 .btn-icon-group .hover-show,
 .product-default-4 .btn-icon-group .hover-show {
     /* position: absolute; */
-    top: 0;
+    /* top: 0;
     left: 0;
     width: 100%;
     -webkit-transition: all 0.3s ease-out;
-    transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out; */
 }
 
 .product-default-2:hover .btn-icon-group .hover-show .btn-icon,
