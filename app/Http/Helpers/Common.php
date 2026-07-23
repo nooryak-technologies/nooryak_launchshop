@@ -406,7 +406,7 @@ class Common
             'attachment' => $fileName,
             'customer_name' => $order->billing_fname,
             'order_number' => $order->order_number,
-           
+            'order_link' => '',
             'website_title' => $data['userBs']->website_title,
             'templateType' => 'product_order',
             'type' => 'productOrder'
@@ -451,7 +451,7 @@ class Common
             ->first();
 
         $website_title = $user->shop_name;
-        $link = '<a href=' . route('customer.orders-details', ['id' => $order->id, $user->username]) . '>Order Details</a>';
+        $link = '';
         $mailBody = str_replace('{customer_name}', $order->billing_fname . ' ' . $order->billing_lname, $mailBody);
         $mailBody = str_replace('{order_number}', $order->order_number, $mailBody);
 
