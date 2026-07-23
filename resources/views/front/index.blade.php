@@ -60,17 +60,17 @@
     background: conic-gradient(
       from 0deg,
       #10b981 0deg,
-      #06b6d4 35deg,
-      #3b82f6 70deg,
-      transparent 70deg,
+      #06b6d4 45deg,
+      #3b82f6 90deg,
+      transparent 90deg,
       transparent 180deg,
       #f43f5e 180deg,
-      #ec4899 215deg,
-      #8b5cf6 250deg,
-      transparent 250deg,
+      #ec4899 225deg,
+      #8b5cf6 270deg,
+      transparent 270deg,
       transparent 360deg
     ) !important;
-    animation: spinRunningBorder 3.5s linear infinite !important;
+    animation: spinRunningBorder 10s linear infinite !important;
     z-index: 0 !important;
   }
   .simulated-dashboard-card::after {
@@ -84,17 +84,17 @@
     background: conic-gradient(
       from 0deg,
       #10b981 0deg,
-      #06b6d4 35deg,
-      #3b82f6 70deg,
-      transparent 70deg,
+      #06b6d4 45deg,
+      #3b82f6 90deg,
+      transparent 90deg,
       transparent 180deg,
       #f43f5e 180deg,
-      #ec4899 215deg,
-      #8b5cf6 250deg,
-      transparent 250deg,
+      #ec4899 225deg,
+      #8b5cf6 270deg,
+      transparent 270deg,
       transparent 360deg
     ) !important;
-    animation: spinRunningBorder 3.5s linear infinite !important;
+    animation: spinRunningBorder 10s linear infinite !important;
     z-index: -1 !important;
     filter: blur(20px) !important;
     opacity: 0.9 !important;
