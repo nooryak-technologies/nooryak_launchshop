@@ -7227,6 +7227,90 @@ html[dir="rtl"] #product-details-slider .slick-track {
 }
 
 /* ============================================================
+   TARGETED FIX: Trending This Week (.product-default-2)
+   & Shop Page (.product-grid-card) — btn-icon-group only
+   Does NOT affect any other section.
+   ============================================================ */
+
+/* ── Layout: reset btn-icon-group to visible static row ─────── */
+.product-default.product-default-2 > .btn-icon-group,
+.product-default.product-default-2 .btn-icon-group,
+.product-grid-card > .btn-icon-group,
+.product-grid-card .btn-icon-group {
+    position: absolute !important;
+    bottom: 12px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    right: auto !important;
+    top: auto !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: auto !important;
+    background: transparent !important;
+    border-top: none !important;
+    z-index: 10 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: opacity 0.25s ease, visibility 0.25s ease !important;
+}
+
+/* ── Show buttons on card hover ──────────────────────────────── */
+.product-default.product-default-2:hover > .btn-icon-group,
+.product-default.product-default-2:hover .btn-icon-group,
+.product-grid-card:hover > .btn-icon-group,
+.product-grid-card:hover .btn-icon-group {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* ── Individual icon buttons ─────────────────────────────────── */
+.product-default.product-default-2 .btn-icon-group .btn,
+.product-default.product-default-2 .btn-icon-group a.btn,
+.product-default.product-default-2 .btn-icon-group button.btn,
+.product-grid-card .btn-icon-group .btn,
+.product-grid-card .btn-icon-group a.btn,
+.product-grid-card .btn-icon-group button.btn {
+    width: 34px !important;
+    min-width: 34px !important;
+    max-width: 34px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    max-height: 34px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #ffffff !important;
+    color: #333333 !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+    line-height: 1 !important;
+    flex-shrink: 0 !important;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important;
+}
+
+/* ── Hover state for individual buttons ──────────────────────── */
+.product-default.product-default-2 .btn-icon-group .btn:hover,
+.product-default.product-default-2 .btn-icon-group a.btn:hover,
+.product-default.product-default-2 .btn-icon-group button.btn:hover,
+.product-grid-card .btn-icon-group .btn:hover,
+.product-grid-card .btn-icon-group a.btn:hover,
+.product-grid-card .btn-icon-group button.btn:hover {
+    background: #111111 !important;
+    color: #ffffff !important;
+    border-color: #111111 !important;
+}
+
+/* ============================================================
    Product List View (.product-list-card) Desktop & Mobile Alignment
    ============================================================ */
 .product-list-card {
