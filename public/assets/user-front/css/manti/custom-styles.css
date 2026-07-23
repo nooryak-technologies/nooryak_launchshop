@@ -380,24 +380,22 @@
   line-height: 1 !important;
 }
 
-/* Actions buttons — hidden by default, shown on hover in place of countdown */
+/* Actions buttons horizontal hover overlay inside countdown container */
 .product-default-2.has-countdown .btn-icon-group .hover-show {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: auto !important;
   display: flex !important;
   flex-direction: row !important;
   justify-content: center !important;
   align-items: center !important;
   gap: 8px !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  transition: opacity 0.25s ease, visibility 0.25s ease !important;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease !important;
   background: transparent !important;
-}
-
-/* Hide countdown, show buttons on hover */
-.product-default-2.has-countdown:hover .product-countdown {
-  opacity: 0 !important;
-  visibility: hidden !important;
-  transition: opacity 0.2s ease !important;
 }
 
 .product-default-2.has-countdown:hover .btn-icon-group .hover-show {

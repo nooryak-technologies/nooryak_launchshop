@@ -6499,6 +6499,12 @@ figure.product-img.skeleton.skeleton-big-img {
     height: 4px;
 }
 
+.hover-show {
+
+    transform: translateY(-50px);
+
+}
+
 .achievement-grid .achievement-item-style-1 {
     padding: 30px;
     z-index: 1;
