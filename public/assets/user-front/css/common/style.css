@@ -3487,12 +3487,12 @@ input[type="radio"]:checked+.form-check-label::after {
     transform: translate(0);
 } */
 
-.product-default:hover .btn-icon-group.btn-inline .hover-show {
+/* .product-default:hover .btn-icon-group.btn-inline .hover-show {
     opacity: 1;
     visibility: visible;
     -webkit-transform: translate(0);
     transform: translate(0);
-}
+} */
 
 .product-default:hover .product-img img {
     -webkit-transform: scale3d(1.05, 1.05, 1.05) translateZ(0);
