@@ -268,9 +268,10 @@
   }
 }
 
-/* ==========================================================================
-   Manti Theme Specific Product Card Styles
-   ========================================================================== */
+/* Add bottom padding to product cards to create breathing space at the bottom */
+.product-default.product-default-2:not(.product-list-card) {
+    padding-bottom: 20px !important;
+}
 
 /* Override absolute positioning of icon group on product default cards in Manti theme with high specificity */
 /* Display the icon group statically (always visible) for regular cards (without countdown) */

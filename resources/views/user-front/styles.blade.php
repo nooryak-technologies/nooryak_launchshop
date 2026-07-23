@@ -31,7 +31,7 @@
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/kids/custom-styles.css') }}">
 @elseif ($userBs->theme == 'manti')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/manti/home-6.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/manti/custom-styles.css?v=1.0.8') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/manti/custom-styles.css?v=1.0.9') }}">
 @elseif ($userBs->theme == 'pet')
   <style>
     :root {
