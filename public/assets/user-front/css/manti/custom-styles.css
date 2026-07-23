@@ -273,12 +273,12 @@
    ========================================================================== */
 
 /* Override absolute positioning of icon group on product default cards in Manti theme with high specificity */
-/* By default, hide the icon group for regular cards (without countdown) */
+/* Display the icon group statically (always visible) for regular cards (without countdown) */
 .product-default.product-default-2:not(.product-list-card):not(.has-countdown) .btn-icon-group {
     position: absolute !important;
     top: 0 !important;
     left: 50% !important;
-    transform: translate(-50%, 0) !important; /* Slide down slightly when hidden */
+    transform: translate(-50%, -50%) !important; /* Always centered, overlapping bottom of image */
     width: auto !important;
     height: auto !important;
     display: flex !important;
@@ -288,8 +288,8 @@
     gap: 10px !important;
     background: transparent !important;
     z-index: 10 !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
+    opacity: 1 !important; /* Always visible */
+    visibility: visible !important; /* Always visible */
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
     padding: 0 !important;
     margin: 0 !important;
@@ -300,13 +300,6 @@
 /* Ensure the card detail container is relative to support correct absolute positioning overlay */
 .product-default.product-default-2:not(.product-list-card):not(.has-countdown) .product-details {
     position: relative !important;
-}
-
-/* Show action buttons on hover centered at the border between image and details */
-.product-default.product-default-2:not(.product-list-card):not(.has-countdown):hover .btn-icon-group {
-    opacity: 1 !important;
-    visibility: visible !important;
-    transform: translate(-50%, -50%) !important; /* Overlap image bottom border */
 }
 
 /* FOR CARDS WITH COUNTDOWN: Keep the container relative and visible in normal flow */
