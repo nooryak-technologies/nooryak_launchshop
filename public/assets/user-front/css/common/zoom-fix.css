@@ -315,9 +315,9 @@ section > .container {
     justify-content: center !important;
     align-items: center !important;
     gap: 8px !important;
-    padding: 8px 10px 12px !important; /* Reduced padding to make it compact */
+    padding: 0px 10px 15px !important; /* Removed top padding to pull icons up */
     background: #ffffff !important;
-    border-top: 1px solid #f0eedf !important;
+    border-top: none !important; /* Removed top border line */
     box-sizing: border-box !important;
     order: 3 !important;
     opacity: 1 !important;
