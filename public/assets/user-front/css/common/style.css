@@ -3034,7 +3034,7 @@ input[type="radio"]:checked+.form-check-label::after {
     border: 1px solid var(--border-2);
     -webkit-transition: all 0.3s ease-out;
     transition: all 0.3s ease-out;
-    padding-bottom: 0px !important;
+    padding-bottom: 20px;
 }
 
 .product-default .product-details {
@@ -3422,7 +3422,7 @@ input[type="radio"]:checked+.form-check-label::after {
 
 .product-default .btn-icon-group.btn-absolute {
     position: absolute;
-    right: 20px;
+    8 right: 20px;
     bottom: 25px;
 }
 
@@ -3436,80 +3436,26 @@ input[type="radio"]:checked+.form-check-label::after {
     transition-delay: 0.2s;
 }
 
-.product-default .btn-icon-group.btn-inline {
-    position: static !important;
-    display: flex !important;
-    flex-direction: row !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 8px !important;
-    padding: 12px 15px 15px !important;
-    background: #ffffff !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    transform: none !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    border-top: 1px solid #f0eedf !important;
-    margin-top: 10px !important;
-    z-index: 4 !important;
+.product-default .btn-icon-group.btn-inline .btn-icon {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    margin: 0 3px;
+    z-index: 2;
 }
 
 .product-default .btn-icon-group.btn-inline .hover-show {
-    opacity: 1 !important;
-    visibility: visible !important;
-    transform: none !important;
-    position: static !important;
-    width: auto !important;
+    z-index: 1;
 }
 
-.product-default .btn-icon-group.btn-inline .btn-icon,
-.product-default .btn-icon-group.btn-inline a,
-.product-default .btn-icon-group.btn-inline button {
-    width: 40px !important;
-    height: 40px !important;
-    border-radius: 4px !important;
-    border: 1px solid #e2ded5 !important;
-    background: #f7f5f0 !important;
-    color: #333333 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-size: 14px !important;
-    transition: all 0.2s ease-in-out !important;
-    box-shadow: none !important;
-    cursor: pointer !important;
-    margin: 0 4px !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    transform: none !important;
+.product-default .btn-icon-group.btn-inline .hover-show:first-child {
+    -webkit-transform: translateX(50px);
+    transform: translateX(50px);
 }
 
-.product-default .btn-icon-group.btn-inline .btn-icon:hover,
-.product-default .btn-icon-group.btn-inline a:hover,
-.product-default .btn-icon-group.btn-inline button:hover {
-    background: #000000 !important;
-    color: #ffffff !important;
-    border-color: #000000 !important;
-}
-
-.product-default .btn-icon-group.btn-inline .cart-link {
-    order: 1 !important;
-}
-.product-default .btn-icon-group.btn-inline .btn-wish,
-.product-default .btn-icon-group.btn-inline .btn-wishlist,
-.product-default .btn-icon-group.btn-inline .add-to-wish,
-.product-default .btn-icon-group.btn-inline .remove-wish {
-    order: 2 !important;
-}
-.product-default .btn-icon-group.btn-inline .quick-view-link,
-.product-default .btn-icon-group.btn-inline button[data-bs-target*="quickViewModal"],
-.product-default .btn-icon-group.btn-inline button[title*="Quick View"] {
-    order: 3 !important;
-}
-.product-default .btn-icon-group.btn-inline a[onclick*="addToCompare"],
-.product-default .btn-icon-group.btn-inline a[title*="Compare"] {
-    order: 4 !important;
+.product-default .btn-icon-group.btn-inline .hover-show:last-child {
+    -webkit-transform: translateX(-50px);
+    transform: translateX(-50px);
 }
 
 .product-default .line {
@@ -3535,6 +3481,13 @@ input[type="radio"]:checked+.form-check-label::after {
 } */
 
 .product-default:hover .btn-icon-group .hover-show {
+    opacity: 1;
+    visibility: visible;
+    -webkit-transform: translate(0);
+    transform: translate(0);
+}
+
+.product-default:hover .btn-icon-group.btn-inline .hover-show {
     opacity: 1;
     visibility: visible;
     -webkit-transform: translate(0);

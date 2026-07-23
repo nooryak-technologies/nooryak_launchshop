@@ -64,16 +64,6 @@
               title="{{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}"><i class="far fa-shopping-cart "></i></a>
           @endif
 
-          @php
-            $customer_id = Auth::guard('customer')->check() ? Auth::guard('customer')->user()->id : null;
-            $checkWishList = $customer_id ? checkWishList($item->item_id, $customer_id) : false;
-          @endphp
-          <a class="btn btn-icon radius-sm btn-wish {{ $checkWishList ? 'remove-wish active' : 'add-to-wish' }}"
-            data-url="{{ route('front.user.add.wishlist', ['id' => $item->item_id, getParam()]) }}"
-            data-removeurl="{{ route('front.user.remove.wishlist', ['id' => $item->item_id, getParam()]) }}"
-            data-bs-toggle="tooltip" data-bs-placement="top"
-            title="{{ $keywords['Add to Wishlist'] ?? __('Add to Wishlist') }}"><i class="fal fa-heart"></i></a>
-
           <button type="button" class="btn btn-icon radius-sm quick-view-link" data-bs-toggle="tooltip"
             data-bs-placement="top" title="{{ $keywords['Quick View'] ?? __('Quick View') }}" data-bs-toggle="modal"
             data-bs-target="#quickViewModal" data-item_id="{{ $item->item_id }}" data-slug="{{ $item->product_slug }}"
@@ -85,6 +75,15 @@
             onclick="addToCompare('{{ route('front.user.add.compare', ['id' => $item->item_id, getParam()]) }}')"
             data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $keywords['Compare'] ?? __('Compare') }}"><i
               class="fal fa-random"></i></a>
+          @php
+            $customer_id = Auth::guard('customer')->check() ? Auth::guard('customer')->user()->id : null;
+            $checkWishList = $customer_id ? checkWishList($item->item_id, $customer_id) : false;
+          @endphp
+          <a class="btn btn-icon radius-sm btn-wish {{ $checkWishList ? 'remove-wish active' : 'add-to-wish' }}"
+            data-url="{{ route('front.user.add.wishlist', ['id' => $item->item_id, getParam()]) }}"
+            data-removeurl="{{ route('front.user.remove.wishlist', ['id' => $item->item_id, getParam()]) }}"
+            data-bs-toggle="tooltip" data-bs-placement="top"
+            title="{{ $keywords['Add to Wishlist'] ?? __('Add to Wishlist') }}"><i class="fal fa-heart"></i></a>
 
         </div>
         @php
