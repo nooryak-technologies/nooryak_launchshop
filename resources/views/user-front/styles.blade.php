@@ -563,6 +563,120 @@
     align-items: center !important;
   }
 }
+
+@if ($userBs->theme != 'clothing')
+/* --- Custom bottom action buttons for all themes except clothing (urban) --- */
+.actual-content .product-default,
+.actual-content .product-default-2,
+.actual-content .product-default-3,
+.actual-content .product-default-4,
+.actual-content .product-default-7,
+.actual-content .product-default-8,
+.actual-content .product-default-9,
+.actual-content .product-default-tab-card {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  height: 100% !important;
+  position: relative !important;
+  background: #ffffff !important;
+  border: 1px solid #f0f0f0 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03) !important;
+  overflow: hidden !important;
+}
+
+.actual-content .product-details {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  flex-grow: 1 !important;
+  padding: 15px !important;
+}
+
+.actual-content .btn-icon-group {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 12px 0 0 0 !important;
+  border-top: 1px solid #f0f0f0 !important;
+  margin-top: 12px !important;
+  order: 10 !important; /* Move to the bottom of the flex card details */
+  position: static !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  background: transparent !important;
+}
+
+.actual-content .btn-icon-group .hover-hide {
+  display: none !important;
+}
+
+.actual-content .btn-icon-group .hover-show {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px !important;
+  position: static !important;
+  width: 100% !important;
+  background: transparent !important;
+}
+
+.actual-content .btn-icon-group .btn-icon,
+.actual-content .btn-icon-group .hover-show .btn-icon,
+.actual-content .btn-icon-group .hover-show a,
+.actual-content .btn-icon-group .hover-show button {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 4px !important;
+  border: 1px solid #e2ded5 !important;
+  background: #f7f5f0 !important;
+  color: #333333 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 14px !important;
+  transition: all 0.2s ease-in-out !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  margin: 0 !important;
+}
+
+.actual-content .btn-icon-group .btn-icon:hover,
+.actual-content .btn-icon-group .hover-show .btn-icon:hover,
+.actual-content .btn-icon-group .hover-show a:hover,
+.actual-content .btn-icon-group .hover-show button:hover {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border-color: #000000 !important;
+}
+
+@media only screen and (max-width: 575.98px) {
+  .actual-content .btn-icon-group .btn-icon,
+  .actual-content .btn-icon-group .hover-show .btn-icon,
+  .actual-content .btn-icon-group .hover-show a,
+  .actual-content .btn-icon-group .hover-show button {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    max-width: 28px !important;
+    font-size: 11px !important;
+  }
+  .actual-content .btn-icon-group .hover-show {
+    gap: 4px !important;
+  }
+}
+@endif
 </style>
 
 @yield('styles')
