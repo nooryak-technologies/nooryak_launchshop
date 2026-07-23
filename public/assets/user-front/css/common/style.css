@@ -3552,14 +3552,14 @@ input[type="radio"]:checked+.form-check-label::after {
     transform: none;
 }
 
-/* .product-default-2:hover .btn-icon-group .hover-hide,
+.product-default-2:hover .btn-icon-group .hover-hide,
 .product-default-4:hover .btn-icon-group .hover-hide {
     opacity: 0;
     visibility: hidden;
     background: transparent !important;
-    -webkit-transform: translateX(50%);
-    transform: translateX(50%);
-} */
+    /* -webkit-transform: translateX(50%); */
+    /* transform: translateX(50%); */
+}
 
 .product-default-4 {
     padding: 25px;
