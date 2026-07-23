@@ -46,7 +46,7 @@
     padding: 8px !important;
     border-radius: 20px !important;
     overflow: hidden !important;
-    background: #0b0f19 !important;
+    background: linear-gradient(135deg, #C2410C, #F97316)!important;
     box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25) !important;
     z-index: 1 !important;
   }
