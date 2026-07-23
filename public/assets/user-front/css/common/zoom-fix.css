@@ -277,3 +277,44 @@ section > .container {
     border-color: var(--color-primary) !important;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
 }
+
+/* Dock the button icon group to the bottom of the card on the shop page grid */
+.product-default.product-grid-card {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    height: 100% !important;
+    position: relative !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.product-default.product-grid-card .product-details {
+    flex-grow: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    padding-bottom: 15px !important;
+}
+
+.product-default.product-grid-card:not(.product-list-card) .btn-icon-group {
+    position: static !important;
+    margin-top: auto !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 12px 10px 15px !important;
+    background: #ffffff !important;
+    border-top: 1px solid #f0eedf !important;
+    box-sizing: border-box !important;
+    order: 3 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+}
