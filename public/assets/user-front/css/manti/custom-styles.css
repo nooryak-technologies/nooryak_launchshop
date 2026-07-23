@@ -267,3 +267,198 @@
     font-size: 14px;
   }
 }
+
+/* ==========================================================================
+   Manti Theme Specific Product Card Styles
+   ========================================================================== */
+
+/* Override absolute positioning of icon group on product default cards in Manti theme */
+.product-default-2 .btn-icon-group {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    left: auto !important;
+    bottom: auto !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 10px 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    z-index: 5 !important;
+    border-top: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Ensure the first item wide card's countdown is centered and positioned correctly */
+.product_first_item.product-default-2 .btn-icon-group {
+    margin: 20px 0 10px 0 !important;
+}
+
+/* Style the countdown capsules to look like clean, rounded pills matching reference image */
+.product-default-2 .product-countdown {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin: 10px 0 !important;
+    width: 100% !important;
+}
+
+.product-default-2 .product-countdown .count {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 48px !important;
+    height: 48px !important;
+    background: #f1f5f9 !important; /* light slate background */
+    border-radius: 50% !important;
+    margin: 0 4px !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02) !important;
+    padding: 4px !important;
+    box-sizing: border-box !important;
+}
+
+.product-default-2 .product-countdown .count span[class^="count-value_"],
+.product-default-2 .product-countdown .count span:first-child {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    margin-bottom: 2px !important;
+    line-height: 1 !important;
+}
+
+.product-default-2 .product-countdown .count .count-period {
+    font-size: 8px !important;
+    font-weight: 500 !important;
+    color: var(--color-primary, #3b82f6) !important;
+    text-transform: capitalize !important;
+    line-height: 1 !important;
+}
+
+/* Actions buttons horizontal hover overlay */
+.product-default-2 .btn-icon-group .hover-show {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: auto !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 8px !important;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease !important;
+    background: transparent !important;
+}
+
+.product-default-2:hover .btn-icon-group .hover-show {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.product-default-2:hover .btn-icon-group .hover-hide {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: scale(0.8) !important;
+}
+
+/* Circular thin outline action buttons */
+.product-default-2 .btn-icon-group .btn-icon,
+.product-default-2 .btn-icon-group a,
+.product-default-2 .btn-icon-group button {
+    width: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    max-height: 36px !important;
+    border-radius: 50% !important;
+    border: 1px solid var(--color-primary, #10b981) !important;
+    background: #ffffff !important;
+    color: var(--color-primary, #10b981) !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s ease !important;
+    margin: 0 4px !important;
+    padding: 0 !important;
+}
+
+.product-default-2 .btn-icon-group .btn-icon:hover,
+.product-default-2 .btn-icon-group a:hover,
+.product-default-2 .btn-icon-group button:hover {
+    background: var(--color-primary, #10b981) !important;
+    color: #ffffff !important;
+    border-color: var(--color-primary, #10b981) !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15) !important;
+}
+
+/* Fix product title style link color */
+.product-default-2 .product-title a {
+    color: #1e293b !important;
+    transition: color 0.3s ease !important;
+}
+.product-default-2:hover .product-title a {
+    color: var(--color-primary, #10b981) !important;
+}
+
+/* Inline product cards (Top Rated lists) */
+.product-inline .btn-icon-group {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    left: auto !important;
+    bottom: auto !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    gap: 6px !important;
+    width: auto !important;
+    height: auto !important;
+    margin-top: 10px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    z-index: 5 !important;
+    border: none !important;
+}
+
+.product-inline .btn-icon-group .btn-icon,
+.product-inline .btn-icon-group a,
+.product-inline .btn-icon-group button {
+    width: 32px !important;
+    min-width: 32px !important;
+    max-width: 32px !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    max-height: 32px !important;
+    border-radius: 50% !important;
+    border: 1px solid var(--color-primary, #10b981) !important;
+    background: #ffffff !important;
+    color: var(--color-primary, #10b981) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 11px !important;
+    margin: 0 3px 0 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+.product-inline .btn-icon-group .btn-icon:hover,
+.product-inline .btn-icon-group a:hover,
+.product-inline .btn-icon-group button:hover {
+    background: var(--color-primary, #10b981) !important;
+    color: #ffffff !important;
+}
