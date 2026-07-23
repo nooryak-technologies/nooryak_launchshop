@@ -34,6 +34,9 @@
         fade: true,
         cssEase: 'linear',
         asNavFor: ".slider-thumbnails",
+        swipe: false,
+        draggable: false,
+        touchMove: false
     });
     // Product SIngle SLider Nav
     proSingleNav.slick({
@@ -97,7 +100,10 @@
         fade: true,
         cssEase: 'linear',
         asNavFor: ".slider-thumbnails2",
-        rtl: $('html').attr('dir') === 'rtl'
+        rtl: $('html').attr('dir') === 'rtl',
+        swipe: false,
+        draggable: false,
+        touchMove: false
     });
     // Product SIngle SLider Nav
     proSingleNav2.slick({
