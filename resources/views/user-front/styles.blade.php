@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/fashion/home-3.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/fashion/custom-styles.css') }}">
 @elseif ($userBs->theme == 'electronics')
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/home-4.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/home-4.css?v=1.0.1') }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/custom-styles.css') }}">
 @elseif ($userBs->theme == 'kids')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/kids/home-5.css') }}">
