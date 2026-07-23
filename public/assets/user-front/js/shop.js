@@ -36,7 +36,8 @@
         asNavFor: ".slider-thumbnails",
         swipe: false,
         draggable: false,
-        touchMove: false
+        touchMove: false,
+        infinite: false
     });
     // Product SIngle SLider Nav
     proSingleNav.slick({
@@ -48,6 +49,7 @@
         focusOnSelect: false,
         prevArrow: '<button type="button" class="btn-icon slider-btn slider-prev"><i class="fal fa-angle-left"></i></button>',
         nextArrow: '<button type="button" class="btn-icon slider-btn slider-next"><i class="fal fa-angle-left"></i></span>',
+        infinite: false,
         responsive: [
             {
                 breakpoint: 576,
@@ -114,7 +116,8 @@
         rtl: $('html').attr('dir') === 'rtl',
         swipe: false,
         draggable: false,
-        touchMove: false
+        touchMove: false,
+        infinite: false
     });
     // Product SIngle SLider Nav
     proSingleNav2.slick({
@@ -126,6 +129,7 @@
         focusOnSelect: false,
         prevArrow: '<button type="button" class="btn-icon slider-btn slider-prev"><i class="fal fa-angle-left"></i></button>',
         nextArrow: '<button type="button" class="btn-icon slider-btn slider-next"><i class="fal fa-angle-left"></i></span>',
+        infinite: false,
         responsive: [
             {
                 breakpoint: 576,

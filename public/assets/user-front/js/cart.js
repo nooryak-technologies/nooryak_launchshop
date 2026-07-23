@@ -351,7 +351,8 @@ var optionsSingle = {
     fade: true,
     cssEase: 'linear',
     asNavFor: ".slider-thumbnails",
-    rtl: $('html').attr('dir') === 'rtl'
+    rtl: $('html').attr('dir') === 'rtl',
+    infinite: false
 }
 
 var optionsThumb = {
@@ -365,6 +366,7 @@ var optionsThumb = {
     asNavFor: ".product-single-slider",
     prevArrow: '<button type="button" class="btn-icon slider-btn slider-prev"><i class="fal fa-angle-left"></i></button>',
     nextArrow: '<button type="button" class="btn-icon slider-btn slider-next"><i class="fal fa-angle-left"></i></button>',
+    infinite: false
 }
 
 $("body").on('click', '.quick-view-link', function (e) {
