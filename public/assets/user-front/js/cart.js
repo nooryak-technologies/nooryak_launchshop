@@ -400,13 +400,15 @@ $("body").on('click', '.quick-view-link', function (e) {
 
                 $(".product-single-slider").on('setPosition afterChange', function (event, slick, currentSlide) {
                     $(".zoomContainer").remove();
-                    $(".product-single-slider .slick-active img").elevateZoom({
-                        zoomWindowFadeIn: 500,
-                        zoomWindowFadeOut: 750,
-                        zoomType: "inner",
-                        cursor: "crosshair",
-                        scrollZoom: false,
-                    });
+                    if ($(window).width() >= 992) {
+                        $(".product-single-slider .slick-active img").elevateZoom({
+                            zoomWindowFadeIn: 500,
+                            zoomWindowFadeOut: 750,
+                            zoomType: "inner",
+                            cursor: "crosshair",
+                            scrollZoom: false,
+                        });
+                    }
                 });
 
                 $('#quickViewModal').modal('show').animate({ opacity: 1 }, 500);
