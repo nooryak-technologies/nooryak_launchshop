@@ -43,10 +43,11 @@
   /* Animated Multi-Color Running Gradient Border for Dashboard Showcase */
   .simulated-dashboard-card {
     position: relative !important;
-    padding: 6px !important;
+    padding: 8px !important;
     border-radius: 20px !important;
     overflow: hidden !important;
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18) !important;
+    background: #0b0f19 !important;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25) !important;
     z-index: 1 !important;
   }
   .simulated-dashboard-card::before {
@@ -58,12 +59,16 @@
     left: -75% !important;
     background: conic-gradient(
       from 0deg,
-      #ff5a2c 0deg,
-      #10b981 72deg,
-      #06b6d4 144deg,
-      #8b5cf6 216deg,
-      #ec4899 288deg,
-      #ff5a2c 360deg
+      #10b981 0deg,
+      #06b6d4 35deg,
+      #3b82f6 70deg,
+      transparent 70deg,
+      transparent 180deg,
+      #f43f5e 180deg,
+      #ec4899 215deg,
+      #8b5cf6 250deg,
+      transparent 250deg,
+      transparent 360deg
     ) !important;
     animation: spinRunningBorder 3.5s linear infinite !important;
     z-index: 0 !important;
@@ -78,17 +83,21 @@
     border-radius: 24px !important;
     background: conic-gradient(
       from 0deg,
-      #ff5a2c 0deg,
-      #10b981 72deg,
-      #06b6d4 144deg,
-      #8b5cf6 216deg,
-      #ec4899 288deg,
-      #ff5a2c 360deg
+      #10b981 0deg,
+      #06b6d4 35deg,
+      #3b82f6 70deg,
+      transparent 70deg,
+      transparent 180deg,
+      #f43f5e 180deg,
+      #ec4899 215deg,
+      #8b5cf6 250deg,
+      transparent 250deg,
+      transparent 360deg
     ) !important;
     animation: spinRunningBorder 3.5s linear infinite !important;
     z-index: -1 !important;
-    filter: blur(18px) !important;
-    opacity: 0.85 !important;
+    filter: blur(20px) !important;
+    opacity: 0.9 !important;
   }
   .simulated-dashboard-card img {
     position: relative !important;
