@@ -609,6 +609,31 @@ body {
   z-index: 4;
 }
 
+@media screen and (max-width: 767px) {
+
+  /* Action Buttons - always visible horizontal row at bottom */
+  .product-default-10 .btn-icon-group,
+  .product-default-10 .btn-icon-group.btn-inline {
+    position: static !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 12px 15px 15px !important;
+    background: #ffffff !important;
+    opacity: 1 !important;
+    transform: none !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    border-top: 1px solid #f0eedf !important;
+    margin-top: 10px !important;
+    z-index: 4;
+  }
+}
+
+
+
 .product-default-10 .btn-icon,
 .product-default-10 .btn-icon-group.btn-inline .btn-icon,
 .product-default-10 .btn-icon-group.btn-inline a.btn,
@@ -3266,9 +3291,11 @@ body {
   #product-details-slider .slick-slide {
     padding: 0 5px !important;
   }
+
   #product-details-slider .product-default-10 {
     margin-bottom: 0 !important;
   }
+
   #product-details-slider {
     margin-left: -5px !important;
     margin-right: -5px !important;

@@ -14,6 +14,10 @@
               href="{{ route('customer.orders', getParam()) }}">
               <i class="fal fa-shopping-cart"></i>
               {{ $keywords['My Orders'] ?? __('My Orders') }}</a></li>
+          <li><a class=" @if (request()->routeIs('customer.order-tracking')) active @endif"
+              href="{{ route('customer.order-tracking', getParam()) }}">
+              <i class="fal fa-map-marker-alt"></i>
+              {{ $keywords['Order Tracking'] ?? __('Order Tracking') }}</a></li>
         @endif
         <li><a class=" @if (request()->routeIs('customer.wishlist')) active @endif"
             href="{{ route('customer.wishlist', getParam()) }}"><i class="fal fa-heart"></i>

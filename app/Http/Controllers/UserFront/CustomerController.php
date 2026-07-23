@@ -720,6 +720,29 @@ class CustomerController extends Controller
         return view('user-front.customer.order_details', $data);
     }
 
+    public function orderTracking(Request $request, $domain)
+    {
+        $data['currentLanguage'] = app('userCurrentLang');
+        $userCurrentLang = app('userCurrentLang');
+        $data['pageHeading'] = $this->getUserPageHeading($userCurrentLang);
+
+        $customerId = Auth::guard('customer')->user()->id;
+
+        if ($request->filled('order_id')) {
+            $order = UserOrder::where('customer_id', $customerId)
+                ->with('orderitems.item')
+                ->findOrFail($request->order_id);
+            $data['trackOrder'] = $order;
+        }
+
+        $data['orders'] = UserOrder::where('customer_id', $customerId)
+            ->with('orderitems')
+            ->orderBy('id', 'DESC')
+            ->paginate(10);
+
+        return view('user-front.customer.order-tracking', $data);
+    }
+
     public function onlineSuccess()
     {;
         Session::forget('user_coupon_' . app('user')->username);

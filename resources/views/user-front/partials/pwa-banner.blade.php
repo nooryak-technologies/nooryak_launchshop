@@ -6,7 +6,7 @@
          style="width:44px;height:44px;object-fit:contain;border-radius:10px;border:1px solid #e2e8f0;padding:2px;background:#fff;" alt="">
     <div>
       <div style="font-size:13px;font-weight:700;color:#0f172a;line-height:1.3;">
-        Add {{ $userBs->website_title ?? ($user->shop_name ?? $user->username) }} to Home Screen
+        Install Our {{ $userBs->website_title ?? ($user->shop_name ?? $user->username) }} App
       </div>
       <div style="font-size:11px;color:#64748b;margin-top:1px;">
         Install for a faster app-like experience

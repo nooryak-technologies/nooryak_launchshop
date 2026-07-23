@@ -128,6 +128,7 @@ Route::group(['domain' => $domain, 'prefix' => $prefix, 'middleware' => ['userVi
         // all ads route
         Route::get('/order/{id}', 'UserFront\CustomerController@orderdetails')->name('customer.orders-details');
         Route::get('/orders', 'UserFront\CustomerController@customerOrders')->name('customer.orders');
+        Route::get('/order-tracking', 'UserFront\CustomerController@orderTracking')->name('customer.order-tracking');
         Route::get('/wishlist', 'UserFront\CustomerController@customerWishlist')->name('customer.wishlist');
         Route::get('/remove-from-wishlist/{id}', 'UserFront\CustomerController@removefromWish')->name('customer.removefromWish');
 
