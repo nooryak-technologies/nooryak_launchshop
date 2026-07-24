@@ -2260,3 +2260,50 @@ Footer css
     max-width: 100%;
     display: block;
 }
+
+/* =====================================================
+   Skinflow Mobile Overflow / Horizontal Scroll Fix
+   (scoped only to skinflow hero slider classes)
+   ===================================================== */
+.home-hero-9,
+.home-hero-9 .home-hero-area,
+.home-hero-9 .slider-area {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+@media (max-width: 767.98px) {
+    /* Prevent slide margins from overflowing viewport */
+    .home-hero-9 .slide-item {
+        margin-right: 8px;
+        margin-left: 8px;
+    }
+
+    /* Keep hero image constrained */
+    .home-hero-9 .slide-item img {
+        max-width: 100%;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+    }
+
+    /* Prevent hero section itself from leaking */
+    .home-hero.home-hero-9 {
+        overflow: hidden;
+        width: 100%;
+    }
+}
+
+@media (max-width: 575.98px) {
+    /* Zero out margins on very small screens */
+    .home-hero-9 .slide-item {
+        margin-right: 0;
+        margin-left: 0;
+        border-radius: 8px;
+    }
+
+    /* Tighten padding so content stays inside */
+    .home-hero-9 .slide-item {
+        padding: 20px 10px 0 10px;
+    }
+}
