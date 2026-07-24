@@ -313,5 +313,67 @@
   .product-default-2 .product-details {
     padding: 10px 10px 15px !important;
   }
+
+  /* Mobile Action buttons alignment & hover transition fixes */
+  .product-default-2 .btn-icon-group.btn-inline {
+    position: relative !important;
+    min-height: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-bottom: 5px !important;
+  }
+  
+  .product-default-2 .btn-icon-group.btn-inline .hover-show {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 4px !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: all 0.3s ease-out !important;
+    z-index: 5 !important;
+    background: transparent !important;
+  }
+  
+  .product-default-2:hover .btn-icon-group.btn-inline .hover-show,
+  .product-default-2:active .btn-icon-group.btn-inline .hover-show {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .product-default-2 .btn-icon-group.btn-inline .hover-hide {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transition: all 0.3s ease-out !important;
+  }
+
+  .product-default-2:hover .btn-icon-group.btn-inline .hover-hide,
+  .product-default-2:active .btn-icon-group.btn-inline .hover-hide {
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+  
+  .product-default-2 .btn-icon-group.btn-inline .hover-show .btn-icon {
+    width: 32px !important;
+    height: 32px !important;
+    line-height: 30px !important;
+    font-size: 12px !important;
+    margin: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+    background: #ffffff !important;
+    border: 1px solid var(--color-primary) !important;
+    color: var(--color-primary) !important;
+  }
 }
 
