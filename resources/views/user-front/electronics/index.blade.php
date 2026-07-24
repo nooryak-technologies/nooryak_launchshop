@@ -544,6 +544,77 @@
         rtl: $('html').attr('dir') === 'rtl'
       });
     }
+
+    if ($('.product-slider-electronics').length > 0) {
+      $(".product-slider-electronics").each(function () {
+        var $this = $(this);
+        var id = $this.attr("id");
+        var sliderId = "#" + id;
+        var appendArrowsClassName = "#" + id + "-arrows";
+        
+        var desktopSlides = 3;
+        try {
+          var dataSlick = $this.data('slick');
+          if (dataSlick && dataSlick.slidesToShow) {
+            desktopSlides = dataSlick.slidesToShow;
+          }
+        } catch(e) {}
+
+        $(sliderId).slick({
+          speed: 600,
+          arrows: true,
+          dots: false,
+          autoplay: false,
+          slidesToShow: desktopSlides,
+          infinite: false,
+          rtl: $('html').attr('dir') === 'rtl',
+          responsive: [
+            {
+              breakpoint: 1200,
+              settings: {
+                slidesToShow: desktopSlides >= 4 ? 4 : desktopSlides,
+                slidesToScroll: 1
+              }
+            },
+            {
+              breakpoint: 992,
+              settings: {
+                slidesToShow: desktopSlides >= 3 ? 3 : 2,
+                slidesToScroll: 1
+              }
+            },
+            {
+              breakpoint: 768,
+              settings: {
+                slidesToShow: 2,
+                slidesToScroll: 1
+              }
+            },
+            {
+              breakpoint: 575,
+              settings: {
+                slidesToShow: 2,
+                slidesToScroll: 1
+              }
+            },
+            {
+              breakpoint: 480,
+              settings: {
+                slidesToShow: 2,
+                slidesToScroll: 1
+              }
+            }
+          ],
+          prevArrow: '<button type="button" class="btn-icon slider-btn slider-prev"><i class="fal fa-angle-left"></i></button>',
+          nextArrow: '<button type="button" class="btn-icon slider-btn slider-next"><i class="fal fa-angle-right"></i></button>',
+          appendArrows: appendArrowsClassName
+        });
+
+        $('[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+          $(sliderId).slick('setPosition');
+        });
+      });
+    }
   });
 </script>
 @endsection

@@ -17,7 +17,7 @@
           <div class="mb-30">
             <div class="row">
               @for ($skeleton = 1; $skeleton <= 4; $skeleton++)
-                <div class="col-lg-3">
+                <div class="col-lg-3 col-md-6 col-6">
                   <div class="product-default product-default-2 radius-md mb-30">
                     <figure class="product-img radius-md skeleton skeleton-img"></figure>
                     <div class="product-details">
@@ -72,7 +72,7 @@
               {{ $userSec->category_section_title ?? ($keywords['NO PRODUCTS FOUND'] ?? __('NO PRODUCTS FOUND')) }}
             </h5>
           @else
-            <div class="product-slider mb-30" id="pro-slider-electronics-132131231"
+            <div class="product-slider-electronics mb-30" id="pro-slider-electronics-132131231"
               data-slick='{"dots": true, "slidesToShow": 4}'>
               @foreach ($flash_items as $item)
                 <div class="product-default product-default-2 radius-md mb-30">

@@ -36,7 +36,7 @@
           <div class="col-lg-8">
             <div class="row">
               @for ($skeleton = 1; $skeleton <= 3; $skeleton++)
-                <div class="col-lg-4">
+                <div class="col-lg-4 col-md-6 col-6">
                   <div class="product-default product-default-2 radius-md mb-30">
                     <figure class="product-img skeleton skeleton-big-img"></figure>
 
@@ -107,7 +107,7 @@
               <div class="slider-arrow-inline style-2 mb-20" id="pro-slider-electronics-{{ $cat->id }}-arrows">
               </div>
             </div>
-            <div class="product-slider" id="pro-slider-electronics-{{ $cat->id }}"
+            <div class="product-slider-electronics" id="pro-slider-electronics-{{ $cat->id }}"
               data-slick='{"arrows": true, "slidesToShow": 3}'>
 
 
