@@ -58,8 +58,8 @@
       --font-family-body: "Jost", sans-serif !important;
     }
   </style>
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/jewellery/jewellery.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/jewellery/custom-styles.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/jewellery/jewellery.css?v=2.0.1') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/jewellery/custom-styles.css?v=2.0.1') }}">
 @elseif ($userBs->theme == 'clothing')
 
   <style>
