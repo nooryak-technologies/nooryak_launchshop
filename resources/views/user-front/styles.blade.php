@@ -563,6 +563,14 @@
     align-items: center !important;
   }
 }
+
+/* Ensure all modals and backdrops are rendered above any headers */
+.modal {
+  z-index: 999999 !important;
+}
+.modal-backdrop {
+  z-index: 999998 !important;
+}
 </style>
 
 @yield('styles')

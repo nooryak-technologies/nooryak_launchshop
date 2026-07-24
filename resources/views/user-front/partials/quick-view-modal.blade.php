@@ -1,6 +1,6 @@
 @if (!empty($product))
 
-  <div class="col-lg-6">
+  <div class="col-lg-6 product-single-default">
     @if ($product->item->sliders)
       <input type="hidden" id="item_id" value="{{ $item_id }}">
       <div class="product-single-gallery">
