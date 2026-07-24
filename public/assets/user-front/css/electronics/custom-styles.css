@@ -377,3 +377,7 @@
   }
 }
 
+.hover-show {
+  transform: translateY(-50px);
+}
+

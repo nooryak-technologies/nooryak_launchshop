@@ -2790,6 +2790,9 @@ input[type="radio"]:checked+.form-check-label::after {
     cursor: pointer;
     -webkit-transition: all 0.3s ease-out;
     transition: all 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .category .category-item .line {
@@ -6497,10 +6500,6 @@ figure.product-img.skeleton.skeleton-big-img {
             rgba(0, 166, 247, 0) 100%);
     width: 340px;
     height: 4px;
-}
-
-.hover-show {
-    /* transform: translateY(-50px); */
 }
 
 .achievement-grid .achievement-item-style-1 {
