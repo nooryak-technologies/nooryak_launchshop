@@ -69,8 +69,11 @@
       max-width: 100% !important;
     }
 
-    .main-panel {
-      overflow: hidden !important;
+    @media (max-width: 767.98px) {
+      .main-panel {
+        overflow-x: hidden !important;
+        width: 100% !important;
+      }
     }
 
     /* Clip all major jewellery sections */
