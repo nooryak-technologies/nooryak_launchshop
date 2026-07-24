@@ -81,19 +81,9 @@
     }
 
     @media (max-width: 767.98px) {
-      /* Fix hero background-attachment:fixed — collapses on iOS/Android */
+      /* Hide the hero/slider section on mobile to prevent collapse and overflow */
       .home-hero-8 {
-        background-attachment: scroll !important;
-        background-size: cover !important;
-        background-position: center center !important;
-        padding: 60px 15px !important;
-        min-height: 340px;
-      }
-
-      .home-hero-8 .hero-card-wrapper {
-        max-width: 100% !important;
-        width: 100%;
-        padding: 16px;
+        display: none !important;
       }
 
       /* Fix fluid-left negative calc: on 414px → (414-540)/2 = -63px → broken */
@@ -125,11 +115,6 @@
     }
 
     @media (max-width: 575.98px) {
-      .home-hero-8 {
-        padding: 40px 10px !important;
-        min-height: 300px;
-      }
-
       .featured-8 .featured-item {
         padding: 0 10px !important;
       }
