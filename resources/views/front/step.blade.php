@@ -525,8 +525,8 @@
                         <img src="{{ asset('images/Logo.png') }}" alt="Logo">
                       </div>
                       <div class="whatsapp-badge-content">
-                        <span class="badge-title">{{ __('OTP Sent Successfully!') }}</span>
-                        <p class="badge-desc">{{ __('Your OTP has been sent to your WhatsApp mobile number successfully.') }}</p>
+                        <span class="badge-title">{{ __('OTP  Sent To Your Whatsapp!') }}</span>
+                        <p class="badge-desc">{{ __('Recieved From Launchshop Verification | Nooryak Technologies') }}</p>
                       </div>
                     </div>
                   </div>
