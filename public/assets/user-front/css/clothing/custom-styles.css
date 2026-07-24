@@ -272,7 +272,12 @@
 @media (min-width: 992px) and (max-width: 1599px) {
   .clothing-hero-shell {
     height: auto !important;
-    min-height: 520px !important;
+    min-height: 380px !important;
+    aspect-ratio: 1400 / 520 !important;
+  }
+
+  .hero-visual-frame img {
+    object-position: center top !important;
   }
 
   .clothing-hero-copy {
