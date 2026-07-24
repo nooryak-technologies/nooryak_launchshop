@@ -14,28 +14,23 @@
           <div class="row">
             <div class="col-lg-12">
               <div class="form-group">
-                <label for="">{{ __('Name') }} <span class="text-danger">**</span></label>
-                <input type="text" class="form-control" name="name" placeholder="{{ __('Enter name') }}"
+                <label for="">{{ __('Payment Type') }} <span class="text-danger">**</span></label>
+                <input type="text" class="form-control" name="name" placeholder="{{ __('Enter payment type') }}"
                   value="">
                 <p id="errname" class="mb-0 text-danger em"></p>
               </div>
             </div>
           </div>
           <div class="form-group">
-            <label for="">{{ __('Short Description') }}</label>
+            <label for="">{{ __('Payment ID') }}</label>
             <textarea class="form-control" name="short_description" rows="3" cols="80"
-              placeholder="{{ __('Enter short description') }}"></textarea>
+              placeholder="{{ __('Enter payment id') }}"></textarea>
             <p id="errshort_description" class="mb-0 text-danger em"></p>
-          </div>
-          <div class="form-group">
-            <label for="">{{ __('Instructions') }}</label>
-            <textarea class="form-control summernote" name="instructions" rows="3" cols="80"
-              placeholder="{{ __('Enter instructions') }}" data-height="150"></textarea>
           </div>
           <div class="row">
             <div class="col-lg-6">
               <div class="form-group">
-                <label>{{ __('Receipt Image') }} <span class="text-danger">**</span></label>
+                <label>{{ __('Payment Gateway') }} <span class="text-danger">**</span></label>
                 <div class="selectgroup w-100">
                   <label class="selectgroup-item">
                     <input type="radio" name="is_receipt" value="1" class="selectgroup-input" checked>
@@ -50,12 +45,12 @@
             </div>
             <div class="col-lg-6">
               <div class="form-group">
-                <label for="">{{ __('Serial Number') }} <span class="text-danger">**</span></label>
+                <label for="">{{ __('Order Wise') }} <span class="text-danger">**</span></label>
                 <input type="number" class="form-control" name="serial_number" value=""
-                  placeholder="{{ __('Enter Serial Number') }}">
+                  placeholder="{{ __('Enter Order Wise') }}">
                 <p id="errserial_number" class="mb-0 text-danger em"></p>
                 <p class="text-warning">
-                  <small>{{ __('The higher the serial number is, the later the package will be shown everywhere.') }}</small>
+                  <small>{{ __('The higher the order wise number is, the later the gateway will be shown everywhere.') }}</small>
                 </p>
               </div>
             </div>
