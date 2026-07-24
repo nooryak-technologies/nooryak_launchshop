@@ -13,9 +13,8 @@
           <div class="footer-widget">
             <div class="navbar-brand">
               <a href="{{ route('front.user.detail.view', getParam()) }}">
-                <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
-                  data-src="{{ !is_null(@$footer->footer_logo) ? asset('assets/front/img/footer/' . @$footer->footer_logo) : asset('assets/front/img/logo.png') }}"
-                  alt="Logo">
+                <img src="{{ !empty($footer->footer_logo) ? asset('assets/front/img/footer/' . $footer->footer_logo) : asset('assets/front/img/logo.png') }}"
+                  alt="{{ $userBs->website_title ?? 'Logo' }}">
               </a>
             </div>
             <p class="text footer_description">{{ @$footer->footer_text ?? '' }}</p>
@@ -155,8 +154,7 @@
       <div class="logo">
         <!-- logo -->
         <a href="{{ route('front.user.detail.view', getParam()) }}" class="logo">
-          <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
-            data-src="{{ asset('assets/front/img/user/' . $userBs->logo) }}" alt="logo">
+          <img src="{{ !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png') }}" alt="{{ $userBs->website_title ?? 'logo' }}">
         </a>
       </div>
       <span class="mobile-menu-close"><i class="fal fa-times"></i></span>

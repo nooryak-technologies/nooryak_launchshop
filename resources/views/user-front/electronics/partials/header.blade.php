@@ -5,9 +5,8 @@
     <div class="container">
       <div class="mobile-navbar-inner">
         <a href="{{ route('front.user.detail.view', getParam()) }}" class="logo">
-          <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
-            data-src="{{ !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png') }}"
-            alt="logo">
+          <img src="{{ !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png') }}"
+            alt="{{ $userBs->website_title ?? 'logo' }}">
         </a>
         <button class="mobile-menu-toggler" type="button">
           <span></span><span></span><span></span>
@@ -118,9 +117,8 @@
       <div class="header-left">
         <div class="brand-logo">
           <a href="{{ route('front.user.detail.view', getParam()) }}" title="" target="_self">
-            <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
-              data-src="{{ isset($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png') }}"
-              alt="Namid Logo">
+            <img src="{{ !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png') }}"
+              alt="{{ $userBs->website_title ?? 'logo' }}">
           </a>
         </div>
       </div>
