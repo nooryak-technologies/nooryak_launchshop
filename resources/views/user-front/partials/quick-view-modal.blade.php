@@ -1,6 +1,6 @@
 @if (!empty($product))
 
-  <div class="col-lg-6 product-single-default">
+  <div class="col-lg-6">
     @if ($product->item->sliders)
       <input type="hidden" id="item_id" value="{{ $item_id }}">
       <div class="product-single-gallery">
@@ -15,7 +15,7 @@
         </div>
         <div class="product-single-slider">
           @foreach ($product->item->sliders as $slide)
-            <figure class="radius-lg lazy-container ratio ratio-1-1">
+            <figure class="radius-lg lazy-container ratio ratio-1-1" style="left: 13px;">
               <a src="{{ asset('assets/front/img/user/items/slider-images/' . $slide->image) }}">
                 <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
                   data-src="{{ asset('assets/front/img/user/items/slider-images/' . $slide->image) }}"
