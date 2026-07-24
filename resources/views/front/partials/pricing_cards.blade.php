@@ -250,6 +250,36 @@
             @endphp
 
             <div class="pricing-card-v2 {{ $cardClass }}">
+              @if($titleKey == 'standard')
+                <!-- Mobile-only Most Popular Callout -->
+                <div class="mobile-most-popular-callout d-lg-none">
+                  <div class="d-flex align-items-start gap-2">
+                    <div class="callout-icon-wrap rocket" style="background:#ff5a2c; color:#fff;">
+                      <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="callout-text">
+                      <h5 class="callout-title">Most Popular</h5>
+                      <p class="callout-desc">Ideal balance for growing businesses with all essential tools.</p>
+                    </div>
+                  </div>
+                </div>
+              @endif
+
+              @if($titleKey == 'premium')
+                <!-- Mobile-only Most People Choose Callout -->
+                <div class="mobile-most-people-choose-callout d-lg-none">
+                  <div class="d-flex align-items-start gap-2">
+                    <div class="callout-icon-wrap star" style="background:#f59e0b; color:#fff;">
+                      <i class="fas fa-star"></i>
+                    </div>
+                    <div class="callout-text">
+                      <h5 class="callout-title">Most People Choose</h5>
+                      <p class="callout-desc">Best value with all premium features and a free domain.</p>
+                    </div>
+                  </div>
+                </div>
+              @endif
+
               @if($titleKey == 'basic')
                 @if(strtolower($term) == 'monthly')
                   <!-- Monthly Billing Callout Box -->

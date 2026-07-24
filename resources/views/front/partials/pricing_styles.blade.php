@@ -487,6 +487,49 @@
     display: block;
   }
 
+  /* Mobile-only callout boxes styling */
+  .mobile-most-popular-callout {
+    display: none;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto 20px auto;
+    background: linear-gradient(135deg, #ffffff 0%, #fff3f0 100%);
+    border: 2px solid #ff5a2c;
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 12px 35px rgba(255, 90, 44, 0.15);
+    text-align: left;
+    box-sizing: border-box;
+  }
+  .mobile-most-popular-callout .callout-title {
+    color: #ff5a2c;
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .mobile-most-popular-callout .callout-icon-wrap {
+    background: linear-gradient(135deg, #ff5a2c 0%, #e0451a 100%) !important;
+    box-shadow: 0 4px 10px rgba(255, 90, 44, 0.2);
+  }
+
+  .mobile-most-people-choose-callout {
+    display: none;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto 20px auto;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 12px;
+    padding: 14px 16px;
+    box-shadow: 0 10px 25px rgba(245, 158, 11, 0.08);
+    text-align: left;
+    box-sizing: border-box;
+  }
+  .mobile-most-people-choose-callout .callout-title {
+    color: #d97706;
+    font-size: 14px;
+    font-weight: 800;
+  }
+
   /* CTA button */
   .plan-v2-btn {
     display: block;
@@ -600,7 +643,7 @@
 
   /* Responsive */
   @media(max-width:1200px) {
-    .monthly-billing-callout, .premium-most-chosen-callout, .standard-most-popular-callout, .basic-most-popular-callout, .enterprise-callout-box {
+    .monthly-billing-callout {
       position: relative !important;
       top: 0 !important;
       left: 0 !important;
@@ -612,8 +655,18 @@
       display: block !important;
       text-align: center !important;
     }
-    .monthly-billing-callout .callout-arrow, .premium-most-chosen-callout .callout-arrow-left, .standard-most-popular-callout .callout-arrow-left, .standard-most-popular-callout .callout-arrow-right, .basic-most-popular-callout .callout-arrow-down, .basic-most-popular-callout .callout-arrow-to-standard, .enterprise-callout-box .callout-arrow-left {
+    .monthly-billing-callout .callout-arrow {
       display: none !important;
+    }
+    .premium-most-chosen-callout, 
+    .standard-most-popular-callout, 
+    .basic-most-popular-callout, 
+    .enterprise-callout-box {
+      display: none !important;
+    }
+    .mobile-most-popular-callout,
+    .mobile-most-people-choose-callout {
+      display: block !important;
     }
     .pricing-card-v2 {
       margin-bottom: 24px;
