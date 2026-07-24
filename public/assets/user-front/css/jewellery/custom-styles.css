@@ -267,3 +267,13 @@
     font-size: 14px;
   }
 }
+
+/* =====================================================
+   Jewellery Theme — Global Mobile Horizontal Scroll Fix
+   Prevents bottom scrollbar on all screen sizes
+   ===================================================== */
+html,
+body {
+  overflow-x: hidden !important;
+  max-width: 100% !important;
+}

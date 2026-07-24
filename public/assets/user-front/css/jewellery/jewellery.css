@@ -1977,27 +1977,66 @@ Footer css
 }
 
 /* =====================================================
-   Jewellery Theme — Mobile Collapse & Horizontal Scroll Fix
-   (scoped only to jewellery-specific classes)
+   Jewellery Theme — Comprehensive Mobile Fix
+   (scoped to jewellery-specific classes only)
    ===================================================== */
 
-/* Prevent any horizontal scroll on the jewellery theme */
-.home-hero-8,
-.home-hero.home-hero-8 {
-    overflow-x: hidden;
-    max-width: 100vw;
+/* === Global overflow guard for jewellery pages === */
+/* These selectors target sections that only exist in the jewellery theme */
+.home-hero-8 ~ * {
+    max-width: 100%;
 }
 
+/* Stop ALL sections from causing horizontal scroll */
+.home-hero-8,
+.home-hero.home-hero-8,
+.featured-8,
+.category-8,
+.flash-sale-section,
+.products-section-v8,
+.banner-section {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+/* === Fix fluid-left/fluid-right negative padding on small screens ===
+   On 384px screen: calc((384 - 540)/2) = -78px → broken layout.
+   Use max(0px, ...) to clamp to zero minimum. */
 @media (max-width: 767.98px) {
-    /* Fix hero collapse on mobile:
-       background-attachment:fixed is unsupported on iOS/Android,
-       causing the section to collapse or show no background. */
+    .category-8 .fluid-left {
+        padding-inline-start: max(0px, calc((100vw - 540px) / 2)) !important;
+        padding-inline-end: 0 !important;
+    }
+
+    .category-8 .fluid-right {
+        padding-inline-end: max(0px, calc((100vw - 540px) / 2)) !important;
+    }
+
+    /* Fix the flex-nowrap row in category section — allow wrapping on mobile */
+    .category-8 .row.flex-nowrap {
+        flex-wrap: wrap !important;
+    }
+
+    /* Hide the vertical rotated title on mobile (takes up col-2 and causes squish) */
+    .category-8 .vertical-title {
+        display: none !important;
+    }
+
+    /* Make category slider column take full width */
+    .category-8 .col-auto {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+
+    /* Fix hero collapse:
+       background-attachment:fixed fails on iOS/Android — section collapses */
     .home-hero-8 {
         background-attachment: scroll !important;
         background-size: cover !important;
         background-position: center center !important;
-        padding: 60px 0 !important;
-        min-height: 380px;
+        padding: 60px 15px !important;
+        min-height: 360px;
     }
 
     /* Make hero card full width on small screens */
@@ -2007,22 +2046,25 @@ Footer css
         padding: 16px;
     }
 
-    /* Reduce featured-item side padding that causes overflow */
+    /* Fix featured-item excessive padding causing overflow */
     .featured-8 .featured-item {
         padding: 0 16px !important;
     }
 
-    /* Prevent the featured wrap from leaking */
     .featured-8 .featured-item-wrap {
+        overflow: hidden;
+    }
+
+    /* Banner section images */
+    .banner-section .banner-md {
         overflow: hidden;
     }
 }
 
 @media (max-width: 575.98px) {
-    /* Further reduce padding on very small phones */
     .home-hero-8 {
-        padding: 40px 0 !important;
-        min-height: 320px;
+        padding: 40px 10px !important;
+        min-height: 300px;
     }
 
     .home-hero-8 .hero-card-wrapper {
@@ -2030,10 +2072,16 @@ Footer css
     }
 
     .home-hero-8 .hero-card-wrapper .hero-card {
-        padding: 14px 14px 0px 14px;
+        padding: 14px 14px 0 14px;
     }
 
     .featured-8 .featured-item {
         padding: 0 10px !important;
+    }
+
+    /* Remove border-end on mobile stacked layout */
+    .featured-8 .featured-item-wrap .border-end {
+        border-right: 0 !important;
+        border-bottom: 1px solid var(--border);
     }
 }
