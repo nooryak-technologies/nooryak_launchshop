@@ -57,6 +57,83 @@
       --font-family-base: "Merriweather", serif !important;
       --font-family-body: "Jost", sans-serif !important;
     }
+
+    /* =====================================================
+       JEWELLERY THEME — MOBILE HORIZONTAL SCROLL FIX
+       Inline so it cannot be cached. Only loads for jewellery.
+       ===================================================== */
+
+    /* Prevent horizontal scroll at page level */
+    html, body {
+      overflow-x: hidden !important;
+      max-width: 100% !important;
+    }
+
+    /* Clip all major jewellery sections */
+    .home-hero-8,
+    .featured-8,
+    .category-8,
+    .products-section-v8,
+    .flash-sale-section,
+    .banner-section {
+      overflow-x: hidden !important;
+      max-width: 100% !important;
+    }
+
+    @media (max-width: 767.98px) {
+      /* Fix hero background-attachment:fixed — collapses on iOS/Android */
+      .home-hero-8 {
+        background-attachment: scroll !important;
+        background-size: cover !important;
+        background-position: center center !important;
+        padding: 60px 15px !important;
+        min-height: 340px;
+      }
+
+      .home-hero-8 .hero-card-wrapper {
+        max-width: 100% !important;
+        width: 100%;
+        padding: 16px;
+      }
+
+      /* Fix fluid-left negative calc: on 414px → (414-540)/2 = -63px → broken */
+      .category-8 .fluid-left {
+        padding-inline-start: max(0px, calc((100vw - 540px) / 2)) !important;
+      }
+
+      /* Force category row to wrap on mobile instead of staying nowrap */
+      .category-8 .row.flex-nowrap {
+        flex-wrap: wrap !important;
+      }
+
+      /* Hide the vertical rotated title (squishes layout on narrow screens) */
+      .category-8 .vertical-title {
+        display: none !important;
+      }
+
+      /* Make category slider take full row width */
+      .category-8 .col-auto {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+      }
+
+      /* Fix featured item huge padding causing overflow */
+      .featured-8 .featured-item {
+        padding: 0 16px !important;
+      }
+    }
+
+    @media (max-width: 575.98px) {
+      .home-hero-8 {
+        padding: 40px 10px !important;
+        min-height: 300px;
+      }
+
+      .featured-8 .featured-item {
+        padding: 0 10px !important;
+      }
+    }
   </style>
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/jewellery/jewellery.css?v=2.0.1') }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/jewellery/custom-styles.css?v=2.0.1') }}">
