@@ -571,6 +571,20 @@
 .modal-backdrop {
   z-index: 999998 !important;
 }
+
+/* Prevent gallery slider and thumbnail overlap on laptop/desktop views */
+@media (min-width: 992px) {
+  .product-single-default .slider-thumbnails,
+  .product-single-default .slider-thumbnails2 {
+    width: 80px !important;
+    flex: 0 0 80px !important;
+  }
+  .product-single-default .product-single-slider,
+  .product-single-default .product-single-slider2 {
+    width: calc(100% - 100px) !important;
+    flex: 0 0 calc(100% - 100px) !important;
+  }
+}
 </style>
 
 @yield('styles')
