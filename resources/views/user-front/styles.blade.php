@@ -180,7 +180,7 @@
   .product-default-tab-card .btn-icon-group {
     display: flex !important;
     flex-direction: row !important;
-    flex-wrap: nowrap !important;
+    flex-wrap: wrap !important;
     white-space: nowrap !important;
     gap: 4px !important;
     align-items: center !important;
