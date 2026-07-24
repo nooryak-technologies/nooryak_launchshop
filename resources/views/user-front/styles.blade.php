@@ -70,7 +70,7 @@
     }
 
     @media (max-width: 767.98px) {
-      .main-panel {
+      .main-panel, .wrapper, .footer-area {
         overflow-x: hidden !important;
         width: 100% !important;
       }
@@ -142,8 +142,8 @@
       }
     }
   </style>
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/jewellery/jewellery.css?v=2.0.2') }}">
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/jewellery/custom-styles.css?v=2.0.2') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/jewellery/jewellery.css?v=2.0.3') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/jewellery/custom-styles.css?v=2.0.3') }}">
 @elseif ($userBs->theme == 'clothing')
 
   <style>
