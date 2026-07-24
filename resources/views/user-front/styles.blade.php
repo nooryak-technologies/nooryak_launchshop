@@ -69,6 +69,10 @@
       max-width: 100% !important;
     }
 
+    .main-panel {
+      overflow: hidden !important;
+    }
+
     /* Clip all major jewellery sections */
     .home-hero-8,
     .featured-8,
