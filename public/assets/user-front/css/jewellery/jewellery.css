@@ -941,6 +941,20 @@ category-8
     background: rgba(var(--color-primary-rgb), 1);
 }
 
+/* ── Mobile: hide the tab scrollbar to stop it leaking into page scroll ── */
+@media (max-width: 767.98px) {
+    .tabs-navigation {
+        scrollbar-width: none;       /* Firefox */
+        -ms-overflow-style: none;    /* IE/Edge */
+        overflow-x: auto;
+        padding-bottom: 0;
+    }
+
+    .tabs-navigation::-webkit-scrollbar {
+        display: none;               /* Chrome, Safari, Opera */
+    }
+}
+
 .tabs-navigation-4 .nav-tabs .nav-link {
     border-radius: 0px !important;
     color: #635658;
