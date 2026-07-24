@@ -180,6 +180,11 @@
       <span class="wa-pulse"></span>
     </button>
 
+    <!-- WhatsApp Floating Hint Badge -->
+    <div class="wa-floating-badge d-none">
+      <span class="wa-badge-text">{{ __('Still Confused? Chat With Us') }}</span>
+    </div>
+
     <!-- WhatsApp Chat Popup -->
     <div class="wa-chat-popup">
       <!-- Header -->
@@ -424,6 +429,9 @@
         $popup.toggleClass('show');
         if ($popup.hasClass('show')) {
           $input.focus();
+          $('.wa-floating-badge').removeClass('show');
+        } else {
+          $('.wa-floating-badge').addClass('show');
         }
       });
 
@@ -431,14 +439,36 @@
       $closeBtn.on('click', function(e) {
         e.stopPropagation();
         $popup.removeClass('show');
+        $('.wa-floating-badge').addClass('show');
       });
 
       // Close popup when clicking outside the widget
       $(document).on('click', function(e) {
         if (!$(e.target).closest('.custom-wa-widget').length) {
-          $popup.removeClass('show');
+          if ($popup.hasClass('show')) {
+            $popup.removeClass('show');
+            $('.wa-floating-badge').addClass('show');
+          }
         }
       });
+
+      // Click handler for floating badge
+      $(document).on('click', '.wa-floating-badge', function(e) {
+        e.stopPropagation();
+        $popup.addClass('show');
+        $input.focus();
+        $('.wa-floating-badge').removeClass('show');
+      });
+
+      // Show badge on landing after 1.5 seconds
+      setTimeout(function() {
+        if (!$popup.hasClass('show')) {
+          $('.wa-floating-badge').removeClass('d-none').addClass('show');
+          setTimeout(function() {
+            $('.wa-floating-badge').addClass('active-float');
+          }, 500);
+        }
+      }, 1500);
 
       // Send function
       function sendMessage() {

@@ -11401,4 +11401,59 @@ iframe[id^="tawkchat-"],
 
 .wa-send-btn svg {
     margin-left: 2px;
-}
+}
+
+/* WhatsApp Floating Hint Badge */
+.wa-floating-badge {
+    position: absolute;
+    left: 70px;
+    top: 50%;
+    transform: translateY(-50%) translateX(20px);
+    background-color: #ffffff;
+    padding: 10px 18px;
+    border-radius: 50px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border: 1px solid #e2e8f0;
+    white-space: nowrap;
+    z-index: 5;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    align-items: center;
+}
+
+.wa-floating-badge.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) translateX(0);
+}
+
+.wa-badge-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: #075e54;
+    font-family: 'Outfit', 'Inter', sans-serif;
+}
+
+@keyframes wa-badge-float {
+    0% { transform: translateY(-50%) translateY(0); }
+    50% { transform: translateY(-50%) translateY(-4px); }
+    100% { transform: translateY(-50%) translateY(0); }
+}
+
+.wa-floating-badge.show.active-float {
+    animation: wa-badge-float 3s ease-in-out infinite;
+}
+
+@media (max-width: 575.98px) {
+    .wa-floating-badge {
+        left: 62px;
+        padding: 8px 14px;
+    }
+    .wa-badge-text {
+        font-size: 11px;
+    }
+}
+
