@@ -62,7 +62,7 @@
           @php
             $i = $loop->iteration;
           @endphp
-          <div class="col-lg-4 col-md-6 col-sm-6" data-aos="fade-up" data-aos-delay="100">
+          <div class="col-lg-4 col-md-6 col-sm-6 col-6" data-aos="fade-up" data-aos-delay="100">
             <!-- product-default -->
 
             @if ($i == 2 || ($i >= 5 && $i % 2 != 0))
