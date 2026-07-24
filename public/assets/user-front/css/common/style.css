@@ -6500,9 +6500,7 @@ figure.product-img.skeleton.skeleton-big-img {
 }
 
 .hover-show {
-
-    transform: translateY(-50px);
-
+    /* transform: translateY(-50px); */
 }
 
 .achievement-grid .achievement-item-style-1 {
