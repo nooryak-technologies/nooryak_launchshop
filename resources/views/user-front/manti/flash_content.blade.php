@@ -1,3 +1,67 @@
+<style>
+@media (max-width: 575.98px) {
+  /* Squeeze padding for mobile cards in Manti flash sale */
+  .actual-content .product-default-2 {
+    padding: 10px !important;
+    margin-bottom: 20px !important;
+  }
+  .actual-content .product-default-2 .product-details {
+    padding: 10px 5px !important;
+  }
+  .actual-content .product-default-2 .product-title {
+    font-size: 13px !important;
+    margin-bottom: 5px !important;
+    height: 38px;
+    overflow: hidden;
+  }
+  .actual-content .product-default-2 .product-price {
+    font-size: 12px !important;
+  }
+  .actual-content .product-default-2 .product-price .new-price {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+  }
+  .actual-content .product-default-2 .product-price .old-price {
+    font-size: 11px !important;
+  }
+  /* Style countdown container to be responsive */
+  .actual-content .product-default-2 .product-countdown {
+    gap: 2px !important;
+    margin-bottom: 10px !important;
+  }
+  .actual-content .product-default-2 .product-countdown .count {
+    width: 32px !important;
+    height: 32px !important;
+    padding: 4px 0 !important;
+    min-width: unset !important;
+  }
+  .actual-content .product-default-2 .product-countdown .count span[class^="count-value_"] {
+    font-size: 11px !important;
+    line-height: 1 !important;
+    display: block !important;
+  }
+  .actual-content .product-default-2 .product-countdown .count .count-period {
+    font-size: 7px !important;
+    line-height: 1 !important;
+    display: block !important;
+  }
+  /* Align title and button inline in header */
+  .actual-content .section-title.title-inline {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+  }
+  .actual-content .section-title.title-inline .title {
+    font-size: 20px !important;
+  }
+  .actual-content .section-title.title-inline .btn {
+    padding: 8px 16px !important;
+    font-size: 12px !important;
+  }
+}
+</style>
+
 <!-- Skeleton Content -->
 <section class="section pb-100 lazy">
   <div class="container">
@@ -40,7 +104,7 @@
         </div>
         <div class="row">
           @for ($skeleton = 1; $skeleton <= 3; $skeleton++)
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-4 col-md-6 col-6">
               <div class="product-default radius-md mb-30">
                 <figure class="product-img mb-20 skeleton skeleton-img"></figure>
                 <div class="product-details">
@@ -201,7 +265,7 @@
           </div>
           <div class="row">
             @foreach ($flash_items->skip(1) as $item)
-              <div class="col-lg-4 col-md-6">
+              <div class="col-lg-4 col-md-6 col-6">
                 <!-- product-default -->
                 <div class="product-default product-default-2 radius-md mb-30 has-countdown">
                   <figure class="product-img mb-20">
