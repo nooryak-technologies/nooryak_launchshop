@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     if (!actualContent) return; // Skip if no content found
 
-                    const productSlider = actualContent.querySelector('.product-slider');
+                    const productSlider = actualContent.querySelector('.product-slider, .product-slider-electronics');
                     const productSlider2 = actualContent.querySelector('.product-list-slider');
                     const productSlider3 = actualContent.querySelector('#product-list-slider-2');
                     const productSlider4 = actualContent.querySelector('#pro-slider-fashion');
