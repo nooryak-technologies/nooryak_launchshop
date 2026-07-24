@@ -132,7 +132,7 @@ class PwaController extends Controller
             return null;
         }
 
-        foreach (['web_app_image', 'favicon', 'logo'] as $field) {
+        foreach (['web_app_image', 'logo'] as $field) {
             if (empty($userBs->{$field})) {
                 continue;
             }

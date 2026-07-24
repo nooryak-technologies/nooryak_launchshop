@@ -167,7 +167,7 @@
                         {{ __('Used when customers install your store as a mobile app.') }}
                       </p>
                       <p class="text-warning mb-0">
-                        {{ __('Square PNG or JPG, 512x512 recommended. Falls back to Logo if empty.') }}
+                        {{ __('Square PNG or JPG, minimum 512x512 pixels required. Falls back to Logo if empty.') }}
                       </p>
                       @if ($errors->has('web_app_image'))
                         <p id="errweb_app_image" class="mb-0 text-danger em">{{ $errors->first('web_app_image') }}</p>

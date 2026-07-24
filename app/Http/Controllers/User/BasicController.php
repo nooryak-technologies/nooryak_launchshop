@@ -168,6 +168,8 @@ class BasicController extends Controller
                 },
             ],
             'web_app_image' => [
+                'nullable',
+                'image',
                 function ($attribute, $value, $fail) use ($webAppImage, $allowedExts) {
                     if (!empty($webAppImage)) {
                         $ext = $webAppImage->getClientOriginalExtension();
@@ -176,10 +178,15 @@ class BasicController extends Controller
                         }
                     }
                 },
+                'dimensions:min_width=512,min_height=512,ratio=1/1',
             ],
         ];
 
-        $validator = Validator::make($request->all(), $rules);
+        $messages = [
+            'web_app_image.dimensions' => __('The web app image must be a square image (minimum 512x512 pixels).'),
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
             $validator->getMessageBag()->add('error', 'true');
