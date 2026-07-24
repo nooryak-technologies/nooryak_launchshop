@@ -362,6 +362,79 @@
     color: #475569;
     font-weight: 600;
   }
+
+  /* WhatsApp OTP Sent Badge */
+  .whatsapp-badge-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.05);
+    transition: all 0.3s ease;
+    text-align: left;
+  }
+  
+  .whatsapp-badge-logo {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    padding: 6px;
+  }
+
+  .whatsapp-badge-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .whatsapp-badge-content {
+    text-align: left;
+  }
+
+  .whatsapp-badge-content .badge-title {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: #166534;
+    margin-bottom: 2px;
+    text-align: left;
+  }
+
+  .whatsapp-badge-content .badge-desc {
+    font-size: 13px;
+    color: #15803d;
+    margin: 0;
+    font-weight: 500;
+    line-height: 1.4;
+    text-align: left;
+  }
+
+  @media (max-width: 575.98px) {
+    .whatsapp-badge-wrapper {
+      padding: 12px;
+      gap: 12px;
+    }
+    .whatsapp-badge-logo {
+      width: 38px;
+      height: 38px;
+      padding: 4px;
+    }
+    .whatsapp-badge-content .badge-title {
+      font-size: 13px;
+    }
+    .whatsapp-badge-content .badge-desc {
+      font-size: 12px;
+    }
+  }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
 @endsection
@@ -444,6 +517,19 @@
                   <button type="button" class="btn primary-btn w-100 py-3 mb-20" id="btn-send-otp" style="font-size: 16px; font-weight: 600; border-radius: 8px;">
                     {{ __('Get OTP') }}
                   </button>
+
+                  <!-- WhatsApp OTP Sent Badge -->
+                  <div id="otp-whatsapp-badge" class="d-none mb-20">
+                    <div class="whatsapp-badge-wrapper">
+                      <div class="whatsapp-badge-logo">
+                        <img src="{{ asset('images/Logo.png') }}" alt="Logo">
+                      </div>
+                      <div class="whatsapp-badge-content">
+                        <span class="badge-title">{{ __('OTP Sent Successfully!') }}</span>
+                        <p class="badge-desc">{{ __('Your OTP has been sent to your WhatsApp mobile number successfully.') }}</p>
+                      </div>
+                    </div>
+                  </div>
 
                   <!-- OTP Input Field (hidden initially) -->
                   <div class="form-group mb-20 d-none" id="otp-group">
@@ -972,6 +1058,7 @@
         }, function(response) {
           if (response.success) {
             $('#phone-feedback').html('<span class="text-success"><i class="fas fa-check-circle"></i> ' + response.message + '</span>');
+            $('#otp-whatsapp-badge').removeClass('d-none');
             $('#otp-group').removeClass('d-none');
             $btn.text('{{ __("Sent") }}');
             startOtpTimer();
@@ -1004,6 +1091,7 @@
         }, function(response) {
           if (response.success) {
             $('#phone-feedback').html('<span class="text-success"><i class="fas fa-check-circle"></i> ' + response.message + '</span>');
+            $('#otp-whatsapp-badge').removeClass('d-none');
             startOtpTimer();
           } else {
             $('#phone-feedback').html('<span class="text-danger"><i class="fas fa-times-circle"></i> ' + response.message + '</span>');
@@ -1094,6 +1182,7 @@
         $('#phone-feedback').html('');
         $('#otp-feedback').html('');
         $('#otp_code').val('');
+        $('#otp-whatsapp-badge').addClass('d-none');
         
         // Switch screens
         $('#screen-2').addClass('d-none');
