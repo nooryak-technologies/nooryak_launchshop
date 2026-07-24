@@ -352,7 +352,7 @@
       min-height: 100vh;
     }
     .login-split-area {
-      padding: 0;
+      padding: 110px 0 40px 0;
       background: #ffffff;
     }
   }
