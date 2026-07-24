@@ -275,9 +275,9 @@
                     data-language_id="{{ $uLang }}"
                     title="Add to Cart"><i class="far fa-shopping-cart"></i></a>
                 @endif
-                <a href="{{ route('front.user.add.wishlist', ['id' => $product->id, getParam()]) }}" class="btn-icon" title="Wishlist"><i class="fal fa-heart"></i></a>
-                <a href="javascript:void(0)" class="btn-icon quick-view" data-item_id="{{ $product->id }}" title="Quick View"><i class="fal fa-eye"></i></a>
-                <a href="{{ route('front.user.add.compare', ['id' => $product->id, getParam()]) }}" class="btn-icon" title="Compare"><i class="fal fa-random"></i></a>
+                <a href="javascript:void(0)" data-url="{{ route('front.user.add.wishlist', ['id' => $product->id, getParam()]) }}" class="btn-icon btn-wishlist" title="Wishlist"><i class="fal fa-heart"></i></a>
+                <a href="javascript:void(0)" class="btn-icon quick-view-link" data-url="{{ route('front.user.quick-view', [getParam(), $product->id]) }}" data-slug="{{ $pContent->slug }}" title="Quick View"><i class="fal fa-eye"></i></a>
+                <a href="javascript:void(0)" onclick="addToCompare('{{ route('front.user.add.compare', ['id' => $product->id, getParam()]) }}')" class="btn-icon" title="Compare"><i class="fal fa-random"></i></a>
               </div>
             </div>
           @endforeach
@@ -386,9 +386,9 @@
                     data-language_id="{{ $uLang }}"
                     title="Add to Cart"><i class="far fa-shopping-cart"></i></a>
                 @endif
-                <a href="javascript:void(0)" class="btn-icon quick-view" data-item_id="{{ $bProd->id }}" title="Quick View"><i class="fal fa-eye"></i></a>
-                <a href="{{ route('front.user.add.wishlist', ['id' => $bProd->id, getParam()]) }}" class="btn-icon"><i class="fal fa-heart"></i></a>
-                <a href="{{ route('front.user.add.compare', ['id' => $bProd->id, getParam()]) }}" class="btn-icon"><i class="fal fa-random"></i></a>
+                <a href="javascript:void(0)" class="btn-icon quick-view-link" data-url="{{ route('front.user.quick-view', [getParam(), $bProd->id]) }}" data-slug="{{ $bCont->slug }}" title="Quick View"><i class="fal fa-eye"></i></a>
+                <a href="javascript:void(0)" data-url="{{ route('front.user.add.wishlist', ['id' => $bProd->id, getParam()]) }}" class="btn-icon btn-wishlist" title="Wishlist"><i class="fal fa-heart"></i></a>
+                <a href="javascript:void(0)" onclick="addToCompare('{{ route('front.user.add.compare', ['id' => $bProd->id, getParam()]) }}')" class="btn-icon" title="Compare"><i class="fal fa-random"></i></a>
               </div>
             </div>
           @endforeach

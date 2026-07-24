@@ -114,21 +114,22 @@
                   <i class="far fa-shopping-cart"></i>
                 </a>
               @endif
-              <a href="{{ route('customer.wishlist', getParam()) }}"
-                class="btn btn-icon add_to_wishlist"
-                data-item_id="{{ $flash_item->item_id }}"
+              <a href="javascript:void(0)"
+                class="btn btn-icon btn-wishlist"
+                data-url="{{ route('front.user.add.wishlist', ['id' => $flash_item->item_id, getParam()]) }}"
                 title="{{ $keywords['Add to Wishlist'] ?? __('Add to Wishlist') }}">
                 <i class="fal fa-heart"></i>
               </a>
               <a href="javascript:void(0)"
-                class="btn btn-icon quick-view"
-                data-item_id="{{ $flash_item->item_id }}"
+                class="btn btn-icon quick-view-link"
+                data-url="{{ route('front.user.quick-view', [getParam(), $flash_item->item_id]) }}"
+                data-slug="{{ $flash_item->slug }}"
                 title="{{ $keywords['Quick View'] ?? __('Quick View') }}">
                 <i class="fal fa-eye"></i>
               </a>
-              <a href="{{ route('front.user.compare', getParam()) }}"
-                class="btn btn-icon add_to_compare"
-                data-id="{{ $flash_item->item_id }}"
+              <a href="javascript:void(0)"
+                onclick="addToCompare('{{ route('front.user.add.compare', ['id' => $flash_item->item_id, getParam()]) }}')"
+                class="btn btn-icon"
                 title="{{ $keywords['Add to Compare'] ?? __('Add to Compare') }}">
                 <i class="fal fa-random"></i>
               </a>
