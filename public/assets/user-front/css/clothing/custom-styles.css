@@ -276,6 +276,10 @@
     aspect-ratio: 1400 / 520 !important;
   }
 
+  .hero-visual-frame img {
+    object-position: center top !important;
+  }
+
   .clothing-hero-copy {
     padding: 15px 50px !important;
   }
