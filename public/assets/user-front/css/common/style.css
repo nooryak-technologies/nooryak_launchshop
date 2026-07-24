@@ -2790,7 +2790,7 @@ input[type="radio"]:checked+.form-check-label::after {
     cursor: pointer;
     -webkit-transition: all 0.3s ease-out;
     transition: all 0.3s ease-out;
-    display: flex;
+    display: flex !important;
     flex-direction: column;
     align-items: center;
 }
