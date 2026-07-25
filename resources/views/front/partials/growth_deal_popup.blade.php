@@ -19,20 +19,31 @@
                 </svg>
             </button>
 
-            {{-- Decorative Stars scattered in header area --}}
-            <span class="gd-deco gd-d1">✦</span>
-            <span class="gd-deco gd-d2">✦</span>
-            <span class="gd-deco gd-d3"></span>
-            <span class="gd-deco gd-d4">✦</span>
-            <span class="gd-deco gd-d5">/</span>
-            <span class="gd-deco gd-d6">✦</span>
+            {{-- Celebration ornaments matching reference image exactly --}}
+            <div class="gd-celebration gd-cel-left" aria-hidden="true">
+                <svg viewBox="0 0 100 100" class="gd-cel-svg">
+                    <path d="M10,40 Q22,32 16,18 T28,6" stroke="#FF8B5E" stroke-width="2.5" fill="none" stroke-linecap="round" />
+                    <path d="M25,48 Q37,40 31,26 T43,14" stroke="#FFA37B" stroke-width="2" fill="none" stroke-linecap="round" />
+                    <path d="M5,58 Q17,50 11,36 T23,24" stroke="#FFBC9F" stroke-width="1.5" fill="none" stroke-linecap="round" />
+                    <path d="M55,30 L57,35 L62,35 L58,39 L60,44 L55,41 L50,44 L52,39 L48,35 L53,35 Z" fill="#3B82F6" />
+                    <path d="M35,65 L37,68 L41,68 L38,71 L39,75 L35,73 L31,75 L32,71 L29,68 L33,68 Z" fill="#FF5A2C" />
+                    <path d="M75,50 L76.5,52 L79.5,52 L77,54 L78,57 L75,55.5 L72,57 L73,54 L70.5,52 L73.5,52 Z" fill="#FFB700" />
+                </svg>
+            </div>
+            <div class="gd-celebration gd-cel-right" aria-hidden="true">
+                <svg viewBox="0 0 100 100" class="gd-cel-svg">
+                    <circle cx="50" cy="20" r="5" fill="none" stroke="#3B82F6" stroke-width="2" />
+                    <path d="M25,40 L27,45 L32,45 L28,49 L30,54 L25,51 L20,54 L22,49 L18,45 L23,45 Z" fill="#FFB700" />
+                    <path d="M70,35 L72,40 L77,40 L73,44 L75,49 L70,46 L65,49 L67,44 L63,40 L68,40 Z" fill="#FFB700" />
+                    <path d="M60,60 Q70,55 65,45 T75,35" stroke="#FFA37B" stroke-width="2" fill="none" stroke-linecap="round" />
+                    <path d="M85,55 L90,65" stroke="#FF5A2C" stroke-width="2" fill="none" stroke-linecap="round" />
+                </svg>
+            </div>
 
             {{-- Top Ribbon Badge --}}
             <div class="gd-ribbon-wrap">
                 <div class="gd-ribbon">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="white" style="margin-right:6px; flex-shrink:0;">
-                        <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z"/>
-                    </svg>
+                    <i class="fas fa-crown" style="margin-right: 6px; font-size: 11.5px; color: white;"></i>
                     YEAR-END GROWTH DEAL
                 </div>
             </div>
@@ -43,6 +54,7 @@
 
             {{-- Countdown Timer --}}
             <div class="gd-timer-section">
+                <span class="gd-sparkle-left">✦</span>
                 <p class="gd-timer-lbl">Claim it before time runs out</p>
                 <div class="gd-timer-row">
                     <div class="gd-tblock">
@@ -65,7 +77,7 @@
                         <span class="gd-tunit">SECONDS</span>
                     </div>
                 </div>
-                <span class="gd-sparkle">✦</span>
+                <span class="gd-sparkle-right">✦</span>
             </div>
 
             {{-- Pricing Cards Outer (extra right space for 65% badge) --}}
@@ -135,6 +147,7 @@
                             <li><i class="fas fa-check"></i>Zero Transaction Fees</li>
                         </ul>
                         <a href="{{ route('front.pricing') }}" class="gd-btn-fill">Upgrade to Premium &nbsp;→</a>
+                        <span class="gd-card-sparkle">✦</span>
                     </div>
                 </div>
 
@@ -180,6 +193,8 @@
      STYLES
      ============================ --}}
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap');
+
 /* ── Reset in scope ── */
 .gd-overlay *, .gd-overlay *::before, .gd-overlay *::after {
     box-sizing: border-box;
@@ -236,7 +251,7 @@
     animation: gdFloat 4s ease-in-out infinite;
     filter: drop-shadow(0 16px 24px rgba(255, 90, 30, 0.22));
 }
-.gd-giftbox svg { width: 100%; height: auto; }
+.gd-giftbox img { width: 100%; height: auto; }
 
 @keyframes gdFloat {
     0%, 100% { transform: translateY(0px); }
@@ -245,21 +260,22 @@
 
 /* ── White Box ── */
 .gd-box {
-    background: #ffffff;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFFDFB 100%);
+    border: 1.5px solid rgba(255, 90, 44, 0.12);
     border-radius: 22px;
     padding: 22px 30px 14px;
-    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.16);
+    box-shadow: 0 30px 80px rgba(255, 90, 44, 0.08), 0 10px 30px rgba(0, 0, 0, 0.04);
     position: relative;
     width: 100%;
-    max-height: 95dvh;
+    max-height: 115dvh;
     overflow-y: auto;
     overflow-x: visible;
     scrollbar-width: thin;
     scrollbar-color: #f0ece9 transparent;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 .gd-box::-webkit-scrollbar { width: 3px; }
-.gd-box::-webkit-scrollbar-thumb { background: #e2ded9; border-radius: 3px; }
+.gd-box::-webkit-scrollbar-thumb { background: #e2ded9; border-radius: 3px; }::-webkit-scrollbar-thumb { background: #e2ded9; border-radius: 3px; }
 
 /* ── Close Button ── */
 .gd-close {
@@ -281,30 +297,28 @@
 }
 .gd-close:hover { background: #f1f5f9; transform: scale(1.08); }
 
-/* ── Decorative Stars ── */
-.gd-deco {
+/* ── Celebration Ornaments ── */
+.gd-celebration {
     position: absolute;
+    width: 90px;
+    height: 90px;
     pointer-events: none;
-    line-height: 1;
-    animation: gdTwinkle 2.5s ease-in-out infinite;
+    z-index: 1;
 }
-.gd-d1 { top: 7%;  left: 14%; font-size: 15px; color: #FFB700; animation-delay: 0s;   }
-.gd-d2 { top: 20%; right: 10%; font-size: 19px; color: #FF5A2C; animation-delay: 0.6s; }
-.gd-d3 { /* hollow blue circle */
-    top: 5%; right: 26%;
-    width: 9px; height: 9px;
-    border-radius: 50%;
-    border: 2px solid #3B82F6;
-    background: transparent;
-    animation-delay: 1.1s;
+.gd-cel-left {
+    top: 3%;
+    left: 2%;
+    transform: rotate(-10deg);
 }
-.gd-d4 { top: 16%; left: 42%; font-size: 11px; color: #FFB700; animation-delay: 0.3s; }
-.gd-d5 { top: 9%; right: 16%; font-size: 20px; color: #FF8040; font-weight: 300; transform: rotate(15deg); animation-delay: 0.9s; }
-.gd-d6 { top: 4%; right: 6%;  font-size: 12px; color: #FF5A2C; animation-delay: 1.5s; }
-
-@keyframes gdTwinkle {
-    0%, 100% { opacity: 0.45; transform: scale(1); }
-    50%       { opacity: 1;    transform: scale(1.25); }
+.gd-cel-right {
+    top: 2%;
+    right: 2%;
+    transform: rotate(10deg);
+}
+.gd-cel-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
 }
 
 /* ── Ribbon Badge ── */
@@ -398,15 +412,36 @@
     padding-bottom: 8px;
     align-self: center;
 }
-.gd-sparkle {
+.gd-sparkle-left, .gd-sparkle-right, .gd-card-sparkle {
     position: absolute;
-    right: -14px;
-    top: 50%;
-    transform: translateY(-30%);
-    font-size: 17px;
+    font-size: 16px;
     color: #FFB700;
-    animation: gdTwinkle 2.2s ease-in-out infinite;
+    animation: gdTwinkle 2s ease-in-out infinite;
     pointer-events: none;
+    line-height: 1;
+}
+.gd-sparkle-left {
+    left: -12px;
+    top: 55%;
+    transform: translateY(-50%);
+    animation-delay: 0.3s;
+}
+.gd-sparkle-right {
+    right: -12px;
+    top: 45%;
+    transform: translateY(-50%);
+    animation-delay: 0.7s;
+}
+.gd-card-sparkle {
+    right: 12px;
+    bottom: 12px;
+    animation-delay: 1.1s;
+    font-size: 18px;
+}
+
+@keyframes gdTwinkle {
+    0%, 100% { opacity: 0.3; transform: scale(0.85); }
+    50%       { opacity: 1;   transform: scale(1.15); }
 }
 
 /* ── Cards Outer (holds grid + 65% badge) ── */
