@@ -6,7 +6,7 @@
 
         {{-- 3D Gift Box (left side, overlapping modal edge) --}}
         <div class="gd-giftbox" aria-hidden="true">
-            <img src="{{ asset('images/orange_percent_giftbox.png') }}" alt="Gift Box" style="width: 100%; height: auto;">
+            <img src="{{ asset('images/orange_percent_giftbox.png') }}?v=12" alt="Gift Box" style="width: 100%; height: auto;">
         </div>
 
         {{-- White Modal Box --}}
@@ -108,10 +108,10 @@
                         <div class="gd-price-big">₹4,999<span class="gd-per">/year</span></div>
                         <p class="gd-billed">Billed annually</p>
                         <ul class="gd-feats">
-                            <li><i class="fas fa-check"></i>Unlimited Products</li>
-                            <li><i class="fas fa-check"></i>Custom Domain</li>
-                            <li><i class="fas fa-check"></i>Secure Payments</li>
-                            <li><i class="fas fa-check"></i>Email &amp; Chat Support</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Unlimited Products</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Custom Domain</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Secure Payments</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Email &amp; Chat Support</li>
                         </ul>
                         <a href="{{ route('front.pricing') }}" class="gd-btn-border">Choose Standard &nbsp;→</a>
                     </div>
@@ -140,11 +140,11 @@
                         <div class="gd-price-big">₹9,999<span class="gd-per">/year</span></div>
                         <p class="gd-billed">Billed annually</p>
                         <ul class="gd-feats">
-                            <li><i class="fas fa-check"></i>Everything in Standard</li>
-                            <li><i class="fas fa-check"></i>Advanced Analytics</li>
-                            <li><i class="fas fa-check"></i>Priority Support</li>
-                            <li><i class="fas fa-check"></i>Free .com Domain</li>
-                            <li><i class="fas fa-check"></i>Zero Transaction Fees</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Everything in Standard</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Advanced Analytics</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Priority Support</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Free .com Domain</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Zero Transaction Fees</li>
                         </ul>
                         <a href="{{ route('front.pricing') }}" class="gd-btn-fill">Upgrade to Premium &nbsp;→</a>
                         <span class="gd-card-sparkle">✦</span>
@@ -194,6 +194,11 @@
      ============================ --}}
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* Apply Outfit font to headings and highlight texts to match reference image */
+.gd-heading, .gd-card-name, .gd-tnum, .gd-ribbon, .gd-price-big, .gd-off-badge strong, .gd-ti strong {
+    font-family: 'Outfit', sans-serif !important;
+}
 
 /* ── Reset in scope ── */
 .gd-overlay *, .gd-overlay *::before, .gd-overlay *::after {
@@ -632,16 +637,28 @@
 }
 .gd-feats li {
     font-size: 12.5px;
-    color: #374151;
+    color: #475569;
     margin-bottom: 8px;
     display: flex;
     align-items: center;
     gap: 10px;
 }
-.gd-feats li i {
-    font-size: 11px;
-    color: #FF5A2C;
+.gd-check-circle {
+    width: 17px;
+    height: 17px;
+    background: #FFF0EB;
+    border: 1px solid rgba(255, 90, 44, 0.15);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 2px;
     flex-shrink: 0;
+}
+.gd-check-circle i {
+    font-size: 8px;
+    color: #FF5A2C;
+    line-height: 1;
 }
 
 /* ── Buttons ── */
@@ -694,15 +711,15 @@
 }
 .gd-ti:last-child { border-right: none; }
 .gd-ti-ico {
-    width: 26px;
-    height: 26px;
-    background: #FFF5F2;
-    border-radius: 7px;
+    width: 28px;
+    height: 28px;
+    background: #FFF0EB;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #FF5A2C;
-    font-size: 11px;
+    font-size: 11.5px;
     flex-shrink: 0;
 }
 .gd-ti strong {
