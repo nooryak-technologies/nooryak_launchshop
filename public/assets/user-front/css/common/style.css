@@ -5757,6 +5757,17 @@ figure.product-img.skeleton.skeleton-big-img {
         padding: 10px 15px;
         font-size: 12px;
     }
+
+    .skeleton::after {
+        display: block;
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        transform: translateX(-100%);
+        background: transparent;
+        animation: skeleton-loading 1.5s infinite;
+    }
 }
 
 .product-single-default .price-group-btn {
