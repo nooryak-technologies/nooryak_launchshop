@@ -244,6 +244,7 @@
     margin-left: 60px;
     display: flex;
     flex-direction: column;
+        height: 665px;
 }
 
 /* ── 3D Gift Box ── */
@@ -764,6 +765,18 @@
 
 /* Tablet adjustments */
 @media (max-width: 767px) {
+
+    .gd-dialog {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 760px;
+    /* On desktop, shift right slightly so gift box doesn't overflow viewport */
+    margin-left: 60px;
+    display: flex;
+    flex-direction: column;
+        height: 665px;
+}
     .gd-overlay { padding: 40px 12px; align-items: flex-start; }
     .gd-dialog { margin: 0 auto 60px; }
     .gd-box {
@@ -824,7 +837,7 @@
 
 /* Small mobile */
 @media (max-width: 480px) {
-    .gd-overlay { padding: 40px 10px; }
+    .gd-overlay { padding: 19px 10px; }
     .gd-box {
         padding: 14px 14px 10px;
         border-radius: 14px;
