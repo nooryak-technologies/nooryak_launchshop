@@ -765,7 +765,7 @@
 /* Tablet adjustments */
 @media (max-width: 767px) {
     .gd-overlay { padding: 40px 12px; align-items: flex-start; }
-    .gd-dialog { margin: 0 auto; }
+    .gd-dialog { margin: 0 auto 60px; }
     .gd-box {
         padding: 20px 24px 14px;
         border-radius: 18px;
