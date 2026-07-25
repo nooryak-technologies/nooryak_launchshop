@@ -33,7 +33,7 @@ class Demo
         }
 
         // Block writes for template-preview users (User Dashboard)
-        if ($isWriteMethod && Auth::guard('web')->check() && Auth::guard('web')->user()->preview_template == 1) {
+        if ($isWriteMethod && !$request->is('admin') && !$request->is('admin/*') && Auth::guard('web')->check() && Auth::guard('web')->user()->preview_template == 1) {
             if ($request->ajax()) {
                 return response()->json([
                     'status' => 'error', 
