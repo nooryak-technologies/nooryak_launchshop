@@ -211,7 +211,7 @@
     inset: 0;
     z-index: 1000001;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     padding: 40px 16px;
     opacity: 0;
@@ -241,7 +241,7 @@
     width: 100%;
     max-width: 760px;
     /* On desktop, shift right slightly so gift box doesn't overflow viewport */
-    margin: auto 0 auto 60px;
+    margin-left: 60px;
     display: flex;
     flex-direction: column;
 }
@@ -867,28 +867,50 @@
 }
 
 /* Viewport height-based layout scaling to prevent vertical scrollbars on desktop */
-@media (min-width: 961px) and (max-height: 850px) {
+@media (min-width: 768px) and (max-height: 900px) {
     .gd-dialog {
         transform: scale(0.92);
         transform-origin: center center;
     }
 }
-@media (min-width: 961px) and (max-height: 780px) {
+@media (min-width: 768px) and (max-height: 820px) {
     .gd-dialog {
-        transform: scale(0.85);
+        transform: scale(0.84);
         transform-origin: center center;
     }
 }
-@media (min-width: 961px) and (max-height: 700px) {
+@media (min-width: 768px) and (max-height: 750px) {
     .gd-dialog {
-        transform: scale(0.78);
+        transform: scale(0.76);
         transform-origin: center center;
     }
 }
-@media (min-width: 961px) and (max-height: 620px) {
+@media (min-width: 768px) and (max-height: 680px) {
     .gd-dialog {
-        transform: scale(0.70);
+        transform: scale(0.68);
         transform-origin: center center;
+    }
+}
+@media (min-width: 768px) and (max-height: 600px) {
+    .gd-dialog {
+        transform: scale(0.60);
+        transform-origin: center center;
+    }
+}
+@media (min-width: 768px) and (max-height: 520px) {
+    .gd-dialog {
+        transform: scale(0.52);
+        transform-origin: center center;
+    }
+}
+
+/* Align adjustments for mobile scrolling */
+@media (max-width: 767px) {
+    .gd-overlay {
+        align-items: flex-start;
+    }
+    .gd-dialog {
+        margin: auto 0;
     }
 }
 </style>
