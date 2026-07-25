@@ -325,7 +325,7 @@
               Have a question or need expert guidance? We're here to help you build, launch, and grow your online store with Launchshop.in.
             </p>
             <div class="contact-trust-pill-banner">
-              <span class="trust-pill"><i class="fas fa-heart text-orange"></i> Trusted by 10,000+ merchants across India</span>
+              <span class="trust-pill"><i class="fas fa-heart text-orange"></i> Trusted by 5,000+ merchants across India</span>
             </div>
           </div>
         </div>

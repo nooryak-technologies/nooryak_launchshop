@@ -103,9 +103,10 @@
         padding: 16px;
       }
 
-      /* Fix fluid-left negative calc: on 414px → (414-540)/2 = -63px → broken */
-      .category-8 .fluid-left {
-        padding-inline-start: max(0px, calc((100vw - 540px) / 2)) !important;
+      /* Fix fluid-left and fluid-right negative calc causing huge overflow */
+      .fluid-left, .fluid-right {
+        padding-inline-start: 0 !important;
+        padding-inline-end: 0 !important;
       }
 
       /* Force category row to wrap on mobile instead of staying nowrap */
@@ -128,6 +129,13 @@
       /* Fix featured item huge padding causing overflow */
       .featured-8 .featured-item {
         padding: 0 16px !important;
+      }
+
+      /* Fix row negative margins inside featured wrap pushing width > 100vw */
+      .featured-8 .featured-item-wrap.row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100% !important;
       }
     }
 
