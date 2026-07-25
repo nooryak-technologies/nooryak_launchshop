@@ -100,6 +100,12 @@
         animation: none !important;
       }
 
+      /* Disable hover "shine" effect on banners (mobile touch/scroll triggers hover) */
+      .banner-md:hover::after, .banner-xl:hover::after {
+        animation: none !important;
+        display: none !important;
+      }
+
       /* Fix hero background-attachment:fixed — collapses on iOS/Android */
       .home-hero-8 {
         background-attachment: scroll !important;
