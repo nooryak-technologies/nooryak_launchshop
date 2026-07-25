@@ -213,7 +213,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px 16px;
+    padding: 60px 16px; /* 60px space top and bottom for laptop views */
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.32s ease, visibility 0.32s ease;
@@ -764,6 +764,8 @@
 
 /* Tablet adjustments */
 @media (max-width: 767px) {
+    .gd-overlay { padding: 40px 12px; align-items: flex-start; }
+    .gd-dialog { margin: 0 auto; }
     .gd-box {
         padding: 20px 24px 14px;
         border-radius: 18px;
@@ -822,7 +824,7 @@
 
 /* Small mobile */
 @media (max-width: 480px) {
-    .gd-overlay { padding: 20px 12px; }
+    .gd-overlay { padding: 40px 10px; }
     .gd-box {
         padding: 14px 14px 10px;
         border-radius: 14px;
@@ -869,48 +871,38 @@
 /* Viewport height-based layout scaling to prevent vertical scrollbars on desktop */
 @media (min-width: 768px) and (max-height: 900px) {
     .gd-dialog {
-        transform: scale(0.92);
+        transform: scale(0.88);
         transform-origin: center center;
     }
 }
 @media (min-width: 768px) and (max-height: 820px) {
     .gd-dialog {
-        transform: scale(0.84);
+        transform: scale(0.80);
         transform-origin: center center;
     }
 }
 @media (min-width: 768px) and (max-height: 750px) {
     .gd-dialog {
-        transform: scale(0.76);
+        transform: scale(0.72);
         transform-origin: center center;
     }
 }
 @media (min-width: 768px) and (max-height: 680px) {
     .gd-dialog {
-        transform: scale(0.68);
+        transform: scale(0.64);
         transform-origin: center center;
     }
 }
 @media (min-width: 768px) and (max-height: 600px) {
     .gd-dialog {
-        transform: scale(0.60);
+        transform: scale(0.56);
         transform-origin: center center;
     }
 }
 @media (min-width: 768px) and (max-height: 520px) {
     .gd-dialog {
-        transform: scale(0.52);
+        transform: scale(0.48);
         transform-origin: center center;
-    }
-}
-
-/* Align adjustments for mobile scrolling */
-@media (max-width: 767px) {
-    .gd-overlay {
-        align-items: flex-start;
-    }
-    .gd-dialog {
-        margin: auto 0;
     }
 }
 </style>
