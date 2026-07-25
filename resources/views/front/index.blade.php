@@ -1691,4 +1691,5 @@
 </script>
 @endsection
 
+@include('front.partials.growth_deal_popup')
 @endsection
