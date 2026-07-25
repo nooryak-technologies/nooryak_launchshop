@@ -92,12 +92,12 @@
     }
 
     @media (max-width: 767.98px) {
-      /* Fix AOS horizontal scroll bug on mobile by converting side fades to fade-up */
-      [data-aos="fade-left"], [data-aos="fade-right"] {
-        transform: translate3d(0, 40px, 0) !important;
-      }
-      [data-aos="fade-left"].aos-animate, [data-aos="fade-right"].aos-animate {
+      /* Disable all AOS animations on mobile for jewellery theme */
+      [data-aos] {
+        opacity: 1 !important;
         transform: translate3d(0, 0, 0) !important;
+        transition: none !important;
+        animation: none !important;
       }
 
       /* Fix hero background-attachment:fixed — collapses on iOS/Android */
