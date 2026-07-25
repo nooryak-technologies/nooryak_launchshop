@@ -272,7 +272,7 @@
     box-shadow: 0 30px 80px rgba(255, 90, 44, 0.08), 0 10px 30px rgba(0, 0, 0, 0.04);
     position: relative;
     width: 100%;
-    max-height: 115dvh;
+    max-height: calc(100dvh - 48px);
     overflow-y: auto;
     overflow-x: visible;
     scrollbar-width: thin;
@@ -280,7 +280,7 @@
     font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 .gd-box::-webkit-scrollbar { width: 3px; }
-.gd-box::-webkit-scrollbar-thumb { background: #e2ded9; border-radius: 3px; }::-webkit-scrollbar-thumb { background: #e2ded9; border-radius: 3px; }
+.gd-box::-webkit-scrollbar-thumb { background: #e2ded9; border-radius: 3px; }
 
 /* ── Close Button ── */
 .gd-close {
@@ -762,7 +762,11 @@
 
 /* Tablet adjustments */
 @media (max-width: 767px) {
-    .gd-box { padding: 20px 24px 14px; border-radius: 18px; }
+    .gd-box {
+        padding: 20px 24px 14px;
+        border-radius: 18px;
+        max-height: calc(100dvh - 32px);
+    }
     .gd-heading { font-size: 24px; }
     .gd-subtext { font-size: 12.5px; }
     .gd-tnum { font-size: 32px; }
@@ -817,8 +821,12 @@
 
 /* Small mobile */
 @media (max-width: 480px) {
-    .gd-overlay { padding: 8px; }
-    .gd-box { padding: 14px 14px 10px; border-radius: 14px; }
+    .gd-overlay { padding: 12px 10px; }
+    .gd-box {
+        padding: 14px 14px 10px;
+        border-radius: 14px;
+        max-height: calc(100dvh - 24px);
+    }
     .gd-heading { font-size: 20px; }
     .gd-ribbon { font-size: 10px; padding: 5px 12px; letter-spacing: 0.8px; }
     .gd-tnum { font-size: 26px; }
