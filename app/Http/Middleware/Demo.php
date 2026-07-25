@@ -32,14 +32,14 @@ class Demo
             return redirect()->back();
         }
 
-        // Block CRUD operations on the Demo Admin panel
-        if ($isWriteMethod && ($request->is('admin') || $request->is('admin/*'))) {
-            session()->flash('warning', __('This is Demo version. You can not change anything.'));
-            return redirect()->back();
-        }
-
         // Block writes for template-preview (secret login) sessions (User Dashboard)
         if (Session::get('secrect_login') == true && $isWriteMethod) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 'error', 
+                    'message' => __('This is template demo dashboard message')
+                ]);
+            }
             session()->flash('warning', __('This is template demo dashboard message'));
             return redirect()->back();
         }
