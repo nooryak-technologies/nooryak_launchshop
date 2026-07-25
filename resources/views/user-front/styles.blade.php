@@ -73,6 +73,10 @@
       .main-panel, .wrapper, .footer-area {
         overflow-x: hidden !important;
         width: 100% !important;
+        position: relative !important;
+      }
+      body {
+        position: relative !important;
       }
     }
 
@@ -88,6 +92,14 @@
     }
 
     @media (max-width: 767.98px) {
+      /* Fix AOS horizontal scroll bug on mobile by converting side fades to fade-up */
+      [data-aos="fade-left"], [data-aos="fade-right"] {
+        transform: translate3d(0, 40px, 0) !important;
+      }
+      [data-aos="fade-left"].aos-animate, [data-aos="fade-right"].aos-animate {
+        transform: translate3d(0, 0, 0) !important;
+      }
+
       /* Fix hero background-attachment:fixed — collapses on iOS/Android */
       .home-hero-8 {
         background-attachment: scroll !important;
