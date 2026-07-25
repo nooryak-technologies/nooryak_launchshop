@@ -272,7 +272,6 @@
     box-shadow: 0 30px 80px rgba(255, 90, 44, 0.08), 0 10px 30px rgba(0, 0, 0, 0.04);
     position: relative;
     width: 100%;
-    max-height: calc(100dvh - 48px);
     overflow-y: auto;
     overflow-x: visible;
     scrollbar-width: thin;
@@ -281,6 +280,14 @@
 }
 .gd-box::-webkit-scrollbar { width: 3px; }
 .gd-box::-webkit-scrollbar-thumb { background: #e2ded9; border-radius: 3px; }
+
+
+
+@media screen (max-width:768px) {
+    .gd-box {
+    max-height: calc(100dvh - 48px);
+}
+}
 
 /* ── Close Button ── */
 .gd-close {
