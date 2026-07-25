@@ -762,56 +762,100 @@
 
 /* Tablet adjustments */
 @media (max-width: 767px) {
-    .gd-box { padding: 24px 18px 18px; border-radius: 18px; }
-    .gd-heading { font-size: 26px; }
-    .gd-subtext { font-size: 13px; }
-    .gd-tnum { font-size: 36px; }
-    .gd-tsep { font-size: 28px; }
-    .gd-tblock { min-width: 44px; }
-    .gd-timer-row { padding: 12px 14px 10px; gap: 4px; }
-    .gd-sparkle { display: none; }
+    .gd-box { padding: 20px 24px 14px; border-radius: 18px; }
+    .gd-heading { font-size: 24px; }
+    .gd-subtext { font-size: 12.5px; }
+    .gd-tnum { font-size: 32px; }
+    .gd-tsep { font-size: 24px; padding-bottom: 6px; }
+    .gd-tblock { min-width: 42px; }
+    .gd-timer-row { padding: 8px 12px 6px; gap: 8px; }
+    .gd-sparkle-left, .gd-sparkle-right { display: none; }
 
-    /* Stack cards */
-    .gd-cards-outer { padding-right: 0; }
-    .gd-cards-grid { grid-template-columns: 1fr; }
+    /* Show cards side-by-side (2 columns) */
+    .gd-cards-outer { padding-right: 18px; margin-bottom: 12px; }
+    .gd-cards-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
 
-    /* Move 65% badge inside premium card area */
+    /* Adjust Card elements for tablet side-by-side */
+    .gd-card { padding: 14px 12px 12px; }
+    .gd-hexagon-icon { width: 38px; height: 38px; }
+    .gd-hex-inner-icon { font-size: 14px; }
+    .gd-card-name { font-size: 16px; }
+    .gd-card-tagline { font-size: 11px; }
+    .gd-great-val { font-size: 10px; padding: 2px 8px; margin: 8px 0; }
+    .gd-price-row { margin: 8px 0 2px; gap: 6px; }
+    .gd-original-price { font-size: 12px; }
+    .gd-save-tag { font-size: 9.5px; padding: 1px 6px; }
+    .gd-price-big { font-size: 24px; }
+    .gd-billed { font-size: 11px; margin-bottom: 8px; }
+    .gd-feats li { font-size: 11px; margin-bottom: 6px; gap: 6px; }
+    .gd-check-circle { width: 15px; height: 15px; }
+    .gd-check-circle i { font-size: 7px; }
+    .gd-btn-border, .gd-btn-fill { padding: 8px 10px; font-size: 12px; margin-top: 8px; }
+
+    /* Move 65% badge inside premium card area but styled for side-by-side */
     .gd-off-badge {
         position: absolute;
-        right: 16px;
-        top: -22px;
-        transform: none;
-        width: 60px;
-        height: 60px;
+        right: -10px;
+        top: 40%;
+        transform: translateY(-50%);
+        width: 58px;
+        height: 58px;
+        border-width: 2px;
     }
     .gd-off-badge strong { font-size: 16px; }
     .gd-off-badge i { font-size: 10px; }
     .gd-off-badge span { font-size: 7.5px; }
-    .gd-pre { margin-top: 30px; } /* space for badge */
+    .gd-pre { margin-top: 0; } /* Reset top margin since it is side-by-side */
 
     /* Trust 2 columns */
-    .gd-trust { grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px; }
-    .gd-ti { border-right: none !important; border-bottom: 1px solid #E2E8F0; padding: 8px 4px; }
+    .gd-trust { grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
+    .gd-ti { border-right: none !important; border-bottom: 1px solid #E2E8F0; padding: 6px 4px; }
     .gd-ti:nth-child(odd)  { border-right: 1px solid #E2E8F0 !important; }
     .gd-ti:nth-child(3),
     .gd-ti:nth-child(4)    { border-bottom: none; }
-    .gd-price-big { font-size: 30px; }
 }
 
 /* Small mobile */
 @media (max-width: 480px) {
-    .gd-overlay { padding: 10px; }
-    .gd-box { padding: 20px 14px 16px; border-radius: 14px; }
-    .gd-heading { font-size: 22px; }
-    .gd-ribbon { font-size: 10.5px; padding: 7px 16px; letter-spacing: 1px; }
-    .gd-tnum { font-size: 30px; }
-    .gd-tsep { font-size: 22px; }
-    .gd-tblock { min-width: 34px; }
-    .gd-tunit { font-size: 7.5px; }
-    .gd-timer-row { gap: 2px; padding: 10px 10px 8px; }
-    .gd-card { padding: 18px 14px 16px; }
-    .gd-price-big { font-size: 26px; }
-    .gd-trust { grid-template-columns: 1fr 1fr; font-size: 9px; }
+    .gd-overlay { padding: 8px; }
+    .gd-box { padding: 14px 14px 10px; border-radius: 14px; }
+    .gd-heading { font-size: 20px; }
+    .gd-ribbon { font-size: 10px; padding: 5px 12px; letter-spacing: 0.8px; }
+    .gd-tnum { font-size: 26px; }
+    .gd-tsep { font-size: 18px; }
+    .gd-tblock { min-width: 32px; }
+    .gd-tunit { font-size: 7px; }
+    .gd-timer-row { gap: 4px; padding: 6px 8px 4px; }
+
+    .gd-cards-outer { padding-right: 10px; }
+    .gd-cards-grid { gap: 6px; }
+    .gd-card { padding: 10px 8px 8px; }
+    .gd-hexagon-icon { width: 28px; height: 28px; }
+    .gd-hex-inner-icon { font-size: 11px; }
+    .gd-card-name { font-size: 13px; }
+    .gd-card-tagline { font-size: 9px; }
+    .gd-great-val { font-size: 9px; padding: 1px 6px; margin: 4px 0; }
+    .gd-original-price { font-size: 10px; }
+    .gd-save-tag { font-size: 8.5px; padding: 1px 4px; }
+    .gd-price-big { font-size: 18px; }
+    .gd-billed { font-size: 10px; margin-bottom: 6px; }
+    .gd-feats li { font-size: 10px; margin-bottom: 4px; gap: 4px; }
+    .gd-check-circle { width: 12px; height: 12px; }
+    .gd-check-circle i { font-size: 5.5px; }
+    .gd-btn-border, .gd-btn-fill { padding: 6px 8px; font-size: 10.5px; margin-top: 6px; }
+
+    .gd-off-badge {
+        right: -8px;
+        top: 38%;
+        width: 44px;
+        height: 44px;
+        border-width: 1.5px;
+    }
+    .gd-off-badge strong { font-size: 12px; }
+    .gd-off-badge i { font-size: 8px; }
+    .gd-off-badge span { font-size: 6px; }
+
+    .gd-trust { grid-template-columns: 1fr 1fr; font-size: 8.5px; }
 }
 
 /* Viewport height-based layout scaling to prevent vertical scrollbars on desktop */
