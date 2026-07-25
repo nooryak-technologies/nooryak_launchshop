@@ -1,3 +1,9 @@
+@php
+  $standardPackage = \App\Models\Package::where('status', '1')->where('term', 'yearly')->where('title', 'Standard')->first();
+  $premiumPackage = \App\Models\Package::where('status', '1')->where('term', 'yearly')->where('title', 'Premium')->first();
+  $standardPackageId = $standardPackage ? $standardPackage->id : 2;
+  $premiumPackageId = $premiumPackage ? $premiumPackage->id : 3;
+@endphp
 {{-- Year-End Growth Deal Popup v2 - Pixel Perfect Match --}}
 <div class="gd-overlay" id="gdOverlay" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Year-End Growth Deal">
     <div class="gd-backdrop" id="gdBackdrop"></div>
@@ -113,7 +119,7 @@
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Secure Payments</li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Email &amp; Chat Support</li>
                         </ul>
-                        <a href="{{ route('front.pricing') }}" class="gd-btn-border">Choose Standard &nbsp;→</a>
+                        <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $standardPackageId]) }}" class="gd-btn-border">Choose Standard &nbsp;→</a>
                     </div>
 
                     {{-- Premium Card --}}
@@ -146,7 +152,7 @@
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Free .com Domain</li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Zero Transaction Fees</li>
                         </ul>
-                        <a href="{{ route('front.pricing') }}" class="gd-btn-fill">Upgrade to Premium &nbsp;→</a>
+                        <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $premiumPackageId]) }}" class="gd-btn-fill">Upgrade to Premium &nbsp;→</a>
                         <span class="gd-card-sparkle">✦</span>
                     </div>
                 </div>
