@@ -32,8 +32,8 @@ class Demo
             return redirect()->back();
         }
 
-        // Block writes for template-preview (secret login) sessions (User Dashboard)
-        if (Session::get('secrect_login') == true && $isWriteMethod) {
+        // Block writes for template-preview users (User Dashboard)
+        if ($isWriteMethod && Auth::guard('web')->check() && Auth::guard('web')->user()->preview_template == 1) {
             if ($request->ajax()) {
                 return response()->json([
                     'status' => 'error', 
