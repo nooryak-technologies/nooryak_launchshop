@@ -244,7 +244,7 @@
     margin-left: 60px;
     display: flex;
     flex-direction: column;
-        height: 665px;
+        /* height: 665px; */
 }
 
 /* ── 3D Gift Box ── */
