@@ -6,52 +6,7 @@
 
         {{-- 3D Gift Box (left side, overlapping modal edge) --}}
         <div class="gd-giftbox" aria-hidden="true">
-            <svg viewBox="0 0 180 235" xmlns="http://www.w3.org/2000/svg">
-                {{-- Drop shadow --}}
-                <ellipse cx="90" cy="226" rx="58" ry="9" fill="rgba(200,80,20,0.08)"/>
-                {{-- Cloud puffs at base --}}
-                <ellipse cx="48" cy="205" rx="24" ry="15" fill="white" opacity="0.95"/>
-                <ellipse cx="72" cy="213" rx="30" ry="17" fill="white" opacity="0.97"/>
-                <ellipse cx="104" cy="211" rx="28" ry="16" fill="white" opacity="0.97"/>
-                <ellipse cx="134" cy="204" rx="22" ry="14" fill="white" opacity="0.95"/>
-                {{-- Box body main --}}
-                <rect x="20" y="100" width="140" height="103" rx="5" fill="#FF6C35"/>
-                {{-- Box body left shading --}}
-                <rect x="20" y="100" width="38" height="103" rx="5" fill="rgba(0,0,0,0.08)"/>
-                {{-- Vertical ribbon --}}
-                <rect x="68" y="100" width="28" height="103" fill="white" opacity="0.92"/>
-                {{-- Horizontal ribbon --}}
-                <rect x="20" y="138" width="140" height="22" fill="white" opacity="0.92"/>
-                {{-- Box lid --}}
-                <rect x="12" y="76" width="156" height="28" rx="5" fill="#FF8B4E"/>
-                {{-- Lid left shading --}}
-                <rect x="12" y="76" width="38" height="28" rx="5" fill="rgba(0,0,0,0.07)"/>
-                {{-- Vertical ribbon on lid --}}
-                <rect x="68" y="76" width="28" height="28" fill="white" opacity="0.92"/>
-                {{-- Left bow loop --}}
-                <ellipse cx="57" cy="62" rx="28" ry="18" fill="#FF8B4E" transform="rotate(-22, 57, 62)"/>
-                <ellipse cx="57" cy="62" rx="17" ry="10" fill="#FF6C35" transform="rotate(-22, 57, 62)"/>
-                {{-- Right bow loop --}}
-                <ellipse cx="123" cy="62" rx="28" ry="18" fill="#FF8B4E" transform="rotate(22, 123, 62)"/>
-                <ellipse cx="123" cy="62" rx="17" ry="10" fill="#FF6C35" transform="rotate(22, 123, 62)"/>
-                {{-- Left ribbon tail --}}
-                <path d="M76 80 Q62 94 54 106" stroke="#FF8B4E" stroke-width="6" fill="none" stroke-linecap="round"/>
-                {{-- Right ribbon tail --}}
-                <path d="M104 80 Q118 94 128 106" stroke="#FF8B4E" stroke-width="6" fill="none" stroke-linecap="round"/>
-                {{-- Bow center knot --}}
-                <circle cx="90" cy="70" r="14" fill="#FF5A1F"/>
-                <circle cx="90" cy="70" r="8" fill="#FF8B4E"/>
-                {{-- % sign on box front --}}
-                <text x="90" y="180" font-size="34" font-weight="900" fill="white" text-anchor="middle"
-                      font-family="Arial Black, Arial, sans-serif" opacity="0.96">%</text>
-                {{-- Decorative confetti near gift box --}}
-                <text x="4"   y="50"  font-size="18" fill="#FFB700">✦</text>
-                <text x="155" y="32"  font-size="12" fill="#FF5A2C">✦</text>
-                <text x="165" y="88"  font-size="9"  fill="#3B82F6">●</text>
-                <text x="2"   y="125" font-size="10" fill="#FF5A2C">✦</text>
-                {{-- Small curvy line decoration --}}
-                <path d="M 162 55 Q 170 48 163 42" stroke="#FFB700" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-            </svg>
+            <img src="{{ asset('images/orange_percent_giftbox.png') }}" alt="Gift Box" style="width: 100%; height: auto;">
         </div>
 
         {{-- White Modal Box --}}
@@ -120,12 +75,15 @@
                     {{-- Standard Card --}}
                     <div class="gd-card gd-std">
                         <div class="gd-card-header">
-                            <div class="gd-icon gd-icon-std">
-                                <i class="fas fa-star"></i>
+                            <div class="gd-hexagon-icon">
+                                <svg viewBox="0 0 100 100" class="gd-hex-svg">
+                                    <polygon points="50,5 90,28 90,72 50,95 10,72 10,28" fill="#FFF5F2" stroke="#FF5A2C" stroke-width="3.5" />
+                                </svg>
+                                <i class="fas fa-star gd-hex-inner-icon"></i>
                             </div>
                             <div class="gd-card-meta">
                                 <h3 class="gd-card-name">Standard</h3>
-                                <p class="gd-card-tagline">Smart choice for growing brands</p>
+                                <p class="gd-card-tagline gd-tagline-standard">Smart choice for growing brands</p>
                             </div>
                         </div>
                         <div class="gd-great-val">
@@ -149,15 +107,18 @@
                     {{-- Premium Card --}}
                     <div class="gd-card gd-pre">
                         <div class="gd-card-header">
-                            <div class="gd-icon gd-icon-pre">
-                                <i class="fas fa-crown"></i>
+                            <div class="gd-hexagon-icon">
+                                <svg viewBox="0 0 100 100" class="gd-hex-svg">
+                                    <polygon points="50,5 90,28 90,72 50,95 10,72 10,28" fill="#FFF5F2" stroke="#FF5A2C" stroke-width="3.5" />
+                                </svg>
+                                <i class="fas fa-crown gd-hex-inner-icon"></i>
                             </div>
                             <div class="gd-card-meta">
                                 <h3 class="gd-card-name">
                                     Premium&nbsp;
                                     <span class="gd-most-loved"><i class="fas fa-heart"></i>&nbsp;Most Loved</span>
                                 </h3>
-                                <p class="gd-card-tagline">The complete toolkit to scale faster</p>
+                                <p class="gd-card-tagline gd-tagline-premium">The complete toolkit to scale faster</p>
                             </div>
                         </div>
                         <div class="gd-price-row" style="margin-top:16px;">
@@ -385,26 +346,27 @@
 /* ── Timer ── */
 .gd-timer-section {
     position: relative;
-    max-width: 500px;
-    margin: 0 auto 22px;
+    max-width: 480px;
+    margin: 0 auto 24px;
+    background: linear-gradient(180deg, #ffffff 0%, #FFFDFB 100%);
+    border: 1.2px solid rgba(255, 90, 44, 0.16);
+    border-radius: 20px;
+    padding: 12px 20px 10px;
+    box-shadow: 0 8px 30px rgba(255, 90, 44, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    text-align: center;
 }
 .gd-timer-lbl {
-    text-align: center;
-    font-size: 12.5px;
-    font-weight: 500;
+    font-size: 12px;
+    font-weight: 600;
     color: #475569;
-    margin: 0 0 9px;
+    margin: 0 0 6px;
+    letter-spacing: 0.5px;
 }
 .gd-timer-row {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    background: linear-gradient(170deg, #ffffff 0%, #FFF6F2 100%);
-    border: 1px solid rgba(255, 90, 44, 0.13);
-    border-radius: 16px;
-    padding: 16px 22px 14px;
-    box-shadow: 0 4px 22px rgba(255, 90, 44, 0.05), inset 0 1px 0 rgba(255,255,255,0.8);
+    gap: 16px;
 }
 .gd-tblock {
     display: flex;
@@ -413,15 +375,15 @@
     min-width: 58px;
 }
 .gd-tnum {
-    font-size: 48px;
+    font-size: 46px;
     font-weight: 800;
     color: #FF5A2C;
     line-height: 1;
     font-variant-numeric: tabular-nums;
-    letter-spacing: -1px;
+    letter-spacing: -1.2px;
 }
 .gd-tunit {
-    font-size: 9px;
+    font-size: 8.5px;
     font-weight: 700;
     color: #94A3B8;
     text-transform: uppercase;
@@ -429,12 +391,12 @@
     margin-top: 6px;
 }
 .gd-tsep {
-    font-size: 38px;
+    font-size: 34px;
     font-weight: 700;
     color: #FF5A2C;
     line-height: 1;
-    padding-bottom: 16px;
-    align-self: flex-end;
+    padding-bottom: 12px;
+    align-self: center;
 }
 .gd-sparkle {
     position: absolute;
@@ -484,20 +446,29 @@
     gap: 13px;
     margin-bottom: 0;
 }
-.gd-icon {
-    width: 50px;
-    height: 50px;
-    flex-shrink: 0;
+.gd-hexagon-icon {
+    position: relative;
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
-    /* Hexagon shape */
-    clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+    flex-shrink: 0;
 }
-.gd-icon-std { background: #FFF2ED; color: #FF5A2C; }
-.gd-icon-pre { background: #FFF2ED; color: #FF5A2C; }
-
+.gd-hex-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+.gd-hex-inner-icon {
+    position: relative;
+    z-index: 2;
+    font-size: 18px;
+    color: #FF5A2C;
+}
 .gd-card-name {
     font-size: 20px;
     font-weight: 800;
@@ -511,11 +482,15 @@
 }
 .gd-card-tagline {
     font-size: 13px;
-    color: #FF5A2C;
     margin: 0;
     font-weight: 500;
 }
-
+.gd-tagline-standard {
+    color: #C25E3D;
+}
+.gd-tagline-premium {
+    color: #FF5A2C;
+}
 /* ── Great Value Badge ── */
 .gd-great-val {
     margin: 12px 0;
@@ -524,9 +499,9 @@
     gap: 5px;
     font-size: 11.5px;
     font-weight: 700;
-    color: #DC2626;
-    background: #FEF2F2;
-    border: 1px solid rgba(220, 38, 38, 0.14);
+    color: #FF5A2C;
+    background: #FFF5F2;
+    border: 1px solid rgba(255, 90, 44, 0.16);
     padding: 4px 12px;
     border-radius: 20px;
     width: fit-content;
@@ -552,26 +527,26 @@
 /* ── 65% OFF Badge ── */
 .gd-off-badge {
     position: absolute;
-    right: 0;
-    top: 50%;
+    right: -28px;
+    top: 42%;
     transform: translateY(-50%);
-    width: 66px;
-    height: 66px;
+    width: 86px;
+    height: 86px;
     background: #ffffff;
-    border: 2px solid #FF5A2C;
+    border: 2.5px solid #FF5A2C;
     border-radius: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    box-shadow: 0 4px 18px rgba(255, 90, 44, 0.22);
+    box-shadow: 0 10px 25px rgba(255, 90, 44, 0.14), 0 0 15px rgba(255, 90, 44, 0.15);
     z-index: 5;
-    line-height: 1.1;
+    line-height: 1.15;
 }
-.gd-off-badge i    { font-size: 12px; color: #FF5A2C; margin-bottom: 1px; }
-.gd-off-badge span { font-size: 8.5px; font-weight: 700; color: #FF5A2C; text-transform: uppercase; }
-.gd-off-badge strong { font-size: 18px; font-weight: 900; color: #FF5A2C; display: block; }
+.gd-off-badge i    { font-size: 14px; color: #FF5A2C; margin-bottom: 2px; }
+.gd-off-badge span { font-size: 9px; font-weight: 700; color: #C25E3D; text-transform: uppercase; }
+.gd-off-badge strong { font-size: 24px; font-weight: 900; color: #FF5A2C; display: block; }
 
 /* ── Pricing ── */
 .gd-price-row {
