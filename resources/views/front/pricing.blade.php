@@ -377,6 +377,28 @@
       });
     }
 
+    // Activate Yearly tab if requested via query parameter
+    var urlParams = new URLSearchParams(window.location.search);
+    var term = urlParams.get('term') || window.location.hash.replace('#', '');
+    if (term === 'yearly') {
+      var yearlyTab = document.getElementById('yearly-tab');
+      var yearlyPane = document.getElementById('tab-yearly');
+      if (yearlyTab && yearlyPane) {
+        // Remove active class from other tabs
+        document.querySelectorAll('#pricing-tabs .nav-link').forEach(function(btn) {
+          btn.classList.remove('active');
+          btn.setAttribute('aria-selected', 'false');
+        });
+        document.querySelectorAll('#pricing-tabs-content .tab-pane').forEach(function(pane) {
+          pane.classList.remove('show', 'active');
+        });
+        // Activate yearly
+        yearlyTab.classList.add('active');
+        yearlyTab.setAttribute('aria-selected', 'true');
+        yearlyPane.classList.add('show', 'active');
+      }
+    }
+
   });
 </script>
 @endsection
