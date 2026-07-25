@@ -247,11 +247,11 @@
 .gd-box {
     background: #ffffff;
     border-radius: 22px;
-    padding: 30px 36px 22px;
+    padding: 22px 30px 14px;
     box-shadow: 0 24px 70px rgba(0, 0, 0, 0.16);
     position: relative;
     width: 100%;
-    max-height: calc(100dvh - 36px);
+    max-height: 95dvh;
     overflow-y: auto;
     overflow-x: visible;
     scrollbar-width: thin;
@@ -308,55 +308,55 @@
 }
 
 /* ── Ribbon Badge ── */
-.gd-ribbon-wrap { text-align: center; margin-bottom: 14px; }
+.gd-ribbon-wrap { text-align: center; margin-bottom: 12px; }
 .gd-ribbon {
     display: inline-flex;
     align-items: center;
     background: linear-gradient(90deg, #FF6B3D 0%, #FF3D1F 100%);
     color: #fff;
-    padding: 8px 22px;
+    padding: 7px 18px;
     border-radius: 30px;
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 700;
-    letter-spacing: 1.3px;
+    letter-spacing: 1.2px;
     text-transform: uppercase;
-    box-shadow: 0 5px 16px rgba(255, 90, 44, 0.38);
+    box-shadow: 0 5px 16px rgba(255, 90, 44, 0.3);
 }
 
 /* ── Heading ── */
 .gd-heading {
     text-align: center;
-    font-size: 34px;
+    font-size: 28px;
     font-weight: 800;
     color: #0F172A;
-    line-height: 1.18;
-    margin: 0 0 10px;
+    line-height: 1.15;
+    margin: 0 0 6px;
     letter-spacing: -0.5px;
 }
 .gd-heading span { color: #FF5A2C; }
 
 .gd-subtext {
     text-align: center;
-    font-size: 14px;
+    font-size: 13px;
     color: #64748B;
-    line-height: 1.6;
-    margin: 0 0 20px;
+    line-height: 1.5;
+    margin: 0 0 16px;
 }
 
 /* ── Timer ── */
 .gd-timer-section {
     position: relative;
-    max-width: 480px;
-    margin: 0 auto 24px;
+    max-width: 440px;
+    margin: 0 auto 18px;
     background: linear-gradient(180deg, #ffffff 0%, #FFFDFB 100%);
     border: 1.2px solid rgba(255, 90, 44, 0.16);
     border-radius: 20px;
-    padding: 12px 20px 10px;
+    padding: 10px 18px 8px;
     box-shadow: 0 8px 30px rgba(255, 90, 44, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8);
     text-align: center;
 }
 .gd-timer-lbl {
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 600;
     color: #475569;
     margin: 0 0 6px;
@@ -366,36 +366,36 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 16px;
+    gap: 14px;
 }
 .gd-tblock {
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 58px;
+    min-width: 50px;
 }
 .gd-tnum {
-    font-size: 46px;
+    font-size: 38px;
     font-weight: 800;
     color: #FF5A2C;
     line-height: 1;
     font-variant-numeric: tabular-nums;
-    letter-spacing: -1.2px;
+    letter-spacing: -1px;
 }
 .gd-tunit {
-    font-size: 8.5px;
+    font-size: 8px;
     font-weight: 700;
     color: #94A3B8;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-top: 6px;
+    margin-top: 4px;
 }
 .gd-tsep {
-    font-size: 34px;
+    font-size: 28px;
     font-weight: 700;
     color: #FF5A2C;
     line-height: 1;
-    padding-bottom: 12px;
+    padding-bottom: 8px;
     align-self: center;
 }
 .gd-sparkle {
@@ -413,7 +413,7 @@
 .gd-cards-outer {
     position: relative;
     padding-right: 52px; /* space for 65% off badge */
-    margin-bottom: 18px;
+    margin-bottom: 14px;
 }
 
 /* ── Cards Grid ── */
@@ -427,7 +427,7 @@
 .gd-card {
     background: #ffffff;
     border-radius: 16px;
-    padding: 22px 20px 20px;
+    padding: 16px 16px 14px;
     border: 1.5px solid #E5E7EB;
     position: relative;
     box-shadow: 0 2px 14px rgba(0, 0, 0, 0.04);
@@ -493,20 +493,20 @@
 }
 /* ── Great Value Badge ── */
 .gd-great-val {
-    margin: 12px 0;
+    margin: 10px 0;
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-size: 11.5px;
+    font-size: 11px;
     font-weight: 700;
     color: #FF5A2C;
     background: #FFF5F2;
     border: 1px solid rgba(255, 90, 44, 0.16);
-    padding: 4px 12px;
+    padding: 3px 10px;
     border-radius: 20px;
     width: fit-content;
 }
-.gd-great-val i { font-size: 11px; }
+.gd-great-val i { font-size: 10px; }
 
 /* ── Most Loved Badge ── */
 .gd-most-loved {
@@ -553,7 +553,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin: 14px 0 4px;
+    margin: 10px 0 2px;
 }
 .gd-original-price {
     font-size: 13px;
@@ -571,34 +571,34 @@
     white-space: nowrap;
 }
 .gd-price-big {
-    font-size: 36px;
+    font-size: 30px;
     font-weight: 800;
     color: #0F172A;
     line-height: 1;
     margin-bottom: 3px;
 }
 .gd-per {
-    font-size: 14px;
+    font-size: 13.5px;
     font-weight: 500;
     color: #64748B;
 }
 .gd-billed {
     font-size: 12px;
     color: #64748B;
-    margin: 0 0 14px;
+    margin: 0 0 10px;
 }
 
 /* ── Feature List ── */
 .gd-feats {
     list-style: none;
     padding: 0;
-    margin: 0 0 auto;
+    margin: 0 0 10px;
     flex: 1;
 }
 .gd-feats li {
-    font-size: 13.5px;
+    font-size: 12.5px;
     color: #374151;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -615,10 +615,10 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 12px 16px;
-    margin-top: 16px;
+    padding: 10px 14px;
+    margin-top: 12px;
     border-radius: 10px;
-    font-size: 14px;
+    font-size: 13.5px;
     font-weight: 700;
     text-decoration: none;
     transition: all 0.22s ease;
@@ -644,42 +644,42 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 0;
-    background: #F8FAFC;
-    border: 1px solid #F1F5F9;
+    background: #FFFBF9;
+    border: 1px solid rgba(255, 90, 44, 0.1);
     border-radius: 12px;
-    padding: 13px 8px;
-    margin-bottom: 14px;
+    padding: 10px 6px;
+    margin-bottom: 12px;
 }
 .gd-ti {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 0 8px;
+    padding: 0 6px;
     border-right: 1px solid #E2E8F0;
 }
 .gd-ti:last-child { border-right: none; }
 .gd-ti-ico {
-    width: 30px;
-    height: 30px;
+    width: 26px;
+    height: 26px;
     background: #FFF5F2;
     border-radius: 7px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #FF5A2C;
-    font-size: 13px;
+    font-size: 11px;
     flex-shrink: 0;
 }
 .gd-ti strong {
     display: block;
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 700;
     color: #0F172A;
     margin-bottom: 2px;
 }
 .gd-ti span {
     display: block;
-    font-size: 10px;
+    font-size: 9px;
     color: #64748B;
     line-height: 1.3;
 }
@@ -687,7 +687,7 @@
 /* ── Footer / Dismiss ── */
 .gd-footer { text-align: center; }
 .gd-dismiss {
-    font-size: 13.5px;
+    font-size: 12.5px;
     color: #64748B;
     font-weight: 500;
     text-decoration: none;
@@ -760,6 +760,32 @@
     .gd-card { padding: 18px 14px 16px; }
     .gd-price-big { font-size: 26px; }
     .gd-trust { grid-template-columns: 1fr 1fr; font-size: 9px; }
+}
+
+/* Viewport height-based layout scaling to prevent vertical scrollbars on desktop */
+@media (min-width: 961px) and (max-height: 850px) {
+    .gd-dialog {
+        transform: scale(0.92);
+        transform-origin: center center;
+    }
+}
+@media (min-width: 961px) and (max-height: 780px) {
+    .gd-dialog {
+        transform: scale(0.85);
+        transform-origin: center center;
+    }
+}
+@media (min-width: 961px) and (max-height: 700px) {
+    .gd-dialog {
+        transform: scale(0.78);
+        transform-origin: center center;
+    }
+}
+@media (min-width: 961px) and (max-height: 620px) {
+    .gd-dialog {
+        transform: scale(0.70);
+        transform-origin: center center;
+    }
 }
 </style>
 
