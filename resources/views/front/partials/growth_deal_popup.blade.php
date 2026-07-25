@@ -211,12 +211,13 @@
     inset: 0;
     z-index: 1000001;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    padding: 16px;
+    padding: 40px 16px;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.32s ease, visibility 0.32s ease;
+    overflow-y: auto;
 }
 .gd-overlay.gd-show {
     opacity: 1;
@@ -240,7 +241,7 @@
     width: 100%;
     max-width: 760px;
     /* On desktop, shift right slightly so gift box doesn't overflow viewport */
-    margin-left: 60px;
+    margin: auto 0 auto 60px;
     display: flex;
     flex-direction: column;
 }
@@ -281,13 +282,6 @@
 .gd-box::-webkit-scrollbar { width: 3px; }
 .gd-box::-webkit-scrollbar-thumb { background: #e2ded9; border-radius: 3px; }
 
-
-
-@media screen (max-width:768px) {
-    .gd-box {
-    max-height: calc(100dvh - 48px);
-}
-}
 
 /* ── Close Button ── */
 .gd-close {
@@ -764,7 +758,7 @@
 
 /* Hide gift box on screens too narrow to accommodate it */
 @media (max-width: 960px) {
-    .gd-dialog { margin-left: 0; }
+    .gd-dialog { margin: auto 0; }
     .gd-giftbox { display: none; }
 }
 
@@ -773,7 +767,6 @@
     .gd-box {
         padding: 20px 24px 14px;
         border-radius: 18px;
-        max-height: calc(100dvh - 32px);
     }
     .gd-heading { font-size: 24px; }
     .gd-subtext { font-size: 12.5px; }
@@ -829,11 +822,10 @@
 
 /* Small mobile */
 @media (max-width: 480px) {
-    .gd-overlay { padding: 12px 10px; }
+    .gd-overlay { padding: 20px 12px; }
     .gd-box {
         padding: 14px 14px 10px;
         border-radius: 14px;
-        max-height: calc(100dvh - 24px);
     }
     .gd-heading { font-size: 20px; }
     .gd-ribbon { font-size: 10px; padding: 5px 12px; letter-spacing: 0.8px; }
