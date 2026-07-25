@@ -381,7 +381,7 @@ Route::domain($domain)->group(function () {
     ******************** Admin Dashboard Routes **********************
     =======================================================*/
 
-    Route::group(['prefix' => 'admin', 'middleware' => 'guest:admin'], function () {
+    Route::group(['prefix' => 'X9_AdMiN-Portal_V7', 'middleware' => 'guest:admin'], function () {
         Route::get('/', 'Admin\LoginController@login')->name('admin.login');
         Route::post('/login', 'Admin\LoginController@authenticate')->name('admin.auth');
 

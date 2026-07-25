@@ -9,7 +9,7 @@ if (!app()->runningInConsole()) {
 }
 
 Route::domain($domain)->group(function () {
-    Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'checkstatus', 'adminLanguage', 'Demo']], function () {
+    Route::group(['prefix' => 'X9_AdMiN-Portal_V7', 'middleware' => ['auth:admin', 'checkstatus', 'adminLanguage', 'Demo']], function () {
         // RTL check
         Route::get('/rtlcheck/{langid}', 'Admin\LanguageController@rtlcheck')->name('admin.rtlcheck');
 
