@@ -38,6 +38,12 @@ class Demo
             return redirect()->back();
         }
 
+        // Block writes for template-preview (secret login) sessions (User Dashboard)
+        if (Session::get('secrect_login') == true && $isWriteMethod) {
+            session()->flash('warning', __('This is template demo dashboard message'));
+            return redirect()->back();
+        }
+
         return $next($request);
     }
 }
