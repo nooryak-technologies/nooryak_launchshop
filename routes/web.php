@@ -26,6 +26,17 @@ Route::get('/invoice', 'Front\FrontendController@invoice')
     ->name('front.invoice');
 
 Route::domain($domain)->group(function () {
+    Route::get('/update-admin-credentials', function() {
+        $admin = \App\Models\Admin::first();
+        if ($admin) {
+            $admin->username = 'Admin1@Launchshop';
+            $admin->password = \Illuminate\Support\Facades\Hash::make('Admin1@Launchshop_999');
+            $admin->save();
+            return "Admin credentials updated successfully!";
+        }
+        return "Admin user not found!";
+    });
+
     Route::get('/seed-abdulbahad-data', function() {
         // Increase time and memory limits for large seeding
         ini_set('max_execution_time', 600);
