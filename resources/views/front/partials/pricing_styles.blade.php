@@ -739,19 +739,19 @@
   }
 
  /* See more toggle */
- .pricing-card-v2.package-1 .plan-v2-see-more {
+.pricing-card-v2.plan-basic .plan-v2-see-more {
     margin-bottom: 14px;
   }
 
-  .pricing-card-v2.package-2 .plan-v2-see-more {
+  .pricing-card-v2.plan-basic .plan-v2-see-more {
     margin-bottom: 14px;
   }
 
-  .pricing-card-v2.package-3 .plan-v2-see-more {
+.pricing-card-v2.plan-basic .plan-v2-see-more {
     margin-bottom: 14px;
   }
 
-  .pricing-card-v2.package-enterprise .plan-v2-see-more {
+ .pricing-card-v2.card-enterprise  .plan-v2-see-more {
     margin-bottom: 14px;
   }
 
