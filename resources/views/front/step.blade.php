@@ -369,7 +369,7 @@
     align-items: center;
     gap: 16px;
     background: #f0fdf4;
-    border: 1px solid #bbf7d0;
+    border: 2px dashed #22c55e;
     border-radius: 12px;
     padding: 16px;
     box-shadow: 0 4px 12px rgba(22, 163, 74, 0.05);
@@ -379,8 +379,8 @@
   
   .whatsapp-badge-logo {
     flex-shrink: 0;
-    width: 44px;
-    height: 44px;
+    width: 64px;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -400,22 +400,18 @@
     text-align: left;
   }
 
-  .whatsapp-badge-content .badge-title {
-    display: block;
-    font-size: 14px;
-    font-weight: 700;
-    color: #166534;
-    margin-bottom: 2px;
-    text-align: left;
-  }
-
   .whatsapp-badge-content .badge-desc {
-    font-size: 13px;
-    color: #15803d;
+    font-size: 16px;
+    color: #166534;
     margin: 0;
-    font-weight: 500;
-    line-height: 1.4;
+    font-weight: 700;
+    line-height: 1.5;
     text-align: left;
+    background-color: #fef08a;
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    border: 1px solid #fde047;
   }
 
   @media (max-width: 575.98px) {
@@ -424,15 +420,13 @@
       gap: 12px;
     }
     .whatsapp-badge-logo {
-      width: 38px;
-      height: 38px;
+      width: 50px;
+      height: 50px;
       padding: 4px;
     }
-    .whatsapp-badge-content .badge-title {
-      font-size: 13px;
-    }
     .whatsapp-badge-content .badge-desc {
-      font-size: 12px;
+      font-size: 13px;
+      padding: 3px 6px;
     }
   }
 </style>
@@ -525,8 +519,7 @@
                         <img src="{{ asset('images/Logo.png') }}" alt="Logo">
                       </div>
                       <div class="whatsapp-badge-content">
-                        <span class="badge-title">{{ __('OTP  Sent To Your Whatsapp!') }}</span>
-                        <p class="badge-desc">{{ __('Recieved From Launchshop Verification | Nooryak Technologies') }}</p>
+                        <p class="badge-desc">{{ __('Check Your Whatsapp For Launcshop Verification | Otp Recieve From Nooryak Technologies.') }}</p>
                       </div>
                     </div>
                   </div>
