@@ -266,7 +266,7 @@
   .pricing-cards-row {
     display: flex;
     gap: 20px;
-    align-items: stretch;
+    align-items: flex-start;
     flex-wrap: wrap;
     justify-content: center;
     position: relative;
@@ -713,11 +713,5 @@
       justify-content: center;
       display: flex;
     }
-  }
-
-  /* Task 2: Change orange checkmark circle color to green in comparison table */
-  .feat-check-circle {
-    background: #10b981 !important;
-    box-shadow: none !important;
   }
 </style>

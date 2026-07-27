@@ -388,9 +388,9 @@
 
               <hr class="plan-v2-divider">
 
-              {{-- Features --}}
+              {{-- Visible features --}}
               <ul class="plan-v2-features">
-                @foreach($packageFormattedFeatures as $feat)
+                @foreach($visibleFeats as $feat)
                   @php
                     $isPremiumFreeDomain = ($titleKey == 'premium' && (stripos($feat['text'], 'Free .in Domain') !== false || stripos($feat['text'], 'Free Domain') !== false));
                   @endphp
@@ -406,6 +406,35 @@
                   </li>
                 @endforeach
               </ul>
+
+              {{-- Extra features (collapsed) --}}
+              @php $hasExtra = (count($extraFeats) > 0); @endphp
+              @if($hasExtra)
+                <div class="plan-v2-extra-features" id="extra-{{ strtolower($term) }}-{{ $package->id }}">
+                  <ul class="plan-v2-features" style="margin-bottom:8px;">
+                    @foreach($extraFeats as $ef)
+                      @php
+                        $isPremiumFreeDomainExtra = ($titleKey == 'premium' && (stripos($ef['text'], 'Free .in Domain') !== false || stripos($ef['text'], 'Free Domain') !== false));
+                      @endphp
+                      <li class="{{ !$ef['has'] ? 'feat-disabled' : '' }} {{ $isPremiumFreeDomainExtra ? 'feat-free-domain-premium' : '' }}">
+                        @if($isPremiumFreeDomainExtra)
+                          <i class="fas fa-globe fi-globe-premium" style="color: #10b981; font-size: 15px; flex-shrink: 0; margin-top: 2px;"></i>
+                        @elseif($ef['has'])
+                          <i class="fas fa-check fi-check"></i>
+                        @else
+                          <i class="fas fa-times fi-times"></i>
+                        @endif
+                        <span>{{ __($ef['text']) }}</span>
+                      </li>
+                    @endforeach
+                  </ul>
+                </div>
+                <button type="button" class="plan-v2-see-more"
+                        onclick="togglePlanFeatures('{{ strtolower($term) }}-{{ $package->id }}', this)">
+                  <span class="see-more-txt">See More Features</span>
+                  <i class="fas fa-arrow-right see-more-icon" style="font-size:11px;"></i>
+                </button>
+              @endif
 
               {{-- CTA Button with correct name --}}
               <a href="{{ $ctaHref }}" class="plan-v2-btn {{ ($isRecommended || $isBestValue) ? '' : 'btn-v2-outline' }}">
