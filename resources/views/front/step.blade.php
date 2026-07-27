@@ -414,8 +414,8 @@
       gap: 12px;
     }
     .whatsapp-badge-logo {
-      width: 50px;
-      height: 50px;
+      width: 56px;
+      height: 56px;
       padding: 4px;
     }
     .whatsapp-badge-content .badge-desc {
