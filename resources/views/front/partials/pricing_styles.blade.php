@@ -721,4 +721,20 @@
     color: #ffffff !important;
     box-shadow: none !important;
   }
+
+  /* Equal height of pricing cards on desktop */
+  @media (min-width: 992px) {
+    .pricing-card-v2.package-1, .pricing-card-v2.plan-basic {
+      min-height: 605px;
+    }
+    .pricing-card-v2.package-2, .pricing-card-v2.plan-standard {
+      min-height: 605px;
+    }
+    .pricing-card-v2.package-3, .pricing-card-v2.plan-premium {
+      min-height: 605px;
+    }
+    .pricing-card-v2.package-enterprise, .pricing-card-v2.card-enterprise {
+      min-height: 605px;
+    }
+  }
 </style>

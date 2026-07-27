@@ -249,7 +249,7 @@
               }
             @endphp
 
-            <div class="pricing-card-v2 {{ $cardClass }}">
+            <div class="pricing-card-v2 {{ $cardClass }} package-{{ $package->id }} plan-{{ $titleKey }}">
               @if($titleKey == 'standard')
                 <!-- Mobile-only Most Popular Callout -->
                 <div class="mobile-most-popular-callout d-lg-none">
@@ -446,7 +446,7 @@
 
           @if(strtolower($term) != 'monthly')
           {{-- Enterprise card always shown --}}
-            <div class="pricing-card-v2 card-enterprise">
+            <div class="pricing-card-v2 card-enterprise package-enterprise">
               <!-- Enterprise Callout Box (Most Chosen) -->
               <div class="enterprise-callout-box d-none d-lg-block">
                 <div class="d-flex align-items-start gap-2">
