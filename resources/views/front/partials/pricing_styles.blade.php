@@ -266,7 +266,7 @@
   .pricing-cards-row {
     display: flex;
     gap: 20px;
-    align-items: stretch;
+    align-items: flex-start;
     flex-wrap: wrap;
     justify-content: center;
     position: relative;
