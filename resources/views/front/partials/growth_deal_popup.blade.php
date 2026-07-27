@@ -114,7 +114,7 @@
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Secure Payments</li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Email &amp; Chat Support</li>
                         </ul>
-                        <a href="{{ route('front.pricing') }}?term=yearly" class="gd-btn-border">Choose Standard &nbsp;→</a>
+                        <a href="{{ route('front.pricing') }}?term=yearly" class="gd-btn-border" id="gdChooseStandard">Choose Standard &nbsp;→</a>
                     </div>
 
                     {{-- Premium Card --}}
@@ -147,7 +147,7 @@
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Free .com Domain</li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Zero Transaction Fees</li>
                         </ul>
-                        <a href="{{ route('front.pricing') }}?term=yearly" class="gd-btn-fill">Upgrade to Premium &nbsp;→</a>
+                        <a href="{{ route('front.pricing') }}?term=yearly" class="gd-btn-fill" id="gdUpgradePremium">Upgrade to Premium &nbsp;→</a>
                         <span class="gd-card-sparkle">✦</span>
                     </div>
                 </div>
@@ -955,6 +955,48 @@
     if (backdrop)  backdrop.addEventListener('click', closePopup);
     if (dismissEl) dismissEl.addEventListener('click', function(e){ e.preventDefault(); closePopup(); });
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closePopup(); });
+
+    /* Mobile-only scroll to plans */
+    var standardBtn = document.getElementById('gdChooseStandard');
+    var premiumBtn  = document.getElementById('gdUpgradePremium');
+
+    function handlePlanClick(e, cardSelector) {
+        if (window.innerWidth <= 767) {
+            e.preventDefault();
+            closePopup();
+
+            // Switch to yearly tab if yearly tab exists
+            var yearlyTab = document.getElementById('yearly-tab');
+            if (yearlyTab) {
+                yearlyTab.click();
+            }
+
+            // Scroll to the standard/premium card
+            setTimeout(function() {
+                var targetCard = document.querySelector(cardSelector);
+                if (targetCard) {
+                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    var pricingSection = document.getElementById('home-pricing-section');
+                    if (pricingSection) {
+                        pricingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            }, 150);
+        }
+    }
+
+    if (standardBtn) {
+        standardBtn.addEventListener('click', function(e) {
+            handlePlanClick(e, '.pricing-card-v2.card-recommended');
+        });
+    }
+
+    if (premiumBtn) {
+        premiumBtn.addEventListener('click', function(e) {
+            handlePlanClick(e, '.pricing-card-v2.card-best-value');
+        });
+    }
 
     /* ── Persistent Countdown ── */
     var SK = 'gdTimerEnd_v2';
