@@ -384,10 +384,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #ffffff;
-    border-radius: 10px;
-    border: 1px solid #e2e8f0;
-    padding: 6px;
   }
 
   .whatsapp-badge-logo img {
@@ -401,17 +397,15 @@
   }
 
   .whatsapp-badge-content .badge-desc {
-    font-size: 16px;
+    font-size: 15px;
     color: #166534;
     margin: 0;
     font-weight: 700;
     line-height: 1.5;
     text-align: left;
-    background-color: #fef08a;
     padding: 4px 8px;
     border-radius: 6px;
     display: inline-block;
-    border: 1px solid #fde047;
   }
 
   @media (max-width: 575.98px) {
