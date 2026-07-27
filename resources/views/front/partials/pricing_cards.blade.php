@@ -101,7 +101,7 @@
               // Subtitle
               $subtitles = [
                   'basic' => 'Start your own online store',
-                  'standard' => 'Elevate Your E-commerce Journey with this Starter Plan.',
+                  'standard' => 'Elevate Your E-commerce Journey',
                   'premium' => 'Best for Small Business Owners.'
               ];
               $planSubtitle = $subtitles[$titleKey] ?? ucfirst($titleKey).' plan';
