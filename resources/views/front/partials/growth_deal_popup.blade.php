@@ -59,22 +59,17 @@
                 <p class="gd-timer-lbl">Claim it before time runs out</p>
                 <div class="gd-timer-row">
                     <div class="gd-tblock">
-                        <span class="gd-tnum" id="gd-days">01</span>
-                        <span class="gd-tunit">DAYS</span>
-                    </div>
-                    <span class="gd-tsep">:</span>
-                    <div class="gd-tblock">
-                        <span class="gd-tnum" id="gd-hours">23</span>
+                        <span class="gd-tnum" id="gd-hours">01</span>
                         <span class="gd-tunit">HOURS</span>
                     </div>
                     <span class="gd-tsep">:</span>
                     <div class="gd-tblock">
-                        <span class="gd-tnum" id="gd-mins">45</span>
+                        <span class="gd-tnum" id="gd-mins">30</span>
                         <span class="gd-tunit">MINUTES</span>
                     </div>
                     <span class="gd-tsep">:</span>
                     <div class="gd-tblock">
-                        <span class="gd-tnum" id="gd-secs">59</span>
+                        <span class="gd-tnum" id="gd-secs">22</span>
                         <span class="gd-tunit">SECONDS</span>
                     </div>
                 </div>
@@ -999,15 +994,14 @@
     }
 
     /* ── Persistent Countdown ── */
-    var SK = 'gdTimerEnd_v2';
+    var SK = 'gdTimerEnd_v3';
     var endTs = parseInt(sessionStorage.getItem(SK), 10);
     if (!endTs || isNaN(endTs) || endTs < Date.now()) {
-        /* 1 day 23h 45m 59s */
-        endTs = Date.now() + (1*86400 + 23*3600 + 45*60 + 59) * 1000;
+        /* 1 hour 30m 22s */
+        endTs = Date.now() + (1*3600 + 30*60 + 22) * 1000;
         sessionStorage.setItem(SK, endTs);
     }
 
-    var elD = document.getElementById('gd-days');
     var elH = document.getElementById('gd-hours');
     var elM = document.getElementById('gd-mins');
     var elS = document.getElementById('gd-secs');
@@ -1015,11 +1009,9 @@
     function pad(n){ return n < 10 ? '0'+n : ''+n; }
     function tick(){
         var diff = Math.max(0, endTs - Date.now());
-        var d = Math.floor(diff / 86400000);
-        var h = Math.floor((diff % 86400000) / 3600000);
+        var h = Math.floor(diff / 3600000);
         var m = Math.floor((diff % 3600000)  / 60000);
         var s = Math.floor((diff % 60000)    / 1000);
-        if(elD) elD.textContent = pad(d);
         if(elH) elH.textContent = pad(h);
         if(elM) elM.textContent = pad(m);
         if(elS) elS.textContent = pad(s);
