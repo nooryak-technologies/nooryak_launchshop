@@ -266,7 +266,7 @@
   .pricing-cards-row {
     display: flex;
     gap: 20px;
-    align-items: flex-start;
+    align-items: stretch;
     flex-wrap: wrap;
     justify-content: center;
     position: relative;
@@ -713,5 +713,12 @@
       justify-content: center;
       display: flex;
     }
+  }
+
+  /* Change orange checkmark circles to green, keeping cancel marks red */
+  .feat-check-circle:not(.times):not(.muted):not(.detail) {
+    background: #10b981 !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
   }
 </style>

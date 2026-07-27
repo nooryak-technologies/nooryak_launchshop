@@ -229,7 +229,7 @@
                   $packageFormattedFeatures[] = ['text' => $customText, 'has' => $customHas];
               }
  
-              $visibleCount = 5;
+              $visibleCount = 7;
               $visibleFeats = array_slice($packageFormattedFeatures, 0, $visibleCount);
               $extraFeats   = array_slice($packageFormattedFeatures, $visibleCount);
 
