@@ -970,7 +970,18 @@
             setTimeout(function() {
                 var targetCard = document.querySelector(cardSelector);
                 if (targetCard) {
-                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    var headerHeight = 70; // default approximate
+                    var headerElement = document.querySelector('.main-responsive-nav') || document.querySelector('.header-area');
+                    if (headerElement) {
+                        headerHeight = headerElement.offsetHeight;
+                    }
+                    var scrollY = window.pageYOffset || window.scrollY || document.documentElement.scrollTop;
+                    var elementPosition = targetCard.getBoundingClientRect().top + scrollY;
+                    var offsetPosition = elementPosition - headerHeight - 15; // 15px extra spacing for breathing room
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
                 } else {
                     var pricingSection = document.getElementById('home-pricing-section');
                     if (pricingSection) {
