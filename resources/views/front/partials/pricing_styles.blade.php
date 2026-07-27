@@ -725,36 +725,16 @@
   /* Equal height of pricing cards on desktop */
   @media (min-width: 992px) {
     .pricing-card-v2.package-1, .pricing-card-v2.plan-basic {
-      min-height: 605px;
+      min-height: 670px;
     }
     .pricing-card-v2.package-2, .pricing-card-v2.plan-standard {
-      min-height: 605px;
+      min-height: 670px;
     }
     .pricing-card-v2.package-3, .pricing-card-v2.plan-premium {
-      min-height: 605px;
+      min-height: 670px;
     }
     .pricing-card-v2.package-enterprise, .pricing-card-v2.card-enterprise {
-      min-height: 605px;
+      min-height: 670px;
     }
   }
-
- /* See more toggle */
-.pricing-card-v2.plan-basic .plan-v2-see-more {
-    margin-bottom: 14px;
-  }
-
-  .pricing-card-v2.plan-basic .plan-v2-see-more {
-    margin-bottom: 14px;
-  }
-
-.pricing-card-v2.plan-basic .plan-v2-see-more {
-    margin-bottom: 14px;
-  }
-
- .pricing-card-v2.card-enterprise  .plan-v2-see-more {
-    margin-bottom: 14px;
-  }
-
-
-
 </style>
