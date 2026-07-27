@@ -977,7 +977,7 @@
                     }
                     var scrollY = window.pageYOffset || window.scrollY || document.documentElement.scrollTop;
                     var elementPosition = targetCard.getBoundingClientRect().top + scrollY;
-                    var offsetPosition = elementPosition - headerHeight - 15; // 15px extra spacing for breathing room
+                    var offsetPosition = elementPosition - headerHeight - 50; // 50px extra spacing to show the top badge/border clearly
                     window.scrollTo({
                         top: offsetPosition,
                         behavior: 'smooth'
