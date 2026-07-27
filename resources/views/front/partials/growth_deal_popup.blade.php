@@ -956,7 +956,7 @@
     var premiumBtn  = document.getElementById('gdUpgradePremium');
 
     function handlePlanClick(e, cardSelector) {
-        if (window.innerWidth <= 767) {
+        if (window.innerWidth <= 991) {
             e.preventDefault();
             closePopup();
 
@@ -972,8 +972,12 @@
                 var targetCard = document.querySelector('#tab-yearly ' + cardSelector);
                 if (targetCard) {
                     var headerHeight = 70; // default approximate
-                    var headerElement = document.querySelector('.main-responsive-nav') || document.querySelector('.header-area');
-                    if (headerElement) {
+                    var headerElement = document.querySelector('.main-responsive-nav');
+                    // Fallback to desktop header if mobile header is hidden (offsetHeight === 0)
+                    if (!headerElement || headerElement.offsetHeight === 0) {
+                        headerElement = document.querySelector('.header-area');
+                    }
+                    if (headerElement && headerElement.offsetHeight > 0) {
                         headerHeight = headerElement.offsetHeight;
                     }
                     var scrollY = window.pageYOffset || window.scrollY || document.documentElement.scrollTop;
