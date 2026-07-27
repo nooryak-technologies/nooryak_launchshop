@@ -971,18 +971,24 @@
                 // Target the card inside the activated yearly tab container to avoid matching the hidden monthly tab card
                 var targetCard = document.querySelector('#tab-yearly ' + cardSelector);
                 if (targetCard) {
-                    var headerHeight = 70; // default approximate
-                    var headerElement = document.querySelector('.main-responsive-nav');
-                    // Fallback to desktop header if mobile header is hidden (offsetHeight === 0)
-                    if (!headerElement || headerElement.offsetHeight === 0) {
-                        headerElement = document.querySelector('.header-area');
-                    }
-                    if (headerElement && headerElement.offsetHeight > 0) {
-                        headerHeight = headerElement.offsetHeight;
-                    }
+                   var headerHeight = 100;
+
+const mobileHeader = document.querySelector('.main-responsive-nav');
+const desktopHeader = document.querySelector('.header-area');
+
+if (mobileHeader && mobileHeader.getBoundingClientRect().height) {
+    headerHeight = mobileHeader.getBoundingClientRect().height;
+}
+
+if (desktopHeader && desktopHeader.getBoundingClientRect().height) {
+    headerHeight = Math.max(
+        headerHeight,
+        desktopHeader.getBoundingClientRect().height
+    );
+}
                     var scrollY = window.pageYOffset || window.scrollY || document.documentElement.scrollTop;
                     var elementPosition = targetCard.getBoundingClientRect().top + scrollY;
-                    var offsetPosition = elementPosition - headerHeight - 20; // 20px extra spacing to show the top badge/border clearly
+                    var offsetPosition = elementPosition - headerHeight - 60; // 20px extra spacing to show the top badge/border clearly
                     window.scrollTo({
                         top: offsetPosition,
                         behavior: 'smooth'
