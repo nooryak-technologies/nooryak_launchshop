@@ -109,10 +109,10 @@
                         <div class="gd-price-big">₹4,999<span class="gd-per">/year</span></div>
                         <p class="gd-billed">Billed annually</p>
                         <ul class="gd-feats">
-                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Unlimited Products</li>
-                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Custom Domain</li>
-                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Secure Payments</li>
-                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Email &amp; Chat Support</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Custom Domain Mapping</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Qr Builder</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Google Login</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Gst Billing.</li>
                         </ul>
                         <a href="{{ route('front.pricing') }}?term=yearly" class="gd-btn-border" id="gdChooseStandard">Choose Standard &nbsp;→</a>
                     </div>
@@ -141,11 +141,11 @@
                         <div class="gd-price-big">₹9,999<span class="gd-per">/year</span></div>
                         <p class="gd-billed">Billed annually</p>
                         <ul class="gd-feats">
-                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Everything in Standard</li>
-                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Advanced Analytics</li>
-                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Priority Support</li>
-                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Free .com Domain</li>
-                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Zero Transaction Fees</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Free .in Domain</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Premium Themes</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Staff Management</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Push Notification</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Payment Option</li>
                         </ul>
                         <a href="{{ route('front.pricing') }}?term=yearly" class="gd-btn-fill" id="gdUpgradePremium">Upgrade to Premium &nbsp;→</a>
                         <span class="gd-card-sparkle">✦</span>
