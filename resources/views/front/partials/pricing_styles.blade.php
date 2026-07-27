@@ -683,6 +683,13 @@
       flex-direction: column !important;
       align-items: center !important;
     }
+    /* Hide the plan icon for Standard and Premium on mobile */
+    .pricing-card-v2.plan-standard .plan-v2-icon,
+    .pricing-card-v2.plan-premium .plan-v2-icon,
+    .pricing-card-v2.package-2 .plan-v2-icon,
+    .pricing-card-v2.package-3 .plan-v2-icon {
+      display: none !important;
+    }
   }
   @media(max-width:768px) {
     .pricing-hero-center h1 { font-size: 28px; }
