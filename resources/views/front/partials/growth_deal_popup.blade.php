@@ -968,7 +968,8 @@
 
             // Scroll to the standard/premium card
             setTimeout(function() {
-                var targetCard = document.querySelector(cardSelector);
+                // Target the card inside the activated yearly tab container to avoid matching the hidden monthly tab card
+                var targetCard = document.querySelector('#tab-yearly ' + cardSelector);
                 if (targetCard) {
                     var headerHeight = 70; // default approximate
                     var headerElement = document.querySelector('.main-responsive-nav') || document.querySelector('.header-area');
@@ -977,7 +978,7 @@
                     }
                     var scrollY = window.pageYOffset || window.scrollY || document.documentElement.scrollTop;
                     var elementPosition = targetCard.getBoundingClientRect().top + scrollY;
-                    var offsetPosition = elementPosition - headerHeight - 50; // 50px extra spacing to show the top badge/border clearly
+                    var offsetPosition = elementPosition - headerHeight - 20; // 20px extra spacing to show the top badge/border clearly
                     window.scrollTo({
                         top: offsetPosition,
                         behavior: 'smooth'
