@@ -13,11 +13,11 @@
             </div>
             <p>{{ $bs->footer_text }}</p>
             <div class="social-link mb-2" bis_skin_checked="1">
+              <a href="https://www.instagram.com/launchshop.in/" target="_blank" title=""><i class="fab fa-instagram"></i></a>
               <a href="https://www.facebook.com/" target="_blank" title=""><i class="fab fa-facebook-f"></i></a>
+              <a href="https://www.linkedin.com/" target="_blank" title=""><i class="fab fa-linkedin-in"></i></a>
+              <a href="https://www.youtube.com/" target="_blank" title=""><i class="fab fa-youtube"></i></a>
               <a href="https://twitter.com/" target="_blank" title=""><i class="fab fa-twitter"></i></a>
-              <a href="https://bd.linkedin.com/" target="_blank" title=""><i class="fab fa-linkedin-in"></i></a>
-              <a href="https://www.instagram.com/" target="_blank" title=""><i class="fab fa-instagram"></i></a>
-              <a href="https://dribbble.com/" target="_blank" title=""><i class="fab fa-dribbble"></i></a>
             </div>
           </div>
         </div>
