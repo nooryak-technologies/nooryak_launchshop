@@ -988,7 +988,7 @@ if (desktopHeader && desktopHeader.getBoundingClientRect().height) {
 }
                     var scrollY = window.pageYOffset || window.scrollY || document.documentElement.scrollTop;
                     var elementPosition = targetCard.getBoundingClientRect().top + scrollY;
-                    var offsetPosition = elementPosition - headerHeight - 80; // 20px extra spacing to show the top badge/border clearly
+                    var offsetPosition = elementPosition - headerHeight - 140; // 20px extra spacing to show the top badge/border clearly
                     window.scrollTo({
                         top: offsetPosition,
                         behavior: 'smooth'
