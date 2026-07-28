@@ -212,9 +212,9 @@
     inset: 0;
     z-index: 1000001;
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* Bulletproof vertical scrolling */
     justify-content: center;
-    padding: 60px 16px; /* 60px space top and bottom for laptop views */
+    padding: 0 16px;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.32s ease, visibility 0.32s ease;
@@ -241,11 +241,10 @@
     z-index: 2;
     width: 100%;
     max-width: 760px;
-    /* On desktop, shift right slightly so gift box doesn't overflow viewport */
-    margin-left: 60px;
+    /* 60px top/bottom space for large screens / laptops, horizontally centered */
+    margin: 60px auto;
     display: flex;
     flex-direction: column;
-        /* height: 665px; */
 }
 
 /* ── 3D Gift Box ── */
@@ -854,7 +853,7 @@
 
 /* Hide gift box on screens too narrow to accommodate it */
 @media (max-width: 960px) {
-    .gd-dialog { margin: auto 0; }
+    .gd-dialog { margin: 40px auto; }
     .gd-giftbox { display: none; }
 }
 
@@ -866,14 +865,13 @@
     z-index: 2;
     width: 100%;
     max-width: 760px;
-    /* On desktop, shift right slightly so gift box doesn't overflow viewport */
-    margin-left: 60px;
+    margin: 30px auto;
     display: flex;
     flex-direction: column;
-        height: 665px;
+    height: auto;
 }
-    .gd-overlay { padding: 40px 12px; align-items: flex-start; }
-    .gd-dialog { margin: 0 auto 60px; }
+    .gd-overlay { padding: 0 12px; align-items: flex-start; }
+    .gd-dialog { margin: 30px auto; }
     .gd-box {
         padding: 20px 24px 14px;
         border-radius: 18px;
