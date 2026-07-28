@@ -44,8 +44,7 @@
             {{-- Top Ribbon Badge --}}
             <div class="gd-ribbon-wrap">
                 <div class="gd-ribbon">
-                    <i class="fas fa-crown" style="margin-right: 6px; font-size: 11.5px; color: white;"></i>
-                    YEAR-END GROWTH DEAL
+                    🚀 LIMITED TIME OFFER
                 </div>
             </div>
 
@@ -55,7 +54,7 @@
             {{-- Countdown Timer --}}
             <div class="gd-timer-section">
                 <span class="gd-sparkle-left">✦</span>
-                <p class="gd-timer-lbl">Claim it before time runs out</p>
+                <p class="gd-timer-lbl">⏰ Offer ends in
                 <div class="gd-timer-row">
                     <div class="gd-tblock">
                         <span class="gd-tnum" id="gd-hours">01</span>
@@ -89,7 +88,9 @@
                                 <i class="fas fa-star gd-hex-inner-icon"></i>
                             </div>
                             <div class="gd-card-meta">
-                                <h3 class="gd-card-name">Standard</h3>
+                                <h3 class="gd-card-name"
+                                >Ecommerce
+                                Standard</h3>
                                 <p class="gd-card-tagline gd-tagline-standard">Smart choice for growing brands</p>
                             </div>
                         </div>
@@ -122,10 +123,12 @@
                             </div>
                             <div class="gd-card-meta">
                                 <h3 class="gd-card-name">
-                                    Premium&nbsp;
+                                    Ecommerce Premium&nbsp;
                                     <span class="gd-most-loved"><i class="fas fa-heart"></i>&nbsp;Most Loved</span>
                                 </h3>
-                                <p class="gd-card-tagline gd-tagline-premium">The complete toolkit to scale faster</p>
+                                <p class="gd-card-tagline gd-tagline-premium">
+                                    choice for advanced features
+                                </p>
                             </div>
                         </div>
                         <div class="gd-price-row" style="margin-top:16px;">
@@ -155,29 +158,13 @@
                 </div>
             </div>
 
-            {{-- Trust Row --}}
-            <div class="gd-trust">
-                <div class="gd-ti">
-                    <div class="gd-ti-ico"><i class="fas fa-shield-alt"></i></div>
-                    <div><strong>Cancel Anytime</strong><span>No questions asked</span></div>
-                </div>
-                <div class="gd-ti">
-                    <div class="gd-ti-ico"><i class="fas fa-lock"></i></div>
-                    <div><strong>Secure Checkout</strong><span>100% safe &amp; encrypted</span></div>
-                </div>
-                <div class="gd-ti">
-                    <div class="gd-ti-ico"><i class="fas fa-globe"></i></div>
-                    <div><strong>Free Domain</strong><span>.com on annual plans</span></div>
-                </div>
-                <div class="gd-ti">
-                    <div class="gd-ti-ico"><i class="fas fa-headset"></i></div>
-                    <div><strong>Priority Support</strong><span>We're here for you</span></div>
-                </div>
-            </div>
+
 
             {{-- Dismiss --}}
             <div class="gd-footer">
-                <a href="#" class="gd-dismiss" id="gdDismiss">I'll decide later <i class="fas fa-angle-right"></i></a>
+                <a href="#" class="gd-dismiss" id="gdDismiss">
+                No Thanks , Maybe Later
+            </a>
             </div>
 
         </div>{{-- .gd-box --}}
