@@ -163,7 +163,10 @@
                                 </a>
                             </li>
                         </ul>
-                        <a href="{{ route('front.pricing') }}?term=yearly" class="gd-btn-fill" id="gdUpgradePremium">Select Premium &nbsp;→</a>
+                        <div class="gd-select-premium-wrap">
+                            <span class="gd-click-hand" aria-hidden="true">👆</span>
+                            <a href="{{ route('front.pricing') }}?term=yearly" class="gd-btn-fill" id="gdUpgradePremium">Select Premium &nbsp;→</a>
+                        </div>
                         <span class="gd-card-sparkle">✦</span>
                     </div>
                 </div>
@@ -781,6 +784,46 @@
 }
 .gd-btn-border:hover { background: #FFF5F2; color: #FF5A2C; text-decoration: none; }
 
+.gd-select-premium-wrap {
+    position: relative;
+    margin-top: 16px;
+}
+.gd-select-premium-wrap .gd-btn-fill {
+    margin-top: 0;
+    animation: gdPremiumPulse 1.6s ease-in-out infinite;
+    cursor: pointer !important;
+}
+.gd-select-premium-wrap .gd-btn-fill:hover {
+    animation-play-state: paused;
+}
+.gd-click-hand {
+    position: absolute;
+    right: -10px;
+    bottom: -18px;
+    font-size: 26px;
+    z-index: 10;
+    pointer-events: none;
+    animation: gdHandBounce 1.2s ease-in-out infinite;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.18));
+    transform-origin: bottom center;
+}
+@keyframes gdHandBounce {
+    0%, 100% { transform: translateY(0) rotate(-10deg); opacity: 1; }
+    30%       { transform: translateY(-8px) rotate(0deg); opacity: 1; }
+    60%       { transform: translateY(-2px) rotate(-5deg); opacity: 0.7; }
+}
+@keyframes gdPremiumPulse {
+    0%, 100% {
+        background: #FF5A2C;
+        box-shadow: 0 4px 18px rgba(255, 90, 44, 0.32);
+        transform: scale(1);
+    }
+    50% {
+        background: #FF7340;
+        box-shadow: 0 6px 28px rgba(255, 90, 44, 0.65), 0 0 0 5px rgba(255, 90, 44, 0.18);
+        transform: scale(1.025);
+    }
+}
 .gd-btn-fill {
     background: #FF5A2C;
     color: #fff;
