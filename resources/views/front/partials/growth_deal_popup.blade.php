@@ -57,7 +57,7 @@
             {{-- Countdown Timer --}}
             <div class="gd-timer-section">
                 <span class="gd-sparkle-left">✦</span>
-                <p class="gd-timer-lbl">⏰ Offer ends in Soon
+                <p class="gd-timer-lbl">⏰ Offer ending in Soon
                 <div class="gd-timer-row">
                     <div class="gd-tblock">
                         <span class="gd-tnum" id="gd-hours">01</span>
@@ -1099,8 +1099,8 @@
         document.body.style.overflow = '';
     }
 
-    /* Auto-open after 1.5 s */
-    if (overlay) setTimeout(openPopup, 1500);
+    /* Auto-open after 30 s */
+    if (overlay) setTimeout(openPopup, 30000);
 
     /* Close handlers */
     if (closeBtn)  closeBtn.addEventListener('click', closePopup);
