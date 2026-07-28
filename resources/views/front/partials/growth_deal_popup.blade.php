@@ -44,7 +44,8 @@
             {{-- Top Ribbon Badge --}}
             <div class="gd-ribbon-wrap">
                 <div class="gd-ribbon">
-                    🚀 LIMITED TIME OFFER
+                    <i class="fas fa-crown" style="margin-right: 6px; font-size: 11.5px; color: white;"></i>
+                     LIMITED TIME OFFER
                 </div>
             </div>
 
@@ -108,6 +109,11 @@
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Qr Builder</li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Google Login</li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Gst Billing.</li>
+                            <li>
+                                <a href="{{ route('front.pricing') }}?term=yearly" class="gd-more-features gd-btn-standard-trigger">
+                                    <span class="gd-plus-circle"><i class="fas fa-plus"></i></span>more features
+                                </a>
+                            </li>
                         </ul>
                         <a href="{{ route('front.pricing') }}?term=yearly" class="gd-btn-border" id="gdChooseStandard">Choose Standard &nbsp;→</a>
                     </div>
@@ -143,6 +149,11 @@
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Staff Management</li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Push Notification</li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Payment Option</li>
+                            <li>
+                                <a href="{{ route('front.pricing') }}?term=yearly" class="gd-more-features gd-btn-premium-trigger">
+                                    <span class="gd-plus-circle"><i class="fas fa-plus"></i></span>more features
+                                </a>
+                            </li>
                         </ul>
                         <a href="{{ route('front.pricing') }}?term=yearly" class="gd-btn-fill" id="gdUpgradePremium">Upgrade to Premium &nbsp;→</a>
                         <span class="gd-card-sparkle">✦</span>
@@ -324,6 +335,7 @@
     letter-spacing: 1.3px;
     text-transform: uppercase;
     box-shadow: 0 5px 16px rgba(255, 90, 44, 0.38);
+    animation: gdRibbonBlink 2.5s ease-in-out infinite;
 }
 
 /* ── Heading ── */
@@ -357,9 +369,10 @@
     padding: 12px 20px 10px;
     box-shadow: 0 8px 30px rgba(255, 90, 44, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8);
     text-align: center;
+    animation: gdTimerBlink 2.5s ease-in-out infinite;
 }
 .gd-timer-lbl {
-    font-size: 12.5px;
+    font-size: 15.5px;
     font-weight: 600;
     color: #475569;
     margin: 0 0 8px;
@@ -378,7 +391,7 @@
     min-width: 58px;
 }
 .gd-tnum {
-    font-size: 46px;
+    font-size: 54px;
     font-weight: 800;
     color: #FF5A2C;
     line-height: 1;
@@ -431,6 +444,30 @@
 @keyframes gdTwinkle {
     0%, 100% { opacity: 0.3; transform: scale(0.85); }
     50%       { opacity: 1;   transform: scale(1.15); }
+}
+
+@keyframes gdRibbonBlink {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 5px 16px rgba(255, 90, 44, 0.38);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 8px 24px rgba(255, 90, 44, 0.6);
+    }
+}
+
+@keyframes gdTimerBlink {
+    0%, 100% {
+        box-shadow: 0 8px 30px rgba(255, 90, 44, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        border-color: rgba(255, 90, 44, 0.16);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 8px 30px rgba(255, 90, 44, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        border-color: rgba(255, 90, 44, 0.4);
+        transform: scale(1.015);
+    }
 }
 
 /* ── Cards Outer (holds grid + 65% badge) ── */
@@ -581,7 +618,7 @@
     margin: 14px 0 4px;
 }
 .gd-original-price {
-    font-size: 13px;
+    font-size: 15.5px;
     color: #94A3B8;
     text-decoration: line-through;
     font-weight: 500;
@@ -589,7 +626,7 @@
 .gd-save-tag {
     background: #DCFCE7;
     color: #16A34A;
-    font-size: 10.5px;
+    font-size: 12.5px;
     font-weight: 700;
     padding: 2px 8px;
     border-radius: 10px;
@@ -621,7 +658,7 @@
     flex: 1;
 }
 .gd-feats li {
-    font-size: 13.5px;
+    font-size: 15.5px;
     color: #475569;
     margin-bottom: 10px;
     display: flex;
@@ -641,6 +678,37 @@
     flex-shrink: 0;
 }
 .gd-check-circle i {
+    font-size: 8px;
+    color: #FF5A2C;
+    line-height: 1;
+}
+.gd-more-features {
+    text-decoration: none !important;
+    color: #FF5A2C !important;
+    font-weight: 600;
+    font-size: 15.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.gd-more-features:hover {
+    opacity: 0.85;
+    transform: translateY(-0.5px);
+}
+.gd-plus-circle {
+    width: 17px;
+    height: 17px;
+    background: #FFF0EB;
+    border: 1px solid rgba(255, 90, 44, 0.15);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 2px;
+    flex-shrink: 0;
+}
+.gd-plus-circle i {
     font-size: 8px;
     color: #FF5A2C;
     line-height: 1;
@@ -767,7 +835,8 @@
     }
     .gd-heading { font-size: 24px; }
     .gd-subtext { font-size: 12.5px; }
-    .gd-tnum { font-size: 32px; }
+    .gd-timer-lbl { font-size: 13.5px; }
+    .gd-tnum { font-size: 38px; }
     .gd-tsep { font-size: 24px; padding-bottom: 6px; }
     .gd-tblock { min-width: 42px; }
     .gd-timer-row { padding: 8px 12px 6px; gap: 8px; }
@@ -785,13 +854,16 @@
     .gd-card-tagline { font-size: 11px; }
     .gd-great-val { font-size: 10px; padding: 2px 8px; margin: 8px 0; }
     .gd-price-row { margin: 8px 0 2px; gap: 6px; }
-    .gd-original-price { font-size: 12px; }
-    .gd-save-tag { font-size: 9.5px; padding: 1px 6px; }
+    .gd-original-price { font-size: 13.5px; }
+    .gd-save-tag { font-size: 11px; padding: 1px 6px; }
     .gd-price-big { font-size: 24px; }
     .gd-billed { font-size: 11px; margin-bottom: 8px; }
-    .gd-feats li { font-size: 11px; margin-bottom: 6px; gap: 6px; }
+    .gd-feats li { font-size: 13px; margin-bottom: 6px; gap: 6px; }
     .gd-check-circle { width: 15px; height: 15px; }
     .gd-check-circle i { font-size: 7px; }
+    .gd-more-features { font-size: 13px; }
+    .gd-plus-circle { width: 15px; height: 15px; }
+    .gd-plus-circle i { font-size: 7px; }
     .gd-btn-border, .gd-btn-fill { padding: 8px 10px; font-size: 12px; margin-top: 8px; }
 
     /* Move 65% badge inside premium card area but styled for side-by-side */
@@ -826,7 +898,8 @@
     }
     .gd-heading { font-size: 20px; }
     .gd-ribbon { font-size: 10px; padding: 5px 12px; letter-spacing: 0.8px; }
-    .gd-tnum { font-size: 26px; }
+    .gd-timer-lbl { font-size: 12.5px; }
+    .gd-tnum { font-size: 30px; }
     .gd-tsep { font-size: 18px; }
     .gd-tblock { min-width: 32px; }
     .gd-tunit { font-size: 7px; }
@@ -840,13 +913,16 @@
     .gd-card-name { font-size: 13px; }
     .gd-card-tagline { font-size: 9px; }
     .gd-great-val { font-size: 9px; padding: 1px 6px; margin: 4px 0; }
-    .gd-original-price { font-size: 10px; }
-    .gd-save-tag { font-size: 8.5px; padding: 1px 4px; }
+    .gd-original-price { font-size: 11.5px; }
+    .gd-save-tag { font-size: 10px; padding: 1px 4px; }
     .gd-price-big { font-size: 18px; }
     .gd-billed { font-size: 10px; margin-bottom: 6px; }
-    .gd-feats li { font-size: 10px; margin-bottom: 4px; gap: 4px; }
+    .gd-feats li { font-size: 11.5px; margin-bottom: 4px; gap: 4px; }
     .gd-check-circle { width: 12px; height: 12px; }
     .gd-check-circle i { font-size: 5.5px; }
+    .gd-more-features { font-size: 11.5px; }
+    .gd-plus-circle { width: 12px; height: 12px; }
+    .gd-plus-circle i { font-size: 5.5px; }
     .gd-btn-border, .gd-btn-fill { padding: 6px 8px; font-size: 10.5px; margin-top: 6px; }
 
     .gd-off-badge {
@@ -989,17 +1065,20 @@ if (desktopHeader && desktopHeader.getBoundingClientRect().height) {
         }
     }
 
-    if (standardBtn) {
-        standardBtn.addEventListener('click', function(e) {
+    var standardTriggers = document.querySelectorAll('#gdChooseStandard, .gd-btn-standard-trigger');
+    var premiumTriggers  = document.querySelectorAll('#gdUpgradePremium, .gd-btn-premium-trigger');
+
+    standardTriggers.forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
             handlePlanClick(e, '.pricing-card-v2.card-recommended');
         });
-    }
+    });
 
-    if (premiumBtn) {
-        premiumBtn.addEventListener('click', function(e) {
+    premiumTriggers.forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
             handlePlanClick(e, '.pricing-card-v2.card-best-value');
         });
-    }
+    });
 
     /* ── Persistent Countdown ── */
     var SK = 'gdTimerEnd_v3';
