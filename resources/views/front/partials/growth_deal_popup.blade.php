@@ -721,20 +721,21 @@
 .gd-more-features {
     text-decoration: none !important;
     color: #16A34A !important;
-    background: #DCFCE7 !important;
-    padding: 6px 14px !important;
-    border-radius: 20px !important;
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
     font-weight: 700;
-    font-size: 13px !important;
+    font-size: 13.5px !important;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    transition: all 0.2s ease, transform 0.2s ease;
+    gap: 6px;
+    white-space: nowrap !important;
+    transition: color 0.2s ease, transform 0.2s ease;
 }
 .gd-more-features:hover {
-    background: #C6F6D5 !important;
-    transform: translateY(-1px);
-    color: #16A34A !important;
+    color: #117835 !important;
+    transform: translateX(2px);
+    background: transparent !important;
 }
 .gd-plus-circle {
     width: 17px;
