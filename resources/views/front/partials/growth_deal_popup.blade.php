@@ -15,8 +15,8 @@
 
             {{-- Close Button --}}
             <button type="button" class="gd-close" id="gdClose" aria-label="Close popup">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M1 1L15 15M15 1L1 15" stroke="#555" stroke-width="2.2" stroke-linecap="round"/>
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M1 1L15 15M15 1L1 15" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
                 </svg>
             </button>
 
@@ -125,9 +125,9 @@
                         <div class="gd-card-header">
                             <div class="gd-hexagon-icon">
                                 <svg viewBox="0 0 100 100" class="gd-hex-svg">
-                                    <polygon points="50,5 90,28 90,72 50,95 10,72 10,28" fill="#FFF5F2" stroke="#FF5A2C" stroke-width="3.5" />
+                                    <polygon points="50,5 90,28 90,72 50,95 10,72 10,28" fill="#FFFCEB" stroke="#F59E0B" stroke-width="3.5" />
                                 </svg>
-                                <i class="fas fa-crown gd-hex-inner-icon"></i>
+                                <i class="fas fa-crown gd-hex-inner-icon" style="color: #F59E0B;"></i>
                             </div>
                             <div class="gd-card-meta">
                                 <h3 class="gd-card-name">
@@ -146,7 +146,7 @@
                         <div class="gd-price-big">₹9,999<span class="gd-per">/year</span></div>
                         <p class="gd-billed">Billed annually</p>
                         <ul class="gd-feats">
-                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Free .in Domain</li>
+                            <li class="gd-feat-green-highlight"><span class="gd-check-circle gd-check-green"><i class="fas fa-check"></i></span>Free .in Domain</li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Premium Themes</li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Staff Management</li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Push Notification</li>
@@ -287,8 +287,8 @@
     width: 34px;
     height: 34px;
     border-radius: 50%;
-    background: #f9fafb;
-    border: 1.5px solid #e2e8f0;
+    background: #FF5A2C;
+    border: none;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -296,8 +296,9 @@
     transition: background 0.18s, transform 0.18s;
     z-index: 10;
     padding: 0;
+    box-shadow: 0 4px 12px rgba(255, 90, 44, 0.25);
 }
-.gd-close:hover { background: #f1f5f9; transform: scale(1.08); }
+.gd-close:hover { background: #E04E22; transform: scale(1.08); }
 
 /* ── Celebration Ornaments ── */
 .gd-celebration {
@@ -363,7 +364,7 @@
 /* ── Timer ── */
 .gd-timer-section {
     position: relative;
-    max-width: 320px;
+    max-width: 350px;
     margin: 0 auto 22px;
     background: linear-gradient(180deg, #ffffff 0%, #FFFDFB 100%);
     border: 1.2px solid rgba(255, 90, 44, 0.16);
@@ -498,8 +499,9 @@
     flex-direction: column;
 }
 .gd-pre {
-    border: 2px solid #FF5A2C;
-    box-shadow: 0 6px 28px rgba(255, 90, 44, 0.1);
+    background: #FFFCEB !important;
+    border: 2.5px solid #F59E0B !important;
+    box-shadow: 0 6px 28px rgba(245, 158, 11, 0.15);
 }
 
 /* ── Card Header ── */
@@ -552,7 +554,7 @@
     color: #C25E3D;
 }
 .gd-tagline-premium {
-    color: #FF5A2C;
+    color: #D97706;
 }
 
 /* ── Great Value Badge ── */
@@ -574,7 +576,7 @@
 
 /* ── Most Loved Badge ── */
 .gd-most-loved {
-    background: #FF5A2C;
+    background: #F59E0B !important;
     color: #fff;
     font-size: 10px;
     font-weight: 700;
@@ -683,6 +685,32 @@
     font-size: 8px;
     color: #FF5A2C;
     line-height: 1;
+}
+.gd-feat-green-highlight {
+    background: #E8F5E9 !important;
+    border-radius: 8px;
+    padding: 6px 10px !important;
+    color: #1B5E20 !important;
+    font-weight: 700;
+}
+.gd-check-green {
+    background: #C8E6C9 !important;
+    border: 1px solid rgba(76, 175, 80, 0.4) !important;
+}
+.gd-check-green i {
+    color: #2E7D32 !important;
+}
+@media (max-width: 767px) {
+    .gd-feat-green-highlight {
+        padding: 4px 8px !important;
+        border-radius: 6px;
+    }
+}
+@media (max-width: 480px) {
+    .gd-feat-green-highlight {
+        padding: 3px 6px !important;
+        border-radius: 4px;
+    }
 }
 .gd-more-features {
     text-decoration: none !important;
@@ -901,7 +929,7 @@
     }
     .gd-heading { font-size: 22px !important;}
     .gd-ribbon { font-size: 10px; padding: 5px 12px; letter-spacing: 0.8px; }
-    .gd-timer-section { max-width: 220px; padding: 8px 10px; }
+    .gd-timer-section { max-width: 240px; padding: 8px 10px; }
     .gd-timer-lbl { font-size: 12.5px; }
     .gd-tnum { font-size: 30px; }
     .gd-tsep { font-size: 18px; }
