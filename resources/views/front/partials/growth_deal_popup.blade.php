@@ -400,7 +400,7 @@
     min-width: 58px;
 }
 .gd-tnum {
-    font-size: 54px;
+    font-size: 35px;
     font-weight: 800;
     color: #FF5A2C;
     line-height: 1;
