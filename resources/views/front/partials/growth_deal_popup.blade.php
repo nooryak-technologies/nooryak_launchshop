@@ -363,7 +363,7 @@
 /* ── Timer ── */
 .gd-timer-section {
     position: relative;
-    max-width: 480px;
+    max-width: 320px;
     margin: 0 auto 22px;
     background: linear-gradient(180deg, #ffffff 0%, #FFFDFB 100%);
     border: 1.2px solid rgba(255, 90, 44, 0.16);
@@ -837,6 +837,7 @@
     }
     .gd-heading { font-size: 24px; }
     .gd-subtext { font-size: 12.5px; }
+    .gd-timer-section { max-width: 260px; padding: 10px 14px; }
     .gd-timer-lbl { font-size: 13.5px; }
     .gd-tnum { font-size: 38px; }
     .gd-tsep { font-size: 24px; padding-bottom: 6px; }
@@ -900,6 +901,7 @@
     }
     .gd-heading { font-size: 22px !important;}
     .gd-ribbon { font-size: 10px; padding: 5px 12px; letter-spacing: 0.8px; }
+    .gd-timer-section { max-width: 220px; padding: 8px 10px; }
     .gd-timer-lbl { font-size: 12.5px; }
     .gd-tnum { font-size: 30px; }
     .gd-tsep { font-size: 18px; }
