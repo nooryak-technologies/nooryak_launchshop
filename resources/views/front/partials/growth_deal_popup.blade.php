@@ -116,7 +116,7 @@
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Gst Billing.</li>
                             <li>
                                 <a href="{{ route('front.pricing') }}?term=yearly" class="gd-more-features gd-btn-standard-trigger">
-                                    <span class="gd-plus-circle"><i class="fas fa-plus"></i></span> More Features
+                                    Features &nbsp;<span class="gd-plus-circle"><i class="fas fa-plus"></i></span>
                                 </a>
                             </li>
                         </ul>
@@ -159,7 +159,7 @@
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Payment Option</li>
                             <li>
                                 <a href="{{ route('front.pricing') }}?term=yearly" class="gd-more-features gd-btn-premium-trigger">
-                                    <span class="gd-plus-circle"><i class="fas fa-plus"></i></span>More Advanced Features 
+                                    Advanced Features &nbsp;<span class="gd-plus-circle"><i class="fas fa-plus"></i></span>
                                 </a>
                             </li>
                         </ul>
@@ -720,33 +720,37 @@
 }
 .gd-more-features {
     text-decoration: none !important;
-    color: #FF5A2C !important;
-    font-weight: 600;
-    font-size: 15.5px;
+    color: #16A34A !important;
+    background: #DCFCE7 !important;
+    padding: 6px 14px !important;
+    border-radius: 20px !important;
+    font-weight: 700;
+    font-size: 13px !important;
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    gap: 8px;
+    transition: all 0.2s ease, transform 0.2s ease;
 }
 .gd-more-features:hover {
-    opacity: 0.85;
-    transform: translateY(-0.5px);
+    background: #C6F6D5 !important;
+    transform: translateY(-1px);
+    color: #16A34A !important;
 }
 .gd-plus-circle {
     width: 17px;
     height: 17px;
-    background: #FFF0EB;
-    border: 1px solid rgba(255, 90, 44, 0.15);
+    background: #16A34A;
+    border: none;
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin-right: 2px;
+    margin-left: 2px;
     flex-shrink: 0;
 }
 .gd-plus-circle i {
     font-size: 8px;
-    color: #FF5A2C;
+    color: #ffffff;
     line-height: 1;
 }
 
