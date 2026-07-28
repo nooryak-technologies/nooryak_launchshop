@@ -115,7 +115,7 @@ class FrontendController extends Controller
         $data['testimonials'] = Testimonial::where('language_id', $lang_id)
             ->orderBy('serial_number', 'ASC')
             ->get();
-        $data['blogs'] = Blog::where('language_id', $lang_id)->orderBy('id', 'DESC')->take(5)->get();
+        $data['blogs'] = Blog::where('language_id', $lang_id)->orderBy('id', 'DESC')->take(3)->get();
 
         $data['partners'] = Partner::orderBy('serial_number', 'ASC')
             ->get();
@@ -178,7 +178,7 @@ class FrontendController extends Controller
         $data['testimonials'] = Testimonial::where('language_id', $lang_id)
             ->orderBy('serial_number', 'ASC')
             ->get();
-        $data['blogs'] = Blog::where('language_id', $lang_id)->orderBy('id', 'DESC')->take(5)->get();
+        $data['blogs'] = Blog::where('language_id', $lang_id)->orderBy('id', 'DESC')->take(3)->get();
 
         $data['partners'] = Partner::orderBy('serial_number', 'ASC')
             ->get();
