@@ -144,9 +144,10 @@
                                     choice for advanced features
                                 </p>
                             </div>
-                          <div class="gd-great-val">
-                            😍 Most Popular
+                          
                         </div>
+                        <div class="gd-great-val">
+                            😍 Most Popular
                         </div>
                         <div class="gd-price-row" style="margin-top:16px;">
                             <span class="gd-original-price">₹28,569/year</span>
