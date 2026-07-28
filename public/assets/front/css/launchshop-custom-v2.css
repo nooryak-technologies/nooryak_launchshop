@@ -9125,6 +9125,7 @@ iframe[id^="tawkchat-"],
         margin-right: auto !important;
         border-radius: 24px !important;
     }
+
     .page-title-area .container {
         max-width: 1400px !important;
         margin-left: auto !important;
@@ -11142,9 +11143,20 @@ iframe[id^="tawkchat-"],
 }
 
 @keyframes wa-pulse-anim {
-    0% { transform: scale(1); opacity: 0.7; }
-    70% { transform: scale(1.5); opacity: 0; }
-    100% { transform: scale(1.5); opacity: 0; }
+    0% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+
+    70% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
 }
 
 /* Popup Container */
@@ -11214,7 +11226,7 @@ iframe[id^="tawkchat-"],
     width: 100%;
     height: 100%;
     object-fit: contain;
-    padding: 5px;
+    /* padding: 5px; */
 }
 
 .wa-status-text {
@@ -11250,8 +11262,15 @@ iframe[id^="tawkchat-"],
 }
 
 @keyframes wa-dot-blink {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
+
+    0%,
+    100% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
 }
 
 .wa-close-btn {
@@ -11438,9 +11457,17 @@ iframe[id^="tawkchat-"],
 }
 
 @keyframes wa-badge-float {
-    0% { transform: translateY(-50%) translateY(0); }
-    50% { transform: translateY(-50%) translateY(-4px); }
-    100% { transform: translateY(-50%) translateY(0); }
+    0% {
+        transform: translateY(-50%) translateY(0);
+    }
+
+    50% {
+        transform: translateY(-50%) translateY(-4px);
+    }
+
+    100% {
+        transform: translateY(-50%) translateY(0);
+    }
 }
 
 .wa-floating-badge.show.active-float {
@@ -11452,8 +11479,8 @@ iframe[id^="tawkchat-"],
         left: 62px;
         padding: 8px 14px;
     }
+
     .wa-badge-text {
         font-size: 11px;
     }
 }
-

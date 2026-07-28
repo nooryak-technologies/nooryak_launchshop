@@ -1125,6 +1125,45 @@
   @endif
 
   @if ($bs->about_blog_section_status == 1)
+    @php
+      $customBlogs = [
+          [
+              'category' => 'CLOTHING',
+              'image' => 'clothing_theme_blog.png',
+              'title' => 'How to Start a Highly Successful Online Clothing Store',
+              'date' => 'July 24, 2026',
+              'content' => 'Discover the best practices for setting up your online apparel shop. Learn about layout designs, size guides, inventory tracking, and marketing strategies that drive conversions for clothing brands.'
+          ],
+          [
+              'category' => 'ELECTRONICS',
+              'image' => 'electronics_theme_blog.png',
+              'title' => 'Top Tech Themes: Optimizing Gadget Store User Experience',
+              'date' => 'July 25, 2026',
+              'content' => 'Sell electronics smarter with specialized layout features. Compare side-by-side spec sheets, high-resolution zoom components, and multi-option filters to help customers pick the perfect gadgets.'
+          ],
+          [
+              'category' => 'JEWELRY',
+              'image' => 'jewelry_theme_blog.png',
+              'title' => 'Elegant Luxury Themes for Accessories & Jewelry E-commerce',
+              'date' => 'July 26, 2026',
+              'content' => 'Craft a high-end digital showroom for necklaces, rings, and premium accessories. Implement gold accents, sleek dark modes, and soft animations that reflect the premium nature of your products.'
+          ],
+          [
+              'category' => 'GROCERY',
+              'image' => 'grocery_theme_blog.png',
+              'title' => 'Grocery Store Launch: Fast Checkout & Delivery Optimization',
+              'date' => 'July 27, 2026',
+              'content' => 'Simplify supermarket shopping with cart reminders, local neighborhood delivery scheduling, and dynamic stock statuses. Deliver fresh organic vegetables and pantry staples effortlessly.'
+          ],
+          [
+              'category' => 'BEAUTY',
+              'image' => 'beauty_theme_blog.png',
+              'title' => 'Skincare & Cosmetics Themes: Designing Beauty Showrooms',
+              'date' => 'July 28, 2026',
+              'content' => 'Engage beauty lovers with interactive shade finders, skin routine bundles, and premium cosmetic styling. Make your store look as clean, natural, and premium as your beauty product line.'
+          ]
+      ];
+    @endphp
     <!-- Blog Start -->
     <section class="about-blog-section">
       <div class="container">
@@ -1140,29 +1179,29 @@
           <div class="ls-slider-viewport">
             <div class="ls-slider-track">
 
-              @foreach ($blogs as $blog)
+              @foreach ($customBlogs as $blog)
                 <div class="ls-slide">
                   <article class="about-blog-card">
                     <div class="about-blog-img-wrap">
-                      <span class="about-blog-badge">{{ $blog->bcategory->name }}</span>
-                      <a href="{{ route('front.blogdetails', ['id' => $blog->id, 'slug' => $blog->slug]) }}">
-                        <img class="lazyload" src="{{ asset('assets/front/img/blogs/' . $blog->main_image) }}" alt="blog thumbnail">
+                      <span class="about-blog-badge">{{ $blog['category'] }}</span>
+                      <a href="{{ route('front.blogs') }}">
+                        <img class="lazyload" src="{{ asset('assets/front/img/blogs/' . $blog['image']) }}" alt="blog thumbnail">
                       </a>
                     </div>
                     <div class="about-blog-content">
                       <ul class="about-blog-meta">
                         <li><i class="fal fa-user"></i> {{ __('Admin') }}</li>
-                        <li><i class="fal fa-calendar"></i> {{ \Carbon\Carbon::parse($blog->created_at)->format('F j, Y') }}</li>
+                        <li><i class="fal fa-calendar"></i> {{ $blog['date'] }}</li>
                       </ul>
                       <h3 class="about-blog-title">
-                        <a href="{{ route('front.blogdetails', ['id' => $blog->id, 'slug' => $blog->slug]) }}">
-                          {{ $blog->title }}
+                        <a href="{{ route('front.blogs') }}">
+                          {{ $blog['title'] }}
                         </a>
                       </h3>
                       <p class="about-blog-text">
-                        {!! substr(strip_tags($blog->content), 0, 110) !!}...
+                        {{ substr(strip_tags($blog['content']), 0, 110) }}...
                       </p>
-                      <a href="{{ route('front.blogdetails', ['id' => $blog->id, 'slug' => $blog->slug]) }}"
+                      <a href="{{ route('front.blogs') }}"
                         class="about-blog-btn">{{ __('Read More') }} <i class="fas fa-arrow-right"></i></a>
                     </div>
                   </article>
@@ -1214,7 +1253,7 @@
        Blog Slider Initialization
        ========================================================= */
     if (typeof lsInit === 'function') {
-      lsInit('aboutBlogSlider', { autoMs: 5000 });
+      lsInit('aboutBlogSlider', { autoMs: 3000 });
     }
 
     /* =========================================================
