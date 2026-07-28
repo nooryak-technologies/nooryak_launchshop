@@ -910,7 +910,7 @@
     .gd-card { padding: 10px 8px 8px; }
     .gd-hexagon-icon { width: 28px; height: 28px; }
     .gd-hex-inner-icon { font-size: 11px; }
-    .gd-card-name { font-size: 13px; }
+    .gd-card-name { font-size: 13px !important;}
     .gd-card-tagline { font-size: 9px; }
     .gd-great-val { font-size: 9px; padding: 1px 6px; margin: 4px 0; }
     .gd-original-price { font-size: 11.5px; }
