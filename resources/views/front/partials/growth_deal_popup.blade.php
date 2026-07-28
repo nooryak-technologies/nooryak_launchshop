@@ -945,7 +945,7 @@
     }
     .gd-heading { font-size: 22px !important;}
     .gd-ribbon { font-size: 10px; padding: 5px 12px; letter-spacing: 0.8px; }
-    .gd-timer-section { max-width: 240px; padding: 8px 10px; }
+    .gd-timer-section { max-width: 328px; padding: 8px 10px; }
     .gd-timer-lbl { font-size: 17.5px; font-weight: 700; }
     .gd-tnum { font-size: 30px; }
     .gd-tsep { font-size: 18px; }
