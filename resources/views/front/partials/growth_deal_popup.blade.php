@@ -112,6 +112,8 @@
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Custom Pages</li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Inventory Management </li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Advanced Report</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Google Login</li>
+
 
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Gst Billing.</li>
                             <li>
