@@ -107,9 +107,12 @@
                         <div class="gd-price-big">₹4,999<span class="gd-per">/year</span></div>
                         <p class="gd-billed">Billed annually</p>
                         <ul class="gd-feats">
-                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Custom Domain Mapping</li>
-                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Qr Builder</li>
-                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Google Login</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Custom Domain </li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Unlimited Orders</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Custom Pages</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Inventory Management </li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Advanced Report</li>
+
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Gst Billing.</li>
                             <li>
                                 <a href="{{ route('front.pricing') }}?term=yearly" class="gd-more-features gd-btn-standard-trigger">
@@ -147,6 +150,9 @@
                         <p class="gd-billed">Billed annually</p>
                         <ul class="gd-feats">
                             <li class="gd-feat-green-highlight"><span class="gd-check-circle gd-check-green"><i class="fas fa-check"></i></span>Free .in Domain</li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>All Standard Features</li>
+
+                            
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Premium Themes</li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Staff Management</li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Push Notification</li>
