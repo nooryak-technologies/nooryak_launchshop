@@ -57,7 +57,7 @@
             {{-- Countdown Timer --}}
             <div class="gd-timer-section">
                 <span class="gd-sparkle-left">✦</span>
-                <p class="gd-timer-lbl">⏰ Offer ends in
+                <p class="gd-timer-lbl">⏰ Offer ends in Soon
                 <div class="gd-timer-row">
                     <div class="gd-tblock">
                         <span class="gd-tnum" id="gd-hours">01</span>
@@ -482,7 +482,7 @@
 /* ── Cards Outer (holds grid + 65% badge) ── */
 .gd-cards-outer {
     position: relative;
-    padding-right: 52px; /* space for 65% off badge */
+    padding-right: 0 !important;
     margin-bottom: 18px;
 }
 
@@ -599,9 +599,9 @@
 /* ── 65% OFF Badge ── */
 .gd-off-badge {
     position: absolute;
-    right: -28px;
-    top: 42%;
-    transform: translateY(-50%);
+    left: 50%;
+    top: -26px; /* Centered below clock, overlapping cards top border */
+    transform: translateX(-50%);
     width: 86px;
     height: 86px;
     background: #ffffff;
@@ -885,7 +885,7 @@
     .gd-sparkle-left, .gd-sparkle-right { display: none; }
 
     /* Show cards side-by-side (2 columns) */
-    .gd-cards-outer { padding-right: 18px; margin-bottom: 12px; }
+    .gd-cards-outer { padding-right: 0 !important; margin-bottom: 12px; }
     .gd-cards-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
 
     /* Adjust Card elements for tablet side-by-side */
@@ -911,9 +911,10 @@
     /* Move 65% badge inside premium card area but styled for side-by-side */
     .gd-off-badge {
         position: absolute;
-        right: -10px;
-        top: 40%;
-        transform: translateY(-50%);
+        left: 50%;
+        top: -18px;
+        right: auto;
+        transform: translateX(-50%);
         width: 58px;
         height: 58px;
         border-width: 2px;
@@ -941,7 +942,7 @@
     .gd-heading { font-size: 22px !important;}
     .gd-ribbon { font-size: 10px; padding: 5px 12px; letter-spacing: 0.8px; }
     .gd-timer-section { max-width: 240px; padding: 8px 10px; }
-    .gd-timer-lbl { font-size: 12.5px; }
+    .gd-timer-lbl { font-size: 17.5px; font-weight: 700; }
     .gd-tnum { font-size: 30px; }
     .gd-tsep { font-size: 18px; }
     .gd-tblock { min-width: 32px; }
@@ -969,8 +970,10 @@
     .gd-btn-border, .gd-btn-fill { padding: 6px 8px; font-size: 10.5px; margin-top: 6px; }
 
     .gd-off-badge {
-        right: -8px;
-        top: 38%;
+        left: 50%;
+        top: -15px;
+        right: auto;
+        transform: translateX(-50%);
         width: 44px;
         height: 44px;
         border-width: 1.5px;
