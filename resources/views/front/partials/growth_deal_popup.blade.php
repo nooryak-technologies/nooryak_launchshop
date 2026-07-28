@@ -116,7 +116,7 @@
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Gst Billing.</li>
                             <li>
                                 <a href="{{ route('front.pricing') }}?term=yearly" class="gd-more-features gd-btn-standard-trigger">
-                                    Features &nbsp;<span class="gd-plus-circle"><i class="fas fa-plus"></i></span>
+                                   More Features &nbsp;<span class="gd-plus-circle"><i class="fas fa-plus"></i></span>
                                 </a>
                             </li>
                         </ul>
