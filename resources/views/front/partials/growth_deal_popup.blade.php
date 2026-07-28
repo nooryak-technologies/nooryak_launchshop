@@ -90,7 +90,7 @@
                             </div>
                             <div class="gd-card-meta">
                                 <h3 class="gd-card-name"
-                                >Ecommerce
+                                >Ecom
                                 Standard</h3>
                                 <p class="gd-card-tagline gd-tagline-standard">Smart choice for growing brands</p>
                             </div>
@@ -129,7 +129,7 @@
                             </div>
                             <div class="gd-card-meta">
                                 <h3 class="gd-card-name">
-                                    Ecommerce Premium&nbsp;
+                                    Ecom Premium&nbsp;
                                     <span class="gd-most-loved"><i class="fas fa-heart"></i>&nbsp;Most Loved</span>
                                 </h3>
                                 <p class="gd-card-tagline gd-tagline-premium">
