@@ -51,7 +51,6 @@
 
             {{-- Main Heading --}}
             <h2 class="gd-heading">Unlock Your Biggest<br><span>Savings of the Year!</span></h2>
-            <p class="gd-subtext">Premium tools. Powerful growth. Unbeatable annual prices.<br>Offer expires when the timer hits zero.</p>
 
             {{-- Countdown Timer --}}
             <div class="gd-timer-section">
