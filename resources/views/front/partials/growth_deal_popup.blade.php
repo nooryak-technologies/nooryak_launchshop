@@ -384,7 +384,7 @@
     font-size: 15.5px;
     font-weight: 600;
     color: #475569;
-    margin: 0 0 8px;
+    margin: 0 0 -6px;
     letter-spacing: 0.5px;
 }
 .gd-timer-row {
@@ -717,6 +717,10 @@
         padding: 3px 6px !important;
         border-radius: 4px;
     }
+    /* ── Card Header ── */
+.gd-card-header {
+    gap: 6px;
+}
 }
 .gd-more-features {
     text-decoration: none !important;
@@ -876,7 +880,7 @@
     }
     .gd-heading { font-size: 24px; }
     .gd-subtext { font-size: 12.5px; }
-    .gd-timer-section { max-width: 260px; padding: 10px 14px; }
+    .gd-timer-section { max-width: 325px; padding: 10px 14px; }
     .gd-timer-lbl { font-size: 13.5px; }
     .gd-tnum { font-size: 38px; }
     .gd-tsep { font-size: 24px; padding-bottom: 6px; }
@@ -952,7 +956,7 @@
     .gd-cards-outer { padding-right: 10px; }
     .gd-cards-grid { gap: 6px; }
     .gd-card { padding: 10px 8px 8px; }
-    .gd-hexagon-icon { width: 28px; height: 28px; }
+    .gd-hexagon-icon { width: 38px; height: 38px; }
     .gd-hex-inner-icon { font-size: 11px; }
     .gd-card-name { font-size: 13px !important;}
     .gd-card-tagline { font-size: 9px; }
