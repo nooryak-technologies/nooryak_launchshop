@@ -157,7 +157,7 @@
                                 </a>
                             </li>
                         </ul>
-                        <a href="{{ route('front.pricing') }}?term=yearly" class="gd-btn-fill" id="gdUpgradePremium">Upgrade to Premium &nbsp;→</a>
+                        <a href="{{ route('front.pricing') }}?term=yearly" class="gd-btn-fill" id="gdUpgradePremium">Select Premium &nbsp;→</a>
                         <span class="gd-card-sparkle">✦</span>
                     </div>
                 </div>
