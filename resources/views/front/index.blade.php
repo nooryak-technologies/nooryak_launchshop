@@ -313,6 +313,15 @@
 @section('meta-description', !empty($seo) ? $seo->home_meta_description : '')
 @section('meta-keywords', !empty($seo) ? $seo->home_meta_keywords : '')
 
+@section('og-meta')
+  <meta property="og:title" content="{{ $bs->website_title }}">
+  <meta property="og:description" content="{{ !empty($seo) ? $seo->home_meta_description : '' }}">
+  <meta property="og:image" content="{{ asset('assets/front/img/' . $bs->logo) }}">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ url()->current() }}">
+@endsection
+
 @section('content')
 
   @if ($bs->feature_section == 1)
