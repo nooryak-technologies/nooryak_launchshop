@@ -141,7 +141,7 @@
                                     <!-- <span class="gd-most-loved"><i class="fas fa-heart"></i>&nbsp;Most Loved</span> -->
                                 </h3>
                                 <p class="gd-card-tagline gd-tagline-premium">
-                                    choice for advanced features
+                                    Best choice for advanced features
                                 </p>
                             </div>
                           
@@ -281,7 +281,7 @@
     background: linear-gradient(180deg, #FFFFFF 0%, #FFFDFB 100%);
     border: 1.5px solid rgba(255, 90, 44, 0.12);
     border-radius: 22px;
-    padding: 30px 36px 22px;
+    padding: 11px 36px 22px;
     box-shadow: 0 30px 80px rgba(255, 90, 44, 0.08), 0 10px 30px rgba(0, 0, 0, 0.04);
     position: relative;
     width: 100%;
@@ -383,7 +383,7 @@
     max-width: 350px;
     margin: 0 auto 22px;
     background: linear-gradient(180deg, #ffffff 0%, #FFFDFB 100%);
-    border: 1.2px solid rgba(255, 90, 44, 0.16);
+    border: 2px dashed rgba(255, 90, 44, 0.16);
     border-radius: 20px;
     padding: 12px 20px 10px;
     box-shadow: 0 8px 30px rgba(255, 90, 44, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8);
@@ -396,6 +396,8 @@
     color: #475569;
     margin: 0 0 -6px;
     letter-spacing: 0.5px;
+    text-align: center;
+    margin-bottom: 10px;
 }
 .gd-timer-row {
     display: flex;
@@ -562,7 +564,7 @@
     gap: 6px;
 }
 .gd-card-tagline {
-    font-size: 13px;
+    font-size: 15px;
     margin: 0;
     font-weight: 500;
 }
@@ -575,18 +577,20 @@
 
 /* ── Great Value Badge ── */
 .gd-great-val {
-    margin: 12px 0;
+        margin: 12px 0;
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-size: 11.5px;
+    font-size: 14.5px;
     font-weight: 700;
     color: #FF5A2C;
     background: #FFF5F2;
     border: 1px solid rgba(255, 90, 44, 0.16);
     padding: 4px 12px;
     border-radius: 20px;
-    width: fit-content;
+    width: 178px;
+    /* text-align: center; */
+    margin: 7px auto;
 }
 .gd-great-val i { font-size: 11px; }
 
@@ -996,7 +1000,8 @@
     .gd-heading { font-size: 22px !important;}
     .gd-ribbon { font-size: 10px; padding: 5px 12px; letter-spacing: 0.8px; }
     .gd-timer-section { max-width: 328px; padding: 8px 10px; }
-    .gd-timer-lbl { font-size: 17.5px; font-weight: 700; }
+    .gd-timer-lbl { font-size: 17.5px; font-weight: 700;         text-align: center;
+        margin-bottom: 4px;}
     .gd-tnum { font-size: 30px; }
     .gd-tsep { font-size: 18px; }
     .gd-tblock { min-width: 32px; }
@@ -1009,7 +1014,7 @@
     .gd-hexagon-icon { width: 38px; height: 38px; }
     .gd-hex-inner-icon { font-size: 11px; }
     .gd-card-name { font-size: 13px !important;}
-    .gd-card-tagline { font-size: 9px; }
+    .gd-card-tagline { font-size: 11px; }
     .gd-great-val { font-size: 9px; padding: 1px 6px; margin: 4px 0; }
     .gd-original-price { font-size: 11.5px; }
     .gd-save-tag { font-size: 10px; padding: 1px 4px; }
@@ -1105,7 +1110,7 @@
     }
 
     /* Auto-open after 30 s */
-    if (overlay) setTimeout(openPopup, 30000);
+    if (overlay) setTimeout(openPopup, 5000);
 
     /* Close handlers */
     if (closeBtn)  closeBtn.addEventListener('click', closePopup);
