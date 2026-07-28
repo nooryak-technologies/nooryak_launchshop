@@ -53,11 +53,12 @@
             {{-- Main Heading --}}
             <h2 class="gd-heading">⚡ FLASH SALE!
                 <br><span>Limited Spots Available</span></h2>
+                <p class="gd-timer-lbl">⏰ Offer Ending Soon</p>
 
             {{-- Countdown Timer --}}
             <div class="gd-timer-section">
+
                 <span class="gd-sparkle-left">✦</span>
-                <p class="gd-timer-lbl">⏰ Offer ending in Soon
                 <div class="gd-timer-row">
                     <div class="gd-tblock">
                         <span class="gd-tnum" id="gd-hours">01</span>
@@ -98,7 +99,7 @@
                             </div>
                         </div>
                         <div class="gd-great-val">
-                            <i class="fas fa-check-circle"></i> Great Value
+                           🎉 Great Value
                         </div>
                         <div class="gd-price-row">
                             <span class="gd-original-price">₹14,283/year</span>
@@ -137,12 +138,15 @@
                             <div class="gd-card-meta">
                                 <h3 class="gd-card-name">
                                     Ecom Premium&nbsp;
-                                    <span class="gd-most-loved"><i class="fas fa-heart"></i>&nbsp;Most Loved</span>
+                                    <!-- <span class="gd-most-loved"><i class="fas fa-heart"></i>&nbsp;Most Loved</span> -->
                                 </h3>
                                 <p class="gd-card-tagline gd-tagline-premium">
                                     choice for advanced features
                                 </p>
                             </div>
+                          <div class="gd-great-val">
+                            😍 Most Popular
+                        </div>
                         </div>
                         <div class="gd-price-row" style="margin-top:16px;">
                             <span class="gd-original-price">₹28,569/year</span>
@@ -1020,7 +1024,7 @@
 
     .gd-off-badge {
         left: 50%;
-        top: -15px;
+        top: -21px;
         right: auto;
         transform: translateX(-50%);
         width: 44px;
