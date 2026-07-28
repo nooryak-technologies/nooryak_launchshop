@@ -936,7 +936,7 @@
     .gd-subtext { font-size: 12.5px; }
     .gd-timer-section { max-width: 325px; padding: 10px 14px; }
     .gd-timer-lbl { font-size: 13.5px; }
-    .gd-tnum { font-size: 38px; }
+    .gd-tnum { font-size: 40px; }
     .gd-tsep { font-size: 24px; padding-bottom: 6px; }
     .gd-tblock { min-width: 42px; }
     .gd-timer-row { padding: 8px 12px 6px; gap: 8px; }
@@ -1015,7 +1015,7 @@
     .gd-hex-inner-icon { font-size: 11px; }
     .gd-card-name { font-size: 13px !important;}
     .gd-card-tagline { font-size: 11px; }
-    .gd-great-val { font-size: 9px; padding: 1px 6px; margin: 4px 0; }
+    .gd-great-val { font-size: 9px; padding: 1px 6px; margin: 4px 0; width: 100%; }
     .gd-original-price { font-size: 11.5px; }
     .gd-save-tag { font-size: 10px; padding: 1px 4px; }
     .gd-price-big { font-size: 18px; }
