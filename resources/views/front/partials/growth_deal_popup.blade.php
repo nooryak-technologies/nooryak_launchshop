@@ -1015,7 +1015,12 @@
     .gd-hex-inner-icon { font-size: 11px; }
     .gd-card-name { font-size: 13px !important;}
     .gd-card-tagline { font-size: 11px; }
-    .gd-great-val { font-size: 9px; padding: 1px 6px; margin: 4px 0; width: 100%; }
+    .gd-great-val { font-size: 9px;
+        padding: 1px 6px;
+        margin: 4px 0;
+        width: 64%;
+        margin: 10px auto;
+    }
     .gd-original-price { font-size: 11.5px; }
     .gd-save-tag { font-size: 10px; padding: 1px 4px; }
     .gd-price-big { font-size: 18px; }
