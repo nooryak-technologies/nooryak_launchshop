@@ -4231,7 +4231,7 @@ i[id$="EyeIcon"]:hover {
 }
 
 .cta-buttons-wrapper .btn-white-outline {
-    background: #ffffff;
+    background: rgb(224, 77, 36);
     color: #1e2335;
     border: 1px solid #e2e8f0;
 }

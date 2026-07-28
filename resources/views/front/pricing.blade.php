@@ -308,14 +308,14 @@
             </div>
             <div class="cta-text">
               <h3>Ready to Launch Your Store?</h3>
-              <p>Join thousands of successful entrepreneurs. 10-Days Money Back Guarantee — no credit card required.</p>
+              <p>Join hundreads of successful entrepreneurs. 10-Days Money Back Guarantee — no credit card required.</p>
             </div>
           </div>
           <div class="col-lg-5 text-lg-end">
             <div class="cta-buttons-wrapper d-flex justify-content-lg-end justify-content-center">
               <div class="cta-btn-block">
-                <a href="{{ route('front.templates.view') }}" class="btn-pricing-action btn-white-outline px-4">
-                  Browse Themes
+                <a href="https://launchshop.in/registration/step-1/regular/14?template=electi" class="btn-pricing-action btn-white-outline px-4">
+                  Launch store Now
                 </a>
                 <span class="btn-subtext">Find your perfect look</span>
               </div>
