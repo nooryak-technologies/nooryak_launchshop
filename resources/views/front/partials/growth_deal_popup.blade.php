@@ -49,8 +49,10 @@
                 </div>
             </div>
 
+
             {{-- Main Heading --}}
-            <h2 class="gd-heading">Unlock Your Biggest<br><span>Savings of the Year!</span></h2>
+            <h2 class="gd-heading">⚡ FLASH SALE!
+                <br><span>Limited Spots Available</span></h2>
 
             {{-- Countdown Timer --}}
             <div class="gd-timer-section">
