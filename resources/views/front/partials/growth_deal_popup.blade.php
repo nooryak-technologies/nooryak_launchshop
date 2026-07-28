@@ -898,7 +898,7 @@
         padding: 14px 14px 10px;
         border-radius: 14px;
     }
-    .gd-heading { font-size: 20px; }
+    .gd-heading { font-size: 22px !important;}
     .gd-ribbon { font-size: 10px; padding: 5px 12px; letter-spacing: 0.8px; }
     .gd-timer-lbl { font-size: 12.5px; }
     .gd-tnum { font-size: 30px; }
