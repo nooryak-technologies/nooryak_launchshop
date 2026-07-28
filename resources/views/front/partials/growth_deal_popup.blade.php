@@ -113,7 +113,7 @@
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Gst Billing.</li>
                             <li>
                                 <a href="{{ route('front.pricing') }}?term=yearly" class="gd-more-features gd-btn-standard-trigger">
-                                    <span class="gd-plus-circle"><i class="fas fa-plus"></i></span>more features
+                                    <span class="gd-plus-circle"><i class="fas fa-plus"></i></span> More Features
                                 </a>
                             </li>
                         </ul>
@@ -153,7 +153,7 @@
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Payment Option</li>
                             <li>
                                 <a href="{{ route('front.pricing') }}?term=yearly" class="gd-more-features gd-btn-premium-trigger">
-                                    <span class="gd-plus-circle"><i class="fas fa-plus"></i></span>more features
+                                    <span class="gd-plus-circle"><i class="fas fa-plus"></i></span>More Advanced Features 
                                 </a>
                             </li>
                         </ul>
