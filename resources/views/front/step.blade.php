@@ -1044,7 +1044,6 @@
           name: nameVal
         }, function(response) {
           if (response.success) {
-            console.log("OTP Code:", response.otp);
             $('#phone-feedback').html('<span class="text-success"><i class="fas fa-check-circle"></i> ' + response.message + '</span>');
             $('#otp-whatsapp-badge').removeClass('d-none');
             $('#otp-group').removeClass('d-none');
@@ -1078,7 +1077,6 @@
           name: $('#first_name').val().trim()
         }, function(response) {
           if (response.success) {
-            console.log("Resent OTP Code:", response.otp);
             $('#phone-feedback').html('<span class="text-success"><i class="fas fa-check-circle"></i> ' + response.message + '</span>');
             $('#otp-whatsapp-badge').removeClass('d-none');
             startOtpTimer();
