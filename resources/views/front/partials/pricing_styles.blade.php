@@ -748,4 +748,24 @@
       min-height: 670px;
     }
   }
+
+  /* Blinking animation for Hero Badge (#1 Ecommerce Builder For Sales & Growth) */
+  .hero-badge {
+    animation: heroBadgeBlink 1.5s ease-in-out infinite !important;
+  }
+
+  @keyframes heroBadgeBlink {
+    0%, 100% {
+      opacity: 1;
+      border-color: rgba(255, 90, 44, 0.6);
+      box-shadow: 0 0 0 0 rgba(255, 90, 44, 0.4);
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.4;
+      border-color: rgba(255, 90, 44, 1);
+      box-shadow: 0 0 16px 4px rgba(255, 90, 44, 0.45);
+      transform: scale(1.03);
+    }
+  }
 </style>
