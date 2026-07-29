@@ -1078,7 +1078,7 @@
       <div class="container">
 
         <!-- Hero Header Section matching pricing page -->
-        <div class="pricing-hero-center text-center mb-5" data-aos="fade-up">
+        <div class="pricing-hero-center text-center" data-aos="fade-up">
           <div class="pricing-eyebrow-badge" style="font-size: 13px; font-weight: 800; color: #ff5a2c; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px;">SIMPLE, TRANSPARENT PRICING</div>
           <h2 class="section-title mb-3" style="font-size: 38px; font-weight: 800; color: #1e2335; line-height: 1.2;">Choose the <span style="color: #ff5a2c;">perfect plan</span> for your business</h2>
           <p class="subtitle font-weight-medium" style="font-size: 16px; color: #64748b; max-width: 600px; margin: 0 auto 24px;">Launch your store in minutes and scale as your business grows.</p>
