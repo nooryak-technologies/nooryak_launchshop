@@ -591,7 +591,7 @@
     border: 1.5px solid #e2e8f0;
     border-radius: 16px;
     padding: 20px;
-    margin-top: 48px;
+    /* margin-top: 48px;/ */
     box-shadow: 0 4px 12px rgba(0,0,0,0.02);
     width: 100%;
     max-width: 1100px;

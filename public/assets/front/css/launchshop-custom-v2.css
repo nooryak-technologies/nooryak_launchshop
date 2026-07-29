@@ -9820,7 +9820,7 @@ iframe[id^="tawkchat-"],
 
 @media (max-width: 767px) {
     .how-it-works-v2 {
-        padding: 0px 0 50px;
+        padding: 0px 0 0px;
     }
 
     .hiw-stats-row {
