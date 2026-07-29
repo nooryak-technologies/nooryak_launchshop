@@ -298,28 +298,72 @@
         </div>
       @endif
 
-      <!-- Bottom final CTA conversion card -->
-      <div class="pricing-footer-cta-card " data-aos="fade-up">
-        <div class="row align-items-center">
-          <div class="col-lg-7 d-flex align-items-center  mb-lg-0">
-            <div class="cta-store-icon me-4 d-none d-sm-block">
-              <div class="roof-span"></div>
-              <div class="window-span"></div>
-            </div>
-            <div class="cta-text">
-              <h3>Ready to Launch Your Store?</h3>
-              <p>Join hundreads of successful entrepreneurs. 10-Days Money Back Guarantee — no credit card required.</p>
-            </div>
-          </div>
-          <div class="col-lg-5 text-lg-end">
-            <div class="cta-buttons-wrapper d-flex justify-content-lg-end justify-content-center">
-              <div class="cta-btn-block">
-                <a href="https://launchshop.in/registration/step-1/regular/14?template=electi" class="btn-pricing-action btn-white-outline px-4">
-                  Launch store Now
+      <!-- Bottom CTA Section -->
+      <div class="position-relative mt-5">
+        <!-- Dot grid decorators -->
+        <div class="cta-decor-dots cta-decor-left"></div>
+        <div class="cta-decor-dots cta-decor-right"></div>
+        
+        <!-- Main Blue Card -->
+        <div class="cta-blue-card mb-4" data-aos="fade-up">
+          <div class="row align-items-center g-0">
+            
+            <!-- Left Column (Text & Buttons) -->
+            <div class="col-lg-6 col-md-12 p-4 p-sm-5 text-center text-lg-start">
+              <h2 class="cta-revamp-title mb-3">{{ __('Ready to Launch Your Dream Store?') }}</h2>
+              <p class="cta-revamp-desc mb-4">{{ __('Join thousands of entrepreneurs and start selling online with Launchshop in just minutes.') }}</p>
+              
+              <div class="cta-revamp-btns d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+                @php
+                  $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
+                  $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
+                @endphp
+                <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
+                  {{ __('Launch Your Store') }} <i class="fas fa-arrow-right"></i>
                 </a>
-                <span class="btn-subtext">Find your perfect look</span>
+                <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-cta-check px-4 py-3 d-inline-flex align-items-center">
+                  {{ __('Launch Now') }}
+                </a>
               </div>
             </div>
+
+            <!-- Right Column (Footer Right Image) -->
+            <div class="col-lg-6 col-md-12 text-center d-flex align-items-end justify-content-center h-100 position-relative cta-right-col">
+              <img src="{{ asset('images/footer_right.png') }}" class="img-fluid cta-right-img" alt="Ready to Launch">
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Trust Badges Banner -->
+        <div class="cta-trust-banner py-4 px-3" data-aos="fade-up">
+          <div class="d-flex flex-wrap align-items-center justify-content-around gap-4 text-center">
+            
+            <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
+              <span class="trust-icon"><i class="fas fa-crown"></i></span>
+              <span class="trust-txt">{{ __('Premium Stores') }}</span>
+            </div>
+
+            <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
+              <span class="trust-icon"><i class="fas fa-rocket"></i></span>
+              <span class="trust-txt">{{ __('Launch Instantly') }}</span>
+            </div>
+
+            <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
+              <span class="trust-icon"><i class="fas fa-shield-alt"></i></span>
+              <span class="trust-txt">{{ __('10-Days Money Back Guarantee') }}</span>
+            </div>
+
+            <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
+              <span class="trust-icon"><i class="fas fa-chart-line"></i></span>
+              <span class="trust-txt">{{ __('Get High Conversions') }}</span>
+            </div>
+
+            <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
+              <span class="trust-icon"><i class="fas fa-headset"></i></span>
+              <span class="trust-txt">{{ __('24/7 Expert Support') }}</span>
+            </div>
+
           </div>
         </div>
       </div>
