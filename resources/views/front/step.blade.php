@@ -501,6 +501,20 @@
                     <div id="phone-feedback" class="small mt-2" style="font-weight: 600; text-align: left;"></div>
                   </div>
 
+                  <!-- Email Input -->
+                  <div class="form-group mb-20">
+                    <label class="form-label font-weight-bold small mb-2" style="color: #475569; display: block; text-align: left;">
+                      {{ __('Email Address') }} *
+                    </label>
+                    <div style="position: relative;">
+                      <span style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 15px;"><i class="fal fa-envelope"></i></span>
+                      <input class="form-control" type="email" name="email" id="email" placeholder="{{ __('Email Address') }}" value="{{ old('email', session('phone_verified') ? session('verified_email') : session('otp_email')) }}" required style="padding-left: 46px !important;">
+                    </div>
+                    @error('email')
+                      <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
+                    @enderror
+                  </div>
+
                   <!-- Get OTP Button -->
                   <button type="button" class="btn primary-btn w-100 py-3 mb-20" id="btn-send-otp" style="font-size: 16px; font-weight: 600; border-radius: 8px;">
                     {{ __('Get OTP') }}
@@ -555,7 +569,7 @@
                     <div style="text-align: left;">
                       <p class="mb-0 small text-muted font-weight-bold" style="font-size: 10px; text-transform: uppercase;">{{ __('VERIFIED CONTACT') }}</p>
                       <h6 class="mb-0 font-weight-bold text-dark" id="summary-verified-info" style="font-size: 14px; margin-top: 2px;">
-                        {{ session('otp_name') }} ({{ session('otp_country_code') }} {{ session('verified_phone') }})
+                        {{ session('otp_name') }} ({{ session('otp_email') }} | {{ session('otp_country_code') }} {{ session('verified_phone') }})
                       </h6>
                     </div>
                     <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none font-weight-bold" id="btn-edit-contact" style="color: var(--primary-color, #ff5a2c);">
@@ -699,14 +713,6 @@
                     @enderror
                   </div>
 
-                  <!-- Email Input -->
-                  <div class="form-group mb-20">
-                    <input class="form-control" type="email" name="email" value="{{ old('email') }}"
-                      placeholder="{{ __('Email Address') }}" required>
-                    @error('email')
-                      <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
-                    @enderror
-                  </div>
 
                   <!-- Password Input -->
                   <div class="form-group mb-20">
@@ -801,6 +807,7 @@
         $('#first_name').removeAttr('required').prop('readonly', true);
         $('#phone_number').removeAttr('required').prop('readonly', true);
         $('#country_code').prop('readonly', true);
+        $('#email').removeAttr('required').prop('readonly', true);
       }
 
       // Update hidden country_code input on country change
@@ -1018,6 +1025,7 @@
         let nameVal = $('#first_name').val().trim();
         let phoneVal = $('#phone_number').val().trim();
         let countryCode = $('#country_code').val().trim();
+        let emailVal = $('#email').val().trim();
 
         if (!nameVal) {
           $('#phone-feedback').html('<span class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ __("Please enter your name first.") }}</span>');
@@ -1031,8 +1039,21 @@
           $('#phone_number').addClass('is-invalid');
           return;
         }
-
         $('#phone_number').removeClass('is-invalid');
+
+        if (!emailVal) {
+          $('#phone-feedback').html('<span class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ __("Please enter your email address first.") }}</span>');
+          $('#email').addClass('is-invalid');
+          return;
+        }
+        let emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+        if (!emailReg.test(emailVal)) {
+          $('#phone-feedback').html('<span class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ __("Please enter a valid email address.") }}</span>');
+          $('#email').addClass('is-invalid');
+          return;
+        }
+        $('#email').removeClass('is-invalid');
+
         $('#phone-feedback').html('<span class="text-info"><i class="fas fa-spinner fa-spin"></i> {{ __("Sending OTP...") }}</span>');
         let $btn = $(this);
         $btn.prop('disabled', true);
@@ -1041,7 +1062,8 @@
           _token: "{{ csrf_token() }}",
           phone_number: phoneVal,
           country_code: countryCode,
-          name: nameVal
+          name: nameVal,
+          email: emailVal
         }, function(response) {
           if (response.success) {
             $('#phone-feedback').html('<span class="text-success"><i class="fas fa-check-circle"></i> ' + response.message + '</span>');
@@ -1054,7 +1076,15 @@
             $btn.prop('disabled', false);
           }
         }).fail(function(xhr) {
-          let msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : '{{ __("Failed to send OTP. Please try again.") }}';
+          let msg = '{{ __("Failed to send OTP. Please try again.") }}';
+          if (xhr.responseJSON) {
+            if (xhr.responseJSON.errors) {
+              let firstKey = Object.keys(xhr.responseJSON.errors)[0];
+              msg = xhr.responseJSON.errors[firstKey][0];
+            } else if (xhr.responseJSON.message) {
+              msg = xhr.responseJSON.message;
+            }
+          }
           $('#phone-feedback').html('<span class="text-danger"><i class="fas fa-times-circle"></i> ' + msg + '</span>');
           $btn.prop('disabled', false);
         });
@@ -1064,6 +1094,7 @@
         e.preventDefault();
         let phoneVal = $('#phone_number').val().trim();
         let countryCode = $('#country_code').val().trim();
+        let emailVal = $('#email').val().trim();
 
         $('#otp-feedback').html('');
         $('#phone-feedback').html('<span class="text-info"><i class="fas fa-spinner fa-spin"></i> {{ __("Resending OTP...") }}</span>');
@@ -1074,7 +1105,8 @@
           _token: "{{ csrf_token() }}",
           phone_number: phoneVal,
           country_code: countryCode,
-          name: $('#first_name').val().trim()
+          name: $('#first_name').val().trim(),
+          email: emailVal
         }, function(response) {
           if (response.success) {
             $('#phone-feedback').html('<span class="text-success"><i class="fas fa-check-circle"></i> ' + response.message + '</span>');
@@ -1085,7 +1117,15 @@
             $btn.removeClass('d-none');
           }
         }).fail(function(xhr) {
-          let msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : '{{ __("Failed to resend OTP.") }}';
+          let msg = '{{ __("Failed to resend OTP.") }}';
+          if (xhr.responseJSON) {
+            if (xhr.responseJSON.errors) {
+              let firstKey = Object.keys(xhr.responseJSON.errors)[0];
+              msg = xhr.responseJSON.errors[firstKey][0];
+            } else if (xhr.responseJSON.message) {
+              msg = xhr.responseJSON.message;
+            }
+          }
           $('#phone-feedback').html('<span class="text-danger"><i class="fas fa-times-circle"></i> ' + msg + '</span>');
           $btn.removeClass('d-none');
         });
@@ -1097,6 +1137,7 @@
         let phoneVal = $('#phone_number').val().trim();
         let countryCode = $('#country_code').val().trim();
         let nameVal = $('#first_name').val().trim();
+        let emailVal = $('#email').val().trim();
 
         if (!enteredOtp) {
           $('#otp-feedback').html('<span class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ __("Please enter the OTP.") }}</span>');
@@ -1117,12 +1158,13 @@
             $('#phone-feedback').html('<span class="text-success" style="font-size: 15px;"><i class="fas fa-check-circle"></i> ' + response.message + '</span>');
             
             // Set verified info summary
-            $('#summary-verified-info').text(nameVal + ' (' + countryCode + ' ' + phoneVal + ')');
+            $('#summary-verified-info').text(nameVal + ' (' + emailVal + ' | ' + countryCode + ' ' + phoneVal + ')');
 
             // Make fields readonly and change verify button state
             $('#phone_number').prop('readonly', true).removeAttr('required');
             $('#country_code').prop('readonly', true);
             $('#first_name').prop('readonly', true).removeAttr('required');
+            $('#email').prop('readonly', true).removeAttr('required');
             
             $('#btn-send-otp')
               .prop('disabled', true)
@@ -1156,6 +1198,7 @@
         $('#phone_number').prop('readonly', false).attr('required', true);
         $('#country_code').prop('readonly', false);
         $('#first_name').prop('readonly', false).attr('required', true);
+        $('#email').prop('readonly', false).attr('required', true);
         
         $('#btn-send-otp')
           .prop('disabled', false)

@@ -247,21 +247,23 @@ class FrontendController extends Controller
     {
         $request->validate([
             'phone_number' => 'required',
-            'country_code' => 'required'
+            'country_code' => 'required',
+            'email' => 'required|email|unique:users'
         ]);
 
         $phone = ltrim($request->phone_number, '0');
         $countryCode = $request->country_code;
         $name = $request->input('name', '');
+        $email = $request->email;
 
         // Persist typed data in session immediately
         Session::put('otp_phone', $phone);
         Session::put('otp_country_code', $countryCode);
         Session::put('otp_name', $name);
+        Session::put('otp_email', $email);
 
         // Reset verified status since they are initiating a new verification
-        Session::forget('phone_verified');
-        Session::forget('verified_phone');
+        Session::forget(['phone_verified', 'verified_phone', 'verified_email']);
 
         $cleanPhone = preg_replace('/[^0-9]/', '', $phone);
         $cleanCountryCode = preg_replace('/[^0-9]/', '', $countryCode);
@@ -274,15 +276,6 @@ class FrontendController extends Controller
         }
 
         $otp = rand(100000, 999999);
-
-        return response()->json([
-    'success' => true,
-    'otp' => $otp, // Remove this in production
-    'message' => 'OTP sent successfully!'
-        ]);
-
-
-        // dump($otp);
 
         try {
             $response = Http::withHeaders([
@@ -304,6 +297,27 @@ class FrontendController extends Controller
                 Session::put('otp_code', $otp);
                 Session::put('otp_phone', $phone);
                 Session::put('otp_expires_at', time() + 300);
+                Session::put('otp_email', $email);
+
+                // Send OTP to email
+                try {
+                    $be = BE::first();
+                    $mailData = [
+                        'smtp_status' => $be->is_smtp,
+                        'smtp_host' => $be->smtp_host,
+                        'smtp_username' => $be->smtp_username,
+                        'smtp_password' => $be->smtp_password,
+                        'encryption' => $be->encryption,
+                        'smtp_port' => $be->smtp_port,
+                        'from_mail' => $be->from_mail,
+                        'recipient' => $email,
+                        'subject' => "OTP Verification Code",
+                        'body' => "Your OTP verification code is <b>" . $otp . "</b> for <b>Launchshop Ecommerce</b>. This code is valid for 5 minutes. Please do not share it with anyone.",
+                    ];
+                    BasicMailer::sendMail($mailData);
+                } catch (\Exception $mailEx) {
+                    Log::error('OTP Email send failed: ' . $mailEx->getMessage());
+                }
 
                 // Save / update phone lead in DB for admin visibility
                 try {
@@ -322,7 +336,7 @@ class FrontendController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'message' => __('OTP sent successfully!')
+                    'message' => __('OTP sent successfully to your WhatsApp and Email!')
                 ]);
             } else {
                 $errorMsg = __('Failed to send OTP. Please try again.');
@@ -383,13 +397,14 @@ class FrontendController extends Controller
         if ($otp == $sessionOtp && substr($cleanPhone, -10) === substr($cleanSessionPhone, -10)) {
             Session::put('phone_verified', true);
             Session::put('verified_phone', $phone);
+            Session::put('verified_email', Session::get('otp_email'));
             Session::put('phone_verified_at', time());
 
             Session::forget(['otp_code', 'otp_phone', 'otp_expires_at']);
 
             return response()->json([
                 'success' => true,
-                'message' => __('Phone number verified successfully!')
+                'message' => __('Phone number and email verified successfully!')
             ]);
         }
 
@@ -566,12 +581,12 @@ class FrontendController extends Controller
     {
         // Clear phone verification session if it has expired (3 minutes / 180 seconds)
         if (Session::has('phone_verified') && (time() - Session::get('phone_verified_at', 0)) > 180) {
-            Session::forget(['phone_verified', 'verified_phone', 'phone_verified_at']);
+            Session::forget(['phone_verified', 'verified_phone', 'verified_email', 'phone_verified_at']);
         }
 
-        // Validate backend phone verification status
-        if (!Session::get('phone_verified') || Session::get('verified_phone') !== $request->phone) {
-            return redirect()->back()->withErrors(['phone' => __('Please verify your phone number first.')])->withInput();
+        // Validate backend phone and email verification status
+        if (!Session::get('phone_verified') || Session::get('verified_phone') !== $request->phone || Session::get('verified_email') !== $request->email) {
+            return redirect()->back()->withErrors(['phone' => __('Please verify your details first.')])->withInput();
         }
 
         if ($request->has('phone')) {
