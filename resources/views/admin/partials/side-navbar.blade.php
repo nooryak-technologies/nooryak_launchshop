@@ -71,7 +71,7 @@
           </a>
         </li>
         {{-- Users Management --}}
-        @if (empty($admin->role) || (!empty($permissions) && in_array('Users Management', $permissions)))
+        @if (empty($admin->role) || (!empty($permissions) && (in_array('Users Management', $permissions) || in_array('Categories', $permissions) || in_array('Registered Users', $permissions) || in_array('Non-Verified Users', $permissions) || in_array('Subscribers', $permissions) || in_array('Mail to Subscribers', $permissions))))
           <li
             class="nav-item
             @if (request()->routeIs('admin.register.user')) active
@@ -100,6 +100,7 @@
               id="registerd-users">
               <ul class="nav nav-collapse">
 
+                @if (empty($admin->role) || (!empty($permissions) && (in_array('Categories', $permissions) || in_array('Users Management', $permissions))))
                 <li
                   class="
                 @if (request()->routeIs('register.user.category')) active @endif
@@ -109,7 +110,9 @@
                     <span class="sub-item">{{ __('Categories') }}</span>
                   </a>
                 </li>
+                @endif
 
+                @if (empty($admin->role) || (!empty($permissions) && (in_array('Registered Users', $permissions) || in_array('Users Management', $permissions))))
                 <li
                   class="
                 @if (request()->routeIs('admin.register.user')) active
@@ -120,7 +123,9 @@
                     <span class="sub-item">{{ __('Registered Users') }}</span>
                   </a>
                 </li>
+                @endif
 
+                @if (empty($admin->role) || (!empty($permissions) && (in_array('Non-Verified Users', $permissions) || in_array('Users Management', $permissions))))
                 <li
                   class="
                 @if (request()->routeIs('admin.nonverified.user')) active @endif
@@ -129,17 +134,23 @@
                     <span class="sub-item">{{ __('Non-Verified Users') }}</span>
                   </a>
                 </li>
+                @endif
 
+                @if (empty($admin->role) || (!empty($permissions) && (in_array('Subscribers', $permissions) || in_array('Users Management', $permissions))))
                 <li class="@if (request()->routeIs('admin.subscriber.index')) active @endif">
                   <a href="{{ route('admin.subscriber.index') }}">
                     <span class="sub-item">{{ __('Subscribers') }}</span>
                   </a>
                 </li>
+                @endif
+
+                @if (empty($admin->role) || (!empty($permissions) && (in_array('Mail to Subscribers', $permissions) || in_array('Users Management', $permissions))))
                 <li class="@if (request()->routeIs('admin.mailsubscriber')) active @endif">
                   <a href="{{ route('admin.mailsubscriber') }}">
                     <span class="sub-item">{{ __('Mail to Subscribers') }}</span>
                   </a>
                 </li>
+                @endif
               </ul>
             </div>
           </li>

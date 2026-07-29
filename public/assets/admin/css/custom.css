@@ -22,12 +22,30 @@
     background: rgba(199, 199, 199, 0.2);
 }
 
+.sidebar,
 .sidebar .nav .nav-item a, 
 .sidebar .nav .nav-item a p, 
 .sidebar .nav .nav-item a i,
 .sidebar .nav .nav-item a .caret,
-.sidebar .nav .nav-collapse li a .sub-item {
+.sidebar .nav-collapse li a,
+.sidebar .nav-collapse li a .sub-item,
+.sidebar .nav-collapse li a span,
+.sidebar .nav .nav-item span,
+.sidebar .user .info a span,
+.sidebar .user .info a p,
+.sidebar .user .info .user-level,
+.sidebar.sidebar-style-2 .nav .nav-item a,
+.sidebar.sidebar-style-2 .nav .nav-item a p,
+.sidebar.sidebar-style-2 .nav-collapse li a .sub-item {
     color: #ffffff !important;
+    opacity: 1 !important;
+}
+
+.sidebar .nav-collapse li a:hover .sub-item,
+.sidebar .nav .nav-item a:hover p,
+.sidebar .nav .nav-item a:hover i {
+    color: #ffffff !important;
+    opacity: 1 !important;
 }
 /* sider navbar css over write end */
 

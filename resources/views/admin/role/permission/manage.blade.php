@@ -113,6 +113,31 @@
                       <span class="selectgroup-button">{{ __('Users Management') }}</span>
                     </label>
                     <label class="selectgroup-item">
+                      <input type="checkbox" name="permissions[]" value="Categories" class="selectgroup-input"
+                        @if (is_array($permissions) && in_array('Categories', $permissions)) checked @endif>
+                      <span class="selectgroup-button">{{ __('Categories') }}</span>
+                    </label>
+                    <label class="selectgroup-item">
+                      <input type="checkbox" name="permissions[]" value="Registered Users" class="selectgroup-input"
+                        @if (is_array($permissions) && in_array('Registered Users', $permissions)) checked @endif>
+                      <span class="selectgroup-button">{{ __('Registered Users') }}</span>
+                    </label>
+                    <label class="selectgroup-item">
+                      <input type="checkbox" name="permissions[]" value="Non-Verified Users" class="selectgroup-input"
+                        @if (is_array($permissions) && in_array('Non-Verified Users', $permissions)) checked @endif>
+                      <span class="selectgroup-button">{{ __('Non-Verified Users') }}</span>
+                    </label>
+                    <label class="selectgroup-item">
+                      <input type="checkbox" name="permissions[]" value="Subscribers" class="selectgroup-input"
+                        @if (is_array($permissions) && in_array('Subscribers', $permissions)) checked @endif>
+                      <span class="selectgroup-button">{{ __('Subscribers') }}</span>
+                    </label>
+                    <label class="selectgroup-item">
+                      <input type="checkbox" name="permissions[]" value="Mail to Subscribers" class="selectgroup-input"
+                        @if (is_array($permissions) && in_array('Mail to Subscribers', $permissions)) checked @endif>
+                      <span class="selectgroup-button">{{ __('Mail to Subscribers') }}</span>
+                    </label>
+                    <label class="selectgroup-item">
                       <input type="checkbox" name="permissions[]" value="Shops" class="selectgroup-input"
                         @if (is_array($permissions) && in_array('Shops', $permissions)) checked @endif>
                       <span class="selectgroup-button">{{ __('Shops') }}</span>

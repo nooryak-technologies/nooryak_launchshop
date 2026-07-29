@@ -317,6 +317,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        try {
+            $be = BasicExtended::first();
+            $tz = (!empty($be) && !empty($be->timezone)) ? $be->timezone : 'Asia/Kolkata';
+            date_default_timezone_set($tz);
+            config(['app.timezone' => $tz]);
+        } catch (\Exception $e) {
+            date_default_timezone_set('Asia/Kolkata');
+            config(['app.timezone' => 'Asia/Kolkata']);
+        }
 
         User::created(function ($user) {
             if (app()->runningInConsole()) {

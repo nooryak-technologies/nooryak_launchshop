@@ -96,7 +96,7 @@
                         </span>
                       @endif
                     </td>
-                    <td>{{ $lead->otp_sent_at ? $lead->otp_sent_at->format('d M Y, h:i A') : '-' }}</td>
+                    <td>{{ $lead->otp_sent_at ? \Carbon\Carbon::parse($lead->otp_sent_at, 'UTC')->setTimezone(config('app.timezone', 'Asia/Kolkata'))->format('d M Y, h:i A') : '-' }}</td>
                     <td>
                       <button class="btn btn-sm btn-info view-lead-btn" 
                               data-id="{{ $lead->id }}"
@@ -106,9 +106,8 @@
                               data-email="{{ $lead->email }}"
                               data-purchased="{{ $lead->purchased ? 1 : 0 }}"
                               data-status="{{ $lead->status ?: 'Not Purchased' }}"
-                              data-status_date="{{ $lead->status_date ? \Carbon\Carbon::parse($lead->status_date)->format('Y-m-d\TH:i') : '' }}"
-                              data-otp_sent_at="{{ $lead->otp_sent_at ? $lead->otp_sent_at->format('d M Y, h:i A') : '-' }}"
-                              data-created_at="{{ $lead->created_at ? $lead->created_at->format('d M Y, h:i A') : '-' }}"
+                              data-status_date="{{ $lead->status_date ? \Carbon\Carbon::parse($lead->status_date, 'UTC')->setTimezone(config('app.timezone', 'Asia/Kolkata'))->format('Y-m-d\TH:i') : '' }}"
+                              data-otp_sent_at="{{ $lead->otp_sent_at ? \Carbon\Carbon::parse($lead->otp_sent_at, 'UTC')->setTimezone(config('app.timezone', 'Asia/Kolkata'))->format('d M Y, h:i A') : '-' }}"
                               data-toggle="modal" 
                               data-target="#viewLeadModal">
                         <i class="fas fa-eye"></i>
