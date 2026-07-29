@@ -275,6 +275,8 @@ class FrontendController extends Controller
 
         $otp = rand(100000, 999999);
 
+        dump($otp);
+
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer 3bf6211c4ba7000f46ea1cb9d2d0f78f',
