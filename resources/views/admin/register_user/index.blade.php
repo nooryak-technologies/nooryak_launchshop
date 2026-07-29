@@ -318,21 +318,18 @@
                     </td>
                     <td>{{ $lead->country_code ?: '-' }}</td>
                     <td id="lead-status-cell-{{ $lead->id }}">
-                      @if($lead->status === 'Purchased')
+                      @if($lead->purchased)
                         <span class="badge badge-success px-2 py-1 lead-purchased-badge">
                           <i class="fas fa-check mr-1"></i>{{ __('Purchased') }}
                         </span>
-                      @elseif($lead->status === 'Follow Up')
-                        <span class="badge badge-warning px-2 py-1 lead-status-badge">
-                          {{ __('Follow Up') }}
+                      @else
+                        <span class="badge badge-warning px-2 py-1 lead-purchased-badge">
+                          <i class="fas fa-clock mr-1"></i>{{ __('Not Purchased') }}
                         </span>
-                      @elseif($lead->status === 'Interested')
-                        <span class="badge badge-info px-2 py-1 lead-status-badge">
-                          {{ __('Interested') }}
-                        </span>
-                      @elseif($lead->status === 'Not Interested')
-                        <span class="badge badge-danger px-2 py-1 lead-status-badge">
-                          {{ __('Not Interested') }}
+                      @endif
+                      @if($lead->status && $lead->status !== 'Not Purchased' && $lead->status !== 'Purchased')
+                        <span class="badge badge-info px-2 py-1 lead-status-badge ml-1">
+                          {{ $lead->status }}
                         </span>
                       @endif
                     </td>
@@ -637,14 +634,13 @@
               var statusCell = $('#lead-status-cell-' + response.lead.id);
               if (statusCell.length) {
                 var badgesHtml = '';
-                if (response.lead.status === 'Purchased') {
-                  badgesHtml = '<span class="badge badge-success px-2 py-1 lead-purchased-badge"><i class="fas fa-check mr-1"></i>Purchased</span>';
-                } else if (response.lead.status === 'Follow Up') {
-                  badgesHtml = '<span class="badge badge-warning px-2 py-1 lead-status-badge">Follow Up</span>';
-                } else if (response.lead.status === 'Interested') {
-                  badgesHtml = '<span class="badge badge-info px-2 py-1 lead-status-badge">Interested</span>';
-                } else if (response.lead.status === 'Not Interested') {
-                  badgesHtml = '<span class="badge badge-danger px-2 py-1 lead-status-badge">Not Interested</span>';
+                if (response.lead.purchased == 1) {
+                  badgesHtml += '<span class="badge badge-success px-2 py-1 lead-purchased-badge"><i class="fas fa-check mr-1"></i>Purchased</span>';
+                } else {
+                  badgesHtml += '<span class="badge badge-warning px-2 py-1 lead-purchased-badge"><i class="fas fa-clock mr-1"></i>Not Purchased</span>';
+                }
+                if (response.lead.status && response.lead.status !== 'Not Purchased' && response.lead.status !== 'Purchased') {
+                  badgesHtml += '<span class="badge badge-info px-2 py-1 lead-status-badge ml-1">' + response.lead.status + '</span>';
                 }
                 statusCell.html(badgesHtml);
               }
