@@ -275,7 +275,7 @@ class FrontendController extends Controller
 
         $otp = rand(100000, 999999);
 
-        dump($otp);
+        // dump($otp);
 
         try {
             $response = Http::withHeaders([
