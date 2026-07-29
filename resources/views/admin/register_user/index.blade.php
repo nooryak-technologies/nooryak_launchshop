@@ -95,6 +95,7 @@
                         <th scope="col">{{ __('WhatsApp') }}</th>
                         <th scope="col">{{ __('Email Status') }}</th>
                         <th scope="col">{{ __('Account') }}</th>
+                        <th scope="col">{{ __('Registered At') }}</th>
                         <td scope="col">{{ __('Action') }}</td>
                       </tr>
                     </thead>
@@ -193,6 +194,9 @@
                               </select>
                               <input type="hidden" name="user_id" value="{{ $user->id }}">
                             </form>
+                          </td>
+                          <td>
+                            {{ $user->created_at ? $user->created_at->format('d-m-Y H:i') : '-' }}
                           </td>
                           <td>
                             <div class="dropdown  ">
@@ -305,31 +309,52 @@
                     <th>{{ __('Country Code') }}</th>
                     <th>{{ __('Plan Status') }}</th>
                     <th>{{ __('OTP Sent At') }}</th>
-                    <th>{{ __('Registered At') }}</th>
+                    <th>{{ __('Action') }}</th>
                   </tr>
                 </thead>
                 <tbody>
                   @foreach($verifiedLeads as $lead)
-                  <tr>
+                  <tr id="lead-row-{{ $lead->id }}">
                     <td>{{ $lead->id }}</td>
                     <td>{{ $lead->name ?: '-' }}</td>
                     <td>
                       <strong>{{ $lead->phone }}</strong>
                     </td>
                     <td>{{ $lead->country_code ?: '-' }}</td>
-                    <td>
+                    <td id="lead-status-cell-{{ $lead->id }}">
                       @if($lead->purchased)
-                        <span class="badge badge-success px-2 py-1">
+                        <span class="badge badge-success px-2 py-1 lead-purchased-badge">
                           <i class="fas fa-check mr-1"></i>{{ __('Purchased') }}
                         </span>
                       @else
-                        <span class="badge badge-warning px-2 py-1">
+                        <span class="badge badge-warning px-2 py-1 lead-purchased-badge">
                           <i class="fas fa-clock mr-1"></i>{{ __('Not Purchased') }}
+                        </span>
+                      @endif
+                      @if($lead->status && $lead->status !== 'Not Purchased' && $lead->status !== 'Purchased')
+                        <span class="badge badge-info px-2 py-1 lead-status-badge ml-1">
+                          {{ $lead->status }}
                         </span>
                       @endif
                     </td>
                     <td>{{ $lead->otp_sent_at ? $lead->otp_sent_at->format('d M Y, h:i A') : '-' }}</td>
-                    <td>{{ $lead->created_at ? $lead->created_at->format('d M Y') : '-' }}</td>
+                    <td>
+                      <button class="btn btn-sm btn-info view-lead-btn" 
+                              data-id="{{ $lead->id }}"
+                              data-name="{{ $lead->name }}"
+                              data-phone="{{ $lead->phone }}"
+                              data-country_code="{{ $lead->country_code }}"
+                              data-email="{{ $lead->email }}"
+                              data-purchased="{{ $lead->purchased ? 1 : 0 }}"
+                              data-status="{{ $lead->status ?: 'Not Purchased' }}"
+                              data-status_date="{{ $lead->status_date ? \Carbon\Carbon::parse($lead->status_date)->format('Y-m-d') : '' }}"
+                              data-otp_sent_at="{{ $lead->otp_sent_at ? $lead->otp_sent_at->format('d M Y, h:i A') : '-' }}"
+                              data-created_at="{{ $lead->created_at ? $lead->created_at->format('d M Y, h:i A') : '-' }}"
+                              data-toggle="modal" 
+                              data-target="#viewLeadModal">
+                        <i class="fas fa-eye"></i>
+                      </button>
+                    </td>
                   </tr>
                   @endforeach
                 </tbody>
@@ -481,4 +506,203 @@
       </div>
     </div>
   </div>
+
+  <!-- View Lead Details Modal -->
+  <div class="modal fade" id="viewLeadModal" tabindex="-1" role="dialog" aria-labelledby="viewLeadModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="viewLeadModalTitle">{{ __('Lead Details') }}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-success d-none" id="lead-success-alert"></div>
+          <div class="alert alert-danger d-none" id="lead-error-alert"></div>
+          
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <strong>{{ __('Name') }}:</strong> <span id="lead-detail-name"></span>
+            </div>
+            <div class="col-md-6">
+              <strong>{{ __('Email') }}:</strong> <span id="lead-detail-email"></span>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <strong>{{ __('Phone') }}:</strong> <span id="lead-detail-phone"></span>
+            </div>
+            <div class="col-md-6">
+              <strong>{{ __('Country Code') }}:</strong> <span id="lead-detail-country-code"></span>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <strong>{{ __('OTP Sent At') }}:</strong> <span id="lead-detail-otp-sent"></span>
+            </div>
+            <div class="col-md-6">
+              <strong>{{ __('Created At') }}:</strong> <span id="lead-detail-created-at"></span>
+            </div>
+          </div>
+          
+          <hr>
+          
+          <form id="leadUpdateForm">
+            @csrf
+            <input type="hidden" name="id" id="lead-id-input">
+            
+            <div class="form-group">
+              <label for="lead-status-select"><strong>{{ __('Plan Status') }}</strong></label>
+              <select name="status" id="lead-status-select" class="form-control">
+                <option value="Purchased">{{ __('Purchased') }}</option>
+                <option value="Not Purchased">{{ __('Not Purchased') }}</option>
+                <option value="Follow Up">{{ __('Follow Up') }}</option>
+                <option value="Interested">{{ __('Interested') }}</option>
+                <option value="Not Interested">{{ __('Not Interested') }}</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="lead-status-date-input"><strong>{{ __('Status Date') }}</strong></label>
+              <input type="date" name="status_date" id="lead-status-date-input" class="form-control">
+              <small class="form-text text-muted">{{ __('For Follow Up status, the date must be today or in the future.') }}</small>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center mt-4">
+              <button type="button" class="btn btn-danger" id="deleteLeadBtn">
+                <i class="fas fa-trash mr-1"></i> {{ __('Delete Lead') }}
+              </button>
+              <div>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('Close') }}</button>
+                <button type="submit" class="btn btn-primary" id="saveLeadBtn">
+                  <i class="fas fa-save mr-1"></i> {{ __('Save Changes') }}
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      $(document).on('click', '.view-lead-btn', function () {
+        var btn = $(this);
+        var id = btn.data('id');
+        var name = btn.data('name') || '-';
+        var email = btn.data('email') || '-';
+        var phone = btn.data('phone') || '-';
+        var countryCode = btn.data('country_code') || '-';
+        var otpSentAt = btn.data('otp_sent_at') || '-';
+        var createdAt = btn.data('created_at') || '-';
+        var status = btn.data('status') || 'Not Purchased';
+        var statusDate = btn.data('status_date') || '';
+        
+        $('#lead-id-input').val(id);
+        $('#lead-detail-name').text(name);
+        $('#lead-detail-email').text(email);
+        $('#lead-detail-phone').text(phone);
+        $('#lead-detail-country-code').text(countryCode);
+        $('#lead-detail-otp-sent').text(otpSentAt);
+        $('#lead-detail-created-at').text(createdAt);
+        $('#lead-status-select').val(status);
+        $('#lead-status-date-input').val(statusDate);
+        
+        $('#lead-success-alert').addClass('d-none').text('');
+        $('#lead-error-alert').addClass('d-none').text('');
+        $('#saveLeadBtn').prop('disabled', false);
+      });
+      
+      $('#leadUpdateForm').on('submit', function (e) {
+        e.preventDefault();
+        var form = $(this);
+        var submitBtn = $('#saveLeadBtn');
+        
+        $('#lead-success-alert').addClass('d-none').text('');
+        $('#lead-error-alert').addClass('d-none').text('');
+        submitBtn.prop('disabled', true);
+        
+        $.ajax({
+          url: "{{ route('admin.register.lead.updateStatus') }}",
+          method: "POST",
+          data: form.serialize(),
+          success: function (response) {
+            if (response.success) {
+              $('#lead-success-alert').removeClass('d-none').text(response.message);
+              
+              // Update triggering button data attributes
+              var leadBtn = $('.view-lead-btn[data-id="' + response.lead.id + '"]');
+              leadBtn.data('status', response.lead.status);
+              leadBtn.data('status_date', response.lead.status_date);
+              leadBtn.data('purchased', response.lead.purchased);
+              
+              // Update the plan status cell badge in the row
+              var statusCell = $('#lead-status-cell-' + response.lead.id);
+              if (statusCell.length) {
+                var badgesHtml = '';
+                if (response.lead.purchased == 1) {
+                  badgesHtml += '<span class="badge badge-success px-2 py-1 lead-purchased-badge"><i class="fas fa-check mr-1"></i>Purchased</span>';
+                } else {
+                  badgesHtml += '<span class="badge badge-warning px-2 py-1 lead-purchased-badge"><i class="fas fa-clock mr-1"></i>Not Purchased</span>';
+                }
+                if (response.lead.status && response.lead.status !== 'Not Purchased' && response.lead.status !== 'Purchased') {
+                  badgesHtml += '<span class="badge badge-info px-2 py-1 lead-status-badge ml-1">' + response.lead.status + '</span>';
+                }
+                statusCell.html(badgesHtml);
+              }
+              
+              setTimeout(function () {
+                $('#viewLeadModal').modal('hide');
+              }, 1000);
+            }
+          },
+          error: function (xhr) {
+            submitBtn.prop('disabled', false);
+            var errorMsg = "{{ __('An error occurred. Please try again.') }}";
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+              errorMsg = xhr.responseJSON.message;
+            }
+            $('#lead-error-alert').removeClass('d-none').text(errorMsg);
+          }
+        });
+      });
+      
+      $('#deleteLeadBtn').on('click', function () {
+        var id = $('#lead-id-input').val();
+        if (confirm("{{ __('Are you sure you want to delete this lead? This will perform a soft delete.') }}")) {
+          var btn = $(this);
+          btn.prop('disabled', true);
+          
+          $.ajax({
+            url: "{{ route('admin.register.lead.delete') }}",
+            method: "POST",
+            data: {
+              _token: "{{ csrf_token() }}",
+              id: id
+            },
+            success: function (response) {
+              if (response.success) {
+                $('#lead-success-alert').removeClass('d-none').text(response.message);
+                $('#lead-row-' + id).remove();
+                setTimeout(function () {
+                  $('#viewLeadModal').modal('hide');
+                  btn.prop('disabled', false);
+                }, 1000);
+              }
+            },
+            error: function (xhr) {
+              btn.prop('disabled', false);
+              var errorMsg = "{{ __('Failed to delete lead. Please try again.') }}";
+              if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMsg = xhr.responseJSON.message;
+              }
+              $('#lead-error-alert').removeClass('d-none').text(errorMsg);
+            }
+          });
+        }
+      });
+    });
+  </script>
 @endsection

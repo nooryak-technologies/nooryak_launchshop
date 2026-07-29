@@ -630,7 +630,11 @@ class CheckoutController extends Controller
             $cleanCode  = preg_replace('/[^0-9]/', '', $request['country_code'] ?? '');
             if ($cleanPhone) {
                 $fullPhone = (strpos($cleanPhone, $cleanCode) === 0) ? $cleanPhone : $cleanCode . $cleanPhone;
-                \App\Models\VerifiedPhoneLead::where('phone', $fullPhone)->update(['purchased' => true]);
+                \App\Models\VerifiedPhoneLead::where('phone', $fullPhone)->update([
+                    'purchased' => true,
+                    'status' => 'Purchased',
+                    'status_date' => now()
+                ]);
             }
         } catch (\Exception $leadEx) {
             \Log::warning('VerifiedPhoneLead purchase mark failed: ' . $leadEx->getMessage());

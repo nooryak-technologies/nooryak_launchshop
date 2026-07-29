@@ -231,6 +231,9 @@ Route::domain($domain)->group(function () {
             // Register User start
             Route::prefix('register-users')->group(function () {
                 Route::get('/', 'Admin\RegisterUserController@index')->name('admin.register.user');
+                Route::get('/nonregistered', 'Admin\RegisterUserController@nonRegistered')->name('admin.nonregistered.user');
+                Route::post('/lead/update', 'Admin\RegisterUserController@updateLeadStatus')->name('admin.register.lead.updateStatus');
+                Route::post('/lead/delete', 'Admin\RegisterUserController@deleteLead')->name('admin.register.lead.delete');
                 Route::get('/details/{id}', 'Admin\RegisterUserController@view')->name('register.user.view');
                 Route::get('change-passwords/{id}', 'Admin\RegisterUserController@changePass')->name('register.user.changePass');
                 Route::get('categories', 'Admin\RegisterUserController@category')->name('register.user.category');

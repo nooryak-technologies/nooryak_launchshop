@@ -327,6 +327,8 @@ class FrontendController extends Controller
                         [
                             'name'         => $name,
                             'country_code' => $countryCode,
+                            'email'        => $email,
+                            'is_verified'  => false,
                             'otp_sent_at'  => now(),
                         ]
                     );
@@ -399,6 +401,16 @@ class FrontendController extends Controller
             Session::put('verified_phone', $phone);
             Session::put('verified_email', Session::get('otp_email'));
             Session::put('phone_verified_at', time());
+
+            // Mark lead as verified in DB
+            try {
+                $cleanPhoneDigits = preg_replace('/[^0-9]/', '', $phone);
+                \App\Models\VerifiedPhoneLead::where('phone', 'like', '%' . $cleanPhoneDigits)->update([
+                    'is_verified' => true
+                ]);
+            } catch (\Exception $leadEx) {
+                Log::warning('VerifiedPhoneLead verify mark failed: ' . $leadEx->getMessage());
+            }
 
             Session::forget(['otp_code', 'otp_phone', 'otp_expires_at']);
 

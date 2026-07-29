@@ -74,6 +74,8 @@ use Illuminate\Support\Facades\DB;
 use Hash;
 use Session;
 use Validator;
+use App\Http\Requests\Admin\UpdateLeadStatusRequest;
+use App\Http\Requests\Admin\DeleteLeadRequest;
 
 class RegisterUserController extends Controller
 {
@@ -103,7 +105,7 @@ class RegisterUserController extends Controller
 
         // Verified phone leads (users who sent OTP but may not have purchased a plan)
         $leadFilter = $request->input('lead_filter', 'all'); // all | purchased | not_purchased
-        $verifiedLeadsQuery = \App\Models\VerifiedPhoneLead::orderBy('otp_sent_at', 'DESC');
+        $verifiedLeadsQuery = \App\Models\VerifiedPhoneLead::where('is_verified', true)->orderBy('otp_sent_at', 'DESC');
         if ($leadFilter === 'purchased') {
             $verifiedLeadsQuery->where('purchased', true);
         } elseif ($leadFilter === 'not_purchased') {
@@ -350,6 +352,17 @@ class RegisterUserController extends Controller
                 'type' => 'registrationWithPremiumPackage'
             ];
             $mailer->mailFromAdmin($data);
+
+            // Mark the verified phone lead as purchased (if one exists for this number)
+            try {
+                \App\Models\VerifiedPhoneLead::where('phone', $user->phone)->update([
+                    'purchased' => true,
+                    'status' => 'Purchased',
+                    'status_date' => now(),
+                ]);
+            } catch (\Exception $leadEx) {
+                \Log::warning('VerifiedPhoneLead purchase mark failed for admin user store: ' . $leadEx->getMessage());
+            }
         }
 
         Session::flash('success', __('Created Successfully'));
@@ -2160,5 +2173,62 @@ class RegisterUserController extends Controller
 
         Session::flash('success', __('Deleted Successfully'));
         return back();
+    }
+
+    public function nonRegistered(Request $request)
+    {
+        $term = $request->input('term');
+        $verifiedLeadsQuery = \App\Models\VerifiedPhoneLead::where('is_verified', false)->orderBy('otp_sent_at', 'DESC');
+        if ($term) {
+            $verifiedLeadsQuery->where(function($q) use ($term) {
+                $q->where('name', 'like', '%' . $term . '%')
+                  ->orWhere('phone', 'like', '%' . $term . '%')
+                  ->orWhere('email', 'like', '%' . $term . '%');
+            });
+        }
+        $verifiedLeads = $verifiedLeadsQuery->paginate(10);
+        return view('admin.register_user.non_registered', compact('verifiedLeads', 'term'));
+    }
+
+    public function updateLeadStatus(UpdateLeadStatusRequest $request)
+    {
+        $lead = \App\Models\VerifiedPhoneLead::findOrFail($request->id);
+        $lead->status = $request->status;
+        $lead->status_date = $request->status_date ? \Carbon\Carbon::parse($request->status_date) : null;
+        
+        // Map status string to purchased boolean
+        if (in_array(strtolower($request->status), ['purchased', 'converted', 'converted / purchased'])) {
+            $lead->purchased = true;
+        } else {
+            $lead->purchased = false;
+        }
+        
+        $lead->save();
+
+        \Log::info("Admin ID " . Auth::guard('admin')->id() . " updated lead ID " . $lead->id . " status to " . $lead->status);
+
+        return response()->json([
+            'success' => true,
+            'message' => __('Status updated successfully!'),
+            'lead' => [
+                'id' => $lead->id,
+                'status' => $lead->status,
+                'status_date' => $lead->status_date ? $lead->status_date->format('Y-m-d') : '',
+                'purchased' => $lead->purchased ? 1 : 0
+            ]
+        ]);
+    }
+
+    public function deleteLead(DeleteLeadRequest $request)
+    {
+        $lead = \App\Models\VerifiedPhoneLead::findOrFail($request->id);
+        $lead->delete();
+
+        \Log::info("Admin ID " . Auth::guard('admin')->id() . " soft-deleted lead ID " . $lead->id);
+
+        return response()->json([
+            'success' => true,
+            'message' => __('Lead deleted successfully!')
+        ]);
     }
 }
