@@ -275,7 +275,16 @@ class FrontendController extends Controller
 
         $otp = rand(100000, 999999);
 
-        // dump($otp);
+        // Store OTP details in the session so verifyOtp works
+        Session::put('otp_code', $otp);
+        Session::put('otp_phone', $phone);
+        Session::put('otp_expires_at', time() + 300);
+
+        return response()->json([
+            'success' => true,
+            'otp' => $otp, // Remove this in production
+            'message' => 'OTP sent successfully!'
+        ]);
 
         try {
             $response = Http::withHeaders([
