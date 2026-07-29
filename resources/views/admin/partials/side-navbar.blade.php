@@ -80,7 +80,7 @@
             @elseif (request()->routeIs('admin.subscriber.index')) active
             @elseif (request()->routeIs('register.user.category')) active
             @elseif (request()->routeIs('register.user.category_edit')) active
-            @elseif (request()->routeIs('admin.nonregistered.user')) active
+            @elseif (request()->routeIs('admin.nonverified.user')) active
             @elseif(request()->routeIs('admin.mailsubscriber')) active @endif">
             <a data-toggle="collapse" href="#registerd-users">
               <i class="fas fa-users"></i>
@@ -95,7 +95,7 @@
             @elseif (request()->routeIs('admin.subscriber.index')) show
             @elseif (request()->routeIs('register.user.category')) show
             @elseif (request()->routeIs('register.user.category_edit')) show
-            @elseif (request()->routeIs('admin.nonregistered.user')) show
+            @elseif (request()->routeIs('admin.nonverified.user')) show
             @elseif(request()->routeIs('admin.mailsubscriber')) show @endif"
               id="registerd-users">
               <ul class="nav nav-collapse">
@@ -123,10 +123,10 @@
 
                 <li
                   class="
-                @if (request()->routeIs('admin.nonregistered.user')) active @endif
+                @if (request()->routeIs('admin.nonverified.user')) active @endif
                 ">
-                  <a href="{{ route('admin.nonregistered.user') }}">
-                    <span class="sub-item">{{ __('Non-Registered Customers') }}</span>
+                  <a href="{{ route('admin.nonverified.user') }}">
+                    <span class="sub-item">{{ __('Non-Verified Users') }}</span>
                   </a>
                 </li>
 

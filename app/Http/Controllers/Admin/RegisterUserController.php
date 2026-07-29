@@ -2175,7 +2175,7 @@ class RegisterUserController extends Controller
         return back();
     }
 
-    public function nonRegistered(Request $request)
+    public function nonVerified(Request $request)
     {
         $term = $request->input('term');
         $verifiedLeadsQuery = \App\Models\VerifiedPhoneLead::where('is_verified', false)->orderBy('otp_sent_at', 'DESC');
@@ -2187,7 +2187,7 @@ class RegisterUserController extends Controller
             });
         }
         $verifiedLeads = $verifiedLeadsQuery->paginate(10);
-        return view('admin.register_user.non_registered', compact('verifiedLeads', 'term'));
+        return view('admin.register_user.non_verified', compact('verifiedLeads', 'term'));
     }
 
     public function updateLeadStatus(UpdateLeadStatusRequest $request)

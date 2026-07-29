@@ -568,9 +568,15 @@
                   <div class="alert alert-success d-flex justify-content-between align-items-center p-3 mb-20" style="border-radius: 10px; background-color: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.15); margin-bottom: 20px;">
                     <div style="text-align: left;">
                       <p class="mb-0 small text-muted font-weight-bold" style="font-size: 10px; text-transform: uppercase;">{{ __('VERIFIED CONTACT') }}</p>
-                      <h6 class="mb-0 font-weight-bold text-dark" id="summary-verified-info" style="font-size: 14px; margin-top: 2px;">
-                        {{ session('otp_name') }} ({{ session('otp_email') }} | {{ session('otp_country_code') }} {{ session('verified_phone') }})
-                      </h6>
+                      <div class="d-flex align-items-center" style="gap: 8px; margin-top: 2px; flex-wrap: wrap;">
+                        <h6 class="mb-0 font-weight-bold text-dark" id="summary-verified-info" style="font-size: 14px;">
+                          {{ session('otp_name') }} ({{ session('otp_country_code') }} {{ session('verified_phone') }})
+                        </h6>
+                        <span class="d-inline-flex align-items-center" style="color: #10b981; font-weight: 700; font-size: 13px; gap: 4px;">
+                          <i class="fas fa-check-circle" style="font-size: 14px; color: #10b981;"></i>
+                          {{ __('Verified') }}
+                        </span>
+                      </div>
                     </div>
                     <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none font-weight-bold" id="btn-edit-contact" style="color: var(--primary-color, #ff5a2c);">
                       {{ __('Edit') }}
@@ -1158,7 +1164,7 @@
             $('#phone-feedback').html('<span class="text-success" style="font-size: 15px;"><i class="fas fa-check-circle"></i> ' + response.message + '</span>');
             
             // Set verified info summary
-            $('#summary-verified-info').text(nameVal + ' (' + emailVal + ' | ' + countryCode + ' ' + phoneVal + ')');
+            $('#summary-verified-info').text(nameVal + ' (' + countryCode + ' ' + phoneVal + ')');
 
             // Make fields readonly and change verify button state
             $('#phone_number').prop('readonly', true).removeAttr('required');

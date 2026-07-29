@@ -3,7 +3,7 @@
 @section('content')
   <div class="page-header">
     <h4 class="page-title">
-      {{ __('Non-Registered Customers') }}
+      {{ __('Non-Verified Users') }}
     </h4>
     <ul class="breadcrumbs">
       <li class="nav-home">
@@ -21,7 +21,7 @@
         <i class="flaticon-right-arrow"></i>
       </li>
       <li class="nav-item">
-        <a href="#">{{ __('Non-Registered Customers') }}</a>
+        <a href="#">{{ __('Non-Verified Users') }}</a>
       </li>
     </ul>
   </div>
@@ -34,8 +34,8 @@
             <div class="col-lg-6">
               <div class="card-title">
                 <i class="fas fa-phone-slash mr-1 text-warning"></i>
-                {{ __('Non-Registered Customers') }}
-                <small class="text-muted ml-2">{{ __('Users who requested OTP but never completed registration') }}</small>
+                {{ __('Non-Verified Users') }}
+                <small class="text-muted ml-2">{{ __('Users who requested OTP but never completed verification') }}</small>
               </div>
             </div>
             <div class="col-lg-6 mt-2 mt-lg-0 d-block d-lg-flex justify-content-end gap-3">
@@ -50,7 +50,7 @@
           @if ($verifiedLeads->count() === 0)
             <h3 class="text-center text-muted py-4">
               <i class="fas fa-user-slash d-block mb-2" style="font-size:48px;"></i>
-              {{ __('No non-registered customers found') }}
+              {{ __('No non-verified users found') }}
             </h3>
           @else
             <div class="table-responsive">
