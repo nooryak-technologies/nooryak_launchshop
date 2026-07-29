@@ -2213,7 +2213,7 @@ class RegisterUserController extends Controller
             'lead' => [
                 'id' => $lead->id,
                 'status' => $lead->status,
-                'status_date' => $lead->status_date ? $lead->status_date->format('Y-m-d') : '',
+                'status_date' => $lead->status_date ? $lead->status_date->format('Y-m-d\TH:i') : '',
                 'purchased' => $lead->purchased ? 1 : 0
             ]
         ]);

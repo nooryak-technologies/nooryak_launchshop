@@ -22,6 +22,13 @@
     background: rgba(199, 199, 199, 0.2);
 }
 
+.sidebar .nav .nav-item a, 
+.sidebar .nav .nav-item a p, 
+.sidebar .nav .nav-item a i,
+.sidebar .nav .nav-item a .caret,
+.sidebar .nav .nav-collapse li a .sub-item {
+    color: #ffffff !important;
+}
 /* sider navbar css over write end */
 
 .cropped-thumbnail-image,

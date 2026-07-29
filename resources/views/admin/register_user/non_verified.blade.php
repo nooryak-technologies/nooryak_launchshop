@@ -78,18 +78,21 @@
                     <td>{{ $lead->country_code ?: '-' }}</td>
                     <td>{{ $lead->email ?: '-' }}</td>
                     <td id="lead-status-cell-{{ $lead->id }}">
-                      @if($lead->purchased)
+                      @if($lead->status === 'Purchased')
                         <span class="badge badge-success px-2 py-1 lead-purchased-badge">
                           <i class="fas fa-check mr-1"></i>{{ __('Purchased') }}
                         </span>
-                      @else
-                        <span class="badge badge-warning px-2 py-1 lead-purchased-badge">
-                          <i class="fas fa-clock mr-1"></i>{{ __('Not Purchased') }}
+                      @elseif($lead->status === 'Follow Up')
+                        <span class="badge badge-warning px-2 py-1 lead-status-badge">
+                          {{ __('Follow Up') }}
                         </span>
-                      @endif
-                      @if($lead->status && $lead->status !== 'Not Purchased' && $lead->status !== 'Purchased')
-                        <span class="badge badge-info px-2 py-1 lead-status-badge ml-1">
-                          {{ $lead->status }}
+                      @elseif($lead->status === 'Interested')
+                        <span class="badge badge-info px-2 py-1 lead-status-badge">
+                          {{ __('Interested') }}
+                        </span>
+                      @elseif($lead->status === 'Not Interested')
+                        <span class="badge badge-danger px-2 py-1 lead-status-badge">
+                          {{ __('Not Interested') }}
                         </span>
                       @endif
                     </td>
@@ -103,7 +106,7 @@
                               data-email="{{ $lead->email }}"
                               data-purchased="{{ $lead->purchased ? 1 : 0 }}"
                               data-status="{{ $lead->status ?: 'Not Purchased' }}"
-                              data-status_date="{{ $lead->status_date ? \Carbon\Carbon::parse($lead->status_date)->format('Y-m-d') : '' }}"
+                              data-status_date="{{ $lead->status_date ? \Carbon\Carbon::parse($lead->status_date)->format('Y-m-d\TH:i') : '' }}"
                               data-otp_sent_at="{{ $lead->otp_sent_at ? $lead->otp_sent_at->format('d M Y, h:i A') : '-' }}"
                               data-created_at="{{ $lead->created_at ? $lead->created_at->format('d M Y, h:i A') : '-' }}"
                               data-toggle="modal" 
@@ -163,11 +166,8 @@
             </div>
           </div>
           <div class="row mb-3">
-            <div class="col-md-6">
+            <div class="col-md-12">
               <strong>{{ __('OTP Sent At') }}:</strong> <span id="lead-detail-otp-sent"></span>
-            </div>
-            <div class="col-md-6">
-              <strong>{{ __('Created At') }}:</strong> <span id="lead-detail-created-at"></span>
             </div>
           </div>
           
@@ -190,7 +190,7 @@
             
             <div class="form-group">
               <label for="lead-status-date-input"><strong>{{ __('Status Date') }}</strong></label>
-              <input type="date" name="status_date" id="lead-status-date-input" class="form-control">
+              <input type="datetime-local" name="status_date" id="lead-status-date-input" class="form-control">
               <small class="form-text text-muted">{{ __('For Follow Up status, the date must be today or in the future.') }}</small>
             </div>
             
@@ -267,13 +267,14 @@
               var statusCell = $('#lead-status-cell-' + response.lead.id);
               if (statusCell.length) {
                 var badgesHtml = '';
-                if (response.lead.purchased == 1) {
-                  badgesHtml += '<span class="badge badge-success px-2 py-1 lead-purchased-badge"><i class="fas fa-check mr-1"></i>Purchased</span>';
-                } else {
-                  badgesHtml += '<span class="badge badge-warning px-2 py-1 lead-purchased-badge"><i class="fas fa-clock mr-1"></i>Not Purchased</span>';
-                }
-                if (response.lead.status && response.lead.status !== 'Not Purchased' && response.lead.status !== 'Purchased') {
-                  badgesHtml += '<span class="badge badge-info px-2 py-1 lead-status-badge ml-1">' + response.lead.status + '</span>';
+                if (response.lead.status === 'Purchased') {
+                  badgesHtml = '<span class="badge badge-success px-2 py-1 lead-purchased-badge"><i class="fas fa-check mr-1"></i>Purchased</span>';
+                } else if (response.lead.status === 'Follow Up') {
+                  badgesHtml = '<span class="badge badge-warning px-2 py-1 lead-status-badge">Follow Up</span>';
+                } else if (response.lead.status === 'Interested') {
+                  badgesHtml = '<span class="badge badge-info px-2 py-1 lead-status-badge">Interested</span>';
+                } else if (response.lead.status === 'Not Interested') {
+                  badgesHtml = '<span class="badge badge-danger px-2 py-1 lead-status-badge">Not Interested</span>';
                 }
                 statusCell.html(badgesHtml);
               }
