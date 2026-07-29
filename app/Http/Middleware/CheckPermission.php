@@ -24,7 +24,29 @@ class CheckPermission
                 return redirect()->route('admin.dashboard');
             }
 
-            if (!is_null($permissions) && !in_array($permission, $permissions)) {
+            $permsRequired = explode('|', $permission);
+            $hasPermission = false;
+
+            foreach ($permsRequired as $perm) {
+                $perm = trim($perm);
+                if (is_array($permissions) && in_array($perm, $permissions)) {
+                    $hasPermission = true;
+                    break;
+                }
+
+                // If checking master 'Users Management', allow if admin has any sub-permission
+                if ($perm === 'Users Management') {
+                    $userSubPerms = ['Categories', 'Registered Users', 'Non-Verified Users', 'Subscribers', 'Mail to Subscribers'];
+                    foreach ($userSubPerms as $subP) {
+                        if (is_array($permissions) && in_array($subP, $permissions)) {
+                            $hasPermission = true;
+                            break 2;
+                        }
+                    }
+                }
+            }
+
+            if (!$hasPermission) {
                 return redirect()->route('admin.dashboard');
             }
         }

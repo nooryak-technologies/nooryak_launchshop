@@ -230,13 +230,13 @@ Route::domain($domain)->group(function () {
         Route::prefix('users-management')->middleware('checkpermission:Users Management')->group(function () {
             // Register User start
             Route::prefix('register-users')->group(function () {
-                Route::get('/', 'Admin\RegisterUserController@index')->name('admin.register.user');
-                Route::get('/non-verified-users', 'Admin\RegisterUserController@nonVerified')->name('admin.nonverified.user');
+                Route::get('/', 'Admin\RegisterUserController@index')->middleware('checkpermission:Users Management|Registered Users')->name('admin.register.user');
+                Route::get('/non-verified-users', 'Admin\RegisterUserController@nonVerified')->middleware('checkpermission:Users Management|Non-Verified Users')->name('admin.nonverified.user');
                 Route::post('/lead/update', 'Admin\RegisterUserController@updateLeadStatus')->name('admin.register.lead.updateStatus');
                 Route::post('/lead/delete', 'Admin\RegisterUserController@deleteLead')->name('admin.register.lead.delete');
                 Route::get('/details/{id}', 'Admin\RegisterUserController@view')->name('register.user.view');
                 Route::get('change-passwords/{id}', 'Admin\RegisterUserController@changePass')->name('register.user.changePass');
-                Route::get('categories', 'Admin\RegisterUserController@category')->name('register.user.category');
+                Route::get('categories', 'Admin\RegisterUserController@category')->middleware('checkpermission:Users Management|Categories')->name('register.user.category');
                 Route::post('categories/store', 'Admin\RegisterUserController@categoryStore')->name('register.user.category_store');
                 Route::get('categories/edit/{id}', 'Admin\RegisterUserController@categoryEdit')->name('register.user.category_edit');
                 Route::post('categories/update', 'Admin\RegisterUserController@categoryUpdate')->name('register.user.category_update');
@@ -261,11 +261,9 @@ Route::domain($domain)->group(function () {
             Route::post('register/user/updatePassword', 'Admin\RegisterUserController@updatePassword')->name('register.user.updatePassword');
             Route::get('register/users/secret-login/{id}', 'Admin\RegisterUserController@secret_login')->name('register.user.secret_login');
 
-
-
             // Admin Subscriber Routes
-            Route::get('/subscribers', 'Admin\SubscriberController@index')->name('admin.subscriber.index');
-            Route::get('/mailsubscriber', 'Admin\SubscriberController@mailsubscriber')->name('admin.mailsubscriber');
+            Route::get('/subscribers', 'Admin\SubscriberController@index')->middleware('checkpermission:Users Management|Subscribers')->name('admin.subscriber.index');
+            Route::get('/mailsubscriber', 'Admin\SubscriberController@mailsubscriber')->middleware('checkpermission:Users Management|Mail to Subscribers')->name('admin.mailsubscriber');
             Route::post('/subscribers/sendmail', 'Admin\SubscriberController@subscsendmail')->name('admin.subscribers.sendmail');
             Route::post('/subscriber/delete', 'Admin\SubscriberController@delete')->name('admin.subscriber.delete');
             Route::post('/subscriber/bulk-delete', 'Admin\SubscriberController@bulkDelete')->name('admin.subscriber.bulk.delete');
