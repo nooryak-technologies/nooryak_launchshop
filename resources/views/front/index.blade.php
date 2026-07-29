@@ -1247,7 +1247,8 @@
             <h2 class="cta-revamp-title mb-3">{{ __('Ready to Launch Your Dream Store?') }}</h2>
             <p class="cta-revamp-desc mb-4">{{ __('Join thousands of entrepreneurs and start selling online with Launchshop in just minutes.') }}</p>
             
-            <div class="cta-revamp-btns d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+            <!-- Desktop Button (Laptop / Desktop only) -->
+            <div class="cta-revamp-btns d-none d-lg-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
               @php
                 $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
                 $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
@@ -1255,13 +1256,19 @@
               <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
                 {{ __('Launch Your Store') }} <i class="fas fa-hand-pointer animated-click-hand"></i>
               </a>
-              
             </div>
           </div>
 
-          <!-- Right Column (Footer Right Image) -->
-          <div class="col-lg-6 col-md-12 text-center d-flex align-items-end justify-content-center h-100 position-relative cta-right-col">
+          <!-- Right Column (Footer Right Image + Mobile Button below image) -->
+          <div class="col-lg-6 col-md-12 text-center d-flex flex-column align-items-center justify-content-end h-100 position-relative cta-right-col">
             <img src="{{ asset('images/footer_right.png') }}" class="img-fluid cta-right-img" alt="Ready to Launch">
+            
+            <!-- Mobile Button (Renders ONLY below the image on mobile screens) -->
+            <div class="cta-revamp-btns d-lg-none d-flex justify-content-center text-center mt-3 pb-4 px-3 w-100">
+              <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
+                {{ __('Launch Your Store') }} <i class="fas fa-hand-pointer animated-click-hand"></i>
+              </a>
+            </div>
           </div>
 
         </div>
