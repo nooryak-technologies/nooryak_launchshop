@@ -120,7 +120,7 @@
   /* Steps & Stats Section Styles */
   .steps-stats-section {
     background: #ffffff;
-    padding: 80px 0;
+    padding: 15px 0;
     font-family: 'Outfit', 'Inter', sans-serif;
   }
   .rocket-visual-wrap {
