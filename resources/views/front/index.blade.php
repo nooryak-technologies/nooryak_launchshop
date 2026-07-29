@@ -1253,7 +1253,7 @@
                 $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
               @endphp
               <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
-                {{ __('Launch Your Store') }} <i class="fas fa-arrow-right"></i>
+                {{ __('Launch Your Store') }} <i class="fas fa-hand-pointer animated-click-hand"></i>
               </a>
               
             </div>

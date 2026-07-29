@@ -11526,3 +11526,27 @@ iframe[id^="tawkchat-"],
         font-size: 11px;
     }
 }
+
+/* Animated clicking hand icon */
+.animated-click-hand {
+    display: inline-block !important;
+    margin-left: 6px !important;
+    font-size: 16px !important;
+    animation: handClickPulse 1.2s cubic-bezier(0.25, 1, 0.5, 1) infinite !important;
+    transform-origin: bottom right;
+}
+
+@keyframes handClickPulse {
+    0%, 100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    30% {
+        transform: translate(-3px, -3px) scale(1.22) rotate(-12deg);
+    }
+    55% {
+        transform: translate(1px, 1px) scale(0.88) rotate(6deg);
+    }
+    75% {
+        transform: translate(-1px, -1px) scale(1.08) rotate(-4deg);
+    }
+}
