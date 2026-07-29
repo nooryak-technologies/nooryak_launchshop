@@ -762,7 +762,7 @@
       transform: scale(1);
     }
     50% {
-      opacity: 0.4;
+      /* opacity: 0.4; */
       border-color: rgba(255, 90, 44, 1);
       box-shadow: 0 0 16px 4px rgba(255, 90, 44, 0.45);
       transform: scale(1.03);
