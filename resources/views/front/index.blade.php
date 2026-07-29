@@ -332,7 +332,7 @@
           <div class="col-lg-5 col-xl-5 order-2 order-lg-1">
             <div class="hero-content" data-aos="fade-right">
               <div class="hero-badge">
-                <span style="font-weight:800; margin-right:4px;">#1</span> Ecommerce Builder Platform For Success
+                <span style="font-weight:800; margin-right:4px;">#1</span> Ecommerce Builder For Sales & Growth🎉
               </div>
               
               <h1 class="hero-title">Launch Your  <br><span>Online Store In</span> Just 2 minutes</h1>
