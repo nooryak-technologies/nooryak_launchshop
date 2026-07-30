@@ -1,8 +1,6 @@
 @extends('front.layout')
 
-@section('pagename')
-  - {{ __('Home') }}
-@endsection
+@section('pagename', '')
 
 @section('styles')
 <style>
@@ -310,16 +308,22 @@
 @php
   $additional_section_status = json_decode($bs->additional_section_status, true);
 @endphp
-@section('meta-description', !empty($seo) ? $seo->home_meta_description : '')
+@section('meta-description', 'Your Professional Ecommerce Store in 2 Minutes.')
 @section('meta-keywords', !empty($seo) ? $seo->home_meta_keywords : '')
 
 @section('og-meta')
-  <meta property="og:title" content="{{ $bs->website_title }}">
-  <meta property="og:description" content="{{ !empty($seo) ? $seo->home_meta_description : '' }}">
-  <meta property="og:image" content="{{ asset('assets/front/img/' . $bs->logo) }}">
-  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Launch Your Shop.">
+  <meta property="og:description" content="Your Professional Ecommerce Store in 2 Minutes.">
+  <meta property="og:image" content="{{ asset('images/meta_icon.jpeg') }}">
+  <meta property="og:image:secure_url" content="{{ asset('images/meta_icon.jpeg') }}">
+  <meta property="og:image:type" content="image/jpeg">
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{ url()->current() }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Launch Your Shop.">
+  <meta name="twitter:description" content="Your Professional Ecommerce Store in 2 Minutes.">
+  <meta name="twitter:image" content="{{ asset('images/meta_icon.jpeg') }}">
+  <link rel="image_src" href="{{ asset('images/meta_icon.jpeg') }}">
 @endsection
 
 @section('content')

@@ -5,16 +5,29 @@
   <!--====== Required meta tags ======-->
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="@yield('meta-description')">
+  <meta name="description" content="@yield('meta-description', 'Your Professional Ecommerce Store in 2 Minutes.')">
   <meta name="keywords" content="@yield('meta-keywords')">
 
-
-  @yield('og-meta')
+  <!-- Open Graph / Sharing Meta Tags -->
+  @hasSection('og-meta')
+    @yield('og-meta')
+  @else
+    <meta property="og:title" content="Launch Your Shop.">
+    <meta property="og:description" content="Your Professional Ecommerce Store in 2 Minutes.">
+    <meta property="og:image" content="{{ asset('images/meta_icon.jpeg') }}">
+    <meta property="og:image:secure_url" content="{{ asset('images/meta_icon.jpeg') }}">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Launch Your Shop.">
+    <meta name="twitter:description" content="Your Professional Ecommerce Store in 2 Minutes.">
+    <meta name="twitter:image" content="{{ asset('images/meta_icon.jpeg') }}">
+    <link rel="image_src" href="{{ asset('images/meta_icon.jpeg') }}">
+  @endif
 
   <!-- Title -->
-  <title>{{ $bs->website_title }} @yield('pagename')</title>
+  <title>@hasSection('custom_title')@yield('custom_title')@else Launch Your Shop. @yield('pagename')@endif</title>
   <!-- Favicon -->
   <link rel="shortcut icon" href="{{ asset('assets/front/img/' . $bs->favicon) }}" type="image/x-icon">
 
