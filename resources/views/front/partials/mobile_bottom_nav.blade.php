@@ -65,35 +65,33 @@
 </div>
 
 <style>
-  /* Prevent horizontal overflow on mobile viewports */
+  /* Mobile Floating Bottom Navigation Bar Styles */
+  .mobile-bottom-nav-bar {
+    display: none;
+  }
+
   @media (max-width: 991px) {
-    html, body {
-      overflow-x: hidden !important;
-      max-width: 100vw !important;
-    }
-
-    /* Full Edge-to-Edge Mobile Bottom Navigation Bar (No side gaps) */
+    /* Sleek Floating Dock Navigation Bar */
     .mobile-bottom-nav-bar {
-      display: block;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      width: 100% !important;
-      margin: 0 !important;
-      z-index: 999999;
-      background: #0c101d;
-      border-radius: 0 !important; /* Edge to edge without corner gap cuts */
-      box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.6);
-      padding: 8px 0 6px;
-      user-select: none;
-      -webkit-user-select: none;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      overflow: hidden;
+      display: block !important;
+      position: fixed !important;
+      bottom: 12px !important;
+      left: 14px !important;
+      right: 14px !important;
+      width: auto !important;
+      z-index: 999999 !important;
+      background: #0d121e !important;
+      border-radius: 20px !important;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.65), 0 0 1px rgba(255, 255, 255, 0.15) !important;
+      padding: 9px 8px 6px !important;
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      overflow: hidden !important;
     }
 
-    /* Top Multi-Color Gradient Glow Border Line across full width */
+    /* Top Multi-Color Gradient Glow Border Line */
     .mobile-bottom-nav-bar::before {
       content: '';
       position: absolute;
@@ -102,6 +100,8 @@
       right: 0;
       height: 3.5px;
       background: linear-gradient(90deg, #ff4500 0%, #e60067 22%, #9c27b0 45%, #0070f3 72%, #00f2fe 100%);
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
     }
 
     .mobile-nav-items {
@@ -173,11 +173,11 @@
     /* Home Indicator line (white bar) */
     .mobile-home-indicator {
       display: block;
-      width: 130px;
+      width: 120px;
       height: 4px;
       background: rgba(255, 255, 255, 0.88);
       border-radius: 100px;
-      margin: 7px auto 3px;
+      margin: 7px auto 2px;
       box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
     }
 
@@ -186,11 +186,11 @@
     .custom-wa-widget,
     .fab-btn,
     .go-top {
-      bottom: 80px !important;
+      bottom: 95px !important;
     }
 
     body {
-      padding-bottom: 72px !important;
+      padding-bottom: 85px !important;
     }
   }
 
