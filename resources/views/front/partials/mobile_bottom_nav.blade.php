@@ -65,120 +65,124 @@
 </div>
 
 <style>
-  /* Mobile Floating Bottom Navigation Bar Styles */
-  .mobile-bottom-nav-bar {
-    display: none;
-  }
-
+  /* Prevent horizontal overflow on mobile viewports */
   @media (max-width: 991px) {
-    /* Sleek Floating Dock Navigation Bar */
+    html, body {
+      overflow-x: hidden !important;
+      max-width: 100vw !important;
+    }
+
+    /* Full 100% Edge-to-Edge Mobile Bottom Navigation Bar (Zero corner gaps) */
     .mobile-bottom-nav-bar {
       display: block !important;
       position: fixed !important;
-      bottom: 12px !important;
-      left: 14px !important;
-      right: 14px !important;
-      width: auto !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100vw !important;
+      max-width: 100% !important;
+      margin: 0 !important;
       z-index: 999999 !important;
-      background: #0d121e !important;
-      border-radius: 20px !important;
-      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.65), 0 0 1px rgba(255, 255, 255, 0.15) !important;
-      padding: 9px 8px 6px !important;
+      background: #0c101d !important;
+      border-radius: 0 !important; /* Fixed: 0 border radius eliminates all left and right corner gaps */
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6) !important;
+      padding: 8px 0 calc(6px + env(safe-area-inset-bottom, 0px)) !important;
       user-select: none !important;
       -webkit-user-select: none !important;
       backdrop-filter: blur(12px) !important;
       -webkit-backdrop-filter: blur(12px) !important;
-      overflow: hidden !important;
+      box-sizing: border-box !important;
     }
 
-    /* Top Multi-Color Gradient Glow Border Line */
+    /* Top Multi-Color Gradient Glow Border Line across full screen width */
     .mobile-bottom-nav-bar::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3.5px;
-      background: linear-gradient(90deg, #ff4500 0%, #e60067 22%, #9c27b0 45%, #0070f3 72%, #00f2fe 100%);
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
+      content: '' !important;
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      height: 3.5px !important;
+      background: linear-gradient(90deg, #ff4500 0%, #e60067 22%, #9c27b0 45%, #0070f3 72%, #00f2fe 100%) !important;
+      border-radius: 0 !important;
     }
 
     .mobile-nav-items {
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      padding-top: 4px;
-      width: 100%;
-      margin: 0;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-around !important;
+      padding-top: 4px !important;
+      width: 100% !important;
+      margin: 0 !important;
+      box-sizing: border-box !important;
     }
 
     .mobile-nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
       text-decoration: none !important;
-      color: #8c9ba5;
-      padding: 4px 0;
-      transition: all 0.25s ease;
-      flex: 1;
-      text-align: center;
+      color: #8c9ba5 !important;
+      padding: 4px 0 !important;
+      transition: all 0.25s ease !important;
+      flex: 1 !important;
+      text-align: center !important;
     }
 
     .mobile-nav-icon {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 26px;
-      height: 26px;
-      margin-bottom: 3px;
-      color: #8c9ba5;
-      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.25s ease, filter 0.25s ease;
+      position: relative !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 26px !important;
+      height: 26px !important;
+      margin-bottom: 3px !important;
+      color: #8c9ba5 !important;
+      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.25s ease, filter 0.25s ease !important;
     }
 
     .mobile-nav-icon svg {
-      width: 22px;
-      height: 22px;
+      width: 22px !important;
+      height: 22px !important;
     }
 
     .mobile-nav-label {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.6px;
-      text-transform: uppercase;
-      color: #8c9ba5;
-      transition: color 0.25s ease, text-shadow 0.25s ease;
-      line-height: 1.2;
+      font-size: 10px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.6px !important;
+      text-transform: uppercase !important;
+      color: #8c9ba5 !important;
+      transition: color 0.25s ease, text-shadow 0.25s ease !important;
+      line-height: 1.2 !important;
     }
 
     /* Active State (Glowing Orange) */
     .mobile-nav-item.active .mobile-nav-icon {
-      color: #ff5722;
-      transform: translateY(-2px) scale(1.08);
-      filter: drop-shadow(0 2px 8px rgba(255, 87, 34, 0.75));
+      color: #ff5722 !important;
+      transform: translateY(-2px) scale(1.08) !important;
+      filter: drop-shadow(0 2px 8px rgba(255, 87, 34, 0.75)) !important;
     }
 
     .mobile-nav-item.active .mobile-nav-label {
-      color: #ff5722;
-      text-shadow: 0 0 10px rgba(255, 87, 34, 0.45);
+      color: #ff5722 !important;
+      text-shadow: 0 0 10px rgba(255, 87, 34, 0.45) !important;
     }
 
-    /* Hover/Touch feedback */
+    /* Touch feedback */
     .mobile-nav-item:active .mobile-nav-icon {
-      transform: scale(0.92);
+      transform: scale(0.92) !important;
     }
 
     /* Home Indicator line (white bar) */
     .mobile-home-indicator {
-      display: block;
-      width: 120px;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.88);
-      border-radius: 100px;
-      margin: 7px auto 2px;
-      box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+      display: block !important;
+      width: 120px !important;
+      height: 4px !important;
+      background: rgba(255, 255, 255, 0.88) !important;
+      border-radius: 100px !important;
+      margin: 7px auto 2px !important;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.2) !important;
     }
 
     /* Reposition floating widgets above mobile bottom bar */
@@ -186,11 +190,11 @@
     .custom-wa-widget,
     .fab-btn,
     .go-top {
-      bottom: 95px !important;
+      bottom: 80px !important;
     }
 
     body {
-      padding-bottom: 85px !important;
+      padding-bottom: 75px !important;
     }
   }
 
