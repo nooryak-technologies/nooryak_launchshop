@@ -5,7 +5,7 @@
       <div class="main-responsive-menu">
         <div class="logo">
           <a href="{{ route('front.index') }}">
-            <img src="{{ asset('assets/front/img/' . $bs->logo) }}" alt="logo">
+            <img src="{{ asset('assets/front/img/' . $bs->logo) }}" onerror="this.onerror=null;this.src='{{ asset('images/logo.png') }}'" alt="logo">
           </a>
         </div>
       </div>
@@ -16,7 +16,7 @@
       <nav class="navbar navbar-expand-lg">
         <!-- Logo -->
         <a class="navbar-brand" href="{{ route('front.index') }}">
-          <img src="{{ asset('assets/front/img/' . $bs->logo) }}" alt="Logo">
+          <img src="{{ asset('assets/front/img/' . $bs->logo) }}" onerror="this.onerror=null;this.src='{{ asset('images/logo.png') }}'" alt="Logo">
         </a>
         <!-- Navigation items -->
         <div class="collapse navbar-collapse mean-menu">

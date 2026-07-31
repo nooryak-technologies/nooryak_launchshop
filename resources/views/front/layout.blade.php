@@ -5,6 +5,7 @@
   <!--====== Required meta tags ======-->
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <meta name="description" content="@yield('meta-description', 'Your Professional Ecommerce Store in 2 Minutes.')">
   <meta name="keywords" content="@yield('meta-keywords')">
 
@@ -181,10 +182,28 @@
   {{-- Popups end --}}
 
   {{-- WhatsApp Chat Button (dynamic custom widget) --}}
+  {{-- Floating Call / Phone Button (LEFT SIDE) & WhatsApp Chat Button (RIGHT SIDE) --}}
   @php
     $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
     $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
+    $phoneNum = !empty($be->contact_numbers) ? trim(explode(',', $be->contact_numbers)[0]) : '+917200770351';
+    $cleanPhone = preg_replace('/[^0-9+]/', '', $phoneNum);
+    if (!str_starts_with($cleanPhone, '+') && !str_starts_with($cleanPhone, '91') && strlen($cleanPhone) == 10) {
+      $cleanPhone = '+91' . $cleanPhone;
+    }
   @endphp
+
+  <!-- Floating Call / Phone Button (LEFT SIDE) -->
+  <a href="tel:{{ $cleanPhone }}" class="custom-call-widget" title="Call Us" aria-label="Call Us">
+    <div class="call-float-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="#ffffff">
+        <path d="M6.62 10.79a15.053 15.053 0 0 0 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+      </svg>
+      <span class="call-pulse"></span>
+    </div>
+  </a>
+
+  <!-- WhatsApp Chat Button (RIGHT SIDE) -->
   <div id="WAButton" class="custom-wa-widget">
     <!-- WhatsApp Float Button (the circle button) -->
     <button type="button" class="wa-float-btn" aria-label="Open Chat">
@@ -232,7 +251,7 @@
           <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="wa-action-btn">
             Start My Online Store
           </a>
-          <a href="https://api.whatsapp.com/send?phone=917200770351&text=Hi%2C%20I%20want%20to%20talk%20to%20an%20expert%20to%20help%20me%20get%20started." target="_blank" class="wa-action-btn wa-talk-expert">
+          <a href="https://api.whatsapp.com/send?phone={{ preg_replace('/[^0-9]/', '', $phoneNum) }}&text=Hi%2C%20I%20want%20to%20talk%20to%20an%20expert%20to%20help%20me%20get%20started." target="_blank" class="wa-action-btn wa-talk-expert">
             Talk to Expert
           </a>
           <a href="{{ route('front.pricing') }}" class="wa-action-btn">
@@ -253,89 +272,95 @@
     </div>
   </div>
 
-  <!-- {{-- AI Chat Button — always visible, above WhatsApp --}}
-  <button type="button"
-          class="fab-btn fab-ai-chat"
-          title="AI Assistant"
-          aria-label="Chat with AI"
-          onclick="window.dispatchEvent(new CustomEvent('open-ai-chat'))">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 2a8 8 0 0 1 8 8c0 3-1.6 5.6-4 7.1V20l-4-2-4 2v-2.9A8 8 0 0 1 4 10a8 8 0 0 1 8-8z"/>
-      <circle cx="9" cy="10" r="1" fill="#fff" stroke="none"/>
-      <circle cx="12" cy="10" r="1" fill="#fff" stroke="none"/>
-      <circle cx="15" cy="10" r="1" fill="#fff" stroke="none"/>
-    </svg>
-    <span class="fab-ai-pulse"></span>
-  </button> -->
-
   <style>
-    /* ── Shared FAB base ── */
-    .fab-btn {
-      position: fixed;
-      left: 18px;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: none;
-      cursor: pointer;
+    /* ── Floating Call Button (LEFT SIDE) ── */
+    .custom-call-widget {
+      position: fixed !important;
+      left: 18px !important;
+      right: auto !important;
+      bottom: 22px !important;
+      z-index: 99999 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
       text-decoration: none !important;
-      z-index: 9999;
-      transition: transform 0.22s ease, box-shadow 0.22s ease;
     }
-    .fab-btn:hover {
-      transform: scale(1.1) translateY(-2px);
+    .call-float-btn {
+      position: relative !important;
+      width: 56px !important;
+      height: 56px !important;
+      border-radius: 50% !important;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+      box-shadow: 0 4px 18px rgba(16, 185, 129, 0.45) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      transition: transform 0.22s ease, box-shadow 0.22s ease !important;
     }
-
-    /* ── WhatsApp ── */
-    .fab-whatsapp {
-      bottom: 22px;
-      background: #25D366;
-      box-shadow: 0 4px 16px rgba(37,211,102,0.45);
-      color: #fff !important;
+    .call-float-btn:hover {
+      transform: scale(1.1) translateY(-2px) !important;
+      box-shadow: 0 6px 22px rgba(16, 185, 129, 0.6) !important;
     }
-    .fab-whatsapp:hover {
-      background: #20ba58;
-      box-shadow: 0 6px 20px rgba(37,211,102,0.6);
-      color: #fff !important;
+    .call-pulse {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 50% !important;
+      border: 2px solid rgba(16, 185, 129, 0.6) !important;
+      animation: call-pulse-anim 2s ease-out infinite !important;
+      pointer-events: none !important;
     }
-
-    /* ── AI Chat ── */
-    .fab-ai-chat {
-      bottom: 90px;           /* 22px + 56px + 12px gap */
-      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-      box-shadow: 0 4px 16px rgba(99,102,241,0.45);
-      position: fixed;
-      padding: 0;
-    }
-    .fab-ai-chat:hover {
-      box-shadow: 0 6px 20px rgba(99,102,241,0.6);
-    }
-
-    /* Animated pulse ring on AI button */
-    .fab-ai-pulse {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 2px solid rgba(139,92,246,0.5);
-      animation: fab-pulse 2s ease-out infinite;
-      pointer-events: none;
-    }
-    @keyframes fab-pulse {
+    @keyframes call-pulse-anim {
       0%   { transform: scale(1);   opacity: 0.7; }
       70%  { transform: scale(1.5); opacity: 0;   }
       100% { transform: scale(1.5); opacity: 0;   }
     }
 
-    /* ── Scroll-to-top — bottom-RIGHT at same level as WhatsApp ── */
-    .go-top {
+    /* ── Floating WhatsApp (RIGHT SIDE) ── */
+    #WAButton,
+    .custom-wa-widget {
       left: auto !important;
       right: 18px !important;
       bottom: 22px !important;
+    }
+
+    /* WhatsApp Hint Badge expands to the LEFT */
+    .custom-wa-widget .wa-floating-badge {
+      left: auto !important;
+      right: 68px !important;
+      transform: translateY(-50%) translateX(-20px) !important;
+    }
+    .custom-wa-widget .wa-floating-badge.show {
+      transform: translateY(-50%) translateX(0) !important;
+    }
+
+    /* WhatsApp Chat Popup anchors to the RIGHT */
+    .custom-wa-widget .wa-chat-popup {
+      left: auto !important;
+      right: 0 !important;
+    }
+
+    /* ── Scroll-to-top — RIGHT side ABOVE WhatsApp ── */
+    .go-top {
+      left: auto !important;
+      right: 18px !important;
+      bottom: 88px !important;
       border-radius: 12px !important;
+    }
+
+    @media (max-width: 991px) {
+      .custom-call-widget {
+        bottom: 85px !important;
+      }
+      #WAButton,
+      .custom-wa-widget {
+        bottom: 85px !important;
+      }
+      .go-top {
+        bottom: 148px !important;
+      }
     }
   </style>
 
@@ -629,32 +654,49 @@
       });
 
       // ─────────────────────────────────────────────────────────
-      // FORCE: WhatsApp LEFT + scroll-to-top RIGHT
+      // FORCE: Call LEFT + WhatsApp RIGHT + Scroll-to-top ABOVE WhatsApp
       // ─────────────────────────────────────────────────────────
       function forcePositions() {
         var isMobile = window.innerWidth <= 991;
-        var bottomVal = isMobile ? '85px' : '15px';
-        var goTopBottom = isMobile ? '85px' : '22px';
+        var bottomVal = isMobile ? '85px' : '22px';
+        var goTopBottom = isMobile ? '148px' : '88px';
 
-        // 1. Floating WhatsApp (#WAButton / .floating-wpp)
+        // 1. Phone Call button (LEFT SIDE)
+        var callBtn = document.querySelector('.custom-call-widget');
+        if (callBtn) {
+          callBtn.style.setProperty('left', '18px', 'important');
+          callBtn.style.setProperty('right', 'auto', 'important');
+          callBtn.style.setProperty('position', 'fixed', 'important');
+          callBtn.style.setProperty('bottom', bottomVal, 'important');
+        }
+
+        // 2. Floating WhatsApp (#WAButton) (RIGHT SIDE)
         var waBtn = document.getElementById('WAButton');
         if (waBtn) {
-          waBtn.style.setProperty('left', '15px', 'important');
-          waBtn.style.setProperty('right', 'auto', 'important');
+          waBtn.style.setProperty('right', '18px', 'important');
+          waBtn.style.setProperty('left', 'auto', 'important');
           waBtn.style.setProperty('position', 'fixed', 'important');
           waBtn.style.setProperty('bottom', bottomVal, 'important');
-          var wpp = waBtn.querySelector('.floating-wpp');
-          if (wpp) {
-            wpp.style.setProperty('left', '15px', 'important');
-            wpp.style.setProperty('right', 'auto', 'important');
+          var badge = waBtn.querySelector('.wa-floating-badge');
+          if (badge) {
+            badge.style.setProperty('right', '68px', 'important');
+            badge.style.setProperty('left', 'auto', 'important');
+          }
+          var popup = waBtn.querySelector('.wa-chat-popup');
+          if (popup) {
+            popup.style.setProperty('right', '0', 'important');
+            popup.style.setProperty('left', 'auto', 'important');
           }
         }
 
-        // 2. Scroll-to-top stays RIGHT
+        // 3. Scroll-to-top stays RIGHT (Above WhatsApp)
         var goTop = document.querySelector('.go-top');
         if (goTop) {
-          goTop.style.cssText += ';right:20px!important;left:auto!important;bottom:' + goTopBottom + '!important;';
+          goTop.style.setProperty('right', '18px', 'important');
+          goTop.style.setProperty('left', 'auto', 'important');
+          goTop.style.setProperty('bottom', goTopBottom, 'important');
         }
+      }
 
         // 3. Tawk.to — target its injected container divs and iframes
         var tawkSelectors = [

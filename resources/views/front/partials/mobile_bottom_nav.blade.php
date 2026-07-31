@@ -72,29 +72,30 @@
       max-width: 100vw !important;
     }
 
-    /* Full 100% Edge-to-Edge Mobile Bottom Navigation Bar (Zero corner gaps) */
+    /* Floating Mobile Bottom Navigation Bar with Left & Right Gaps */
     .mobile-bottom-nav-bar {
       display: block !important;
       position: fixed !important;
-      bottom: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      width: 100vw !important;
-      max-width: 100% !important;
-      margin: 0 !important;
+      bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+      left: 14px !important;
+      right: 14px !important;
+      width: calc(100% - 28px) !important;
+      max-width: 480px !important;
+      margin: 0 auto !important;
       z-index: 999999 !important;
       background: #0c101d !important;
-      border-radius: 0 !important; /* Fixed: 0 border radius eliminates all left and right corner gaps */
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6) !important;
-      padding: 8px 0 calc(6px + env(safe-area-inset-bottom, 0px)) !important;
+      border-radius: 20px !important;
+      overflow: hidden !important;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.12) !important;
+      padding: 8px 0 6px !important;
       user-select: none !important;
       -webkit-user-select: none !important;
-      backdrop-filter: blur(12px) !important;
-      -webkit-backdrop-filter: blur(12px) !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
       box-sizing: border-box !important;
     }
 
-    /* Top Multi-Color Gradient Glow Border Line across full screen width */
+    /* Top Multi-Color Gradient Glow Border Line across full bar width */
     .mobile-bottom-nav-bar::before {
       content: '' !important;
       position: absolute !important;
@@ -104,7 +105,7 @@
       width: 100% !important;
       height: 3.5px !important;
       background: linear-gradient(90deg, #ff4500 0%, #e60067 22%, #9c27b0 45%, #0070f3 72%, #00f2fe 100%) !important;
-      border-radius: 0 !important;
+      border-radius: 20px 20px 0 0 !important;
     }
 
     .mobile-nav-items {
@@ -174,27 +175,21 @@
       transform: scale(0.92) !important;
     }
 
-    /* Home Indicator line (white bar) */
+    /* Home Indicator line */
     .mobile-home-indicator {
-      display: block !important;
-      width: 120px !important;
-      height: 4px !important;
-      background: rgba(255, 255, 255, 0.88) !important;
-      border-radius: 100px !important;
-      margin: 7px auto 2px !important;
-      box-shadow: 0 0 4px rgba(255, 255, 255, 0.2) !important;
+      display: none !important;
     }
 
-    /* Reposition floating widgets above mobile bottom bar */
+    /* Reposition floating widgets above floating mobile bottom bar */
     #WAButton,
     .custom-wa-widget,
     .fab-btn,
     .go-top {
-      bottom: 80px !important;
+      bottom: 85px !important;
     }
 
     body {
-      padding-bottom: 75px !important;
+      padding-bottom: 85px !important;
     }
   }
 
