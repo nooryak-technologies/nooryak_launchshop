@@ -156,6 +156,7 @@
 
   {{-- footer section --}}
   @includeIf('front.partials.footer')
+  @includeIf('front.partials.mobile_bottom_nav')
   @if ($be->cookie_alert_status == 1)
     <div class="cookie">
       @include('cookie-consent::index')
@@ -618,13 +619,17 @@
       // FORCE: WhatsApp LEFT + scroll-to-top RIGHT
       // ─────────────────────────────────────────────────────────
       function forcePositions() {
+        var isMobile = window.innerWidth <= 991;
+        var bottomVal = isMobile ? '85px' : '15px';
+        var goTopBottom = isMobile ? '85px' : '22px';
+
         // 1. Floating WhatsApp (#WAButton / .floating-wpp)
         var waBtn = document.getElementById('WAButton');
         if (waBtn) {
           waBtn.style.setProperty('left', '15px', 'important');
           waBtn.style.setProperty('right', 'auto', 'important');
           waBtn.style.setProperty('position', 'fixed', 'important');
-          waBtn.style.setProperty('bottom', '15px', 'important');
+          waBtn.style.setProperty('bottom', bottomVal, 'important');
           var wpp = waBtn.querySelector('.floating-wpp');
           if (wpp) {
             wpp.style.setProperty('left', '15px', 'important');
@@ -635,7 +640,7 @@
         // 2. Scroll-to-top stays RIGHT
         var goTop = document.querySelector('.go-top');
         if (goTop) {
-          goTop.style.cssText += ';right:20px!important;left:auto!important;';
+          goTop.style.cssText += ';right:20px!important;left:auto!important;bottom:' + goTopBottom + '!important;';
         }
 
         // 3. Tawk.to — target its injected container divs and iframes
