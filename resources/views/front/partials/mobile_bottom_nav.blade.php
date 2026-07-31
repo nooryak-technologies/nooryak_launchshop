@@ -1,4 +1,8 @@
 <!-- Mobile Bottom Navigation Bar -->
+@php
+  $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
+  $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
+@endphp
 <div class="mobile-bottom-nav-bar">
   <div class="mobile-nav-items">
     <!-- 1. HOME -->
@@ -15,8 +19,10 @@
     <a href="{{ route('front.templates.view') }}" class="mobile-nav-item {{ request()->routeIs('front.templates.view') ? 'active' : '' }}">
       <div class="mobile-nav-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m18.37 2.63 3 3a2.12 2.12 0 0 1 0 3L11 19l-4 1 1-4L18.37 2.63z"/>
-          <path d="M8 14s-1.5 2-4 2 2 3.5 4.5 3.5 3.5-1.5 3.5-3.5"/>
+          <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+          <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+          <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+          <rect x="3" y="14" width="7" height="7" rx="1.5"/>
         </svg>
       </div>
       <span class="mobile-nav-label">{{ __('THEME') }}</span>
@@ -37,7 +43,7 @@
     @auth
       <a href="{{ route('user-dashboard') }}" class="mobile-nav-item {{ request()->routeIs('user-dashboard') ? 'active' : '' }}">
     @else
-      <a href="{{ route('user.login') }}" class="mobile-nav-item {{ (request()->routeIs('user.login') || request()->routeIs('user.register')) ? 'active' : '' }}">
+      <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="mobile-nav-item {{ (request()->routeIs('user.login') || request()->routeIs('user.register') || request()->routeIs('front.register.view')) ? 'active' : '' }}">
     @endauth
       <div class="mobile-nav-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -124,7 +130,7 @@
       align-items: center !important;
       justify-content: center !important;
       text-decoration: none !important;
-      color: #8c9ba5 !important;
+      color: #ffffff !important;
       padding: 4px 0 !important;
       transition: all 0.25s ease !important;
       flex: 1 !important;
@@ -139,7 +145,7 @@
       width: 26px !important;
       height: 26px !important;
       margin-bottom: 3px !important;
-      color: #8c9ba5 !important;
+      color: #ffffff !important;
       transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.25s ease, filter 0.25s ease !important;
     }
 
@@ -153,7 +159,7 @@
       font-weight: 700 !important;
       letter-spacing: 0.6px !important;
       text-transform: uppercase !important;
-      color: #8c9ba5 !important;
+      color: #ffffff !important;
       transition: color 0.25s ease, text-shadow 0.25s ease !important;
       line-height: 1.2 !important;
     }

@@ -194,14 +194,19 @@
   @endphp
 
   <!-- Floating Call / Phone Button (LEFT SIDE) -->
-  <a href="tel:{{ $cleanPhone }}" class="custom-call-widget" title="Call Us" aria-label="Call Us">
-    <div class="call-float-btn">
+  <div class="custom-call-widget">
+    <a href="tel:{{ $cleanPhone }}" class="call-float-btn" title="Call Us" aria-label="Call Us">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="#ffffff">
         <path d="M6.62 10.79a15.053 15.053 0 0 0 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
       </svg>
       <span class="call-pulse"></span>
-    </div>
-  </a>
+    </a>
+
+    <!-- Call Us Floating Hint Badge -->
+    <a href="tel:{{ $cleanPhone }}" class="call-floating-badge show active-float">
+      <span class="call-badge-text">{{ __('Call Us') }}</span>
+    </a>
+  </div>
 
   <!-- WhatsApp Chat Button (RIGHT SIDE) -->
   <div id="WAButton" class="custom-wa-widget">
@@ -215,7 +220,7 @@
 
     <!-- WhatsApp Floating Hint Badge -->
     <div class="wa-floating-badge d-none">
-      <span class="wa-badge-text">{{ __('Still Confused? Chat With Us') }}</span>
+      <span class="wa-badge-text">{{ __('Chat With Us') }}</span>
     </div>
 
     <!-- WhatsApp Chat Popup -->
@@ -282,7 +287,6 @@
       z-index: 99999 !important;
       display: flex !important;
       align-items: center !important;
-      justify-content: center !important;
       text-decoration: none !important;
     }
     .call-float-btn {
@@ -296,10 +300,25 @@
       align-items: center !important;
       justify-content: center !important;
       transition: transform 0.22s ease, box-shadow 0.22s ease !important;
+      text-decoration: none !important;
     }
     .call-float-btn:hover {
       transform: scale(1.1) translateY(-2px) !important;
       box-shadow: 0 6px 22px rgba(16, 185, 129, 0.6) !important;
+    }
+    /* Phone Ringing / Wobble Animation */
+    @keyframes phone-call-ring {
+      0% { transform: rotate(0deg) scale(1); }
+      10% { transform: rotate(-16deg) scale(1.12); }
+      20% { transform: rotate(16deg) scale(1.12); }
+      30% { transform: rotate(-16deg) scale(1.12); }
+      40% { transform: rotate(16deg) scale(1.12); }
+      50% { transform: rotate(0deg) scale(1); }
+      100% { transform: rotate(0deg) scale(1); }
+    }
+    .call-float-btn svg {
+      animation: phone-call-ring 2.2s ease-in-out infinite !important;
+      transform-origin: center center !important;
     }
     .call-pulse {
       position: absolute !important;
@@ -316,6 +335,32 @@
       0%   { transform: scale(1);   opacity: 0.7; }
       70%  { transform: scale(1.5); opacity: 0;   }
       100% { transform: scale(1.5); opacity: 0;   }
+    }
+    /* Call Floating Badge (expands to RIGHT) */
+    .custom-call-widget .call-floating-badge {
+      position: absolute !important;
+      left: 68px !important;
+      right: auto !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      background-color: #ffffff !important;
+      padding: 10px 18px !important;
+      border-radius: 50px !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+      border: 1px solid #e2e8f0 !important;
+      white-space: nowrap !important;
+      z-index: 5 !important;
+      text-decoration: none !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      animation: wa-badge-float 3s ease-in-out infinite !important;
+    }
+    .custom-call-widget .call-badge-text {
+      font-size: 13px !important;
+      font-weight: 700 !important;
+      color: #059669 !important;
+      font-family: 'Outfit', 'Inter', sans-serif !important;
     }
 
     /* ── Floating WhatsApp (RIGHT SIDE) ── */
@@ -337,9 +382,12 @@
     }
 
     /* WhatsApp Chat Popup anchors to the RIGHT */
-    .custom-wa-widget .wa-chat-popup {
+    #WAButton .wa-chat-popup,
+    .custom-wa-widget .wa-chat-popup,
+    .wa-chat-popup {
       left: auto !important;
       right: 0 !important;
+      max-width: calc(100vw - 32px) !important;
     }
 
     /* ── Scroll-to-top — RIGHT side ABOVE WhatsApp ── */
@@ -360,6 +408,22 @@
       }
       .go-top {
         bottom: 148px !important;
+      }
+    }
+    @media (max-width: 575.98px) {
+      .custom-call-widget .call-floating-badge {
+        left: 62px !important;
+        padding: 8px 14px !important;
+      }
+      .custom-call-widget .call-badge-text {
+        font-size: 11px !important;
+      }
+      #WAButton .wa-chat-popup,
+      .custom-wa-widget .wa-chat-popup,
+      .wa-chat-popup {
+        right: -6px !important;
+        width: calc(100vw - 28px) !important;
+        max-width: 340px !important;
       }
     }
   </style>

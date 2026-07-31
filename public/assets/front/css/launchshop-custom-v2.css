@@ -11207,10 +11207,11 @@ iframe[id^="tawkchat-"],
 .wa-chat-popup {
     position: absolute !important;
     bottom: 72px !important;
-    left: 0 !important;
-    right: auto !important;
+    left: auto !important;
+    right: 0 !important;
     top: auto !important;
-    width: 330px;
+    width: 330px !important;
+    max-width: calc(100vw - 32px) !important;
     border-radius: 24px;
     background-color: #ebf3f5;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
