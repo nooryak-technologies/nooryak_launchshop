@@ -65,31 +65,35 @@
 </div>
 
 <style>
-  /* Mobile Bottom Navigation Bar Styles */
-  .mobile-bottom-nav-bar {
-    display: none;
-  }
-
+  /* Prevent horizontal overflow on mobile viewports */
   @media (max-width: 991px) {
+    html, body {
+      overflow-x: hidden !important;
+      max-width: 100vw !important;
+    }
+
+    /* Full Edge-to-Edge Mobile Bottom Navigation Bar (No side gaps) */
     .mobile-bottom-nav-bar {
       display: block;
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
+      width: 100% !important;
+      margin: 0 !important;
       z-index: 999999;
-      background: #0d121e;
-      border-top-left-radius: 18px;
-      border-top-right-radius: 18px;
-      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.5);
-      padding: 8px 10px 6px;
+      background: #0c101d;
+      border-radius: 0 !important; /* Edge to edge without corner gap cuts */
+      box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.6);
+      padding: 8px 0 6px;
       user-select: none;
       -webkit-user-select: none;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      overflow: hidden;
     }
 
-    /* Top Multi-Color Gradient Glow Border Line */
+    /* Top Multi-Color Gradient Glow Border Line across full width */
     .mobile-bottom-nav-bar::before {
       content: '';
       position: absolute;
@@ -98,8 +102,6 @@
       right: 0;
       height: 3.5px;
       background: linear-gradient(90deg, #ff4500 0%, #e60067 22%, #9c27b0 45%, #0070f3 72%, #00f2fe 100%);
-      border-top-left-radius: 18px;
-      border-top-right-radius: 18px;
     }
 
     .mobile-nav-items {
@@ -107,6 +109,8 @@
       align-items: center;
       justify-content: space-around;
       padding-top: 4px;
+      width: 100%;
+      margin: 0;
     }
 
     .mobile-nav-item {
@@ -116,7 +120,7 @@
       justify-content: center;
       text-decoration: none !important;
       color: #8c9ba5;
-      padding: 4px 6px;
+      padding: 4px 0;
       transition: all 0.25s ease;
       flex: 1;
       text-align: center;
@@ -161,7 +165,7 @@
       text-shadow: 0 0 10px rgba(255, 87, 34, 0.45);
     }
 
-    /* Hover effect on touch/mouse */
+    /* Hover/Touch feedback */
     .mobile-nav-item:active .mobile-nav-icon {
       transform: scale(0.92);
     }
@@ -177,16 +181,22 @@
       box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
     }
 
-    /* Reposition floating widgets (WhatsApp, Scroll-Top) above mobile bottom bar */
+    /* Reposition floating widgets above mobile bottom bar */
     #WAButton,
     .custom-wa-widget,
     .fab-btn,
     .go-top {
-      bottom: 85px !important;
+      bottom: 80px !important;
     }
 
     body {
       padding-bottom: 72px !important;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .mobile-bottom-nav-bar {
+      display: none !important;
     }
   }
 </style>
