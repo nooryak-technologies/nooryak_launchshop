@@ -267,3 +267,144 @@
     font-size: 14px;
   }
 }
+
+/* ==========================================================================
+   FURIAL (FURNITURE THEME) SPECIFIC CUSTOM FIXES
+   ========================================================================== */
+
+/* Task 1: Hide first cart icon (.hover-hide) on hover & align action icons */
+.product-default:hover .hover-hide,
+.product-default-2:hover .hover-hide,
+.product-default:focus-within .hover-hide,
+.product-default-2:focus-within .hover-hide {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+@media (max-width: 767.98px) {
+  .product-default .hover-hide,
+  .product-default-2 .hover-hide {
+    display: none !important;
+  }
+}
+
+.product-default .btn-icon-group.btn-inline .hover-show,
+.product-default-2 .btn-icon-group.btn-inline .hover-show {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 6px !important;
+  width: 100% !important;
+}
+
+/* Task 2: Correct alignment for Top Rated list items */
+.product-inline.product-inline-style-2,
+.product-inline {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.product-inline.product-inline-style-2 .product-img,
+.product-inline .product-img {
+  width: 85px !important;
+  height: 85px !important;
+  flex: 0 0 85px !important;
+  max-width: 85px !important;
+  margin-bottom: 0 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+.product-inline.product-inline-style-2 .product-img img,
+.product-inline .product-img img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+.product-inline.product-inline-style-2 .product-details,
+.product-inline .product-details {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.product-inline.product-inline-style-2 .product-title,
+.product-inline .product-title {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  margin-bottom: 4px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.product-inline.product-inline-style-2 .btn-icon-group,
+.product-inline .btn-icon-group {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 4px !important;
+  width: 100% !important;
+  justify-content: flex-start !important;
+  margin-top: 4px !important;
+}
+
+.product-inline.product-inline-style-2 .btn-icon-group .btn-icon,
+.product-inline.product-inline-style-2 .btn-icon-group a,
+.product-inline .btn-icon-group .btn-icon,
+.product-inline .btn-icon-group a {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  font-size: 11px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+  padding: 0 !important;
+}
+
+/* Task 3: Flash Sale / 3rd Section slider — 2 columns per row on mobile */
+@media (max-width: 767.98px) {
+  .new-product #pro-slider-furniture .slick-slide,
+  .new-product #pro-slider-furniture-skeleton .slick-slide {
+    width: 50% !important;
+    max-width: 50% !important;
+    padding: 0 4px !important;
+    box-sizing: border-box !important;
+  }
+
+  .new-product #pro-slider-furniture .slick-track,
+  .new-product #pro-slider-furniture-skeleton .slick-track {
+    display: flex !important;
+  }
+
+  .new-product #pro-slider-furniture .product-default-2,
+  .new-product #pro-slider-furniture-skeleton .product-default-2 {
+    margin-bottom: 15px !important;
+    width: 100% !important;
+  }
+
+  .new-product #pro-slider-furniture .product-countdown {
+    gap: 2px !important;
+  }
+
+  .new-product #pro-slider-furniture .product-countdown .count {
+    padding: 2px 3px !important;
+    min-width: 24px !important;
+  }
+
+  .new-product #pro-slider-furniture .product-countdown .count-period,
+  .new-product #pro-slider-furniture .product-countdown span {
+    font-size: 9px !important;
+  }
+}

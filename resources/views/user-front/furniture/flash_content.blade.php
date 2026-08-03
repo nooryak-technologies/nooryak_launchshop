@@ -18,7 +18,7 @@
          </div>
          <div class="col-lg-8">
            <div class="product-slider mb-30" id="pro-slider-furniture-skeleton"
-             data-slick='{"dots": true, "slidesToShow": 3}'>
+             data-slick='{"dots": true, "slidesToShow": 3, "responsive": [{"breakpoint": 992, "settings": {"slidesToShow": 3}}, {"breakpoint": 768, "settings": {"slidesToShow": 2}}, {"breakpoint": 576, "settings": {"slidesToShow": 2}}]}'>
              @for ($skeleton = 1; $skeleton <= 3; $skeleton++)
                <div class="product-default product-default-2 product-center mb-30 ">
                  <figure class="product-img skeleton skeleton-big-img"></figure>
@@ -77,7 +77,7 @@
                {{ $keywords['NO PRODUCTS FOUND'] ?? __('NO PRODUCTS FOUND') }}
              </h5>
            @else
-             <div class="product-slider mb-30" id="pro-slider-furniture" data-slick='{"dots": true, "slidesToShow": 3}'>
+             <div class="product-slider mb-30" id="pro-slider-furniture" data-slick='{"dots": true, "slidesToShow": 3, "responsive": [{"breakpoint": 992, "settings": {"slidesToShow": 3}}, {"breakpoint": 768, "settings": {"slidesToShow": 2}}, {"breakpoint": 576, "settings": {"slidesToShow": 2}}]}'>
                @foreach ($flash_items as $item)
                  <div class="product-default product-default-2 product-center mb-30 ">
                    <figure class="product-img">

@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/grocery/custom-styles.css') }}">
 @elseif ($userBs->theme == 'furniture')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/furniture/home-2.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/furniture/custom-styles.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/furniture/custom-styles.css?v=' . time()) }}">
 @elseif ($userBs->theme == 'fashion')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/fashion/home-3.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/fashion/custom-styles.css') }}">
