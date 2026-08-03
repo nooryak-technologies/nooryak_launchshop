@@ -63,6 +63,26 @@
 
   @yield('styles')
 
+  <style>
+    html, body {
+      overflow-x: hidden !important;
+      max-width: 100% !important;
+      width: 100% !important;
+      position: relative !important;
+    }
+
+    .main-wrapper,
+    .page-wrapper,
+    .header-area,
+    .footer-area,
+    section,
+    header,
+    footer {
+      overflow-x: hidden !important;
+      max-width: 100% !important;
+    }
+  </style>
+
   @if ($bs->is_whatsapp == 0 && $bs->is_tawkto == 0)
     <style>
       .back-to-top {

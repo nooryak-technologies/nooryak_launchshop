@@ -206,6 +206,30 @@
    MOBILE & LAYOUT ALIGNMENT FIXES (All Templates)
    ========================================================================== */
 
+/* --- Global Horizontal (Bottom) Scroll Prevention for All Themes --- */
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  position: relative !important;
+}
+
+.wrapper,
+.main-panel,
+.content,
+.page-inner,
+.header-area,
+.footer-area,
+.main-wrapper,
+.body-wrapper,
+.page-wrapper,
+section,
+header,
+footer {
+  overflow-x: hidden !important;
+  max-width: 100% !important;
+}
+
 /* --- Task 2: Page Title Area (About/Inner Headers) Spacing Fix --- */
 @if ($userBs->theme == 'fashion' || $userBs->theme == 'furniture' || $userBs->theme == 'clothing' || $userBs->theme == 'jewellery' || $userBs->theme == 'skinflow' || $userBs->theme == 'pet')
 /* For templates with fixed headers, we need large top padding to prevent header overlap */
