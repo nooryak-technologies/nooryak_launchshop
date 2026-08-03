@@ -60,7 +60,37 @@
            </h5>
          @else
            <div class="product-slider" id="pro-slider-fashion"
-             data-slick='{"arrows": true, "infinite": true, "slidesToShow": 4}'>
+             data-slick='{
+                "arrows": true,
+                "infinite": true,
+                "slidesToShow": 4,
+                "responsive": [
+                    {
+                        "breakpoint": 1200,
+                        "settings": {
+                            "slidesToShow": 3
+                        }
+                    },
+                    {
+                        "breakpoint": 992,
+                        "settings": {
+                            "slidesToShow": 2
+                        }
+                    },
+                    {
+                        "breakpoint": 768,
+                        "settings": {
+                            "slidesToShow": 2
+                        }
+                    },
+                    {
+                        "breakpoint": 575,
+                        "settings": {
+                            "slidesToShow": 2
+                        }
+                    }
+                ]
+              }'>
              @foreach ($flash_items as $item)
                <div class="product-default product-default-3 radius-md border-0 mb-30">
                  <figure class="product-img">
