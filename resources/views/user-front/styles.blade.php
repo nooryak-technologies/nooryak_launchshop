@@ -288,13 +288,15 @@
   .product-default-8 .btn-icon-group,
   .product-default-9 .btn-icon-group,
   .product-default-tab-card .btn-icon-group {
-    display: flex !important;
-    flex-direction: row !important;
-    /* flex-wrap: wrap !important; */
-    white-space: nowrap !important;
-    gap: 4px !important;
-    align-items: center !important;
-    width: 100% !important;
+          display: flex !important;
+        flex-direction: row !important;
+        /* flex-wrap: wrap !important; */
+        white-space: nowrap !important;
+        gap: 4px !important;
+        align-items: center !important;
+        width: 100% !important;
+        justify-content: center;
+        margin-bottom: 2px;
   }
 
   .btn-icon-group.text-center,
