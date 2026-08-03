@@ -22,7 +22,7 @@
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/furniture/custom-styles.css?v=' . time()) }}">
 @elseif ($userBs->theme == 'fashion')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/fashion/home-3.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/fashion/custom-styles.css?v=' . time()) }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/fashion/custom-styles.css') }}">
 @elseif ($userBs->theme == 'electronics')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/home-4.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/custom-styles.css?v=1.0.3') }}">
@@ -183,7 +183,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/clothing/clothing.css?v=1.0.4') }}">
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/clothing/custom-styles.css?v=' . time()) }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/clothing/custom-styles.css?v=1.0.5') }}">
 @endif
 <!--====== Style css ======-->
 
