@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/custom-styles.css?v=1.0.3') }}">
 @elseif ($userBs->theme == 'kids')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/kids/home-5.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/kids/custom-styles.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/kids/custom-styles.css?v=' . time()) }}">
 @elseif ($userBs->theme == 'manti')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/manti/home-6.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/manti/custom-styles.css?v=1.0.9') }}">
