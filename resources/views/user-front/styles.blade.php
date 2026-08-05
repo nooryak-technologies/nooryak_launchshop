@@ -207,7 +207,11 @@
    ========================================================================== */
 
 /* --- Global Horizontal (Bottom) Scroll Prevention for All Themes --- */
-html, body {
+html {
+  overflow-x: hidden !important;
+}
+
+body {
   overflow-x: hidden !important;
   max-width: 100% !important;
   width: 100% !important;
@@ -226,7 +230,7 @@ html, body {
 section,
 header,
 footer {
-  overflow-x: hidden !important;
+  overflow-x: clip !important;
   max-width: 100% !important;
 }
 

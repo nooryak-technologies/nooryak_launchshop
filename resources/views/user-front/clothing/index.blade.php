@@ -195,7 +195,7 @@
                class="clothing-category-card" style="min-height:200px;"
                data-aos="fade-up" data-aos-delay="{{ $loop->index * 70 }}">
               <img class="lazyload blur-up"
-                src="{{ asset('assets/front/images/placeholder.png') }}"
+                src="{{ !empty($cat->image) ? asset('assets/front/img/user/items/categories/'.$cat->image) : asset('assets/front/images/placeholder.png') }}"
                 data-src="{{ asset('assets/front/img/user/items/categories/'.$cat->image) }}"
                 alt="{{ $cat->name }}"
                 style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
