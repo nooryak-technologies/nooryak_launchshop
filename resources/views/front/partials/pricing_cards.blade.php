@@ -282,7 +282,19 @@
 
               @if($titleKey == 'basic')
                 @if(strtolower($term) == 'monthly')
-                  <!-- Monthly Billing Callout Box -->
+                  <!-- Mobile Monthly Billing Callout Box -->
+                  <div class="mobile-monthly-billing-callout d-lg-none">
+                    <div class="d-flex align-items-start gap-2">
+                      <div class="callout-icon-wrap">
+                        <i class="far fa-calendar-alt"></i>
+                      </div>
+                      <div class="callout-text">
+                        <h5 class="callout-title">Monthly Billing</h5>
+                        <p class="callout-desc">Only Basic plan is available with <strong>monthly billing</strong>.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Desktop Monthly Billing Callout Box -->
                   <div class="monthly-billing-callout d-none d-lg-block">
                     <div class="d-flex align-items-start gap-2">
                       <div class="callout-icon-wrap">
@@ -360,7 +372,7 @@
               </div>
 
               {{-- Title --}}
-              <h3 class="plan-v2-title">{{ __($package->title) }}</h3>
+              <h3 class="plan-v2-title">Ecom {{ __($package->title) }}</h3>
               <p class="plan-v2-subtitle">{{ $planSubtitle }}</p>
 
               {{-- Price --}}
@@ -372,13 +384,13 @@
                   <span class="plan-v2-period"> / {{ $periodLabel }}</span>
                 @endif
               </div>
-              @if(strtolower($package->term)=='monthly')
+              @if(strtolower($package->term)=='monthly' && $titleKey == 'basic')
                 <div class="text-center mb-2">
                   <span class="plan-monthly-badge">Just ₹1999/Yearly</span>
                 </div>
               @else
                 <p class="plan-v2-billing-note">
-                  @if(strtolower($package->term)=='yearly')
+                  @if(strtolower($package->term)=='yearly' || $titleKey == 'standard' || $titleKey == 'premium')
                     Billed yearly
                   @else
                     One-time access fee
@@ -438,7 +450,7 @@
 
               {{-- CTA Button with correct name --}}
               <a href="{{ $ctaHref }}" class="plan-v2-btn {{ ($isRecommended || $isBestValue) ? '' : 'btn-v2-outline' }}">
-                Select {{ __($package->title) }}
+                Select Ecom {{ __($package->title) }}
               </a>
 
             </div><!-- /.pricing-card-v2 -->

@@ -105,7 +105,7 @@
                             <span class="gd-original-price">₹14,283/year</span>
                             <span class="gd-save-tag">Save ₹9,284</span>
                         </div>
-                        <div class="gd-price-big">₹4,999<span class="gd-per">/year</span></div>
+                        <div class="gd-price-big">₹3,999<span class="gd-per">/year</span></div>
                         <p class="gd-billed">Billed annually</p>
                         <ul class="gd-feats">
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Custom Domain </li>
@@ -153,7 +153,7 @@
                             <span class="gd-original-price">₹28,569/year</span>
                             <span class="gd-save-tag">Save ₹18,570</span>
                         </div>
-                        <div class="gd-price-big">₹9,999<span class="gd-per">/year</span></div>
+                        <div class="gd-price-big">₹8,999<span class="gd-per">/year</span></div>
                         <p class="gd-billed">Billed annually</p>
                         <ul class="gd-feats">
                             <li class="gd-feat-green-highlight"><span class="gd-check-circle gd-check-green"><i class="fas fa-check"></i></span>Free .in Domain</li>

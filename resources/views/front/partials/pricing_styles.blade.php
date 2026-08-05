@@ -222,38 +222,44 @@
     position: absolute;
     left: -240px;
     top: -45px;
-    width: 210px;
-    background: #fff5f2;
-    border: 1px solid #ffd5c8;
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 4px 12px rgba(255,90,44,0.05);
+    width: 220px;
+    background: linear-gradient(135deg, #ffffff 0%, #fff3f0 100%);
+    border: 2px solid #ff5a2c;
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 12px 35px rgba(255, 90, 44, 0.25), 0 0 20px rgba(255, 90, 44, 0.15);
     z-index: 10;
     text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .monthly-billing-callout:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 40px rgba(255, 90, 44, 0.3), 0 0 25px rgba(255, 90, 44, 0.25);
   }
   .callout-icon-wrap {
-    background: #ff5a2c;
+    background: linear-gradient(135deg, #ff5a2c 0%, #e0451a 100%) !important;
     color: #fff;
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 16px;
     flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(255, 90, 44, 0.35);
   }
   .callout-title {
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 800;
     margin: 0 0 4px 0;
-    color: #0f172a;
+    color: #ff5a2c;
   }
   .callout-desc {
-    font-size: 11px;
+    font-size: 12px;
     margin: 0;
     color: #475569;
-    line-height: 1.4;
+    line-height: 1.45;
   }
   .callout-arrow {
     position: absolute;
@@ -530,6 +536,45 @@
     font-weight: 800;
   }
 
+  .mobile-monthly-billing-callout {
+    display: none;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto 20px auto;
+    background: linear-gradient(135deg, #ffffff 0%, #fff3f0 100%);
+    border: 2px solid #ff5a2c;
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 12px 35px rgba(255, 90, 44, 0.15);
+    text-align: left;
+    box-sizing: border-box;
+  }
+  .mobile-monthly-billing-callout .callout-title {
+    color: #ff5a2c;
+    font-size: 14px;
+    font-weight: 800;
+    margin: 0 0 4px 0;
+  }
+  .mobile-monthly-billing-callout .callout-desc {
+    font-size: 12px;
+    margin: 0;
+    color: #475569;
+    line-height: 1.45;
+  }
+  .mobile-monthly-billing-callout .callout-icon-wrap {
+    background: linear-gradient(135deg, #ff5a2c 0%, #e0451a 100%) !important;
+    color: #fff;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(255, 90, 44, 0.2);
+  }
+
   /* CTA button */
   .plan-v2-btn {
     display: block;
@@ -644,18 +689,6 @@
   /* Responsive */
   @media(max-width:1200px) {
     .monthly-billing-callout {
-      position: relative !important;
-      top: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      transform: none !important;
-      width: 100% !important;
-      max-width: 320px !important;
-      margin: 0 auto 20px auto !important;
-      display: block !important;
-      text-align: center !important;
-    }
-    .monthly-billing-callout .callout-arrow {
       display: none !important;
     }
     .premium-most-chosen-callout, 
@@ -665,7 +698,8 @@
       display: none !important;
     }
     .mobile-most-popular-callout,
-    .mobile-most-people-choose-callout {
+    .mobile-most-people-choose-callout,
+    .mobile-monthly-billing-callout {
       display: block !important;
     }
     .pricing-card-v2 {
@@ -683,11 +717,8 @@
       flex-direction: column !important;
       align-items: center !important;
     }
-    /* Hide the plan icon for Standard and Premium on mobile */
-    .pricing-card-v2.plan-standard .plan-v2-icon,
-    .pricing-card-v2.plan-premium .plan-v2-icon,
-    .pricing-card-v2.package-2 .plan-v2-icon,
-    .pricing-card-v2.package-3 .plan-v2-icon {
+    /* Hide all plan icon badges (paper plane / telegram, rocket, crown) on mobile view */
+    .pricing-card-v2 .plan-v2-icon {
       display: none !important;
     }
   }

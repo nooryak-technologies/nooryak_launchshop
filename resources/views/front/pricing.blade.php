@@ -153,10 +153,10 @@
                   <th style="text-align: center;" class="{{ strtolower($pkg->title) == 'standard' ? 'highlight-column-header' : '' }}">
                     @if (strtolower($pkg->title) == 'standard')
                       <div class="highlight-wrapper">
-                        <i class="fas fa-star text-orange me-1"></i> {{ __($pkg->title) }}
+                        <i class="fas fa-star text-orange me-1"></i> Ecom {{ __($pkg->title) }}
                       </div>
                     @else
-                      {{ __($pkg->title) }}
+                      Ecom {{ __($pkg->title) }}
                     @endif
                     <div style="font-size:11px;font-weight:600;color:#94a3b8;">{{ strtolower($pkg->term) == 'monthly' ? 'Monthly' : 'Yearly' }}</div>
                   </th>
