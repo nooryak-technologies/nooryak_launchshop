@@ -103,8 +103,15 @@
                               ->count();
                         @endphp
                         <li class="list-dropdown {{ request()->input('category') == $category->slug ? 'open' : '' }}">
-                          <a class="category" href="#" data-slug="{{ $category->slug }}">{{ $category->name }}
-                            <span class="qty">({{ $category_count }})</span></a>
+                          <a class="category d-inline-flex align-items-center gap-2" href="#" data-slug="{{ $category->slug }}">
+                            @if(!empty($category->image))
+                              <img src="{{ asset('assets/front/img/user/items/categories/' . $category->image) }}" alt="{{ $category->name }}" style="width:24px;height:24px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+                            @else
+                              <i class="fal fa-tag" style="font-size:12px;color:#8B5E34;"></i>
+                            @endif
+                            <span>{{ $category->name }}</span>
+                            <span class="qty">({{ $category_count }})</span>
+                          </a>
 
                           @php
                             $subcategories = $category->subcategories()->where('status', 1)->get();

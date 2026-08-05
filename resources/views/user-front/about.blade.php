@@ -430,7 +430,7 @@
           <div class="col-lg-6">
             <div class="about-image mb-30 ratio ratio-5-4 blur-up lazyload">
               <img class="ls-is-cached lazyload radius-sm" src="{{ asset('assets/front/images/placeholder.png') }}"
-                data-src="{{ !is_null(@$counterSection->image) ? asset('assets/front/img/user/about/' . @$counterSection->image) : asset('images/actvment.png') }}"
+                data-src="{{ !is_null(@$counterSection->image) ? asset('assets/front/img/user/about/' . @$counterSection->image) : ($userBs->theme == 'clothing' ? asset('assets/user-front/images/clothing/urban_about_counter.png') : asset('images/actvment.png')) }}"
                 alt="about-image">
             </div>
           </div>

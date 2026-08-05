@@ -617,4 +617,51 @@ class HomeController extends Controller
         Session::put('user-bypass-token', $token);
         return redirect()->route('front.user.detail.view', getParam());
     }
+
+    public function tenantPolicyPage($domain, $slug)
+    {
+        $user = app('user');
+        $userCurrentLang = app('userCurrentLang');
+        $id = $user->id;
+
+        $slugMap = [
+            'privacy-policy' => ['title' => __('Privacy Policy'), 'default_text' => 'Welcome to ' . ($user->shop_name ?? $user->username) . '. Your privacy is important to us.'],
+            'terms-and-conditions' => ['title' => __('Terms & Conditions'), 'default_text' => 'Welcome to ' . ($user->shop_name ?? $user->username) . '. Please read these terms and conditions carefully before using our website.'],
+            'refund-policy' => ['title' => __('Cancellation & Refund Policy'), 'default_text' => 'Welcome to ' . ($user->shop_name ?? $user->username) . '. Please review our cancellation and refund policies.'],
+            'shipping-policy' => ['title' => __('Shipping & Delivery Policy'), 'default_text' => 'Welcome to ' . ($user->shop_name ?? $user->username) . '. Here you can find all shipping and delivery guidelines.'],
+        ];
+
+        $pageInfo = $slugMap[$slug] ?? ['title' => ucfirst(str_replace('-', ' ', $slug)), 'default_text' => 'Policy content'];
+
+        $pageContent = DB::table('user_page_contents')
+            ->join('user_pages', 'user_pages.id', '=', 'user_page_contents.page_id')
+            ->where('user_page_contents.user_id', $id)
+            ->where('user_pages.status', 1)
+            ->where(function($q) use ($slug) {
+                $q->where('user_page_contents.slug', $slug)
+                  ->orWhere('user_page_contents.slug', 'like', '%' . $slug . '%');
+            })
+            ->select('user_page_contents.*')
+            ->first();
+
+        if ($pageContent) {
+            $data['page'] = $pageContent;
+            $data['title'] = $pageContent->title;
+        } else {
+            $data['page'] = (object) [
+                'title' => $pageInfo['title'],
+                'body' => '<h3>' . $pageInfo['title'] . '</h3><p>' . $pageInfo['default_text'] . '</p>',
+            ];
+            $data['title'] = $pageInfo['title'];
+        }
+
+        $data['pageHeading'] = $data['title'];
+
+        return view('user-front.custom-page', $data);
+    }
+
+    public function tenantPrivacyPolicy($domain) { return $this->tenantPolicyPage($domain, 'privacy-policy'); }
+    public function tenantTermsConditions($domain) { return $this->tenantPolicyPage($domain, 'terms-and-conditions'); }
+    public function tenantRefundPolicy($domain) { return $this->tenantPolicyPage($domain, 'refund-policy'); }
+    public function tenantShippingPolicy($domain) { return $this->tenantPolicyPage($domain, 'shipping-policy'); }
 }
