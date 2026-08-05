@@ -388,6 +388,14 @@
                 <div class="text-center mb-2">
                   <span class="plan-monthly-badge">Just ₹1999/Yearly</span>
                 </div>
+              @else
+                <p class="plan-v2-billing-note">
+                  @if(strtolower($package->term)=='yearly' || $titleKey == 'standard' || $titleKey == 'premium')
+                    Billed yearly
+                  @else
+                    One-time access fee
+                  @endif
+                </p>
               @endif
 
               <hr class="plan-v2-divider">
