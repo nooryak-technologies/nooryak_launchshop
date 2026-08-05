@@ -30,9 +30,29 @@ class ShopController extends Controller
         $uLang = $userCurrentLang->id;
         $data['uLang'] = $userCurrentLang->id;
 
-        $data['categories'] = UserItemCategory::with('subcategories')->where('language_id', $userCurrentLang->id)
-            ->where([['user_id', $user->id], ['status', 1]])
+        $data['categories'] = UserItemCategory::with('subcategories')
+            ->where('user_id', $user->id)
+            ->where('status', 1)
+            ->where(function($q) use ($userCurrentLang) {
+                $q->where('language_id', $userCurrentLang->id)
+                  ->orWhereNull('language_id');
+            })
             ->get();
+
+        if (count($data['categories']) == 0) {
+            $data['categories'] = UserItemCategory::with('subcategories')
+                ->where('user_id', $user->id)
+                ->where('status', 1)
+                ->get();
+        }
+
+        if (count($data['categories']) == 0) {
+            $this->seedTenantCategories($user->id, $userCurrentLang->id);
+            $data['categories'] = UserItemCategory::with('subcategories')
+                ->where('user_id', $user->id)
+                ->where('status', 1)
+                ->get();
+        }
 
         $selected_category = UserItemCategory::with('variations')->where('slug', $request->category)->where('language_id', $userCurrentLang->id)
             ->where([['user_id', $user->id], ['status', 1]])
@@ -506,5 +526,29 @@ class ShopController extends Controller
         $data['item_id'] = $data['product']->item_id;
 
         return view('user-front.partials.quick-view-modal', $data);
+    }
+
+    public function seedTenantCategories($userId, $langId)
+    {
+        $cats = [
+            ['name' => 'Dresses & Gowns', 'slug' => 'dresses-gowns', 'image' => 'cat_dresses.png'],
+            ['name' => 'Tops & Shirts', 'slug' => 'tops-shirts', 'image' => 'cat_tops.png'],
+            ['name' => 'Outerwear', 'slug' => 'outerwear', 'image' => 'cat_outerwear.png'],
+            ['name' => 'Ethnic Wear', 'slug' => 'ethnic-wear', 'image' => 'cat_ethnic.png'],
+            ['name' => 'Summer Wear', 'slug' => 'summer-wear', 'image' => 'cat_summer.png'],
+        ];
+
+        foreach ($cats as $idx => $c) {
+            UserItemCategory::create([
+                'user_id' => $userId,
+                'language_id' => $langId,
+                'name' => $c['name'],
+                'slug' => $c['slug'],
+                'image' => $c['image'],
+                'status' => 1,
+                'is_feature' => 1,
+                'serial_number' => $idx + 1,
+            ]);
+        }
     }
 }
