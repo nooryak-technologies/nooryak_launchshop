@@ -678,11 +678,14 @@ body {
   background: #ffffff !important;
 }
 
-/* Hide category and rating on clothing product cards globally */
+/* Hide category and rating on clothing product cards only */
 .product-default-10 .product-category,
-.product-default .product-category,
-.product-category,
-.category {
+.product-default-10 .category,
+.product-default:not(.product-list-card) .product-category,
+.product-default:not(.product-list-card) .product-details > a .product-category,
+.product-default:not(.product-list-card) .product-details > .category,
+.product-center:not(.product-list-card) .product-category,
+.product-inline:not(.product-list-card) .product-category {
   display: none !important;
 }
 
