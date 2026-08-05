@@ -28,7 +28,7 @@
           <a href="#" class="category pill-item {{ request()->input('category') == $category->slug ? 'active' : '' }}" data-slug="{{ $category->slug }}">
             <div class="pill-img-wrap">
               @if(!empty($category->image))
-                <img class="lazyload pill-img" src="{{ asset('assets/front/images/placeholder.png') }}"
+                <img class="lazyload pill-img" src="{{ asset('assets/front/img/user/items/categories/' . $category->image) }}"
                   data-src="{{ asset('assets/front/img/user/items/categories/' . $category->image) }}" alt="{{ $category->name }}">
               @else
                 <div class="pill-icon"><i class="fal fa-tags"></i></div>

@@ -6945,14 +6945,17 @@ figure.product-img.skeleton.skeleton-big-img {
 /* Custom Shop Category Pills Horizontal Navigation */
 .shop-category-pills {
     width: 100%;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
     padding-bottom: 5px;
 }
 
 .shop-category-pills::-webkit-scrollbar {
-    display: none;
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
 }
 
 .shop-category-pills .pills-wrapper {

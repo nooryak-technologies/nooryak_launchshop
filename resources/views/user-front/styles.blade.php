@@ -230,6 +230,19 @@ footer {
   max-width: 100% !important;
 }
 
+.shop-category-pills {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.shop-category-pills::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
 /* --- Task 2: Page Title Area (About/Inner Headers) Spacing Fix --- */
 @if ($userBs->theme == 'fashion' || $userBs->theme == 'furniture' || $userBs->theme == 'clothing' || $userBs->theme == 'jewellery' || $userBs->theme == 'skinflow' || $userBs->theme == 'pet')
 /* For templates with fixed headers, we need large top padding to prevent header overlap */

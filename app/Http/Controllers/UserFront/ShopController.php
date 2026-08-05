@@ -30,6 +30,10 @@ class ShopController extends Controller
         $uLang = $userCurrentLang->id;
         $data['uLang'] = $userCurrentLang->id;
 
+        $data['categories'] = UserItemCategory::with('subcategories')->where('language_id', $userCurrentLang->id)
+            ->where([['user_id', $user->id], ['status', 1]])
+            ->get();
+
         $selected_category = UserItemCategory::with('variations')->where('slug', $request->category)->where('language_id', $userCurrentLang->id)
             ->where([['user_id', $user->id], ['status', 1]])
             ->select('id')
