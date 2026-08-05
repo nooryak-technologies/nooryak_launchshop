@@ -3,6 +3,7 @@
 @section('pagename', '')
 
 @section('styles')
+@include('front.partials.pricing_styles')
 <style>
   /* Give longer thumbnail preview */
   .card-image-wrap {
