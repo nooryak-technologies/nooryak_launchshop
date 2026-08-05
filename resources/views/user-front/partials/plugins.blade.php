@@ -106,7 +106,7 @@
     $(function() {
       var whatsappButtonImage = `<img data-src="${whatsappImg}" class="lazyload" />`;
       $('#WAButton').floatingWhatsApp({
-        phone: "{{ !empty($userBs->whatsapp_number) ? $userBs->whatsapp_number : '917200770351' }}", //WhatsApp Business phone number
+        phone: "{{ !empty($userBs->whatsapp_number) ? $userBs->whatsapp_number : (!empty($userBs->contact_number) ? $userBs->contact_number : (!empty($user->phone) ? $user->phone : '')) }}", //WhatsApp Business phone number
         headerTitle: "{{ !empty($userBs->whatsapp_header_title) ? $userBs->whatsapp_header_title : 'WhatsApp Chat' }}", //Popup Title
         popupMessage: `{!! !empty($userBs->whatsapp_popup_message) ? nl2br($userBs->whatsapp_popup_message) : 'Hello, how can we help you?' !!}`, //Popup Message
         showPopup: whatsapp_popup == 1 ? true : false, //Enables popup display

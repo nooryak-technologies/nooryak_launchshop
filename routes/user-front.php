@@ -42,6 +42,10 @@ Route::group(['domain' => $domain, 'prefix' => $prefix, 'middleware' => ['userVi
     Route::get('apply/{token}', 'UserFront\HomeController@removeMaintenance')->name('front.user.remove')->withoutMiddleware('userMaintenance');
 
     Route::get('/about', 'UserFront\HomeController@userAbout')->name('front.user.about');
+    Route::get('/privacy-policy', 'Front\FrontendController@privacyPolicy')->name('front.user.privacy_policy');
+    Route::get('/terms-and-conditions', 'Front\FrontendController@termsConditions')->name('front.user.terms_conditions');
+    Route::get('/refund-policy', 'Front\FrontendController@refundPolicy')->name('front.user.refund_policy');
+    Route::get('/shipping-policy', 'Front\FrontendController@shippingPolicy')->name('front.user.shipping_policy');
 
     Route::get('/page/{slug}', 'Front\FrontendController@customPage')->name('front.user.custom.page');
     Route::post('/subscribe', 'User\SubscriberController@Usersubscribe')->name('front.user.subscribe');

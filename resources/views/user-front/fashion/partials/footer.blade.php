@@ -28,22 +28,20 @@
         <div class=" {{ count($ulinks) <= 5 ? 'col-lg-2 col-md-3 col-sm-6' : 'col-lg-3 col-md-4 col-sm-6' }} ">
           <div class="footer-widget">
             <h3>{{ @$footer->useful_links_title ?? __('Useful Links') }}</h3>
-            @if (count($ulinks) == 0)
-              <h6 class="title mb-20">
-                {{ $userSec->category_section_title ?? ($keywords['NO LINKS FOUND'] ?? __('NO LINKS FOUND')) }}
-              </h6>
-            @else
-              <ul class="footer-links">
-                @foreach ($ulinks as $link)
-                  @if ($loop->iteration > 5)
-                    @break
-                  @endif
-                  <li>
-                    <a href="{{ $link->url }}">{{ $link->name }}</a>
-                  </li>
-                @endforeach
-              </ul>
-            @endif
+            <ul class="footer-links">
+              @foreach ($ulinks as $link)
+                @if ($loop->iteration > 4)
+                  @break
+                @endif
+                <li>
+                  <a href="{{ $link->url }}">{{ $link->name }}</a>
+                </li>
+              @endforeach
+              <li><a href="{{ route('front.user.privacy_policy', getParam()) }}">{{ $keywords['Privacy Policy'] ?? __('Privacy Policy') }}</a></li>
+              <li><a href="{{ route('front.user.terms_conditions', getParam()) }}">{{ $keywords['Terms & Conditions'] ?? __('Terms & Conditions') }}</a></li>
+              <li><a href="{{ route('front.user.refund_policy', getParam()) }}">{{ $keywords['Refund Policy'] ?? __('Refund Policy') }}</a></li>
+              <li><a href="{{ route('front.user.shipping_policy', getParam()) }}">{{ $keywords['Shipping Policy'] ?? __('Shipping Policy') }}</a></li>
+            </ul>
           </div>
         </div>
 
@@ -51,13 +49,15 @@
           <div class="footer-widget">
             <h3>{{ $keywords['Contact Us'] ?? __('Contact Us') }}</h3>
             @php
-              $phone_numbers = !empty(@$userContact->contact_numbers)
-                  ? explode(',', str_replace('6374913298', '72007 70351', @$userContact->contact_numbers))
-                  : ['72007 70351'];
-              $emails = !empty(@$userContact->contact_mails) ? explode(',', @$userContact->contact_mails) : [];
-              $addresses = !empty(@$userContact->contact_addresses)
-                  ? explode(PHP_EOL, @$userContact->contact_addresses)
-                  : [];
+              $phone_numbers = !empty(@$userContact->contact_numbers) 
+                ? explode(',', $userContact->contact_numbers) 
+                : (!empty(@$userBs->contact_number) ? [$userBs->contact_number] : (!empty($user->phone) ? [$user->phone] : []));
+              $emails = !empty(@$userContact->contact_mails) 
+                ? explode(',', $userContact->contact_mails) 
+                : (!empty(@$userBs->email) ? [$userBs->email] : (!empty($user->email) ? [$user->email] : []));
+              $addresses = !empty(@$userContact->contact_addresses) 
+                ? explode(PHP_EOL, $userContact->contact_addresses) 
+                : (!empty(@$userBs->address) ? [$userBs->address] : []);
             @endphp
 
             <ul class="footer-links">

@@ -66,6 +66,9 @@
   background:#0f172a; color:#fff; border:none; border-radius:8px;
   padding:10px 18px; font-size:14px; font-weight:600; cursor:pointer;
 }
+.pwa-install-nav-item {
+  display: none !important;
+}
 </style>
 
 <script>
@@ -102,13 +105,7 @@
   }
 
   function injectPwaNavLinks() {
-    var label = window.pwaInstallLabel || 'Install App';
-    var html = '<li class="nav-item pwa-install-nav-item menu-item"><a href="javascript:void(0)" class="nav-link menu-link" onclick="triggerPwaInstall();return false;">' + label + '</a></li>';
-
-    document.querySelectorAll('.mobile-nav > ul, nav.menu.mobile-nav ul, .main-nav nav.menu ul.menu-right, .main-nav nav.menu > ul.menu-right').forEach(function(ul) {
-      if (ul.querySelector('.pwa-install-nav-item')) return;
-      ul.insertAdjacentHTML('beforeend', html);
-    });
+    // Disabled to remove "Install App" from header menu across all themes
   }
 
   function showPwaFallback(title, message) {

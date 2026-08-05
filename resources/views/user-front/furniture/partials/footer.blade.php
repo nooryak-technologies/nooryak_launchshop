@@ -50,13 +50,15 @@
           <div class="footer-widget">
             <h3>{{ $keywords['Contact Us'] ?? __('Contact Us') }}</h3>
             @php
-              $phone_numbers = !empty(@$userContact->contact_numbers)
-                  ? explode(',', str_replace('6374913298', '72007 70351', @$userContact->contact_numbers))
-                  : ['72007 70351'];
-              $emails = !empty(@$userContact->contact_mails) ? explode(',', @$userContact->contact_mails) : [];
-              $addresses = !empty(@$userContact->contact_addresses)
-                  ? explode(PHP_EOL, @$userContact->contact_addresses)
-                  : [];
+              $phone_numbers = !empty(@$userContact->contact_numbers) 
+                ? explode(',', $userContact->contact_numbers) 
+                : (!empty(@$userBs->contact_number) ? [$userBs->contact_number] : (!empty($user->phone) ? [$user->phone] : []));
+              $emails = !empty(@$userContact->contact_mails) 
+                ? explode(',', $userContact->contact_mails) 
+                : (!empty(@$userBs->email) ? [$userBs->email] : (!empty($user->email) ? [$user->email] : []));
+              $addresses = !empty(@$userContact->contact_addresses) 
+                ? explode(PHP_EOL, $userContact->contact_addresses) 
+                : (!empty(@$userBs->address) ? [$userBs->address] : []);
             @endphp
 
             <ul class="footer-links">

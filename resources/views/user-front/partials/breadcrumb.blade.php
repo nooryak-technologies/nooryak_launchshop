@@ -1,11 +1,10 @@
-<div class="page-title-area header-next">
-  @if (!is_null($userBe) && $userBe->breadcrumb)
-    <img class="bg-img" src="{{ asset('assets/front/images/placeholder.png') }}"
-      data-src="{{ asset('assets/front/img/user/' . $userBe->breadcrumb) }}" alt="Banner">
-  @else
-    <img class="bg-img" src="{{ asset('assets/front/images/placeholder.png') }}"
-      data-src="{{ asset('assets/front/img/shop_banner_bg.png') }}" alt="Banner">
-  @endif
+@php
+  $breadcrumbBgImg = (!is_null($userBe) && $userBe->breadcrumb)
+    ? asset('assets/front/img/user/' . $userBe->breadcrumb)
+    : asset('assets/front/img/shop_banner_bg.png');
+@endphp
+<div class="page-title-area header-next" style="background-image: url('{{ $breadcrumbBgImg }}'); background-size: cover; background-position: center bottom;">
+  <img class="bg-img" src="{{ $breadcrumbBgImg }}" data-src="{{ $breadcrumbBgImg }}" alt="Banner" style="display:none;">
   <div class="container">
     <div class="row align-items-center justify-content-between">
       <div class="col-lg-4 col-md-5 col-sm-12">

@@ -9,6 +9,306 @@
 @endphp
 
 @section('content')
+@if ($userBs->theme == 'clothing')
+  {{-- ═════════════════════════════════════════════════════════════════════
+       URBAN THEME (CLOTHING) — PIXEL-PERFECT ABOUT US SECTION
+       ═════════════════════════════════════════════════════════════════════ --}}
+  <style>
+    .urban-about-hero-section {
+      background: #FAF7F2;
+      padding: 60px 0;
+    }
+    .urban-about-kicker {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #8B5E34;
+      display: inline-block;
+      margin-bottom: 14px;
+    }
+    .urban-about-title {
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.15;
+      color: #111;
+      margin-bottom: 18px;
+      font-family: 'Jost', 'Cormorant Garamond', sans-serif;
+    }
+    .urban-about-divider {
+      width: 44px;
+      height: 3px;
+      background: #8B5E34;
+      margin-bottom: 22px;
+    }
+    .urban-about-desc {
+      font-size: 15px;
+      line-height: 1.65;
+      color: #5c554d;
+      margin-bottom: 28px;
+      max-width: 520px;
+    }
+    .urban-about-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #8B5E34;
+      color: #ffffff !important;
+      padding: 14px 30px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-decoration: none !important;
+      box-shadow: 0 4px 14px rgba(139, 94, 52, 0.25);
+      transition: all 0.3s ease;
+    }
+    .urban-about-btn:hover {
+      background: #6e4726;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(139, 94, 52, 0.35);
+    }
+    .urban-about-hero-img-wrap {
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.07);
+      background: #eae4db;
+    }
+    .urban-about-hero-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+    .urban-about-hero-img-wrap:hover img {
+      transform: scale(1.03);
+    }
+
+    /* Features & Stats Strip */
+    .urban-features-stats-strip {
+      background: #ffffff;
+      padding: 50px 0;
+      border-top: 1px solid #eae5dd;
+      border-bottom: 1px solid #eae5dd;
+    }
+    .urban-feature-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 10px 15px;
+    }
+    .urban-feature-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 1.5px solid #8B5E34;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8B5E34;
+      font-size: 20px;
+      margin-bottom: 14px;
+      background: #FAF7F2;
+    }
+    .urban-feature-title {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: #111;
+      margin-bottom: 6px;
+    }
+    .urban-feature-text {
+      font-size: 12px;
+      line-height: 1.5;
+      color: #666;
+      margin: 0;
+    }
+
+    .urban-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      padding-left: 20px;
+      border-left: 1px solid #eae5dd;
+    }
+    @media(max-width: 991px) {
+      .urban-stats-grid {
+        border-left: none;
+        padding-left: 0;
+        margin-top: 30px;
+        border-top: 1px solid #eae5dd;
+        padding-top: 30px;
+      }
+    }
+    .urban-stat-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .urban-stat-icon {
+      font-size: 24px;
+      color: #8B5E34;
+    }
+    .urban-stat-num {
+      font-size: 22px;
+      font-weight: 800;
+      color: #111;
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+    .urban-stat-label {
+      font-size: 11px;
+      color: #777;
+      margin: 0;
+    }
+
+    /* Our Story Section */
+    .urban-story-section {
+      padding: 60px 0;
+      background: #FAF7F2;
+    }
+    .urban-story-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+      border: 1px solid #eae5dd;
+    }
+    .urban-story-img {
+      border-radius: 14px;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      min-height: 260px;
+    }
+  </style>
+
+  <!-- Hero Section -->
+  <section class="urban-about-hero-section">
+    <div class="container">
+      <div class="row align-items-center gy-4">
+        <div class="col-lg-6">
+          <span class="urban-about-kicker">ABOUT US</span>
+          <h1 class="urban-about-title">{{ @$aboutInfo->title ?? 'STYLISH. QUALITY. MADE FOR YOU.' }}</h1>
+          <div class="urban-about-divider"></div>
+          <p class="urban-about-desc">
+            {{ @$aboutInfo->subtitle ?? "At Urban, we believe fashion is more than what you wear—it's how you express yourself. Our collections are crafted with premium fabrics, attention to detail, and designed to make you look and feel your best every day." }}
+          </p>
+          <a href="{{ @$aboutInfo->button_url ?? route('front.user.shop', getParam()) }}" class="urban-about-btn">
+            {{ @$aboutInfo->button_text ?? 'SHOP OUR COLLECTION' }} <i class="fal fa-arrow-right"></i>
+          </a>
+        </div>
+        <div class="col-lg-6">
+          <div class="urban-about-hero-img-wrap">
+            <img src="{{ !is_null(@$aboutInfo->image) ? asset('assets/front/img/user/about/' . @$aboutInfo->image) : asset('assets/user-front/images/clothing/urban_about_hero.png') }}" alt="About Urban">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features & Stats Strip -->
+  <section class="urban-features-stats-strip">
+    <div class="container">
+      <div class="row align-items-center">
+        <!-- 4 Feature Cards -->
+        <div class="col-lg-8">
+          <div class="row gy-4">
+            <div class="col-sm-6 col-md-3">
+              <div class="urban-feature-box">
+                <div class="urban-feature-icon"><i class="fal fa-award"></i></div>
+                <h4 class="urban-feature-title">PREMIUM QUALITY</h4>
+                <p class="urban-feature-text">We use the finest fabrics and materials to ensure long-lasting comfort and style.</p>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+              <div class="urban-feature-box">
+                <div class="urban-feature-icon"><i class="fal fa-tag"></i></div>
+                <h4 class="urban-feature-title">AFFORDABLE STYLE</h4>
+                <p class="urban-feature-text">Trendy designs at honest prices—because great style should be for everyone.</p>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+              <div class="urban-feature-box">
+                <div class="urban-feature-icon"><i class="fal fa-truck"></i></div>
+                <h4 class="urban-feature-title">FAST SHIPPING</h4>
+                <p class="urban-feature-text">We deliver your favorite styles quickly and safely to your doorstep.</p>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+              <div class="urban-feature-box">
+                <div class="urban-feature-icon"><i class="fal fa-headset"></i></div>
+                <h4 class="urban-feature-title">CUSTOMER FIRST</h4>
+                <p class="urban-feature-text">Our customer support team is always here to help you with anything you need.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2x2 Stats Grid -->
+        <div class="col-lg-4">
+          <div class="urban-stats-grid">
+            <div class="urban-stat-item">
+              <div class="urban-stat-icon"><i class="fal fa-user-friends"></i></div>
+              <div>
+                <div class="urban-stat-num">10K+</div>
+                <p class="urban-stat-label">Happy Customers</p>
+              </div>
+            </div>
+            <div class="urban-stat-item">
+              <div class="urban-stat-icon"><i class="fal fa-tshirt"></i></div>
+              <div>
+                <div class="urban-stat-num">500+</div>
+                <p class="urban-stat-label">Products</p>
+              </div>
+            </div>
+            <div class="urban-stat-item">
+              <div class="urban-stat-icon"><i class="fal fa-star"></i></div>
+              <div>
+                <div class="urban-stat-num">4.8</div>
+                <p class="urban-stat-label">Average Rating</p>
+              </div>
+            </div>
+            <div class="urban-stat-item">
+              <div class="urban-stat-icon"><i class="fal fa-ribbon"></i></div>
+              <div>
+                <div class="urban-stat-num">5+</div>
+                <p class="urban-stat-label">Years of Trust</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Story Section -->
+  <section class="urban-story-section">
+    <div class="container">
+      <div class="urban-story-card">
+        <div class="row align-items-center gy-4">
+          <div class="col-lg-5">
+            <img src="{{ asset('assets/user-front/images/clothing/urban_about_story.png') }}" alt="Our Story" class="urban-story-img">
+          </div>
+          <div class="col-lg-7">
+            <span class="urban-about-kicker">OUR STORY</span>
+            <h2 style="font-size:1.8rem;font-weight:800;color:#111;margin-bottom:14px;">PASSION FOR FASHION</h2>
+            <p style="font-size:14px;line-height:1.65;color:#555;margin-bottom:14px;">
+              Urban was born from a simple idea — to create timeless, comfortable, and stylish clothing that fits seamlessly into your everyday life. What started as a small passion project has now grown into a brand loved by thousands.
+            </p>
+            <p style="font-size:14px;line-height:1.65;color:#555;margin:0;">
+              We continue to innovate and bring you the latest trends while staying true to our commitment to quality and customer satisfaction.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+@else
   @if ($userBs->about_info_section == 1)
     <section class="section pt-100 pb-70">
       <div class="container">
@@ -48,6 +348,7 @@
       </div>
     </section>
   @endif
+@endif
 
   @if (count($after_about_info) > 0)
     @foreach ($after_about_info as $cusAboutInfo)

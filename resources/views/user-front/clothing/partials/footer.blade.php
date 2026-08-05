@@ -49,20 +49,20 @@
           </div>
         </div>
 
-        <!-- Useful Links -->
+        <!-- Useful Links & Policies -->
         <div class="col-lg-3 col-md-6 col-6">
           <div class="footer-widget">
             <h4 class="footer-heading">{{ $footer->useful_links_title ?? __('Quick Links') }}</h4>
-            @if(count($ulinks) == 0)
-              <p style="color:#888;font-size:13px;">{{ $keywords['NO LINKS FOUND'] ?? __('NO LINKS FOUND') }}</p>
-            @else
-              <ul class="footer-links" style="list-style:none;padding-left:0;line-height:2.2;">
-                @foreach($ulinks as $link)
-                  @if($loop->iteration > 6) @break @endif
-                  <li><a href="{{ $link->url }}">{{ $link->name }}</a></li>
-                @endforeach
-              </ul>
-            @endif
+            <ul class="footer-links" style="list-style:none;padding-left:0;line-height:2.2;">
+              @foreach($ulinks as $link)
+                @if($loop->iteration > 4) @break @endif
+                <li><a href="{{ $link->url }}">{{ $link->name }}</a></li>
+              @endforeach
+              <li><a href="{{ route('front.user.privacy_policy', getParam()) }}">{{ $keywords['Privacy Policy'] ?? __('Privacy Policy') }}</a></li>
+              <li><a href="{{ route('front.user.terms_conditions', getParam()) }}">{{ $keywords['Terms & Conditions'] ?? __('Terms & Conditions') }}</a></li>
+              <li><a href="{{ route('front.user.refund_policy', getParam()) }}">{{ $keywords['Refund Policy'] ?? __('Refund Policy') }}</a></li>
+              <li><a href="{{ route('front.user.shipping_policy', getParam()) }}">{{ $keywords['Shipping Policy'] ?? __('Shipping Policy') }}</a></li>
+            </ul>
           </div>
         </div>
 
@@ -83,16 +83,22 @@
           <div class="footer-widget">
             <h4 class="footer-heading">{{ $keywords['Contact Us'] ?? __('Contact Us') }}</h4>
             @php
-              $phone_numbers = !empty(@$userContact->contact_numbers) ? explode(',', str_replace('6374913298', '72007 70351', $userContact->contact_numbers)) : ['72007 70351'];
-              $emails        = !empty(@$userContact->contact_mails)   ? explode(',', $userContact->contact_mails)   : [];
-              $addresses     = !empty(@$userContact->contact_addresses)? explode(PHP_EOL, $userContact->contact_addresses) : [];
+              $phone_numbers = !empty(@$userContact->contact_numbers) 
+                ? explode(',', $userContact->contact_numbers) 
+                : (!empty(@$userBs->contact_number) ? [$userBs->contact_number] : (!empty($user->phone) ? [$user->phone] : []));
+              $emails = !empty(@$userContact->contact_mails) 
+                ? explode(',', $userContact->contact_mails) 
+                : (!empty(@$userBs->email) ? [$userBs->email] : (!empty($user->email) ? [$user->email] : []));
+              $addresses = !empty(@$userContact->contact_addresses) 
+                ? explode(PHP_EOL, $userContact->contact_addresses) 
+                : (!empty(@$userBs->address) ? [$userBs->address] : []);
             @endphp
             <ul class="footer-links" style="list-style:none;padding-left:0;line-height:2.2;font-size:13px;color:#555;">
               @if(count($phone_numbers) > 0)
                 <li>
                   <i class="fal fa-phone" style="margin-right:8px;"></i>
                   @foreach($phone_numbers as $pn)
-                    <a href="tel:{{ $pn }}">{{ $pn }}</a>{{ !$loop->last ? ', ' : '' }}
+                    <a href="tel:{{ trim($pn) }}">{{ trim($pn) }}</a>{{ !$loop->last ? ', ' : '' }}
                   @endforeach
                 </li>
               @endif
@@ -100,16 +106,18 @@
                 <li>
                   <i class="fal fa-envelope" style="margin-right:8px;"></i>
                   @foreach($emails as $em)
-                    <a href="mailto:{{ $em }}">{{ $em }}</a>{{ !$loop->last ? ', ' : '' }}
+                    <a href="mailto:{{ trim($em) }}">{{ trim($em) }}</a>{{ !$loop->last ? ', ' : '' }}
                   @endforeach
                 </li>
               @endif
               @if(count($addresses) > 0)
                 @foreach($addresses as $address)
-                  <li>
-                    <i class="fal fa-map-marker-alt" style="margin-right:8px;"></i>
-                    {{ $address }}
-                  </li>
+                  @if(!empty(trim($address)))
+                    <li>
+                      <i class="fal fa-map-marker-alt" style="margin-right:8px;"></i>
+                      {{ trim($address) }}
+                    </li>
+                  @endif
                 @endforeach
               @endif
             </ul>

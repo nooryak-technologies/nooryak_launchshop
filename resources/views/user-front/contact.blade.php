@@ -14,71 +14,67 @@
       <div class="row justify-content-center">
         <div class="col-12">
           <div class="row justify-content-center mb-20">
-            @if (!empty($contact->contact_numbers))
-              @php
-                if ($contact) {
-                    $phones = explode(',', str_replace('6374913298', '72007 70351', $contact->contact_numbers));
-                }
-              @endphp
-              @if (!empty($phones))
-                <div class="col-xl-4 col-lg-6">
-                  <div class="card mb-30 blue" data-aos="fade-up" data-aos-delay="100">
-                    <div class="icon">
-                      <i class="fal fa-phone-plus"></i>
-                    </div>
-                    <div class="card-text">
-                      @foreach ($phones as $phone)
-                        <p class="mb-0"><a href="tel:{{ $phone }}">{{ $phone }}</a></p>
-                      @endforeach
-                    </div>
+            @php
+              $phones = !empty(@$contact->contact_numbers) 
+                ? explode(',', $contact->contact_numbers) 
+                : (!empty(@$userBs->contact_number) ? [$userBs->contact_number] : (!empty($user->phone) ? [$user->phone] : []));
+              $mails = !empty(@$contact->contact_mails) 
+                ? explode(',', $contact->contact_mails) 
+                : (!empty(@$userBs->email) ? [$userBs->email] : (!empty($user->email) ? [$user->email] : []));
+              $addresses = !empty(@$contact->contact_addresses) 
+                ? explode(PHP_EOL, $contact->contact_addresses) 
+                : (!empty(@$userBs->address) ? [$userBs->address] : []);
+            @endphp
+
+            @if (!empty($phones))
+              <div class="col-xl-4 col-lg-6">
+                <div class="card mb-30 blue" data-aos="fade-up" data-aos-delay="100">
+                  <div class="icon">
+                    <i class="fal fa-phone-plus"></i>
+                  </div>
+                  <div class="card-text">
+                    @foreach ($phones as $phone)
+                      @if(!empty(trim($phone)))
+                        <p class="mb-0"><a href="tel:{{ trim($phone) }}">{{ trim($phone) }}</a></p>
+                      @endif
+                    @endforeach
                   </div>
                 </div>
-              @endif
+              </div>
             @endif
 
-            @if (!empty($contact->contact_mails))
-              @php
-                if (!empty($contact)) {
-                    $mails = explode(',', $contact->contact_mails);
-                }
-              @endphp
-              @if (!empty($mails))
-                <div class="col-xl-4 col-lg-6">
-                  <div class="card mb-30 green" data-aos="fade-up" data-aos-delay="200">
-                    <div class="icon">
-                      <i class="fal fa-envelope"></i>
-                    </div>
-                    <div class="card-text">
-                      @foreach ($mails as $mail)
-                        <p class="mb-0"><a href="mailTo:{{ $mail }}">{{ $mail }}</a></p>
-                      @endforeach
-                    </div>
+            @if (!empty($mails))
+              <div class="col-xl-4 col-lg-6">
+                <div class="card mb-30 green" data-aos="fade-up" data-aos-delay="200">
+                  <div class="icon">
+                    <i class="fal fa-envelope"></i>
+                  </div>
+                  <div class="card-text">
+                    @foreach ($mails as $mail)
+                      @if(!empty(trim($mail)))
+                        <p class="mb-0"><a href="mailto:{{ trim($mail) }}">{{ trim($mail) }}</a></p>
+                      @endif
+                    @endforeach
                   </div>
                 </div>
-              @endif
+              </div>
             @endif
 
-
-            @if (!empty($contact->contact_addresses))
-              @php
-                if ($contact) {
-                    $addresses = explode(PHP_EOL, $contact->contact_addresses);
-                }
-              @endphp
-              @if (!empty($addresses))
-                <div class="col-xl-4 col-lg-6">
-                  <div class="card mb-30 orange" data-aos="fade-up" data-aos-delay="300">
-                    <div class="icon">
-                      <i class="fal fa-map-marker-alt"></i>
-                    </div>
-                    <div class="card-text">
-                      @foreach ($addresses as $address)
-                        <p class="mb-0"><a href="">{{ $address }}</a></p>
-                      @endforeach
-                    </div>
+            @if (!empty($addresses))
+              <div class="col-xl-4 col-lg-6">
+                <div class="card mb-30 orange" data-aos="fade-up" data-aos-delay="300">
+                  <div class="icon">
+                    <i class="fal fa-map-marker-alt"></i>
+                  </div>
+                  <div class="card-text">
+                    @foreach ($addresses as $address)
+                      @if(!empty(trim($address)))
+                        <p class="mb-0">{{ trim($address) }}</p>
+                      @endif
+                    @endforeach
                   </div>
                 </div>
-              @endif
+              </div>
             @endif
           </div>
           <div class="row">
