@@ -309,7 +309,7 @@
           <div class="templates-hero-content" data-aos="fade-up">
             <span class="templates-hero-badge">{{ __('PREMIUM STORE THEMES') }}</span>
             <h1 class="templates-hero-title">
-              Launch Your Dream Store <br><span>in Minutes</span>
+              Select Profesional Store Theme For Your <br><span>Ecommerce Shop</span>
             </h1>
             <p class="templates-hero-desc">
               Choose from our e-commerce templates built for speed, responsiveness, and conversions. Select a template and pick a plan to checkout and start selling.
