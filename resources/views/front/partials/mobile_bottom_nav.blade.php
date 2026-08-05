@@ -25,7 +25,7 @@
           <rect x="3" y="14" width="7" height="7" rx="1.5"/>
         </svg>
       </div>
-      <span class="mobile-nav-label">{{ __('THEME') }}</span>
+      <span class="mobile-nav-label">{{ __('THEMES') }}</span>
     </a>
 
     <!-- 3. PRICING -->
