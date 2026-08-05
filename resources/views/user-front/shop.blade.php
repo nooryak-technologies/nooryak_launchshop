@@ -28,8 +28,7 @@
           <a href="#" class="category pill-item {{ request()->input('category') == $category->slug ? 'active' : '' }}" data-slug="{{ $category->slug }}">
             <div class="pill-img-wrap">
               @if(!empty($category->image))
-                <img class="lazyload pill-img" src="{{ asset('assets/front/img/user/items/categories/' . $category->image) }}"
-                  data-src="{{ asset('assets/front/img/user/items/categories/' . $category->image) }}" alt="{{ $category->name }}">
+                <img class="pill-img" src="{{ asset('assets/front/img/user/items/categories/' . $category->image) }}" alt="{{ $category->name }}">
               @else
                 <div class="pill-icon"><i class="fal fa-tags"></i></div>
               @endif
@@ -70,8 +69,13 @@
                     <ul class="list-group toggle-list" data-toggle-list="amenitiesToggle" data-toggle-show="7">
                       <li
                         class="list-dropdown {{ Route::current()->getName() == 'front.user.shop' && empty(request()->input('category')) ? 'open' : '' }}">
-                        <a class="category" href="#" data-category-slug-="all">
-                          {{ $keywords['All'] ?? __('All') }}
+                        <a class="category d-inline-flex align-items-center gap-2" href="#" data-category-slug-="all">
+                          <span class="radio-circle {{ empty(request()->input('category')) ? 'active' : '' }}" style="width:14px;height:14px;border-radius:50%;border:2px solid #8B5E34;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            @if(empty(request()->input('category')))
+                              <span style="width:6px;height:6px;border-radius:50%;background:#8B5E34;"></span>
+                            @endif
+                          </span>
+                          <span>{{ $keywords['All'] ?? __('All') }}</span>
                           <span class="qty">({{ $all_category_product_count }})</span>
                         </a>
                       </li>
@@ -104,10 +108,13 @@
                         @endphp
                         <li class="list-dropdown {{ request()->input('category') == $category->slug ? 'open' : '' }}">
                           <a class="category d-inline-flex align-items-center gap-2" href="#" data-slug="{{ $category->slug }}">
+                            <span class="radio-circle {{ request()->input('category') == $category->slug ? 'active' : '' }}" style="width:14px;height:14px;border-radius:50%;border:2px solid #8B5E34;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
+                              @if(request()->input('category') == $category->slug)
+                                <span style="width:6px;height:6px;border-radius:50%;background:#8B5E34;"></span>
+                              @endif
+                            </span>
                             @if(!empty($category->image))
-                              <img src="{{ asset('assets/front/img/user/items/categories/' . $category->image) }}" alt="{{ $category->name }}" style="width:24px;height:24px;border-radius:50%;object-fit:cover;flex-shrink:0;">
-                            @else
-                              <i class="fal fa-tag" style="font-size:12px;color:#8B5E34;"></i>
+                              <img src="{{ asset('assets/front/img/user/items/categories/' . $category->image) }}" alt="{{ $category->name }}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;">
                             @endif
                             <span>{{ $category->name }}</span>
                             <span class="qty">({{ $category_count }})</span>
