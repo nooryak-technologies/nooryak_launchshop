@@ -14,114 +14,37 @@
 @endsection
 
 @section('breadcrumb_right')
-{{-- Category pills are shown inline in content below, not in breadcrumb for clothing theme --}}
+  <!-- Horizontal Scrollable Category Pills -->
+  @if(count($categories) > 0)
+    <div class="shop-category-pills">
+      <div class="pills-wrapper justify-content-lg-end justify-content-start">
+        <a href="#" class="category pill-item {{ Route::current()->getName() == 'front.user.shop' && empty(request()->input('category')) ? 'active' : '' }}" data-category-slug-="all">
+          <div class="pill-img-wrap">
+            <div class="pill-icon"><i class="fal fa-th-large"></i></div>
+          </div>
+          <span class="pill-name">{{ $keywords['All'] ?? __('All') }}</span>
+        </a>
+        @foreach ($categories as $category)
+          <a href="#" class="category pill-item {{ request()->input('category') == $category->slug ? 'active' : '' }}" data-slug="{{ $category->slug }}">
+            <div class="pill-img-wrap">
+              @if(!empty($category->image))
+                <img class="pill-img" src="{{ asset('assets/front/img/user/items/categories/' . $category->image) }}" alt="{{ $category->name }}">
+              @else
+                <div class="pill-icon"><i class="fal fa-tags"></i></div>
+              @endif
+            </div>
+            <span class="pill-name">{{ $category->name }}</span>
+          </a>
+        @endforeach
+      </div>
+    </div>
+  @endif
 @endsection
 
 @section('content')
   <!-- Shop Start -->
   <div class="products pt-40 pb-70">
     <div class="container">
-
-      {{-- ===== CATEGORY SLIDER ROW (matches manti reference) ===== --}}
-      @if(count($categories) > 0)
-      <div class="urban-cat-slider-row mb-30">
-        <style>
-          .urban-cat-slider-row {
-            width: 100%;
-            background: #faf7f2;
-            border-radius: 14px;
-            border: 1px solid #ede9e0;
-            padding: 18px 24px;
-            overflow-x: auto;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-          }
-          .urban-cat-slider-row::-webkit-scrollbar { display: none; }
-          .urban-cat-slider-inner {
-            display: flex;
-            align-items: flex-start;
-            gap: 28px;
-            width: max-content;
-          }
-          .urban-cat-pill {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none !important;
-            cursor: pointer;
-            min-width: 80px;
-            transition: transform 0.2s ease;
-          }
-          .urban-cat-pill:hover { transform: translateY(-3px); }
-          .urban-cat-pill-img {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            border: 2.5px solid #ddd6c8;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #fff;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.07);
-            margin-bottom: 8px;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-          }
-          .urban-cat-pill.active .urban-cat-pill-img,
-          .urban-cat-pill:hover .urban-cat-pill-img {
-            border-color: #8B5E34;
-            box-shadow: 0 4px 16px rgba(139,94,52,0.18);
-          }
-          .urban-cat-pill-img img {
-            width: 100%; height: 100%; object-fit: cover; display: block;
-          }
-          .urban-cat-pill-img .pill-icon-inner {
-            font-size: 26px; color: #8B5E34;
-          }
-          .urban-cat-pill-name {
-            font-size: 12.5px;
-            font-weight: 700;
-            color: #444;
-            text-align: center;
-            line-height: 1.3;
-            max-width: 80px;
-            transition: color 0.2s;
-          }
-          .urban-cat-pill.active .urban-cat-pill-name {
-            color: #8B5E34;
-          }
-          @media(max-width: 575px) {
-            .urban-cat-pill-img { width: 58px; height: 58px; }
-            .urban-cat-pill-name { font-size: 11px; max-width: 65px; }
-            .urban-cat-slider-inner { gap: 18px; }
-          }
-        </style>
-        <div class="urban-cat-slider-inner">
-          {{-- ALL pill --}}
-          <a href="#" class="urban-cat-pill category {{ Route::current()->getName() == 'front.user.shop' && empty(request()->input('category')) ? 'active' : '' }}" data-category-slug-="all">
-            <div class="urban-cat-pill-img">
-              <span class="pill-icon-inner"><i class="fal fa-th-large"></i></span>
-            </div>
-            <span class="urban-cat-pill-name">{{ $keywords['All'] ?? __('All') }}</span>
-          </a>
-          {{-- Category pills --}}
-          @foreach ($categories as $cat)
-          <a href="#" class="urban-cat-pill category {{ request()->input('category') == $cat->slug ? 'active' : '' }}" data-slug="{{ $cat->slug }}">
-            <div class="urban-cat-pill-img">
-              @if(!empty($cat->image))
-                <img src="{{ asset('assets/front/img/user/items/categories/' . $cat->image) }}" alt="{{ $cat->name }}">
-              @else
-                <span class="pill-icon-inner"><i class="fal fa-tags"></i></span>
-              @endif
-            </div>
-            <span class="urban-cat-pill-name">{{ $cat->name }}</span>
-          </a>
-          @endforeach
-        </div>
-      </div>
-      @endif
-      {{-- ===== END CATEGORY SLIDER ROW ===== --}}
-
       <div class="row gx-xl-5">
 
         <div class="col-lg-4 col-xl-3">
@@ -356,6 +279,32 @@
 
 
         <div class="col-lg-8 col-xl-9">
+
+          <!-- Top Category Slider Pills (Horizontal Scrollable) -->
+          @if(count($categories) > 0)
+            <div class="shop-top-category-slider mb-30" style="width: 100%; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; background: #faf8f5; padding: 16px 20px; border-radius: 12px; border: 1px solid #eee7dd;">
+              <div class="d-flex align-items-center gap-3" style="width: max-content;">
+                <a href="#" class="category pill-item text-center {{ Route::current()->getName() == 'front.user.shop' && empty(request()->input('category')) ? 'active' : '' }}" data-category-slug-="all" style="text-decoration:none; color:inherit;">
+                  <div class="pill-img-wrap" style="width:65px; height:65px; border-radius:50%; background:#fff; border:2.5px solid {{ empty(request()->input('category')) ? '#8B5E34' : '#e5e0d8' }}; display:flex; align-items:center; justify-content:center; margin:0 auto 6px auto; overflow:hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition:all 0.3s ease;">
+                    <i class="fal fa-th-large" style="font-size:22px; color:{{ empty(request()->input('category')) ? '#8B5E34' : '#666' }};"></i>
+                  </div>
+                  <span class="pill-name" style="font-size:12px; font-weight:700; color:{{ empty(request()->input('category')) ? '#8B5E34' : '#333' }}; display:block;">{{ $keywords['All'] ?? __('All') }}</span>
+                </a>
+                @foreach ($categories as $category)
+                  <a href="#" class="category pill-item text-center {{ request()->input('category') == $category->slug ? 'active' : '' }}" data-slug="{{ $category->slug }}" style="text-decoration:none; color:inherit;">
+                    <div class="pill-img-wrap" style="width:65px; height:65px; border-radius:50%; background:#fff; border:2.5px solid {{ request()->input('category') == $category->slug ? '#8B5E34' : '#e5e0d8' }}; display:flex; align-items:center; justify-content:center; margin:0 auto 6px auto; overflow:hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition:all 0.3s ease;">
+                      @if(!empty($category->image))
+                        <img src="{{ asset('assets/front/img/user/items/categories/' . $category->image) }}" alt="{{ $category->name }}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                      @else
+                        <i class="fal fa-tags" style="font-size:22px; color:#666;"></i>
+                      @endif
+                    </div>
+                    <span class="pill-name" style="font-size:12px; font-weight:700; color:{{ request()->input('category') == $category->slug ? '#8B5E34' : '#333' }}; display:block;">{{ $category->name }}</span>
+                  </a>
+                @endforeach
+              </div>
+            </div>
+          @endif
 
           <div class="product-sort-area mb-30">
 
@@ -598,43 +547,20 @@
   <script src="{{ asset('assets/user-front/js/product-search.js') }}"></script>
   <script>
     $(document).ready(function() {
-      // When top urban slider pill is clicked — sync sidebar + trigger filter
-      $('body').on('click', '.urban-cat-pill', function(e) {
-        e.preventDefault();
-        $('.urban-cat-pill').removeClass('active');
+      // Sync active state on horizontal pills click
+      $('body').on('click', '.shop-category-pills .pill-item', function() {
+        $('.shop-category-pills .pill-item').removeClass('active');
         $(this).addClass('active');
-        var slug = $(this).data('slug');
-        var allSlug = $(this).data('category-slug-');
-        // Sync sidebar
-        $('#categories .category').parent().removeClass('open');
-        if (slug) {
-          $('#categories .category[data-slug="' + slug + '"]').parent().addClass('open');
-          $('#categories .category[data-slug="' + slug + '"]').trigger('click_from_pill');
-        } else {
-          $('#categories .category[data-category-slug-="all"]').trigger('click_from_pill');
-        }
-        // Trigger the actual category filter via the sidebar link
-        if (slug) {
-          var $sidebarLink = $('#categories .category[data-slug="' + slug + '"]');
-          if ($sidebarLink.length) {
-            $sidebarLink[0].click();
-          }
-        } else {
-          var $allLink = $('#categories .category[data-category-slug-="all"]');
-          if ($allLink.length) {
-            $allLink[0].click();
-          }
-        }
       });
-
-      // When sidebar category is clicked — sync top urban slider pills
+      
+      // Sync active state on sidebar categories click
       $('body').on('click', '#categories .category', function() {
         var slug = $(this).data('slug');
-        $('.urban-cat-pill').removeClass('active');
+        $('.shop-category-pills .pill-item').removeClass('active');
         if (slug) {
-          $('.urban-cat-pill[data-slug="' + slug + '"]').addClass('active');
+          $('.shop-category-pills .pill-item[data-slug="' + slug + '"]').addClass('active');
         } else {
-          $('.urban-cat-pill[data-category-slug-="all"]').addClass('active');
+          $('.shop-category-pills .pill-item[data-category-slug-="all"]').addClass('active');
         }
       });
     });
