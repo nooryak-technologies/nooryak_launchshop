@@ -491,10 +491,17 @@ class HomeController extends Controller
         $userCurrentLang = app('userCurrentLang');
         $data['pageHeading'] = $this->getUserPageHeading($userCurrentLang);
 
+        // Auto-seed blogs if this tenant currently has 0 blogs in database
+        $blogCount = DB::table('user_blogs')->where('user_id', $id)->count();
+        if ($blogCount == 0) {
+            $this->seedTenantBlogs($id, $userCurrentLang->id);
+        }
+
         $data['blogs'] = DB::table('user_blogs')
-            ->join('user_blog_contents', 'user_blogs.id', 'user_blog_contents.blog_id')
-            ->join('user_blog_categories', 'user_blog_categories.id', '=', 'user_blog_contents.category_id')
-            ->where([['user_blog_contents.language_id', $userCurrentLang->id], ['user_blogs.user_id', $id], ['user_blogs.status', 1], ['user_blog_categories.status', 1]])
+            ->join('user_blog_contents', 'user_blogs.id', '=', 'user_blog_contents.blog_id')
+            ->leftJoin('user_blog_categories', 'user_blog_categories.id', '=', 'user_blog_contents.category_id')
+            ->where('user_blogs.user_id', $id)
+            ->where('user_blogs.status', 1)
             ->when($catid, function ($query, $catid) {
                 return $query->where('user_blog_contents.category_id', $catid);
             })
@@ -502,14 +509,15 @@ class HomeController extends Controller
                 return $query->where('user_blog_contents.title', 'LIKE', '%' . $term . '%');
             })
             ->select('user_blogs.*', 'user_blog_contents.*', 'user_blog_categories.name as categoryName', 'user_blog_categories.id as categoryId')
-            ->orderBy('serial_number', 'ASC')
+            ->orderBy('user_blogs.serial_number', 'ASC')
             ->paginate(6);
 
 
         $data['latestBlogs'] = DB::table('user_blogs')
-            ->join('user_blog_contents', 'user_blogs.id', 'user_blog_contents.blog_id')
-            ->join('user_blog_categories', 'user_blog_categories.id', '=', 'user_blog_contents.category_id')
-            ->where([['user_blog_contents.language_id', $userCurrentLang->id], ['user_blogs.user_id', $id], ['user_blogs.status', 1]])
+            ->join('user_blog_contents', 'user_blogs.id', '=', 'user_blog_contents.blog_id')
+            ->leftJoin('user_blog_categories', 'user_blog_categories.id', '=', 'user_blog_contents.category_id')
+            ->where('user_blogs.user_id', $id)
+            ->where('user_blogs.status', 1)
             ->select('user_blogs.*', 'user_blog_contents.title', 'user_blog_contents.slug', 'user_blog_categories.name as categoryName')
             ->orderBy('user_blogs.id', 'DESC')
             ->limit(3)->get();
@@ -517,19 +525,91 @@ class HomeController extends Controller
         $data['blog_categories'] = BlogCategory::query()
             ->where('status', 1)
             ->orderBy('serial_number', 'ASC')
-            ->where('language_id', $userCurrentLang->id)
             ->where('user_id', $id)
             ->get();
 
-        $data['allCount'] = Blog::query()
+        $data['allCount'] = DB::table('user_blogs')
             ->where('user_id', $id)
             ->count();
 
-        $data['seo'] = SEO::where('language_id', $userCurrentLang->id)->where('user_id', $user->id)
+        $data['seo'] = SEO::where('user_id', $user->id)
             ->select('blogs_meta_keywords', 'blogs_meta_description')
             ->first();
 
         return view('user-front.blogs', $data);
+    }
+
+    public function seedTenantBlogs($userId, $langId)
+    {
+        $catId = DB::table('user_blog_categories')->where('user_id', $userId)->where('name', 'Style Guide')->value('id');
+        if (!$catId) {
+            $catId = DB::table('user_blog_categories')->insertGetId([
+                'user_id' => $userId,
+                'language_id' => $langId,
+                'name' => 'Style Guide',
+                'status' => 1,
+                'serial_number' => 1,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+        }
+
+        $blogsData = [
+            [
+                'title' => 'Top 5 Capsule Wardrobe Essentials for Every Season',
+                'image' => 'urban_blog_1.png',
+                'content' => 'Building a timeless capsule wardrobe allows you to express effortless elegance while simplifying your morning routine. Focus on premium linen shirts, tailored trousers, dark denim jackets, and versatile leather footwear that transition seamlessly between seasons.',
+            ],
+            [
+                'title' => 'The Rise of Sustainable Fashion & Eco-Friendly Textiles',
+                'image' => 'urban_blog_2.png',
+                'content' => 'Sustainable fashion is redefining modern retail. Discover how organic cotton, recycled linen, and eco-friendly dye processes are helping conscious shoppers curate stunning outfits while reducing environmental impact.',
+            ],
+            [
+                'title' => 'How to Layer Clothing Like a Professional Stylist',
+                'image' => 'urban_blog_3.png',
+                'content' => 'Mastering texture and proportion is the key to mastering cold weather layering. Pair lightweight knits under heavy wool overcoats, experiment with earthy color accents, and add structured scarves for an elevated look.',
+            ],
+            [
+                'title' => 'Mastering Color Harmony in Everyday Urban Outfits',
+                'image' => 'urban_blog_4.png',
+                'content' => 'Neutral tones like terracotta, warm beige, cream, and olive green create an effortlessly sophisticated palette. Learn how to combine subtle earth tones for versatile outfit combinations that stand out tastefully.',
+            ],
+            [
+                'title' => 'Garment Care Guide: How to Make Quality Clothes Last',
+                'image' => 'urban_blog_1.png',
+                'content' => 'Investing in high quality apparel is only half the secret. Proper washing, air drying, steamer maintenance, and natural cedar storage keep your favorite wardrobe pieces looking brand new for years to come.',
+            ]
+        ];
+
+        foreach ($blogsData as $index => $bData) {
+            $slug = \Illuminate\Support\Str::slug($bData['title']);
+            $existing = DB::table('user_blog_contents')->where('user_id', $userId)->where('slug', $slug)->first();
+            if ($existing) continue;
+
+            $blogId = DB::table('user_blogs')->insertGetId([
+                'user_id' => $userId,
+                'image' => $bData['image'],
+                'status' => 1,
+                'serial_number' => $index + 1,
+                'created_at' => now()->subDays(rand(1, 10)),
+                'updated_at' => now()
+            ]);
+
+            DB::table('user_blog_contents')->insert([
+                'user_id' => $userId,
+                'blog_id' => $blogId,
+                'language_id' => $langId,
+                'category_id' => $catId,
+                'title' => $bData['title'],
+                'slug' => $slug,
+                'content' => '<p>' . $bData['content'] . '</p>',
+                'meta_keywords' => 'urban, fashion, capsule wardrobe, style',
+                'meta_description' => $bData['content'],
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+        }
     }
 
     public function userBlogDetail($domain, $slug)

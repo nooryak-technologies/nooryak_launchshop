@@ -44,6 +44,7 @@ Route::group(['domain' => $domain, 'prefix' => $prefix, 'middleware' => ['userVi
     Route::get('/about', 'UserFront\HomeController@userAbout')->name('front.user.about');
     Route::get('/privacy-policy', 'UserFront\HomeController@tenantPrivacyPolicy')->name('front.user.privacy_policy');
     Route::get('/terms-and-conditions', 'UserFront\HomeController@tenantTermsConditions')->name('front.user.terms_conditions');
+    Route::get('/terms-conditions', 'UserFront\HomeController@tenantTermsConditions');
     Route::get('/refund-policy', 'UserFront\HomeController@tenantRefundPolicy')->name('front.user.refund_policy');
     Route::get('/shipping-policy', 'UserFront\HomeController@tenantShippingPolicy')->name('front.user.shipping_policy');
 
