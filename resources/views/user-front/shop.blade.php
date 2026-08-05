@@ -293,32 +293,6 @@
 
         <div class="col-lg-8 col-xl-9">
 
-          <!-- Top Category Slider Pills (Horizontal Scrollable) -->
-          @if(count($categories) > 0)
-            <div class="shop-top-category-slider mb-30" style="width: 100%; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; background: #faf8f5; padding: 16px 20px; border-radius: 12px; border: 1px solid #eee7dd;">
-              <div class="d-flex align-items-center gap-3" style="width: max-content;">
-                <a href="#" class="category pill-item text-center {{ Route::current()->getName() == 'front.user.shop' && empty(request()->input('category')) ? 'active' : '' }}" data-category-slug-="all" style="text-decoration:none; color:inherit;">
-                  <div class="pill-img-wrap" style="width:65px; height:65px; border-radius:50%; background:#fff; border:2.5px solid {{ empty(request()->input('category')) ? '#8B5E34' : '#e5e0d8' }}; display:flex; align-items:center; justify-content:center; margin:0 auto 6px auto; overflow:hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition:all 0.3s ease;">
-                    <i class="fal fa-th-large" style="font-size:22px; color:{{ empty(request()->input('category')) ? '#8B5E34' : '#666' }};"></i>
-                  </div>
-                  <span class="pill-name" style="font-size:12px; font-weight:700; color:{{ empty(request()->input('category')) ? '#8B5E34' : '#333' }}; display:block;">{{ $keywords['All'] ?? __('All') }}</span>
-                </a>
-                @foreach ($categories as $category)
-                  <a href="#" class="category pill-item text-center {{ request()->input('category') == $category->slug ? 'active' : '' }}" data-slug="{{ $category->slug }}" style="text-decoration:none; color:inherit;">
-                    <div class="pill-img-wrap" style="width:65px; height:65px; border-radius:50%; background:#fff; border:2.5px solid {{ request()->input('category') == $category->slug ? '#8B5E34' : '#e5e0d8' }}; display:flex; align-items:center; justify-content:center; margin:0 auto 6px auto; overflow:hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition:all 0.3s ease;">
-                      @if(!empty($category->image))
-                        <img src="{{ asset('assets/front/img/user/items/categories/' . $category->image) }}" alt="{{ $category->name }}" style="width:100%; height:100%; object-fit:cover; display:block;">
-                      @else
-                        <i class="fal fa-tags" style="font-size:22px; color:#666;"></i>
-                      @endif
-                    </div>
-                    <span class="pill-name" style="font-size:12px; font-weight:700; color:{{ request()->input('category') == $category->slug ? '#8B5E34' : '#333' }}; display:block;">{{ $category->name }}</span>
-                  </a>
-                @endforeach
-              </div>
-            </div>
-          @endif
-
           <div class="product-sort-area mb-30">
 
             <ul class="product-sort-list">
