@@ -30,29 +30,34 @@ class ShopController extends Controller
         $uLang = $userCurrentLang->id;
         $data['uLang'] = $userCurrentLang->id;
 
-        $data['categories'] = UserItemCategory::with('subcategories')
+        $categories = UserItemCategory::with('subcategories')
             ->where('user_id', $user->id)
             ->where('status', 1)
-            ->where(function($q) use ($userCurrentLang) {
-                $q->where('language_id', $userCurrentLang->id)
-                  ->orWhereNull('language_id');
-            })
             ->get();
 
-        if (count($data['categories']) == 0) {
-            $data['categories'] = UserItemCategory::with('subcategories')
+        if (count($categories) == 0) {
+            $categories = UserItemCategory::with('subcategories')
                 ->where('user_id', $user->id)
-                ->where('status', 1)
                 ->get();
         }
 
-        if (count($data['categories']) == 0) {
+        if (count($categories) == 0) {
+            $catIds = UserItemContent::where('user_id', $user->id)->pluck('category_id')->filter()->unique();
+            if (count($catIds) > 0) {
+                $categories = UserItemCategory::with('subcategories')
+                    ->whereIn('id', $catIds)
+                    ->get();
+            }
+        }
+
+        if (count($categories) == 0) {
             $this->seedTenantCategories($user->id, $userCurrentLang->id);
-            $data['categories'] = UserItemCategory::with('subcategories')
+            $categories = UserItemCategory::with('subcategories')
                 ->where('user_id', $user->id)
-                ->where('status', 1)
                 ->get();
         }
+
+        $data['categories'] = $categories;
 
         $selected_category = UserItemCategory::with('variations')->where('slug', $request->category)->where('language_id', $userCurrentLang->id)
             ->where([['user_id', $user->id], ['status', 1]])
@@ -539,6 +544,11 @@ class ShopController extends Controller
         ];
 
         foreach ($cats as $idx => $c) {
+            $existing = UserItemCategory::where('user_id', $userId)->where('slug', $c['slug'])->first();
+            if ($existing) {
+                $existing->update(['status' => 1, 'image' => $c['image']]);
+                continue;
+            }
             UserItemCategory::create([
                 'user_id' => $userId,
                 'language_id' => $langId,
@@ -549,6 +559,15 @@ class ShopController extends Controller
                 'is_feature' => 1,
                 'serial_number' => $idx + 1,
             ]);
+        }
+
+        $firstCat = UserItemCategory::where('user_id', $userId)->first();
+        if ($firstCat) {
+            UserItemContent::where('user_id', $userId)
+                ->where(function($q) {
+                    $q->whereNull('category_id')->orWhere('category_id', 0);
+                })
+                ->update(['category_id' => $firstCat->id]);
         }
     }
 }

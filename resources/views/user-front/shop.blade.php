@@ -82,29 +82,16 @@
 
                       @foreach ($categories as $category)
                         @php
-                          $category_count = \App\Models\User\UserItem::join(
-                              'user_item_contents',
+                          $category_count = \App\Models\User\UserItemContent::join(
+                              'user_items',
                               'user_items.id',
                               '=',
-                              'user_item_contents.item_id',
+                              'user_item_contents.item_id'
                           )
-                              ->join(
-                                  'user_item_categories',
-                                  'user_item_categories.id',
-                                  '=',
-                                  'user_item_contents.category_id',
-                              )
-                              ->leftJoin(
-                                  'user_item_sub_categories',
-                                  'user_item_sub_categories.id',
-                                  '=',
-                                  'user_item_contents.subcategory_id',
-                              )
-                              ->where('user_items.status', '=', 1)
-                              ->where('user_items.user_id', $user->id)
-                              ->where('user_item_contents.language_id', '=', $category->language_id)
-                              ->where('user_item_contents.category_id', '=', $category->id)
-                              ->count();
+                          ->where('user_items.status', 1)
+                          ->where('user_items.user_id', $user->id)
+                          ->where('user_item_contents.category_id', $category->id)
+                          ->count();
                         @endphp
                         <li class="list-dropdown {{ request()->input('category') == $category->slug ? 'open' : '' }}">
                           <a class="category d-inline-flex align-items-center gap-2" href="#" data-slug="{{ $category->slug }}">
