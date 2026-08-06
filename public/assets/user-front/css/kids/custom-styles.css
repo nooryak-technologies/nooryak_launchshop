@@ -386,3 +386,8 @@
     font-size: 9px !important;
   }
 }
+
+/* Theme Scoped Header Bottom Margin */
+.header-bottom {
+  margin-top: 1rem !important;
+}

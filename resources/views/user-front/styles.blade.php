@@ -201,6 +201,14 @@
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/jewellery/jewellery-rtl.css') }}">
 @endif
 
+@if ($userBs->theme == 'manti' || $userBs->theme == 'vegetables' || $userBs->theme == 'grocery' || $userBs->theme == 'kids' || $userBs->theme == 'fashion')
+<style>
+  .header-bottom {
+    margin-top: 1rem !important;
+  }
+</style>
+@endif
+
 <style>
 /* ==========================================================================
    MOBILE & LAYOUT ALIGNMENT FIXES (All Templates)
