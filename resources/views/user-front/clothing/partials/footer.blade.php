@@ -83,15 +83,15 @@
           <div class="footer-widget">
             <h4 class="footer-heading">{{ $keywords['Contact Us'] ?? __('Contact Us') }}</h4>
             @php
-              $phone_numbers = !empty(@$userContact->contact_numbers) 
-                ? explode(',', $userContact->contact_numbers) 
-                : (!empty(@$userBs->contact_number) ? [$userBs->contact_number] : (!empty($user->phone) ? [$user->phone] : []));
-              $emails = !empty(@$userContact->contact_mails) 
-                ? explode(',', $userContact->contact_mails) 
-                : (!empty(@$userBs->email) ? [$userBs->email] : (!empty($user->email) ? [$user->email] : []));
-              $addresses = !empty(@$userContact->contact_addresses) 
-                ? explode(PHP_EOL, $userContact->contact_addresses) 
-                : (!empty(@$userBs->address) ? [$userBs->address] : []);
+              $phone_numbers = !empty(@$userBs->contact_number) 
+                ? explode(',', $userBs->contact_number) 
+                : (!empty(@$user->phone) ? [$user->phone] : (!empty(@$userContact->contact_numbers) ? explode(',', $userContact->contact_numbers) : []));
+              $emails = !empty(@$userBs->email) 
+                ? explode(',', $userBs->email) 
+                : (!empty(@$user->email) ? [$user->email] : (!empty(@$userContact->contact_mails) ? explode(',', $userContact->contact_mails) : []));
+              $addresses = !empty(@$userBs->address) 
+                ? explode(PHP_EOL, $userBs->address) 
+                : (!empty(@$user->address) ? [$user->address] : (!empty(@$userContact->contact_addresses) ? explode(PHP_EOL, $userContact->contact_addresses) : []));
             @endphp
             <ul class="footer-links" style="list-style:none;padding-left:0;line-height:2.2;font-size:13px;color:#555;">
               @if(count($phone_numbers) > 0)

@@ -15,15 +15,15 @@
         <div class="col-12">
           <div class="row justify-content-center mb-20">
             @php
-              $phones = !empty(@$contact->contact_numbers) 
-                ? explode(',', $contact->contact_numbers) 
-                : (!empty(@$userBs->contact_number) ? [$userBs->contact_number] : (!empty($user->phone) ? [$user->phone] : []));
-              $mails = !empty(@$contact->contact_mails) 
-                ? explode(',', $contact->contact_mails) 
-                : (!empty(@$userBs->email) ? [$userBs->email] : (!empty($user->email) ? [$user->email] : []));
-              $addresses = !empty(@$contact->contact_addresses) 
-                ? explode(PHP_EOL, $contact->contact_addresses) 
-                : (!empty(@$userBs->address) ? [$userBs->address] : []);
+              $phones = !empty(@$userBs->contact_number) 
+                ? explode(',', $userBs->contact_number) 
+                : (!empty(@$user->phone) ? [$user->phone] : (!empty(@$contact->contact_numbers) ? explode(',', $contact->contact_numbers) : []));
+              $mails = !empty(@$userBs->email) 
+                ? explode(',', $userBs->email) 
+                : (!empty(@$user->email) ? [$user->email] : (!empty(@$contact->contact_mails) ? explode(',', $contact->contact_mails) : []));
+              $addresses = !empty(@$userBs->address) 
+                ? explode(PHP_EOL, $userBs->address) 
+                : (!empty(@$user->address) ? [$user->address] : (!empty(@$contact->contact_addresses) ? explode(PHP_EOL, $contact->contact_addresses) : []));
             @endphp
 
             @if (!empty($phones))
@@ -151,10 +151,16 @@
                 </div>
               </form>
             </div>
-            @if (!empty($contact->latitude) && !empty($contact->longitude))
+            @if (!empty($contact->latitude) && !empty($contact->longitude) && floatval($contact->latitude) != 0)
               <div class="col-lg-6 mb-30" data-aos="fade-up" data-aos-delay="200">
                 <iframe width="100%" height="450" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-                  src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q={{ intval($contact->latitude) }},%20{{ intval($contact->longitude) }}+({{ $userBs->website_title }})&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
+                  src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q={{ $contact->latitude }},{{ $contact->longitude }}+({{ urlencode(@$userBs->website_title) }})&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
+              </div>
+            @elseif(!empty($addresses))
+              @php $mapQuery = implode(', ', array_map('trim', $addresses)); @endphp
+              <div class="col-lg-6 mb-30" data-aos="fade-up" data-aos-delay="200">
+                <iframe width="100%" height="450" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                  src="https://maps.google.com/maps?width=100%25&amp;height=450&amp;hl=en&amp;q={{ urlencode($mapQuery) }}&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
               </div>
             @endif
           </div>
