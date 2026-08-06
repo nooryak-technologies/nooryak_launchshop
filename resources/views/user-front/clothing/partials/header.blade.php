@@ -62,8 +62,16 @@
                       <ul class="submenu">
                         @foreach($link['children'] as $level2)
                           @php $l2Href = getUserHref($level2, $userCurrentLang->id); @endphp
-                          <li><a href="{{ $l2Href }}" target="{{ $level2['target'] }}">{{ $level2['text'] }}</a></li>
+                          @if(trim($level2['text']) != 'Privacy Policy')
+                            <li><a href="{{ $l2Href }}" target="{{ $level2['target'] }}">{{ $level2['text'] }}</a></li>
+                          @endif
                         @endforeach
+                        @if(strtolower(trim($link['text'])) == 'pages')
+                          <li><a href="{{ route('front.user.privacy_policy', getParam()) }}">{{ $keywords['Privacy Policy'] ?? __('Privacy Policy') }}</a></li>
+                          <li><a href="{{ route('front.user.terms_conditions', getParam()) }}">{{ $keywords['Terms & Conditions'] ?? __('Terms & Conditions') }}</a></li>
+                          <li><a href="{{ route('front.user.refund_policy', getParam()) }}">{{ $keywords['Refund Policy'] ?? __('Refund Policy') }}</a></li>
+                          <li><a href="{{ route('front.user.shipping_policy', getParam()) }}">{{ $keywords['Shipping Policy'] ?? __('Shipping Policy') }}</a></li>
+                        @endif
                       </ul>
                     </li>
                   @endif
@@ -86,27 +94,12 @@
 
             <!-- Icons Menu -->
             <ul class="menu header-icons" style="display:flex;justify-content:flex-end;gap:4px;align-items:center;list-style:none;margin-bottom:0;padding-left:0;">
-              <!-- Currency Switcher -->
-              {{-- Currency Switcher hidden --}}
-              {{-- <li class="menu-item" style="position:relative;">
-                <a href="javascript:void(0)" class="sf-with-ul" style="display:flex;align-items:center;gap:6px;color:#0d0d0d;padding:8px 10px;font-size:13px;font-weight:500;">
-                  <span>{{ $userCurrentCurr->symbol }} {{ convertUtf8($userCurrentCurr->text) }}</span>
-                </a>
-                <ul class="setting-dropdown" style="display:none;">
-                  @foreach ($userCurrency as $userCurr)
-                    <li>
-                      <a href="{{ route('front.user.changeUserCurrency', ['id' => $userCurr->id, getParam()]) }}"
-                        class="menu-link">{{ $userCurr->text }}</a>
-                    </li>
-                  @endforeach
-                </ul>
-              </li> --}}
               <!-- Account -->
               <li class="menu-item" style="position:relative;">
-                <a href="javascript:void(0)" class="sf-with-ul" style="display:flex;align-items:center;gap:6px;color:#0d0d0d;padding:8px 10px;font-size:13px;font-weight:500;">
+                <a href="{{ Auth::guard('customer')->check() ? route('customer.dashboard', getParam()) : route('customer.signup', getParam()) }}" class="sf-with-ul" style="display:flex;align-items:center;gap:6px;color:#0d0d0d;padding:8px 10px;font-size:13px;font-weight:500;">
                   <i class="fal fa-user" style="font-size:17px;"></i>
                 </a>
-                <ul class="setting-dropdown" style="display:none;">
+                <ul class="setting-dropdown">
                   @guest('customer')
                     <li><a class="menu-link" href="{{ route('customer.login', getParam()) }}">{{ $keywords['Login'] ?? __('Login') }}</a></li>
                     <li><a class="menu-link" href="{{ route('customer.signup', getParam()) }}">{{ $keywords['Signup'] ?? __('Signup') }}</a></li>

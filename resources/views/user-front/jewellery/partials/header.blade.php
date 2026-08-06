@@ -9,7 +9,7 @@
               <li>
                 {{ preg_replace('/\bHours\b\s*/i', '', $header->header_text ?? '') }}
                 @php
-                  $emails = !empty($userContact->contact_mails) ? explode(',', $userContact->contact_mails) : [];
+                  $emails = !empty(@$userBs->email) ? [$userBs->email] : (!empty(@$user->email) ? [$user->email] : (!empty(@$userContact->contact_mails) ? explode(',', $userContact->contact_mails) : []));
                 @endphp
                 @if (count($emails) > 0)
                   <span class="mx-2">|</span>

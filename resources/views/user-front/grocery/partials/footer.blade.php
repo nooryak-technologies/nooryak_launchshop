@@ -36,13 +36,17 @@
             @else
               <ul class="footer-links">
                 @foreach ($ulinks as $link)
-                  @if ($loop->iteration > 5)
+                  @if ($loop->iteration > 4)
                     @break
                   @endif
                   <li>
                     <a href="{{ $link->url }}">{{ $link->name }}</a>
                   </li>
                 @endforeach
+                <li><a href="{{ route('front.user.privacy_policy', getParam()) }}">{{ $keywords['Privacy Policy'] ?? __('Privacy Policy') }}</a></li>
+                <li><a href="{{ route('front.user.terms_conditions', getParam()) }}">{{ $keywords['Terms & Conditions'] ?? __('Terms & Conditions') }}</a></li>
+                <li><a href="{{ route('front.user.refund_policy', getParam()) }}">{{ $keywords['Refund Policy'] ?? __('Refund Policy') }}</a></li>
+                <li><a href="{{ route('front.user.shipping_policy', getParam()) }}">{{ $keywords['Shipping Policy'] ?? __('Shipping Policy') }}</a></li>
               </ul>
             @endif
           </div>

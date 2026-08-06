@@ -327,3 +327,51 @@
   }
 }
 
+/* Fix header dropdowns (Account & Cart) disappearing / flickering on hover */
+.header-icons .menu-item,
+.menu .menu-item {
+  position: relative !important;
+}
+
+.header-icons .menu-item .setting-dropdown,
+.header-icons .menu-item .cart-dropdown,
+.menu .menu-item .setting-dropdown,
+.menu .menu-item .cart-dropdown {
+  position: absolute !important;
+  top: 100% !important;
+  right: 0 !important;
+  left: auto !important;
+  margin-top: 0 !important;
+  z-index: 99999 !important;
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease !important;
+}
+
+/* Add invisible bridge pseudo-element between icon and dropdown so mouse hover never drops */
+.header-icons .menu-item::after,
+.header-icons .menu-item .setting-dropdown::before,
+.header-icons .menu-item .cart-dropdown::before,
+.menu .menu-item .setting-dropdown::before,
+.menu .menu-item .cart-dropdown::before {
+  content: "" !important;
+  position: absolute !important;
+  top: -15px !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 25px !important;
+  background: transparent !important;
+}
+
+.header-icons .menu-item:hover > .setting-dropdown,
+.header-icons .menu-item:hover > .cart-dropdown,
+.menu .menu-item:hover > .setting-dropdown,
+.menu .menu-item:hover > .cart-dropdown,
+.header-icons .menu-item .setting-dropdown:hover,
+.header-icons .menu-item .cart-dropdown:hover,
+.menu .menu-item .setting-dropdown:hover,
+.menu .menu-item .cart-dropdown:hover {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
+}
+
