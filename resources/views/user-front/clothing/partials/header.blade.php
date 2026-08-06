@@ -3,7 +3,7 @@
 
   <!-- Promo Strip -->
   <div class="promo-strip">
-    {{ $keywords['FREE SHIPPING ON ORDERS OVER $75'] ?? __('FREE SHIPPING ON ORDERS OVER $75') }}
+    {{ $keywords['FREE SHIPPING ON ORDERS OVER ₹75'] ?? ($keywords['FREE SHIPPING ON ORDERS OVER $75'] ?? __('FREE SHIPPING ON ORDERS OVER ₹75')) }}
   </div>
 
   <!-- Mobile Navbar -->

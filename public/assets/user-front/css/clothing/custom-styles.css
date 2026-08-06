@@ -307,3 +307,23 @@
   }
 }
 
+/* Hero Banner Top Margin - Urban (Clothing) Theme Only */
+.clothing-home section.header-next,
+.clothing-home .clothing-hero-slider {
+  margin-top: 140px !important;
+}
+
+@media (max-width: 1199px) {
+  .clothing-home section.header-next,
+  .clothing-home .clothing-hero-slider {
+    margin-top: 110px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .clothing-home section.header-next,
+  .clothing-home .clothing-hero-slider {
+    margin-top: 85px !important;
+  }
+}
+

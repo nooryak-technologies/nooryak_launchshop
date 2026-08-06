@@ -74,7 +74,7 @@
        HERO SECTION
   ═══════════════════════════════════════════ --}}
   @if($ubs->hero_section == 1)
-  <section class="header-next" style="padding: 0; margin-bottom: 40px; margin-top: 30px;">
+  <section class="header-next" style="padding: 0; margin-bottom: 40px; margin-top: 140px;">
     <div class="container">
       @php
         $heroSlides = collect();
@@ -404,7 +404,7 @@
     <div class="container-fluid px-0">
       <div class="clothing-trust-strip">
         @foreach([
-          ['icon'=>'fal fa-truck',  'title'=>'FREE SHIPPING',   'text'=>'Free shipping on orders over $75'],
+          ['icon'=>'fal fa-truck',  'title'=>'FREE SHIPPING',   'text'=>'Free shipping on orders over ₹75'],
           ['icon'=>'fal fa-undo',   'title'=>'EASY RETURNS',    'text'=>'30-day return policy hassle free'],
           ['icon'=>'fal fa-lock',   'title'=>'SECURE PAYMENT',  'text'=>'100% secure payment guaranteed'],
           ['icon'=>'fal fa-award',  'title'=>'PREMIUM QUALITY', 'text'=>'High quality materials you can trust'],
