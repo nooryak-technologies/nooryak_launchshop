@@ -18,6 +18,9 @@ class UserVisibilityCheck
     public function handle(Request $request, Closure $next)
     {
         $user = getUser();
+        if (empty($user) || !is_object($user) || !isset($user->id)) {
+            return $next($request);
+        }
         if (Auth::check() && Auth::user()->id != $user->id && $user->online_status != 1 && $user->preview_template != 1) {
             return redirect()->route('front.index');
         } elseif (!Auth::check() && $user->online_status != 1 && $user->preview_template != 1) {

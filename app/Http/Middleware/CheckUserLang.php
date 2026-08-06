@@ -15,6 +15,9 @@ class CheckUserLang
     public function handle(Request $request, Closure $next)
     {
         $user = Auth::guard('web')->user() ?? getUser();
+        if (empty($user) || !is_object($user) || !isset($user->id)) {
+            return $next($request);
+        }
         $username = $user->username;
         $userId = $user->id;
 

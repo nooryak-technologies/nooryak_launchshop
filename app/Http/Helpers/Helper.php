@@ -607,6 +607,9 @@ if (!function_exists('getParam')) {
 if (!function_exists('cPackageHasSubdomain')) {
     function cPackageHasSubdomain($user)
     {
+        if (empty($user) || !is_object($user) || empty($user->id)) {
+            return false;
+        }
         $currPackageFeatures = UserPermissionHelper::packagePermission($user->id);
         $currPackageFeatures = json_decode($currPackageFeatures, true);
 
@@ -623,6 +626,9 @@ if (!function_exists('cPackageHasSubdomain')) {
 if (!function_exists('cPackageHasCdomain')) {
     function cPackageHasCdomain($user)
     {
+        if (empty($user) || !is_object($user) || empty($user->id)) {
+            return false;
+        }
         $currPackageFeatures = UserPermissionHelper::packagePermission($user->id);
         $currPackageFeatures = json_decode($currPackageFeatures, true);
 
@@ -638,6 +644,9 @@ if (!function_exists('getCdomain')) {
 
     function getCdomain($user)
     {
+        if (empty($user) || !is_object($user) || empty($user->id)) {
+            return false;
+        }
         $cdomains = $user->custom_domains()->where('status', 1);
         return $cdomains->count() > 0 ? $cdomains->orderBy('id', 'DESC')->first()->requested_domain : false;
     }
@@ -784,10 +793,14 @@ if (!function_exists('getUserNullCheck')) {
                     ->first();
 
 
+                if (empty($user)) {
+                    return null;
+                }
+
                 // if the current url is a subdomain
                 if ($host != env('WEBSITE_HOST')) {
                     if (!cPackageHasSubdomain($user)) {
-                        return view('errors.404');
+                        return null;
                     }
                 }
 
