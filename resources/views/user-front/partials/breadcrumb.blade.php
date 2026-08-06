@@ -1,6 +1,10 @@
 @php
   $isUrbanTheme = (!empty($userBs) && $userBs->theme == 'clothing');
   $isFashionTheme = (!empty($userBs) && $userBs->theme == 'fashion');
+  $isSkinflowTheme = (!empty($userBs) && $userBs->theme == 'skinflow');
+  $isJewelleryTheme = (!empty($userBs) && $userBs->theme == 'jewellery');
+
+  $reduceTitlePadding = ($isFashionTheme || $isSkinflowTheme || $isJewelleryTheme);
 
   if ($isUrbanTheme) {
     $breadcrumbBgImg = asset('assets/front/img/shop_banner_bg.png');
@@ -12,7 +16,7 @@
       : asset('assets/front/img/default_shop_banner.png');
   }
 @endphp
-<div class="page-title-area header-next" style="background-image: url('{{ $breadcrumbBgImg }}'); background-size: cover; background-position: center center; position: relative; {{ $isFashionTheme ? 'padding-top: 70px !important; padding-bottom: 50px !important;' : '' }}">
+<div class="page-title-area header-next" style="background-image: url('{{ $breadcrumbBgImg }}'); background-size: cover; background-position: center center; position: relative; {{ $reduceTitlePadding ? 'padding-top: 70px !important; padding-bottom: 50px !important;' : '' }}">
   @if($isUrbanTheme)
     <div class="page-title-overlay" style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(248, 245, 240, 0.65) 100%); pointer-events: none;"></div>
   @elseif($isFashionTheme)

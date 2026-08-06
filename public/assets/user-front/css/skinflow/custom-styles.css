@@ -267,3 +267,15 @@
     font-size: 14px;
   }
 }
+
+/* Skinflow Theme Page Title Top Padding Reduction */
+.page-title-area {
+  padding-top: 70px !important;
+  padding-bottom: 50px !important;
+}
+@media only screen and (min-width: 992px) {
+  .page-title-area {
+    padding-top: 70px !important;
+    padding-bottom: 50px !important;
+  }
+}
