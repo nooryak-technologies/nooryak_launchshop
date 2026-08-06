@@ -32,18 +32,7 @@ class Demo
             return redirect()->back();
         }
 
-        // Block writes for template-preview users (User Dashboard)
-        if ($isWriteMethod && !$request->is('X9_AdMiN-Portal_V7') && !$request->is('X9_AdMiN-Portal_V7/*') && Auth::guard('web')->check() && Auth::guard('web')->user()->preview_template == 1) {
-            if ($request->ajax()) {
-                return response()->json([
-                    'status' => 'error', 
-                    'message' => __('This is template demo dashboard message')
-                ]);
-            }
-            session()->flash('warning', __('This is template demo dashboard message'));
-            return redirect()->back();
-        }
-
+        // Allow CRUD operations on demo user dashboard
         return $next($request);
     }
 }
