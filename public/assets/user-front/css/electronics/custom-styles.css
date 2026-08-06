@@ -381,3 +381,8 @@
   transform: translateY(-50px);
 }
 
+/* Theme Scoped Header Bottom Margin */
+.header-bottom {
+  margin-top: 1rem !important;
+}
+
