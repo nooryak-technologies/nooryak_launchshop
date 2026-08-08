@@ -5,6 +5,15 @@
       ['code', request()->input('language')],
       ['user_id', Auth::guard('web')->user()->id],
   ])->first();
+  if (empty($selLang)) {
+      $selLang = \App\Models\User\Language::where([
+          ['user_id', Auth::guard('web')->user()->id],
+          ['is_default', 1],
+      ])->first();
+  }
+  if (empty($selLang)) {
+      $selLang = \App\Models\User\Language::where('user_id', Auth::guard('web')->user()->id)->first();
+  }
   $userLanguages = \App\Models\User\Language::where('user_id', Auth::guard('web')->user()->id)->get();
 
   $language_variation_data = [];
