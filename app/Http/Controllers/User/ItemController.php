@@ -1817,7 +1817,7 @@ class ItemController extends Controller
                 }
             }
 
-            foreach ($options as $opt) {
+            foreach ($options as $optIndex => $opt) {
                 $optName = $opt['option_name'];
                 $optPrice = $opt['price'];
                 $optStock = $opt['stock'];
@@ -1837,7 +1837,8 @@ class ItemController extends Controller
                             'variant_id' => $variant->id,
                             'variant_option_id' => $variantOption->id,
                             'language_id' => $lang->id,
-                            'option_name' => $optName
+                            'option_name' => $optName,
+                            'index_key' => $optIndex
                         ]);
                     }
                 }

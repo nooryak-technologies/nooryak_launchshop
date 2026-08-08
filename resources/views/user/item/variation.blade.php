@@ -114,6 +114,9 @@
                               ['product_variation_id', $variation->id],
                               ['language_id', $selLang->id],
                           ])->first();
+                          if (!$product_variation_content) {
+                              $product_variation_content = App\Models\User\ProductVariationContent::where('product_variation_id', $variation->id)->first();
+                          }
                         @endphp
                         <div class="col-md-6">
                           <div class="form-group">
@@ -151,41 +154,64 @@
 
                           <div class="col-md-3">
                             <div class="form-group">
-                              @php
-                                $selected_option = App\Models\User\ProductVariantOptionContent::where([
-                                    ['product_variant_option_id', $product_variation_option->id],
-                                    ['language_id', $selLang->id],
-                                ])->first();
-                                if ($selected_option) {
-                                    $variant_option_content = App\Models\VariantOptionContent::where(
-                                        'id',
-                                        intval($selected_option->option_name),
-                                    )->first();
-                                    if ($variant_option_content) {
-                                        $variant_option_contents = App\Models\VariantOptionContent::where([
-                                            ['variant_id', $variant_option_content->variant_id],
-                                            ['language_id', $selLang->id],
-                                        ])->get();
-                                    } else {
-                                        $variant_option_contents = [];
-                                    }
-                                } else {
-                                    $variant_option_contents = [];
-                                }
+                                @php
+                                  $selected_option = App\Models\User\ProductVariantOptionContent::where([
+                                      ['product_variant_option_id', $product_variation_option->id],
+                                      ['language_id', $selLang->id],
+                                  ])->first();
+                                  if (!$selected_option) {
+                                      $selected_option = App\Models\User\ProductVariantOptionContent::where('product_variant_option_id', $product_variation_option->id)->first();
+                                  }
 
-                              @endphp
-                              <label for="">{{ __('Option') }}
-                                <span class="text-danger">**</span>
-                              </label>
-                              <select name="{{ $variation->unique_id }}_option_name[]"
-                                class="form-control {{ $selLang->code }}_option_name">
-                                <option value="">{{ __('Select Option') }}</option>
-                                @foreach ($variant_option_contents as $option)
-                                  <option @selected($selected_option->option_name == $option->id) value="{{ $option->id }}">
-                                    {{ $option->option_name }}
-                                  </option>
-                                @endforeach
-                              </select>
+                                  $variant_option_contents = collect();
+                                  $selected_option_id = null;
+
+                                  if ($selected_option) {
+                                      $variant_option_content = App\Models\VariantOptionContent::where(
+                                          'id',
+                                          intval($selected_option->option_name),
+                                      )->first();
+                                      if ($variant_option_content) {
+                                          $variant_option_contents = App\Models\VariantOptionContent::where([
+                                              ['variant_id', $variant_option_content->variant_id],
+                                              ['language_id', $selLang->id],
+                                          ])->get();
+
+                                          $curLangOpt = App\Models\VariantOptionContent::where([
+                                              ['variant_id', $variant_option_content->variant_id],
+                                              ['language_id', $selLang->id],
+                                          ])->where(function($q) use ($variant_option_content) {
+                                              $q->where('variant_option_id', $variant_option_content->variant_option_id)
+                                                ->orWhere('index_key', $variant_option_content->index_key)
+                                                ->orWhere('option_name', $variant_option_content->option_name);
+                                          })->first();
+
+                                          $selected_option_id = $curLangOpt ? $curLangOpt->id : $variant_option_content->id;
+                                      }
+                                  }
+
+                                  if (($variant_option_contents->isEmpty() || count($variant_option_contents) == 0) && !empty($product_variation_content->variation_name)) {
+                                      $parentVarContent = App\Models\VariantContent::find($product_variation_content->variation_name);
+                                      if ($parentVarContent) {
+                                          $variant_option_contents = App\Models\VariantOptionContent::where([
+                                              ['variant_id', $parentVarContent->variant_id],
+                                              ['language_id', $selLang->id],
+                                          ])->get();
+                                      }
+                                  }
+                                @endphp
+                                <label for="">{{ __('Option') }}
+                                  <span class="text-danger">**</span>
+                                </label>
+                                <select name="{{ $variation->unique_id }}_option_name[]"
+                                  class="form-control {{ $selLang->code }}_option_name">
+                                  <option value="">{{ __('Select Option') }}</option>
+                                  @foreach ($variant_option_contents as $option)
+                                    <option {{ ($selected_option_id == $option->id || @$selected_option->option_name == $option->id || @$selected_option->option_name == $option->option_name) ? 'selected' : '' }} value="{{ $option->id }}">
+                                      {{ $option->option_name }}
+                                    </option>
+                                  @endforeach
+                                </select>
                               <p class="mb-0 text-danger em err{{ $variation->unique_id }}_option_name">
                             </div>
                           </div>
