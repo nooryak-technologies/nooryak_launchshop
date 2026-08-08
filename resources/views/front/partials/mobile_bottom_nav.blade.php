@@ -28,7 +28,7 @@
       <span class="mobile-nav-label">{{ __('THEMES') }}</span>
     </a>
 
-    <!-- 3. PRICING -->
+    <!-- 3. PRICING --> 
     <a href="{{ route('front.pricing') }}" class="mobile-nav-item {{ request()->routeIs('front.pricing') ? 'active' : '' }}">
       <div class="mobile-nav-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

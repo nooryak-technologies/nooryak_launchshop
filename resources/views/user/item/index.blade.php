@@ -3,6 +3,7 @@
 @php
   $selLang = \App\Models\User\Language::where('code', request()->input('language'))->first();
   $userLanguages = \App\Models\User\Language::where('user_id', Auth::guard('web')->user()->id)->get();
+  $csvBatchLimit = \App\Http\Helpers\UserPermissionHelper::getCsvBatchLimit(Auth::guard('web')->user()->id);
 @endphp
 @includeIf('user.partials.rtl-style')
 
@@ -74,6 +75,20 @@
               </div>
             </form>
 
+            @if ($csvBatchLimit > 0)
+              <button type="button" class="btn btn-warning text-white btn-sm font-weight-bold d-inline-flex align-items-center mr-1 mb-2 mb-md-0" style="border-radius: 8px; padding: 8px 14px; height: 38px; background: #ff9f43; border-color: #ff9f43;" data-toggle="modal" data-target="#bulkImagesModal" onclick="loadBulkImagesGallery()">
+                <i class="fas fa-images mr-1"></i> {{ __('Upload Images') }}
+              </button>
+              <a href="{{ route('user.item.sample_csv') }}" class="btn btn-outline-secondary btn-sm font-weight-bold d-inline-flex align-items-center mr-1 mb-2 mb-md-0" style="border-radius: 8px; padding: 8px 14px; height: 38px;" title="{{ __('Download Sample CSV') }}">
+                <i class="fas fa-file-csv mr-1"></i> {{ __('Sample CSV') }}
+              </a>
+              <button type="button" class="btn btn-info btn-sm font-weight-bold d-inline-flex align-items-center mr-1 mb-2 mb-md-0" style="border-radius: 8px; padding: 8px 14px; height: 38px;" data-toggle="modal" data-target="#importCsvModal">
+                <i class="fas fa-file-import mr-1"></i> {{ __('Import CSV') }}
+              </button>
+              <a href="{{ route('user.item.export_csv') . '?language=' . request()->input('language') }}" class="btn btn-success btn-sm font-weight-bold d-inline-flex align-items-center mr-1 mb-2 mb-md-0" style="border-radius: 8px; padding: 8px 14px; height: 38px;">
+                <i class="fas fa-file-export mr-1"></i> {{ __('Export CSV') }}
+              </a>
+            @endif
             <a href="{{ route('user.item.type') }}" class="btn btn-primary btn-sm font-weight-bold d-inline-flex align-items-center mb-2 mb-md-0" style="border-radius: 8px; padding: 8px 16px; height: 38px; background: #0d6efd; border-color: #0d6efd;">
               <i class="fas fa-plus mr-2"></i> {{ __('Add Item') }}
             </a>
@@ -129,7 +144,20 @@
                             <input type="checkbox" class="bulk-check" data-val="{{ $item->item_id }}">
                           </td>
                           <td class="align-middle" style="border-top: 1px solid rgba(0,0,0,0.04); border-bottom: 1px solid rgba(0,0,0,0.04);">
-                            <img src="{{ $item->thumbnail ? asset('assets/front/img/user/items/thumbnail/' . $item->thumbnail) : asset('assets/admin/img/noimage.jpg') }}" alt="Product Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(0,0,0,0.08);">
+                            @php
+                              $thumbSrc = asset('assets/admin/img/noimage.jpg');
+                              if (!empty($item->thumbnail)) {
+                                  if (filter_var($item->thumbnail, FILTER_VALIDATE_URL)) {
+                                      $thumbSrc = $item->thumbnail;
+                                  } else {
+                                      $cleanImgName = basename(parse_url($item->thumbnail, PHP_URL_PATH));
+                                      if (!empty($cleanImgName) && file_exists(public_path('assets/front/img/user/items/thumbnail/' . $cleanImgName))) {
+                                          $thumbSrc = asset('assets/front/img/user/items/thumbnail/' . $cleanImgName);
+                                      }
+                                  }
+                              }
+                            @endphp
+                            <img src="{{ $thumbSrc }}" onerror="this.onerror=null;this.src='{{ asset('assets/admin/img/noimage.jpg') }}';" alt="Product Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(0,0,0,0.08);">
                           </td>
                           <td class="align-middle font-weight-bold" style="border-top: 1px solid rgba(0,0,0,0.04); border-bottom: 1px solid rgba(0,0,0,0.04);">
                             <a href="{{ route('front.user.productDetails', [Auth::user('web')->username, 'slug' => $item->slug]) }}"
@@ -295,4 +323,256 @@
       </div>
     </div>
   </div>
+
+  <!-- Import CSV Modal -->
+  <div class="modal fade text-left" id="importCsvModal" tabindex="-1" role="dialog" aria-labelledby="importCsvModalTitle" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content border-0 shadow" style="border-radius: 12px;">
+        <div class="modal-header border-bottom">
+          <h5 class="modal-title font-weight-bold" id="importCsvModalTitle">
+            <i class="fas fa-file-import text-info mr-2"></i>{{ __('Import Products via CSV') }}
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="importModalCloseBtn">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="{{ route('user.item.import_csv') }}" method="POST" enctype="multipart/form-data" id="csvImportForm">
+          @csrf
+          <div class="modal-body p-4">
+            <div id="importFormFields">
+              <div class="alert alert-info py-2 px-3 mb-3" style="border-radius: 8px; font-size: 13px;">
+                <i class="fas fa-info-circle mr-1"></i> {{ __('Upload CSV file to import products in bulk. Product import respects your package limit.') }}
+              </div>
+              <div class="form-group p-0 mb-3">
+                <label class="font-weight-bold mb-2">{{ __('Select CSV File') }} <span class="text-danger">*</span></label>
+                <input type="file" name="csv_file" class="form-control-file p-2 border rounded" accept=".csv, .txt" required style="border-radius: 8px;">
+                <small class="form-text text-muted mt-2">
+                  {{ __('Allowed file type: .csv (Max: 5MB)') }}
+                </small>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                <span class="text-muted" style="font-size: 12px;">{{ __('Need standard CSV format?') }}</span>
+                <a href="{{ route('user.item.sample_csv') }}" class="btn btn-link btn-sm p-0 font-weight-bold">
+                  <i class="fas fa-download mr-1"></i>{{ __('Download Sample CSV') }}
+                </a>
+              </div>
+            </div>
+            <!-- Loading Animation -->
+            <div id="importLoadingState" class="d-none text-center py-4">
+              <div class="spinner-border text-info mb-3" style="width: 3.5rem; height: 3.5rem;" role="status">
+                <span class="sr-only">{{ __('Loading...') }}</span>
+              </div>
+              <h5 class="font-weight-bold text-dark mb-2">{{ __('Importing Products...') }}</h5>
+              <p class="text-muted mb-0" style="font-size: 13px;">{{ __('Please wait while your CSV file is being processed and products are imported.') }}</p>
+            </div>
+          </div>
+          <div class="modal-footer px-4 pb-4 border-0" id="importModalFooter">
+            <button type="button" class="btn btn-outline-secondary font-weight-bold" style="border-radius: 8px;" data-dismiss="modal">{{ __('Close') }}</button>
+            <button type="submit" id="importSubmitBtn" class="btn btn-info font-weight-bold" style="border-radius: 8px;">
+              <i class="fas fa-upload mr-1"></i>{{ __('Upload & Import') }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bulk Images Upload Modal -->
+  <div class="modal fade text-left" id="bulkImagesModal" tabindex="-1" role="dialog" aria-labelledby="bulkImagesModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content border-0 shadow" style="border-radius: 12px;">
+        <div class="modal-header border-bottom" style="background: #f8f9fa; border-radius: 12px 12px 0 0;">
+          <h5 class="modal-title font-weight-bold" id="bulkImagesModalTitle">
+            <i class="fas fa-images text-warning mr-2"></i>{{ __('Bulk Product Images Uploader') }}
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="alert alert-warning py-2 px-3 mb-3" style="border-radius: 8px; font-size: 13px; background: #fff8ec; border-color: #ffe6b3; color: #856404;">
+            <i class="fas fa-lightbulb mr-1"></i> {{ __('Upload product images from your computer here first. Copy the filename or URL to use in your CSV file before importing.') }}
+          </div>
+
+          <!-- Drag & Drop / File Input Box -->
+          <form id="bulkImagesForm" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group border rounded p-4 text-center bg-light" style="border: 2px dashed #ff9f43 !important; border-radius: 10px; cursor: pointer;" onclick="document.getElementById('bulkImageInput').click();">
+              <i class="fas fa-cloud-upload-alt text-warning mb-2" style="font-size: 42px;"></i>
+              <h6 class="font-weight-bold text-dark mb-1">{{ __('Click or Drag & Drop Images Here') }}</h6>
+              <p class="text-muted mb-2" style="font-size: 12px;">{{ __('Select multiple image files (JPG, PNG, WEBP, SVG max 10MB per file)') }}</p>
+              <input type="file" id="bulkImageInput" name="images[]" multiple accept="image/*" class="d-none" onchange="handleBulkFilesSelected(this)">
+              <div id="selectedFilesBadge" class="mt-2 text-info font-weight-bold" style="font-size: 13px;"></div>
+            </div>
+            <div class="text-right mb-4">
+              <button type="submit" id="uploadImagesSubmitBtn" class="btn btn-warning text-white font-weight-bold" style="border-radius: 8px; background: #ff9f43; border-color: #ff9f43;" disabled>
+                <i class="fas fa-upload mr-1"></i>{{ __('Upload All Selected Images') }}
+              </button>
+            </div>
+          </form>
+
+          <!-- Uploaded Gallery Header -->
+          <div class="d-flex justify-content-between align-items-center mb-3 pt-3 border-top">
+            <h6 class="font-weight-bold mb-0 text-dark">
+              <i class="fas fa-photo-video text-secondary mr-1"></i> {{ __('Uploaded Images Gallery') }}
+            </h6>
+            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="loadBulkImagesGallery()" style="border-radius: 6px; font-size: 12px;">
+              <i class="fas fa-sync-alt mr-1"></i>{{ __('Refresh') }}
+            </button>
+          </div>
+
+          <!-- Gallery List Container -->
+          <div id="bulkImagesGallery" class="row" style="max-height: 320px; overflow-y: auto;">
+            <div class="col-12 text-center py-4 text-muted">
+              <i class="fas fa-spinner fa-spin mr-1"></i>{{ __('Loading gallery...') }}
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer px-4 pb-4 border-0">
+          <button type="button" class="btn btn-secondary font-weight-bold" style="border-radius: 8px;" data-dismiss="modal">{{ __('Close') }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var csvForm = document.getElementById('csvImportForm');
+      if (csvForm) {
+        csvForm.addEventListener('submit', function() {
+          document.getElementById('importFormFields').classList.add('d-none');
+          document.getElementById('importLoadingState').classList.remove('d-none');
+          document.getElementById('importModalFooter').classList.add('d-none');
+          var closeBtn = document.getElementById('importModalCloseBtn');
+          if (closeBtn) closeBtn.style.display = 'none';
+        });
+      }
+    });
+
+    function handleBulkFilesSelected(input) {
+      var files = input.files;
+      var badge = document.getElementById('selectedFilesBadge');
+      var btn = document.getElementById('uploadImagesSubmitBtn');
+      if (files && files.length > 0) {
+        badge.innerHTML = '<i class="fas fa-check-circle text-success mr-1"></i> ' + files.length + ' {{ __("files selected") }}';
+        btn.removeAttribute('disabled');
+      } else {
+        badge.innerHTML = '';
+        btn.setAttribute('disabled', 'disabled');
+      }
+    }
+
+    function loadBulkImagesGallery() {
+      var gallery = document.getElementById('bulkImagesGallery');
+      if (!gallery) return;
+      gallery.innerHTML = '<div class="col-12 text-center py-4 text-muted"><i class="fas fa-spinner fa-spin mr-1"></i> {{ __("Loading gallery...") }}</div>';
+
+      fetch('{{ route("user.item.get_bulk_images") }}')
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'success' && data.images.length > 0) {
+            var html = '';
+            data.images.forEach(function(img) {
+              html += '<div class="col-6 col-sm-4 col-md-3 mb-3" id="imgcard-' + encodeURIComponent(img.filename) + '">';
+              html += '  <div class="card h-100 border shadow-sm p-2 text-center" style="border-radius: 10px;">';
+              html += '    <img src="' + img.url + '" onerror="this.onerror=null;this.src=\'{{ asset("assets/admin/img/noimage.jpg") }}\';" style="height: 80px; object-fit: cover; border-radius: 6px;" class="w-100 mb-2">';
+              html += '    <small class="text-truncate d-block font-weight-bold text-dark mb-1" style="font-size: 11px;" title="' + img.filename + '">' + img.filename + '</small>';
+              html += '    <div class="d-flex justify-content-between mt-1">';
+              html += '      <button type="button" class="btn btn-outline-info btn-xs font-weight-bold flex-grow-1 mr-1" onclick="copyImageFilename(\'' + img.filename + '\', this)" style="font-size: 10px; border-radius: 4px; padding: 2px 4px;">';
+              html += '        <i class="fas fa-copy mr-1"></i>{{ __("Copy") }}';
+              html += '      </button>';
+              html += '      <button type="button" class="btn btn-outline-danger btn-xs font-weight-bold" onclick="deleteBulkImage(\'' + img.filename + '\', this)" style="font-size: 10px; border-radius: 4px; padding: 2px 6px;" title="{{ __("Delete Image") }}">';
+              html += '        <i class="fas fa-trash-alt"></i>';
+              html += '      </button>';
+              html += '    </div>';
+              html += '  </div>';
+              html += '</div>';
+            });
+            gallery.innerHTML = html;
+          } else {
+            gallery.innerHTML = '<div class="col-12 text-center py-4 text-muted" style="font-size: 13px;">{{ __("No uploaded images found yet.") }}</div>';
+          }
+        })
+        .catch(err => {
+          gallery.innerHTML = '<div class="col-12 text-center py-4 text-danger">{{ __("Failed to load images.") }}</div>';
+        });
+    }
+
+    function copyImageFilename(filename, btn) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(filename).then(function() {
+          var oldText = btn.innerHTML;
+          btn.innerHTML = '<i class="fas fa-check text-success"></i> {{ __("Copied!") }}';
+          setTimeout(function() { btn.innerHTML = oldText; }, 2000);
+        });
+      } else {
+        var tempInput = document.createElement('input');
+        tempInput.value = filename;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        var oldText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check text-success"></i> {{ __("Copied!") }}';
+        setTimeout(function() { btn.innerHTML = oldText; }, 2000);
+      }
+    }
+
+    document.getElementById('bulkImagesForm')?.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var formData = new FormData(this);
+      var btn = document.getElementById('uploadImagesSubmitBtn');
+      btn.setAttribute('disabled', 'disabled');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> {{ __("Uploading...") }}';
+
+      fetch('{{ route("user.item.upload_bulk_images") }}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        btn.innerHTML = '<i class="fas fa-upload mr-1"></i> {{ __("Upload All Selected Images") }}';
+        if (data.status === 'success') {
+          document.getElementById('bulkImageInput').value = '';
+          document.getElementById('selectedFilesBadge').innerHTML = '<span class="text-success">' + data.message + '</span>';
+          loadBulkImagesGallery();
+        } else {
+          alert(data.message || '{{ __("Upload failed.") }}');
+        }
+      })
+      .catch(err => {
+        btn.innerHTML = '<i class="fas fa-upload mr-1"></i> {{ __("Upload All Selected Images") }}';
+        alert('{{ __("Upload failed. Check image file sizes.") }}');
+      });
+    });
+
+    function deleteBulkImage(filename, btn) {
+      if (!confirm('{{ __("Are you sure you want to delete this image file?") }}')) return;
+      btn.setAttribute('disabled', 'disabled');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+      fetch('{{ route("user.item.delete_bulk_image") }}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({ filename: filename })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          loadBulkImagesGallery();
+        } else {
+          alert(data.message || '{{ __("Failed to delete image.") }}');
+        }
+      })
+      .catch(err => {
+        alert('{{ __("Error deleting image.") }}');
+      });
+    }
+  </script>
 @endsection
