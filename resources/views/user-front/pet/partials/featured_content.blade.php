@@ -109,6 +109,20 @@
                               'sliders',
                           ])
                           ->first();
+
+                      if (!$product_details) {
+                          $product_details = \App\Models\User\UserItem::where([
+                              ['id', $single_item->item_id],
+                              ['status', 1],
+                          ])
+                              ->with([
+                                  'itemContents' => function ($q) use ($uLang) {
+                                      $q->where('language_id', '=', $uLang);
+                                  },
+                                  'sliders',
+                              ])
+                              ->first();
+                      }
                     @endphp
                     @if (!is_null(@$product_details->itemContents[0]->slug))
                       <div class="col-xl-3 col-lg-4 col-6">
