@@ -166,7 +166,7 @@ class HomeController extends Controller
                 ->orderBy('user_items.updated_at', 'DESC')
                 ->select('user_items.*')
                 ->distinct()
-                ->take($shopSet->latest_item_count)
+                ->take($data['ubs']->theme == 'electronics' ? 4 : $shopSet->latest_item_count)
                 ->get();
         }
 

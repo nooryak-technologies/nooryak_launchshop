@@ -122,6 +122,9 @@
           </div>
         </div>
         <div class="product-list mb-30">
+          @php
+            $latest_items = isset($latest_items) ? $latest_items->take(4) : collect();
+          @endphp
           @if (count($latest_items) == 0)
             <h5 class="title text-center mt-30">
               {{ $userSec->category_section_title ?? ($keywords['NO PRODUCTS FOUND'] ?? __('NO PRODUCTS FOUND')) }}

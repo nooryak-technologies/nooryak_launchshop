@@ -6,7 +6,7 @@
       <div class="mobile-navbar-inner">
         <a href="{{ route('front.user.detail.view', getParam()) }}" class="logo">
           <img src="{{ !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png') }}"
-            alt="{{ $userBs->website_title ?? 'logo' }}">
+            alt="{{ $userBs->website_title ?? 'logo' }}" style="max-height: 38px; max-width: 160px; width: auto; height: auto; object-fit: contain;">
         </a>
         <button class="mobile-menu-toggler" type="button">
           <span></span><span></span><span></span>
@@ -118,7 +118,7 @@
         <div class="brand-logo">
           <a href="{{ route('front.user.detail.view', getParam()) }}" title="" target="_self">
             <img src="{{ !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png') }}"
-              alt="{{ $userBs->website_title ?? 'logo' }}">
+              alt="{{ $userBs->website_title ?? 'logo' }}" style="max-height: 48px; max-width: 190px; width: auto; height: auto; object-fit: contain;">
           </a>
         </div>
       </div>
