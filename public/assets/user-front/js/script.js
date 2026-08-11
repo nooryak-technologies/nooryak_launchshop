@@ -519,6 +519,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 var endD = $(this).data('end_date');
                 var endT = $(this).data('end_time') || '';
                 var item_id = $(this).data('item_id');
+                var isDemo = $(this).data('is_demo') == 1 || $(this).data('is_demo') == '1';
 
                 // Convert endD + endT to Date object
                 var fullEndStr = endD + (endT ? ' ' + endT : ' 23:59:59');
@@ -536,6 +537,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 var hours = Math.floor((timeLeft - (days * 86400)) / 3600);
                 var minutes = Math.floor((timeLeft - (days * 86400) - (hours * 3600)) / 60);
                 var seconds = Math.floor(timeLeft - (days * 86400) - (hours * 3600) - (minutes * 60));
+
+                if (isDemo && days > 2) {
+                    days = 2;
+                }
 
                 // Add leading zeros if necessary
                 days = days < 10 ? "0" + days : days;
