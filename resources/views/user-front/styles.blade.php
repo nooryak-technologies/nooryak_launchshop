@@ -799,7 +799,7 @@ footer {
   }
   .copy-right-area, .footer-bottom {
     padding-top: 15px !important;
-    padding-bottom: 85px !important;
+    /* padding-bottom: 85px !important; */
     margin-bottom: 0 !important;
     text-align: center !important;
     display: block !important;
