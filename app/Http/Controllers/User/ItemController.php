@@ -1822,17 +1822,21 @@ class ItemController extends Controller
                 $optPrice = $opt['price'];
                 $optStock = $opt['stock'];
 
-                $variantOption = VariantOption::where('variant_id', $variant->id)->whereHas('variantOptionContents', function ($q) use ($optName) {
-                    $q->where('option_name', $optName);
-                })->first();
+                // Find specific VariantOptionContent for this variant & option name (case-insensitive)
+                $optContent = VariantOptionContent::where('variant_id', $variant->id)
+                    ->where(function ($q) use ($optName) {
+                        $q->where('option_name', 'like', $optName)
+                            ->orWhereRaw('LOWER(TRIM(option_name)) = ?', [strtolower(trim($optName))]);
+                    })
+                    ->first();
 
-                if (!$variantOption) {
+                if (!$optContent) {
                     $variantOption = VariantOption::create([
                         'user_id' => $userId,
                         'variant_id' => $variant->id
                     ]);
                     foreach ($languages as $lang) {
-                        VariantOptionContent::create([
+                        $createdOptContent = VariantOptionContent::create([
                             'user_id' => $userId,
                             'variant_id' => $variant->id,
                             'variant_option_id' => $variantOption->id,
@@ -1840,6 +1844,9 @@ class ItemController extends Controller
                             'option_name' => $optName,
                             'index_key' => $optIndex
                         ]);
+                        if (!$optContent && $lang->id == $languages->first()->id) {
+                            $optContent = $createdOptContent;
+                        }
                     }
                 }
 
@@ -1853,15 +1860,27 @@ class ItemController extends Controller
                 ]);
 
                 foreach ($languages as $lang) {
-                    $optContent = VariantOptionContent::where('variant_option_id', $variantOption->id)->where('language_id', $lang->id)->first();
+                    $specificOptContent = null;
                     if ($optContent) {
+                        $specificOptContent = VariantOptionContent::where([
+                            ['variant_id', $variant->id],
+                            ['language_id', $lang->id]
+                        ])->where(function ($q) use ($optContent, $optName) {
+                            $q->where('id', $optContent->id)
+                                ->orWhere('index_key', $optContent->index_key)
+                                ->orWhere('variant_option_id', $optContent->variant_option_id)
+                                ->orWhere('option_name', 'like', $optName);
+                        })->first();
+                    }
+
+                    if ($specificOptContent) {
                         ProductVariantOptionContent::create([
                             'user_id' => $userId,
                             'item_id' => $item->id,
                             'product_variation_id' => $productVariation->id,
                             'product_variant_option_id' => $pOption->id,
                             'language_id' => $lang->id,
-                            'option_name' => $optContent->id
+                            'option_name' => $specificOptContent->id
                         ]);
                     }
                 }
