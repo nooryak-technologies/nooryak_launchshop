@@ -27,9 +27,11 @@
             <div class="footer-logo" style="margin-bottom:20px;">
               <a href="{{ route('front.user.detail.view', getParam()) }}">
                 @if(!empty(@$footer->footer_logo))
-                  <img src="{{ asset('assets/front/img/footer/' . @$footer->footer_logo) }}" alt="Logo">
+                  <img src="{{ asset('assets/front/img/footer/' . @$footer->footer_logo) }}" alt="Logo" style="max-height: 60px; max-width: 220px; object-fit: contain;">
+                @elseif(!empty(@$userBs->logo))
+                  <img src="{{ asset('assets/front/img/user/' . @$userBs->logo) }}" alt="Logo" style="max-height: 60px; max-width: 220px; object-fit: contain;">
                 @else
-                  <span style="font-family:var(--clothing-body-font);font-size:26px;font-weight:700;letter-spacing:0.5px;color:#000;text-transform:uppercase;">{{ $user->username }}<span>.</span></span>
+                  <span style="font-family:var(--clothing-body-font);font-size:26px;font-weight:700;letter-spacing:0.5px;color:#000;text-transform:uppercase;">{{ $userBs->website_title ?? $user->username }}<span>.</span></span>
                 @endif
               </a>
             </div>
