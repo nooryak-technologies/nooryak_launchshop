@@ -235,13 +235,14 @@
               </h5>
             @else
               {{-- Slick slider: links straight to shop filtered by category --}}
-              <div class="category-slider mx-auto" id="cat-slider-electronics" style="max-width: 900px;"
-                data-slick='{"dots": false, "arrows": true, "autoplay": true, "autoplaySpeed": 3000, "slidesToShow": 5, "slidesToScroll": 1,
+              <div class="category-slider mx-auto" id="cat-slider-electronics" style="width: 100%;"
+                data-slick='{"dots": false, "arrows": true, "autoplay": true, "autoplaySpeed": 3000, "slidesToShow": 7, "slidesToScroll": 1,
                   "responsive": [
-                    {"breakpoint": 1200, "settings": {"slidesToShow": 5}},
-                    {"breakpoint": 992,  "settings": {"slidesToShow": 4}},
-                    {"breakpoint": 768,  "settings": {"slidesToShow": 3}},
-                    {"breakpoint": 576,  "settings": {"slidesToShow": 2}},
+                    {"breakpoint": 1400, "settings": {"slidesToShow": 7}},
+                    {"breakpoint": 1200, "settings": {"slidesToShow": 6}},
+                    {"breakpoint": 992,  "settings": {"slidesToShow": 5}},
+                    {"breakpoint": 768,  "settings": {"slidesToShow": 4}},
+                    {"breakpoint": 576,  "settings": {"slidesToShow": 3}},
                     {"breakpoint": 480,  "settings": {"slidesToShow": 2}}
                   ]
                 }'>
