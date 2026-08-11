@@ -174,10 +174,30 @@
                                   $selected_option_id = null;
 
                                   if ($selected_option) {
-                                      $variant_option_content = App\Models\VariantOptionContent::where(
-                                          'id',
-                                          intval($selected_option->option_name),
-                                      )->first();
+                                      $variant_option_content = null;
+                                      if (is_numeric($selected_option->option_name)) {
+                                          $variant_option_content = App\Models\VariantOptionContent::where(
+                                              'id',
+                                              intval($selected_option->option_name),
+                                          )->first();
+                                      }
+
+                                      if (!$variant_option_content) {
+                                          $varContentId = @$product_variation_content->variation_name;
+                                          $parentVarContent = $varContentId ? App\Models\VariantContent::find($varContentId) : null;
+                                          $varId = $parentVarContent ? $parentVarContent->variant_id : null;
+
+                                          $variant_option_content = App\Models\VariantOptionContent::where(function ($q) use ($varId) {
+                                              if ($varId) {
+                                                  $q->where('variant_id', $varId);
+                                              }
+                                          })
+                                          ->where(function ($q) use ($selected_option) {
+                                              $q->where('option_name', 'like', $selected_option->option_name)
+                                                ->orWhereRaw('LOWER(TRIM(option_name)) = ?', [strtolower(trim($selected_option->option_name))]);
+                                          })->first();
+                                      }
+
                                       if ($variant_option_content) {
                                           $variant_option_contents = App\Models\VariantOptionContent::where([
                                               ['variant_id', $variant_option_content->variant_id],
@@ -187,10 +207,14 @@
                                           $curLangOpt = App\Models\VariantOptionContent::where([
                                               ['variant_id', $variant_option_content->variant_id],
                                               ['language_id', $selLang->id],
-                                          ])->where(function($q) use ($variant_option_content) {
-                                              $q->where('variant_option_id', $variant_option_content->variant_option_id)
-                                                ->orWhere('index_key', $variant_option_content->index_key)
-                                                ->orWhere('option_name', $variant_option_content->option_name);
+                                          ])->where(function($q) use ($variant_option_content, $selected_option) {
+                                              $q->where('id', $variant_option_content->id)
+                                                ->orWhere(function($subQ) use ($variant_option_content) {
+                                                    $subQ->where('index_key', $variant_option_content->index_key)
+                                                         ->where('variant_option_id', $variant_option_content->variant_option_id);
+                                                })
+                                                ->orWhere('option_name', 'like', @$selected_option->option_name)
+                                                ->orWhereRaw('LOWER(TRIM(option_name)) = ?', [strtolower(trim(@$selected_option->option_name))]);
                                           })->first();
 
                                           $selected_option_id = $curLangOpt ? $curLangOpt->id : $variant_option_content->id;
@@ -214,7 +238,12 @@
                                   class="form-control {{ $selLang->code }}_option_name">
                                   <option value="">{{ __('Select Option') }}</option>
                                   @foreach ($variant_option_contents as $option)
-                                    <option {{ ($selected_option_id == $option->id || @$selected_option->option_name == $option->id || @$selected_option->option_name == $option->option_name) ? 'selected' : '' }} value="{{ $option->id }}">
+                                    @php
+                                      $isSel = ($selected_option_id == $option->id) ||
+                                               (@$selected_option->option_name == $option->id) ||
+                                               (strtolower(trim(@$selected_option->option_name)) == strtolower(trim($option->option_name)));
+                                    @endphp
+                                    <option {{ $isSel ? 'selected' : '' }} value="{{ $option->id }}">
                                       {{ $option->option_name }}
                                     </option>
                                   @endforeach

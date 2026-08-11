@@ -1867,9 +1867,12 @@ class ItemController extends Controller
                             ['language_id', $lang->id]
                         ])->where(function ($q) use ($optContent, $optName) {
                             $q->where('id', $optContent->id)
-                                ->orWhere('index_key', $optContent->index_key)
-                                ->orWhere('variant_option_id', $optContent->variant_option_id)
-                                ->orWhere('option_name', 'like', $optName);
+                                ->orWhere('option_name', 'like', $optName)
+                                ->orWhereRaw('LOWER(TRIM(option_name)) = ?', [strtolower(trim($optName))])
+                                ->orWhere(function ($subQ) use ($optContent) {
+                                    $subQ->where('index_key', $optContent->index_key)
+                                        ->where('variant_option_id', $optContent->variant_option_id);
+                                });
                         })->first();
                     }
 
