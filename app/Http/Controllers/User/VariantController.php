@@ -322,7 +322,7 @@ class VariantController extends Controller
     public function getValidation($user_languages, $request)
     {
         $rules = [
-            'category_id' => 'required',
+            'category_id' => 'nullable',
         ];
         foreach ($user_languages as $user_language) {
             $code = $user_language->code;

@@ -51,13 +51,18 @@ class ShopController extends Controller
         $selected_subcategory_id = $selected_subcategory ? $selected_subcategory->id : null;
 
         if (!is_null($selected_category_id)) {
-            $variants = VariantContent::where([['user_id', $user->id], ['category_id', $selected_category_id]])
+            $variants = VariantContent::where('user_id', $user->id)
+                ->where(function ($q) use ($selected_category_id) {
+                    $q->where('category_id', $selected_category_id)->orWhereNull('category_id');
+                })
                 ->when($selected_subcategory_id, function ($query) use ($selected_subcategory_id) {
                     return $query->where('sub_category_id', $selected_subcategory_id);
                 })
                 ->get();
         } else {
-            $variants = [];
+            $variants = VariantContent::where('user_id', $user->id)
+                ->whereNull('category_id')
+                ->get();
         }
         $data['variants'] = $variants;
 
@@ -405,14 +410,18 @@ class ShopController extends Controller
             }
         }
 
-        $variants = collect();
-        if (!is_null($category_id)) {
-            $variants = VariantContent::where([['user_id', $user->id], ['category_id', $category_id]])
-                ->when($subcategory_id, function ($query) use ($subcategory_id) {
-                    return $query->where('sub_category_id', $subcategory_id);
-                })
-                ->get();
-        }
+        $variants = VariantContent::where('user_id', $user->id)
+            ->where(function ($q) use ($category_id) {
+                if (!is_null($category_id)) {
+                    $q->where('category_id', $category_id)->orWhereNull('category_id');
+                } else {
+                    $q->whereNull('category_id');
+                }
+            })
+            ->when($subcategory_id, function ($query) use ($subcategory_id) {
+                return $query->where('sub_category_id', $subcategory_id);
+            })
+            ->get();
 
         if ($request->filled('subcategory') && $variants == '[]') {
             $items = UserItemContent::where([

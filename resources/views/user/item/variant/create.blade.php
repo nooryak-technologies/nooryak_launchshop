@@ -95,10 +95,10 @@
                     @endphp
                     <div class="col-md-3 category_dropdown">
                       <div class="form-group">
-                        <label for="">{{ __('Category') }}<span class="text-danger">**</span></label>
+                        <label for="">{{ __('Category') }}</label>
                         <select class="form-control variation_category" data-language_id="{{ $selLang->id }}"
                           data-language_code="{{ $selLang->code }}" name="category_id">
-                          <option value="">{{ __('Select Category') }}</option>
+                          <option value="">{{ __('All Categories (Applies to all products)') }}</option>
                           @foreach ($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                           @endforeach

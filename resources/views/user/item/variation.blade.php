@@ -30,11 +30,18 @@
       $category_id = $item_content->category_id ?? null;
       $subcategory_id = $item_content->subcategory_id ?? null;
 
-      $variation_contents = App\Models\VariantContent::where('category_id', $category_id)
-          ->when($subcategory_id, function ($query, $subcategory_id) {
-              return $query->orWhere('sub_category_id', $subcategory_id);
-          })
-          ->get();
+      $variation_contents = App\Models\VariantContent::where([
+          ['user_id', Auth::guard('web')->user()->id],
+          ['language_id', $language->id],
+      ])
+      ->where(function ($query) use ($category_id, $subcategory_id) {
+          $query->where('category_id', $category_id)
+              ->orWhereNull('category_id');
+          if ($subcategory_id) {
+              $query->orWhere('sub_category_id', $subcategory_id);
+          }
+      })
+      ->get();
 
       $language_variation_data[$language->id] = $variation_contents;
   }

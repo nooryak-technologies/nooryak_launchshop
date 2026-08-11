@@ -110,10 +110,10 @@
                   <div class="row ">
                     <div class="col-md-3 category_dropdown">
                       <div class="form-group">
-                        <label for="">{{ __('Category') }} <span class="text-danger">**</span></label>
+                        <label for="">{{ __('Category') }}</label>
                         <select class="form-control variation_category" data-language_id="{{ $selLang->id }}"
                           data-language_code="{{ $selLang->code }}" name="category_id">
-                          <option value="">{{ __('Select Category') }}</option>
+                          <option value="" @selected(empty($variant_content->category_id))>{{ __('All Categories (Applies to all products)') }}</option>
                           @foreach ($categories as $category)
                             <option @selected($category->id == $variant_content->category_id) value="{{ $category->id }}">{{ $category->name }}
                             </option>
@@ -128,7 +128,7 @@
                     </div>
                     <div class="col-md-3 subcategory_dropdown">
                       <div class="form-group">
-                        <label for="">{{ __('Subcategory') }} <span class="text-danger">**</span></label>
+                        <label for="">{{ __('Subcategory') }}</label>
                         <select class="form-control variation_subcategory" name="sub_category_id">
                           <option value="">{{ __('Select Subcategory') }}
                           </option>

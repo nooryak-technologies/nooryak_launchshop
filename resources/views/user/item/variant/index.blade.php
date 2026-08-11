@@ -140,7 +140,7 @@
                               <span>{{ $item->name }}</span>
                             </div>
                           </td>
-                          <td style="padding: 15px; vertical-align: middle; border-top: 1px solid rgba(0,0,0,0.05);" class="dark-text">{{ @$item->category->name }}</td>
+                          <td style="padding: 15px; vertical-align: middle; border-top: 1px solid rgba(0,0,0,0.05);" class="dark-text">{{ @$item->category->name ?? __('All Categories') }}</td>
                           <td style="padding: 15px; vertical-align: middle; border-top: 1px solid rgba(0,0,0,0.05);" class="dark-text">{{ @$item->sub_category->name ?? '-' }}</td>
                           <td style="padding: 15px; vertical-align: middle; border-top: 1px solid rgba(0,0,0,0.05);">
                             @if (count($options) > 0)
