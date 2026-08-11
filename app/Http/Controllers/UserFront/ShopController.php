@@ -51,7 +51,7 @@ class ShopController extends Controller
         $selected_subcategory_id = $selected_subcategory ? $selected_subcategory->id : null;
 
         if (!is_null($selected_category_id)) {
-            $variants = VariantContent::where('user_id', $user->id)
+            $variants = VariantContent::where([['user_id', $user->id], ['language_id', $uLang]])
                 ->where(function ($q) use ($selected_category_id) {
                     $q->where('category_id', $selected_category_id)->orWhereNull('category_id');
                 })
@@ -60,11 +60,11 @@ class ShopController extends Controller
                 })
                 ->get();
         } else {
-            $variants = VariantContent::where('user_id', $user->id)
+            $variants = VariantContent::where([['user_id', $user->id], ['language_id', $uLang]])
                 ->whereNull('category_id')
                 ->get();
         }
-        $data['variants'] = $variants;
+        $data['variants'] = $variants->unique('variant_id');
 
         $category = $subcategory = $min = $max = $keyword = $sort = null;
 
@@ -202,7 +202,7 @@ class ShopController extends Controller
             ->where([['user_id', $user->id], ['status', 1]])
             ->select('id')
             ->first();
-        $data['variants'] = VariantContent::where([['language_id', $uLang], ['user_id', $user->id]])->get();
+        $data['variants'] = VariantContent::where([['language_id', $uLang], ['user_id', $user->id]])->get()->unique('variant_id');
 
         $category = $subcategory = $min = $max = $keyword = $sort = $rating = $variants = $on_sale = null;
 
@@ -410,7 +410,7 @@ class ShopController extends Controller
             }
         }
 
-        $variants = VariantContent::where('user_id', $user->id)
+        $variants = VariantContent::where([['user_id', $user->id], ['language_id', $userCurrentLang->id]])
             ->where(function ($q) use ($category_id) {
                 if (!is_null($category_id)) {
                     $q->where('category_id', $category_id)->orWhereNull('category_id');
@@ -443,10 +443,10 @@ class ShopController extends Controller
                     }
                 }
             }
-            $variants = VariantContent::whereIn('id', $variantIds)->get();
+            $variants = VariantContent::whereIn('id', $variantIds)->where('language_id', $userCurrentLang->id)->get();
         }
 
-        $data['variants'] = $variants;
+        $data['variants'] = $variants->unique('variant_id');
         return view('user-front.variants', $data)->render();
     }
 
