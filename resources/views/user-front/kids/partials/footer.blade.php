@@ -134,7 +134,7 @@
   <div class="copy-right-area border-top">
     <div class="container">
       <div class="copy-right-content">
-        {!! replaceBaseUrl(@$footer->copyright_text ?? null) !!}
+        <span>{!! replaceBaseUrl(@$footer->copyright_text ?? null) ?: ('Copyright &copy; ' . date('Y') . ' ' . ($userBs->website_title ?? 'Metroshop') . '. All Rights Reserved.') !!}</span>
       </div>
     </div>
   </div>

@@ -760,6 +760,59 @@ footer {
     margin-right: 0 !important;
   }
 }
+
+/* --- Global Header Logo Size Enhancements (All Themes) --- */
+.mobile-navbar .logo img,
+.mobile-navbar-inner .logo img,
+.header-area .logo img,
+.header-navigation .logo img {
+  max-height: 55px !important;
+  max-width: 230px !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+
+@media (min-width: 992px) {
+  .brand-logo img,
+  .header-middle .brand-logo img,
+  .header-area .brand-logo img,
+  .navbar-brand img,
+  .site-logo img {
+    max-height: 75px !important;
+    max-width: 280px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+}
+
+/* --- Global Mobile Copyright Display & Bottom Clearance Fix (All Themes) --- */
+@media only screen and (max-width: 991.98px) {
+  footer, .footer-area, .copy-right-area, .copy-right-content, .footer-bottom {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  footer, .footer-area {
+    padding-bottom: 85px !important;
+  }
+  .copy-right-area, .footer-bottom {
+    padding-top: 15px !important;
+    padding-bottom: 85px !important;
+    margin-bottom: 0 !important;
+    text-align: center !important;
+    display: block !important;
+    position: relative !important;
+    z-index: 10 !important;
+  }
+  .copy-right-content span, .copy-right-area p, .copy-right-area span, .footer-bottom span, .footer-bottom p {
+    display: inline-block !important;
+    color: inherit !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+  }
+}
 </style>
 
 @yield('styles')

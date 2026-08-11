@@ -128,18 +128,16 @@
     </div>
   </div>
 
-  @if($ubs->copyright_section == 1)
-    <div class="footer-bottom">
-      <div class="container">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-          <p>{!! replaceBaseUrl($footer->copyright_text ?? null) !!}</p>
-          <p style="font-size:12px;color:rgba(0,0,0,0.4);">
-            <i class="fal fa-shield-alt" style="margin-right:6px;"></i>{{ $keywords['Secure Payments'] ?? __('Secure Payments') }}
-          </p>
-        </div>
+  <div class="footer-bottom">
+    <div class="container">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <p>{!! replaceBaseUrl($footer->copyright_text ?? null) ?: ('Copyright &copy; ' . date('Y') . ' ' . ($userBs->website_title ?? 'Metroshop') . '. All Rights Reserved.') !!}</p>
+        <p style="font-size:12px;color:rgba(0,0,0,0.4);">
+          <i class="fal fa-shield-alt" style="margin-right:6px;"></i>{{ $keywords['Secure Payments'] ?? __('Secure Payments') }}
+        </p>
       </div>
     </div>
-  @endif
+  </div>
 </footer>
 <!-- Footer v10 (Clothing) End -->
 

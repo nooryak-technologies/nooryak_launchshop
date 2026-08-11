@@ -127,17 +127,15 @@
         </div>
       </div>
     </div>
-    @if ($ubs->copyright_section == 1)
       <div class="copy-right-area border-top">
         <div class="container">
           <div class="copy-right-content">
             <span>
-              {!! replaceBaseUrl(@$footer->copyright_text ?? null) !!}
+              {!! replaceBaseUrl(@$footer->copyright_text ?? null) ?: ('Copyright &copy; ' . date('Y') . ' ' . ($userBs->website_title ?? 'Metroshop') . '. All Rights Reserved.') !!}
             </span>
           </div>
         </div>
       </div>
-    @endif
 </footer>
 <!-- Footer End -->
 
