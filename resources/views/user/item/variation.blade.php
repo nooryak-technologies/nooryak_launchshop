@@ -230,6 +230,13 @@
                                           ])->get();
                                       }
                                   }
+
+                                  if (empty($selected_option_id) && !$variant_option_contents->isEmpty()) {
+                                      $fallbackOpt = $variant_option_contents->get($key) ?? $variant_option_contents->first();
+                                      if ($fallbackOpt) {
+                                          $selected_option_id = $fallbackOpt->id;
+                                      }
+                                  }
                                 @endphp
                                 <label for="">{{ __('Option') }}
                                   <span class="text-danger">**</span>

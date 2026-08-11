@@ -1876,6 +1876,10 @@ class ItemController extends Controller
                         })->first();
                     }
 
+                    if (!$specificOptContent) {
+                        $specificOptContent = $optContent;
+                    }
+
                     if ($specificOptContent) {
                         ProductVariantOptionContent::create([
                             'user_id' => $userId,
