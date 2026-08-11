@@ -1481,7 +1481,9 @@ class ItemController extends Controller
         $importedCount = 0;
         $skippedLimitCount = 0;
         $skippedBatchLimitCount = 0;
+        $skippedDuplicateCount = 0;
         $invalidRowsCount = 0;
+        $importedTitles = [];
 
         while (($row = fgetcsv($handle, 0, ',')) !== false) {
             if (empty(array_filter($row))) {
@@ -1508,6 +1510,17 @@ class ItemController extends Controller
             $currentPrice = floatval($data['current_price'] ?? 0);
             if (empty($title) || $currentPrice <= 0) {
                 $invalidRowsCount++;
+                continue;
+            }
+
+            // Check for duplicate product title (either in DB for this user or within current CSV batch)
+            $normalizedTitle = strtolower(trim($title));
+            $isDuplicateInDb = UserItemContent::where('user_id', $userId)
+                ->whereRaw('LOWER(TRIM(title)) = ?', [$normalizedTitle])
+                ->exists();
+
+            if ($isDuplicateInDb || in_array($normalizedTitle, $importedTitles)) {
+                $skippedDuplicateCount++;
                 continue;
             }
 
@@ -1714,28 +1727,36 @@ class ItemController extends Controller
                 $this->processProductVariantsCsv($item, $userId, $firstCatId, $firstSubcatId, $languages, $variantsInput);
             }
 
+            $importedTitles[] = $normalizedTitle;
             $importedCount++;
         }
 
         fclose($handle);
 
+        $msgParts = [];
+        if ($importedCount > 0) {
+            $msgParts[] = __('Successfully imported :count product(s) from CSV.', ['count' => $importedCount]);
+        }
+        if ($skippedDuplicateCount > 0) {
+            $msgParts[] = __('Skipped :count duplicate product(s) with matching title.', ['count' => $skippedDuplicateCount]);
+        }
         if ($skippedBatchLimitCount > 0) {
-            Session::flash('warning', __('Imported :imported products. :skipped products skipped because your plan (:plan) limit is :limit products per CSV file upload. Upgrade to Premium for higher limit.', [
-                'imported' => $importedCount,
-                'skipped' => $skippedBatchLimitCount,
+            $msgParts[] = __('Skipped :count product(s) because your plan (:plan) limit is :limit per CSV.', [
+                'count' => $skippedBatchLimitCount,
                 'plan' => $packageName,
                 'limit' => $csvBatchLimit
-            ]));
+            ]);
         } else if ($skippedLimitCount > 0) {
-            Session::flash('warning', __('Imported :imported products. :skipped products skipped due to package product limit (:limit max).', [
-                'imported' => $importedCount,
-                'skipped' => $skippedLimitCount,
+            $msgParts[] = __('Skipped :count product(s) due to package product limit (:limit max).', [
+                'count' => $skippedLimitCount,
                 'limit' => $itemLimit
-            ]));
-        } else if ($importedCount > 0) {
-            Session::flash('success', __('Successfully imported :count products from CSV.', ['count' => $importedCount]));
-        } else {
+            ]);
+        }
+
+        if (empty($msgParts)) {
             Session::flash('warning', __('No valid products were imported from the CSV file.'));
+        } else {
+            Session::flash($importedCount > 0 ? 'success' : 'warning', implode(' ', $msgParts));
         }
 
         return redirect()->back();
