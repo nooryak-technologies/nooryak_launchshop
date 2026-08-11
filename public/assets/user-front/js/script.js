@@ -517,24 +517,25 @@ document.addEventListener("DOMContentLoaded", () => {
         $('.product-countdown').each(function () {
             try {
                 var endD = $(this).data('end_date');
+                var endT = $(this).data('end_time') || '';
                 var item_id = $(this).data('item_id');
 
-                // Convert endD to Date object
-                var endTime = Date.parse(endD) / 1000;
+                // Convert endD + endT to Date object
+                var fullEndStr = endD + (endT ? ' ' + endT : ' 23:59:59');
+                var endTime = Date.parse(fullEndStr) / 1000;
+                if (isNaN(endTime)) {
+                    endTime = Date.parse(endD) / 1000;
+                }
 
                 // Get the current time in seconds
                 var now = Math.floor(currentTimeDate.getTime() / 1000);
 
                 // Calculate the time left
-                var timeLeft = endTime - now;
+                var timeLeft = Math.max(0, endTime - now);
                 var days = Math.floor(timeLeft / 86400);
                 var hours = Math.floor((timeLeft - (days * 86400)) / 3600);
                 var minutes = Math.floor((timeLeft - (days * 86400) - (hours * 3600)) / 60);
                 var seconds = Math.floor(timeLeft - (days * 86400) - (hours * 3600) - (minutes * 60));
-
-                if (days > 2) {
-                    days = 2;
-                }
 
                 // Add leading zeros if necessary
                 days = days < 10 ? "0" + days : days;
