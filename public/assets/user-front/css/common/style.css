@@ -7438,7 +7438,7 @@ html[dir="rtl"] #product-details-slider .slick-track {
 
     .product-default-10 .product-img,
     .product-default:not(.product-list-card) .product-img {
-        aspect-ratio: 4 / 4.5 !important;
+        /* aspect-ratio: 4 / 4.5 !important; */
         max-height: 328px !important;
     }
 
