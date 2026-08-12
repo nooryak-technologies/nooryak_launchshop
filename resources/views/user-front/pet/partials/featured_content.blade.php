@@ -96,7 +96,7 @@
             @foreach ($featuredCategories as $key => $cat)
               <div class="tab-pane fade {{ $key == 0 ? 'show active' : '' }}"id="tab_category_{{ $cat->id }}">
                 <div class="row justify-content-center">
-                  @foreach ($cat->items as $single_item)
+                  @foreach ($cat->items->take(8) as $single_item)
                     @php
                       $product_details = \App\Models\User\UserItem::where([
                           ['id', $single_item->item_id],
@@ -109,6 +109,20 @@
                               'sliders',
                           ])
                           ->first();
+
+                      if (!$product_details) {
+                          $product_details = \App\Models\User\UserItem::where([
+                              ['id', $single_item->item_id],
+                              ['status', 1],
+                          ])
+                              ->with([
+                                  'itemContents' => function ($q) use ($uLang) {
+                                      $q->where('language_id', '=', $uLang);
+                                  },
+                                  'sliders',
+                              ])
+                              ->first();
+                      }
                     @endphp
                     @if (!is_null(@$product_details->itemContents[0]->slug))
                       <div class="col-xl-3 col-lg-4 col-6">
