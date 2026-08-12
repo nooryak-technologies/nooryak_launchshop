@@ -1,3 +1,142 @@
+/* Skinsflow Theme Custom Styles */
+
+/* ==========================================================================
+   Responsive & Layout Fixes for Skinflow Theme (Large Screens & 1600px+)
+   ========================================================================== */
+
+/* Task 1: Centered Logo on Nav Header */
+.header.header-v9 .header-middle .header-left,
+.header.header-v9 .header-middle .header-right {
+  flex: 1 1 0% !important;
+}
+
+.header.header-v9 .header-middle .header-left {
+  display: flex !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+}
+
+.header.header-v9 .header-middle .header-right {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+}
+
+.header.header-v9 .header-middle .header-center {
+  flex: 0 0 auto !important;
+  text-align: center !important;
+  margin: 0 auto !important;
+}
+
+.header.header-v9 .header-middle .brand-logo {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+}
+
+.header.header-v9 .header-middle .brand-logo img {
+  display: block !important;
+  margin: 0 auto !important;
+  max-height: 65px !important;
+  width: auto !important;
+}
+
+.header.header-v9 .header-bottom .main-nav {
+  display: flex !important;
+  justify-content: center !important;
+  width: 100% !important;
+}
+
+.header.header-v9 .header-bottom .menu {
+  justify-content: center !important;
+  margin: 0 auto !important;
+}
+
+/* Task 2: Hero Banner Height Fix */
+.home-hero-9 {
+  max-height: 520px !important;
+  overflow: hidden !important;
+}
+
+.home-hero-9 .slide-item {
+  height: 480px !important;
+  max-height: 480px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-around !important;
+  padding: 30px 40px 10px 40px !important;
+  box-sizing: border-box !important;
+}
+
+.home-hero-9 .slide-item .hero-content {
+  max-width: 460px !important;
+}
+
+.home-hero-9 .slide-item img {
+  max-height: 380px !important;
+  height: auto !important;
+  width: auto !important;
+  object-fit: contain !important;
+}
+
+@media (min-width: 1600px) {
+  .home-hero-9 {
+    max-height: 480px !important;
+  }
+  .home-hero-9 .slide-item {
+    height: 450px !important;
+    max-height: 450px !important;
+    padding: 20px 50px 10px 50px !important;
+  }
+  .home-hero-9 .slide-item img {
+    max-height: 340px !important;
+  }
+}
+
+/* Task 3: Super Flash Sale Card White Space & Height Fix */
+.product-default-9 {
+  position: relative !important;
+  padding-bottom: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  background: #fff !important;
+}
+
+.product-default-9 .product-img {
+  position: relative !important;
+  width: 100% !important;
+  overflow: hidden !important;
+}
+
+.product-default-9 .product-details {
+  position: relative !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  padding: 18px 12px !important;
+  margin-top: auto !important;
+  background: inherit !important;
+}
+
+/* 1600px Specific Container & Navigation Media Query Alignment */
+@media (min-width: 1600px) {
+  .container {
+    max-width: 1440px !important;
+    width: 1440px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  
+  .header-middle > .container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+}
+
 /* Category Navigation Slider Styles */
 .categories-nav-slider-wrapper {
   width: 100%;
@@ -175,16 +314,16 @@
   }
 
   .header-middle .header-left {
-    flex: 0 0 auto;
+    flex: 1 1 0% !important;
   }
 
   .header-middle .header-center {
-    flex: 1 1 auto;
+    flex: 0 0 auto !important;
     padding: 0 20px;
   }
 
   .header-middle .header-right {
-    flex: 0 0 auto;
+    flex: 1 1 0% !important;
   }
 
   /* Main content wrapper */
