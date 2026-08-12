@@ -395,3 +395,23 @@
   height: 100% !important;
   object-fit: cover !important;
 }
+
+/* ==========================================================================
+   Header Clearance Offset (Specifically for Skinflow Theme Only)
+   ========================================================================== */
+section.header-next,
+.header-next,
+.home-hero-9,
+.home-hero-8 {
+  margin-top: 190px !important;
+}
+
+@media (max-width: 991.98px) {
+  section.header-next,
+  .header-next,
+  .home-hero-9,
+  .home-hero-8 {
+    margin-top: 85px !important;
+  }
+}
+
