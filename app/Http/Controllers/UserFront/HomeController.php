@@ -138,38 +138,28 @@ class HomeController extends Controller
         $flash_query = DB::table('user_items')->where('user_items.user_id', $user->id)
             ->where('user_items.flash', 1)
             ->where('user_items.status', 1)
-            ->Join('user_item_contents', 'user_items.id', '=', 'user_item_contents.item_id')
-            ->join('user_item_categories', 'user_item_contents.category_id', '=', 'user_item_categories.id')
+            ->join('user_item_contents', 'user_items.id', '=', 'user_item_contents.item_id')
+            ->leftJoin('user_item_categories', function ($join) use ($userCurrentLang) {
+                $join->on('user_item_contents.category_id', '=', 'user_item_categories.id')
+                    ->where('user_item_categories.language_id', '=', $userCurrentLang->id);
+            })
             ->select('user_items.*', 'user_items.id AS item_id', 'user_item_contents.*', 'user_item_categories.name AS category', 'user_item_categories.slug AS category_slug')
             ->orderBy('user_items.id', 'DESC')
-            ->where('user_item_contents.language_id', '=', $userCurrentLang->id)
-            ->where('user_item_categories.language_id', '=', $userCurrentLang->id)
-            ->where('user_item_categories.status', '=', 1);
+            ->where('user_item_contents.language_id', '=', $userCurrentLang->id);
 
-        $todayStr = Carbon::now()->format('Y-m-d');
-
-        $data['flash_items'] = (clone $flash_query)
-            ->where(function($q) use ($todayStr) {
-                $q->whereNull('user_items.start_date')
-                  ->orWhere('user_items.start_date', '<=', $todayStr);
-            })
-            ->where(function($q) use ($todayStr) {
-                $q->whereNull('user_items.end_date')
-                  ->orWhere('user_items.end_date', '>=', $todayStr);
-            })
-            ->take(3)
-            ->get();
+        $data['flash_items'] = (clone $flash_query)->get();
 
         if ($data['flash_items']->isEmpty()) {
             $data['flash_items'] = DB::table('user_items')->where('user_items.user_id', $user->id)
                 ->where('user_items.status', 1)
-                ->Join('user_item_contents', 'user_items.id', '=', 'user_item_contents.item_id')
-                ->join('user_item_categories', 'user_item_contents.category_id', '=', 'user_item_categories.id')
+                ->join('user_item_contents', 'user_items.id', '=', 'user_item_contents.item_id')
+                ->leftJoin('user_item_categories', function ($join) use ($userCurrentLang) {
+                    $join->on('user_item_contents.category_id', '=', 'user_item_categories.id')
+                        ->where('user_item_categories.language_id', '=', $userCurrentLang->id);
+                })
                 ->select('user_items.*', 'user_items.id AS item_id', 'user_item_contents.*', 'user_item_categories.name AS category', 'user_item_categories.slug AS category_slug')
                 ->orderBy('user_items.id', 'DESC')
                 ->where('user_item_contents.language_id', '=', $userCurrentLang->id)
-                ->where('user_item_categories.language_id', '=', $userCurrentLang->id)
-                ->where('user_item_categories.status', '=', 1)
                 ->take(3)
                 ->get();
         }
