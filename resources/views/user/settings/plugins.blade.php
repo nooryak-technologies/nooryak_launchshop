@@ -323,66 +323,64 @@
           </div>
         @endif
 
-        @if (in_array('Facebook Pixel', $features))
-          {{-- Facebook Pixel --}}
-          <div class="col-lg-4">
-            <div class="card">
-              <div class="card-header">
-                <div class="row">
-                  <div class="col-lg-12">
-                    <div class="card-title">{{ __('Facebook Pixel') }}</div>
-                  </div>
+        {{-- Facebook Pixel --}}
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-header">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="card-title">{{ __('Facebook Pixel') }}</div>
                 </div>
               </div>
-              <div class="card-body">
-                <form action="{{ route('user.pixel.update') }}" id="pixelForm" method="POST">
-                  @csrf
-                  <div class="row">
-                    <div class="col-lg-12">
-                      <div class="form-group">
-                        <label>{{ __('Facebook Pixel Status') }}</label>
-                        <div class="selectgroup w-100">
-                          <label class="selectgroup-item">
-                            <input type="radio" name="is_facebook_pixel" value="1" class="selectgroup-input"
-                              {{ $userBs->is_facebook_pixel == 1 ? 'checked' : '' }}>
-                            <span class="selectgroup-button">{{ __('Active') }}</span>
-                          </label>
+            </div>
+            <div class="card-body">
+              <form action="{{ route('user.pixel.update') }}" id="pixelForm" method="POST">
+                @csrf
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="form-group">
+                      <label>{{ __('Facebook Pixel Status') }}</label>
+                      <div class="selectgroup w-100">
+                        <label class="selectgroup-item">
+                          <input type="radio" name="is_facebook_pixel" value="1" class="selectgroup-input"
+                            {{ $userBs->is_facebook_pixel == 1 ? 'checked' : '' }}>
+                          <span class="selectgroup-button">{{ __('Active') }}</span>
+                        </label>
 
-                          <label class="selectgroup-item">
-                            <input type="radio" name="is_facebook_pixel" value="0" class="selectgroup-input"
-                              {{ $userBs->is_facebook_pixel != 1 ? 'checked' : '' }}>
-                            <span class="selectgroup-button">{{ __('Deactive') }}</span>
-                          </label>
-                        </div>
-                        <p id="erris_facebook_pixel" class="mb-0 text-danger em"></p>
-                        <p class="text text-warning">
-                          <strong>Hint:</strong> <a class="text-primary" href="https://prnt.sc/5u1ZP6YjAw5O"
-                            target="_blank">{{ __('Click Here') }}</a>
-                          {{ __('to see where to get the Facebook Pixel ID') }}
-                        </p>
-                        @if ($errors->has('is_facebook_pixel'))
-                          <p class="text-danger">{{ $errors->first('is_facebook_pixel') }}</p>
-                        @endif
+                        <label class="selectgroup-item">
+                          <input type="radio" name="is_facebook_pixel" value="0" class="selectgroup-input"
+                            {{ $userBs->is_facebook_pixel != 1 ? 'checked' : '' }}>
+                          <span class="selectgroup-button">{{ __('Deactive') }}</span>
+                        </label>
                       </div>
+                      <p id="erris_facebook_pixel" class="mb-0 text-danger em"></p>
+                      <p class="text text-warning">
+                        <strong>Hint:</strong> <a class="text-primary" href="https://prnt.sc/5u1ZP6YjAw5O"
+                          target="_blank">{{ __('Click Here') }}</a>
+                        {{ __('to see where to get the Facebook Pixel ID') }}
+                      </p>
+                      @if ($errors->has('is_facebook_pixel'))
+                        <p class="text-danger">{{ $errors->first('is_facebook_pixel') }}</p>
+                      @endif
+                    </div>
 
-                      <div class="form-group">
-                        <label>{{ __('Facebook Pixel ID') }}</label>
-                        <input type="text" class="form-control" name="pixel_id" value="{{ $userBs->pixel_id }}">
-                        <p id="errpixel_id" class="mb-0 text-danger em"></p>
-                        @if ($errors->has('pixel_id'))
-                          <p class="text-danger">{{ $errors->first('pixel_id') }}</p>
-                        @endif
-                      </div>
+                    <div class="form-group">
+                      <label>{{ __('Facebook Pixel ID') }}</label>
+                      <input type="text" class="form-control" name="pixel_id" value="{{ $userBs->pixel_id }}">
+                      <p id="errpixel_id" class="mb-0 text-danger em"></p>
+                      @if ($errors->has('pixel_id'))
+                        <p class="text-danger">{{ $errors->first('pixel_id') }}</p>
+                      @endif
                     </div>
                   </div>
-                </form>
-              </div>
-              <div class="card-footer text-center">
-                <button type="submit" class="btn btn-success" form="pixelForm">{{ __('Update') }}</button>
-              </div>
+                </div>
+              </form>
+            </div>
+            <div class="card-footer text-center">
+              <button type="submit" class="btn btn-success" form="pixelForm">{{ __('Update') }}</button>
             </div>
           </div>
-        @endif
+        </div>
 
         @if (in_array('WhatsApp Chat Button', $features) || (Auth::check() && Auth::user()->whatsapp_status == 1))
           {{-- Whatsapp Chat Button --}}
