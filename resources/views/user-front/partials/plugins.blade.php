@@ -64,7 +64,7 @@
   @endif
 </script>
 
-@if ($userBs->is_facebook_pixel == 1 && !empty($userBs->pixel_id))
+@if ($userBs->is_facebook_pixel == 1 && in_array('Facebook Pixel', $packagePermissions))
   <!-- Meta Pixel Code -->
   <script>
     ! function(f, b, e, v, n, t, s) {
