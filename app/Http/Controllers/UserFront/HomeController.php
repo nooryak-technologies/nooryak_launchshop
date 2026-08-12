@@ -157,7 +157,7 @@ class HomeController extends Controller
                 $q->whereNull('user_items.end_date')
                   ->orWhere('user_items.end_date', '>=', $todayStr);
             })
-            ->take($shopSet->flash_item_count ?? 6)
+            ->take(3)
             ->get();
 
         if ($data['flash_items']->isEmpty()) {
@@ -170,7 +170,7 @@ class HomeController extends Controller
                 ->where('user_item_contents.language_id', '=', $userCurrentLang->id)
                 ->where('user_item_categories.language_id', '=', $userCurrentLang->id)
                 ->where('user_item_categories.status', '=', 1)
-                ->take($shopSet->flash_item_count ?? 6)
+                ->take(3)
                 ->get();
         }
 
@@ -201,11 +201,10 @@ class HomeController extends Controller
         $data['item_categories'] = UserItemCategory::where('language_id', $userCurrentLang->id)
             ->where([['user_id', $user->id], ['status', 1]])
             ->orderBy('serial_number', 'ASC')
-            ->take($shopSet->categories_count)
             ->get();
-        $data['featuredCategories'] = $data['item_categories']->where('is_feature', 1);
+        $data['featuredCategories'] = $data['item_categories']->where('is_feature', 1)->take(8);
         if ($data['featuredCategories']->isEmpty()) {
-            $data['featuredCategories'] = $data['item_categories'];
+            $data['featuredCategories'] = $data['item_categories']->take(8);
         }
 
         if (in_array($data['ubs']->theme, ['manti', 'vegetables', 'grocery', 'furniture', 'pet', 'skinflow', 'clothing'])) {

@@ -68,7 +68,7 @@ j<section class="section pb-100 lazy">
         <div class="tabs-navigation tabs-navigation-scroll d-flex mb-30">
           <ul class="nav nav-tabs" data-hover="fancyHover">
             <!-- data-hover="fancyHover" -->
-            @foreach ($item_categories as $key => $category)
+            @foreach ($item_categories->take(8) as $key => $category)
               <li class="nav-item">
                 <button class="nav-link hover-effect radius-sm {{ $key == 0 ? 'active' : '' }}" data-bs-toggle="tab"
                   data-bs-target="#tab_category_{{ $category->id }}" type="button">{{ $category->name }}</button>
@@ -88,7 +88,7 @@ j<section class="section pb-100 lazy">
         @else
           <!-- tab-content -->
           <div class="tab-content">
-            @foreach ($item_categories as $key => $cat)
+            @foreach ($item_categories->take(8) as $key => $cat)
               <!-- tab-content item -->
               <div class="tab-pane fade {{ $key == 0 ? 'show active' : '' }}" id="tab_category_{{ $cat->id }}">
                 <div class="row">

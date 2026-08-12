@@ -75,7 +75,7 @@
           <!-- tabs-navigation -->
           <div class="tabs-navigation tabs-navigation-3 text-center">
             <ul class="nav nav-tabs gap-2" data-hover="fancyHover">
-              @foreach ($featuredCategories as $key => $category)
+              @foreach ($featuredCategories->take(8) as $key => $category)
                 <li class="nav-item {{ $key == 0 ? 'active' : '' }}">
                   <button class="nav-link hover-effect {{ $key == 0 ? 'active' : '' }}" data-bs-toggle="tab"
                     data-bs-target="#tab_category_{{ $category->id }}" type="button">{{ $category->name }}</button>
@@ -93,7 +93,7 @@
           </h5>
         @else
           <div class="tab-content">
-            @foreach ($featuredCategories as $key => $cat)
+            @foreach ($featuredCategories->take(8) as $key => $cat)
               <div class="tab-pane fade {{ $key == 0 ? 'show active' : '' }}"id="tab_category_{{ $cat->id }}">
                 <div class="row justify-content-center">
                   @foreach ($cat->items->take(8) as $single_item)
