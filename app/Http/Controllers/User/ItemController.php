@@ -1769,29 +1769,44 @@ class ItemController extends Controller
         $grouped = [];
         foreach ($variantItems as $vStr) {
             if (empty($vStr)) continue;
-            if (strpos($vStr, ':') !== false && strpos($vStr, '=') !== false) {
-                list($varPart, $valPart) = explode('=', $vStr, 2);
-                list($variantName, $optionName) = explode(':', $varPart, 2);
-
+            if (strpos($vStr, ':') !== false) {
                 $price = 0;
                 $stock = 0;
-                if (strpos($valPart, ':') !== false) {
-                    list($price, $stock) = explode(':', $valPart, 2);
+                if (strpos($vStr, '=') !== false) {
+                    list($varPart, $valPart) = explode('=', $vStr, 2);
+                    list($variantName, $optionName) = explode(':', $varPart, 2);
+
+                    if (strpos($valPart, ':') !== false) {
+                        list($price, $stock) = explode(':', $valPart, 2);
+                    } else {
+                        $price = $valPart;
+                    }
                 } else {
-                    $price = $valPart;
+                    list($variantName, $optionName) = explode(':', $vStr, 2);
                 }
 
                 $variantName = trim($variantName);
                 $optionName = trim($optionName);
-                $price = floatval($price);
-                $stock = intval($stock);
+                $price = floatval(trim($price));
+                $stock = intval(trim($stock));
 
                 if (!empty($variantName) && !empty($optionName)) {
-                    $grouped[$variantName][] = [
-                        'option_name' => $optionName,
-                        'price' => $price,
-                        'stock' => $stock
-                    ];
+                    $existsInGroup = false;
+                    if (isset($grouped[$variantName])) {
+                        foreach ($grouped[$variantName] as $gOpt) {
+                            if (strtolower(trim($gOpt['option_name'])) === strtolower($optionName)) {
+                                $existsInGroup = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!$existsInGroup) {
+                        $grouped[$variantName][] = [
+                            'option_name' => $optionName,
+                            'price' => $price,
+                            'stock' => $stock
+                        ];
+                    }
                 }
             }
         }
@@ -1799,22 +1814,23 @@ class ItemController extends Controller
         foreach ($grouped as $variantName => $options) {
             $uniqueId = uniqid();
 
+            // Case-insensitive search to prevent duplicate Master Variants for this user
             $variant = Variant::where('user_id', $userId)->whereHas('variantContents', function ($q) use ($variantName) {
-                $q->where('name', $variantName);
+                $q->whereRaw('LOWER(TRIM(name)) = ?', [strtolower(trim($variantName))]);
             })->first();
 
             if (!$variant) {
                 $variant = Variant::create([
-                    'user_id' => $userId,
-                    'category_id' => $catId,
-                    'subcategory_id' => $subcatId
+                    'user_id' => $userId
                 ]);
                 foreach ($languages as $lang) {
                     VariantContent::create([
                         'user_id' => $userId,
                         'variant_id' => $variant->id,
                         'language_id' => $lang->id,
-                        'name' => $variantName
+                        'name' => trim($variantName),
+                        'category_id' => null,      // Applies to All Categories
+                        'sub_category_id' => null
                     ]);
                 }
             }
@@ -1839,15 +1855,15 @@ class ItemController extends Controller
             }
 
             foreach ($options as $optIndex => $opt) {
-                $optName = $opt['option_name'];
-                $optPrice = $opt['price'];
-                $optStock = $opt['stock'];
+                $optName = trim($opt['option_name']);
+                $optPrice = floatval($opt['price']);
+                $optStock = intval($opt['stock']);
 
-                // Find specific VariantOptionContent for this variant & option name (case-insensitive)
+                // Case-insensitive search for Master Variant Option Content
                 $optContent = VariantOptionContent::where('variant_id', $variant->id)
                     ->where(function ($q) use ($optName) {
                         $q->where('option_name', 'like', $optName)
-                            ->orWhereRaw('LOWER(TRIM(option_name)) = ?', [strtolower(trim($optName))]);
+                            ->orWhereRaw('LOWER(TRIM(option_name)) = ?', [strtolower($optName)]);
                     })
                     ->first();
 
@@ -1889,7 +1905,7 @@ class ItemController extends Controller
                         ])->where(function ($q) use ($optContent, $optName) {
                             $q->where('id', $optContent->id)
                                 ->orWhere('option_name', 'like', $optName)
-                                ->orWhereRaw('LOWER(TRIM(option_name)) = ?', [strtolower(trim($optName))])
+                                ->orWhereRaw('LOWER(TRIM(option_name)) = ?', [strtolower($optName)])
                                 ->orWhere(function ($subQ) use ($optContent) {
                                     $subQ->where('index_key', $optContent->index_key)
                                         ->where('variant_option_id', $optContent->variant_option_id);
