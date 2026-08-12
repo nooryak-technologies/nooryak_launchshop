@@ -676,12 +676,6 @@ footer {
   margin-bottom: 20px !important;
 }
 
-/* ── Remove large-screen margin-top offset below header for all templates (above 1600px) ── */
-@media (min-width: 1600px) {
-  .header-next {
-    margin-top: 0 !important;
-  }
-}
 
 /* ── Ensure header-top is a single line on desktop screens (min-width: 1600px) ── */
 @media (min-width: 1600px) {
