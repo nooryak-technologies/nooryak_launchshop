@@ -46,6 +46,7 @@
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }
@@ -87,6 +88,7 @@
 
 /* Task 3: Nooryak CRM Layout - Centered Content for screens > 1600px */
 @media (min-width: 1600px) {
+
   /* Center the main container with fixed width */
   .container {
     max-width: 1400px !important;
@@ -100,7 +102,7 @@
   /* Header wrapper - full width background */
   .header {
     width: 100% !important;
-    position: relative !important;
+    position: fixed !important;
   }
 
   /* Header sections - full width backgrounds with centered content */
@@ -129,7 +131,7 @@
     width: 100% !important;
   }
 
-  section > .container {
+  section>.container {
     max-width: 1400px !important;
     width: 1400px !important;
     margin-left: auto !important;
@@ -161,6 +163,7 @@
 
 /* Nooryak CRM Style Header Layout for 1600px+ */
 @media (min-width: 1600px) {
+
   /* Header alignment fixes */
   .header-top .header-left,
   .header-top .header-center,
@@ -195,8 +198,8 @@
   }
 
   /* Ensure proper spacing on zoom */
-  .header-middle > .container,
-  .header-bottom > .container {
+  .header-middle>.container,
+  .header-bottom>.container {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -205,6 +208,7 @@
 
 /* Additional Nooryak CRM inspired styles */
 @media (min-width: 1600px) {
+
   /* Clean, professional header spacing */
   .header-top {
     padding: 8px 0 !important;
@@ -282,6 +286,7 @@
 }
 
 @media (max-width: 767.98px) {
+
   .product-default .hover-hide,
   .product-default-2 .hover-hide {
     display: none !important;
@@ -374,6 +379,7 @@
 
 /* Task 3: Flash Sale / 3rd Section slider — 2 columns per row on mobile */
 @media (max-width: 767.98px) {
+
   .new-product #pro-slider-furniture .slick-slide,
   .new-product #pro-slider-furniture-skeleton .slick-slide {
     width: 50% !important;

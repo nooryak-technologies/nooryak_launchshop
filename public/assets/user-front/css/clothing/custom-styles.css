@@ -102,7 +102,7 @@
   /* Header wrapper - full width background */
   .header {
     width: 100% !important;
-    position: relative !important;
+    position: fixed !important;
   }
 
   /* Header sections - full width backgrounds with centered content */
@@ -198,8 +198,8 @@
   }
 
   /* Ensure proper spacing on zoom */
-  .header-middle > .container,
-  .header-bottom > .container {
+  .header-middle>.container,
+  .header-bottom>.container {
     display: flex;
     align-items: center;
     justify-content: space-between;
