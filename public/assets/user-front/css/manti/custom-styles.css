@@ -198,9 +198,8 @@
   }
 
   /* Ensure proper spacing on zoom */
-  .header-middle>.container,
-  .header-top>.container,
-  .header-bottom>.container {
+  .header-middle > .container,
+  .header-bottom > .container {
     display: flex;
     align-items: center;
     justify-content: space-between;

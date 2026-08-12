@@ -165,44 +165,108 @@
   }
 }
 
-/* Header alignment at all zoom levels */
+/* Universal Header Alignment for 1600px+ Large Screens */
 @media (min-width: 1600px) {
 
-  /* Top header alignment */
-  .header-top .header-left,
-  .header-top .header-center,
-  .header-top .header-right {
-    flex: 0 0 auto;
-  }
-
-  /* Middle header - proper distribution */
-  .header-middle .container {
+  /* Top Header Grid Alignment */
+  .header-top .row {
+    width: 100% !important;
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .header-top .header-left {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+  }
+
+  .header-top .header-right {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+  }
+
+  /* Middle Header Layout Alignment */
+  .header-middle > .container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
   }
 
   .header-middle .header-left {
-    flex: 0 0 auto;
+    flex: 0 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
   }
 
   .header-middle .header-center {
-    flex: 1 1 auto;
-    padding: 0 20px;
+    flex: 1 1 auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 0 20px !important;
+  }
+
+  .header-middle .header-center nav,
+  .header-middle .header-center .menu,
+  .header-middle .header-center .mobile-nav {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  .header-middle .header-center .menu-right {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    list-style: none !important;
+  }
+
+  .header-middle .header-center .menu-right > .nav-item {
+    display: inline-block !important;
+    margin: 0 14px !important;
+    white-space: nowrap !important;
   }
 
   .header-middle .header-right {
-    flex: 0 0 auto;
+    flex: 0 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+  }
+
+  .header-middle .header-right > .menu {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 15px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
   }
 
   /* Bottom header */
   .header-bottom .container {
     display: flex !important;
     align-items: center !important;
+    justify-content: center !important;
   }
 
   .header-bottom .main-nav {
-    width: 100%;
+    width: 100% !important;
   }
 }
 
@@ -212,24 +276,6 @@
     max-width: 1370px !important;
     margin: 10px auto 0 !important;
     padding: 0 15px !important;
-  }
-}
-
-/* Fix for elements with position: absolute */
-@media (min-width: 1600px) {
-
-  .header-top,
-  .header-middle,
-  .header-bottom {
-    position: relative !important;
-  }
-
-  /* Ensure dropdowns and modals center properly */
-  .dropdown-menu,
-  .modal,
-  .popup {
-    left: 50% !important;
-    transform: translateX(-50%) !important;
   }
 }
 

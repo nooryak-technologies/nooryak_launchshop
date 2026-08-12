@@ -46,6 +46,7 @@
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }
@@ -87,6 +88,7 @@
 
 /* Task 3: Nooryak CRM Layout - Centered Content for screens > 1600px */
 @media (min-width: 1600px) {
+
   /* Center the main container with fixed width */
   .container {
     max-width: 1400px !important;
@@ -129,7 +131,7 @@
     width: 100% !important;
   }
 
-  section > .container {
+  section>.container {
     max-width: 1400px !important;
     width: 1400px !important;
     margin-left: auto !important;
@@ -161,6 +163,7 @@
 
 /* Nooryak CRM Style Header Layout for 1600px+ */
 @media (min-width: 1600px) {
+
   /* Header alignment fixes */
   .header-top .header-left,
   .header-top .header-center,
@@ -196,7 +199,6 @@
 
   /* Ensure proper spacing on zoom */
   .header-middle > .container,
-  .header-top > .container,
   .header-bottom > .container {
     display: flex;
     align-items: center;
@@ -206,6 +208,7 @@
 
 /* Additional Nooryak CRM inspired styles */
 @media (min-width: 1600px) {
+
   /* Clean, professional header spacing */
   .header-top {
     padding: 8px 0 !important;
@@ -313,7 +316,16 @@
   margin-top: 140px !important;
 }
 
+@media (min-width: 1600px) {
+
+  .clothing-home section.header-next,
+  .clothing-home .clothing-hero-slider {
+    margin-top: 0 !important;
+  }
+}
+
 @media (max-width: 1199px) {
+
   .clothing-home section.header-next,
   .clothing-home .clothing-hero-slider {
     margin-top: 110px !important;
@@ -321,6 +333,7 @@
 }
 
 @media (max-width: 767px) {
+
   .clothing-home section.header-next,
   .clothing-home .clothing-hero-slider {
     margin-top: 85px !important;
@@ -361,10 +374,10 @@
   background: transparent !important;
 }
 
-.header-icons .menu-item:hover > .setting-dropdown,
-.header-icons .menu-item:hover > .cart-dropdown,
-.menu .menu-item:hover > .setting-dropdown,
-.menu .menu-item:hover > .cart-dropdown,
+.header-icons .menu-item:hover>.setting-dropdown,
+.header-icons .menu-item:hover>.cart-dropdown,
+.menu .menu-item:hover>.setting-dropdown,
+.menu .menu-item:hover>.cart-dropdown,
 .header-icons .menu-item .setting-dropdown:hover,
 .header-icons .menu-item .cart-dropdown:hover,
 .menu .menu-item .setting-dropdown:hover,
@@ -374,4 +387,3 @@
   visibility: visible !important;
   transform: translateY(0) !important;
 }
-
