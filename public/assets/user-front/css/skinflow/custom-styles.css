@@ -418,3 +418,29 @@
     padding-bottom: 50px !important;
   }
 }
+
+/* Footer Copyright & Powered-by Single Line Fix for Laptop & Large Screens */
+@media (min-width: 768px) {
+  .copy-right-area,
+  .copy-right-content {
+    text-align: center !important;
+  }
+
+  .copy-right-content,
+  .copy-right-content > span,
+  .copy-right-content p {
+    display: inline-flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  .copy-right-content .powered-by-link {
+    display: inline-block !important;
+    white-space: nowrap !important;
+    margin-left: 2px !important;
+  }
+}
