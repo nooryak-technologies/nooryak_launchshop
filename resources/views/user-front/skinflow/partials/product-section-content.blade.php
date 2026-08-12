@@ -93,10 +93,6 @@
           <!-- product-inline -->
           @php
             $products = json_decode($tabs[$i]->products, true);
-            $active_p_ids = \App\Models\User\UserItem::where('user_id', $user->id)->where('status', 1)->pluck('id')->toArray();
-            if (empty($products) || !is_array($products) || count(array_intersect($products, $active_p_ids)) == 0) {
-                $products = $active_p_ids;
-            }
           @endphp
           @if (!is_null($products))
             @for ($k = 0; $k < count($products); $k += 2)
