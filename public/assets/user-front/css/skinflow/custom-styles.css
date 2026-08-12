@@ -444,3 +444,29 @@
     margin-left: 2px !important;
   }
 }
+
+/* ==========================================================================
+   Skinflow Theme Specific Overrides
+   ========================================================================== */
+
+/* Override ratio 1-1 aspect ratio before pseudo-element specifically for Skinflow Theme */
+.ratio.ratio-1-1::before {
+  padding-bottom: 56.25% !important;
+}
+
+/* Category Section Arch Dome Image Styling specifically for Skinflow Theme */
+.category.category-9 .category-item .category-image {
+  width: 132px !important;
+  height: 132px !important;
+  border-radius: 100px 100px 0 0 !important;
+  overflow: hidden !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-bottom: 14px !important;
+}
+
+.category.category-9 .category-item .category-image img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
