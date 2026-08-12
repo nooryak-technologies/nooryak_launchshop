@@ -102,7 +102,7 @@
   /* Header wrapper - full width background */
   .header {
     width: 100% !important;
-    position: relative !important;
+    position: fixed !important;
   }
 
   /* Header sections - full width backgrounds with centered content */
