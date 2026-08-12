@@ -327,7 +327,14 @@
   transform: translateY(-50px);
 }
 
-/* Theme Scoped Header Bottom Margin */
+/* Theme Scoped Header Bottom Margin & Header Clearance */
 .header-bottom {
   margin-top: 1rem !important;
+}
+
+@media (min-width: 1600px) {
+  section.header-next,
+  .header-next {
+    margin-top: 190px !important;
+  }
 }
