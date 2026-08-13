@@ -1204,10 +1204,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         $(sliderId).slick({
             rtl: $('html').attr('dir') === 'rtl',
-            speed: 600,
+            speed: 800,
             arrows: true,
             dots: false,
-            autoplay: false,
+            autoplay: true,
+            autoplaySpeed: 3500,
             infinite: true,
             centerMode: true,
             centerPadding: '25%',
