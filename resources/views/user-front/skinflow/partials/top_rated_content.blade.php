@@ -79,11 +79,11 @@
 <section class="featured-section-v9 pb-100 actual-content">
   <div class="container">
     <div class="row gx-xl-5">
-      <div class="col-lg-8 col-xl-7" data-aos="fade-up" data-aos-delay="100">
+      <div class="col-lg-8 col-xl-7" data-aos="fade-right" data-aos-delay="100" data-aos-duration="700">
         <div class="featured-left-area mb-100">
           <div class="section-heading-area">
-            <h2 class="h2 mb-20 ">{{ @$userSec->top_rated_product_section_title ?? __('Top Rated') }}</h2>
-            <p class="small fw-medium mb-40">{{ @$userSec->top_rated_product_section_subtitle }}</p>
+            <h2 class="h2 mb-20" data-aos="fade-up" data-aos-delay="150" data-aos-duration="600">{{ @$userSec->top_rated_product_section_title ?? __('Top Rated') }}</h2>
+            <p class="small fw-medium mb-40" data-aos="fade-up" data-aos-delay="250" data-aos-duration="600">{{ @$userSec->top_rated_product_section_subtitle }}</p>
           </div>
 
           <div class="product-inline-slider-wrapper">
@@ -93,7 +93,7 @@
               </h4>
             @else
               <div id="product-inline-slider-11" class="product-inline-slider"
-                data-slick='{"dots": true, "slidesToShow": 2}'>
+                data-slick='{"dots": true, "autoplay": true, "autoplaySpeed": 4000, "speed": 600, "slidesToShow": 2, "slidesToScroll": 2, "responsive": [{"breakpoint": 768, "settings": {"slidesToShow": 1, "slidesToScroll": 1}}]}'>
                 @for ($k = 0; $k < count($top_rated); $k++)
                   @if ($top_rated[$k]->itemContents != '[]')
                     @if (isset($top_rated[$k]))
@@ -103,7 +103,7 @@
                         $flash_status = $flash_info['status'];
                       @endphp
                       <!-- product-inline -->
-                      <div class="slider-item">
+                      <div class="slider-item skinflow-tr-card" data-aos="fade-up" data-aos-delay="{{ ($k % 2) * 100 + 100 }}" data-aos-duration="600">
                         <div class="product-default-9-inline">
                           <figure class="product-img border radius-md">
                             <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $top_rated[$k]->itemContents[0]->slug]) }}"
@@ -219,7 +219,7 @@
             $banner = $rightBanners[0] ?? null;
           @endphp
           @if ($banner)
-            <div class="col-lg-4 col-xl-5" data-aos="fade-up" data-aos-delay="100">
+            <div class="col-lg-4 col-xl-5" data-aos="fade-left" data-aos-delay="200" data-aos-duration="700">
               <div class="featured-right-area">
 
                 <div class="banner-md radius-lg mb-30 ratio ratio-21-9">
