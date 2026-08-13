@@ -10,12 +10,8 @@
               $banner = $rightBanners[$i] ?? null;
             @endphp
             @if ($banner)
-              <figure class="featured-img radius-lg overfollow-hidden mb-30">
-                <a href="{{ $banner->banner_url }}" class="ratio ratio-1-1 radius-lg">
-                  <img class="lazyload" data-src="{{ asset('assets/front/img/user/banners/' . $banner->banner_img) }}"
-                    alt="featured">
-                </a>
-              </figure>
+              <div class="banner-md radius-lg mb-30 ratio ratio-1-1 skeleton skeleton-big-img">
+              </div>
             @endif
           @endif
         @endif
@@ -75,12 +71,25 @@
               $banner = $rightBanners[$i] ?? null;
             @endphp
             @if ($banner)
-              <figure class="featured-img radius-lg overfollow-hidden mb-30">
-                <a href="{{ $banner->banner_url }}" class="ratio ratio-1-1 radius-lg">
-                  <img class="lazyload" data-src="{{ asset('assets/front/img/user/banners/' . $banner->banner_img) }}"
-                    alt="featured">
-                </a>
-              </figure>
+              <div class="banner-md radius-lg mb-30 ratio ratio-1-1">
+                <img class="lazyload bg-img"
+                  data-src="{{ asset('assets/front/img/user/banners/' . $banner->banner_img) }}" alt="Banner">
+                <div class="banner-content" style="width: 100%;">
+                  <div class="content-inner">
+                    @if ($banner->title)
+                      <h4 class="title text-white fw-bold mb-2">{{ $banner->title }}</h4>
+                    @endif
+                    @if ($banner->subtitle)
+                      <p class="desc mb-1 small text-white">{{ $banner->subtitle }}</p>
+                    @endif
+                  </div>
+                  @if ($banner->banner_url && $banner->button_text)
+                    <a href="{{ $banner->banner_url }}" class="btn btn-light text-sm fw-semibold radius-30">
+                      {{ $banner->button_text }}
+                    </a>
+                  @endif
+                </div>
+              </div>
             @endif
           @endif
         @endif
