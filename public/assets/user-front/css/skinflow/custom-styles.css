@@ -902,6 +902,16 @@
   }
 }
 
+/* Task 3: Remove top margin on featured product card text containers */
+.products-tab-8 .product-default-tab-card .product-details.text-start {
+  margin-top: 0 !important;
+  padding-top: 10px !important;
+}
+
+.products-tab-8 .product-default-tab-card .product-details .product-title {
+  margin-top: 0 !important;
+}
+
 /* Skinflow Theme Page Title (Shop / Blog / FAQ / Pages) Banner Height Reduction */
 .page-title-area {
   padding-top: 40px !important;

@@ -128,12 +128,6 @@
                     @endphp
                     <div class="product-default-tab-card radius-md mb-20">
                       <figure class="product-img">
-                        @if ($discount_percent > 0 || $flash_status == true)
-                          <div class="skinflow-discount-badge">
-                            <span class="percent">{{ $discount_percent > 0 ? $discount_percent : $product_details->flash_amount }}%</span>
-                            <span class="text">OFF</span>
-                          </div>
-                        @endif
 
                         <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $product_details->itemContents[0]->slug]) }}"
                           class="ratio ratio-1-1">
@@ -197,7 +191,7 @@
                       </figure>
 
                       <div class="product-details text-start">
-                        <h5 class="product-title fw-medium lc-2 mt-1 mb-1">
+                        <h5 class="product-title fw-medium lc-2 mb-1">
                           <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $product_details->itemContents[0]->slug]) }}">
                             {{ $product_details->itemContents[0]->title }}
                           </a>
