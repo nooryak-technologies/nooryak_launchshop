@@ -164,10 +164,7 @@
     transition: color 0.2s ease;
   }
 
-  /* Subtle shadows for depth */
-  .header {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
+  /* Subtle shadows for depth - Removed */
 
   /* Modern button styles */
   .btn-primary {
