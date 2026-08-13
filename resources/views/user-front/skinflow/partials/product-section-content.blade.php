@@ -93,14 +93,25 @@
           <!-- product-inline -->
           @php
             $products = json_decode($tabs[$i]->products, true);
-            $active_p_ids = \App\Models\User\UserItem::where('user_id', $user->id)->where('status', 1)->pluck('id')->toArray();
-            if (empty($products) || !is_array($products) || count(array_intersect($products, $active_p_ids)) == 0) {
+            $active_p_ids = \App\Models\User\UserItem::where('user_id', $user->id)
+                ->where('status', 1)
+                ->whereHas('itemContents', function ($q) use ($uLang) {
+                    $q->where('language_id', '=', $uLang);
+                })
+                ->pluck('id')
+                ->toArray();
+            
+            if (empty($products) || !is_array($products)) {
                 $products = array_slice($active_p_ids, 0, 8);
+            } else {
+                $products = array_values(array_intersect($products, $active_p_ids));
+                if (empty($products)) {
+                    $products = array_slice($active_p_ids, 0, 8);
+                }
             }
           @endphp
           @if (!is_null($products))
             @for ($k = 0; $k < count($products); $k += 2)
-              @if ($k < count($products) - 1)
                 @php
                   $product_details1 = \App\Models\User\UserItem::where('id', $products[$k])
                       ->with([
@@ -110,14 +121,17 @@
                           'sliders',
                       ])
                       ->first();
-                  $product_details2 = \App\Models\User\UserItem::where('id', $products[$k + 1])
-                      ->with([
-                          'itemContents' => function ($q) use ($uLang) {
-                              $q->where('language_id', '=', $uLang);
-                          },
-                          'sliders',
-                      ])
-                      ->first();
+                  $product_details2 = null;
+                  if ($k + 1 < count($products)) {
+                      $product_details2 = \App\Models\User\UserItem::where('id', $products[$k + 1])
+                          ->with([
+                              'itemContents' => function ($q) use ($uLang) {
+                                  $q->where('language_id', '=', $uLang);
+                              },
+                              'sliders',
+                          ])
+                          ->first();
+                  }
                 @endphp
                 <div class="slider-item">
                   <div class="d-flex flex-column gap-3">
@@ -332,7 +346,6 @@
                     @endif
                   </div>
                 </div>
-              @endif
             @endfor
           @endif
         </div>
