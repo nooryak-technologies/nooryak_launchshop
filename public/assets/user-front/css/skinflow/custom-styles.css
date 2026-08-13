@@ -87,11 +87,13 @@
   .home-hero-9 {
     max-height: 480px !important;
   }
+
   .home-hero-9 .slide-item {
     height: 450px !important;
     max-height: 450px !important;
     padding: 20px 50px 10px 50px !important;
   }
+
   .home-hero-9 .slide-item img {
     max-height: 340px !important;
   }
@@ -101,239 +103,243 @@
    Skinflow Theme Mobile View Hero Banner & Below Slider Gap & Visual Fixes
    ========================================================================== */
 @media (max-width: 991.98px) {
-/* ==========================================================================
+  /* ==========================================================================
    Skinflow Theme Mobile View Hero Banner & Below Slider Gap & Visual Fixes
    ========================================================================== */
-@media (max-width: 991.98px) {
-  /* Hero Banner Section Container */
-  .home-hero-9 {
-    max-height: none !important;
-    height: auto !important;
-    overflow: hidden !important;
-    margin-bottom: 20px !important;
-    padding-bottom: 0 !important;
-    padding-left: 15px !important;
-    padding-right: 15px !important;
-    box-sizing: border-box !important;
-    width: 100% !important;
+  @media (max-width: 991.98px) {
+
+    /* Hero Banner Section Container */
+    .home-hero-9 {
+      max-height: none !important;
+      height: auto !important;
+      overflow: hidden !important;
+      margin-bottom: 20px !important;
+      padding-bottom: 0 !important;
+      padding-left: 15px !important;
+      padding-right: 15px !important;
+      box-sizing: border-box !important;
+      width: 100% !important;
+    }
+
+    .home-hero-9 .home-hero-area,
+    .home-hero-9 .slider-area,
+    .home-hero-9 .hero-center-slider,
+    .home-hero-9 .slick-list {
+      overflow: hidden !important;
+      width: 100% !important;
+      position: relative !important;
+      padding: 0 !important;
+      /* background: red; */
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Force Slick Track to stay strictly HORIZONTAL and NEVER wrap slides vertically */
+    .home-hero-9 .hero-center-slider .slick-track {
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      align-items: stretch !important;
+      width: 100% !important;
+    }
+
+    .home-hero-9 .hero-center-slider .slick-slide {
+      flex: 0 0 100% !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 100% !important;
+      height: auto !important;
+      float: none !important;
+      box-sizing: border-box !important;
+    }
+
+    .home-hero-9 .hero-center-slider .slick-slide>div {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    /* Slide Card Inner Styling with Equal Padding */
+    .home-hero-9 .slide-item {
+      height: 100% !important;
+      max-height: none !important;
+      min-height: auto !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      padding: 24px 20px 24px 20px !important;
+      margin: 0 !important;
+      width: 100% !important;
+      border-radius: 20px !important;
+      background: linear-gradient(180deg, #fbf7f4 0%, #f5ece5 100%) !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
+      box-sizing: border-box !important;
+    }
+
+    .home-hero-9 .slide-item .hero-content {
+      width: 100% !important;
+      max-width: 100% !important;
+      text-align: center !important;
+      margin: 0 auto 12px auto !important;
+      display: block !important;
+    }
+
+    .home-hero-9 .slide-item .hero-content .title {
+      font-size: 20px !important;
+      line-height: 1.3 !important;
+      font-weight: 700 !important;
+      margin-bottom: 8px !important;
+      color: #2c221e !important;
+    }
+
+    .home-hero-9 .slide-item .hero-content .description {
+      font-size: 13.5px !important;
+      line-height: 1.4 !important;
+      margin-bottom: 14px !important;
+      color: #6e5e57 !important;
+    }
+
+    .home-hero-9 .slide-item .hero-content .btn {
+      display: inline-block !important;
+      padding: 9px 24px !important;
+      font-size: 13.5px !important;
+      font-weight: 600 !important;
+      border-radius: 30px !important;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12) !important;
+    }
+
+    .home-hero-9 .slide-item .hero-image {
+      width: 100% !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      margin-top: 12px !important;
+      margin-bottom: 0 !important;
+    }
+
+    .home-hero-9 .slide-item img {
+      display: block !important;
+      max-height: 175px !important;
+      height: auto !important;
+      width: auto !important;
+      max-width: 100% !important;
+      object-fit: contain !important;
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.08)) !important;
+    }
+
+    .home-hero-9 .slider-arrow .slider-prev {
+      left: 4px !important;
+      top: 50% !important;
+    }
+
+    .home-hero-9 .slider-arrow .slider-next {
+      right: 4px !important;
+      top: 50% !important;
+    }
+
+    /* Below Slider (Announcement Bar) Mobile Styling - DISPLAY 1 ITEM PER ROW */
+    .announcement-area {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      position: relative !important;
+      z-index: 5 !important;
+      width: 100% !important;
+      margin-top: 20px !important;
+      margin-bottom: 25px !important;
+      padding: 12px 0 !important;
+      background: linear-gradient(135deg, #fcf8f5 0%, #f4eae3 100%) !important;
+      border-top: 1px solid #ebdcd3 !important;
+      border-bottom: 1px solid #ebdcd3 !important;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02) !important;
+      overflow: hidden !important;
+    }
+
+    .announcement-slider {
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .announcement-slider .slick-list {
+      width: 100% !important;
+      overflow: hidden !important;
+    }
+
+    .announcement-slider .slick-track {
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      align-items: center !important;
+      width: 100% !important;
+    }
+
+    .announcement-slider .slick-slide {
+      flex: 0 0 100% !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 100% !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      box-sizing: border-box !important;
+      float: none !important;
+    }
+
+    .announcement-slider .slider-item {
+      width: auto !important;
+      max-width: 90% !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 10px !important;
+      padding: 10px 24px !important;
+      margin: 0 auto !important;
+      background: rgba(255, 255, 255, 0.92) !important;
+      border-radius: 30px !important;
+      border: 1px solid rgba(220, 195, 180, 0.5) !important;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04) !important;
+      white-space: nowrap !important;
+    }
+
+    .announcement-slider .slider-item h5 {
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      color: #382c28 !important;
+      margin: 0 !important;
+      letter-spacing: 0.2px !important;
+    }
+
+    .announcement-slider .slider-item i {
+      font-size: 16px !important;
+      color: var(--color-primary, #d9826c) !important;
+      margin-left: 6px !important;
+    }
   }
 
-  .home-hero-9 .home-hero-area,
-  .home-hero-9 .slider-area,
-  .home-hero-9 .hero-center-slider,
-  .home-hero-9 .slick-list {
-    overflow: hidden !important;
-    width: 100% !important;
-    position: relative !important;
-    padding: 0 !important;
-  }
+  @media (max-width: 575.98px) {
+    .home-hero-9 {
+      padding-left: 12px !important;
+      padding-right: 12px !important;
+    }
 
-  /* Force Slick Track to stay strictly HORIZONTAL and NEVER wrap slides vertically */
-  .home-hero-9 .hero-center-slider .slick-track {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    align-items: stretch !important;
-    width: 100% !important;
-  }
+    .home-hero-9 .slide-item {
+      padding: 20px 14px 16px 14px !important;
+    }
 
-  .home-hero-9 .hero-center-slider .slick-slide {
-    flex: 0 0 100% !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 100% !important;
-    height: auto !important;
-    float: none !important;
-    box-sizing: border-box !important;
-  }
+    .home-hero-9 .slide-item .hero-content .title {
+      font-size: 19px !important;
+    }
 
-  .home-hero-9 .hero-center-slider .slick-slide > div {
-    width: 100% !important;
-    height: 100% !important;
-  }
+    .home-hero-9 .slide-item img {
+      max-height: 165px !important;
+    }
 
-  /* Slide Card Inner Styling with Equal Padding */
-  .home-hero-9 .slide-item {
-    height: 100% !important;
-    max-height: none !important;
-    min-height: auto !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    padding: 24px 20px 24px 20px !important;
-    margin: 0 !important;
-    width: 100% !important;
-    border-radius: 20px !important;
-    background: linear-gradient(180deg, #fbf7f4 0%, #f5ece5 100%) !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
-    box-sizing: border-box !important;
+    .announcement-area {
+      margin-top: 18px !important;
+      margin-bottom: 22px !important;
+    }
   }
-
-  .home-hero-9 .slide-item .hero-content {
-    width: 100% !important;
-    max-width: 100% !important;
-    text-align: center !important;
-    margin: 0 auto 12px auto !important;
-    display: block !important;
-  }
-
-  .home-hero-9 .slide-item .hero-content .title {
-    font-size: 20px !important;
-    line-height: 1.3 !important;
-    font-weight: 700 !important;
-    margin-bottom: 8px !important;
-    color: #2c221e !important;
-  }
-
-  .home-hero-9 .slide-item .hero-content .description {
-    font-size: 13.5px !important;
-    line-height: 1.4 !important;
-    margin-bottom: 14px !important;
-    color: #6e5e57 !important;
-  }
-
-  .home-hero-9 .slide-item .hero-content .btn {
-    display: inline-block !important;
-    padding: 9px 24px !important;
-    font-size: 13.5px !important;
-    font-weight: 600 !important;
-    border-radius: 30px !important;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12) !important;
-  }
-
-  .home-hero-9 .slide-item .hero-image {
-    width: 100% !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    margin-top: 12px !important;
-    margin-bottom: 0 !important;
-  }
-
-  .home-hero-9 .slide-item img {
-    display: block !important;
-    max-height: 175px !important;
-    height: auto !important;
-    width: auto !important;
-    max-width: 100% !important;
-    object-fit: contain !important;
-    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.08)) !important;
-  }
-
-  .home-hero-9 .slider-arrow .slider-prev {
-    left: 4px !important;
-    top: 50% !important;
-  }
-
-  .home-hero-9 .slider-arrow .slider-next {
-    right: 4px !important;
-    top: 50% !important;
-  }
-
-  /* Below Slider (Announcement Bar) Mobile Styling - DISPLAY 1 ITEM PER ROW */
-  .announcement-area {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: relative !important;
-    z-index: 5 !important;
-    width: 100% !important;
-    margin-top: 20px !important;
-    margin-bottom: 25px !important;
-    padding: 12px 0 !important;
-    background: linear-gradient(135deg, #fcf8f5 0%, #f4eae3 100%) !important;
-    border-top: 1px solid #ebdcd3 !important;
-    border-bottom: 1px solid #ebdcd3 !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02) !important;
-    overflow: hidden !important;
-  }
-
-  .announcement-slider {
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  .announcement-slider .slick-list {
-    width: 100% !important;
-    overflow: hidden !important;
-  }
-
-  .announcement-slider .slick-track {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    align-items: center !important;
-    width: 100% !important;
-  }
-
-  .announcement-slider .slick-slide {
-    flex: 0 0 100% !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 100% !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    box-sizing: border-box !important;
-    float: none !important;
-  }
-
-  .announcement-slider .slider-item {
-    width: auto !important;
-    max-width: 90% !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 10px !important;
-    padding: 10px 24px !important;
-    margin: 0 auto !important;
-    background: rgba(255, 255, 255, 0.92) !important;
-    border-radius: 30px !important;
-    border: 1px solid rgba(220, 195, 180, 0.5) !important;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04) !important;
-    white-space: nowrap !important;
-  }
-
-  .announcement-slider .slider-item h5 {
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    color: #382c28 !important;
-    margin: 0 !important;
-    letter-spacing: 0.2px !important;
-  }
-
-  .announcement-slider .slider-item i {
-    font-size: 16px !important;
-    color: var(--color-primary, #d9826c) !important;
-    margin-left: 6px !important;
-  }
-}
-
-@media (max-width: 575.98px) {
-  .home-hero-9 {
-    padding-left: 12px !important;
-    padding-right: 12px !important;
-  }
-
-  .home-hero-9 .slide-item {
-    padding: 20px 14px 16px 14px !important;
-  }
-
-  .home-hero-9 .slide-item .hero-content .title {
-    font-size: 19px !important;
-  }
-
-  .home-hero-9 .slide-item img {
-    max-height: 165px !important;
-  }
-
-  .announcement-area {
-    margin-top: 18px !important;
-    margin-bottom: 22px !important;
-  }
-}
 
   /* Below Slider (Announcement Bar) Mobile Styling - DISPLAY 1 ITEM PER ROW */
   .announcement-area {
@@ -618,7 +624,7 @@
 
 /* Mobile Adjustments for Card Grid */
 @media (max-width: 575.98px) {
-  .products-tab-8 .row > [class*="col-"] {
+  .products-tab-8 .row>[class*="col-"] {
     padding-left: 6px !important;
     padding-right: 6px !important;
   }
@@ -690,8 +696,8 @@
     margin-left: auto !important;
     margin-right: auto !important;
   }
-  
-  .header-middle > .container {
+
+  .header-middle>.container {
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
@@ -746,6 +752,7 @@
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }
@@ -787,13 +794,14 @@
 
 /* Centered Layout & Container Spacing for Large Screens (1600px+) */
 @media (min-width: 1600px) {
+
   /* Center main containers with fluid max-width matching desktop behavior */
   .container,
   .header .container,
   .header-top .container,
   .header-middle .container,
   .header-bottom .container,
-  section > .container,
+  section>.container,
   footer .container {
     max-width: 1400px !important;
     width: 100% !important;
@@ -815,8 +823,8 @@
   }
 
   /* Header middle flex distribution */
-  .header-middle > .container,
-  .header-bottom > .container {
+  .header-middle>.container,
+  .header-bottom>.container {
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
@@ -831,6 +839,7 @@
 
 /* Additional Nooryak CRM inspired styles */
 @media (min-width: 1600px) {
+
   /* Clean, professional header spacing */
   .header-top {
     padding: 8px 0 !important;
@@ -898,6 +907,7 @@
   padding-top: 70px !important;
   padding-bottom: 50px !important;
 }
+
 @media only screen and (min-width: 992px) {
   .page-title-area {
     padding-top: 70px !important;
@@ -907,13 +917,14 @@
 
 /* Footer Copyright & Powered-by Single Line Fix for Laptop & Large Screens */
 @media (min-width: 768px) {
+
   .copy-right-area,
   .copy-right-content {
     text-align: center !important;
   }
 
   .copy-right-content,
-  .copy-right-content > span,
+  .copy-right-content>span,
   .copy-right-content p {
     display: inline-flex !important;
     flex-wrap: nowrap !important;
@@ -974,6 +985,7 @@
    Header Clearance Offset (Specifically for Skinflow Theme - Large Screens Only)
    ========================================================================== */
 @media (min-width: 1600px) {
+
   section.header-next,
   .header-next,
   .home-hero-9,
@@ -981,5 +993,3 @@
     margin-top: 190px !important;
   }
 }
-
-
