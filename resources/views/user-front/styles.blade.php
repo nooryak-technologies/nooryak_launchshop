@@ -59,23 +59,53 @@
         padding-left: 15px !important;
         padding-right: 15px !important;
         box-sizing: border-box !important;
+        width: 100% !important;
       }
 
+      .home-hero-9 .home-hero-area,
       .home-hero-9 .slider-area,
       .home-hero-9 .hero-center-slider,
       .home-hero-9 .slick-list {
         overflow: hidden !important;
+        width: 100% !important;
+        position: relative !important;
       }
 
-      .home-hero-9 .slide-item {
+      /* Force Slick Track to stay strictly HORIZONTAL and NEVER wrap slides vertically */
+      .home-hero-9 .hero-center-slider .slick-track {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: stretch !important;
+        width: 100% !important;
+      }
+
+      .home-hero-9 .hero-center-slider .slick-slide {
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 100% !important;
         height: auto !important;
+        float: none !important;
+        box-sizing: border-box !important;
+      }
+
+      .home-hero-9 .hero-center-slider .slick-slide > div {
+        width: 100% !important;
+        height: 100% !important;
+      }
+
+      /* Slide Card Inner Styling */
+      .home-hero-9 .slide-item {
+        height: 100% !important;
         max-height: none !important;
         min-height: auto !important;
-        display: block !important;
-        text-align: center !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: space-between !important;
         padding: 24px 16px 20px 16px !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
+        margin: 0 !important;
         width: 100% !important;
         border-radius: 20px !important;
         background: linear-gradient(180deg, #fbf7f4 0%, #f5ece5 100%) !important;
@@ -84,6 +114,7 @@
       }
 
       .home-hero-9 .slide-item .hero-content {
+        width: 100% !important;
         max-width: 100% !important;
         text-align: center !important;
         margin: 0 auto 15px auto !important;
@@ -91,44 +122,45 @@
       }
 
       .home-hero-9 .slide-item .hero-content .title {
-        font-size: 22px !important;
+        font-size: 20px !important;
         line-height: 1.3 !important;
         font-weight: 700 !important;
-        margin-bottom: 10px !important;
+        margin-bottom: 8px !important;
         color: #2c221e !important;
       }
 
       .home-hero-9 .slide-item .hero-content .description {
-        font-size: 14px !important;
+        font-size: 13.5px !important;
         line-height: 1.4 !important;
-        margin-bottom: 16px !important;
+        margin-bottom: 14px !important;
         color: #6e5e57 !important;
       }
 
       .home-hero-9 .slide-item .hero-content .btn {
         display: inline-block !important;
-        padding: 10px 24px !important;
-        font-size: 14px !important;
+        padding: 9px 22px !important;
+        font-size: 13.5px !important;
         font-weight: 600 !important;
         border-radius: 30px !important;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12) !important;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12) !important;
       }
 
       .home-hero-9 .slide-item .hero-image {
-        display: block !important;
-        text-align: center !important;
         width: 100% !important;
-        margin-top: 15px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin-top: 10px !important;
       }
 
       .home-hero-9 .slide-item img {
-        display: inline-block !important;
-        max-height: 200px !important;
+        display: block !important;
+        max-height: 180px !important;
         height: auto !important;
         width: auto !important;
         max-width: 100% !important;
         object-fit: contain !important;
-        filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.08)) !important;
+        filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.08)) !important;
       }
 
       .home-hero-9 .slider-arrow .slider-prev {
