@@ -125,6 +125,10 @@
                         @php
                           $options = DB::table('variant_option_contents')
                               ->where([['language_id', @$selLang->id], ['variant_id', $item->variant_id]])
+                              ->whereNotNull('option_name')
+                              ->where('option_name', '!=', '')
+                              ->select('option_name')
+                              ->distinct()
                               ->get();
                           $style = $pastelBoxes[$key % count($pastelBoxes)];
                         @endphp
