@@ -211,7 +211,7 @@
       }
 
       .announcement-slider .slick-slide {
-        width: 100vw !important;
+        width: 100% !important;
         max-width: 100% !important;
         min-width: 100% !important;
         display: flex !important;
