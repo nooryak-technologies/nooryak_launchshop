@@ -4,7 +4,7 @@
 <section class="featured-section-v9 pb-100 lazy">
   <div class="container">
     <div class="row gx-xl-5">
-      <div class="col-lg-8 col-xl-7" data-aos="fade-up" data-aos-delay="100">
+      <div class="col-lg-6 col-xl-6" data-aos="fade-right" data-aos-delay="100">
         <div class="featured-left-area mb-100">
           <div class="section-heading-area">
             <h2 class="h2 mb-20 ">{{ @$userSec->top_rated_product_section_title ?? __('Top Rated') }}</h2>
@@ -60,7 +60,7 @@
             $banner = $rightBanners[0] ?? null;
           @endphp
           @if ($banner)
-            <div class="col-lg-4 col-xl-5" data-aos="fade-up" data-aos-delay="100">
+            <div class="col-lg-6 col-xl-6" data-aos="fade-left" data-aos-delay="100">
               <div class="featured-right-area">
 
                 <div class="banner-md radius-lg mb-30 ratio ratio-21-9 skeleton skeleton-big-img">
@@ -79,7 +79,7 @@
 <section class="featured-section-v9 pb-100 actual-content">
   <div class="container">
     <div class="row gx-xl-5">
-      <div class="col-lg-8 col-xl-7" data-aos="fade-up" data-aos-delay="100">
+      <div class="col-lg-6 col-xl-6" data-aos="fade-right" data-aos-delay="100">
         <div class="featured-left-area mb-100">
           <div class="section-heading-area">
             <h2 class="h2 mb-20 ">{{ @$userSec->top_rated_product_section_title ?? __('Top Rated') }}</h2>
@@ -219,7 +219,7 @@
             $banner = $rightBanners[0] ?? null;
           @endphp
           @if ($banner)
-            <div class="col-lg-4 col-xl-5" data-aos="fade-up" data-aos-delay="100">
+            <div class="col-lg-6 col-xl-6" data-aos="fade-left" data-aos-delay="100">
               <div class="featured-right-area">
 
                 <div class="banner-md radius-lg mb-30 ratio ratio-21-9">
