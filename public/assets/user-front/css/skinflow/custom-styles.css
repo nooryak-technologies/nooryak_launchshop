@@ -54,31 +54,33 @@
   margin: 0 auto !important;
 }
 
-/* Task 2: Hero Banner Height Fix */
-.home-hero-9 {
-  max-height: 520px !important;
-  overflow: hidden !important;
-}
+/* Task 2: Hero Banner Height & Layout Fix (Desktop vs Mobile) */
+@media (min-width: 992px) {
+  .home-hero-9 {
+    max-height: 520px !important;
+    overflow: hidden !important;
+  }
 
-.home-hero-9 .slide-item {
-  height: 480px !important;
-  max-height: 480px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-around !important;
-  padding: 30px 40px 10px 40px !important;
-  box-sizing: border-box !important;
-}
+  .home-hero-9 .slide-item {
+    height: 480px !important;
+    max-height: 480px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-around !important;
+    padding: 30px 40px 10px 40px !important;
+    box-sizing: border-box !important;
+  }
 
-.home-hero-9 .slide-item .hero-content {
-  max-width: 460px !important;
-}
+  .home-hero-9 .slide-item .hero-content {
+    max-width: 460px !important;
+  }
 
-.home-hero-9 .slide-item img {
-  max-height: 380px !important;
-  height: auto !important;
-  width: auto !important;
-  object-fit: contain !important;
+  .home-hero-9 .slide-item img {
+    max-height: 380px !important;
+    height: auto !important;
+    width: auto !important;
+    object-fit: contain !important;
+  }
 }
 
 @media (min-width: 1600px) {
@@ -92,6 +94,149 @@
   }
   .home-hero-9 .slide-item img {
     max-height: 340px !important;
+  }
+}
+
+/* ==========================================================================
+   Skinflow Theme Mobile View Hero Banner & Below Slider Gap & Visual Fixes
+   ========================================================================== */
+@media (max-width: 991.98px) {
+  /* Hero Banner Mobile Adjustments */
+  .home-hero-9 {
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin-bottom: 25px !important;
+    padding-bottom: 0 !important;
+  }
+
+  .home-hero-9 .slide-item {
+    height: auto !important;
+    max-height: none !important;
+    min-height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 24px 16px 20px 16px !important;
+    margin-left: 8px !important;
+    margin-right: 8px !important;
+    border-radius: 20px !important;
+    background: linear-gradient(180deg, #fbf7f4 0%, #f5ece5 100%) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
+    box-sizing: border-box !important;
+  }
+
+  .home-hero-9 .slide-item .hero-content {
+    max-width: 100% !important;
+    text-align: center !important;
+    margin: 0 auto 15px auto !important;
+  }
+
+  .home-hero-9 .slide-item .hero-content .title {
+    font-size: 22px !important;
+    line-height: 1.3 !important;
+    font-weight: 700 !important;
+    margin-bottom: 10px !important;
+    color: #2c221e !important;
+  }
+
+  .home-hero-9 .slide-item .hero-content .description {
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    margin-bottom: 16px !important;
+    color: #6e5e57 !important;
+  }
+
+  .home-hero-9 .slide-item .hero-content .btn {
+    padding: 10px 24px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    border-radius: 30px !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12) !important;
+  }
+
+  .home-hero-9 .slide-item .hero-image {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin-top: 10px !important;
+  }
+
+  .home-hero-9 .slide-item img {
+    max-height: 210px !important;
+    height: auto !important;
+    width: auto !important;
+    max-width: 100% !important;
+    object-fit: contain !important;
+    filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.09)) !important;
+  }
+
+  .home-hero-9 .slider-arrow .slider-prev {
+    left: 4px !important;
+    top: 50% !important;
+  }
+
+  .home-hero-9 .slider-arrow .slider-next {
+    right: 4px !important;
+    top: 50% !important;
+  }
+
+  /* Below Slider (Announcement Marquee Bar) Mobile Styling & Gap */
+  .announcement-area {
+    margin-top: 25px !important;
+    margin-bottom: 30px !important;
+    padding: 14px 0 !important;
+    background: linear-gradient(135deg, #fcf8f5 0%, #f4eae3 100%) !important;
+    border-top: 1px solid #ebdcd3 !important;
+    border-bottom: 1px solid #ebdcd3 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02) !important;
+  }
+
+  .announcement-slider .slider-item {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 8px 20px !important;
+    margin-right: 14px !important;
+    background: rgba(255, 255, 255, 0.85) !important;
+    border-radius: 30px !important;
+    border: 1px solid rgba(220, 195, 180, 0.4) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+  }
+
+  .announcement-slider .slider-item h5 {
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    color: #382c28 !important;
+    margin: 0 !important;
+    letter-spacing: 0.2px !important;
+  }
+
+  .announcement-slider .slider-item i {
+    font-size: 15px !important;
+    color: var(--color-primary, #d9826c) !important;
+    margin-left: 4px !important;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .home-hero-9 .slide-item {
+    padding: 20px 14px 16px 14px !important;
+  }
+
+  .home-hero-9 .slide-item .hero-content .title {
+    font-size: 20px !important;
+  }
+
+  .home-hero-9 .slide-item img {
+    max-height: 185px !important;
+  }
+
+  .announcement-area {
+    margin-top: 20px !important;
+    margin-bottom: 25px !important;
   }
 }
 
