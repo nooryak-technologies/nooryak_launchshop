@@ -727,16 +727,16 @@ footer {
 
 /* --- Task 2: Page Title Area (About/Inner Headers) Spacing Fix --- */
 @if ($userBs->theme == 'fashion' || $userBs->theme == 'furniture' || $userBs->theme == 'clothing' || $userBs->theme == 'jewellery' || $userBs->theme == 'skinflow' || $userBs->theme == 'pet')
-/* For templates with fixed headers, we need large top padding to prevent header overlap */
+/* For templates with fixed headers, we need top padding to prevent header overlap */
 .page-title-area {
-  padding-top: 180px !important;
-  padding-bottom: 45px !important;
+  padding-top: 100px !important;
+  padding-bottom: 30px !important;
 }
 
 @media only screen and (max-width: 991.98px) {
   .page-title-area {
-    padding-top: 120px !important;
-    padding-bottom: 45px !important;
+    padding-top: 80px !important;
+    padding-bottom: 25px !important;
   }
 }
 @else
@@ -757,10 +757,10 @@ footer {
 /* Reduce page title font size on desktop only */
 @media only screen and (min-width: 992px) {
   @if ($userBs->theme == 'fashion' || $userBs->theme == 'furniture' || $userBs->theme == 'clothing' || $userBs->theme == 'jewellery' || $userBs->theme == 'skinflow' || $userBs->theme == 'pet')
-  /* Keep the large padding for fixed header templates on desktop */
+  /* Keep compact padding for fixed header templates on desktop */
   .page-title-area {
-    padding-top: 180px !important;
-    padding-bottom: 45px !important;
+    padding-top: 100px !important;
+    padding-bottom: 30px !important;
   }
   @else
   .page-title-area {
