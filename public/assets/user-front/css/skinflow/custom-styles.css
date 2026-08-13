@@ -101,13 +101,16 @@
    Skinflow Theme Mobile View Hero Banner & Below Slider Gap & Visual Fixes
    ========================================================================== */
 @media (max-width: 991.98px) {
-  /* Hero Banner Mobile Adjustments */
+  /* Hero Banner Mobile Adjustments with Left/Right Side Gap */
   .home-hero-9 {
     max-height: none !important;
     height: auto !important;
     overflow: visible !important;
-    margin-bottom: 25px !important;
+    margin-bottom: 20px !important;
     padding-bottom: 0 !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    box-sizing: border-box !important;
   }
 
   .home-hero-9 .slide-item {
@@ -119,8 +122,9 @@
     align-items: center !important;
     justify-content: center !important;
     padding: 24px 16px 20px 16px !important;
-    margin-left: 8px !important;
-    margin-right: 8px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
     border-radius: 20px !important;
     background: linear-gradient(180deg, #fbf7f4 0%, #f5ece5 100%) !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
@@ -183,31 +187,70 @@
     top: 50% !important;
   }
 
-  /* Below Slider (Announcement Marquee Bar) Mobile Styling & Gap */
+  /* Below Slider (Announcement Bar) Mobile Styling - DISPLAY 1 ITEM PER ROW */
   .announcement-area {
-    margin-top: 25px !important;
-    margin-bottom: 30px !important;
-    padding: 14px 0 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 5 !important;
+    width: 100% !important;
+    margin-top: 20px !important;
+    margin-bottom: 25px !important;
+    padding: 12px 0 !important;
     background: linear-gradient(135deg, #fcf8f5 0%, #f4eae3 100%) !important;
     border-top: 1px solid #ebdcd3 !important;
     border-bottom: 1px solid #ebdcd3 !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02) !important;
+    overflow: hidden !important;
+  }
+
+  .announcement-slider {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .announcement-slider .slick-list {
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .announcement-slider .slick-track {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  .announcement-slider .slick-slide {
+    width: 100vw !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+    float: none !important;
   }
 
   .announcement-slider .slider-item {
+    width: auto !important;
+    max-width: 90% !important;
     display: inline-flex !important;
     align-items: center !important;
+    justify-content: center !important;
     gap: 10px !important;
-    padding: 8px 20px !important;
-    margin-right: 14px !important;
-    background: rgba(255, 255, 255, 0.85) !important;
+    padding: 10px 24px !important;
+    margin: 0 auto !important;
+    background: rgba(255, 255, 255, 0.92) !important;
     border-radius: 30px !important;
-    border: 1px solid rgba(220, 195, 180, 0.4) !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+    border: 1px solid rgba(220, 195, 180, 0.5) !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04) !important;
+    white-space: nowrap !important;
   }
 
   .announcement-slider .slider-item h5 {
-    font-size: 13.5px !important;
+    font-size: 14px !important;
     font-weight: 600 !important;
     color: #382c28 !important;
     margin: 0 !important;
@@ -215,13 +258,18 @@
   }
 
   .announcement-slider .slider-item i {
-    font-size: 15px !important;
+    font-size: 16px !important;
     color: var(--color-primary, #d9826c) !important;
-    margin-left: 4px !important;
+    margin-left: 6px !important;
   }
 }
 
 @media (max-width: 575.98px) {
+  .home-hero-9 {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
   .home-hero-9 .slide-item {
     padding: 20px 14px 16px 14px !important;
   }
@@ -235,8 +283,8 @@
   }
 
   .announcement-area {
-    margin-top: 20px !important;
-    margin-bottom: 25px !important;
+    margin-top: 18px !important;
+    margin-bottom: 22px !important;
   }
 }
 
