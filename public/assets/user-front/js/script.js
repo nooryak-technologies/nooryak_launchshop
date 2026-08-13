@@ -1220,13 +1220,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     breakpoint: 992,
                     settings: {
-                        centerPadding: '15%',
+                        centerMode: false,
+                        centerPadding: '0',
                         slidesToShow: 1
                     }
                 },
                 {
                     breakpoint: 576,
                     settings: {
+                        centerMode: false,
                         centerPadding: '0',
                         slidesToShow: 1
                     }

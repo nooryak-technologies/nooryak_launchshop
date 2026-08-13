@@ -69,6 +69,7 @@
         overflow: hidden !important;
         width: 100% !important;
         position: relative !important;
+        padding: 0 !important;
       }
 
       /* Force Slick Track to stay strictly HORIZONTAL and NEVER wrap slides vertically */
