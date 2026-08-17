@@ -1413,7 +1413,6 @@ footer {
 #quickViewModal .product-single-slider figure {
     margin: 0 !important;
     padding: 0 !important;
-    width: 100% !important;
     height: 372px !important;
     border-radius: 12px !important;
     overflow: hidden !important;
