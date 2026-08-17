@@ -11,7 +11,7 @@
 <!-- Main Style CSS -->
 <link rel="stylesheet" href="{{ asset('assets/user-front/css/common/style.css?v=1.0.1') }}">
 <link rel="stylesheet" href="{{ asset('assets/user-front/css/common/header-1.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/zoom-fix.css?v=1.1.3') }}">
+<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/zoom-fix.css?v=1.1.4') }}">
 <link rel="stylesheet" href="{{ asset('assets/user-front/css/tinymce-content.css') }}">
 
 @if ($userBs->theme == 'vegetables')
@@ -1445,6 +1445,73 @@ footer {
     margin: 0 auto !important;
     display: block !important;
     border-radius: 10px !important;
+}
+
+/* Mobile View Quick View Responsive Layout */
+@media (max-width: 576px) {
+    #quickViewModal .product-single-gallery,
+    .quick-view-modal .product-single-gallery {
+        flex-direction: column !important;
+        align-items: center !important;
+        width: 100% !important;
+        gap: 12px !important;
+    }
+
+    #quickViewModal .product-single-slider,
+    .quick-view-modal .product-single-slider {
+        width: 100% !important;
+        max-width: 100% !important;
+        order: 1 !important;
+    }
+
+    #quickViewModal .product-single-slider img,
+    .quick-view-modal .product-single-slider img {
+        max-height: 280px !important;
+        width: 100% !important;
+        object-fit: contain !important;
+    }
+
+    #quickViewModal .slider-thumbnails,
+    .quick-view-modal .slider-thumbnails {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        order: 2 !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+
+    #quickViewModal .slider-thumbnails .slick-list,
+    .quick-view-modal .slider-thumbnails .slick-list {
+        width: 100% !important;
+    }
+
+    #quickViewModal .slider-thumbnails .slick-track,
+    .quick-view-modal .slider-thumbnails .slick-track {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        transform: none !important;
+    }
+
+    #quickViewModal .slider-thumbnails .thumbnail-img,
+    .quick-view-modal .slider-thumbnails .thumbnail-img,
+    #quickViewModal .slider-thumbnails .slick-slide,
+    .quick-view-modal .slider-thumbnails .slick-slide {
+        width: 55px !important;
+        height: 55px !important;
+        min-width: 55px !important;
+        max-width: 55px !important;
+        margin-bottom: 0 !important;
+        margin-right: 6px !important;
+        display: inline-block !important;
+        float: none !important;
+    }
 }
 
 .quick-view-modal .lazy-container,
