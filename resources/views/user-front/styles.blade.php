@@ -1362,7 +1362,7 @@ footer {
     height: 68px !important;
     max-width: 68px !important;
     max-height: 68px !important;
-    border: 1.5px solid #e2e8f0 !important;
+    border: none !important;
     border-radius: 8px !important;
     overflow: hidden !important;
     margin-bottom: 8px !important;
@@ -1370,7 +1370,7 @@ footer {
     background-color: #f8fafc !important;
     box-sizing: border-box !important;
     transition: all 0.2s ease !important;
-    padding: 2px !important;
+    padding: 0 !important;
 }
 
 .quick-view-modal .slider-thumbnails .slick-slide.slick-current .thumbnail-img,
@@ -1379,8 +1379,9 @@ footer {
 .quick-view-modal .slider-thumbnails .thumbnail-img:hover,
 #quickViewModal .slider-thumbnails .slick-slide.slick-current .thumbnail-img,
 #quickViewModal .slider-thumbnails .thumbnail-img.active {
-    border-color: #0f5b3f !important;
-    border-width: 2px !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
 }
 
 .quick-view-modal .slider-thumbnails .thumbnail-img img,
