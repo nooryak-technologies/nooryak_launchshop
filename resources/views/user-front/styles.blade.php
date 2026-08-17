@@ -1432,7 +1432,7 @@ footer {
     width: 100% !important;
     height: 372px !important;
     max-height: 372px !important;
-    object-fit: contain !important;
+    object-fit: cover !important;
     border-radius: 12px !important;
     opacity: 1 !important;
     visibility: visible !important;
