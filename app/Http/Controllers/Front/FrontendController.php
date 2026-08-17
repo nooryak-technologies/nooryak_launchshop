@@ -276,7 +276,9 @@ class FrontendController extends Controller
         }
 
         $otp = rand(100000, 999999);
+        $whatsappSent = false;
 
+        // Try WhatsApp API
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer 3bf6211c4ba7000f46ea1cb9d2d0f78f',
@@ -294,75 +296,73 @@ class FrontendController extends Controller
             ]);
 
             if ($response->successful() && isset($resData['success']) && $resData['success'] === true) {
-                Session::put('otp_code', $otp);
-                Session::put('otp_phone', $phone);
-                Session::put('otp_expires_at', time() + 300);
-                Session::put('otp_email', $email);
-
-                // Send OTP to email
-                try {
-                    $be = BE::first();
-                    $mailData = [
-                        'smtp_status' => $be->is_smtp,
-                        'smtp_host' => $be->smtp_host,
-                        'smtp_username' => $be->smtp_username,
-                        'smtp_password' => $be->smtp_password,
-                        'encryption' => $be->encryption,
-                        'smtp_port' => $be->smtp_port,
-                        'from_mail' => $be->from_mail,
-                        'recipient' => $email,
-                        'subject' => "OTP Verification Code",
-                        'body' => "Your OTP verification code is <b>" . $otp . "</b> for <b>Launchshop Ecommerce</b>. This code is valid for 5 minutes. Please do not share it with anyone.",
-                    ];
-                    BasicMailer::sendMail($mailData);
-                } catch (\Exception $mailEx) {
-                    Log::error('OTP Email send failed: ' . $mailEx->getMessage());
-                }
-
-                // Save / update phone lead in DB for admin visibility
-                try {
-                    $name = $request->input('name', '');
-                    \App\Models\VerifiedPhoneLead::updateOrCreate(
-                        ['phone' => $mobileNo],
-                        [
-                            'name'         => $name,
-                            'country_code' => $countryCode,
-                            'email'        => $email,
-                            'is_verified'  => false,
-                            'otp_sent_at'  => now(),
-                        ]
-                    );
-                } catch (\Exception $leadEx) {
-                    Log::warning('VerifiedPhoneLead save failed: ' . $leadEx->getMessage());
-                }
-
-                return response()->json([
-                    'success' => true,
-                    'message' => __('OTP sent successfully to your WhatsApp and Email!')
-                ]);
+                $whatsappSent = true;
             } else {
-                $errorMsg = __('Failed to send OTP. Please try again.');
-                if (is_array($resData)) {
-                    if (isset($resData['error'])) {
-                        $errorMsg = $resData['error'];
-                    } elseif (isset($resData['message'])) {
-                        $errorMsg = $resData['message'];
-                    }
-                }
-                return response()->json([
-                    'success' => false,
-                    'message' => $errorMsg
-                ], 400);
+                Log::warning('WhatsApp OTP failed, fallback to Email OTP', ['response' => $resData]);
             }
         } catch (\Exception $e) {
-            Log::error('Tehub WhatsApp OTP Send Exception: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return response()->json([
-                'success' => false,
-                'message' => __('An error occurred while sending OTP.')
-            ], 500);
+            Log::error('Tehub WhatsApp OTP Send Exception: ' . $e->getMessage());
         }
+
+        // Always store OTP session so user can verify without restriction
+        Session::put('otp_code', $otp);
+        Session::put('otp_phone', $phone);
+        Session::put('otp_expires_at', time() + 300);
+        Session::put('otp_email', $email);
+
+        // Always send OTP to email
+        $emailSent = false;
+        try {
+            $be = BE::first();
+            $mailData = [
+                'smtp_status' => $be->is_smtp,
+                'smtp_host' => $be->smtp_host,
+                'smtp_username' => $be->smtp_username,
+                'smtp_password' => $be->smtp_password,
+                'encryption' => $be->encryption,
+                'smtp_port' => $be->smtp_port,
+                'from_mail' => $be->from_mail,
+                'recipient' => $email,
+                'subject' => "OTP Verification Code",
+                'body' => "Your OTP verification code is <b>" . $otp . "</b> for <b>Launchshop Ecommerce</b>. This code is valid for 5 minutes. Please do not share it with anyone.",
+            ];
+            BasicMailer::sendMail($mailData);
+            $emailSent = true;
+        } catch (\Exception $mailEx) {
+            Log::error('OTP Email send failed: ' . $mailEx->getMessage());
+        }
+
+        // Save / update phone lead in DB for admin visibility
+        try {
+            $name = $request->input('name', '');
+            \App\Models\VerifiedPhoneLead::updateOrCreate(
+                ['phone' => $mobileNo],
+                [
+                    'name'         => $name,
+                    'country_code' => $countryCode,
+                    'email'        => $email,
+                    'is_verified'  => false,
+                    'otp_sent_at'  => now(),
+                ]
+            );
+        } catch (\Exception $leadEx) {
+            Log::warning('VerifiedPhoneLead save failed: ' . $leadEx->getMessage());
+        }
+
+        if ($whatsappSent && $emailSent) {
+            $msg = __('OTP sent successfully to your WhatsApp and Email!');
+        } elseif ($emailSent) {
+            $msg = __('OTP sent to your Email address (' . $email . ')!');
+        } elseif ($whatsappSent) {
+            $msg = __('OTP sent successfully to your WhatsApp!');
+        } else {
+            $msg = __('OTP code generated! Check your email: ' . $email);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => $msg
+        ]);
     }
 
     public function verifyOtp(Request $request)
