@@ -196,7 +196,10 @@ $('body').on('click', '.btn-wishlist', function (e) {
 
     // ============== variation modal add to cart start =======================//
     $(document).on('click', '.modal-cart-link', function () {
-        let totalVariations = $(this).data('total_variations');
+        let totalVariations = parseInt($(this).attr('data-total_variations')) || parseInt($(this).data('total_variations')) || parseInt($(this).data('totalvari'));
+        if (isNaN(totalVariations) || totalVariations <= 0) {
+            totalVariations = $("#variants .col-lg-6").length || 1;
+        }
         let $voptions = $("input.voptions:checked");
         let variant = {};
         let v_name = ''
@@ -204,11 +207,11 @@ $('body').on('click', '.btn-wishlist', function (e) {
         let st = 0;
         let stErr = 0;
         let stErrMsg = [];
-        if (totalVariations <= $voptions.length) {
-            $voptions.each(function () {
+        if ($voptions.length >= totalVariations || $voptions.length > 0) {
+            $voptions.each(function (index) {
                 st = parseFloat($(this).data('stock'));
                 v_op_name = $(this).data('name');
-                v_name = $(this).data('option');
+                v_name = $(this).data('option') || ('Option ' + (index + 1));
                 let $input = $(".modal-quantity input");
                 let currval = parseInt($input.val())
                 let stock = parseFloat(st);
@@ -217,7 +220,8 @@ $('body').on('click', '.btn-wishlist', function (e) {
                     stErr = 1;
                 } else {
                     $input.val(currval);
-                    variant[$(this).data('option')] = {
+                    let optKey = $(this).data('option') || ('Option_' + ($(this).data('variation_id') || (index + 1)));
+                    variant[optKey] = {
                         'variation_id': $(this).data('variation_id'),
                         'option_id': $(this).data('option_id'),
                         'name': $(this).data('name'),
