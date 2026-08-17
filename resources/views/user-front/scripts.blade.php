@@ -37,7 +37,7 @@
 <script src="{{ asset('assets/user-front/js/shop.js?v=1.0.3') }}"></script>
 
 <script src="{{ asset('assets/user-front/js/script.js?v=1.0.5') }}"></script>
-<script src="{{ asset('assets/user-front/js/cart.js?v=1.0.3') }}"></script>
+<script src="{{ asset('assets/user-front/js/cart.js?v=1.0.4') }}"></script>
 @if (is_array($packagePermissions) && in_array('Push Notification', $packagePermissions))
   <script src="{{ asset('assets/front/js/push-notification.js') }}"></script>
 @endif
