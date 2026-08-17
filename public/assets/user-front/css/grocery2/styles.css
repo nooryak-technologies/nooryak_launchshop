@@ -600,6 +600,17 @@ body.show-mobile-menu .grocery2-header {
     height: 440px !important;
 }
 
+.g2-hero-slider .slick-slide {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+@media (min-width: 1200px) {
+    .g2-hero-slider {
+        max-width: 940px !important;
+    }
+}
+
 .g2-slider-item {
     background-size: cover !important;
     background-position: center right !important;

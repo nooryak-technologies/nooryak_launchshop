@@ -11,7 +11,7 @@
 <!-- Main Style CSS -->
 <link rel="stylesheet" href="{{ asset('assets/user-front/css/common/style.css?v=1.0.1') }}">
 <link rel="stylesheet" href="{{ asset('assets/user-front/css/common/header-1.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/zoom-fix.css?v=1.1.5') }}">
+<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/zoom-fix.css?v=1.1.4') }}">
 <link rel="stylesheet" href="{{ asset('assets/user-front/css/tinymce-content.css') }}">
 
 @if ($userBs->theme == 'vegetables')
@@ -658,7 +658,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/grocery2/styles.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/grocery2/styles.css?v=1.0.2') }}">
+  <style>
+    .g2-hero-slider .slick-slide {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+    @media (min-width: 1200px) {
+      .g2-hero-slider {
+        max-width: 940px !important;
+      }
+    }
+  </style>
 @endif
 <!--====== Style css ======-->
 
@@ -1562,33 +1573,6 @@ footer {
 #quickViewModal .rating-wrapper {
     font-size: 13px !important;
     color: #64748b !important;
-}
-
-/* Universal Laptop View Spacing Between Hero Banners for All Themes */
-@media (min-width: 992px) {
-    .g2-hero-section .row,
-    .hero-section .row,
-    .banner-section .row {
-        --bs-gutter-x: 24px !important;
-    }
-
-    .g2-promo-stack,
-    .hero-side-banners,
-    .banner-promo-stack {
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: space-between !important;
-        gap: 20px !important;
-        height: 440px !important;
-    }
-
-    .g2-side-promo,
-    .hero-side-banner,
-    .banner-promo-item {
-        height: 210px !important;
-        max-height: 210px !important;
-        border-radius: 16px !important;
-    }
 }
 
 .quick-view-modal .stock-status .badge.bg-success,
