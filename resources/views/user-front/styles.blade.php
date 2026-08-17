@@ -1357,22 +1357,9 @@ footer {
 }
 
 .quick-view-modal .slider-thumbnails .thumbnail-img,
-#quickViewModal .slider-thumbnails .thumbnail-img {
-    width: 68px !important;
-    height: 68px !important;
-    max-width: 68px !important;
-    max-height: 68px !important;
-    border: none !important;
-    border-radius: 8px !important;
-    overflow: hidden !important;
-    margin-bottom: 8px !important;
-    cursor: pointer !important;
-    background-color: #f8fafc !important;
-    box-sizing: border-box !important;
-    transition: all 0.2s ease !important;
-    padding: 0 !important;
-}
-
+/* Quick View Thumbnail Border Removal */
+.quick-view-modal .slider-thumbnails .thumbnail-img,
+#quickViewModal .slider-thumbnails .thumbnail-img,
 .quick-view-modal .slider-thumbnails .slick-slide.slick-current .thumbnail-img,
 .quick-view-modal .slider-thumbnails .slick-slide.slick-active.slick-current .thumbnail-img,
 .quick-view-modal .slider-thumbnails .thumbnail-img.active,
@@ -1382,65 +1369,6 @@ footer {
     border: none !important;
     box-shadow: none !important;
     outline: none !important;
-}
-
-.quick-view-modal .slider-thumbnails .thumbnail-img img,
-#quickViewModal .slider-thumbnails .thumbnail-img img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    border-radius: 6px !important;
-    opacity: 1 !important;
-    filter: none !important;
-    -webkit-filter: none !important;
-    display: block !important;
-}
-
-/* Center Main Product Image Slider */
-.quick-view-modal .product-single-slider,
-#quickViewModal .product-single-slider {
-    flex: 1 !important;
-    width: calc(100% - 82px) !important;
-    max-width: calc(100% - 82px) !important;
-    height: 372px !important;
-    border-radius: 12px !important;
-    overflow: hidden !important;
-    background-color: #f8fafc !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-.quick-view-modal .product-single-slider figure,
-#quickViewModal .product-single-slider figure,
-.quick-view-modal .product-single-slider .slick-slide,
-#quickViewModal .product-single-slider .slick-slide {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    height: 372px !important;
-    border-radius: 12px !important;
-    overflow: hidden !important;
-    background-color: #f8fafc !important;
-}
-
-.quick-view-modal .product-single-slider img,
-.quick-view-modal .product-single-slider figure img,
-#quickViewModal .product-single-slider img,
-#quickViewModal .product-single-slider figure img,
-.quick-view-modal .product-single-slider .slick-slide img,
-#quickViewModal .product-single-slider .slick-slide img {
-    width: 100% !important;
-    height: 372px !important;
-    max-height: 372px !important;
-    object-fit: contain !important;
-    border-radius: 12px !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    filter: none !important;
-    -webkit-filter: none !important;
-    background: transparent !important;
-    display: block !important;
-    pointer-events: auto !important;
 }
 
 .quick-view-modal .lazy-container,
