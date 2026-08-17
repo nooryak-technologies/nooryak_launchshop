@@ -1615,8 +1615,8 @@ Lazyload CSS
 }
 
 .slick-slide {
-    margin-right: calc(0.5 * 1.5rem);
-    margin-left: calc(0.5 * 1.5rem);
+    /* margin-right: calc(0.5 * 1.5rem); */
+    /* margin-left: calc(0.5 * 1.5rem); */
 }
 
 .slick-dots li {
@@ -4026,10 +4026,11 @@ input[type="radio"]:checked+.form-check-label::after {
     object-fit: cover;
 }
 
+/* 
 .product-single-default .product-single-slider2 figure,
 .product-single-default .product-single-slider figure {
     border: 1px solid var(--border);
-}
+} */
 
 .product-single-default .product-full-screen {
     position: absolute;

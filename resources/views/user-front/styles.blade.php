@@ -1394,8 +1394,8 @@ footer {
 .slider-thumbnails .thumbnail-img.slick-active,
 .slider-thumbnails .thumbnail-img:hover,
 .slider-thumbnails .thumbnail-img:focus {
-    border: none !important;
-    border-color: transparent !important;
+    /* border: none !important; */
+    /* border-color: transparent !important; */
     box-shadow: none !important;
     outline: none !important;
     margin-bottom: 8px !important;
@@ -1430,7 +1430,7 @@ footer {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    width: 100% !important;
+    /* width: 100% !important; */
     margin: 0 !important;
     padding: 0 !important;
 }

@@ -581,13 +581,15 @@ body.show-mobile-menu .grocery2-header {
 
 @media (min-width: 992px) {
     .g2-hero-section .row {
-        --bs-gutter-x: 24px; /* 24px horizontal in-between gap */
+        --bs-gutter-x: 24px;
+        /* 24px horizontal in-between gap */
     }
 
     .g2-promo-stack {
         display: flex;
         flex-direction: column;
-        gap: 20px; /* 20px vertical gap between right side promo cards */
+        gap: 20px;
+        /* 20px vertical gap between right side promo cards */
         height: 440px !important;
     }
 }
@@ -2807,7 +2809,6 @@ body.show-mobile-menu .grocery2-header {
     margin: 0 !important;
     padding: 0 !important;
     width: 100% !important;
-    height: 372px !important;
     border-radius: 12px !important;
     overflow: hidden !important;
     background-color: #f8fafc !important;
@@ -2818,7 +2819,6 @@ body.show-mobile-menu .grocery2-header {
 
 .quick-view-modal .product-single-slider figure img {
     width: 100% !important;
-    height: 372px !important;
     max-height: 372px !important;
     object-fit: contain !important;
     border-radius: 12px !important;
