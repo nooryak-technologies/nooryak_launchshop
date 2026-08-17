@@ -29,13 +29,7 @@
                   @foreach ($product->item->sliders as $slide)
                     @php
                       $slideImg = $slide->image ?? '';
-                      if (file_exists(public_path('assets/front/img/user/items/slider-images/' . $slideImg))) {
-                          $slideSrc = asset('assets/front/img/user/items/slider-images/' . $slideImg);
-                      } elseif (file_exists(public_path('assets/front/img/user/items/thumbnail/' . $slideImg))) {
-                          $slideSrc = asset('assets/front/img/user/items/thumbnail/' . $slideImg);
-                      } else {
-                          $slideSrc = asset('assets/front/img/user/items/slider-images/' . $slideImg);
-                      }
+                      $slideSrc = str_starts_with($slideImg, 'http') ? $slideImg : (str_starts_with($slideImg, 'assets/') ? asset($slideImg) : asset('assets/front/img/user/items/slider-images/' . $slideImg));
                     @endphp
                     <div class="thumbnail-img radius-md lazy-container ratio ratio-1-1">
                       <img class="lazyloaded" src="{{ $slideSrc }}"
@@ -49,13 +43,7 @@
                   @foreach ($product->item->sliders as $slide)
                     @php
                       $slideImg = $slide->image ?? '';
-                      if (file_exists(public_path('assets/front/img/user/items/slider-images/' . $slideImg))) {
-                          $slideSrc = asset('assets/front/img/user/items/slider-images/' . $slideImg);
-                      } elseif (file_exists(public_path('assets/front/img/user/items/thumbnail/' . $slideImg))) {
-                          $slideSrc = asset('assets/front/img/user/items/thumbnail/' . $slideImg);
-                      } else {
-                          $slideSrc = asset('assets/front/img/user/items/slider-images/' . $slideImg);
-                      }
+                      $slideSrc = str_starts_with($slideImg, 'http') ? $slideImg : (str_starts_with($slideImg, 'assets/') ? asset($slideImg) : asset('assets/front/img/user/items/slider-images/' . $slideImg));
                     @endphp
                     <div class="product-single-single-item">
                       <figure class="radius-lg lazy-container ratio ratio-1-1">

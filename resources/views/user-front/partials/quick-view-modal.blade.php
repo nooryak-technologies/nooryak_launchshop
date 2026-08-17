@@ -7,13 +7,7 @@
     } elseif (str_starts_with($thumb, 'assets/')) {
         $mainThumbSrc = asset($thumb);
     } elseif (!empty($thumb)) {
-        if (file_exists(public_path('assets/front/img/user/items/thumbnail/' . $thumb))) {
-            $mainThumbSrc = asset('assets/front/img/user/items/thumbnail/' . $thumb);
-        } elseif (file_exists(public_path('assets/front/img/user/items/slider-images/' . $thumb))) {
-            $mainThumbSrc = asset('assets/front/img/user/items/slider-images/' . $thumb);
-        } else {
-            $mainThumbSrc = asset('assets/front/img/user/items/thumbnail/' . $thumb);
-        }
+        $mainThumbSrc = asset('assets/front/img/user/items/thumbnail/' . $thumb);
     } else {
         $mainThumbSrc = $placeholderImg;
     }
@@ -27,13 +21,7 @@
             } elseif (str_starts_with($imgName, 'assets/')) {
                 $slides[] = asset($imgName);
             } elseif (!empty($imgName)) {
-                if (file_exists(public_path('assets/front/img/user/items/slider-images/' . $imgName))) {
-                    $slides[] = asset('assets/front/img/user/items/slider-images/' . $imgName);
-                } elseif (file_exists(public_path('assets/front/img/user/items/thumbnail/' . $imgName))) {
-                    $slides[] = asset('assets/front/img/user/items/thumbnail/' . $imgName);
-                } else {
-                    $slides[] = asset('assets/front/img/user/items/slider-images/' . $imgName);
-                }
+                $slides[] = asset('assets/front/img/user/items/slider-images/' . $imgName);
             }
         }
     }
