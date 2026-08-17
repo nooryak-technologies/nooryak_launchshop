@@ -1,31 +1,61 @@
 @if (!empty($product))
+  @php
+    $placeholderImg = asset('assets/front/images/placeholder.png');
+    $thumb = $product->item->thumbnail ?? '';
+    if (str_starts_with($thumb, 'http')) {
+        $mainThumbSrc = $thumb;
+    } elseif (str_starts_with($thumb, 'assets/')) {
+        $mainThumbSrc = asset($thumb);
+    } elseif (!empty($thumb) && file_exists(public_path('assets/front/img/user/items/thumbnail/' . $thumb))) {
+        $mainThumbSrc = asset('assets/front/img/user/items/thumbnail/' . $thumb);
+    } else {
+        $mainThumbSrc = $placeholderImg;
+    }
+  @endphp
 
   <div class="col-lg-6 product-single-default">
-    @if ($product->item->sliders)
-      <input type="hidden" id="item_id" value="{{ $item_id }}">
-      <div class="product-single-gallery">
-        <div class="slider-thumbnails">
-          @foreach ($product->item->sliders as $slide)
-            <div class="thumbnail-img radius-sm lazy-container ratio ratio-1-1">
-              <img class="lazyload" src="{{ asset('assets/front/img/user/items/slider-images/' . $slide->image) }}"
-                alt="product image" />
-            </div>
-          @endforeach
+    @php
+      $slides = [];
+      if ($product->item->sliders && count($product->item->sliders) > 0) {
+          foreach ($product->item->sliders as $s) {
+              $imgName = $s->image ?? '';
+              if (str_starts_with($imgName, 'http')) {
+                  $slides[] = $imgName;
+              } elseif (str_starts_with($imgName, 'assets/')) {
+                  $slides[] = asset($imgName);
+              } elseif (!empty($imgName) && file_exists(public_path('assets/front/img/user/items/slider-images/' . $imgName))) {
+                  $slides[] = asset('assets/front/img/user/items/slider-images/' . $imgName);
+              } elseif (!empty($imgName) && file_exists(public_path('assets/front/img/user/items/thumbnail/' . $imgName))) {
+                  $slides[] = asset('assets/front/img/user/items/thumbnail/' . $imgName);
+              } else {
+                  $slides[] = $mainThumbSrc;
+              }
+          }
+      }
+      if (empty($slides)) {
+          $slides[] = $mainThumbSrc;
+      }
+    @endphp
 
-        </div>
-        <div class="product-single-slider">
-          @foreach ($product->item->sliders as $slide)
-            <figure class="radius-lg lazy-container ratio ratio-1-1" >
-              <a src="{{ asset('assets/front/img/user/items/slider-images/' . $slide->image) }}">
-                <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
-                  data-src="{{ asset('assets/front/img/user/items/slider-images/' . $slide->image) }}"
-                  alt="product image" />
-              </a>
-            </figure>
-          @endforeach
-        </div>
+    <input type="hidden" id="item_id" value="{{ $item_id }}">
+    <div class="product-single-gallery">
+      <div class="slider-thumbnails">
+        @foreach ($slides as $index => $src)
+          <div class="thumbnail-img radius-sm {{ $index === 0 ? 'active' : '' }}">
+            <img src="{{ $src }}" class="lazyloaded" onerror="this.onerror=null;this.src='{{ $placeholderImg }}';" alt="{{ $product->title }}" />
+          </div>
+        @endforeach
       </div>
-    @endif
+      <div class="product-single-slider">
+        @foreach ($slides as $src)  
+          <figure class="radius-lg">
+            <a href="{{ $src }}">
+              <img src="{{ $src }}" class="lazyloaded" onerror="this.onerror=null;this.src='{{ $placeholderImg }}';" alt="{{ $product->title }}" />
+            </a>
+          </figure>
+        @endforeach
+      </div>
+    </div>
   </div>
   <div class="col-lg-6">
     <div class="product-single-details">
