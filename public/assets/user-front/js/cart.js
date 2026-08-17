@@ -384,7 +384,7 @@ var optionsSingle = {
     slidesToScroll: 1,
     arrows: false,
     dots: true,
-    fade: false,
+    fade: true,
     cssEase: 'linear',
     rtl: $('html').attr('dir') === 'rtl',
     infinite: false,

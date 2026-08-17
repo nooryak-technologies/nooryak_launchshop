@@ -1411,9 +1411,12 @@ footer {
 }
 
 .quick-view-modal .product-single-slider figure,
-#quickViewModal .product-single-slider figure {
+#quickViewModal .product-single-slider figure,
+.quick-view-modal .product-single-slider .slick-slide,
+#quickViewModal .product-single-slider .slick-slide {
     margin: 0 !important;
     padding: 0 !important;
+    width: 100% !important;
     height: 372px !important;
     border-radius: 12px !important;
     overflow: hidden !important;
