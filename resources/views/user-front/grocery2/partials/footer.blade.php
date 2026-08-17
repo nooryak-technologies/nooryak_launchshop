@@ -5,10 +5,17 @@
     <div class="container">
       <div class="row g-3">
         @php
-          $user_features = \App\Models\User\UserFeature::where('user_id', $user->id)
-              ->where('language_id', $userCurrentLang->id)
-              ->orderBy('serial_number', 'ASC')
-              ->get();
+          $user_features = [];
+          if (\Illuminate\Support\Facades\Schema::hasTable('user_features')) {
+              try {
+                  $user_features = \App\Models\User\UserFeature::where('user_id', $user->id)
+                      ->where('language_id', $userCurrentLang->id)
+                      ->orderBy('serial_number', 'ASC')
+                      ->get();
+              } catch (\Throwable $e) {
+                  $user_features = [];
+              }
+          }
         @endphp
         @if (count($user_features) > 0)
           @foreach ($user_features as $feature)
