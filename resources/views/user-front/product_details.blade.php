@@ -27,9 +27,19 @@
                 <div class="slider-thumbnails2">
 
                   @foreach ($product->item->sliders as $slide)
+                    @php
+                      $slideImg = $slide->image ?? '';
+                      if (file_exists(public_path('assets/front/img/user/items/slider-images/' . $slideImg))) {
+                          $slideSrc = asset('assets/front/img/user/items/slider-images/' . $slideImg);
+                      } elseif (file_exists(public_path('assets/front/img/user/items/thumbnail/' . $slideImg))) {
+                          $slideSrc = asset('assets/front/img/user/items/thumbnail/' . $slideImg);
+                      } else {
+                          $slideSrc = asset('assets/front/img/user/items/slider-images/' . $slideImg);
+                      }
+                    @endphp
                     <div class="thumbnail-img radius-md lazy-container ratio ratio-1-1">
-                      <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
-                        data-src="{{ asset('assets/front/img/user/items/slider-images/' . $slide->image) }}"
+                      <img class="lazyloaded" src="{{ $slideSrc }}"
+                        onerror="this.onerror=null;this.src='{{ asset('assets/front/img/user/items/thumbnail/' . $product->item->thumbnail) }}';"
                         alt="product image" />
                     </div>
                   @endforeach
@@ -37,11 +47,21 @@
                 </div>
                 <div class="product-single-slider2">
                   @foreach ($product->item->sliders as $slide)
+                    @php
+                      $slideImg = $slide->image ?? '';
+                      if (file_exists(public_path('assets/front/img/user/items/slider-images/' . $slideImg))) {
+                          $slideSrc = asset('assets/front/img/user/items/slider-images/' . $slideImg);
+                      } elseif (file_exists(public_path('assets/front/img/user/items/thumbnail/' . $slideImg))) {
+                          $slideSrc = asset('assets/front/img/user/items/thumbnail/' . $slideImg);
+                      } else {
+                          $slideSrc = asset('assets/front/img/user/items/slider-images/' . $slideImg);
+                      }
+                    @endphp
                     <div class="product-single-single-item">
                       <figure class="radius-lg lazy-container ratio ratio-1-1">
-                        <a src="{{ asset('assets/front/img/user/items/slider-images/' . $slide->image) }}">
-                          <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
-                            data-src="{{ asset('assets/front/img/user/items/slider-images/' . $slide->image) }}"
+                        <a href="{{ $slideSrc }}">
+                          <img class="lazyloaded" src="{{ $slideSrc }}"
+                            onerror="this.onerror=null;this.src='{{ asset('assets/front/img/user/items/thumbnail/' . $product->item->thumbnail) }}';"
                             alt="product image" />
                         </a>
                       </figure>

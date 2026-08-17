@@ -7,32 +7,42 @@
     } elseif (str_starts_with($thumb, 'assets/')) {
         $mainThumbSrc = asset($thumb);
     } elseif (!empty($thumb)) {
-        $mainThumbSrc = asset('assets/front/img/user/items/thumbnail/' . $thumb);
+        if (file_exists(public_path('assets/front/img/user/items/thumbnail/' . $thumb))) {
+            $mainThumbSrc = asset('assets/front/img/user/items/thumbnail/' . $thumb);
+        } elseif (file_exists(public_path('assets/front/img/user/items/slider-images/' . $thumb))) {
+            $mainThumbSrc = asset('assets/front/img/user/items/slider-images/' . $thumb);
+        } else {
+            $mainThumbSrc = asset('assets/front/img/user/items/thumbnail/' . $thumb);
+        }
     } else {
         $mainThumbSrc = $placeholderImg;
+    }
+
+    $slides = [];
+    if ($product->item->sliders && count($product->item->sliders) > 0) {
+        foreach ($product->item->sliders as $s) {
+            $imgName = $s->image ?? '';
+            if (str_starts_with($imgName, 'http')) {
+                $slides[] = $imgName;
+            } elseif (str_starts_with($imgName, 'assets/')) {
+                $slides[] = asset($imgName);
+            } elseif (!empty($imgName)) {
+                if (file_exists(public_path('assets/front/img/user/items/slider-images/' . $imgName))) {
+                    $slides[] = asset('assets/front/img/user/items/slider-images/' . $imgName);
+                } elseif (file_exists(public_path('assets/front/img/user/items/thumbnail/' . $imgName))) {
+                    $slides[] = asset('assets/front/img/user/items/thumbnail/' . $imgName);
+                } else {
+                    $slides[] = asset('assets/front/img/user/items/slider-images/' . $imgName);
+                }
+            }
+        }
+    }
+    if (empty($slides)) {
+        $slides[] = $mainThumbSrc;
     }
   @endphp
 
   <div class="col-lg-6 product-single-default">
-    @php
-      $slides = [];
-      if ($product->item->sliders && count($product->item->sliders) > 0) {
-          foreach ($product->item->sliders as $s) {
-              $imgName = $s->image ?? '';
-              if (str_starts_with($imgName, 'http')) {
-                  $slides[] = $imgName;
-              } elseif (str_starts_with($imgName, 'assets/')) {
-                  $slides[] = asset($imgName);
-              } elseif (!empty($imgName)) {
-                  $slides[] = asset('assets/front/img/user/items/slider-images/' . $imgName);
-              }
-          }
-      }
-      if (empty($slides)) {
-          $slides[] = $mainThumbSrc;
-      }
-    @endphp
-
     <input type="hidden" id="item_id" value="{{ $item_id }}">
     <div class="product-single-gallery">
       <div class="slider-thumbnails">
