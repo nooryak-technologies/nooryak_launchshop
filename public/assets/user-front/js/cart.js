@@ -504,7 +504,13 @@ $('#quickViewModal').on('hidden.bs.modal', function (e) {
 
 $('#quickViewModal').on('shown.bs.modal', function () {
     Object.keys(variant).forEach(key => delete variant[key]);
-})
+    if ($(".product-single-slider").hasClass('slick-initialized')) {
+        $(".product-single-slider").slick('setPosition');
+    }
+    if ($(".slider-thumbnails").hasClass('slick-initialized')) {
+        $(".slider-thumbnails").slick('setPosition');
+    }
+});
 
 $(document).ready(function () {
     totalPriceDetails(1);
