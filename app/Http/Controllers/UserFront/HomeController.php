@@ -167,7 +167,7 @@ class HomeController extends Controller
 
         $data['keywords'] = json_decode($userCurrentLang->keywords, true);
 
-        if ($data['ubs']->theme == 'electronics' || $data['ubs']->theme == 'kids' || $data['ubs']->theme == 'clothing') {
+        if ($data['ubs']->theme == 'electronics' || $data['ubs']->theme == 'kids' || $data['ubs']->theme == 'clothing' || $data['ubs']->theme == 'grocery2') {
             $data['latest_items'] = UserItem::join('user_item_contents', 'user_items.id', '=', 'user_item_contents.item_id')
                 ->join('user_item_categories', 'user_item_categories.id', '=', 'user_item_contents.category_id')
                 ->where('user_items.user_id', $user->id)
@@ -179,7 +179,7 @@ class HomeController extends Controller
                 ->orderBy('user_items.updated_at', 'DESC')
                 ->select('user_items.*')
                 ->distinct()
-                ->take($data['ubs']->theme == 'electronics' ? 4 : $shopSet->latest_item_count)
+                ->take($data['ubs']->theme == 'electronics' ? 4 : 20)
                 ->get();
         }
 
@@ -192,12 +192,28 @@ class HomeController extends Controller
             ->where([['user_id', $user->id], ['status', 1]])
             ->orderBy('serial_number', 'ASC')
             ->get();
+
+        if ($data['item_categories']->isEmpty()) {
+            $data['item_categories'] = UserItemCategory::where([['user_id', $user->id], ['status', 1]])
+                ->orderBy('serial_number', 'ASC')
+                ->get();
+        }
+
         $data['featuredCategories'] = $data['item_categories']->where('is_feature', 1)->take(8);
         if ($data['featuredCategories']->isEmpty()) {
             $data['featuredCategories'] = $data['item_categories']->take(8);
         }
 
-        if (in_array($data['ubs']->theme, ['manti', 'vegetables', 'grocery', 'furniture', 'pet', 'skinflow', 'clothing'])) {
+        if (empty($data['latest_items']) || $data['latest_items']->isEmpty()) {
+            $data['latest_items'] = UserItem::where('user_id', $user->id)
+                ->where('status', 1)
+                ->with(['itemContents', 'sliders'])
+                ->orderBy('id', 'DESC')
+                ->take(20)
+                ->get();
+        }
+
+        if (in_array($data['ubs']->theme, ['manti', 'vegetables', 'grocery', 'grocery2', 'furniture', 'pet', 'skinflow', 'clothing'])) {
             $data['top_rated'] = UserItem::join('user_item_contents', 'user_items.id', '=', 'user_item_contents.item_id')
                 ->join('user_item_categories', 'user_item_categories.id', '=', 'user_item_contents.category_id')
                 ->where('user_items.status', 1)
@@ -307,27 +323,7 @@ class HomeController extends Controller
             $data["after_" . str_replace('_section', '', $section)] = $allSections->get($section, collect());
         }
 
-        if ($data['ubs']->theme == 'electronics') {
-            return view('user-front.electronics.index', $data);
-        } elseif ($data['ubs']->theme == 'fashion') {
-            return view('user-front.fashion.index', $data);
-        } elseif ($data['ubs']->theme == 'furniture') {
-            return view('user-front.furniture.index', $data);
-        } elseif ($data['ubs']->theme == 'kids') {
-            return view('user-front.kids.index', $data);
-        } elseif ($data['ubs']->theme == 'manti') {
-            return view('user-front.manti.index', $data);
-        } elseif ($data['ubs']->theme == 'pet') {
-            return view('user-front.pet.index', $data);
-        } elseif ($data['ubs']->theme == 'skinflow') {
-            return view('user-front.skinflow.index', $data);
-        } elseif ($data['ubs']->theme == 'jewellery') {
-            return view('user-front.jewellery.index', $data);
-        } elseif ($data['ubs']->theme == 'clothing') {
-            return view('user-front.clothing.index', $data);
-        } else {
-            return view('user-front.grocery.index', $data);
-        }
+        return themeView('index', $data);
     }
 
     public function checkCurrentUser() {}
@@ -410,7 +406,7 @@ class HomeController extends Controller
         $data['contact'] = UserContact::where('language_id', $uLang)->where('user_id', $user->id)->first();
 
 
-        return view('user-front.contact', $data);
+        return themeView('contact', $data);
     }
 
     //contactMessage
@@ -499,7 +495,7 @@ class HomeController extends Controller
             ->where('user_id', $user->id)
             ->orderBy('serial_number', 'ASC')
             ->get();
-        return view('user-front.faq', $data);
+        return themeView('faq', $data);
     }
 
 
@@ -567,7 +563,7 @@ class HomeController extends Controller
             ->select('blogs_meta_keywords', 'blogs_meta_description')
             ->first();
 
-        return view('user-front.blogs', $data);
+        return themeView('blogs', $data);
     }
 
     public function seedTenantBlogs($userId, $langId)
@@ -677,7 +673,7 @@ class HomeController extends Controller
 
         $userId = $data['blog']->user_id;
 
-        return view('user-front.blog-details', $data);
+        return themeView('blog-details', $data);
     }
 
     public function userAbout($domain)
@@ -720,7 +716,7 @@ class HomeController extends Controller
                 ->get();
         }
 
-        return view('user-front.about', $data);
+        return themeView('about', $data);
     }
 
     public function removeMaintenance($domain, $token)
@@ -768,7 +764,7 @@ class HomeController extends Controller
 
         $data['pageHeading'] = $data['title'];
 
-        return view('user-front.custom-page', $data);
+        return themeView('custom-page', $data);
     }
 
     public function tenantPrivacyPolicy($domain) { return $this->tenantPolicyPage($domain, 'privacy-policy'); }

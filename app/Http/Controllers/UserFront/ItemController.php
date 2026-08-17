@@ -57,7 +57,7 @@ class ItemController extends Controller
 
         $data['seo'] = SEO::where('language_id', $userCurrentLang->id)->where('user_id', $user->id)->first();
 
-        return view('user-front.cart', $data);
+        return themeView('cart', $data);
     }
 
     public function addToCart($domain, $id)
@@ -237,13 +237,23 @@ class ItemController extends Controller
             $cart = Session::get('cart_' . $user->username);
             if (isset($cart[$uid])) {
                 unset($cart[$uid]);
-                Session::put('cart_' . $user->username, $cart);
+                if (empty($cart)) {
+                    Session::forget('cart_' . $user->username);
+                } else {
+                    Session::put('cart_' . $user->username, $cart);
+                }
             }
             $total = 0;
             $count = 0;
-            foreach ($cart as $i) {
-                $total += $i['product_price'] * $i['qty'];
-                $count += $i['qty'];
+            if (!empty($cart) && is_array($cart)) {
+                foreach ($cart as $i) {
+                    $itemTotal = (float)($i['total'] ?? 0);
+                    if ($itemTotal <= 0 && isset($i['product_price']) && isset($i['qty'])) {
+                        $itemTotal = (float)$i['product_price'] * (int)$i['qty'];
+                    }
+                    $total += $itemTotal;
+                    $count += (int)$i['qty'];
+                }
             }
             $total = round($total, 2);
             return response()->json(['message' => $keywords['Item removed from your cart'] ?? __('Item removed from your cart'), 'count' => $count, 'total' => $total]);
@@ -377,7 +387,7 @@ class ItemController extends Controller
         } else {
             $data['stripeInfo'] = [];
         }
-        return view('user-front.checkout', $data);
+        return themeView('checkout', $data);
     }
 
     public function checkoutGuest($domain, Request $request)
@@ -443,7 +453,7 @@ class ItemController extends Controller
         } else {
             $data['stripeInfo'] = [];
         }
-        return view('user-front.checkout', $data);
+        return themeView('checkout', $data);
     }
 
     public function coupon(Request $request)
@@ -508,7 +518,7 @@ class ItemController extends Controller
         }
         $data['seo'] = SEO::where('language_id', $data['userCurrentLang']->id)->where('user_id', $user->id)->first();
 
-        return view('user-front.compare', $data);
+        return themeView('compare', $data);
     }
 
     public function addToCompare($domain, $id)
@@ -558,7 +568,7 @@ class ItemController extends Controller
 
     public function cartDropdown($domain)
     {
-        return view('user-front.partials.cart-dropdown');
+        return themeView('partials.cart-dropdown');
     }
 
     public function cartDropdownCount($domain)

@@ -844,21 +844,34 @@ if (!function_exists('getUserNullCheck')) {
 if (!function_exists('cartTotal')) {
     function cartTotal()
     {
-        $username = app('user')->username;
+        $user = getUser();
+        if (!$user) return 0;
+        $username = $user->username;
         $total = 0;
         if (session()->has('cart_' . $username) && !empty(session()->get('cart_' . $username))) {
             $cart = session()->get('cart_' . $username);
-            $user_id = getUser()->id;
+            $user_id = $user->id;
             if (!is_null($cart) && is_array($cart)) {
-                $cart = array_filter($cart, function ($item) use ($user_id) {
-                    return $item['user_id'] == $user_id;
-                });
+                $validCart = [];
                 foreach ($cart as $key => $cartItem) {
-                    $itemTotal = (float)($cartItem['total'] ?? 0);
-                    if ($itemTotal <= 0 && isset($cartItem['product_price']) && isset($cartItem['qty'])) {
-                        $itemTotal = (float)$cartItem['product_price'] * (int)$cartItem['qty'];
+                    if (isset($cartItem['user_id']) && $cartItem['user_id'] == $user_id && isset($cartItem['id'])) {
+                        $exists = DB::table('user_items')->where('id', $cartItem['id'])->where('user_id', $user_id)->exists();
+                        if ($exists) {
+                            $itemTotal = (float)($cartItem['total'] ?? 0);
+                            if ($itemTotal <= 0 && isset($cartItem['product_price']) && isset($cartItem['qty'])) {
+                                $itemTotal = (float)$cartItem['product_price'] * (int)$cartItem['qty'];
+                            }
+                            $total += $itemTotal;
+                            $validCart[$key] = $cartItem;
+                        }
                     }
-                    $total += $itemTotal;
+                }
+                if (count($validCart) !== count($cart)) {
+                    if (empty($validCart)) {
+                        session()->forget('cart_' . $username);
+                    } else {
+                        session()->put('cart_' . $username, $validCart);
+                    }
                 }
             }
         }
@@ -1146,9 +1159,13 @@ if (!function_exists('VariationStock')) {
         $product_variations = App\Models\User\ProductVariation::where([
             ['item_id', $item_id],
         ])->get();
-        $varitaion_stock = [];
+        $varitaion_stock = [
+            'has_variation' => 'no',
+            'stock' => 'no'
+        ];
         if (count($product_variations) > 0) {
             $varitaion_stock['has_variation'] = 'yes';
+            $has_stock = false;
             foreach ($product_variations as $product_variation) {
                 $product_variation_options = App\Models\User\ProductVariantOption::where(
                     'product_variation_id',
@@ -1156,17 +1173,12 @@ if (!function_exists('VariationStock')) {
                 )->get();
                 foreach ($product_variation_options as $product_variation_option) {
                     if ($product_variation_option->stock > 0) {
-                        $varitaion_stock['stock'] = 'yes';
-                        break;
-                    } else {
-                        $varitaion_stock['stock'] = 'no';
-                        continue;
+                        $has_stock = true;
+                        break 2;
                     }
                 }
             }
-        } else {
-            $varitaion_stock['has_variation'] = 'no';
-            $varitaion_stock['stock'] = 'no';
+            $varitaion_stock['stock'] = $has_stock ? 'yes' : 'no';
         }
         return $varitaion_stock;
     }
@@ -1266,5 +1278,23 @@ if (!function_exists('hasStaffPerm')) {
         }
 
         return in_array($permissionKey, $perms);
+    }
+}
+
+if (!function_exists('themeView')) {
+    function themeView($view, array $data = [])
+    {
+        return app('theme.service')->view($view, $data);
+    }
+}
+
+if (!function_exists('themeAsset')) {
+    function themeAsset($path)
+    {
+        $theme = app('theme.service')->getActiveTheme();
+        if ($theme === 'vegetables') {
+            $theme = 'grocery';
+        }
+        return asset("assets/user-front/themes/{$theme}/" . ltrim($path, '/'));
     }
 }
