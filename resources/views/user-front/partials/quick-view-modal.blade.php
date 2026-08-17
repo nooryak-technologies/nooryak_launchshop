@@ -35,18 +35,20 @@
     <div class="product-single-gallery">
       <div class="slider-thumbnails">
         @foreach ($slides as $index => $src)
-          <div class="thumbnail-img radius-sm {{ $index === 0 ? 'active' : '' }}">
-            <img src="{{ $src }}" class="lazyloaded" onerror="this.onerror=null;this.src='{{ $placeholderImg }}';" alt="{{ $product->title }}" />
+          <div class="thumbnail-img {{ $loop->first ? 'slick-current slick-active active' : '' }}" data-slick-index="{{ $index }}">
+            <img src="{{ $src }}" onerror="this.onerror=null;this.src='{{ $placeholderImg }}';" alt="{{ $product->title }}" />
           </div>
         @endforeach
       </div>
       <div class="product-single-slider">
-        @foreach ($slides as $src)  
-          <figure class="radius-lg">
-            <a href="{{ $src }}">
-              <img src="{{ $src }}" class="lazyloaded" onerror="this.onerror=null;this.src='{{ $placeholderImg }}';" alt="{{ $product->title }}" />
-            </a>
-          </figure>
+        @foreach ($slides as $index => $src)
+          <div class="product-single-single-item {{ $loop->first ? 'slick-current slick-active active' : '' }}" data-slick-index="{{ $index }}">
+            <figure>
+              <a href="{{ $src }}">
+                <img src="{{ $src }}" class="lazyloaded" onerror="this.onerror=null;this.src='{{ $placeholderImg }}';" alt="{{ $product->title }}" />
+              </a>
+            </figure>
+          </div>
         @endforeach
       </div>
     </div>

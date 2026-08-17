@@ -384,7 +384,7 @@ var optionsSingle = {
     slidesToScroll: 1,
     arrows: false,
     dots: true,
-    fade: true,
+    fade: false,
     cssEase: 'linear',
     rtl: $('html').attr('dir') === 'rtl',
     infinite: false,
@@ -481,8 +481,17 @@ $("body").on('click', '.quick-view-link', function (e) {
                 }
             });
 
+            $('#quickViewModal').off('shown.bs.modal').on('shown.bs.modal', function () {
+                if ($(".product-single-slider").hasClass('slick-initialized')) {
+                    $(".product-single-slider").slick('setPosition');
+                }
+                if ($(".slider-thumbnails").hasClass('slick-initialized')) {
+                    $(".slider-thumbnails").slick('setPosition');
+                }
+            });
+
             $("#quickViewModal").modal('show');
-            $('#quickViewModal').animate({ opacity: 1 }, 200);
+            $('#quickViewModal').animate({ opacity: 1 }, 150);
             $('.request-loader').removeClass('show');
 
             setTimeout(function () {
@@ -492,7 +501,7 @@ $("body").on('click', '.quick-view-link', function (e) {
                 if ($(".slider-thumbnails").hasClass('slick-initialized')) {
                     $(".slider-thumbnails").slick('setPosition');
                 }
-            }, 300);
+            }, 100);
 
             $('[data-bs-toggle="tooltip"]').tooltip('dispose');
 
