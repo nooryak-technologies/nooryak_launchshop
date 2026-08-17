@@ -1418,9 +1418,6 @@ footer {
     border-radius: 12px !important;
     overflow: hidden !important;
     background-color: #f8fafc !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
 }
 
 .quick-view-modal .product-single-slider img,
@@ -1432,7 +1429,7 @@ footer {
     width: 100% !important;
     height: 372px !important;
     max-height: 372px !important;
-    object-fit: cover !important;
+    object-fit: contain !important;
     border-radius: 12px !important;
     opacity: 1 !important;
     visibility: visible !important;
