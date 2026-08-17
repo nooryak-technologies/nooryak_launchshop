@@ -20,7 +20,7 @@
     <div class="container">
       <div class="row g-4">
         <!-- Main Hero Slider -->
-        <div class="col-xl-8 col-lg-12 mb-4">
+        <div class="col-xl-8 col-lg-8 col-12 mb-4">
           <div class="g2-hero-slider" id="g2-main-slider">
             @if (count($sliders) > 0)
               @foreach ($sliders as $slider)
@@ -56,7 +56,7 @@
 
         <!-- Right Side Promo Stack -->
         @if(isset($banners) && count($banners) > 0)
-          <div class="col-xl-4 col-lg-12 mb-4">
+          <div class="col-xl-4 col-lg-4 col-12 mb-4">
             <div class="g2-promo-stack">
               @foreach($banners->take(2) as $b)
                 <div class="g2-side-promo" style="background-image: url('{{ asset('assets/front/img/user/banners/' . $b->banner_img) }}');">

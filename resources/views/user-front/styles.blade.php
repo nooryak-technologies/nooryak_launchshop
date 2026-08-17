@@ -11,7 +11,7 @@
 <!-- Main Style CSS -->
 <link rel="stylesheet" href="{{ asset('assets/user-front/css/common/style.css?v=1.0.1') }}">
 <link rel="stylesheet" href="{{ asset('assets/user-front/css/common/header-1.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/zoom-fix.css?v=1.1.4') }}">
+<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/zoom-fix.css?v=1.1.5') }}">
 <link rel="stylesheet" href="{{ asset('assets/user-front/css/tinymce-content.css') }}">
 
 @if ($userBs->theme == 'vegetables')
@@ -1562,6 +1562,33 @@ footer {
 #quickViewModal .rating-wrapper {
     font-size: 13px !important;
     color: #64748b !important;
+}
+
+/* Universal Laptop View Spacing Between Hero Banners for All Themes */
+@media (min-width: 992px) {
+    .g2-hero-section .row,
+    .hero-section .row,
+    .banner-section .row {
+        --bs-gutter-x: 24px !important;
+    }
+
+    .g2-promo-stack,
+    .hero-side-banners,
+    .banner-promo-stack {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        gap: 20px !important;
+        height: 440px !important;
+    }
+
+    .g2-side-promo,
+    .hero-side-banner,
+    .banner-promo-item {
+        height: 210px !important;
+        max-height: 210px !important;
+        border-radius: 16px !important;
+    }
 }
 
 .quick-view-modal .stock-status .badge.bg-success,
