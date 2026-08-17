@@ -9,9 +9,9 @@
 
 <link rel="stylesheet" href="{{ asset('assets/user-front/fonts/fontawesome/css/all.min.css') }}">
 <!-- Main Style CSS -->
-<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/style.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/style.css?v=1.0.1') }}">
 <link rel="stylesheet" href="{{ asset('assets/user-front/css/common/header-1.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/zoom-fix.css?v=1.1.2') }}">
+<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/zoom-fix.css?v=1.1.3') }}">
 <link rel="stylesheet" href="{{ asset('assets/user-front/css/tinymce-content.css') }}">
 
 @if ($userBs->theme == 'vegetables')
@@ -31,7 +31,7 @@
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/kids/custom-styles.css?v=' . time()) }}">
 @elseif ($userBs->theme == 'manti')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/manti/home-6.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/manti/custom-styles.css?v=1.0.9') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/manti/custom-styles.css?v=1.1.0') }}">
 @elseif ($userBs->theme == 'pet')
   <style>
     :root {
