@@ -7144,7 +7144,7 @@ html[dir="rtl"] #product-details-slider .slick-track {
 .product-slider .slick-list,
 .cat-slider-skinflow .slick-list {
     margin-left: -10px !important;
-    margin-right: -10px !important;
+    margin-right: -2px !important;
     padding-top: 10px !important;
     padding-bottom: 12px !important;
 }
