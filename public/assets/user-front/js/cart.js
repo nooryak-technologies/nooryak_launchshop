@@ -449,8 +449,13 @@ $("body").on('click', '.quick-view-link', function (e) {
                     $(".slider-thumbnails").slick('unslick');
                 }
 
+                var thumbCount = $("#quickViewModalContent .slider-thumbnails .thumbnail-img").length;
+                var customOptionsThumb = $.extend({}, optionsThumb, {
+                    slidesToShow: thumbCount > 0 ? Math.min(thumbCount, 4) : 4
+                });
+
                 $(".product-single-slider").slick(optionsSingle);
-                $(".slider-thumbnails").slick(optionsThumb);
+                $(".slider-thumbnails").slick(customOptionsThumb);
 
                 $(".product-single-slider").on('setPosition afterChange', function (event, slick, currentSlide) {
                     $(".zoomContainer, .zoomWindowContainer").remove();

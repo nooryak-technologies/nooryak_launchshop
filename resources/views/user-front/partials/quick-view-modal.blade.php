@@ -32,7 +32,7 @@
 
   <div class="col-lg-6 product-single-default">
     <input type="hidden" id="item_id" value="{{ $item_id }}">
-    <div class="product-single-gallery">
+    <div class="product-single-gallery d-flex">
       <div class="slider-thumbnails">
         @foreach ($slides as $index => $src)
           <div class="thumbnail-img {{ $loop->first ? 'slick-current slick-active active' : '' }}" data-slick-index="{{ $index }}">
