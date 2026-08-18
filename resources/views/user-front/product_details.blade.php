@@ -178,7 +178,9 @@
 
               @if ($flash_status == true)
                 <div class="product-countdown mt-3" data-end_time="{{ $product->item->end_time }}"
-                  data-end_date="{{ $product->item->end_date }}" data-item_id="{{ $product->id }}">
+                  data-end_date="{{ $product->item->end_date }}"
+                  data-is_demo="{{ (!empty($user->preview_template) && $user->preview_template == 1) || (@$user->email == 'sathikaqiq121@gmail.com') ? 1 : 0 }}"
+                  data-item_id="{{ $product->id }}">
                   <div id="" class="count radius-sm days">
                     <span class="count-value_{{ $product->id }}"></span>
                     <span class="count-period">{{ $keywords['Days'] ?? __('Days') }} </span>
