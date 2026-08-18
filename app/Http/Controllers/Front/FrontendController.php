@@ -278,97 +278,68 @@ class FrontendController extends Controller
         $otp = rand(100000, 999999);
         $whatsappSent = false;
 
-        // Try Zavu Platform Messaging API according to Zavu Official Docs
+        // Try Zavu Platform SMS Messaging API according to Zavu Official Docs
         $apiKey = 'zv_live_788d5c4f01ca75673a41d7e2188d23f79a1ff703b2935c45';
         $senderId = 'kd7cc6f4dg8gfkfz4hgjhcmo-vn8cqk75';
         $digitsOnly = preg_replace('/[^0-9]/', '', $mobileNo);
         $formattedPhone = '+' . $digitsOnly;
-        $otpMessage = "Your OTP verification code is *" . $otp . "* for *Launchshop Ecommerce* - Valid for 5 minutes.";
+        $otpMessage = "Your OTP verification code is " . $otp . " for Launchshop Ecommerce - Valid for 5 minutes.";
 
         $debugLogs = [];
-        $debugLogs[] = date('Y-m-d H:i:s') . " --- Zavu Official API Call for " . $formattedPhone;
+        $debugLogs[] = date('Y-m-d H:i:s') . " --- Zavu Official SMS Call for " . $formattedPhone;
 
-        $headerVariations = [
-            'Bearer Only' => [
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Content-Type'  => 'application/json',
-                'Accept'        => 'application/json'
-            ],
-            'Bearer + Zavu-Sender ID' => [
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Zavu-Sender'   => $senderId,
-                'Content-Type'  => 'application/json',
-                'Accept'        => 'application/json'
-            ],
-            'Bearer + Zavu-Sender Name' => [
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Zavu-Sender'   => 'Nooryak Technologies',
-                'Content-Type'  => 'application/json',
-                'Accept'        => 'application/json'
-            ],
-            'x-api-key Header' => [
-                'x-api-key'     => $apiKey,
-                'Zavu-Sender'   => $senderId,
-                'Content-Type'  => 'application/json',
-                'Accept'        => 'application/json'
-            ],
-            'Bearer + x-api-key' => [
-                'Authorization' => 'Bearer ' . $apiKey,
-                'x-api-key'     => $apiKey,
-                'Zavu-Sender'   => $senderId,
-                'Content-Type'  => 'application/json',
-                'Accept'        => 'application/json'
-            ]
+        $headers = [
+            'Authorization' => 'Bearer ' . $apiKey,
+            'Zavu-Sender'   => $senderId,
+            'Content-Type'  => 'application/json',
+            'Accept'        => 'application/json'
         ];
 
-        $payloadVariations = [
-            'SMS Channel Universal' => [
+        // Force explicit SMS channel to prevent defaulting to WhatsApp
+        $payloadsToTry = [
+            // 1. Explicit SMS Channel
+            [
                 'to'      => $formattedPhone,
                 'text'    => $otpMessage,
                 'channel' => 'sms',
             ],
-            'Smart Channel Auto' => [
+            // 2. Smart Channel Auto
+            [
                 'to'      => $formattedPhone,
                 'text'    => $otpMessage,
                 'channel' => 'smart',
             ],
-            'Minimal Standard' => [
-                'to'   => $formattedPhone,
-                'text' => $otpMessage,
-            ],
-            'WhatsApp Explicit' => [
-                'to'      => $formattedPhone,
-                'text'    => $otpMessage,
-                'channel' => 'whatsapp',
+            // 3. SMS Channel with Sender ID
+            [
+                'senderId' => $senderId,
+                'to'       => $formattedPhone,
+                'text'     => $otpMessage,
+                'channel'  => 'sms',
             ]
         ];
 
-        foreach ($headerVariations as $hName => $headers) {
+        foreach ($payloadsToTry as $idx => $payload) {
             if ($whatsappSent) break;
 
-            foreach ($payloadVariations as $pName => $payload) {
-                if ($whatsappSent) break;
+            try {
+                $response = Http::withHeaders($headers)->withoutVerifying()->post('https://api.zavu.dev/v1/messages', $payload);
+                $status = $response->status();
+                $bodyStr = $response->body();
 
-                try {
-                    $response = Http::withHeaders($headers)->withoutVerifying()->post('https://api.zavu.dev/v1/messages', $payload);
-                    $status = $response->status();
-                    $bodyStr = $response->body();
+                $logEntry = "Payload #{$idx} | Status: {$status} | Body: {$bodyStr}";
+                $debugLogs[] = $logEntry;
+                Log::info("Zavu Attempt: " . $logEntry);
 
-                    $logEntry = "Header: [{$hName}] | Payload: [{$pName}] | Status: {$status} | Body: {$bodyStr}";
-                    $debugLogs[] = $logEntry;
-                    Log::info("Zavu Trace: " . $logEntry);
-
-                    if ($response->successful()) {
-                        $resData = $response->json();
-                        if (!(is_array($resData) && isset($resData['error']) && $resData['error'])) {
-                            $whatsappSent = true;
-                            $debugLogs[] = "SUCCESS! Accepted by Zavu using Header: [{$hName}] and Payload: [{$pName}]";
-                        }
+                if ($response->successful()) {
+                    $resData = $response->json();
+                    if (!(is_array($resData) && isset($resData['error']) && $resData['error'])) {
+                        $whatsappSent = true;
+                        $debugLogs[] = "SUCCESS! Message accepted by Zavu with payload #{$idx}";
                     }
-                } catch (\Exception $e) {
-                    $debugLogs[] = "Header: [{$hName}] | Exception: " . $e->getMessage();
-                    Log::error("Zavu Exception: " . $e->getMessage());
                 }
+            } catch (\Exception $e) {
+                $debugLogs[] = "Payload #{$idx} | Exception: " . $e->getMessage();
+                Log::error("Zavu Exception: " . $e->getMessage());
             }
         }
 
