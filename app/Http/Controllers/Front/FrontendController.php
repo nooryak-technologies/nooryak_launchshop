@@ -290,26 +290,38 @@ class FrontendController extends Controller
 
         $headers = [
             'Authorization' => 'Bearer ' . $apiKey,
+            'x-api-key'     => $apiKey,
             'Zavu-Sender'   => $senderId,
-            'Content-Type'   => 'application/json',
-            'Accept'         => 'application/json'
+            'Content-Type'  => 'application/json',
+            'Accept'        => 'application/json'
         ];
 
-        // Payloads matching Zavu official documentation spec
+        // Payloads matching Zavu official spec with required senderId
         $payloadsToTry = [
-            // 1. Zavu Auto Routing (Smart delivery across WhatsApp / SMS with fallback)
+            // 1. Zavu Auto Routing with explicit senderId
             [
-                'to'   => $formattedPhone,
-                'text' => $otpMessage,
+                'senderId'  => $senderId,
+                'sender_id' => $senderId,
+                'sender'    => $senderId,
+                'to'        => $formattedPhone,
+                'text'      => $otpMessage,
+                'message'   => $otpMessage,
             ],
             // 2. Explicit WhatsApp channel session message
             [
-                'to'      => $formattedPhone,
-                'text'    => $otpMessage,
-                'channel' => 'whatsapp',
+                'senderId'  => $senderId,
+                'sender_id' => $senderId,
+                'sender'    => $senderId,
+                'to'        => $formattedPhone,
+                'text'      => $otpMessage,
+                'message'   => $otpMessage,
+                'channel'   => 'whatsapp',
             ],
             // 3. WhatsApp Template format as defined in Zavu Docs
             [
+                'senderId'    => $senderId,
+                'sender_id'   => $senderId,
+                'sender'      => $senderId,
                 'to'          => $formattedPhone,
                 'channel'     => 'whatsapp',
                 'messageType' => 'template',
@@ -322,28 +334,37 @@ class FrontendController extends Controller
             ]
         ];
 
+        $endpoints = [
+            'https://api.zavu.dev/v1/messages',
+            'https://api.zavu.dev/v1/senders/' . $senderId . '/messages'
+        ];
+
         foreach ($payloadsToTry as $idx => $payload) {
             if ($whatsappSent) break;
 
-            try {
-                $response = Http::withHeaders($headers)->withoutVerifying()->post('https://api.zavu.dev/v1/messages', $payload);
-                $status = $response->status();
-                $bodyStr = $response->body();
+            foreach ($endpoints as $url) {
+                if ($whatsappSent) break;
 
-                $logEntry = "Payload #{$idx} | Status: {$status} | Body: {$bodyStr}";
-                $debugLogs[] = $logEntry;
-                Log::info("Zavu Attempt: " . $logEntry);
+                try {
+                    $response = Http::withHeaders($headers)->withoutVerifying()->post($url, $payload);
+                    $status = $response->status();
+                    $bodyStr = $response->body();
 
-                if ($response->successful()) {
-                    $resData = $response->json();
-                    if (!(is_array($resData) && isset($resData['error']) && $resData['error'])) {
-                        $whatsappSent = true;
-                        $debugLogs[] = "SUCCESS! Message accepted by Zavu with payload #{$idx}";
+                    $logEntry = "URL: {$url} | Payload #{$idx} | Status: {$status} | Body: {$bodyStr}";
+                    $debugLogs[] = $logEntry;
+                    Log::info("Zavu Attempt: " . $logEntry);
+
+                    if ($response->successful()) {
+                        $resData = $response->json();
+                        if (!(is_array($resData) && isset($resData['error']) && $resData['error'])) {
+                            $whatsappSent = true;
+                            $debugLogs[] = "SUCCESS! Message accepted by Zavu with payload #{$idx} on {$url}";
+                        }
                     }
+                } catch (\Exception $e) {
+                    $debugLogs[] = "URL: {$url} | Payload #{$idx} | Exception: " . $e->getMessage();
+                    Log::error("Zavu Exception: " . $e->getMessage());
                 }
-            } catch (\Exception $e) {
-                $debugLogs[] = "Payload #{$idx} | Exception: " . $e->getMessage();
-                Log::error("Zavu Exception: " . $e->getMessage());
             }
         }
 
