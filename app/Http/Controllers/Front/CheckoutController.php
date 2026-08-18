@@ -780,18 +780,23 @@ class CheckoutController extends Controller
             . "– Team LaunchShop 🚀";
 
         $apiKey = 'zv_live_788d5c4f01ca75673a41d7e2188d23f79a1ff703b2935c45';
+        $senderId = 'kd7cc6f4dg8gfkfz4hgjhcmo-vn8cqk75';
         $formattedPhone = '+' . preg_replace('/[^0-9]/', '', $mobileNo);
 
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $apiKey,
                 'x-api-key' => $apiKey,
+                'Zavu-Sender' => $senderId,
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json'
             ])->withoutVerifying()->post('https://api.zavu.dev/v1/messages', [
                 'to'      => $formattedPhone,
                 'text'    => $message,
                 'message' => $message,
+                'channel' => 'whatsapp',
+                'sender'  => $senderId,
+                'sender_id' => $senderId
             ]);
 
             Log::info('Zavu Welcome WhatsApp send response:', [
