@@ -278,58 +278,81 @@ class FrontendController extends Controller
         $otp = rand(100000, 999999);
         $whatsappSent = false;
 
-        // Try Zavu Platform WhatsApp / SMS API
+        // Try Zavu Platform WhatsApp / SMS API with multiple variations & detailed logging
         $apiKey = 'zv_live_788d5c4f01ca75673a41d7e2188d23f79a1ff703b2935c45';
         $senderId = 'kd7cc6f4dg8gfkfz4hgjhcmo-vn8cqk75';
-        $formattedPhone = '+' . preg_replace('/[^0-9]/', '', $mobileNo);
+        $digitsOnly = preg_replace('/[^0-9]/', '', $mobileNo);
+        $phonePlus = '+' . $digitsOnly;
+        $phoneNoPlus = $digitsOnly;
         $otpMessage = "Your OTP verification code is *" . $otp . "* for *Launchshop Ecommerce* - This code is valid for *5 minutes* - Please do not share it with anyone.";
 
-        try {
-            $headers = [
-                'Authorization' => 'Bearer ' . $apiKey,
-                'x-api-key' => $apiKey,
-                'Zavu-Sender' => $senderId,
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json'
-            ];
+        $debugLogs = [];
+        $debugLogs[] = date('Y-m-d H:i:s') . " --- Starting Zavu OTP Send for " . $phonePlus;
 
-            $payload = [
-                'to' => $formattedPhone,
-                'text' => $otpMessage,
-                'message' => $otpMessage,
-                'channel' => 'whatsapp',
-                'sender' => $senderId,
-                'sender_id' => $senderId
-            ];
+        $endpoints = [
+            'https://api.zavu.dev/v1/messages',
+            'https://api.zavu.dev/v1/messages/send',
+            'https://api.zavu.dev/v1/send',
+            'https://api.zavu.dev/v1/chats/send'
+        ];
 
-            $response = Http::withHeaders($headers)->withoutVerifying()->post('https://api.zavu.dev/v1/messages', $payload);
+        $phonesToTest = [$phonePlus, $phoneNoPlus];
 
-            $resData = $response->json() ?? [];
-            Log::info('Zavu OTP Send Response:', [
-                'status' => $response->status(),
-                'response' => $resData,
-                'phone' => $formattedPhone
-            ]);
+        foreach ($phonesToTest as $testPhone) {
+            if ($whatsappSent) break;
 
-            if ($response->successful() && ($resData['success'] ?? true)) {
-                $whatsappSent = true;
-            } else {
-                Log::warning('Zavu OTP API attempt 1 failed, trying fallback endpoints...', ['status' => $response->status(), 'response' => $resData]);
-                
-                // Fallback attempt to /v1/messages/send
-                $response2 = Http::withHeaders($headers)->withoutVerifying()->post('https://api.zavu.dev/v1/messages/send', $payload);
-                if ($response2->successful()) {
-                    $whatsappSent = true;
-                } else {
-                    // Fallback attempt to /v1/send
-                    $response3 = Http::withHeaders($headers)->withoutVerifying()->post('https://api.zavu.dev/v1/send', $payload);
-                    if ($response3->successful()) {
+            foreach ($endpoints as $url) {
+                if ($whatsappSent) break;
+
+                try {
+                    $headers = [
+                        'Authorization' => 'Bearer ' . $apiKey,
+                        'x-api-key' => $apiKey,
+                        'Zavu-Sender' => $senderId,
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json'
+                    ];
+
+                    $payload = [
+                        'to' => $testPhone,
+                        'text' => $otpMessage,
+                        'message' => $otpMessage,
+                        'body' => $otpMessage,
+                        'channel' => 'whatsapp',
+                        'sender' => $senderId,
+                        'sender_id' => $senderId
+                    ];
+
+                    $response = Http::withHeaders($headers)->withoutVerifying()->post($url, $payload);
+                    $status = $response->status();
+                    $bodyStr = $response->body();
+
+                    $logEntry = "URL: {$url} | Phone: {$testPhone} | Status: {$status} | Body: {$bodyStr}";
+                    $debugLogs[] = $logEntry;
+                    Log::info("Zavu Attempt: " . $logEntry);
+
+                    if ($response->successful()) {
+                        $resData = $response->json();
+                        if (is_array($resData) && isset($resData['error']) && $resData['error']) {
+                            // Zavu returned HTTP 200 but error in JSON body
+                            continue;
+                        }
                         $whatsappSent = true;
+                        $debugLogs[] = "SUCCESS! Message accepted by Zavu on {$url} for {$testPhone}";
                     }
+                } catch (\Exception $e) {
+                    $debugLogs[] = "URL: {$url} | Exception: " . $e->getMessage();
+                    Log::error("Zavu Exception on {$url}: " . $e->getMessage());
                 }
             }
-        } catch (\Exception $e) {
-            Log::error('Zavu OTP Send Exception: ' . $e->getMessage());
+        }
+
+        // Save detailed trace to storage/logs/zavu_debug.log so user or developer can read the exact response from Zavu
+        try {
+            $logFilePath = storage_path('logs/zavu_debug.log');
+            file_put_contents($logFilePath, implode("\n", $debugLogs) . "\n\n", FILE_APPEND);
+        } catch (\Exception $logEx) {
+            // Ignore file write errors
         }
 
         // Always store OTP session so user can verify without restriction
