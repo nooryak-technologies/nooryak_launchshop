@@ -9,29 +9,29 @@
 
 <link rel="stylesheet" href="{{ asset('assets/user-front/fonts/fontawesome/css/all.min.css') }}">
 <!-- Main Style CSS -->
-<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/style.css?v=1.0.1') }}">
-<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/header-1.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/zoom-fix.css?v=1.1.4') }}">
-<link rel="stylesheet" href="{{ asset('assets/user-front/css/tinymce-content.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/style.css?v=' . time()) }}">
+<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/header-1.css?v=' . time()) }}">
+<link rel="stylesheet" href="{{ asset('assets/user-front/css/common/zoom-fix.css?v=' . time()) }}">
+<link rel="stylesheet" href="{{ asset('assets/user-front/css/tinymce-content.css?v=' . time()) }}">
 
 @if ($userBs->theme == 'vegetables')
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/grocery/home-1.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/grocery/custom-styles.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/grocery/home-1.css?v=' . time()) }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/grocery/custom-styles.css?v=' . time()) }}">
 @elseif ($userBs->theme == 'furniture')
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/furniture/home-2.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/furniture/home-2.css?v=' . time()) }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/furniture/custom-styles.css?v=' . time()) }}">
 @elseif ($userBs->theme == 'fashion')
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/fashion/home-3.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/fashion/custom-styles.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/fashion/home-3.css?v=' . time()) }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/fashion/custom-styles.css?v=' . time()) }}">
 @elseif ($userBs->theme == 'electronics')
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/home-4.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/custom-styles.css?v=1.0.3') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/home-4.css?v=' . time()) }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/custom-styles.css?v=' . time()) }}">
 @elseif ($userBs->theme == 'kids')
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/kids/home-5.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/kids/home-5.css?v=' . time()) }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/kids/custom-styles.css?v=' . time()) }}">
 @elseif ($userBs->theme == 'manti')
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/manti/home-6.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/manti/custom-styles.css?v=1.1.0') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/manti/home-6.css?v=' . time()) }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/manti/custom-styles.css?v=' . time()) }}">
 @elseif ($userBs->theme == 'pet')
   <style>
     :root {
@@ -638,8 +638,8 @@
       }
     }
   </style>
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/jewellery/jewellery.css?v=2.0.3') }}">
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/jewellery/custom-styles.css?v=2.0.3') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/jewellery/jewellery.css?v=' . time()) }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/jewellery/custom-styles.css?v=' . time()) }}">
 @elseif ($userBs->theme == 'clothing')
 
   <style>
@@ -652,13 +652,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/clothing/clothing.css?v=1.0.5') }}">
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/clothing/custom-styles.css?v=1.0.5') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/clothing/clothing.css?v=' . time()) }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/clothing/custom-styles.css?v=' . time()) }}">
 @elseif ($userBs->theme == 'grocery2')
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ asset('assets/user-front/css/grocery2/styles.css?v=1.0.2') }}">
+  <link rel="stylesheet" href="{{ asset('assets/user-front/css/grocery2/styles.css?v=' . time()) }}">
   <style>
     .g2-hero-slider .slick-slide {
       padding-left: 0 !important;
