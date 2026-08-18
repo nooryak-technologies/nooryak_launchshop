@@ -298,38 +298,43 @@ class FrontendController extends Controller
 
         $phonesToTest = [$phonePlus, $phoneNoPlus];
 
+        $channelsToTest = ['smart', 'sms', 'whatsapp'];
+
         foreach ($phonesToTest as $testPhone) {
             if ($whatsappSent) break;
 
-            foreach ($endpoints as $url) {
+            foreach ($channelsToTest as $channel) {
                 if ($whatsappSent) break;
 
-                try {
-                    $headers = [
-                        'Authorization' => 'Bearer ' . $apiKey,
-                        'x-api-key' => $apiKey,
-                        'Zavu-Sender' => $senderId,
-                        'Content-Type' => 'application/json',
-                        'Accept' => 'application/json'
-                    ];
+                foreach ($endpoints as $url) {
+                    if ($whatsappSent) break;
 
-                    $payload = [
-                        'to' => $testPhone,
-                        'text' => $otpMessage,
-                        'message' => $otpMessage,
-                        'body' => $otpMessage,
-                        'channel' => 'whatsapp',
-                        'sender' => $senderId,
-                        'sender_id' => $senderId
-                    ];
+                    try {
+                        $headers = [
+                            'Authorization' => 'Bearer ' . $apiKey,
+                            'x-api-key' => $apiKey,
+                            'Zavu-Sender' => $senderId,
+                            'Content-Type' => 'application/json',
+                            'Accept' => 'application/json'
+                        ];
 
-                    $response = Http::withHeaders($headers)->withoutVerifying()->post($url, $payload);
-                    $status = $response->status();
-                    $bodyStr = $response->body();
+                        $payload = [
+                            'to' => $testPhone,
+                            'text' => $otpMessage,
+                            'message' => $otpMessage,
+                            'body' => $otpMessage,
+                            'channel' => $channel,
+                            'sender' => $senderId,
+                            'sender_id' => $senderId
+                        ];
 
-                    $logEntry = "URL: {$url} | Phone: {$testPhone} | Status: {$status} | Body: {$bodyStr}";
-                    $debugLogs[] = $logEntry;
-                    Log::info("Zavu Attempt: " . $logEntry);
+                        $response = Http::withHeaders($headers)->withoutVerifying()->post($url, $payload);
+                        $status = $response->status();
+                        $bodyStr = $response->body();
+
+                        $logEntry = "URL: {$url} | Channel: {$channel} | Phone: {$testPhone} | Status: {$status} | Body: {$bodyStr}";
+                        $debugLogs[] = $logEntry;
+                        Log::info("Zavu Attempt: " . $logEntry);
 
                     if ($response->successful()) {
                         $resData = $response->json();
