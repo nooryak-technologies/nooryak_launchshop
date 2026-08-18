@@ -294,57 +294,31 @@ class FrontendController extends Controller
             'Accept'        => 'application/json'
         ];
 
-        // Payloads prioritizing SMS channel to bypass Meta Graph API WhatsApp permissions check
-        $payloadsToTry = [
-            // 1. Explicit SMS Channel (Bypasses Meta WhatsApp Graph API)
-            [
-                'to'      => $formattedPhone,
-                'text'    => $otpMessage,
-                'channel' => 'sms',
-            ],
-            // 2. Smart Channel Auto Routing
-            [
-                'to'      => $formattedPhone,
-                'text'    => $otpMessage,
-                'channel' => 'smart',
-            ],
-            // 3. WhatsApp Template Format
-            [
-                'to'          => $formattedPhone,
-                'channel'     => 'whatsapp',
-                'messageType' => 'template',
-                'content'     => [
-                    'templateId'        => 'otp_verification',
-                    'templateVariables' => [
-                        '1' => (string)$otp
-                    ]
-                ]
-            ]
+        // Official Zavu REST API Payload (Always returns HTTP 202 Accepted)
+        $payload = [
+            'to'   => $formattedPhone,
+            'text' => $otpMessage,
         ];
 
-        foreach ($payloadsToTry as $idx => $payload) {
-            if ($whatsappSent) break;
+        try {
+            $response = Http::withHeaders($headers)->withoutVerifying()->post('https://api.zavu.dev/v1/messages', $payload);
+            $status = $response->status();
+            $bodyStr = $response->body();
 
-            try {
-                $response = Http::withHeaders($headers)->withoutVerifying()->post('https://api.zavu.dev/v1/messages', $payload);
-                $status = $response->status();
-                $bodyStr = $response->body();
+            $logEntry = "Status: {$status} | Body: {$bodyStr}";
+            $debugLogs[] = $logEntry;
+            Log::info("Zavu Attempt: " . $logEntry);
 
-                $logEntry = "Payload #{$idx} | Status: {$status} | Body: {$bodyStr}";
-                $debugLogs[] = $logEntry;
-                Log::info("Zavu Attempt: " . $logEntry);
-
-                if ($response->successful()) {
-                    $resData = $response->json();
-                    if (!(is_array($resData) && isset($resData['error']) && $resData['error'])) {
-                        $whatsappSent = true;
-                        $debugLogs[] = "SUCCESS! Message accepted by Zavu with payload #{$idx}";
-                    }
+            if ($response->successful()) {
+                $resData = $response->json();
+                if (!(is_array($resData) && isset($resData['error']) && $resData['error'])) {
+                    $whatsappSent = true;
+                    $debugLogs[] = "SUCCESS! Message accepted by Zavu";
                 }
-            } catch (\Exception $e) {
-                $debugLogs[] = "Payload #{$idx} | Exception: " . $e->getMessage();
-                Log::error("Zavu Exception: " . $e->getMessage());
             }
+        } catch (\Exception $e) {
+            $debugLogs[] = "Exception: " . $e->getMessage();
+            Log::error("Zavu Exception: " . $e->getMessage());
         }
 
         // Save detailed trace to storage/logs/zavu_debug.log so user or developer can read the exact response from Zavu
