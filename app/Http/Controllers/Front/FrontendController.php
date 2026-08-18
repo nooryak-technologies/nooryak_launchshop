@@ -278,30 +278,47 @@ class FrontendController extends Controller
         $otp = rand(100000, 999999);
         $whatsappSent = false;
 
-        // Try WhatsApp API
+        // Try Zavu Platform WhatsApp / SMS API
+        $apiKey = 'zv_live_788d5c4f01ca75673a41d7e2188d23f79a1ff703b2935c45';
+        $formattedPhone = '+' . preg_replace('/[^0-9]/', '', $mobileNo);
+        $otpMessage = "Your OTP verification code is *" . $otp . "* for *Launchshop Ecommerce* - This code is valid for *5 minutes* - Please do not share it with anyone.";
+
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer 3bf6211c4ba7000f46ea1cb9d2d0f78f',
-            ])->withoutVerifying()->post('https://2fa.tehub.in/api/whatsapp.php', [
-                'to' => $mobileNo,
-                'message' => "Your OTP verification code is *" . $otp . "* for *Launchshop Ecommerce* - This code is valid for *5 minutes* - Please do not share it with anyone.",
-                'type' => 'general'
+                'Authorization' => 'Bearer ' . $apiKey,
+                'x-api-key' => $apiKey,
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json'
+            ])->withoutVerifying()->post('https://api.zavu.dev/v1/messages', [
+                'to' => $formattedPhone,
+                'text' => $otpMessage,
+                'message' => $otpMessage
             ]);
 
             $resData = $response->json();
-            Log::info('Tehub WhatsApp OTP Send Response:', [
+            Log::info('Zavu OTP Send Response:', [
                 'status' => $response->status(),
                 'response' => $resData,
-                'phone' => $mobileNo
+                'phone' => $formattedPhone
             ]);
 
-            if ($response->successful() && isset($resData['success']) && $resData['success'] === true) {
+            if ($response->successful() && (isset($resData['success']) ? $resData['success'] === true : true)) {
                 $whatsappSent = true;
             } else {
-                Log::warning('WhatsApp OTP failed, fallback to Email OTP', ['response' => $resData]);
+                Log::warning('Zavu OTP API non-200, trying send endpoint fallback...', ['response' => $resData]);
+                $response2 = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $apiKey,
+                    'x-api-key' => $apiKey,
+                ])->withoutVerifying()->post('https://api.zavu.dev/v1/messages/send', [
+                    'to' => $formattedPhone,
+                    'text' => $otpMessage
+                ]);
+                if ($response2->successful()) {
+                    $whatsappSent = true;
+                }
             }
         } catch (\Exception $e) {
-            Log::error('Tehub WhatsApp OTP Send Exception: ' . $e->getMessage());
+            Log::error('Zavu OTP Send Exception: ' . $e->getMessage());
         }
 
         // Always store OTP session so user can verify without restriction

@@ -779,19 +779,29 @@ class CheckoutController extends Controller
             . "Need help? Chat with us anytime.\n"
             . "– Team LaunchShop 🚀";
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer 3bf6211c4ba7000f46ea1cb9d2d0f78f',
-        ])->withoutVerifying()->post('https://2fa.tehub.in/api/whatsapp.php', [
-            'to'      => $mobileNo,
-            'message' => $message,
-            'type'    => 'general',
-        ]);
+        $apiKey = 'zv_live_788d5c4f01ca75673a41d7e2188d23f79a1ff703b2935c45';
+        $formattedPhone = '+' . preg_replace('/[^0-9]/', '', $mobileNo);
 
-        Log::info('Welcome WhatsApp send response:', [
-            'phone'    => $mobileNo,
-            'status'   => $response->status(),
-            'response' => $response->json(),
-        ]);
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $apiKey,
+                'x-api-key' => $apiKey,
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json'
+            ])->withoutVerifying()->post('https://api.zavu.dev/v1/messages', [
+                'to'      => $formattedPhone,
+                'text'    => $message,
+                'message' => $message,
+            ]);
+
+            Log::info('Zavu Welcome WhatsApp send response:', [
+                'phone'    => $formattedPhone,
+                'status'   => $response->status(),
+                'response' => $response->json(),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Zavu Welcome WhatsApp Exception: ' . $e->getMessage());
+        }
     }
 }
 

@@ -26,58 +26,9 @@
 @elseif ($userBs->theme == 'electronics')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/home-4.css?v=' . time()) }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/custom-styles.css?v=' . time()) }}">
-  <style>
-    /* Electronics Theme Specific Section Spacing & Overlap Fix */
-    .product-with-border.actual-content,
-    .product-with-border.lazy,
-    .product-with-border {
-      margin-top: 60px !important;
-      padding-top: 20px !important;
-    }
-    .product-with-border .product-inner {
-      padding-top: 100px !important;
-      padding-bottom: 30px !important;
-      margin-top: 20px !important;
-    }
-    section.products.actual-content,
-    section.products.lazy,
-    section.products {
-      margin-top: 60px !important;
-      padding-top: 20px !important;
-    }
-    section.products .section-title.border-bottom {
-      margin-bottom: 30px !important;
-      padding-bottom: 10px !important;
-    }
-    section.products .product-slider-electronics {
-      margin-top: 20px !important;
-    }
-    .banner-collection {
-      margin-top: 50px !important;
-      padding-top: 20px !important;
-    }
-  </style>
 @elseif ($userBs->theme == 'kids')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/kids/home-5.css?v=' . time()) }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/kids/custom-styles.css?v=' . time()) }}">
-  <style>
-    /* Kids Theme Specific Section Spacing */
-    section.category-5,
-    section.category {
-      margin-top: 60px !important;
-      padding-top: 60px !important;
-      padding-bottom: 40px !important;
-    }
-    section.products.actual-content,
-    section.products.lazy,
-    .product-with-border {
-      margin-top: 60px !important;
-      padding-top: 20px !important;
-    }
-    .product-with-border .product-inner {
-      padding-top: 100px !important;
-    }
-  </style>
 @elseif ($userBs->theme == 'manti')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/manti/home-6.css?v=' . time()) }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/manti/custom-styles.css?v=' . time()) }}">
@@ -1534,43 +1485,25 @@ footer {
 }
 
 /* Specific Spacing for Electronics Theme - Deal Of The Week & Laptops/Computers */
-.product-with-border.actual-content,
-.product-with-border.lazy,
-.product-with-border {
-    margin-top: 60px !important;
-    padding-top: 20px !important;
+.product-with-border.actual-content {
+    margin-top: 45px !important;
+    padding-top: 25px !important;
 }
 
-.product-with-border.actual-content .product-inner,
-.product-with-border.lazy .product-inner,
-.product-with-border .product-inner {
-    padding-top: 100px !important;
-    padding-bottom: 30px !important;
-    margin-top: 20px !important;
+.product-with-border.actual-content .product-inner {
+    margin-top: 15px !important;
 }
 
-section.products.actual-content,
-section.products.lazy,
-section.products {
-    margin-top: 60px !important;
-    padding-top: 20px !important;
-}
-
-section.products .section-title.border-bottom {
-    margin-bottom: 30px !important;
-    padding-bottom: 10px !important;
-}
-
-section.products .product-slider-electronics {
-    margin-top: 20px !important;
+section.products.actual-content {
+    margin-top: 45px !important;
+    padding-top: 25px !important;
 }
 
 /* Specific Spacing for Kids Theme - Favorite Categories & Sections */
-section.category-5,
-section.category-5.pt-100 {
+section.category-5 {
     padding-top: 70px !important;
     padding-bottom: 40px !important;
-    margin-top: 60px !important;
+    margin-top: 25px !important;
 }
 
 .quick-view-modal .lazy-container,
