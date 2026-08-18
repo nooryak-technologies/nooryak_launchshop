@@ -278,80 +278,74 @@ class FrontendController extends Controller
         $otp = rand(100000, 999999);
         $whatsappSent = false;
 
-        // Try Zavu Platform WhatsApp / SMS API with multiple variations & detailed logging
+        // Try Zavu Platform Messaging API according to Zavu Official Docs
         $apiKey = 'zv_live_788d5c4f01ca75673a41d7e2188d23f79a1ff703b2935c45';
         $senderId = 'kd7cc6f4dg8gfkfz4hgjhcmo-vn8cqk75';
         $digitsOnly = preg_replace('/[^0-9]/', '', $mobileNo);
-        $phonePlus = '+' . $digitsOnly;
-        $phoneNoPlus = $digitsOnly;
-        $otpMessage = "Your OTP verification code is *" . $otp . "* for *Launchshop Ecommerce* - This code is valid for *5 minutes* - Please do not share it with anyone.";
+        $formattedPhone = '+' . $digitsOnly;
+        $otpMessage = "Your OTP verification code is *" . $otp . "* for *Launchshop Ecommerce* - Valid for 5 minutes.";
 
         $debugLogs = [];
-        $debugLogs[] = date('Y-m-d H:i:s') . " --- Starting Zavu OTP Send for " . $phonePlus;
+        $debugLogs[] = date('Y-m-d H:i:s') . " --- Zavu Official API Call for " . $formattedPhone;
 
-        $endpoints = [
-            'https://api.zavu.dev/v1/messages',
-            'https://api.zavu.dev/v1/messages/send',
-            'https://api.zavu.dev/v1/send',
-            'https://api.zavu.dev/v1/chats/send'
+        $headers = [
+            'Authorization' => 'Bearer ' . $apiKey,
+            'Zavu-Sender'   => $senderId,
+            'Content-Type'   => 'application/json',
+            'Accept'         => 'application/json'
         ];
 
-        $phonesToTest = [$phonePlus, $phoneNoPlus];
+        // Payloads matching Zavu official documentation spec
+        $payloadsToTry = [
+            // 1. Zavu Auto Routing (Smart delivery across WhatsApp / SMS with fallback)
+            [
+                'to'   => $formattedPhone,
+                'text' => $otpMessage,
+            ],
+            // 2. Explicit WhatsApp channel session message
+            [
+                'to'      => $formattedPhone,
+                'text'    => $otpMessage,
+                'channel' => 'whatsapp',
+            ],
+            // 3. WhatsApp Template format as defined in Zavu Docs
+            [
+                'to'          => $formattedPhone,
+                'channel'     => 'whatsapp',
+                'messageType' => 'template',
+                'content'     => [
+                    'templateId'        => 'otp_verification',
+                    'templateVariables' => [
+                        '1' => (string)$otp
+                    ]
+                ]
+            ]
+        ];
 
-        $channelsToTest = ['smart', 'sms', 'whatsapp'];
-
-        foreach ($phonesToTest as $testPhone) {
+        foreach ($payloadsToTry as $idx => $payload) {
             if ($whatsappSent) break;
 
-            foreach ($channelsToTest as $channel) {
-                if ($whatsappSent) break;
+            try {
+                $response = Http::withHeaders($headers)->withoutVerifying()->post('https://api.zavu.dev/v1/messages', $payload);
+                $status = $response->status();
+                $bodyStr = $response->body();
 
-                foreach ($endpoints as $url) {
-                    if ($whatsappSent) break;
+                $logEntry = "Payload #{$idx} | Status: {$status} | Body: {$bodyStr}";
+                $debugLogs[] = $logEntry;
+                Log::info("Zavu Attempt: " . $logEntry);
 
-                    try {
-                        $headers = [
-                            'Authorization' => 'Bearer ' . $apiKey,
-                            'x-api-key' => $apiKey,
-                            'Zavu-Sender' => $senderId,
-                            'Content-Type' => 'application/json',
-                            'Accept' => 'application/json'
-                        ];
-
-                        $payload = [
-                            'to' => $testPhone,
-                            'text' => $otpMessage,
-                            'message' => $otpMessage,
-                            'body' => $otpMessage,
-                            'channel' => $channel,
-                            'sender' => $senderId,
-                            'sender_id' => $senderId
-                        ];
-
-                        $response = Http::withHeaders($headers)->withoutVerifying()->post($url, $payload);
-                        $status = $response->status();
-                        $bodyStr = $response->body();
-
-                        $logEntry = "URL: {$url} | Channel: {$channel} | Phone: {$testPhone} | Status: {$status} | Body: {$bodyStr}";
-                        $debugLogs[] = $logEntry;
-                        Log::info("Zavu Attempt: " . $logEntry);
-
-                    if ($response->successful()) {
-                        $resData = $response->json();
-                        if (is_array($resData) && isset($resData['error']) && $resData['error']) {
-                            // Zavu returned HTTP 200 but error in JSON body
-                            continue;
-                        }
+                if ($response->successful()) {
+                    $resData = $response->json();
+                    if (!(is_array($resData) && isset($resData['error']) && $resData['error'])) {
                         $whatsappSent = true;
-                        $debugLogs[] = "SUCCESS! Message accepted by Zavu on {$url} for {$testPhone}";
+                        $debugLogs[] = "SUCCESS! Message accepted by Zavu with payload #{$idx}";
                     }
-                } catch (\Exception $e) {
-                    $debugLogs[] = "URL: {$url} | Exception: " . $e->getMessage();
-                    Log::error("Zavu Exception on {$url}: " . $e->getMessage());
                 }
+            } catch (\Exception $e) {
+                $debugLogs[] = "Payload #{$idx} | Exception: " . $e->getMessage();
+                Log::error("Zavu Exception: " . $e->getMessage());
             }
         }
-    }
 
         // Save detailed trace to storage/logs/zavu_debug.log so user or developer can read the exact response from Zavu
         try {
