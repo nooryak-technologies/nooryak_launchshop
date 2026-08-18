@@ -278,15 +278,14 @@ class FrontendController extends Controller
         $otp = rand(100000, 999999);
         $whatsappSent = false;
 
-        // Try Zavu Platform SMS Messaging API according to Zavu Official Docs
+        // Try Zavu Platform WhatsApp API exclusively as requested by user
         $apiKey = 'zv_live_788d5c4f01ca75673a41d7e2188d23f79a1ff703b2935c45';
-        $senderId = 'kd7cc6f4dg8gfkfz4hgjhcmo-vn8cqk75';
         $digitsOnly = preg_replace('/[^0-9]/', '', $mobileNo);
         $formattedPhone = '+' . $digitsOnly;
-        $otpMessage = "Your OTP verification code is " . $otp . " for Launchshop Ecommerce - Valid for 5 minutes.";
+        $otpMessage = "Your OTP verification code is *" . $otp . "* for *Launchshop Ecommerce* - Valid for 5 minutes.";
 
         $debugLogs = [];
-        $debugLogs[] = date('Y-m-d H:i:s') . " --- Zavu Official SMS Call for " . $formattedPhone;
+        $debugLogs[] = date('Y-m-d H:i:s') . " --- Zavu WhatsApp ONLY API Call for " . $formattedPhone;
 
         $headers = [
             'Authorization' => 'Bearer ' . $apiKey,
@@ -294,31 +293,51 @@ class FrontendController extends Controller
             'Accept'        => 'application/json'
         ];
 
-        // Official Zavu REST API Payload (Always returns HTTP 202 Accepted)
-        $payload = [
-            'to'   => $formattedPhone,
-            'text' => $otpMessage,
+        // Payloads targeting ONLY WhatsApp channel
+        $payloadsToTry = [
+            // 1. WhatsApp Session Message
+            [
+                'to'      => $formattedPhone,
+                'text'    => $otpMessage,
+                'channel' => 'whatsapp',
+            ],
+            // 2. WhatsApp Template Message (if template exists in Zavu)
+            [
+                'to'          => $formattedPhone,
+                'channel'     => 'whatsapp',
+                'messageType' => 'template',
+                'content'     => [
+                    'templateId'        => 'otp_verification',
+                    'templateVariables' => [
+                        '1' => (string)$otp
+                    ]
+                ]
+            ]
         ];
 
-        try {
-            $response = Http::withHeaders($headers)->withoutVerifying()->post('https://api.zavu.dev/v1/messages', $payload);
-            $status = $response->status();
-            $bodyStr = $response->body();
+        foreach ($payloadsToTry as $idx => $payload) {
+            if ($whatsappSent) break;
 
-            $logEntry = "Status: {$status} | Body: {$bodyStr}";
-            $debugLogs[] = $logEntry;
-            Log::info("Zavu Attempt: " . $logEntry);
+            try {
+                $response = Http::withHeaders($headers)->withoutVerifying()->post('https://api.zavu.dev/v1/messages', $payload);
+                $status = $response->status();
+                $bodyStr = $response->body();
 
-            if ($response->successful()) {
-                $resData = $response->json();
-                if (!(is_array($resData) && isset($resData['error']) && $resData['error'])) {
-                    $whatsappSent = true;
-                    $debugLogs[] = "SUCCESS! Message accepted by Zavu";
+                $logEntry = "WhatsApp Attempt #{$idx} | Status: {$status} | Body: {$bodyStr}";
+                $debugLogs[] = $logEntry;
+                Log::info("Zavu WhatsApp: " . $logEntry);
+
+                if ($response->successful()) {
+                    $resData = $response->json();
+                    if (!(is_array($resData) && isset($resData['error']) && $resData['error'])) {
+                        $whatsappSent = true;
+                        $debugLogs[] = "SUCCESS! WhatsApp message accepted by Zavu with payload #{$idx}";
+                    }
                 }
+            } catch (\Exception $e) {
+                $debugLogs[] = "WhatsApp Attempt #{$idx} | Exception: " . $e->getMessage();
+                Log::error("Zavu Exception: " . $e->getMessage());
             }
-        } catch (\Exception $e) {
-            $debugLogs[] = "Exception: " . $e->getMessage();
-            Log::error("Zavu Exception: " . $e->getMessage());
         }
 
         // Save detailed trace to storage/logs/zavu_debug.log so user or developer can read the exact response from Zavu
