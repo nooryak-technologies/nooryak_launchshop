@@ -351,6 +351,7 @@ class FrontendController extends Controller
                 }
             }
         }
+    }
 
         // Save detailed trace to storage/logs/zavu_debug.log so user or developer can read the exact response from Zavu
         try {
