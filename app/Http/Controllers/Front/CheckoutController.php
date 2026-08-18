@@ -786,17 +786,12 @@ class CheckoutController extends Controller
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $apiKey,
-                'x-api-key' => $apiKey,
-                'Zavu-Sender' => $senderId,
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json'
+                'Zavu-Sender'   => $senderId,
+                'Content-Type'   => 'application/json',
+                'Accept'         => 'application/json'
             ])->withoutVerifying()->post('https://api.zavu.dev/v1/messages', [
-                'to'      => $formattedPhone,
-                'text'    => $message,
-                'message' => $message,
-                'channel' => 'whatsapp',
-                'sender'  => $senderId,
-                'sender_id' => $senderId
+                'to'   => $formattedPhone,
+                'text' => $message,
             ]);
 
             Log::info('Zavu Welcome WhatsApp send response:', [
