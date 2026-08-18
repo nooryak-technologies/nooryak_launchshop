@@ -288,81 +288,86 @@ class FrontendController extends Controller
         $debugLogs = [];
         $debugLogs[] = date('Y-m-d H:i:s') . " --- Zavu Official API Call for " . $formattedPhone;
 
-        $headers = [
-            'Authorization' => 'Bearer ' . $apiKey,
-            'x-api-key'     => $apiKey,
-            'Zavu-Sender'   => $senderId,
-            'Content-Type'  => 'application/json',
-            'Accept'        => 'application/json'
-        ];
-
-        // Payloads matching Zavu official spec with required senderId
-        $payloadsToTry = [
-            // 1. Zavu Auto Routing with explicit senderId
-            [
-                'senderId'  => $senderId,
-                'sender_id' => $senderId,
-                'sender'    => $senderId,
-                'to'        => $formattedPhone,
-                'text'      => $otpMessage,
-                'message'   => $otpMessage,
+        $headerVariations = [
+            'Bearer Only' => [
+                'Authorization' => 'Bearer ' . $apiKey,
+                'Content-Type'  => 'application/json',
+                'Accept'        => 'application/json'
             ],
-            // 2. Explicit WhatsApp channel session message
-            [
-                'senderId'  => $senderId,
-                'sender_id' => $senderId,
-                'sender'    => $senderId,
-                'to'        => $formattedPhone,
-                'text'      => $otpMessage,
-                'message'   => $otpMessage,
-                'channel'   => 'whatsapp',
+            'Bearer + Zavu-Sender ID' => [
+                'Authorization' => 'Bearer ' . $apiKey,
+                'Zavu-Sender'   => $senderId,
+                'Content-Type'  => 'application/json',
+                'Accept'        => 'application/json'
             ],
-            // 3. WhatsApp Template format as defined in Zavu Docs
-            [
-                'senderId'    => $senderId,
-                'sender_id'   => $senderId,
-                'sender'      => $senderId,
-                'to'          => $formattedPhone,
-                'channel'     => 'whatsapp',
-                'messageType' => 'template',
-                'content'     => [
-                    'templateId'        => 'otp_verification',
-                    'templateVariables' => [
-                        '1' => (string)$otp
-                    ]
-                ]
+            'Bearer + Zavu-Sender Name' => [
+                'Authorization' => 'Bearer ' . $apiKey,
+                'Zavu-Sender'   => 'Nooryak Technologies',
+                'Content-Type'  => 'application/json',
+                'Accept'        => 'application/json'
+            ],
+            'x-api-key Header' => [
+                'x-api-key'     => $apiKey,
+                'Zavu-Sender'   => $senderId,
+                'Content-Type'  => 'application/json',
+                'Accept'        => 'application/json'
+            ],
+            'Bearer + x-api-key' => [
+                'Authorization' => 'Bearer ' . $apiKey,
+                'x-api-key'     => $apiKey,
+                'Zavu-Sender'   => $senderId,
+                'Content-Type'  => 'application/json',
+                'Accept'        => 'application/json'
             ]
         ];
 
-        $endpoints = [
-            'https://api.zavu.dev/v1/messages',
-            'https://api.zavu.dev/v1/senders/' . $senderId . '/messages'
+        $payloadVariations = [
+            'Minimal Standard' => [
+                'to'   => $formattedPhone,
+                'text' => $otpMessage,
+            ],
+            'WhatsApp Explicit' => [
+                'to'      => $formattedPhone,
+                'text'    => $otpMessage,
+                'channel' => 'whatsapp',
+            ],
+            'With senderId' => [
+                'senderId' => $senderId,
+                'to'       => $formattedPhone,
+                'text'     => $otpMessage,
+            ],
+            'With sender_id & message' => [
+                'sender_id' => $senderId,
+                'to'        => $formattedPhone,
+                'message'   => $otpMessage,
+                'text'      => $otpMessage,
+            ]
         ];
 
-        foreach ($payloadsToTry as $idx => $payload) {
+        foreach ($headerVariations as $hName => $headers) {
             if ($whatsappSent) break;
 
-            foreach ($endpoints as $url) {
+            foreach ($payloadVariations as $pName => $payload) {
                 if ($whatsappSent) break;
 
                 try {
-                    $response = Http::withHeaders($headers)->withoutVerifying()->post($url, $payload);
+                    $response = Http::withHeaders($headers)->withoutVerifying()->post('https://api.zavu.dev/v1/messages', $payload);
                     $status = $response->status();
                     $bodyStr = $response->body();
 
-                    $logEntry = "URL: {$url} | Payload #{$idx} | Status: {$status} | Body: {$bodyStr}";
+                    $logEntry = "Header: [{$hName}] | Payload: [{$pName}] | Status: {$status} | Body: {$bodyStr}";
                     $debugLogs[] = $logEntry;
-                    Log::info("Zavu Attempt: " . $logEntry);
+                    Log::info("Zavu Trace: " . $logEntry);
 
                     if ($response->successful()) {
                         $resData = $response->json();
                         if (!(is_array($resData) && isset($resData['error']) && $resData['error'])) {
                             $whatsappSent = true;
-                            $debugLogs[] = "SUCCESS! Message accepted by Zavu with payload #{$idx} on {$url}";
+                            $debugLogs[] = "SUCCESS! Accepted by Zavu using Header: [{$hName}] and Payload: [{$pName}]";
                         }
                     }
                 } catch (\Exception $e) {
-                    $debugLogs[] = "URL: {$url} | Payload #{$idx} | Exception: " . $e->getMessage();
+                    $debugLogs[] = "Header: [{$hName}] | Exception: " . $e->getMessage();
                     Log::error("Zavu Exception: " . $e->getMessage());
                 }
             }
