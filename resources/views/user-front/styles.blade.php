@@ -1412,12 +1412,20 @@ footer {
 
 /* Mobile View Quick View Responsive Layout (< 768px) */
 @media (max-width: 767.98px) {
+    #quickViewModal .product-single-default,
+    .quick-view-modal .product-single-default {
+        margin-bottom: 25px !important;
+        display: block !important;
+        width: 100% !important;
+    }
+
     #quickViewModal .product-single-gallery,
     .quick-view-modal .product-single-gallery {
         flex-direction: column !important;
         align-items: center !important;
         width: 100% !important;
-        gap: 12px !important;
+        gap: 15px !important;
+        margin-bottom: 20px !important;
     }
 
     #quickViewModal .product-single-slider,
@@ -1425,11 +1433,12 @@ footer {
         width: 100% !important;
         max-width: 100% !important;
         flex: none !important;
+        margin-bottom: 10px !important;
     }
 
     #quickViewModal .product-single-slider img,
     .quick-view-modal .product-single-slider img {
-        max-height: 280px !important;
+        max-height: 260px !important;
         width: auto !important;
         height: auto !important;
         object-fit: contain !important;
@@ -1446,17 +1455,55 @@ footer {
         flex-direction: row !important;
         justify-content: center !important;
         align-items: center !important;
+        flex-wrap: wrap !important;
         gap: 8px !important;
+        margin-top: 10px !important;
+        margin-bottom: 20px !important;
+        position: relative !important;
+        z-index: 10 !important;
     }
 
     #quickViewModal .slider-thumbnails .thumbnail-img,
     .quick-view-modal .slider-thumbnails .thumbnail-img {
-        width: 60px !important;
-        height: 60px !important;
-        min-width: 60px !important;
-        max-width: 60px !important;
+        width: 55px !important;
+        height: 55px !important;
+        min-width: 55px !important;
+        max-width: 55px !important;
         margin-bottom: 0 !important;
     }
+
+    #quickViewModal .product-single-details,
+    .quick-view-modal .product-single-details {
+        margin-top: 20px !important;
+        padding-top: 10px !important;
+        position: relative !important;
+        z-index: 1 !important;
+        clear: both !important;
+        display: block !important;
+        width: 100% !important;
+    }
+}
+
+/* Specific Spacing for Electronics Theme - Deal Of The Week & Laptops/Computers */
+.product-with-border.actual-content {
+    margin-top: 45px !important;
+    padding-top: 25px !important;
+}
+
+.product-with-border.actual-content .product-inner {
+    margin-top: 15px !important;
+}
+
+section.products.actual-content {
+    margin-top: 45px !important;
+    padding-top: 25px !important;
+}
+
+/* Specific Spacing for Kids Theme - Favorite Categories & Sections */
+section.category-5 {
+    padding-top: 70px !important;
+    padding-bottom: 40px !important;
+    margin-top: 25px !important;
 }
 
 .quick-view-modal .lazy-container,

@@ -7134,7 +7134,7 @@ html[dir="rtl"] #product-details-slider .slick-track {
 .cat-slider .slick-slide,
 .product-slider .slick-slide,
 .cat-slider-skinflow .slick-slide {
-    padding-left: 10px !important;
+    /* padding-left: 10px !important; */
     /* padding-right: 10px !important; */
     box-sizing: border-box !important;
 }
