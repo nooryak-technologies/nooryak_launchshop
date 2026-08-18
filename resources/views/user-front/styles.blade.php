@@ -27,22 +27,33 @@
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/home-4.css?v=' . time()) }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/custom-styles.css?v=' . time()) }}">
   <style>
-    /* Electronics Theme Specific Section Spacing */
+    /* Electronics Theme Specific Section Spacing & Overlap Fix */
     .product-with-border.actual-content,
-    .product-with-border.lazy {
-      margin-top: 85px !important;
-      padding-top: 30px !important;
+    .product-with-border.lazy,
+    .product-with-border {
+      margin-top: 60px !important;
+      padding-top: 20px !important;
     }
     .product-with-border .product-inner {
-      margin-top: 25px !important;
+      padding-top: 100px !important;
+      padding-bottom: 30px !important;
+      margin-top: 20px !important;
     }
     section.products.actual-content,
-    section.products.lazy {
-      margin-top: 75px !important;
-      padding-top: 30px !important;
+    section.products.lazy,
+    section.products {
+      margin-top: 60px !important;
+      padding-top: 20px !important;
+    }
+    section.products .section-title.border-bottom {
+      margin-bottom: 30px !important;
+      padding-bottom: 10px !important;
+    }
+    section.products .product-slider-electronics {
+      margin-top: 20px !important;
     }
     .banner-collection {
-      margin-top: 60px !important;
+      margin-top: 50px !important;
       padding-top: 20px !important;
     }
   </style>
@@ -53,15 +64,18 @@
     /* Kids Theme Specific Section Spacing */
     section.category-5,
     section.category {
-      margin-top: 75px !important;
+      margin-top: 60px !important;
       padding-top: 60px !important;
       padding-bottom: 40px !important;
     }
     section.products.actual-content,
     section.products.lazy,
     .product-with-border {
-      margin-top: 75px !important;
-      padding-top: 30px !important;
+      margin-top: 60px !important;
+      padding-top: 20px !important;
+    }
+    .product-with-border .product-inner {
+      padding-top: 100px !important;
     }
   </style>
 @elseif ($userBs->theme == 'manti')
@@ -1521,20 +1535,34 @@ footer {
 
 /* Specific Spacing for Electronics Theme - Deal Of The Week & Laptops/Computers */
 .product-with-border.actual-content,
-.product-with-border.lazy {
-    margin-top: 85px !important;
-    padding-top: 30px !important;
+.product-with-border.lazy,
+.product-with-border {
+    margin-top: 60px !important;
+    padding-top: 20px !important;
 }
 
 .product-with-border.actual-content .product-inner,
-.product-with-border.lazy .product-inner {
-    margin-top: 25px !important;
+.product-with-border.lazy .product-inner,
+.product-with-border .product-inner {
+    padding-top: 100px !important;
+    padding-bottom: 30px !important;
+    margin-top: 20px !important;
 }
 
 section.products.actual-content,
-section.products.lazy {
-    margin-top: 75px !important;
-    padding-top: 30px !important;
+section.products.lazy,
+section.products {
+    margin-top: 60px !important;
+    padding-top: 20px !important;
+}
+
+section.products .section-title.border-bottom {
+    margin-bottom: 30px !important;
+    padding-bottom: 10px !important;
+}
+
+section.products .product-slider-electronics {
+    margin-top: 20px !important;
 }
 
 /* Specific Spacing for Kids Theme - Favorite Categories & Sections */
@@ -1542,7 +1570,7 @@ section.category-5,
 section.category-5.pt-100 {
     padding-top: 70px !important;
     padding-bottom: 40px !important;
-    margin-top: 75px !important;
+    margin-top: 60px !important;
 }
 
 .quick-view-modal .lazy-container,
