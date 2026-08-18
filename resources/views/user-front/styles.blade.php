@@ -26,9 +26,44 @@
 @elseif ($userBs->theme == 'electronics')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/home-4.css?v=' . time()) }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/electronics/custom-styles.css?v=' . time()) }}">
+  <style>
+    /* Electronics Theme Specific Section Spacing */
+    .product-with-border.actual-content,
+    .product-with-border.lazy {
+      margin-top: 85px !important;
+      padding-top: 30px !important;
+    }
+    .product-with-border .product-inner {
+      margin-top: 25px !important;
+    }
+    section.products.actual-content,
+    section.products.lazy {
+      margin-top: 75px !important;
+      padding-top: 30px !important;
+    }
+    .banner-collection {
+      margin-top: 60px !important;
+      padding-top: 20px !important;
+    }
+  </style>
 @elseif ($userBs->theme == 'kids')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/kids/home-5.css?v=' . time()) }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/kids/custom-styles.css?v=' . time()) }}">
+  <style>
+    /* Kids Theme Specific Section Spacing */
+    section.category-5,
+    section.category {
+      margin-top: 75px !important;
+      padding-top: 60px !important;
+      padding-bottom: 40px !important;
+    }
+    section.products.actual-content,
+    section.products.lazy,
+    .product-with-border {
+      margin-top: 75px !important;
+      padding-top: 30px !important;
+    }
+  </style>
 @elseif ($userBs->theme == 'manti')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/manti/home-6.css?v=' . time()) }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/manti/custom-styles.css?v=' . time()) }}">
@@ -1485,25 +1520,29 @@ footer {
 }
 
 /* Specific Spacing for Electronics Theme - Deal Of The Week & Laptops/Computers */
-.product-with-border.actual-content {
-    margin-top: 45px !important;
-    padding-top: 25px !important;
+.product-with-border.actual-content,
+.product-with-border.lazy {
+    margin-top: 85px !important;
+    padding-top: 30px !important;
 }
 
-.product-with-border.actual-content .product-inner {
-    margin-top: 15px !important;
+.product-with-border.actual-content .product-inner,
+.product-with-border.lazy .product-inner {
+    margin-top: 25px !important;
 }
 
-section.products.actual-content {
-    margin-top: 45px !important;
-    padding-top: 25px !important;
+section.products.actual-content,
+section.products.lazy {
+    margin-top: 75px !important;
+    padding-top: 30px !important;
 }
 
 /* Specific Spacing for Kids Theme - Favorite Categories & Sections */
-section.category-5 {
+section.category-5,
+section.category-5.pt-100 {
     padding-top: 70px !important;
     padding-bottom: 40px !important;
-    margin-top: 25px !important;
+    margin-top: 75px !important;
 }
 
 .quick-view-modal .lazy-container,
