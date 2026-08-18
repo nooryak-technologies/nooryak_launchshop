@@ -1351,31 +1351,9 @@ footer {
     display: flex !important;
     flex-direction: row !important;
     align-items: flex-start !important;
-    gap: 14px !important;
-    width: 100% !important;
-    height: 372px !important;
-}
-
-/* Left Vertical Thumbnails Column */
-.quick-view-modal .slider-thumbnails,
-#quickViewModal .slider-thumbnails {
-    width: 68px !important;
-    flex: 0 0 68px !important;
-    max-width: 68px !important;
-    height: 372px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-.quick-view-modal .slider-thumbnails .thumbnail-img,
-/* Quick View Modal Universal Alignment & Border Removal */
-#quickViewModal .product-single-gallery,
-.quick-view-modal .product-single-gallery {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: flex-start !important;
     gap: 15px !important;
     width: 100% !important;
+    height: auto !important;
 }
 
 #quickViewModal .slider-thumbnails,
@@ -1386,8 +1364,7 @@ footer {
     flex-shrink: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
-    height: 100% !important;
-    min-height: 350px !important;
+    height: auto !important;
 }
 
 #quickViewModal .slider-thumbnails .slick-list,
@@ -1395,33 +1372,30 @@ footer {
     margin: 0 !important;
     padding: 0 !important;
     overflow: hidden !important;
-    height: 100% !important;
+    height: auto !important;
 }
 
 #quickViewModal .slider-thumbnails .thumbnail-img,
 .quick-view-modal .slider-thumbnails .thumbnail-img,
 #quickViewModal .slider-thumbnails .slick-slide .thumbnail-img,
 .quick-view-modal .slider-thumbnails .slick-slide .thumbnail-img,
-.slider-thumbnails .thumbnail-img,
-.slider-thumbnails .thumbnail-img.active,
-.slider-thumbnails .thumbnail-img.slick-current,
-.slider-thumbnails .thumbnail-img.slick-active,
-.slider-thumbnails .thumbnail-img:hover,
-.slider-thumbnails .thumbnail-img:focus {
-    /* border: none !important; */
-    /* border-color: transparent !important; */
+.slider-thumbnails .thumbnail-img {
+    width: 75px !important;
+    height: 75px !important;
     box-shadow: none !important;
     outline: none !important;
     margin-bottom: 8px !important;
     border-radius: 8px !important;
+    border: 1px solid #e2e8f0 !important;
     overflow: hidden !important;
-    background: transparent !important;
+    background: #ffffff !important;
+    cursor: pointer !important;
 }
 
 #quickViewModal .slider-thumbnails .thumbnail-img img,
 .quick-view-modal .slider-thumbnails .thumbnail-img img {
     border: none !important;
-    border-radius: 8px !important;
+    border-radius: 6px !important;
     object-fit: cover !important;
     display: block !important;
     width: 100% !important;
@@ -1433,8 +1407,15 @@ footer {
     flex: 1 !important;
     width: calc(100% - 90px) !important;
     min-width: 0 !important;
+    height: auto !important;
     margin: 0 !important;
     padding: 0 !important;
+}
+
+#quickViewModal .product-single-slider .slick-list,
+#quickViewModal .product-single-slider .slick-track,
+#quickViewModal .product-single-slider .slick-slide {
+    height: auto !important;
 }
 
 #quickViewModal .product-single-slider figure,
@@ -1444,7 +1425,8 @@ footer {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    /* width: 100% !important; */
+    width: 100% !important;
+    height: auto !important;
     margin: 0 !important;
     padding: 0 !important;
 }
@@ -1452,8 +1434,8 @@ footer {
 #quickViewModal .product-single-slider img,
 .quick-view-modal .product-single-slider img {
     max-width: 100% !important;
-    max-height: 380px !important;
-    width: auto !important;
+    max-height: 360px !important;
+    width: 100% !important;
     height: auto !important;
     object-fit: contain !important;
     margin: 0 auto !important;
@@ -1462,12 +1444,13 @@ footer {
 }
 
 /* Mobile View Quick View Responsive Layout */
-@media (max-width: 576px) {
+@media (max-width: 767.98px) {
     #quickViewModal .product-single-gallery,
     .quick-view-modal .product-single-gallery {
         flex-direction: column !important;
         align-items: center !important;
         width: 100% !important;
+        height: auto !important;
         gap: 12px !important;
     }
 
@@ -1475,14 +1458,24 @@ footer {
     .quick-view-modal .product-single-slider {
         width: 100% !important;
         max-width: 100% !important;
+        flex: none !important;
         order: 1 !important;
+    }
+
+    #quickViewModal .product-single-slider .slick-list,
+    #quickViewModal .product-single-slider .slick-track,
+    #quickViewModal .product-single-slider .slick-slide {
+        width: 100% !important;
+        height: auto !important;
     }
 
     #quickViewModal .product-single-slider img,
     .quick-view-modal .product-single-slider img {
-        max-height: 280px !important;
+        max-height: 260px !important;
         width: 100% !important;
+        height: auto !important;
         object-fit: contain !important;
+        display: block !important;
     }
 
     #quickViewModal .slider-thumbnails,
@@ -1490,6 +1483,7 @@ footer {
         width: 100% !important;
         min-width: 100% !important;
         max-width: 100% !important;
+        height: auto !important;
         order: 2 !important;
         display: flex !important;
         flex-direction: row !important;
@@ -1501,6 +1495,7 @@ footer {
     #quickViewModal .slider-thumbnails .slick-list,
     .quick-view-modal .slider-thumbnails .slick-list {
         width: 100% !important;
+        height: auto !important;
     }
 
     #quickViewModal .slider-thumbnails .slick-track,
@@ -1517,10 +1512,10 @@ footer {
     .quick-view-modal .slider-thumbnails .thumbnail-img,
     #quickViewModal .slider-thumbnails .slick-slide,
     .quick-view-modal .slider-thumbnails .slick-slide {
-        width: 55px !important;
-        height: 55px !important;
-        min-width: 55px !important;
-        max-width: 55px !important;
+        width: 60px !important;
+        height: 60px !important;
+        min-width: 60px !important;
+        max-width: 60px !important;
         margin-bottom: 0 !important;
         margin-right: 6px !important;
         display: inline-block !important;
