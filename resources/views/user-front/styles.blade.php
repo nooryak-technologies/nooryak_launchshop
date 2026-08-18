@@ -1386,6 +1386,8 @@ footer {
     flex-shrink: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
+    height: 100% !important;
+    min-height: 350px !important;
 }
 
 #quickViewModal .slider-thumbnails .slick-list,
@@ -1393,6 +1395,7 @@ footer {
     margin: 0 !important;
     padding: 0 !important;
     overflow: hidden !important;
+    height: 100% !important;
 }
 
 #quickViewModal .slider-thumbnails .thumbnail-img,

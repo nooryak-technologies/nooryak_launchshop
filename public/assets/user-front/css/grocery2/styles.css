@@ -2202,9 +2202,60 @@ body.show-mobile-menu .grocery2-header {
     }
 
     .g2-promo-stack {
-        display: flex !important;
+        display: flex;
         flex-direction: column;
         gap: 16px;
+    }
+
+    .g2-promo-stack.slick-initialized {
+        display: block !important;
+        height: auto !important;
+        position: relative !important;
+    }
+
+    .g2-promo-stack.slick-initialized .slick-track {
+        display: flex !important;
+    }
+
+    .g2-promo-stack.slick-initialized .g2-side-promo {
+        height: 200px !important;
+        min-height: 200px !important;
+        border-radius: 16px !important;
+        margin: 0 4px !important;
+    }
+
+    .g2-promo-stack.slick-initialized .slick-dots {
+        position: relative !important;
+        bottom: 0 !important;
+        margin-top: 12px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 6px !important;
+        list-style: none !important;
+        padding: 0 !important;
+    }
+
+    .g2-promo-stack.slick-initialized .slick-dots li {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .g2-promo-stack.slick-initialized .slick-dots li button {
+        font-size: 0 !important;
+        width: 8px !important;
+        height: 8px !important;
+        border-radius: 50% !important;
+        background: #cbd5e1 !important;
+        border: none !important;
+        padding: 0 !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .g2-promo-stack.slick-initialized .slick-dots li.slick-active button {
+        background: #3bb77e !important;
+        width: 22px !important;
+        border-radius: 4px !important;
     }
 
     .g2-side-promo {
