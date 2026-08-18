@@ -35,6 +35,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 use App\Models\User\UserShopSetting;
+use Illuminate\Validation\Rule;
 
 class ItemController extends Controller
 {
@@ -172,7 +173,12 @@ class ItemController extends Controller
         // if product type is 'physical'
         if ($request->type == 'physical') {
             $rules['stock'] = 'required';
-            $rules['sku'] = 'required|unique:user_items';
+            $rules['sku'] = [
+                'required',
+                Rule::unique('user_items', 'sku')->where(function ($query) {
+                    return $query->where('user_id', Auth::guard('web')->user()->id);
+                })
+            ];
         }
         $rules['status'] = 'required';
         // pplimorp
@@ -373,7 +379,12 @@ class ItemController extends Controller
         // if product type is 'physical'
         if ($item->type == 'physical') {
             $rules['stock'] = 'required';
-            $rules['sku'] = 'required|unique:user_items,sku,' . $item->id;
+            $rules['sku'] = [
+                'required',
+                Rule::unique('user_items', 'sku')->where(function ($query) {
+                    return $query->where('user_id', Auth::guard('web')->user()->id);
+                })->ignore($item->id)
+            ];
         }
         $allowedExtensions = array('jpg', 'jpeg', 'png', 'svg');
         $sliderImgURLs = array_key_exists("image", $request->all()) && count($request->image) > 0 ? $request->image : [];
