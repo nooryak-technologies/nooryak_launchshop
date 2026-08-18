@@ -290,31 +290,34 @@ class FrontendController extends Controller
 
         $headers = [
             'Authorization' => 'Bearer ' . $apiKey,
-            'Zavu-Sender'   => $senderId,
             'Content-Type'  => 'application/json',
             'Accept'        => 'application/json'
         ];
 
-        // Force explicit SMS channel to prevent defaulting to WhatsApp
+        // Payloads without custom sender headers to let Zavu resolve project default sender
         $payloadsToTry = [
-            // 1. Explicit SMS Channel
+            // 1. Zavu Auto / Smart Routing
+            [
+                'to'   => $formattedPhone,
+                'text' => $otpMessage,
+            ],
+            // 2. Explicit SMS Channel
             [
                 'to'      => $formattedPhone,
                 'text'    => $otpMessage,
                 'channel' => 'sms',
             ],
-            // 2. Smart Channel Auto
+            // 3. WhatsApp Template Format as per Zavu Docs
             [
-                'to'      => $formattedPhone,
-                'text'    => $otpMessage,
-                'channel' => 'smart',
-            ],
-            // 3. SMS Channel with Sender ID
-            [
-                'senderId' => $senderId,
-                'to'       => $formattedPhone,
-                'text'     => $otpMessage,
-                'channel'  => 'sms',
+                'to'          => $formattedPhone,
+                'channel'     => 'whatsapp',
+                'messageType' => 'template',
+                'content'     => [
+                    'templateId'        => 'otp_verification',
+                    'templateVariables' => [
+                        '1' => (string)$otp
+                    ]
+                ]
             ]
         ];
 
