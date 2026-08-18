@@ -539,16 +539,6 @@ $('#quickViewModal').on('shown.bs.modal', function () {
     if ($(".slider-thumbnails").hasClass('slick-initialized')) {
         $(".slider-thumbnails").slick('setPosition');
     }
-
-    setTimeout(function () {
-        if ($(".product-single-slider").hasClass('slick-initialized')) {
-            $(".product-single-slider").slick('setPosition');
-        }
-        if ($(".slider-thumbnails").hasClass('slick-initialized')) {
-            $(".slider-thumbnails").slick('setPosition');
-        }
-        window.dispatchEvent(new Event('resize'));
-    }, 150);
 });
 
 $(document).ready(function () {

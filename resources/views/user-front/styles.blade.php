@@ -1353,7 +1353,6 @@ footer {
     align-items: flex-start !important;
     gap: 15px !important;
     width: 100% !important;
-    height: auto !important;
 }
 
 #quickViewModal .slider-thumbnails,
@@ -1364,22 +1363,10 @@ footer {
     flex-shrink: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
-    height: auto !important;
-}
-
-#quickViewModal .slider-thumbnails .slick-list,
-.quick-view-modal .slider-thumbnails .slick-list {
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-    height: auto !important;
 }
 
 #quickViewModal .slider-thumbnails .thumbnail-img,
-.quick-view-modal .slider-thumbnails .thumbnail-img,
-#quickViewModal .slider-thumbnails .slick-slide .thumbnail-img,
-.quick-view-modal .slider-thumbnails .slick-slide .thumbnail-img,
-.slider-thumbnails .thumbnail-img {
+.quick-view-modal .slider-thumbnails .thumbnail-img {
     width: 75px !important;
     height: 75px !important;
     box-shadow: none !important;
@@ -1407,26 +1394,6 @@ footer {
     flex: 1 !important;
     width: calc(100% - 90px) !important;
     min-width: 0 !important;
-    height: auto !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-#quickViewModal .product-single-slider .slick-list,
-#quickViewModal .product-single-slider .slick-track,
-#quickViewModal .product-single-slider .slick-slide {
-    height: auto !important;
-}
-
-#quickViewModal .product-single-slider figure,
-.quick-view-modal .product-single-slider figure,
-#quickViewModal .product-single-slider .product-single-single-item,
-.quick-view-modal .product-single-slider .product-single-single-item {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 100% !important;
-    height: auto !important;
     margin: 0 !important;
     padding: 0 !important;
 }
@@ -1434,8 +1401,8 @@ footer {
 #quickViewModal .product-single-slider img,
 .quick-view-modal .product-single-slider img {
     max-width: 100% !important;
-    max-height: 360px !important;
-    width: 100% !important;
+    max-height: 380px !important;
+    width: auto !important;
     height: auto !important;
     object-fit: contain !important;
     margin: 0 auto !important;
@@ -1443,14 +1410,13 @@ footer {
     border-radius: 10px !important;
 }
 
-/* Mobile View Quick View Responsive Layout */
+/* Mobile View Quick View Responsive Layout (< 768px) */
 @media (max-width: 767.98px) {
     #quickViewModal .product-single-gallery,
     .quick-view-modal .product-single-gallery {
         flex-direction: column !important;
         align-items: center !important;
         width: 100% !important;
-        height: auto !important;
         gap: 12px !important;
     }
 
@@ -1459,23 +1425,16 @@ footer {
         width: 100% !important;
         max-width: 100% !important;
         flex: none !important;
-        order: 1 !important;
-    }
-
-    #quickViewModal .product-single-slider .slick-list,
-    #quickViewModal .product-single-slider .slick-track,
-    #quickViewModal .product-single-slider .slick-slide {
-        width: 100% !important;
-        height: auto !important;
     }
 
     #quickViewModal .product-single-slider img,
     .quick-view-modal .product-single-slider img {
-        max-height: 260px !important;
-        width: 100% !important;
+        max-height: 280px !important;
+        width: auto !important;
         height: auto !important;
         object-fit: contain !important;
         display: block !important;
+        margin: 0 auto !important;
     }
 
     #quickViewModal .slider-thumbnails,
@@ -1483,8 +1442,6 @@ footer {
         width: 100% !important;
         min-width: 100% !important;
         max-width: 100% !important;
-        height: auto !important;
-        order: 2 !important;
         display: flex !important;
         flex-direction: row !important;
         justify-content: center !important;
@@ -1492,34 +1449,13 @@ footer {
         gap: 8px !important;
     }
 
-    #quickViewModal .slider-thumbnails .slick-list,
-    .quick-view-modal .slider-thumbnails .slick-list {
-        width: 100% !important;
-        height: auto !important;
-    }
-
-    #quickViewModal .slider-thumbnails .slick-track,
-    .quick-view-modal .slider-thumbnails .slick-track {
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        justify-content: center !important;
-        width: 100% !important;
-        transform: none !important;
-    }
-
     #quickViewModal .slider-thumbnails .thumbnail-img,
-    .quick-view-modal .slider-thumbnails .thumbnail-img,
-    #quickViewModal .slider-thumbnails .slick-slide,
-    .quick-view-modal .slider-thumbnails .slick-slide {
+    .quick-view-modal .slider-thumbnails .thumbnail-img {
         width: 60px !important;
         height: 60px !important;
         min-width: 60px !important;
         max-width: 60px !important;
         margin-bottom: 0 !important;
-        margin-right: 6px !important;
-        display: inline-block !important;
-        float: none !important;
     }
 }
 
