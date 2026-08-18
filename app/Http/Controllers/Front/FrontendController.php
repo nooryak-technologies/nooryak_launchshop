@@ -294,20 +294,21 @@ class FrontendController extends Controller
             'Accept'        => 'application/json'
         ];
 
-        // Payloads without custom sender headers to let Zavu resolve project default sender
+        // Payloads prioritizing SMS channel to bypass Meta Graph API WhatsApp permissions check
         $payloadsToTry = [
-            // 1. Zavu Auto / Smart Routing
-            [
-                'to'   => $formattedPhone,
-                'text' => $otpMessage,
-            ],
-            // 2. Explicit SMS Channel
+            // 1. Explicit SMS Channel (Bypasses Meta WhatsApp Graph API)
             [
                 'to'      => $formattedPhone,
                 'text'    => $otpMessage,
                 'channel' => 'sms',
             ],
-            // 3. WhatsApp Template Format as per Zavu Docs
+            // 2. Smart Channel Auto Routing
+            [
+                'to'      => $formattedPhone,
+                'text'    => $otpMessage,
+                'channel' => 'smart',
+            ],
+            // 3. WhatsApp Template Format
             [
                 'to'          => $formattedPhone,
                 'channel'     => 'whatsapp',
