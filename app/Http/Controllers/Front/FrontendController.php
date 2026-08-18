@@ -322,6 +322,16 @@ class FrontendController extends Controller
         ];
 
         $payloadVariations = [
+            'SMS Channel Universal' => [
+                'to'      => $formattedPhone,
+                'text'    => $otpMessage,
+                'channel' => 'sms',
+            ],
+            'Smart Channel Auto' => [
+                'to'      => $formattedPhone,
+                'text'    => $otpMessage,
+                'channel' => 'smart',
+            ],
             'Minimal Standard' => [
                 'to'   => $formattedPhone,
                 'text' => $otpMessage,
@@ -330,17 +340,6 @@ class FrontendController extends Controller
                 'to'      => $formattedPhone,
                 'text'    => $otpMessage,
                 'channel' => 'whatsapp',
-            ],
-            'With senderId' => [
-                'senderId' => $senderId,
-                'to'       => $formattedPhone,
-                'text'     => $otpMessage,
-            ],
-            'With sender_id & message' => [
-                'sender_id' => $senderId,
-                'to'        => $formattedPhone,
-                'message'   => $otpMessage,
-                'text'      => $otpMessage,
             ]
         ];
 
