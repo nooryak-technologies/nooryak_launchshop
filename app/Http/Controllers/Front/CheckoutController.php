@@ -837,40 +837,50 @@ class CheckoutController extends Controller
 
         $apiKey = 'a09a0ee3aae408f843020cbd6bccf590';
         $digitsOnly = preg_replace('/[^0-9]/', '', $mobileNo);
-
         $imageUrl = $this->getThemeImageUrl($templateName);
+        $endpoint = 'https://app.metamerged.com/api/send';
 
+        // 1. Send Text-Only Welcome Message (Instant delivery)
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $apiKey,
                 'Content-Type'  => 'application/json',
                 'Accept'        => 'application/json'
-            ])->withoutVerifying()->post('https://app.metamerged.com/api/send', [
+            ])->withoutVerifying()->post($endpoint, [
+                'number'  => $digitsOnly,
+                'type'    => 'text',
+                'message' => $message,
+            ]);
+
+            $logMsg = "Meta Merge Text Welcome | Phone: {$digitsOnly} | Status: " . $response->status() . " | Body: " . $response->body();
+            Log::info($logMsg);
+            try {
+                file_put_contents(storage_path('logs/metamerge_debug.log'), "[" . date('Y-m-d H:i:s') . "] " . $logMsg . "\n\n", FILE_APPEND);
+            } catch (\Throwable $fEx) {}
+        } catch (\Throwable $e) {
+            Log::error("Meta Merge Text Welcome Exception: " . $e->getMessage());
+        }
+
+        // 2. Send Theme Image Welcome Message (With theme preview header)
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $apiKey,
+                'Content-Type'  => 'application/json',
+                'Accept'        => 'application/json'
+            ])->withoutVerifying()->post($endpoint, [
                 'number'  => $digitsOnly,
                 'type'    => 'image',
                 'url'     => $imageUrl,
                 'message' => $message,
             ]);
 
-            $status = $response->status();
-            $body = $response->body();
-            $logMsg = "Meta Merge Welcome WhatsApp | Phone: {$digitsOnly} | Status: {$status} | Theme: {$templateName} | Image: {$imageUrl} | Response: {$body}";
-
+            $logMsg = "Meta Merge Image Welcome | Phone: {$digitsOnly} | Status: " . $response->status() . " | Theme: {$templateName} | Image: {$imageUrl} | Body: " . $response->body();
             Log::info($logMsg);
-
             try {
                 file_put_contents(storage_path('logs/metamerge_debug.log'), "[" . date('Y-m-d H:i:s') . "] " . $logMsg . "\n\n", FILE_APPEND);
             } catch (\Throwable $fEx) {}
-
-            if (!$response->successful()) {
-                Log::error("Meta Merge Welcome WhatsApp HTTP ERROR: Status {$status} | Body: {$body}");
-            }
         } catch (\Throwable $e) {
-            $errText = "Meta Merge Welcome WhatsApp Exception for {$digitsOnly}: " . $e->getMessage();
-            Log::error($errText);
-            try {
-                file_put_contents(storage_path('logs/metamerge_debug.log'), "[" . date('Y-m-d H:i:s') . "] EXCEPTION: " . $errText . "\n\n", FILE_APPEND);
-            } catch (\Throwable $fEx) {}
+            Log::error("Meta Merge Image Welcome Exception: " . $e->getMessage());
         }
     }
 }
