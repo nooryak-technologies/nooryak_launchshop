@@ -63,7 +63,8 @@ class CheckoutController extends Controller
         $title = "You are purchasing a membership";
         $description = "Congratulation you are going to join our membership.Please make a payment for confirming your membership now!";
         if ($request->package_type == "trial") {
-            $package = Package::findOrFail($request['package_id']);
+            $package = Package::select('ai_engine', 'ai_token_limit', 'ai_image_limit')
+                ->findOrFail($request['package_id']);
             $request['price'] = 0.00;
             $request['payment_method'] = "-";
             $transaction_id = UserPermissionHelper::uniqidReal(8);
@@ -377,12 +378,6 @@ class CheckoutController extends Controller
      */
     public function store($request, $transaction_id, $transaction_details, $amount, $be, $password)
     {
-        if ($request instanceof \Illuminate\Http\Request) {
-            $request = $request->all();
-        } elseif (is_object($request)) {
-            $request = (array)$request;
-        }
-
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
@@ -594,43 +589,39 @@ class CheckoutController extends Controller
             ];
             $mailer->mailFromAdmin($data);
 
+            // ── WhatsApp welcome message with store and plan details ──
+            try {
+                $cleanPhone  = preg_replace('/[^0-9]/', '', $request['phone'] ?? '');
+                $cleanCode   = preg_replace('/[^0-9]/', '', $request['country_code'] ?? '');
+                $mobileNo    = (strpos($cleanPhone, $cleanCode) === 0) ? $cleanPhone : $cleanCode . $cleanPhone;
+                $this->sendWelcomeWhatsApp($mobileNo, $request['username'], $password, $planName, $planPrice, $user->shop_name, $user->email, $user->phone);
+            } catch (\Exception $waEx) {
+                Log::warning('Welcome WhatsApp send failed: ' . $waEx->getMessage());
+            }
+
+            // ── Send separate beautifully formatted credentials email ──
+            try {
+                $mailer->sendWelcomeCredentialsEmail($user, $password, $planName, $planPrice);
+            } catch (\Exception $emailEx) {
+                Log::warning('Welcome credentials email send failed: ' . $emailEx->getMessage());
+            }
+
+
+            // Automatically seed template catalog for new user
+            try {
+                $seedArgs = [
+                    'user'    => $user->id,
+                    '--force' => true,
+                ];
+                if (!empty($request['selected_template'])) {
+                    $seedArgs['--source'] = $request['selected_template'];
+                }
+                Artisan::call('template:seed-user', $seedArgs);
+            } catch (\Exception $e) {
+                \Log::warning('Template seeding failed for user ' . $user->id . ': ' . $e->getMessage());
+            }
         } else {
             $user = $user->first();
-        }
-
-        // ── WhatsApp welcome message with store, plan, and theme details ──
-        try {
-            $reqUsername = is_array($request) ? ($request['username'] ?? '') : (is_object($request) ? ($request->username ?? '') : '');
-            $reqPhone    = is_array($request) ? ($request['phone'] ?? '') : (is_object($request) ? ($request->phone ?? '') : '');
-            $reqCode     = is_array($request) ? ($request['country_code'] ?? '') : (is_object($request) ? ($request->country_code ?? '') : '');
-
-            $phoneVal    = !empty($reqPhone) ? $reqPhone : ($user->phone ?? session('data.phone', ''));
-            $codeVal     = !empty($reqCode) ? $reqCode : ($user->country_code ?? session('data.country_code', '91'));
-            $usernameVal = !empty($reqUsername) ? $reqUsername : ($user->username ?? session('data.username', ''));
-            $shopNameVal = !empty($user->shop_name) ? $user->shop_name : (is_array($request) ? ($request['shop_name'] ?? '') : (is_object($request) ? ($request->shop_name ?? '') : ''));
-            $emailVal    = !empty($user->email) ? $user->email : (is_array($request) ? ($request['email'] ?? '') : (is_object($request) ? ($request->email ?? '') : ''));
-
-            $templateVal = is_array($request) ? ($request['selected_template'] ?? '') : (is_object($request) ? ($request->selected_template ?? '') : '');
-            if (empty($templateVal)) {
-                $templateVal = session('data.selected_template', session('selected_template', ''));
-            }
-
-            $cleanPhone  = preg_replace('/[^0-9]/', '', (string)$phoneVal);
-            $cleanCode   = preg_replace('/[^0-9]/', '', (string)$codeVal);
-            if (empty($cleanCode)) {
-                $cleanCode = '91';
-            }
-
-            if (!empty($cleanPhone)) {
-                if (strpos($cleanPhone, $cleanCode) === 0) {
-                    $mobileNo = $cleanPhone;
-                } else {
-                    $mobileNo = $cleanCode . $cleanPhone;
-                }
-                $this->sendWelcomeWhatsApp($mobileNo, $usernameVal, $password, $planName, $planPrice, $shopNameVal, $emailVal, $phoneVal, $templateVal);
-            }
-        } catch (\Throwable $waEx) {
-            Log::warning('Welcome WhatsApp send failed: ' . $waEx->getMessage());
         }
 
         // Mark the verified phone lead as purchased (if one exists for this number)
@@ -757,57 +748,10 @@ class CheckoutController extends Controller
     }
 
     /**
-     * Get theme preview image URL based on selected template name.
-     */
-    private function getThemeImageUrl(string $templateName = ''): string
-    {
-        $templateName = strtolower(trim($templateName));
-
-        $themeMap = [
-            'jewellery'   => 'jewellery_theme.png',
-            'jewelry'     => 'jewellery_theme.png',
-            'manthi'      => 'manthi_theme.png',
-            'grocery'     => 'grocery_theme.png',
-            'furniture'   => 'furniture_theme.png',
-            'facilo'      => 'facilo_theme.png',
-            'petroshop'   => 'petroshop_theme.png',
-            'skinflow'    => 'skinflow_theme.png',
-            'kidfo'       => 'kidfo_theme.png',
-            'urban'       => 'urban_theme.png',
-            'electronic'  => 'electronic_theme.png',
-            'electronics' => 'electronic_theme.png',
-        ];
-
-        $matchedFile = null;
-        foreach ($themeMap as $key => $filename) {
-            if (!empty($templateName) && strpos($templateName, $key) !== false) {
-                $matchedFile = $filename;
-                break;
-            }
-        }
-
-        if ($matchedFile) {
-            return 'https://raw.githubusercontent.com/nooryak-technologies/nooryak_launchshop/main/public/meta_icon/' . $matchedFile;
-        }
-
-        return 'https://raw.githubusercontent.com/nooryak-technologies/nooryak_launchshop/main/public/images/logo.png';
-    }
-
-    /**
      * Send a welcome WhatsApp message with account credentials and store details after registration.
      */
-    private function sendWelcomeWhatsApp($mobileNo = '', $username = '', $password = '', $planName = '', $planPrice = '', $shopName = '', $email = '', $phone = '', $templateName = ''): void
+    private function sendWelcomeWhatsApp(string $mobileNo, string $username, string $password, string $planName, string $planPrice, string $shopName, string $email, string $phone): void
     {
-        $mobileNo     = (string)($mobileNo ?? '');
-        $username     = (string)($username ?? '');
-        $password     = (string)($password ?? '');
-        $planName     = (string)($planName ?? '');
-        $planPrice    = (string)($planPrice ?? '');
-        $shopName     = (string)($shopName ?? '');
-        $email        = (string)($email ?? '');
-        $phone        = (string)($phone ?? '');
-        $templateName = (string)($templateName ?? '');
-
         $storeLiveLink = '';
         $loginLink = '';
         $host = request()->getHost();
@@ -815,11 +759,11 @@ class CheckoutController extends Controller
         $cleanWebsiteHost = str_replace('www.', '', $websiteHost);
 
         if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
-            $storeLiveLink = $username . '.localhost:8000';
-            $loginLink = 'localhost:8000/login';
+            $storeLiveLink = 'http://' . $username . '.localhost:8000';
+            $loginLink = 'http://localhost:8000/login';
         } else {
-            $storeLiveLink = $username . '.' . $cleanWebsiteHost;
-            $loginLink = $cleanWebsiteHost . '/login';
+            $storeLiveLink = 'https://' . $username . '.' . $cleanWebsiteHost;
+            $loginLink = 'https://' . $cleanWebsiteHost . '/login';
         }
 
         $message = "🎉 *Welcome to LaunchShop!*\n\n"
@@ -837,50 +781,25 @@ class CheckoutController extends Controller
 
         $apiKey = 'a09a0ee3aae408f843020cbd6bccf590';
         $digitsOnly = preg_replace('/[^0-9]/', '', $mobileNo);
-        $imageUrl = $this->getThemeImageUrl($templateName);
-        $endpoint = 'https://app.metamerged.com/api/send';
 
-        // 1. Send Text-Only Welcome Message (Instant delivery)
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $apiKey,
                 'Content-Type'  => 'application/json',
                 'Accept'        => 'application/json'
-            ])->withoutVerifying()->post($endpoint, [
+            ])->withoutVerifying()->post('https://app.metamerged.com/api/send', [
                 'number'  => $digitsOnly,
                 'type'    => 'text',
                 'message' => $message,
             ]);
 
-            $logMsg = "Meta Merge Text Welcome | Phone: {$digitsOnly} | Status: " . $response->status() . " | Body: " . $response->body();
-            Log::info($logMsg);
-            try {
-                file_put_contents(storage_path('logs/metamerge_debug.log'), "[" . date('Y-m-d H:i:s') . "] " . $logMsg . "\n\n", FILE_APPEND);
-            } catch (\Throwable $fEx) {}
-        } catch (\Throwable $e) {
-            Log::error("Meta Merge Text Welcome Exception: " . $e->getMessage());
-        }
-
-        // 2. Send Theme Image Welcome Message (With theme preview header)
-        try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Content-Type'  => 'application/json',
-                'Accept'        => 'application/json'
-            ])->withoutVerifying()->post($endpoint, [
-                'number'  => $digitsOnly,
-                'type'    => 'image',
-                'url'     => $imageUrl,
-                'message' => $message,
+            Log::info('Meta Merge Welcome WhatsApp send response:', [
+                'phone'    => $digitsOnly,
+                'status'   => $response->status(),
+                'response' => $response->json(),
             ]);
-
-            $logMsg = "Meta Merge Image Welcome | Phone: {$digitsOnly} | Status: " . $response->status() . " | Theme: {$templateName} | Image: {$imageUrl} | Body: " . $response->body();
-            Log::info($logMsg);
-            try {
-                file_put_contents(storage_path('logs/metamerge_debug.log'), "[" . date('Y-m-d H:i:s') . "] " . $logMsg . "\n\n", FILE_APPEND);
-            } catch (\Throwable $fEx) {}
-        } catch (\Throwable $e) {
-            Log::error("Meta Merge Image Welcome Exception: " . $e->getMessage());
+        } catch (\Exception $e) {
+            Log::error('Meta Merge Welcome WhatsApp Exception: ' . $e->getMessage());
         }
     }
 }
