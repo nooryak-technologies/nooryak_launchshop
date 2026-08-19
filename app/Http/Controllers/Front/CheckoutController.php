@@ -591,11 +591,31 @@ class CheckoutController extends Controller
 
             // ── WhatsApp welcome message with store and plan details ──
             try {
-                $cleanPhone  = preg_replace('/[^0-9]/', '', $request['phone'] ?? '');
-                $cleanCode   = preg_replace('/[^0-9]/', '', $request['country_code'] ?? '');
-                $mobileNo    = (strpos($cleanPhone, $cleanCode) === 0) ? $cleanPhone : $cleanCode . $cleanPhone;
-                $this->sendWelcomeWhatsApp($mobileNo, $request['username'], $password, $planName, $planPrice, $user->shop_name, $user->email, $user->phone);
-            } catch (\Exception $waEx) {
+                $reqUsername = is_array($request) ? ($request['username'] ?? '') : (is_object($request) ? ($request->username ?? '') : '');
+                $reqPhone    = is_array($request) ? ($request['phone'] ?? '') : (is_object($request) ? ($request->phone ?? '') : '');
+                $reqCode     = is_array($request) ? ($request['country_code'] ?? '') : (is_object($request) ? ($request->country_code ?? '') : '');
+
+                $phoneVal    = !empty($reqPhone) ? $reqPhone : ($user->phone ?? '');
+                $codeVal     = !empty($reqCode) ? $reqCode : ($user->country_code ?? '91');
+                $usernameVal = !empty($reqUsername) ? $reqUsername : ($user->username ?? '');
+                $shopNameVal = $user->shop_name ?? '';
+                $emailVal    = $user->email ?? '';
+
+                $cleanPhone  = preg_replace('/[^0-9]/', '', (string)$phoneVal);
+                $cleanCode   = preg_replace('/[^0-9]/', '', (string)$codeVal);
+                if (empty($cleanCode)) {
+                    $cleanCode = '91';
+                }
+
+                if (!empty($cleanPhone)) {
+                    if (strpos($cleanPhone, $cleanCode) === 0) {
+                        $mobileNo = $cleanPhone;
+                    } else {
+                        $mobileNo = $cleanCode . $cleanPhone;
+                    }
+                    $this->sendWelcomeWhatsApp($mobileNo, $usernameVal, $password, $planName, $planPrice, $shopNameVal, $emailVal, $phoneVal);
+                }
+            } catch (\Throwable $waEx) {
                 Log::warning('Welcome WhatsApp send failed: ' . $waEx->getMessage());
             }
 
