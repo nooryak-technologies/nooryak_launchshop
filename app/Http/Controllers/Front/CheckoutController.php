@@ -776,8 +776,16 @@ class CheckoutController extends Controller
     /**
      * Send a welcome WhatsApp message with account credentials and store details after registration.
      */
-    private function sendWelcomeWhatsApp(string $mobileNo, string $username, string $password, string $planName, string $planPrice, string $shopName, string $email, string $phone): void
+    private function sendWelcomeWhatsApp($mobileNo = '', $username = '', $password = '', $planName = '', $planPrice = '', $shopName = '', $email = '', $phone = ''): void
     {
+        $mobileNo = (string)($mobileNo ?? '');
+        $username = (string)($username ?? '');
+        $password = (string)($password ?? '');
+        $planName = (string)($planName ?? '');
+        $planPrice = (string)($planPrice ?? '');
+        $shopName = (string)($shopName ?? '');
+        $email    = (string)($email ?? '');
+        $phone    = (string)($phone ?? '');
         $storeLiveLink = '';
         $loginLink = '';
         $host = request()->getHost();
