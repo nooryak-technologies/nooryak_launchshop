@@ -278,71 +278,47 @@ class FrontendController extends Controller
         $otp = rand(100000, 999999);
         $whatsappSent = false;
 
-        // Try Zavu Platform WhatsApp API exclusively as requested by user
-        $apiKey = 'zv_live_788d5c4f01ca75673a41d7e2188d23f79a1ff703b2935c45';
+        // Meta Merge Cloud WhatsApp API integration
+        $apiKey = 'a09a0ee3aae408f843020cbd6bccf590';
         $digitsOnly = preg_replace('/[^0-9]/', '', $mobileNo);
-        $formattedPhone = '+' . $digitsOnly;
         $otpMessage = "Your OTP verification code is *" . $otp . "* for *Launchshop Ecommerce* - Valid for 5 minutes.";
 
         $debugLogs = [];
-        $debugLogs[] = date('Y-m-d H:i:s') . " --- Zavu WhatsApp ONLY API Call for " . $formattedPhone;
+        $debugLogs[] = date('Y-m-d H:i:s') . " --- Meta Merge WhatsApp API Call for " . $digitsOnly;
 
-        $headers = [
-            'Authorization' => 'Bearer ' . $apiKey,
-            'Content-Type'  => 'application/json',
-            'Accept'        => 'application/json'
-        ];
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $apiKey,
+                'Content-Type'  => 'application/json',
+                'Accept'        => 'application/json'
+            ])->withoutVerifying()->post('https://app.metamerged.com/api/send', [
+                'number'  => $digitsOnly,
+                'type'    => 'text',
+                'message' => $otpMessage,
+            ]);
 
-        // Payloads targeting ONLY WhatsApp channel
-        $payloadsToTry = [
-            // 1. WhatsApp Session Message
-            [
-                'to'      => $formattedPhone,
-                'text'    => $otpMessage,
-                'channel' => 'whatsapp',
-            ],
-            // 2. WhatsApp Template Message (if template exists in Zavu)
-            [
-                'to'          => $formattedPhone,
-                'channel'     => 'whatsapp',
-                'messageType' => 'template',
-                'content'     => [
-                    'templateId'        => 'otp_verification',
-                    'templateVariables' => [
-                        '1' => (string)$otp
-                    ]
-                ]
-            ]
-        ];
+            $status = $response->status();
+            $bodyStr = $response->body();
 
-        foreach ($payloadsToTry as $idx => $payload) {
-            if ($whatsappSent) break;
+            $logEntry = "Meta Merge WhatsApp | Status: {$status} | Body: {$bodyStr}";
+            $debugLogs[] = $logEntry;
+            Log::info("Meta Merge WhatsApp: " . $logEntry);
 
-            try {
-                $response = Http::withHeaders($headers)->withoutVerifying()->post('https://api.zavu.dev/v1/messages', $payload);
-                $status = $response->status();
-                $bodyStr = $response->body();
-
-                $logEntry = "WhatsApp Attempt #{$idx} | Status: {$status} | Body: {$bodyStr}";
-                $debugLogs[] = $logEntry;
-                Log::info("Zavu WhatsApp: " . $logEntry);
-
-                if ($response->successful()) {
-                    $resData = $response->json();
-                    if (!(is_array($resData) && isset($resData['error']) && $resData['error'])) {
-                        $whatsappSent = true;
-                        $debugLogs[] = "SUCCESS! WhatsApp message accepted by Zavu with payload #{$idx}";
-                    }
+            if ($response->successful()) {
+                $resData = $response->json();
+                if (is_array($resData) && isset($resData['success']) && $resData['success']) {
+                    $whatsappSent = true;
+                    $debugLogs[] = "SUCCESS! WhatsApp OTP sent via Meta Merge Cloud.";
                 }
-            } catch (\Exception $e) {
-                $debugLogs[] = "WhatsApp Attempt #{$idx} | Exception: " . $e->getMessage();
-                Log::error("Zavu Exception: " . $e->getMessage());
             }
+        } catch (\Exception $e) {
+            $debugLogs[] = "Meta Merge WhatsApp Exception: " . $e->getMessage();
+            Log::error("Meta Merge Exception: " . $e->getMessage());
         }
 
-        // Save detailed trace to storage/logs/zavu_debug.log so user or developer can read the exact response from Zavu
+        // Save trace to storage/logs/metamerge_debug.log
         try {
-            $logFilePath = storage_path('logs/zavu_debug.log');
+            $logFilePath = storage_path('logs/metamerge_debug.log');
             file_put_contents($logFilePath, implode("\n", $debugLogs) . "\n\n", FILE_APPEND);
         } catch (\Exception $logEx) {
             // Ignore file write errors

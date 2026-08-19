@@ -779,28 +779,27 @@ class CheckoutController extends Controller
             . "Need help? Chat with us anytime.\n"
             . "– Team LaunchShop 🚀";
 
-        $apiKey = 'zv_live_788d5c4f01ca75673a41d7e2188d23f79a1ff703b2935c45';
-        $senderId = 'kd7cc6f4dg8gfkfz4hgjhcmo-vn8cqk75';
-        $formattedPhone = '+' . preg_replace('/[^0-9]/', '', $mobileNo);
+        $apiKey = 'a09a0ee3aae408f843020cbd6bccf590';
+        $digitsOnly = preg_replace('/[^0-9]/', '', $mobileNo);
 
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $apiKey,
-                'Zavu-Sender'   => $senderId,
-                'Content-Type'   => 'application/json',
-                'Accept'         => 'application/json'
-            ])->withoutVerifying()->post('https://api.zavu.dev/v1/messages', [
-                'to'   => $formattedPhone,
-                'text' => $message,
+                'Content-Type'  => 'application/json',
+                'Accept'        => 'application/json'
+            ])->withoutVerifying()->post('https://app.metamerged.com/api/send', [
+                'number'  => $digitsOnly,
+                'type'    => 'text',
+                'message' => $message,
             ]);
 
-            Log::info('Zavu Welcome WhatsApp send response:', [
-                'phone'    => $formattedPhone,
+            Log::info('Meta Merge Welcome WhatsApp send response:', [
+                'phone'    => $digitsOnly,
                 'status'   => $response->status(),
                 'response' => $response->json(),
             ]);
         } catch (\Exception $e) {
-            Log::error('Zavu Welcome WhatsApp Exception: ' . $e->getMessage());
+            Log::error('Meta Merge Welcome WhatsApp Exception: ' . $e->getMessage());
         }
     }
 }
