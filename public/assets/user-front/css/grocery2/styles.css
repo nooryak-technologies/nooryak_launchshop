@@ -2883,7 +2883,7 @@ body.show-mobile-menu .grocery2-header {
     flex: 1 !important;
     width: calc(100% - 82px) !important;
     max-width: calc(100% - 82px) !important;
-    height: 372px !important;
+    /* height: 372px !important; */
     border-radius: 12px !important;
     overflow: hidden !important;
     background-color: #f8fafc !important;
