@@ -63,8 +63,7 @@ class CheckoutController extends Controller
         $title = "You are purchasing a membership";
         $description = "Congratulation you are going to join our membership.Please make a payment for confirming your membership now!";
         if ($request->package_type == "trial") {
-            $package = Package::select('ai_engine', 'ai_token_limit', 'ai_image_limit')
-                ->findOrFail($request['package_id']);
+            $package = Package::findOrFail($request['package_id']);
             $request['price'] = 0.00;
             $request['payment_method'] = "-";
             $transaction_id = UserPermissionHelper::uniqidReal(8);
@@ -595,64 +594,43 @@ class CheckoutController extends Controller
             ];
             $mailer->mailFromAdmin($data);
 
-            // ── WhatsApp welcome message with store and plan details ──
-            try {
-                $reqUsername = is_array($request) ? ($request['username'] ?? '') : (is_object($request) ? ($request->username ?? '') : '');
-                $reqPhone    = is_array($request) ? ($request['phone'] ?? '') : (is_object($request) ? ($request->phone ?? '') : '');
-                $reqCode     = is_array($request) ? ($request['country_code'] ?? '') : (is_object($request) ? ($request->country_code ?? '') : '');
-
-                $phoneVal    = !empty($reqPhone) ? $reqPhone : ($user->phone ?? '');
-                $codeVal     = !empty($reqCode) ? $reqCode : ($user->country_code ?? '91');
-                $usernameVal = !empty($reqUsername) ? $reqUsername : ($user->username ?? '');
-                $shopNameVal = $user->shop_name ?? '';
-                $emailVal    = $user->email ?? '';
-
-                $templateVal = is_array($request) ? ($request['selected_template'] ?? '') : (is_object($request) ? ($request->selected_template ?? '') : '');
-                if (empty($templateVal)) {
-                    $templateVal = session('data.selected_template', session('selected_template', ''));
-                }
-
-                $cleanPhone  = preg_replace('/[^0-9]/', '', (string)$phoneVal);
-                $cleanCode   = preg_replace('/[^0-9]/', '', (string)$codeVal);
-                if (empty($cleanCode)) {
-                    $cleanCode = '91';
-                }
-
-                if (!empty($cleanPhone)) {
-                    if (strpos($cleanPhone, $cleanCode) === 0) {
-                        $mobileNo = $cleanPhone;
-                    } else {
-                        $mobileNo = $cleanCode . $cleanPhone;
-                    }
-                    $this->sendWelcomeWhatsApp($mobileNo, $usernameVal, $password, $planName, $planPrice, $shopNameVal, $emailVal, $phoneVal, $templateVal);
-                }
-            } catch (\Throwable $waEx) {
-                Log::warning('Welcome WhatsApp send failed: ' . $waEx->getMessage());
-            }
-
-            // ── Send separate beautifully formatted credentials email ──
-            try {
-                $mailer->sendWelcomeCredentialsEmail($user, $password, $planName, $planPrice);
-            } catch (\Exception $emailEx) {
-                Log::warning('Welcome credentials email send failed: ' . $emailEx->getMessage());
-            }
-
-
-            // Automatically seed template catalog for new user
-            try {
-                $seedArgs = [
-                    'user'    => $user->id,
-                    '--force' => true,
-                ];
-                if (!empty($request['selected_template'])) {
-                    $seedArgs['--source'] = $request['selected_template'];
-                }
-                Artisan::call('template:seed-user', $seedArgs);
-            } catch (\Exception $e) {
-                \Log::warning('Template seeding failed for user ' . $user->id . ': ' . $e->getMessage());
-            }
         } else {
             $user = $user->first();
+        }
+
+        // ── WhatsApp welcome message with store, plan, and theme details ──
+        try {
+            $reqUsername = is_array($request) ? ($request['username'] ?? '') : (is_object($request) ? ($request->username ?? '') : '');
+            $reqPhone    = is_array($request) ? ($request['phone'] ?? '') : (is_object($request) ? ($request->phone ?? '') : '');
+            $reqCode     = is_array($request) ? ($request['country_code'] ?? '') : (is_object($request) ? ($request->country_code ?? '') : '');
+
+            $phoneVal    = !empty($reqPhone) ? $reqPhone : ($user->phone ?? session('data.phone', ''));
+            $codeVal     = !empty($reqCode) ? $reqCode : ($user->country_code ?? session('data.country_code', '91'));
+            $usernameVal = !empty($reqUsername) ? $reqUsername : ($user->username ?? session('data.username', ''));
+            $shopNameVal = !empty($user->shop_name) ? $user->shop_name : (is_array($request) ? ($request['shop_name'] ?? '') : (is_object($request) ? ($request->shop_name ?? '') : ''));
+            $emailVal    = !empty($user->email) ? $user->email : (is_array($request) ? ($request['email'] ?? '') : (is_object($request) ? ($request->email ?? '') : ''));
+
+            $templateVal = is_array($request) ? ($request['selected_template'] ?? '') : (is_object($request) ? ($request->selected_template ?? '') : '');
+            if (empty($templateVal)) {
+                $templateVal = session('data.selected_template', session('selected_template', ''));
+            }
+
+            $cleanPhone  = preg_replace('/[^0-9]/', '', (string)$phoneVal);
+            $cleanCode   = preg_replace('/[^0-9]/', '', (string)$codeVal);
+            if (empty($cleanCode)) {
+                $cleanCode = '91';
+            }
+
+            if (!empty($cleanPhone)) {
+                if (strpos($cleanPhone, $cleanCode) === 0) {
+                    $mobileNo = $cleanPhone;
+                } else {
+                    $mobileNo = $cleanCode . $cleanPhone;
+                }
+                $this->sendWelcomeWhatsApp($mobileNo, $usernameVal, $password, $planName, $planPrice, $shopNameVal, $emailVal, $phoneVal, $templateVal);
+            }
+        } catch (\Throwable $waEx) {
+            Log::warning('Welcome WhatsApp send failed: ' . $waEx->getMessage());
         }
 
         // Mark the verified phone lead as purchased (if one exists for this number)
