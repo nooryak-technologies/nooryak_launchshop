@@ -852,15 +852,25 @@ class CheckoutController extends Controller
                 'message' => $message,
             ]);
 
-            Log::info('Meta Merge Welcome WhatsApp send response:', [
-                'phone'    => $digitsOnly,
-                'status'   => $response->status(),
-                'response' => $response->json(),
-                'theme'    => $templateName,
-                'imageUrl' => $imageUrl,
-            ]);
+            $status = $response->status();
+            $body = $response->body();
+            $logMsg = "Meta Merge Welcome WhatsApp | Phone: {$digitsOnly} | Status: {$status} | Theme: {$templateName} | Image: {$imageUrl} | Response: {$body}";
+
+            Log::info($logMsg);
+
+            try {
+                file_put_contents(storage_path('logs/metamerge_debug.log'), "[" . date('Y-m-d H:i:s') . "] " . $logMsg . "\n\n", FILE_APPEND);
+            } catch (\Throwable $fEx) {}
+
+            if (!$response->successful()) {
+                Log::error("Meta Merge Welcome WhatsApp HTTP ERROR: Status {$status} | Body: {$body}");
+            }
         } catch (\Throwable $e) {
-            Log::error('Meta Merge Welcome WhatsApp Exception: ' . $e->getMessage());
+            $errText = "Meta Merge Welcome WhatsApp Exception for {$digitsOnly}: " . $e->getMessage();
+            Log::error($errText);
+            try {
+                file_put_contents(storage_path('logs/metamerge_debug.log'), "[" . date('Y-m-d H:i:s') . "] EXCEPTION: " . $errText . "\n\n", FILE_APPEND);
+            } catch (\Throwable $fEx) {}
         }
     }
 }
