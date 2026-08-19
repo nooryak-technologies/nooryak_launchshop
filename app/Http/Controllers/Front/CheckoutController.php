@@ -759,11 +759,11 @@ class CheckoutController extends Controller
         $cleanWebsiteHost = str_replace('www.', '', $websiteHost);
 
         if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
-            $storeLiveLink = 'http://' . $username . '.localhost:8000';
-            $loginLink = 'http://localhost:8000/login';
+            $storeLiveLink = $username . '.localhost:8000';
+            $loginLink = 'localhost:8000/login';
         } else {
-            $storeLiveLink = 'https://' . $username . '.' . $cleanWebsiteHost;
-            $loginLink = 'https://' . $cleanWebsiteHost . '/login';
+            $storeLiveLink = $username . '.' . $cleanWebsiteHost;
+            $loginLink = $cleanWebsiteHost . '/login';
         }
 
         $message = "🎉 *Welcome to LaunchShop!*\n\n"
@@ -782,6 +782,8 @@ class CheckoutController extends Controller
         $apiKey = 'a09a0ee3aae408f843020cbd6bccf590';
         $digitsOnly = preg_replace('/[^0-9]/', '', $mobileNo);
 
+        $logoUrl = 'https://raw.githubusercontent.com/nooryak-technologies/nooryak_launchshop/main/public/images/logo.png';
+
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $apiKey,
@@ -789,7 +791,8 @@ class CheckoutController extends Controller
                 'Accept'        => 'application/json'
             ])->withoutVerifying()->post('https://app.metamerged.com/api/send', [
                 'number'  => $digitsOnly,
-                'type'    => 'text',
+                'type'    => 'image',
+                'url'     => $logoUrl,
                 'message' => $message,
             ]);
 
