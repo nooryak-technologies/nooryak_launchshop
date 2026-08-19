@@ -378,6 +378,12 @@ class CheckoutController extends Controller
      */
     public function store($request, $transaction_id, $transaction_details, $amount, $be, $password)
     {
+        if ($request instanceof \Illuminate\Http\Request) {
+            $request = $request->all();
+        } elseif (is_object($request)) {
+            $request = (array)$request;
+        }
+
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
