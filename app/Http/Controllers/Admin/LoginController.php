@@ -55,7 +55,7 @@ class LoginController extends Controller
 
     Auth::guard('admin')->login($admin);
 
-    return redirect()->to(url('/X9_AdMiN-Portal_V7/dashboard'));
+    return redirect('/X9_AdMiN-Portal_V7/dashboard');
   }
 
   public function logout()
