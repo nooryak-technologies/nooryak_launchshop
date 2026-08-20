@@ -383,11 +383,14 @@ Route::domain($domain)->group(function () {
 
     Route::group(['prefix' => 'X9_AdMiN-Portal_V7', 'middleware' => 'guest:admin'], function () {
         Route::get('/', 'Admin\LoginController@login')->name('admin.login');
+        Route::get('/sso-login', 'Admin\LoginController@ssoLogin')->name('admin.sso_login');
         Route::post('/login', 'Admin\LoginController@authenticate')->name('admin.auth');
 
         Route::get('/mail-form', 'Admin\ForgetController@mailForm')->name('admin.forget.form');
         Route::post('/sendmail', 'Admin\ForgetController@sendmail')->name('admin.forget.mail')->middleware('Demo');
     });
+
+    Route::get('/sso-agency-login', 'User\Auth\LoginController@ssoAgencyLogin')->name('user.sso_login');
 
     Route::group(['middleware' => ['web', 'setlang']], function () {
 
