@@ -269,7 +269,7 @@ class LoginController extends Controller
 
         if ($user) {
             Auth::guard('web')->login($user);
-            return redirect()->route('user-dashboard');
+            return redirect()->to(url('/user/dashboard'));
         }
 
         return redirect()->route('user.login')->with('err', __('User account not found.'));
