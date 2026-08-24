@@ -1,12 +1,6 @@
 <?php
 
-$domain = env('WEBSITE_HOST');
-
-if (!app()->runningInConsole()) {
-    if (substr($_SERVER['HTTP_HOST'], 0, 4) === 'www.') {
-        $domain = 'www.' . env('WEBSITE_HOST');
-    }
-}
+$domain = $_SERVER['HTTP_HOST'] ?? env('WEBSITE_HOST');
 
 Route::domain($domain)->group(function () {
     Route::group(['prefix' => 'X9_AdMiN-Portal_V7', 'middleware' => ['auth:admin', 'checkstatus', 'adminLanguage', 'Demo']], function () {
