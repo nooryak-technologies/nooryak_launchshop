@@ -2,13 +2,7 @@
 
 use App\Models\User;
 
-$domain = env('WEBSITE_HOST');
-
-if (!app()->runningInConsole()) {
-    if (substr($_SERVER['HTTP_HOST'], 0, 4) === 'www.') {
-        $domain = 'www.' . env('WEBSITE_HOST');
-    }
-}
+$domain = $_SERVER['HTTP_HOST'] ?? env('WEBSITE_HOST');
 Route::fallback(function () {
     return view('errors.404');
 })->middleware('setlang');
