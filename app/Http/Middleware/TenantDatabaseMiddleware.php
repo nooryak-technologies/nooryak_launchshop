@@ -19,11 +19,6 @@ class TenantDatabaseMiddleware
      */
     public function handle($request, Closure $next)
     {
-        // 0. Super Admin routes MUST ALWAYS use the main database (no tenant DB switch)
-        if ($request->is('X9_AdMiN-Portal_V7*') || $request->is('X9_AdMiN-Portal_V7')) {
-            return $next($request);
-        }
-
         $host = $request->getHost();
 
         // 1. Check if explicit agency or tenant DB is passed in query param or session
@@ -55,20 +50,22 @@ class TenantDatabaseMiddleware
             }
         }
 
-        // 3. Resolve target tenant database name
-        $targetDb = null;
+        // 3. Resolve target tenant database candidates
+        $candidates = [];
 
         if ($tenantDb) {
-            $targetDb = $tenantDb;
+            $candidates[] = $tenantDb;
         } elseif ($agencySlug) {
-            $agency   = $this->findAgencyBySlug($agencySlug);
+            $agency = $this->findAgencyBySlug($agencySlug);
             if ($agency) {
-                $targetDb = $this->findAgencyProductDb($agency->id);
-                Log::info("TenantMiddleware: slug '{$agencySlug}' -> agency_products.db_name: " . ($targetDb ?? 'null'));
-            }
-            if (!$targetDb) {
-                $targetDb = $this->findExistingDbBySlug($agencySlug);
-                Log::info("TenantMiddleware: slug fallback DB search '{$agencySlug}': " . ($targetDb ?? 'not found'));
+                $dbFromPivot = $this->findAgencyProductDb($agency->id);
+                if ($dbFromPivot) {
+                    $candidates[] = $dbFromPivot;
+                }
+                $candidates[] = $this->findExistingDbBySlug($agency->slug ?? '');
+                $candidates[] = $this->findExistingDbBySlug($agencySlug);
+            } else {
+                $candidates[] = $this->findExistingDbBySlug($agencySlug);
             }
         } else {
             $cleanHost = preg_replace('/^(launchshop|app|www)\./i', '', $host);
@@ -77,25 +74,36 @@ class TenantDatabaseMiddleware
             if (!$isMain) {
                 $agency = $this->findAgencyByDomain($cleanHost);
                 if ($agency) {
-                    $targetDb = $this->findAgencyProductDb($agency->id);
-                    if (!$targetDb) {
-                        $agencySlug = \Illuminate\Support\Str::slug($agency->name);
-                        $targetDb   = $this->findExistingDbBySlug($agencySlug);
+                    $dbFromPivot = $this->findAgencyProductDb($agency->id);
+                    if ($dbFromPivot) {
+                        $candidates[] = $dbFromPivot;
                     }
-                    Log::info("TenantMiddleware: domain '{$cleanHost}' -> '{$agency->name}' -> db: " . ($targetDb ?? 'null'));
+                    if (!empty($agency->slug)) {
+                        $candidates[] = $this->findExistingDbBySlug($agency->slug);
+                    }
+                    if (!empty($agency->name)) {
+                        $candidates[] = $this->findExistingDbBySlug(\Illuminate\Support\Str::slug($agency->name));
+                    }
+                    Log::info("TenantMiddleware: domain '{$cleanHost}' -> agency '{$agency->name}'");
                 } else {
-                    Log::info("TenantMiddleware: No agency for domain '{$cleanHost}' — main DB.");
+                    Log::info("TenantMiddleware: No agency for domain '{$cleanHost}' — staying on main DB.");
                 }
             }
         }
 
-        // 4. Switch to tenant database if resolved and different from current
+        $candidates = array_unique(array_filter($candidates));
+
+        // 4. Try connecting to candidates in order of priority
         $currentDb = config('database.connections.mysql.database');
-        if ($targetDb && $targetDb !== $currentDb) {
+        $switched  = false;
+
+        foreach ($candidates as $targetDb) {
+            if ($targetDb === $currentDb) {
+                $switched = true;
+                break;
+            }
+
             try {
-                // IMPORTANT: Do NOT use INFORMATION_SCHEMA.SCHEMATA to check existence.
-                // On cPanel, that only shows DBs the current user has privileges on.
-                // Instead, attempt the connection directly — if it fails, fall back.
                 DB::purge('mysql');
                 config(['database.connections.mysql.database' => $targetDb]);
                 DB::reconnect('mysql');
@@ -106,9 +114,11 @@ class TenantDatabaseMiddleware
                     session(['tenant_agency_slug' => $agencySlug]);
                 }
                 Log::info("TenantMiddleware: Switched to tenant DB: {$targetDb}");
+                $switched = true;
+                break;
             } catch (\Throwable $e) {
-                // Restore original DB on failure
-                Log::warning("TenantMiddleware: Cannot connect to '{$targetDb}': " . $e->getMessage() . " — restoring main DB.");
+                Log::warning("TenantMiddleware: Candidate DB '{$targetDb}' connection failed: " . $e->getMessage());
+                // Restore main DB connection before trying next candidate
                 try {
                     DB::purge('mysql');
                     config(['database.connections.mysql.database' => $currentDb]);
@@ -276,15 +286,24 @@ class TenantDatabaseMiddleware
 
     protected function findExistingDbBySlug(string $slug): ?string
     {
-        $cpanelUser = env('CPANEL_USER', 'bazaarwa');
-        $cleanSlug  = str_replace('-', '_', substr($slug, 0, 16));
+        if (empty($slug)) {
+            return null;
+        }
 
-        $candidates = [
-            "{$cpanelUser}_ps_{$cleanSlug}_launchshop",
-            "{$cpanelUser}_{$cleanSlug}_launchshop",
-            "bazaarwa_ps_{$cleanSlug}_launchshop",
-            "bazaarwa_{$cleanSlug}_launchshop",
-        ];
+        $cpanelUser = env('CPANEL_USER', 'bazaarwa');
+        $fullSlug   = str_replace('-', '_', strtolower($slug));
+        $shortSlug  = substr($fullSlug, 0, 16);
+
+        $candidates = array_unique([
+            "{$cpanelUser}_ps_{$fullSlug}_launchshop",
+            "{$cpanelUser}_ps_{$shortSlug}_launchshop",
+            "{$cpanelUser}_{$fullSlug}_launchshop",
+            "{$cpanelUser}_{$shortSlug}_launchshop",
+            "bazaarwa_ps_{$fullSlug}_launchshop",
+            "bazaarwa_ps_{$shortSlug}_launchshop",
+            "bazaarwa_{$fullSlug}_launchshop",
+            "bazaarwa_{$shortSlug}_launchshop",
+        ]);
 
         $currentDb = config('database.connections.mysql.database');
 
