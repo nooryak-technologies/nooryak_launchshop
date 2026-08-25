@@ -125,8 +125,9 @@ class TenantDatabaseMiddleware
                 try {
                     $hasPackages = DB::select("SHOW TABLES LIKE 'packages'");
                     $hasUsers    = DB::select("SHOW TABLES LIKE 'users'");
-                    if (empty($hasPackages) || empty($hasUsers)) {
-                        Log::info("TenantMiddleware: Tenant DB '{$targetDb}' is missing core tables (packages/users). Auto-importing clean schema template...");
+                    $hasUserCats = DB::select("SHOW TABLES LIKE 'user_categories'");
+                    if (empty($hasPackages) || empty($hasUsers) || empty($hasUserCats)) {
+                        Log::info("TenantMiddleware: Tenant DB '{$targetDb}' is missing core tables. Auto-importing clean schema template...");
                         $this->autoImportCleanSchemaTemplate();
                     }
                 } catch (\Throwable $checkEx) {
@@ -259,6 +260,7 @@ class TenantDatabaseMiddleware
                    OR custom_domain = ?
                    OR custom_domain = ?
                    OR custom_domain LIKE ?
+                ORDER BY id DESC
                 LIMIT 1";
 
         $rows = $this->sassQuery($sql, [
