@@ -15,55 +15,91 @@ class TenantDatabaseMiddleware
     public function handle($request, Closure $next)
     {
         $host = $request->getHost();
-        $cleanHost = preg_replace('/^(launchshop|app|www)\./i', '', $host);
 
-        // 1. If host is nooryak.in or localhost, stay on default main company database
-        if ($cleanHost === 'nooryak.in' || $cleanHost === '127.0.0.1' || $cleanHost === 'localhost') {
-            return $next($request);
+        // 1. Check if explicit agency or tenant DB is passed in query param or session
+        $agencySlug = $request->query('agency') ?? $request->query('tenant') ?? session('tenant_agency_slug');
+        $tenantDb = $request->query('tenant_db') ?? session('tenant_db');
+
+        // 2. Extract subdomain if accessing via subdomain (e.g. amazon.launchshop.nooryak.in -> amazon)
+        if (!$agencySlug && !$tenantDb) {
+            $parts = explode('.', $host);
+            if (count($parts) >= 3 && !in_array(strtolower($parts[0]), ['www', 'app', 'launchshop', 'admin'])) {
+                $agencySlug = $parts[0];
+            }
         }
 
-        // 2. Query Sass_admin DB to find agency matching custom_domain
-        try {
-            $agency = DB::table('agencies')
-                ->where(function ($q) use ($cleanHost) {
-                    $q->where('custom_domain', $cleanHost)
-                      ->orWhere('custom_domain', "https://{$cleanHost}")
-                      ->orWhere('custom_domain', "http://{$cleanHost}");
-                })
-                ->where('type', 'white_label')
-                ->first();
-
-            if ($agency) {
-                // Find dynamic database for launchshop product
-                $agencyProduct = DB::table('agency_products')
-                    ->join('products', 'agency_products.product_id', '=', 'products.id')
-                    ->where('agency_products.agency_id', $agency->id)
-                    ->where('products.slug', 'launchshop')
-                    ->select('agency_products.db_name')
+        // 3. Resolve target tenant database name
+        $targetDb = null;
+        if ($tenantDb) {
+            $targetDb = $tenantDb;
+        } elseif ($agencySlug) {
+            try {
+                $agency = DB::table('agencies')
+                    ->where('slug', $agencySlug)
+                    ->orWhere('name', 'like', "%{$agencySlug}%")
                     ->first();
 
-                $targetDb = $agencyProduct->db_name ?? null;
+                if ($agency) {
+                    $agencyProduct = DB::table('agency_products')
+                        ->join('products', 'agency_products.product_id', '=', 'products.id')
+                        ->where('agency_products.agency_id', $agency->id)
+                        ->where('products.slug', 'launchshop')
+                        ->select('agency_products.db_name')
+                        ->first();
 
-                if (!$targetDb) {
-                    $cpanelUser = env('CPANEL_USER', 'bazaarwa');
-                    $agencySlug = \Illuminate\Support\Str::slug($agency->name);
-                    $cleanAgencySlug = str_replace('-', '_', substr($agencySlug, 0, 16));
-                    $targetDb = "{$cpanelUser}_{$cleanAgencySlug}_launchshop";
+                    $targetDb = $agencyProduct->db_name ?? "bazaarwa_ps_{$agencySlug}_launchshop";
+                } else {
+                    $targetDb = "bazaarwa_ps_{$agencySlug}_launchshop";
                 }
+            } catch (\Throwable $e) {
+                Log::warning("Agency lookup failed by slug {$agencySlug}: " . $e->getMessage());
+            }
+        } else {
+            // Fallback: Query by custom domain
+            $cleanHost = preg_replace('/^(launchshop|app|www)\./i', '', $host);
+            if ($cleanHost !== 'nooryak.in' && $cleanHost !== '127.0.0.1' && $cleanHost !== 'localhost') {
+                try {
+                    $agency = DB::table('agencies')
+                        ->where(function ($q) use ($cleanHost) {
+                            $q->where('custom_domain', $cleanHost)
+                              ->orWhere('custom_domain', "https://{$cleanHost}")
+                              ->orWhere('custom_domain', "http://{$cleanHost}");
+                        })
+                        ->first();
 
-                if ($targetDb) {
-                    // Check if dynamic DB exists
-                    $dbExists = DB::select("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?", [$targetDb]);
+                    if ($agency) {
+                        $agencyProduct = DB::table('agency_products')
+                            ->join('products', 'agency_products.product_id', '=', 'products.id')
+                            ->where('agency_products.agency_id', $agency->id)
+                            ->where('products.slug', 'launchshop')
+                            ->select('agency_products.db_name')
+                            ->first();
 
-                    if (!empty($dbExists)) {
-                        DB::purge('mysql');
-                        config(['database.connections.mysql.database' => $targetDb]);
-                        DB::reconnect('mysql');
+                        $targetDb = $agencyProduct->db_name ?? null;
                     }
+                } catch (\Throwable $e) {
+                    Log::warning("TenantDatabaseMiddleware domain lookup warning: " . $e->getMessage());
                 }
             }
-        } catch (\Throwable $e) {
-            Log::warning("TenantDatabaseMiddleware warning: " . $e->getMessage());
+        }
+
+        // 4. Connect to target database if valid
+        if ($targetDb) {
+            try {
+                $dbExists = DB::select("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?", [$targetDb]);
+
+                if (!empty($dbExists)) {
+                    DB::purge('mysql');
+                    config(['database.connections.mysql.database' => $targetDb]);
+                    DB::reconnect('mysql');
+                    session(['tenant_db' => $targetDb]);
+                    if ($agencySlug) {
+                        session(['tenant_agency_slug' => $agencySlug]);
+                    }
+                }
+            } catch (\Throwable $e) {
+                Log::warning("Failed connecting to tenant DB {$targetDb}: " . $e->getMessage());
+            }
         }
 
         return $next($request);
