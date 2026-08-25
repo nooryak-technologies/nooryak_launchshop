@@ -5,70 +5,104 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class TenantDatabaseMiddleware
 {
     /**
-     * Dynamically switch to the agency's isolated database.
+     * Handle incoming request and dynamically resolve dynamic database for White Label agencies.
      *
-     * HOW IT WORKS (no Sass Admin DB lookup needed):
-     * -----------------------------------------------
-     * When Sass Admin creates an agency + assigns Launchshop, it creates a DB named:
-     *   bazaarwa_ps_{agency_slug}_launchshop
+     * KEY FIX: On cPanel, the launchshop MySQL user (bazaarwa_launchshop) has NO access
+     * to the Sass Admin DB (bazaarwa_Sass_admindb). We must connect to the Sass Admin DB
+     * using its OWN credentials (SASS_ADMIN_DB_USER / SASS_ADMIN_DB_PASSWORD) stored in .env.
      *
-     * This middleware reads the incoming domain/subdomain, derives the agency slug,
-     * constructs the DB name using the same convention, checks it exists, and switches.
-     *
-     * NO cross-database queries needed!
-     *
-     * IMPORTANT: Must run AFTER StartSession in Kernel.php
+     * IMPORTANT: This middleware must run AFTER StartSession in Kernel.php
      */
     public function handle($request, Closure $next)
     {
         $host = $request->getHost();
 
-        // 1. Use cached tenant DB from session (avoids re-resolving every request)
+        // 1. Check if explicit agency or tenant DB is passed in query param or session
+        $agencySlug = $request->query('agency') ?? $request->query('tenant') ?? session('tenant_agency_slug');
         $tenantDb   = $request->query('tenant_db') ?? session('tenant_db');
-        $agencySlug = $request->query('agency') ?? session('tenant_agency_slug');
 
-        // Validate cached session DB still exists (guard against stale sessions)
+        // Guard: if session has a tenant_db, verify it still actually exists in MySQL
         if ($tenantDb && !$request->query('tenant_db')) {
-            if (!$this->dbExists($tenantDb)) {
-                Log::warning("TenantMiddleware: Stale session DB '{$tenantDb}' — clearing.");
+            $exists = false;
+            try {
+                $rows   = DB::select("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?", [$tenantDb]);
+                $exists = !empty($rows);
+            } catch (\Throwable $e) {
+                // ignore
+            }
+            if (!$exists) {
+                Log::warning("TenantMiddleware: Stale session tenant_db '{$tenantDb}' — clearing.");
                 session()->forget(['tenant_db', 'tenant_agency_slug']);
                 $tenantDb   = null;
                 $agencySlug = null;
             }
         }
 
-        // 2. Resolve agency slug from URL if not in session
-        if (!$tenantDb && !$agencySlug) {
-            $agencySlug = $this->resolveAgencySlug($host);
+        // 2. Extract subdomain (e.g. wibro.launchshop.nooryak.in -> wibro)
+        if (!$agencySlug && !$tenantDb) {
+            $parts = explode('.', $host);
+            if (count($parts) >= 3 && !in_array(strtolower($parts[0]), ['www', 'app', 'launchshop', 'admin', 'localhost'])) {
+                $agencySlug = $parts[0];
+            }
         }
 
-        // 3. Resolve the target DB name from the agency slug
+        // 3. Resolve target tenant database name
         $targetDb = null;
 
         if ($tenantDb) {
             $targetDb = $tenantDb;
         } elseif ($agencySlug) {
-            $targetDb = $this->resolveDbForSlug($agencySlug);
-            Log::info("TenantMiddleware: slug '{$agencySlug}' -> resolved DB: " . ($targetDb ?? 'none'));
+            $agency   = $this->findAgencyBySlug($agencySlug);
+            if ($agency) {
+                $targetDb = $this->findAgencyProductDb($agency->id);
+                Log::info("TenantMiddleware: slug '{$agencySlug}' -> agency_products.db_name: " . ($targetDb ?? 'null'));
+            }
+            if (!$targetDb) {
+                $targetDb = $this->findExistingDbBySlug($agencySlug);
+                Log::info("TenantMiddleware: slug fallback DB search '{$agencySlug}': " . ($targetDb ?? 'not found'));
+            }
+        } else {
+            $cleanHost = preg_replace('/^(launchshop|app|www)\./i', '', $host);
+            $isMain    = in_array($cleanHost, ['nooryak.in', '127.0.0.1', 'localhost', 'launchshop.in']);
+
+            if (!$isMain) {
+                $agency = $this->findAgencyByDomain($cleanHost);
+                if ($agency) {
+                    $targetDb = $this->findAgencyProductDb($agency->id);
+                    if (!$targetDb) {
+                        $agencySlug = \Illuminate\Support\Str::slug($agency->name);
+                        $targetDb   = $this->findExistingDbBySlug($agencySlug);
+                    }
+                    Log::info("TenantMiddleware: domain '{$cleanHost}' -> '{$agency->name}' -> db: " . ($targetDb ?? 'null'));
+                } else {
+                    Log::info("TenantMiddleware: No agency for domain '{$cleanHost}' — main DB.");
+                }
+            }
         }
 
-        // 4. Switch connection if a valid agency DB was found
+        // 4. Switch to tenant database if resolved
         $currentDb = config('database.connections.mysql.database');
         if ($targetDb && $targetDb !== $currentDb) {
-            if ($this->dbExists($targetDb)) {
-                DB::purge('mysql');
-                config(['database.connections.mysql.database' => $targetDb]);
-                DB::reconnect('mysql');
-                session(['tenant_db'          => $targetDb]);
-                session(['tenant_agency_slug'  => $agencySlug]);
-                Log::info("TenantMiddleware: ✅ Switched to agency DB: {$targetDb}");
-            } else {
-                Log::warning("TenantMiddleware: ❌ DB '{$targetDb}' does not exist — staying on main DB.");
+            try {
+                $dbExists = DB::select("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?", [$targetDb]);
+                if (!empty($dbExists)) {
+                    DB::purge('mysql');
+                    config(['database.connections.mysql.database' => $targetDb]);
+                    DB::reconnect('mysql');
+                    session(['tenant_db' => $targetDb]);
+                    if ($agencySlug) {
+                        session(['tenant_agency_slug' => $agencySlug]);
+                    }
+                    Log::info("TenantMiddleware: Switched to tenant DB: {$targetDb}");
+                } else {
+                    Log::warning("TenantMiddleware: DB '{$targetDb}' not found in MySQL.");
+                }
+            } catch (\Throwable $e) {
+                Log::warning("TenantMiddleware: Failed switching to {$targetDb}: " . $e->getMessage());
             }
         }
 
@@ -76,93 +110,169 @@ class TenantDatabaseMiddleware
     }
 
     /**
-     * Extract agency slug from the incoming hostname.
+     * Get a PDO connection to the Sass Admin DB using its own credentials.
+     * This is needed because on cPanel, the launchshop MySQL user has NO cross-DB access.
      *
-     * Supported URL patterns:
-     *   wibro.launchshop.cockroachjantaparty.top  -> slug = wibro
-     *   wibro.launchshop.in                       -> slug = wibro
-     *   wibro.nooryak.in                          -> slug = wibro
-     *   wibro.com (custom domain)                 -> slug = wibro (first part)
+     * Requires in launchshop .env:
+     *   SASS_ADMIN_DB=bazaarwa_Sass_admindb
+     *   SASS_ADMIN_DB_HOST=localhost          (optional, defaults to main DB host)
+     *   SASS_ADMIN_DB_USER=bazaarwa_sass_admindb
+     *   SASS_ADMIN_DB_PASS=<password>
      */
-    protected function resolveAgencySlug(string $host): ?string
+    protected function getSassAdminPdo(): ?\PDO
     {
-        $mainDomains = ['launchshop.in', 'nooryak.in', 'cockroachjantaparty.top'];
-        $skipSubdomains = ['www', 'app', 'launchshop', 'admin', 'mail', 'cpanel', 'webmail'];
+        $dbName = env('SASS_ADMIN_DB');
+        $dbUser = env('SASS_ADMIN_DB_USER');
+        $dbPass = env('SASS_ADMIN_DB_PASS', '');
+        $dbHost = env('SASS_ADMIN_DB_HOST', env('DB_HOST', '127.0.0.1'));
+        $dbPort = env('SASS_ADMIN_DB_PORT', env('DB_PORT', '3306'));
 
-        // Remove www. prefix
-        $host = preg_replace('/^www\./i', '', $host);
-
-        // Check if this is a subdomain of one of our main domains
-        foreach ($mainDomains as $mainDomain) {
-            if (str_ends_with($host, '.' . $mainDomain) || $host === $mainDomain) {
-                if ($host === $mainDomain) {
-                    // This IS the main domain — no tenant
-                    return null;
-                }
-                // Strip main domain to get prefix: e.g. "wibro.launchshop" or "wibro"
-                $prefix = substr($host, 0, strlen($host) - strlen($mainDomain) - 1);
-                $parts  = explode('.', $prefix);
-                // Take the first part (e.g. "wibro" from "wibro.launchshop")
-                $slug = strtolower($parts[0] ?? '');
-                if ($slug && !in_array($slug, $skipSubdomains)) {
-                    return $slug;
-                }
-                return null;
-            }
+        if (!$dbName || !$dbUser) {
+            // Credentials not configured — fall back to same-user cross-DB (works on local)
+            return null;
         }
 
-        // Custom domain: e.g. wibrocorp.com — use the full clean host as identifier
-        // Try to find by domain in candidates
-        $cleanHost = preg_replace('/^(launchshop|app)\./i', '', $host);
+        static $pdo = null;
+        if ($pdo !== null) {
+            return $pdo;
+        }
 
-        // Return the first part of domain as a slug attempt
-        $parts = explode('.', $cleanHost);
-        $slug  = strtolower($parts[0] ?? '');
-
-        return (strlen($slug) > 2 && !in_array($slug, $skipSubdomains)) ? $slug : null;
+        try {
+            $dsn = "mysql:host={$dbHost};port={$dbPort};dbname={$dbName};charset=utf8mb4";
+            $pdo = new \PDO($dsn, $dbUser, $dbPass, [
+                \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ,
+                \PDO::ATTR_TIMEOUT            => 5,
+            ]);
+            return $pdo;
+        } catch (\Throwable $e) {
+            Log::warning("TenantMiddleware: Cannot connect to Sass Admin DB '{$dbName}': " . $e->getMessage());
+            return null;
+        }
     }
 
     /**
-     * Try all DB naming conventions to find the agency's database.
-     * Sass Admin creates DBs as: {cpanel_user}_ps_{clean_slug}_launchshop
+     * Run a SELECT query against the Sass Admin DB.
+     * Uses dedicated PDO if credentials are set, otherwise falls back to cross-DB via main connection.
      */
-    protected function resolveDbForSlug(string $slug): ?string
+    protected function sassQuery(string $sql, array $bindings = []): array
+    {
+        // Try dedicated Sass Admin connection first (required on cPanel)
+        $pdo = $this->getSassAdminPdo();
+        if ($pdo) {
+            try {
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute($bindings);
+                return $stmt->fetchAll(\PDO::FETCH_OBJ);
+            } catch (\Throwable $e) {
+                Log::debug("TenantMiddleware: sassQuery PDO error: " . $e->getMessage());
+                return [];
+            }
+        }
+
+        // Fallback: use main DB connection with cross-DB table prefix (works locally)
+        $sassDb = env('SASS_ADMIN_DB', 'sass_admin');
+        // Replace table names with prefixed versions in the SQL
+        $sql = preg_replace('/\bFROM\s+agencies\b/i',         "FROM {$sassDb}.agencies",         $sql);
+        $sql = preg_replace('/\bFROM\s+agency_products\b/i',  "FROM {$sassDb}.agency_products",  $sql);
+        $sql = preg_replace('/\bFROM\s+products\b/i',         "FROM {$sassDb}.products",          $sql);
+        $sql = preg_replace('/\bJOIN\s+agencies\b/i',         "JOIN {$sassDb}.agencies",          $sql);
+        $sql = preg_replace('/\bJOIN\s+agency_products\b/i',  "JOIN {$sassDb}.agency_products",   $sql);
+        $sql = preg_replace('/\bJOIN\s+products\b/i',         "JOIN {$sassDb}.products",           $sql);
+        $sql = preg_replace('/\bSHOW COLUMNS FROM\s+/i',      "SHOW COLUMNS FROM {$sassDb}.",      $sql);
+
+        try {
+            return DB::select($sql, $bindings);
+        } catch (\Throwable $e) {
+            Log::debug("TenantMiddleware: sassQuery fallback error: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    protected function findAgencyByDomain(string $cleanHost): ?object
+    {
+        $rootHost = preg_replace('/^(launchshop|app|www)\./i', '', $cleanHost);
+
+        $sql = "SELECT id, name, slug, custom_domain FROM agencies
+                WHERE custom_domain = ?
+                   OR custom_domain = ?
+                   OR custom_domain = ?
+                   OR custom_domain = ?
+                   OR custom_domain = ?
+                   OR custom_domain = ?
+                   OR custom_domain LIKE ?
+                LIMIT 1";
+
+        $rows = $this->sassQuery($sql, [
+            $cleanHost,
+            $rootHost,
+            "https://{$cleanHost}",
+            "http://{$cleanHost}",
+            "https://{$rootHost}",
+            "http://{$rootHost}",
+            "%{$rootHost}%",
+        ]);
+
+        return $rows[0] ?? null;
+    }
+
+    protected function findAgencyBySlug(string $slug): ?object
+    {
+        $rows = $this->sassQuery(
+            "SELECT id, name, slug, custom_domain FROM agencies WHERE slug = ? OR name LIKE ? LIMIT 1",
+            [$slug, "%{$slug}%"]
+        );
+
+        return $rows[0] ?? null;
+    }
+
+    protected function findAgencyProductDb(int $agencyId): ?string
+    {
+        // Check db_name column exists
+        $cols = $this->sassQuery("SHOW COLUMNS FROM agency_products LIKE 'db_name'");
+        if (empty($cols)) {
+            Log::debug("TenantMiddleware: db_name column missing in agency_products.");
+            return null;
+        }
+
+        $rows = $this->sassQuery(
+            "SELECT ap.db_name
+             FROM agency_products ap
+             JOIN products p ON p.id = ap.product_id
+             WHERE ap.agency_id = ?
+               AND p.slug = 'launchshop'
+               AND ap.db_name IS NOT NULL
+               AND ap.db_name != ''
+             LIMIT 1",
+            [$agencyId]
+        );
+
+        return $rows[0]->db_name ?? null;
+    }
+
+    protected function findExistingDbBySlug(string $slug): ?string
     {
         $cpanelUser = env('CPANEL_USER', 'bazaarwa');
-        $cleanSlug  = str_replace('-', '_', strtolower(substr($slug, 0, 16)));
+        $cleanSlug  = str_replace('-', '_', substr($slug, 0, 16));
 
-        // Convention order: most likely first
         $candidates = [
-            "{$cpanelUser}_ps_{$cleanSlug}_launchshop",   // bazaarwa_ps_wibro_launchshop
-            "{$cpanelUser}_{$cleanSlug}_launchshop",       // bazaarwa_wibro_launchshop
+            "{$cpanelUser}_ps_{$cleanSlug}_launchshop",
+            "{$cpanelUser}_{$cleanSlug}_launchshop",
             "bazaarwa_ps_{$cleanSlug}_launchshop",
             "bazaarwa_{$cleanSlug}_launchshop",
         ];
 
-        foreach ($candidates as $dbName) {
-            if ($this->dbExists($dbName)) {
-                Log::info("TenantMiddleware: Found DB '{$dbName}' for slug '{$slug}'");
-                return $dbName;
+        foreach ($candidates as $cand) {
+            try {
+                $rows = DB::select("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?", [$cand]);
+                if (!empty($rows)) {
+                    return $cand;
+                }
+            } catch (\Throwable $e) {
+                // ignore
             }
         }
 
         return null;
-    }
-
-    /**
-     * Check if a MySQL database exists (using main DB connection's MySQL user).
-     * INFORMATION_SCHEMA.SCHEMATA is accessible to any MySQL user for DBs they have access to.
-     */
-    protected function dbExists(string $dbName): bool
-    {
-        try {
-            $rows = DB::select(
-                "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?",
-                [$dbName]
-            );
-            return !empty($rows);
-        } catch (\Throwable $e) {
-            return false;
-        }
     }
 }
