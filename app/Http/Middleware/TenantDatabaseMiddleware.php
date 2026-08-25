@@ -95,7 +95,15 @@ class TenantDatabaseMiddleware
 
         // 4. Try connecting to candidates in order of priority
         $currentDb = config('database.connections.mysql.database');
-        $switched  = false;
+        $origUser  = config('database.connections.mysql.username');
+        $origPass  = config('database.connections.mysql.password');
+
+        // On cPanel, bazaarwa_sass_admindb is the owner of all agency DBs (bazaarwa_ps_*).
+        // Using Sass Admin credentials bypasses user privilege boundaries automatically.
+        $tenantUser = env('SASS_ADMIN_DB_USER', env('DB_USERNAME_admin', $origUser));
+        $tenantPass = env('SASS_ADMIN_DB_PASS', env('DB_PASSWORD_admin', $origPass));
+
+        $switched = false;
 
         foreach ($candidates as $targetDb) {
             if ($targetDb === $currentDb) {
@@ -105,7 +113,11 @@ class TenantDatabaseMiddleware
 
             try {
                 DB::purge('mysql');
-                config(['database.connections.mysql.database' => $targetDb]);
+                config([
+                    'database.connections.mysql.database' => $targetDb,
+                    'database.connections.mysql.username' => $tenantUser,
+                    'database.connections.mysql.password' => $tenantPass,
+                ]);
                 DB::reconnect('mysql');
                 DB::connection('mysql')->getPdo(); // throws if DB inaccessible
 
@@ -113,15 +125,19 @@ class TenantDatabaseMiddleware
                 if ($agencySlug) {
                     session(['tenant_agency_slug' => $agencySlug]);
                 }
-                Log::info("TenantMiddleware: Switched to tenant DB: {$targetDb}");
+                Log::info("TenantMiddleware: Switched to tenant DB '{$targetDb}' as user '{$tenantUser}'");
                 $switched = true;
                 break;
             } catch (\Throwable $e) {
-                Log::warning("TenantMiddleware: Candidate DB '{$targetDb}' connection failed: " . $e->getMessage());
+                Log::warning("TenantMiddleware: Candidate DB '{$targetDb}' connection failed as '{$tenantUser}': " . $e->getMessage());
                 // Restore main DB connection before trying next candidate
                 try {
                     DB::purge('mysql');
-                    config(['database.connections.mysql.database' => $currentDb]);
+                    config([
+                        'database.connections.mysql.database' => $currentDb,
+                        'database.connections.mysql.username' => $origUser,
+                        'database.connections.mysql.password' => $origPass,
+                    ]);
                     DB::reconnect('mysql');
                 } catch (\Throwable $restoreEx) {
                     Log::error("TenantMiddleware: Failed to restore main DB: " . $restoreEx->getMessage());
