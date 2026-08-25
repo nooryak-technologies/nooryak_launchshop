@@ -106,11 +106,6 @@ class TenantDatabaseMiddleware
         $switched = false;
 
         foreach ($candidates as $targetDb) {
-            if ($targetDb === $currentDb) {
-                $switched = true;
-                break;
-            }
-
             try {
                 DB::purge('mysql');
                 config([
@@ -128,9 +123,10 @@ class TenantDatabaseMiddleware
 
                 // Auto-heal empty or un-provisioned tenant databases
                 try {
-                    $tableCheck = DB::select("SHOW TABLES");
-                    if (count($tableCheck) < 5) {
-                        Log::info("TenantMiddleware: Tenant DB '{$targetDb}' has " . count($tableCheck) . " tables. Auto-importing clean schema template...");
+                    $hasPackages = DB::select("SHOW TABLES LIKE 'packages'");
+                    $hasUsers    = DB::select("SHOW TABLES LIKE 'users'");
+                    if (empty($hasPackages) || empty($hasUsers)) {
+                        Log::info("TenantMiddleware: Tenant DB '{$targetDb}' is missing core tables (packages/users). Auto-importing clean schema template...");
                         $this->autoImportCleanSchemaTemplate();
                     }
                 } catch (\Throwable $checkEx) {
