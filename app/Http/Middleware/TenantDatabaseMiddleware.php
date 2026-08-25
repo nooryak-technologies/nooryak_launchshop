@@ -111,19 +111,30 @@ class TenantDatabaseMiddleware
 
     /**
      * Get a PDO connection to the Sass Admin DB using its own credentials.
-     * This is needed because on cPanel, the launchshop MySQL user has NO cross-DB access.
      *
-     * Requires in launchshop .env:
-     *   SASS_ADMIN_DB=bazaarwa_Sass_admindb
-     *   SASS_ADMIN_DB_HOST=localhost          (optional, defaults to main DB host)
+     * On cPanel, the launchshop MySQL user (bazaarwa_launchshop) has NO cross-DB access.
+     * We connect using the Sass Admin DB's own credentials.
+     *
+     * Reads from launchshop .env (supports two naming conventions):
+     *   SASS_ADMIN_DB=bazaarwa_Sass_admindb       ← DB name
+     *   DB_USERNAME_admin=bazaarwa_sass_admindb   ← DB user  (existing key)
+     *   DB_PASSWORD_admin=<password>              ← DB pass  (existing key)
+     *
+     *   OR alternatively:
      *   SASS_ADMIN_DB_USER=bazaarwa_sass_admindb
      *   SASS_ADMIN_DB_PASS=<password>
      */
     protected function getSassAdminPdo(): ?\PDO
     {
-        $dbName = env('SASS_ADMIN_DB');
-        $dbUser = env('SASS_ADMIN_DB_USER');
-        $dbPass = env('SASS_ADMIN_DB_PASS', '');
+        // DB name: SASS_ADMIN_DB takes priority, fallback to DB_DATABASE_admin
+        $dbName = env('SASS_ADMIN_DB') ?: env('DB_DATABASE_admin');
+
+        // DB user: check both naming conventions
+        $dbUser = env('SASS_ADMIN_DB_USER') ?: env('DB_USERNAME_admin');
+
+        // DB password: check both naming conventions
+        $dbPass = env('SASS_ADMIN_DB_PASS') ?: env('DB_PASSWORD_admin', '');
+
         $dbHost = env('SASS_ADMIN_DB_HOST', env('DB_HOST', '127.0.0.1'));
         $dbPort = env('SASS_ADMIN_DB_PORT', env('DB_PORT', '3306'));
 
