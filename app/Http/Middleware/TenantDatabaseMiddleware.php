@@ -19,6 +19,11 @@ class TenantDatabaseMiddleware
      */
     public function handle($request, Closure $next)
     {
+        // 0. Super Admin routes MUST ALWAYS use the main database (no tenant DB switch)
+        if ($request->is('X9_AdMiN-Portal_V7*') || $request->is('X9_AdMiN-Portal_V7')) {
+            return $next($request);
+        }
+
         $host = $request->getHost();
 
         // 1. Check if explicit agency or tenant DB is passed in query param or session
