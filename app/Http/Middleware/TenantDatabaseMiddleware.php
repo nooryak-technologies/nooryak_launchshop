@@ -125,6 +125,18 @@ class TenantDatabaseMiddleware
                 if ($agencySlug) {
                     session(['tenant_agency_slug' => $agencySlug]);
                 }
+
+                // Auto-heal empty or un-provisioned tenant databases
+                try {
+                    $tableCheck = DB::select("SHOW TABLES");
+                    if (count($tableCheck) < 5) {
+                        Log::info("TenantMiddleware: Tenant DB '{$targetDb}' has " . count($tableCheck) . " tables. Auto-importing clean schema template...");
+                        $this->autoImportCleanSchemaTemplate();
+                    }
+                } catch (\Throwable $checkEx) {
+                    Log::warning("TenantMiddleware: Table check/import failed for '{$targetDb}': " . $checkEx->getMessage());
+                }
+
                 Log::info("TenantMiddleware: Switched to tenant DB '{$targetDb}' as user '{$tenantUser}'");
                 $switched = true;
                 break;
@@ -350,5 +362,58 @@ class TenantDatabaseMiddleware
         }
 
         return null;
+    }
+
+    /**
+     * Auto-import the clean schema template into an empty tenant database.
+     */
+    private function autoImportCleanSchemaTemplate(): void
+    {
+        @set_time_limit(0);
+        @ini_set('memory_limit', '512M');
+
+        $paths = [
+            database_path('schema/launchshop_clean_template.sql'),
+            base_path('../Sass_admin/database/schema/launchshop_clean_template.sql'),
+            '/home/bazaarwa/public_html/database/schema/launchshop_clean_template.sql',
+            '/home/bazaarwa/launchshop.in/database/schema/launchshop_clean_template.sql',
+        ];
+
+        $schemaFile = null;
+        foreach ($paths as $path) {
+            if (file_exists($path)) {
+                $schemaFile = $path;
+                break;
+            }
+        }
+
+        if (!$schemaFile) {
+            Log::warning("TenantMiddleware: launchshop_clean_template.sql not found for auto-import.");
+            return;
+        }
+
+        try {
+            $pdo = DB::connection('mysql')->getPdo();
+            $pdo->exec('SET FOREIGN_KEY_CHECKS=0;');
+
+            $sql = file_get_contents($schemaFile);
+            $statements = preg_split('/;\r?\n(?=(?:CREATE TABLE|INSERT INTO|DROP TABLE|LOCK TABLES|UNLOCK TABLES|ALTER TABLE|\/\*!|--))/i', $sql);
+
+            foreach ($statements as $stmt) {
+                $stmt = trim($stmt);
+                if (!empty($stmt)) {
+                    try {
+                        $pdo->exec($stmt);
+                    } catch (\Throwable $ex) {
+                        // Ignore existing table or duplicate key errors during auto-import
+                    }
+                }
+            }
+
+            $pdo->exec('SET FOREIGN_KEY_CHECKS=1;');
+            Log::info("TenantMiddleware: Successfully auto-imported clean schema into tenant DB.");
+        } catch (\Throwable $e) {
+            Log::error("TenantMiddleware: Auto-import failed: " . $e->getMessage());
+        }
     }
 }
