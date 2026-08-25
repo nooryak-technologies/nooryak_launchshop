@@ -10,10 +10,12 @@ class TenantDatabaseMiddleware
 {
     /**
      * Handle incoming request and dynamically resolve dynamic database for White Label agencies.
-     * Rule: nooryak.in stays on main company DB (bazaarwa_launchshop / nooryak_launchshopp).
+     *
+     * KEY FIX: On cPanel, the launchshop MySQL user (bazaarwa_launchshop) has NO access
+     * to the Sass Admin DB (bazaarwa_Sass_admindb). We must connect to the Sass Admin DB
+     * using its OWN credentials (SASS_ADMIN_DB_USER / SASS_ADMIN_DB_PASSWORD) stored in .env.
      *
      * IMPORTANT: This middleware must run AFTER StartSession in Kernel.php
-     * so that session() is available.
      */
     public function handle($request, Closure $next)
     {
@@ -24,7 +26,6 @@ class TenantDatabaseMiddleware
         $tenantDb   = $request->query('tenant_db') ?? session('tenant_db');
 
         // Guard: if session has a tenant_db, verify it still actually exists in MySQL
-        // (prevents using a stale session pointing to a deleted/renamed DB)
         if ($tenantDb && !$request->query('tenant_db')) {
             $exists = false;
             try {
@@ -34,19 +35,18 @@ class TenantDatabaseMiddleware
                 // ignore
             }
             if (!$exists) {
-                Log::warning("TenantMiddleware: Session tenant_db '{$tenantDb}' not found in MySQL — clearing stale session.");
+                Log::warning("TenantMiddleware: Stale session tenant_db '{$tenantDb}' — clearing.");
                 session()->forget(['tenant_db', 'tenant_agency_slug']);
                 $tenantDb   = null;
                 $agencySlug = null;
             }
         }
 
-        // 2. Extract subdomain if accessing via subdomain (e.g. wibro.launchshop.nooryak.in -> wibro)
+        // 2. Extract subdomain (e.g. wibro.launchshop.nooryak.in -> wibro)
         if (!$agencySlug && !$tenantDb) {
             $parts = explode('.', $host);
             if (count($parts) >= 3 && !in_array(strtolower($parts[0]), ['www', 'app', 'launchshop', 'admin', 'localhost'])) {
                 $agencySlug = $parts[0];
-                Log::info("TenantMiddleware: Detected agency slug from subdomain: {$agencySlug}");
             }
         }
 
@@ -54,47 +54,41 @@ class TenantDatabaseMiddleware
         $targetDb = null;
 
         if ($tenantDb) {
-            // Already validated above
             $targetDb = $tenantDb;
-            Log::info("TenantMiddleware: Using session tenant_db: {$targetDb}");
         } elseif ($agencySlug) {
-            [$agency, $sassDb] = $this->findAgencyBySlug($agencySlug);
+            $agency   = $this->findAgencyBySlug($agencySlug);
             if ($agency) {
-                $targetDb = $this->findAgencyProductDb($agency->id, $sassDb);
-                Log::info("TenantMiddleware: Agency '{$agencySlug}' (id={$agency->id}) -> db_name from agency_products: " . ($targetDb ?? 'null'));
+                $targetDb = $this->findAgencyProductDb($agency->id);
+                Log::info("TenantMiddleware: slug '{$agencySlug}' -> agency_products.db_name: " . ($targetDb ?? 'null'));
             }
             if (!$targetDb) {
                 $targetDb = $this->findExistingDbBySlug($agencySlug);
-                Log::info("TenantMiddleware: Fallback slug-based DB search for '{$agencySlug}': " . ($targetDb ?? 'not found'));
+                Log::info("TenantMiddleware: slug fallback DB search '{$agencySlug}': " . ($targetDb ?? 'not found'));
             }
         } else {
-            // Fallback: Query by domain (e.g. cockroachjantaparty.top or launchshop.cockroachjantaparty.top)
             $cleanHost = preg_replace('/^(launchshop|app|www)\./i', '', $host);
-            $isLocal   = in_array($cleanHost, ['nooryak.in', '127.0.0.1', 'localhost']);
+            $isMain    = in_array($cleanHost, ['nooryak.in', '127.0.0.1', 'localhost', 'launchshop.in']);
 
-            if (!$isLocal) {
-                [$agency, $sassDb] = $this->findAgencyByDomain($cleanHost);
+            if (!$isMain) {
+                $agency = $this->findAgencyByDomain($cleanHost);
                 if ($agency) {
-                    $targetDb = $this->findAgencyProductDb($agency->id, $sassDb);
+                    $targetDb = $this->findAgencyProductDb($agency->id);
                     if (!$targetDb) {
                         $agencySlug = \Illuminate\Support\Str::slug($agency->name);
                         $targetDb   = $this->findExistingDbBySlug($agencySlug);
                     }
-                    Log::info("TenantMiddleware: Domain '{$cleanHost}' -> agency '{$agency->name}' -> db: " . ($targetDb ?? 'null'));
+                    Log::info("TenantMiddleware: domain '{$cleanHost}' -> '{$agency->name}' -> db: " . ($targetDb ?? 'null'));
                 } else {
-                    Log::info("TenantMiddleware: No agency found for domain '{$cleanHost}' — using main DB.");
+                    Log::info("TenantMiddleware: No agency for domain '{$cleanHost}' — main DB.");
                 }
-            } else {
-                Log::info("TenantMiddleware: Local/main host '{$cleanHost}' — using main DB (no tenant switch).");
             }
         }
 
-        // 4. Connect to target database if resolved and different from current
+        // 4. Switch to tenant database if resolved
         $currentDb = config('database.connections.mysql.database');
         if ($targetDb && $targetDb !== $currentDb) {
             try {
                 $dbExists = DB::select("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?", [$targetDb]);
-
                 if (!empty($dbExists)) {
                     DB::purge('mysql');
                     config(['database.connections.mysql.database' => $targetDb]);
@@ -105,128 +99,155 @@ class TenantDatabaseMiddleware
                     }
                     Log::info("TenantMiddleware: Switched to tenant DB: {$targetDb}");
                 } else {
-                    Log::warning("TenantMiddleware: Target DB '{$targetDb}' does not exist in MySQL — staying on main DB.");
+                    Log::warning("TenantMiddleware: DB '{$targetDb}' not found in MySQL.");
                 }
             } catch (\Throwable $e) {
-                Log::warning("TenantMiddleware: Failed connecting to tenant DB {$targetDb}: " . $e->getMessage());
+                Log::warning("TenantMiddleware: Failed switching to {$targetDb}: " . $e->getMessage());
             }
         }
 
         return $next($request);
     }
 
-    protected function findAgencyByDomain(string $cleanHost): array
+    /**
+     * Get a PDO connection to the Sass Admin DB using its own credentials.
+     * This is needed because on cPanel, the launchshop MySQL user has NO cross-DB access.
+     *
+     * Requires in launchshop .env:
+     *   SASS_ADMIN_DB=bazaarwa_Sass_admindb
+     *   SASS_ADMIN_DB_HOST=localhost          (optional, defaults to main DB host)
+     *   SASS_ADMIN_DB_USER=bazaarwa_sass_admindb
+     *   SASS_ADMIN_DB_PASS=<password>
+     */
+    protected function getSassAdminPdo(): ?\PDO
     {
-        $databasesToTry = array_unique(array_filter([
-            env('SASS_ADMIN_DB'),
-            'sass_admin',
-            'bazaarwa_sass_admindb',
-            'bazaarwa_sass_admin',
-            null,
-        ]));
+        $dbName = env('SASS_ADMIN_DB');
+        $dbUser = env('SASS_ADMIN_DB_USER');
+        $dbPass = env('SASS_ADMIN_DB_PASS', '');
+        $dbHost = env('SASS_ADMIN_DB_HOST', env('DB_HOST', '127.0.0.1'));
+        $dbPort = env('SASS_ADMIN_DB_PORT', env('DB_PORT', '3306'));
 
+        if (!$dbName || !$dbUser) {
+            // Credentials not configured — fall back to same-user cross-DB (works on local)
+            return null;
+        }
+
+        static $pdo = null;
+        if ($pdo !== null) {
+            return $pdo;
+        }
+
+        try {
+            $dsn = "mysql:host={$dbHost};port={$dbPort};dbname={$dbName};charset=utf8mb4";
+            $pdo = new \PDO($dsn, $dbUser, $dbPass, [
+                \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ,
+                \PDO::ATTR_TIMEOUT            => 5,
+            ]);
+            return $pdo;
+        } catch (\Throwable $e) {
+            Log::warning("TenantMiddleware: Cannot connect to Sass Admin DB '{$dbName}': " . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Run a SELECT query against the Sass Admin DB.
+     * Uses dedicated PDO if credentials are set, otherwise falls back to cross-DB via main connection.
+     */
+    protected function sassQuery(string $sql, array $bindings = []): array
+    {
+        // Try dedicated Sass Admin connection first (required on cPanel)
+        $pdo = $this->getSassAdminPdo();
+        if ($pdo) {
+            try {
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute($bindings);
+                return $stmt->fetchAll(\PDO::FETCH_OBJ);
+            } catch (\Throwable $e) {
+                Log::debug("TenantMiddleware: sassQuery PDO error: " . $e->getMessage());
+                return [];
+            }
+        }
+
+        // Fallback: use main DB connection with cross-DB table prefix (works locally)
+        $sassDb = env('SASS_ADMIN_DB', 'sass_admin');
+        // Replace table names with prefixed versions in the SQL
+        $sql = preg_replace('/\bFROM\s+agencies\b/i',         "FROM {$sassDb}.agencies",         $sql);
+        $sql = preg_replace('/\bFROM\s+agency_products\b/i',  "FROM {$sassDb}.agency_products",  $sql);
+        $sql = preg_replace('/\bFROM\s+products\b/i',         "FROM {$sassDb}.products",          $sql);
+        $sql = preg_replace('/\bJOIN\s+agencies\b/i',         "JOIN {$sassDb}.agencies",          $sql);
+        $sql = preg_replace('/\bJOIN\s+agency_products\b/i',  "JOIN {$sassDb}.agency_products",   $sql);
+        $sql = preg_replace('/\bJOIN\s+products\b/i',         "JOIN {$sassDb}.products",           $sql);
+        $sql = preg_replace('/\bSHOW COLUMNS FROM\s+/i',      "SHOW COLUMNS FROM {$sassDb}.",      $sql);
+
+        try {
+            return DB::select($sql, $bindings);
+        } catch (\Throwable $e) {
+            Log::debug("TenantMiddleware: sassQuery fallback error: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    protected function findAgencyByDomain(string $cleanHost): ?object
+    {
         $rootHost = preg_replace('/^(launchshop|app|www)\./i', '', $cleanHost);
 
-        foreach ($databasesToTry as $db) {
-            try {
-                $table  = $db ? "{$db}.agencies" : 'agencies';
-                $agency = DB::table($table)
-                    ->where(function ($q) use ($cleanHost, $rootHost) {
-                        $q->where('custom_domain', $cleanHost)
-                          ->orWhere('custom_domain', $rootHost)
-                          ->orWhere('custom_domain', "https://{$cleanHost}")
-                          ->orWhere('custom_domain', "http://{$cleanHost}")
-                          ->orWhere('custom_domain', "https://{$rootHost}")
-                          ->orWhere('custom_domain', "http://{$rootHost}")
-                          ->orWhere('custom_domain', 'like', "%{$rootHost}%");
-                    })
-                    ->first();
+        $sql = "SELECT id, name, slug, custom_domain FROM agencies
+                WHERE custom_domain = ?
+                   OR custom_domain = ?
+                   OR custom_domain = ?
+                   OR custom_domain = ?
+                   OR custom_domain = ?
+                   OR custom_domain = ?
+                   OR custom_domain LIKE ?
+                LIMIT 1";
 
-                if ($agency) {
-                    return [$agency, $db];
-                }
-            } catch (\Throwable $e) {
-                Log::debug("TenantMiddleware: findAgencyByDomain tried db={$db}, error: " . $e->getMessage());
-            }
-        }
+        $rows = $this->sassQuery($sql, [
+            $cleanHost,
+            $rootHost,
+            "https://{$cleanHost}",
+            "http://{$cleanHost}",
+            "https://{$rootHost}",
+            "http://{$rootHost}",
+            "%{$rootHost}%",
+        ]);
 
-        return [null, null];
+        return $rows[0] ?? null;
     }
 
-    protected function findAgencyBySlug(string $slug): array
+    protected function findAgencyBySlug(string $slug): ?object
     {
-        $databasesToTry = array_unique(array_filter([
-            env('SASS_ADMIN_DB'),
-            'sass_admin',
-            'bazaarwa_sass_admindb',
-            'bazaarwa_sass_admin',
-            null,
-        ]));
+        $rows = $this->sassQuery(
+            "SELECT id, name, slug, custom_domain FROM agencies WHERE slug = ? OR name LIKE ? LIMIT 1",
+            [$slug, "%{$slug}%"]
+        );
 
-        foreach ($databasesToTry as $db) {
-            try {
-                $table  = $db ? "{$db}.agencies" : 'agencies';
-                $agency = DB::table($table)
-                    ->where('slug', $slug)
-                    ->orWhere('name', 'like', "%{$slug}%")
-                    ->first();
-
-                if ($agency) {
-                    return [$agency, $db];
-                }
-            } catch (\Throwable $e) {
-                Log::debug("TenantMiddleware: findAgencyBySlug tried db={$db}, error: " . $e->getMessage());
-            }
-        }
-
-        return [null, null];
+        return $rows[0] ?? null;
     }
 
-    protected function findAgencyProductDb($agencyId, ?string $sassDb = null): ?string
+    protected function findAgencyProductDb(int $agencyId): ?string
     {
-        $databasesToTry = array_unique(array_filter([
-            $sassDb,
-            env('SASS_ADMIN_DB'),
-            'sass_admin',
-            'bazaarwa_sass_admindb',
-            null,
-        ]));
-
-        foreach ($databasesToTry as $db) {
-            try {
-                $table     = $db ? "{$db}.agency_products" : 'agency_products';
-                $prodTable = $db ? "{$db}.products" : 'products';
-
-                // Guard: db_name column may not exist yet if migration hasn't run
-                $hasDbCol = false;
-                try {
-                    $cols     = DB::select("SHOW COLUMNS FROM {$table} LIKE 'db_name'");
-                    $hasDbCol = !empty($cols);
-                } catch (\Throwable $e) {
-                    // column check failed
-                }
-
-                if (!$hasDbCol) {
-                    Log::debug("TenantMiddleware: agency_products.db_name column missing in db={$db} — skipping.");
-                    continue;
-                }
-
-                $row = DB::table($table)
-                    ->join($prodTable, "{$table}.product_id", '=', "{$prodTable}.id")
-                    ->where("{$table}.agency_id", $agencyId)
-                    ->where("{$prodTable}.slug", 'launchshop')
-                    ->select("{$table}.db_name")
-                    ->first();
-
-                if ($row && !empty($row->db_name)) {
-                    return $row->db_name;
-                }
-            } catch (\Throwable $e) {
-                Log::debug("TenantMiddleware: findAgencyProductDb tried db={$db}, error: " . $e->getMessage());
-            }
+        // Check db_name column exists
+        $cols = $this->sassQuery("SHOW COLUMNS FROM agency_products LIKE 'db_name'");
+        if (empty($cols)) {
+            Log::debug("TenantMiddleware: db_name column missing in agency_products.");
+            return null;
         }
 
-        return null;
+        $rows = $this->sassQuery(
+            "SELECT ap.db_name
+             FROM agency_products ap
+             JOIN products p ON p.id = ap.product_id
+             WHERE ap.agency_id = ?
+               AND p.slug = 'launchshop'
+               AND ap.db_name IS NOT NULL
+               AND ap.db_name != ''
+             LIMIT 1",
+            [$agencyId]
+        );
+
+        return $rows[0]->db_name ?? null;
     }
 
     protected function findExistingDbBySlug(string $slug): ?string
@@ -239,7 +260,6 @@ class TenantDatabaseMiddleware
             "{$cpanelUser}_{$cleanSlug}_launchshop",
             "bazaarwa_ps_{$cleanSlug}_launchshop",
             "bazaarwa_{$cleanSlug}_launchshop",
-            "root_ps_{$cleanSlug}_launchshop",
         ];
 
         foreach ($candidates as $cand) {
