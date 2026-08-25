@@ -84,25 +84,33 @@ class TenantDatabaseMiddleware
             }
         }
 
-        // 4. Switch to tenant database if resolved
+        // 4. Switch to tenant database if resolved and different from current
         $currentDb = config('database.connections.mysql.database');
         if ($targetDb && $targetDb !== $currentDb) {
             try {
-                $dbExists = DB::select("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?", [$targetDb]);
-                if (!empty($dbExists)) {
-                    DB::purge('mysql');
-                    config(['database.connections.mysql.database' => $targetDb]);
-                    DB::reconnect('mysql');
-                    session(['tenant_db' => $targetDb]);
-                    if ($agencySlug) {
-                        session(['tenant_agency_slug' => $agencySlug]);
-                    }
-                    Log::info("TenantMiddleware: Switched to tenant DB: {$targetDb}");
-                } else {
-                    Log::warning("TenantMiddleware: DB '{$targetDb}' not found in MySQL.");
+                // IMPORTANT: Do NOT use INFORMATION_SCHEMA.SCHEMATA to check existence.
+                // On cPanel, that only shows DBs the current user has privileges on.
+                // Instead, attempt the connection directly — if it fails, fall back.
+                DB::purge('mysql');
+                config(['database.connections.mysql.database' => $targetDb]);
+                DB::reconnect('mysql');
+                DB::connection('mysql')->getPdo(); // throws if DB inaccessible
+
+                session(['tenant_db' => $targetDb]);
+                if ($agencySlug) {
+                    session(['tenant_agency_slug' => $agencySlug]);
                 }
+                Log::info("TenantMiddleware: Switched to tenant DB: {$targetDb}");
             } catch (\Throwable $e) {
-                Log::warning("TenantMiddleware: Failed switching to {$targetDb}: " . $e->getMessage());
+                // Restore original DB on failure
+                Log::warning("TenantMiddleware: Cannot connect to '{$targetDb}': " . $e->getMessage() . " — restoring main DB.");
+                try {
+                    DB::purge('mysql');
+                    config(['database.connections.mysql.database' => $currentDb]);
+                    DB::reconnect('mysql');
+                } catch (\Throwable $restoreEx) {
+                    Log::error("TenantMiddleware: Failed to restore main DB: " . $restoreEx->getMessage());
+                }
             }
         }
 
@@ -273,15 +281,32 @@ class TenantDatabaseMiddleware
             "bazaarwa_{$cleanSlug}_launchshop",
         ];
 
+        $currentDb = config('database.connections.mysql.database');
+
         foreach ($candidates as $cand) {
             try {
-                $rows = DB::select("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?", [$cand]);
-                if (!empty($rows)) {
-                    return $cand;
-                }
+                // Try a direct connection — avoids INFORMATION_SCHEMA privilege issue on cPanel
+                DB::purge('mysql');
+                config(['database.connections.mysql.database' => $cand]);
+                DB::reconnect('mysql');
+                DB::connection('mysql')->getPdo();
+                // Success — restore original connection and return the found DB
+                DB::purge('mysql');
+                config(['database.connections.mysql.database' => $currentDb]);
+                DB::reconnect('mysql');
+                return $cand;
             } catch (\Throwable $e) {
-                // ignore
+                // DB doesn't exist or no access — try next candidate
             }
+        }
+
+        // Restore original connection
+        try {
+            DB::purge('mysql');
+            config(['database.connections.mysql.database' => $currentDb]);
+            DB::reconnect('mysql');
+        } catch (\Throwable $e) {
+            // ignore
         }
 
         return null;
