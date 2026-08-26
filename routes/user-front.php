@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 $domain = env('WEBSITE_HOST');
 
 if (!app()->runningInConsole() && isset($_SERVER['HTTP_HOST'])) {
@@ -10,54 +12,19 @@ if (!app()->runningInConsole() && isset($_SERVER['HTTP_HOST'])) {
 
 $parsedUrl = parse_url(url()->current());
 $host = str_replace("www.", "", $parsedUrl['host'] ?? env('WEBSITE_HOST'));
-$prefix = '';
+$cleanHost = preg_replace('/^(www|app)\./i', '', strtolower($host));
+$mainHosts = array_filter([strtolower((string)env('WEBSITE_HOST')), 'launchshop.in', 'nooryak.in', 'localhost', '127.0.0.1']);
+$isMainHost = in_array($cleanHost, $mainHosts);
 
-if (array_key_exists('host', $parsedUrl)) {
-    $cleanHost = preg_replace('/^(www|app)\./i', '', strtolower($host));
-    $mainHosts = array_filter([strtolower((string)env('WEBSITE_HOST')), 'launchshop.in', 'nooryak.in', 'localhost', '127.0.0.1']);
-    $isMainHost = in_array($cleanHost, $mainHosts);
-
-    $appPath = parse_url(env('APP_URL'), PHP_URL_PATH) ?? '';
-    $currentPath = $parsedUrl['path'] ?? '/';
-    if (!empty($appPath) && strpos($currentPath, $appPath) === 0) {
-        $currentPath = substr($currentPath, strlen($appPath));
-    }
-    $pathSegments = explode('/', trim($currentPath, '/'));
-    $firstSegment = $pathSegments[0] ?? null;
-
-    $reservedKeywords = ['admin', 'user', 'front', 'api', 'login', 'register', 'checkout', 'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs', 'whitelabel-panel', 'master', 'product', 'cart', 'shop', 'page', 'about', 'privacy-policy', 'terms-and-conditions', 'terms-conditions', 'refund-policy', 'shipping-policy'];
-
-    if ($isMainHost && !empty($firstSegment) && !in_array(strtolower($firstSegment), $reservedKeywords)) {
-        $domain = $parsedUrl['host'];
-        $prefix = '/{username}';
-    } else {
-        if (!app()->runningInConsole()) {
-            if (substr($_SERVER['HTTP_HOST'] ?? '', 0, 4) === 'www.') {
-                $domain = 'www.{domain}';
-            } else {
-                $domain = '{domain}';
-            }
-        }
-        if (!$isMainHost && !empty($firstSegment) && !in_array(strtolower($firstSegment), $reservedKeywords)) {
-            $tenantUserExists = \App\Models\User::where('username', strtolower($firstSegment))
-                ->where(function($q) {
-                    $q->where('status', 1)->orWhere('preview_template', 1);
-                })
-                ->exists();
-            if ($tenantUserExists) {
-                $domain = $parsedUrl['host'];
-                $prefix = '/{username}';
-            } else {
-                $prefix = '';
-            }
-        } else {
-            $prefix = '';
-        }
-    }
-}
-
-
-Route::group(['domain' => $domain, 'prefix' => $prefix, 'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance']], function () {
+/*
+|--------------------------------------------------------------------------
+| Path-Based Tenant Routes (e.g. launchshop.cockroachjantaparty.top/grocery)
+|--------------------------------------------------------------------------
+*/
+Route::group([
+    'prefix' => '/{username}',
+    'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance']
+], function () {
     Route::get('/', 'UserFront\HomeController@userDetailView')
         ->name('front.user.detail.view');
     Route::get('/invoice', 'UserFront\HomeController@invoice')
@@ -114,72 +81,47 @@ Route::group(['domain' => $domain, 'prefix' => $prefix, 'middleware' => ['userVi
         return currency_converter($value, $id);
     })->name('front.item.variation.currency.convert');
 
-
     Route::get('/customer-success', 'UserFront\CustomerController@onlineSuccess')->name('customer.success.page');
-
     Route::get('/compare', 'UserFront\ItemController@compare')->name('front.user.compare');
 
     Route::get('/login/google', 'UserFront\CustomerController@redirectToGoogle')->name('customer.google.login');
     Route::get('/login/google/callback', 'UserFront\CustomerController@handleGoogleCallback')->name('customer.google.callback');
 
     Route::prefix('/customer')->middleware(['guest:customer'])->group(function () {
-        // user redirect to login page route
         Route::get('/login',  'UserFront\CustomerController@login')->name('customer.login');
-        // user login submit route
         Route::post('/login-submit', 'UserFront\CustomerController@loginSubmit')->name('customer.login_submit');
-        // user forget password route
         Route::get('/forgot-password', 'UserFront\CustomerController@forgetPassword')->name('customer.forget_password');
-        // send mail to user for forget password route
         Route::post('/send-forget-password-mail', 'UserFront\CustomerController@sendMail')->name('customer.send_forget_password_mail')->middleware('Demo');
-        // reset password route
         Route::get('/reset-password', 'UserFront\CustomerController@resetPassword')->name('customer.reset_password');
-        // user reset password submit route
         Route::post('/reset-password-submit', 'UserFront\CustomerController@resetPasswordSubmit')->name('customer.reset_password_submit')->middleware('Demo');
-        // user redirect to signup page route
         Route::get('/signup', 'UserFront\CustomerController@signup')->name('customer.signup');
-        // user signup submit route
         Route::post('/signup-submit', 'UserFront\CustomerController@signupSubmit')->name('customer.signup.submit')->middleware('Demo');
-        // signup verify route
         Route::get('/signup-verify/{token}', 'UserFront\CustomerController@signupVerify')->name('customer.signup.verify');
     });
 
-
     Route::prefix('/customer')->middleware(['auth:customer', 'accountStatus', 'checkWebsiteOwner', 'Demo'])->group(function () {
-        // user redirect to dashboard route
-        //user order
         Route::get('/dashboard', 'UserFront\CustomerController@redirectToDashboard')->name('customer.dashboard');
         Route::get('/shipping/details', 'UserFront\CustomerController@shippingdetails')->name('customer.shpping-details');
         Route::post('/shipping/details/update', 'UserFront\CustomerController@shippingupdate')->name('customer.shipping-update');
         Route::get('/billing/details', 'UserFront\CustomerController@billingdetails')->name('customer.billing-details');
         Route::post('/billing/details/update', 'UserFront\CustomerController@billingupdate')->name('customer.billing-update');
-        // edit profile route
         Route::get('/edit-profile', 'UserFront\CustomerController@editProfile')->name('customer.edit_profile');
-        // update profile route
         Route::post('/update-profile', 'UserFront\CustomerController@updateProfile')->name('customer.update_profile');
-        // all ads route
         Route::get('/order/{id}', 'UserFront\CustomerController@orderdetails')->name('customer.orders-details');
         Route::get('/orders', 'UserFront\CustomerController@customerOrders')->name('customer.orders');
         Route::get('/order-tracking', 'UserFront\CustomerController@orderTracking')->name('customer.order-tracking');
         Route::get('/wishlist', 'UserFront\CustomerController@customerWishlist')->name('customer.wishlist');
         Route::get('/remove-from-wishlist/{id}', 'UserFront\CustomerController@removefromWish')->name('customer.removefromWish');
-
         Route::get('/checkout/process', 'UserFront\ItemController@checkout_process')->name('front.user.checkout');
         Route::get('/checkout', 'UserFront\ItemController@checkout')->name('front.user.checkout.final_step');
-
         Route::get('/change-password',  'UserFront\CustomerController@changePassword')->name('customer.change_password');
-        // update password route
         Route::post('/update-password',  'UserFront\CustomerController@updatePassword')->name('customer.update_password');
-        // user logout attempt route
         Route::get('/logout',  'UserFront\CustomerController@logoutSubmit')->name('customer.logout');
     });
 
     Route::post('/coupon', 'UserFront\ItemController@coupon')->name('front.coupon');
-
     Route::get('/checkout/guest', 'UserFront\ItemController@checkoutGuest')->name('front.user.checkout.guest');
-
     Route::post('/item/payment/submit', 'UserFront\UsercheckoutController@checkout')->name('item.payment.submit')->middleware('Demo');
-
-
 
     Route::group(['middleware' => ['routeAccess:Testimonial']], function () {
         Route::get('/testimonial', 'Front\FrontendController@userTestimonial')->name('front.user.testimonial');
@@ -189,40 +131,28 @@ Route::group(['domain' => $domain, 'prefix' => $prefix, 'middleware' => ['userVi
         Route::post('/contact/message', 'Front\FrontendController@contactMessage')->name('front.contact.message')->middleware('Demo');
     });
     Route::get('/user/changelanguage', 'Front\FrontendController@changeUserLanguage')->name('changeUserLanguage');
-
     Route::post('/product/payment/instruction', 'UserFront\UsercheckoutController@paymentInstruction')->name('product.payment.paymentInstruction');
     Route::post('/push', 'UserFront\PushController@store')->name('front.user.push-notification.store_endpoint');
 
     Route::prefix('order')->group(function () {
         Route::get('paypal/success', "User\Payment\PaypalController@successPayment")->name('customer.itemcheckout.paypal.success');
         Route::any('/cancel', "UserFront\UsercheckoutController@cancelPayment")->name('customer.itemcheckout.cancel');
-
         Route::get('paystack/success', 'User\Payment\PaystackController@successPayment')->name('customer.itemcheckout.paystack.success');
-
-        Route::get('mercadopago/success', 'User\Payment\MercadopagoController@successPayment')->name('customer.itemcheckout.mercadopago.success');
-
+        Route::get('mercadopago/success', 'Payment\MercadopagoController@successPayment')->name('customer.itemcheckout.mercadopago.success');
         Route::post('razorpay/success', 'User\Payment\RazorpayController@successPayment')->name('customer.itemcheckout.razorpay.success');
-
         Route::get('instamojo/success', 'User\Payment\InstamojoController@successPayment')->name('customer.itemcheckout.instamojo.success');
-
         Route::post('flutterwave/success', 'User\Payment\FlutterWaveController@successPayment')->name('customer.itemcheckout.flutterwave.success');
-
         Route::get('/mollie/success', 'User\Payment\MollieController@successPayment')->name('customer.itemcheckout.mollie.success');
-
         Route::get('/yoco/success', 'User\Payment\YocoController@successPayment')->name('customer.itemcheckout.yoco.success');
-
         Route::get('/xendit/success', 'User\Payment\YocoController@successPayment')->name('customer.itemcheckout.xendit.success');
         Route::get('/perfect-money/success', 'User\Payment\PerfectMoneyController@successPayment')->name('customer.itemcheckout.perfect_money.success');
-
         Route::get('/myfatoorah/success', 'User\Payment\MyfatoorahController@successPayment')->name('customer.itemcheckout.myfatoorah.success');
         Route::get('/toyyibpay/success', 'User\Payment\ToyyibpayController@successPayment')->name('customer.itemcheckout.toyyibpay.success');
         Route::post('/paytabs/success', 'User\Payment\PaytabsController@successPayment')->name('customer.itemcheckout.paytabs.success');
         Route::post('/phonepe/success', 'User\Payment\PhonePeController@successPayment')->name('customer.itemcheckout.phonepe.success');
         Route::get('/midtrans/success', 'User\Payment\MidtransController@successPayment')->name('customer.itemcheckout.midtrans.success');
         Route::post('/iyzico/success', 'User\Payment\IyzicoController@successPayment')->name('customer.itemcheckout.iyzico.success');
-
         Route::get('/offline/success', 'UserFront\UsercheckoutController@offlineSuccess')->name('customer.itemcheckout.offline.success');
-
         Route::post('paytm/payment-status', "User\Payment\PaytmController@paymentStatus")->name('customer.itemcheckout.paytm.status');
     });
 });
