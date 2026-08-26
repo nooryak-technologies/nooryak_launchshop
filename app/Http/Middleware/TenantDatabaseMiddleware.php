@@ -77,6 +77,7 @@ class TenantDatabaseMiddleware
                 '127.0.0.1',
                 'localhost',
                 'launchshop.in',
+                'launchshop.cockroachjantaparty.top',
                 env('WEBSITE_HOST', ''),
             ];
             $isMain = in_array($cleanHost, $mainHosts)

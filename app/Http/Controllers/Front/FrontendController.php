@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 // require_once __DIR__ . '/../../../../vendor/Transliterator/Transliterator.php';
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\UserFront\HomeController as UserFrontHomeController;
 use App\Http\Helpers\BasicMailer;
 use App\Http\Helpers\MegaMailer;
 use App\Models\AdditionalSection;
@@ -63,6 +64,24 @@ class FrontendController extends Controller
 
     public function index()
     {
+        $requestHost = strtolower(str_replace('www.', '', request()->getHost()));
+        $tenantBaseHosts = array_values(array_unique(array_filter([
+            strtolower((string) env('WEBSITE_HOST', '')),
+            'launchshop.in',
+        ])));
+
+        foreach ($tenantBaseHosts as $baseHost) {
+            if (!empty($baseHost)
+                && $requestHost !== $baseHost
+                && str_ends_with($requestHost, '.' . $baseHost)
+            ) {
+                $subdomain = explode('.', $requestHost)[0] ?? null;
+                if (!empty($subdomain)) {
+                    return app(UserFrontHomeController::class)->userDetailView($subdomain);
+                }
+            }
+        }
+
         if (request()->query('clear_cache') == '1') {
             \Artisan::call('cache:clear');
             \Artisan::call('config:clear');

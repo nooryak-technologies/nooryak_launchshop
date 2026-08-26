@@ -697,9 +697,12 @@ if (!function_exists('getUser')) {
             }
         }
 
-        $pathSegments     = explode('/', trim($requestPath, '/'));
-        $usernameFromPath = $pathSegments[0] ?? null;
-        $websiteHost      = strtolower((string) env('WEBSITE_HOST', ''));
+        $pathSegments      = explode('/', trim($requestPath, '/'));
+        $usernameFromPath  = $pathSegments[0] ?? null;
+        $subdomainBaseHosts = array_values(array_unique(array_filter([
+            strtolower((string) env('WEBSITE_HOST', '')),
+            'launchshop.in',
+        ])));
 
         $reservedKeywords = [
             'admin', 'user', 'front', 'api', 'login', 'register', 'checkout',
@@ -724,12 +727,16 @@ if (!function_exists('getUser')) {
             }
         }
 
-        // ── CASE 2: subdomain of WEBSITE_HOST  ─────────────────────────────
+        // ── CASE 2: subdomain of supported base host(s)  ───────────────────
         // e.g. manti.launchshop.in
-        if (!empty($websiteHost)
-            && $requestHost !== $websiteHost
-            && str_ends_with($requestHost, '.' . $websiteHost)
-        ) {
+        foreach ($subdomainBaseHosts as $websiteHost) {
+            if (empty($websiteHost)
+                || $requestHost === $websiteHost
+                || !str_ends_with($requestHost, '.' . $websiteHost)
+            ) {
+                continue;
+            }
+
             $sub  = explode('.', $requestHost)[0];
             $user = User::where('username', $sub)
                 ->where('status', 1)
