@@ -666,25 +666,37 @@ if (!function_exists('getUser')) {
 
     function getUser()
     {
-        // ── Use raw server variables, NOT url()->current() ──────────────────
-        // url()->current() relies on APP_URL which may not match the real request
-        // host (e.g. APP_URL=https://launchshop.in but actual request is on
-        // launchshop.cockroachjantaparty.top). $_SERVER always reflects the real request.
+        // ── Resolve the real request host ────────────────────────────────────
+        // Use $_SERVER['HTTP_HOST'] (real incoming host) not APP_URL.
         $requestHost = isset($_SERVER['HTTP_HOST'])
             ? strtolower(str_replace('www.', '', $_SERVER['HTTP_HOST']))
             : strtolower(str_replace('www.', '', (string) env('WEBSITE_HOST', 'localhost')));
 
-        $requestPath = $_SERVER['REQUEST_URI'] ?? '/';
-        // strip query string
-        if (($qPos = strpos($requestPath, '?')) !== false) {
-            $requestPath = substr($requestPath, 0, $qPos);
+        // ── Resolve the real request path ────────────────────────────────────
+        // IMPORTANT: On cPanel, the root .htaccess rewrites /manti → public/manti.
+        // $_SERVER['REQUEST_URI'] would then be /public/manti instead of /manti.
+        // Laravel's request()->path() correctly resolves to just "manti" in all cases.
+        try {
+            $requestPath = '/' . ltrim(app('request')->path(), '/');
+        } catch (\Exception $e) {
+            // Fallback if request is not available (console / boot phase)
+            $requestPath = $_SERVER['REQUEST_URI'] ?? '/';
+            if (($q = strpos($requestPath, '?')) !== false) {
+                $requestPath = substr($requestPath, 0, $q);
+            }
+            // Strip known prefixes
+            foreach (['/public/', '/public'] as $prefix) {
+                if (strpos($requestPath, $prefix) === 0) {
+                    $requestPath = substr($requestPath, strlen($prefix) - 1);
+                    break;
+                }
+            }
+            $appPath = parse_url(env('APP_URL'), PHP_URL_PATH) ?? '';
+            if (!empty($appPath) && strpos($requestPath, $appPath) === 0) {
+                $requestPath = substr($requestPath, strlen($appPath));
+            }
         }
-        // strip app subdirectory prefix when APP_URL has a path (e.g. /launchshop/public)
-        $appPath = parse_url(env('APP_URL'), PHP_URL_PATH) ?? '';
-        if (!empty($appPath) && strpos($requestPath, $appPath) === 0) {
-            $requestPath = substr($requestPath, strlen($appPath));
-        }
-        $requestPath      = '/' . ltrim($requestPath, '/');
+
         $pathSegments     = explode('/', trim($requestPath, '/'));
         $usernameFromPath = $pathSegments[0] ?? null;
         $websiteHost      = strtolower((string) env('WEBSITE_HOST', ''));
@@ -695,12 +707,12 @@ if (!function_exists('getUser')) {
             'whitelabel-panel', 'master', 'product', 'cart', 'shop', 'page',
             'about', 'privacy-policy', 'terms-and-conditions', 'terms-conditions',
             'refund-policy', 'shipping-policy', 'assets', 'storage',
-            'favicon.ico', 'sitemap.xml', 'robots.txt',
+            'favicon.ico', 'sitemap.xml', 'robots.txt', 'public',
         ];
 
         // ── CASE 1: path-based tenant ─────────────────────────────────────
         // Works for: launchshop.in/manti  OR  agency.top/manti
-        // online_status is NOT checked here — that is the middleware's responsibility.
+        // online_status is the middleware's job — NOT checked here.
         if (!empty($usernameFromPath) && !in_array(strtolower($usernameFromPath), $reservedKeywords)) {
             $pathUser = User::where('username', strtolower($usernameFromPath))
                 ->where(function ($q) {
