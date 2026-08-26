@@ -103,17 +103,79 @@
   </div>
   <!--    Error section end   -->
 
-  @if (config('app.debug') || request()->has('debug'))
-    <div class="container my-4 p-4 bg-dark text-white rounded" style="font-size: 13px; font-family: monospace; z-index: 9999; position: relative;">
-      <h5 class="text-warning">🐞 Debug Information (404 Page Diagnostic)</h5>
-      <ul class="mb-0">
-        <li><strong>Active Database:</strong> {{ DB::connection()->getDatabaseName() }}</li>
-        <li><strong>HTTP_HOST:</strong> {{ $_SERVER['HTTP_HOST'] ?? 'N/A' }}</li>
-        <li><strong>REQUEST_URI:</strong> {{ $_SERVER['REQUEST_URI'] ?? 'N/A' }}</li>
-        <li><strong>Request Path:</strong> {{ request()->path() }}</li>
-        <li><strong>getParam():</strong> {{ json_encode(getParam()) }}</li>
-        <li><strong>app('user'):</strong> {{ app()->bound('user') && app('user') ? app('user')->username . ' (ID: '.app('user')->id.', preview_template: '.app('user')->preview_template.')' : 'NULL (User Not Found)' }}</li>
-      </ul>
+  @php
+    $dbStatusInfo = 'Unknown';
+    $activeDbName = 'Unknown';
+    $usersCountInActiveDb = 0;
+    try {
+        DB::connection()->getPdo();
+        $dbStatusInfo = '<span class="badge bg-success">CONNECTED & ONLINE</span>';
+        $activeDbName = DB::connection()->getDatabaseName();
+        $usersCountInActiveDb = DB::table('users')->count();
+    } catch (\Throwable $dbe) {
+        $dbStatusInfo = '<span class="badge bg-danger">DB ERROR: ' . e($dbe->getMessage()) . '</span>';
+    }
+
+    $paramVal = getParam();
+    $foundUserObj = app()->bound('user') ? app('user') : null;
+    $foundUserDb = null;
+    $userLangCount = 0;
+    $userCurrCount = 0;
+    $hasBsSetting = 'NO';
+
+    try {
+        if ($foundUserObj) {
+            $foundUserDb = $foundUserObj;
+        } elseif (!empty($paramVal)) {
+            $foundUserDb = App\Models\User::where('username', $paramVal)->first();
+        }
+        if ($foundUserDb) {
+            $userLangCount = App\Models\User\Language::where('user_id', $foundUserDb->id)->count();
+            $userCurrCount = App\Models\User\UserCurrency::where('user_id', $foundUserDb->id)->count();
+            $hasBsSetting = App\Models\User\BasicSetting::where('user_id', $foundUserDb->id)->exists() ? 'YES' : 'NO';
+        }
+    } catch (\Throwable $uerr) {}
+  @endphp
+
+  @if (config('app.debug') || request()->has('debug') || true)
+    <div class="container my-4 p-4 bg-dark text-white rounded shadow-lg" style="font-size: 13px; font-family: monospace; z-index: 9999; position: relative; border-left: 5px solid #ffc107;">
+      <h5 class="text-warning mb-3">🐞 Live Database & System Diagnostics (404 Debug)</h5>
+      
+      <div class="row">
+        <div class="col-md-6 mb-2">
+          <p class="mb-1"><strong>🔌 Database Connection:</strong> {!! $dbStatusInfo !!}</p>
+          <p class="mb-1"><strong>🗄️ Active Database Name:</strong> <code class="text-info">{{ $activeDbName }}</code></p>
+          <p class="mb-1"><strong>👥 Total Users in Active DB:</strong> {{ $usersCountInActiveDb }}</p>
+          <p class="mb-1"><strong>🌐 HTTP Host:</strong> {{ $_SERVER['HTTP_HOST'] ?? 'N/A' }}</p>
+          <p class="mb-1"><strong>🔗 Request Path:</strong> {{ request()->path() }}</p>
+          <p class="mb-1"><strong>🔍 URL Parameter (getParam):</strong> <code>{{ json_encode($paramVal) }}</code></p>
+        </div>
+
+        <div class="col-md-6 mb-2">
+          <p class="mb-1"><strong>👤 Tenant User Status:</strong> 
+            @if ($foundUserDb)
+              <span class="text-success">FOUND (ID: {{ $foundUserDb->id }}, Username: {{ $foundUserDb->username }})</span>
+            @else
+              <span class="text-danger">NOT FOUND in Active Database</span>
+            @endif
+          </p>
+          @if ($foundUserDb)
+            <p class="mb-1"><strong>🌐 User Languages Count:</strong> {{ $userLangCount }}</p>
+            <p class="mb-1"><strong>💱 User Currencies Count:</strong> {{ $userCurrCount }}</p>
+            <p class="mb-1"><strong>⚙️ Basic Settings Record:</strong> {{ $hasBsSetting }}</p>
+            <p class="mb-1"><strong>🎨 Preview Template:</strong> {{ $foundUserDb->preview_template ?? 0 }}</p>
+          @endif
+        </div>
+      </div>
+
+      @if (isset($exception) && $exception instanceof \Throwable)
+        <hr class="border-secondary my-2">
+        <div class="text-danger">
+          <strong>⚠️ Exception Details:</strong>
+          <div><strong>Message:</strong> {{ $exception->getMessage() }}</div>
+          <div><strong>File:</strong> {{ $exception->getFile() }}:{{ $exception->getLine() }}</div>
+        </div>
+      @endif
     </div>
   @endif
 @endsection
