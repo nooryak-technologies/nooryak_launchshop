@@ -8,24 +8,11 @@ if (!app()->runningInConsole() && isset($_SERVER['HTTP_HOST'])) {
     $host = str_replace('www.', '', strtolower($_SERVER['HTTP_HOST']));
     $mainHosts = array_filter([strtolower((string)env('WEBSITE_HOST')), 'launchshop.in', 'nooryak.in', 'localhost', '127.0.0.1']);
 
-    if (!in_array($host, $mainHosts) && str_contains($host, '.')) {
-        $parts = explode('.', $host);
-        $subdomainCandidate = $parts[0] ?? '';
-        if (!empty($subdomainCandidate)) {
-            try {
-                $isTenantSubdomain = User::where('username', $subdomainCandidate)
-                    ->where('status', 1)
-                    ->exists();
-            } catch (\Exception $e) {
-                $isTenantSubdomain = false;
-            }
-        }
+    if (!in_array($host, $mainHosts)) {
+        $isTenantSubdomain = true;
     }
 }
 
-Route::fallback(function () {
-    return view('errors.404');
-})->middleware('setlang');
 
 Route::get('/midtrans/bank-notify', 'MidtransBankNotifyController@bank_notify')->name('midtrans.bank_notify');
 Route::get('/check-payment', 'CronJobController@check_payment')->name('cron.check_payment');

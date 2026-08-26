@@ -226,3 +226,7 @@ Route::group(['domain' => $domain, 'prefix' => $prefix, 'middleware' => ['userVi
         Route::post('paytm/payment-status', "User\Payment\PaytmController@paymentStatus")->name('customer.itemcheckout.paytm.status');
     });
 });
+
+Route::fallback(function () {
+    return view('errors.404');
+})->middleware('setlang');

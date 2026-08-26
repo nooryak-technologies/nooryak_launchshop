@@ -581,23 +581,31 @@ if (!function_exists('getParam')) {
     function getParam()
     {
         $parsedUrl = parse_url(url()->current());
-        $host = str_replace("www.", "", $parsedUrl['host']);
+        $host = str_replace("www.", "", $parsedUrl['host'] ?? env('WEBSITE_HOST'));
 
-        // if it is path based URL, then return {username}
-        if (strpos($host, env('WEBSITE_HOST')) !== false && $host == env('WEBSITE_HOST')) {
-            // Remove APP_URL base path to extract username correctly
-            $appPath = parse_url(env('APP_URL'), PHP_URL_PATH) ?? '';
-            $currentPath = $parsedUrl['path'];
-            
-            if (!empty($appPath) && strpos($currentPath, $appPath) === 0) {
-                $currentPath = substr($currentPath, strlen($appPath));
-            }
-            
-            $path = explode('/', trim($currentPath, '/'));
-            return $path[0] ?? null;
+        $appPath = parse_url(env('APP_URL'), PHP_URL_PATH) ?? '';
+        $currentPath = $parsedUrl['path'] ?? '/';
+
+        if (!empty($appPath) && strpos($currentPath, $appPath) === 0) {
+            $currentPath = substr($currentPath, strlen($appPath));
         }
 
-        // if it is a subdomain / custom domain , then return the host (username.domain.ext / custom_domain.ext)
+        $pathSegments = explode('/', trim($currentPath, '/'));
+        $firstSegment = $pathSegments[0] ?? null;
+
+        $reservedKeywords = ['admin', 'user', 'front', 'api', 'login', 'register', 'checkout', 'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs', 'whitelabel-panel', 'master', 'product', 'cart', 'shop', 'page', 'about', 'privacy-policy', 'terms-and-conditions', 'terms-conditions', 'refund-policy', 'shipping-policy'];
+
+        if (!empty($firstSegment) && !in_array(strtolower($firstSegment), $reservedKeywords)) {
+            $tenantUserExists = \App\Models\User::where('username', strtolower($firstSegment))
+                ->where(function($q) {
+                    $q->where('status', 1)->orWhere('preview_template', 1);
+                })
+                ->exists();
+            if ($tenantUserExists) {
+                return strtolower($firstSegment);
+            }
+        }
+
         return $host;
     }
 }
