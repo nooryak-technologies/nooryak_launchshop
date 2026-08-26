@@ -799,90 +799,30 @@ if (!function_exists('getUserNullCheck')) {
 
     function getUserNullCheck()
     {
-        $parsedUrl = parse_url(url()->current());
-
-        $host =  $parsedUrl['host'];
-
-        // if the current URL contains the website domain
-        if (strpos($host, env('WEBSITE_HOST')) !== false) {
-            $host = str_replace('www.', '', $host);
-            // if current URL is a path based URL
-            if ($host == env('WEBSITE_HOST')) {
-                // Remove APP_URL base path to extract username correctly
-                $appPath = parse_url(env('APP_URL'), PHP_URL_PATH) ?? '';
-                $currentPath = $parsedUrl['path'];
-                
-                if (!empty($appPath) && strpos($currentPath, $appPath) === 0) {
-                    $currentPath = substr($currentPath, strlen($appPath));
-                }
-                
-                $path = explode('/', trim($currentPath, '/'));
-                $username = $path[0] ?? null;
-            }
-            // if the current URL is a subdomain
-            else {
-                $hostArr = explode('.', $host);
-                $username = $hostArr[0];
-            }
-
-
-            if (($host == $username . '.' . env('WEBSITE_HOST')) || ($host . '/' . $username == env('WEBSITE_HOST') . '/' . $username)) {
-                $user = User::where('username', $username)
-                    ->where('online_status', 1)
-                    ->where('status', 1)
-                    ->whereHas('memberships', function ($q) {
-                        $q->where('status', '=', 1)
-                            ->where('start_date', '<=', Carbon::now()->format('Y-m-d'))
-                            ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'));
-                    })
-                    ->first();
-
-
-                if (empty($user)) {
-                    return null;
-                }
-
-                // if the current url is a subdomain
-                if ($host != env('WEBSITE_HOST')) {
-                    if (!cPackageHasSubdomain($user)) {
-                        return null;
-                    }
-                }
-
-                return $user;
-            }
+        $user = getUser();
+        if ($user && is_object($user) && isset($user->id)) {
+            return $user;
         }
 
+        try {
+            $parsedUrl = parse_url(url()->current());
+            $host = $parsedUrl['host'] ?? Request::getHost();
+            $hostWithoutWww = str_replace('www.', '', $host);
+            $hostWithWww    = 'www.' . $hostWithoutWww;
 
-
-        // Always include 'www.' at the begining of host
-        if (substr($host, 0, 4) == 'www.') {
-            $host = $host;
-        } else {
-            $host = 'www.' . $host;
+            return User::where('online_status', 1)
+                ->where('status', 1)
+                ->whereHas('user_custom_domains', function ($q) use ($hostWithWww, $hostWithoutWww) {
+                    $q->where('status', 1)
+                        ->where(function ($query) use ($hostWithWww, $hostWithoutWww) {
+                            $query->where('requested_domain', $hostWithWww)
+                                ->orWhere('requested_domain', $hostWithoutWww);
+                        });
+                })
+                ->first();
+        } catch (\Throwable $e) {
+            return null;
         }
-
-        $user = User::where('online_status', 1)
-            ->where('status', 1)
-            ->whereHas('user_custom_domains', function ($q) use ($host) {
-                $q->where('status', '=', 1)
-                    ->where(function ($query) use ($host) {
-                        $query->where('requested_domain', '=', $host)
-                            ->orWhere('requested_domain', '=', str_replace("www.", "", $host));
-                    });
-                // fetch the custom domain , if it matches 'with www.' URL or 'without www.' URL
-            })
-            ->whereHas('memberships', function ($q) {
-                $q->where('status', '=', 1)
-                    ->where('start_date', '<=', Carbon::now()->format('Y-m-d'))
-                    ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'));
-            })->firstOrFail();
-
-        if (!cPackageHasCdomain($user)) {
-            return view('errors.404');
-        }
-
-        return $user;
     }
 }
 
