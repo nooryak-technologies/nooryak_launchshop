@@ -670,12 +670,14 @@ if (!function_exists('getUser')) {
         $pathSegments = explode('/', trim($currentPath, '/'));
         $usernameFromPath = $pathSegments[0] ?? null;
 
-        $reservedKeywords = ['admin', 'user', 'front', 'api', 'login', 'register', 'checkout', 'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs', 'whitelabel-panel', 'master'];
+        $reservedKeywords = ['admin', 'user', 'front', 'api', 'login', 'register', 'checkout', 'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs', 'whitelabel-panel', 'master', 'product', 'cart', 'shop', 'page', 'about', 'privacy-policy', 'terms-and-conditions', 'terms-conditions', 'refund-policy', 'shipping-policy'];
         if (!empty($usernameFromPath) && !in_array(strtolower($usernameFromPath), $reservedKeywords)) {
-            $pathUser = User::where('username', $usernameFromPath)
-                ->where('status', 1)
+            $pathUser = User::where('username', strtolower($usernameFromPath))
                 ->where(function($q) {
-                    $q->where('online_status', 1)->orWhere('preview_template', 1);
+                    $q->where('preview_template', 1)
+                      ->orWhere(function($q2) {
+                          $q2->where('status', 1)->where('online_status', 1);
+                      });
                 })
                 ->first();
             if ($pathUser) {

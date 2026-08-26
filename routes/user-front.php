@@ -39,7 +39,11 @@ if (array_key_exists('host', $parsedUrl)) {
             }
         }
         if (!$isMainHost && !empty($firstSegment) && !in_array(strtolower($firstSegment), $reservedKeywords)) {
-            $tenantUserExists = \App\Models\User::where('username', strtolower($firstSegment))->where('status', 1)->exists();
+            $tenantUserExists = \App\Models\User::where('username', strtolower($firstSegment))
+                ->where(function($q) {
+                    $q->where('status', 1)->orWhere('preview_template', 1);
+                })
+                ->exists();
             if ($tenantUserExists) {
                 $domain = $parsedUrl['host'];
                 $prefix = '/{username}';
