@@ -68,8 +68,23 @@ class TenantDatabaseMiddleware
                 $candidates[] = $this->findExistingDbBySlug($agencySlug);
             }
         } else {
-            $cleanHost = preg_replace('/^(launchshop|app|www)\./i', '', $host);
-            $isMain    = in_array($cleanHost, ['nooryak.in', '127.0.0.1', 'localhost', 'launchshop.in']);
+            $cleanHost = preg_replace('/^(launchshop|app|www)\./', '', $host);
+
+            // ── Main / infrastructure hosts — never switch databases ───────────
+            // Add any domain here that should always use the main DB connection.
+            $mainHosts = [
+                'nooryak.in',
+                '127.0.0.1',
+                'localhost',
+                'launchshop.in',
+                'cockroachjantaparty.top',
+                'launchshop.cockroachjantaparty.top',
+                env('WEBSITE_HOST', ''),
+            ];
+            $isMain = in_array($cleanHost, $mainHosts)
+                   || in_array($host, $mainHosts)
+                   || str_ends_with($cleanHost, '.cockroachjantaparty.top')
+                   || str_ends_with($host, '.cockroachjantaparty.top');
 
             if (!$isMain) {
                 $agency = $this->findAgencyByDomain($cleanHost);
