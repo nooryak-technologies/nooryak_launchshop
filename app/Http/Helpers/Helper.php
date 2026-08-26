@@ -717,7 +717,13 @@ if (!function_exists('getUser')) {
         // Works for: launchshop.in/manti  OR  agency.top/manti
         // online_status is the middleware's job — NOT checked here.
         if (!empty($usernameFromPath) && !in_array(strtolower($usernameFromPath), $reservedKeywords)) {
-            $pathUser = User::where('username', strtolower($usernameFromPath))
+            $rawUsername  = strtolower(urldecode($usernameFromPath));
+            $cleanUsername = str_replace(' ', '', $rawUsername);
+
+            $pathUser = User::where(function ($query) use ($rawUsername, $cleanUsername) {
+                    $query->where('username', $rawUsername)
+                        ->orWhere('username', $cleanUsername);
+                })
                 ->where(function ($q) {
                     $q->where('preview_template', 1)->orWhere('status', 1);
                 })

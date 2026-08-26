@@ -26,55 +26,49 @@
               $itemSliders = $product->item->sliders ?? collect();
               $rawThumb = $product->item->thumbnail ?? '';
               $thumbnailSrc = str_starts_with($rawThumb, 'http') ? $rawThumb : (str_starts_with($rawThumb, 'assets/') ? asset($rawThumb) : asset('assets/front/img/user/items/thumbnail/' . $rawThumb));
+              
+              $slidesList = [];
+              if ($itemSliders->count() > 0) {
+                  foreach ($itemSliders as $s) {
+                      if (!empty($s->image)) {
+                          $slidesList[] = $s->image;
+                      }
+                  }
+              }
+              if (empty($slidesList)) {
+                  $slidesList[] = $rawThumb;
+              }
             @endphp
-            @if ($itemSliders->count() > 0)
-              <div class="product-single-gallery">
-                <div class="slider-thumbnails2">
-
-                  @foreach ($itemSliders as $slide)
-                    @php
-                      $slideImg = $slide->image ?? '';
-                      $slideSrc = str_starts_with($slideImg, 'http') ? $slideImg : (str_starts_with($slideImg, 'assets/') ? asset($slideImg) : asset('assets/front/img/user/items/slider-images/' . $slideImg));
-                    @endphp
-                    <div class="thumbnail-img radius-md lazy-container ratio ratio-1-1">
-                      <img class="lazyloaded" src="{{ $slideSrc }}"
-                        onerror="this.onerror=null;this.src='{{ $thumbnailSrc }}';"
-                        alt="product image" />
-                    </div>
-                  @endforeach
-
-                </div>
-                <div class="product-single-slider2">
-                  @foreach ($itemSliders as $slide)
-                    @php
-                      $slideImg = $slide->image ?? '';
-                      $slideSrc = str_starts_with($slideImg, 'http') ? $slideImg : (str_starts_with($slideImg, 'assets/') ? asset($slideImg) : asset('assets/front/img/user/items/slider-images/' . $slideImg));
-                    @endphp
-                    <div class="product-single-single-item">
-                      <figure class="radius-lg lazy-container ratio ratio-1-1">
-                        <a href="{{ $slideSrc }}">
-                          <img class="lazyloaded" src="{{ $slideSrc }}"
-                            onerror="this.onerror=null;this.src='{{ $thumbnailSrc }}';"
-                            alt="product image" />
-                        </a>
-                      </figure>
-                    </div>
-                  @endforeach
-                </div>
+            <div class="product-single-gallery">
+              <div class="slider-thumbnails2">
+                @foreach ($slidesList as $slideImg)
+                  @php
+                    $slideSrc = str_starts_with($slideImg, 'http') ? $slideImg : (str_starts_with($slideImg, 'assets/') ? asset($slideImg) : asset('assets/front/img/user/items/slider-images/' . $slideImg));
+                  @endphp
+                  <div class="thumbnail-img radius-md lazy-container ratio ratio-1-1">
+                    <img class="lazyloaded" src="{{ $slideSrc }}"
+                      onerror="this.onerror=null;this.src='{{ $thumbnailSrc }}';"
+                      alt="{{ $product->title }}" />
+                  </div>
+                @endforeach
               </div>
-            @else
-              {{-- Fallback: display main product thumbnail when sliders count is 0 --}}
-              <div class="product-single-gallery">
-                <div class="product-single-single-item">
-                  <figure class="radius-lg lazy-container ratio ratio-1-1">
-                    <a href="{{ $thumbnailSrc }}" target="_blank">
-                      <img class="lazyloaded" src="{{ $thumbnailSrc }}"
-                        alt="{{ $product->title }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;" />
-                    </a>
-                  </figure>
-                </div>
+              <div class="product-single-slider2">
+                @foreach ($slidesList as $slideImg)
+                  @php
+                    $slideSrc = str_starts_with($slideImg, 'http') ? $slideImg : (str_starts_with($slideImg, 'assets/') ? asset($slideImg) : asset('assets/front/img/user/items/slider-images/' . $slideImg));
+                  @endphp
+                  <div class="product-single-single-item">
+                    <figure class="radius-lg lazy-container ratio ratio-1-1">
+                      <a href="{{ $slideSrc }}" target="_blank">
+                        <img class="lazyloaded" src="{{ $slideSrc }}"
+                          onerror="this.onerror=null;this.src='{{ $thumbnailSrc }}';"
+                          alt="{{ $product->title }}" />
+                      </a>
+                    </figure>
+                  </div>
+                @endforeach
               </div>
-            @endif
+            </div>
           </div>
           <div class="col-lg-6">
             <div class="product-single-details">

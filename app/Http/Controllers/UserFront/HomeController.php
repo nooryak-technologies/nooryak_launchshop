@@ -49,6 +49,9 @@ class HomeController extends Controller
     public function userDetailView($domain)
     {
         $user = app('user');
+        if (empty($user)) {
+            abort(404);
+        }
         $userCurrentLang = app('userCurrentLang');
 
         if (empty($userCurrentLang) && !empty($user)) {
