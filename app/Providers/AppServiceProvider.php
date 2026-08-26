@@ -56,6 +56,9 @@ class AppServiceProvider extends ServiceProvider
         //user front current langauge
         $this->app->singleton('userCurrentLang', function () {
             $user = app('user');
+            if (empty($user) || !is_object($user) || !isset($user->id)) {
+                return null;
+            }
             if (session()->has('user_lang_' . $user->username)) {
                 $userCurrentLang = UserLanguage::where('code', session()->get('user_lang_' . $user->username))->where('user_id', $user->id)->first();
                 if (empty($userCurrentLang)) {
@@ -84,6 +87,9 @@ class AppServiceProvider extends ServiceProvider
         //user basic-settings
         $this->app->singleton('userBs', function () {
             $user = app('user');
+            if (empty($user) || !is_object($user) || !isset($user->id)) {
+                return null;
+            }
             $userBs = BasicSetting::where('user_id', $user->id)->first();
             if ($userBs && app()->bound('theme.service')) {
                 $userBs->theme = app('theme.service')->getActiveTheme();
@@ -100,6 +106,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('userBe', function () {
             $user = app('user');
             $userCurrentLang = app('userCurrentLang');
+            if (empty($user) || !is_object($user) || empty($userCurrentLang)) {
+                return null;
+            }
             $userBe = BasicExtende::where([
                 ['user_id', $user->id],
                 ['language_id', $userCurrentLang->id]
@@ -112,6 +121,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('categories', function () {
             $user = app('user');
             $userCurrentLang = app('userCurrentLang');
+            if (empty($user) || !is_object($user) || empty($userCurrentLang)) {
+                return collect([]);
+            }
             $categories = UserItemCategory::with([
                 'subcategories' => function ($query) {
                     return $query->where('status', 1);
@@ -127,6 +139,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('header', function () {
             $user = app('user');
             $userCurrentLang = app('userCurrentLang');
+            if (empty($user) || !is_object($user) || empty($userCurrentLang)) {
+                return null;
+            }
             $header = UserHeader::where('language_id', $userCurrentLang->id)
                 ->where('user_id', $user->id)
                 ->first();
@@ -136,6 +151,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('ulinks', function () {
             $user = app('user');
             $userCurrentLang = app('userCurrentLang');
+            if (empty($user) || !is_object($user) || empty($userCurrentLang)) {
+                return collect([]);
+            }
             $ulinks = UserUlink::where('language_id', $userCurrentLang->id)
                 ->where('user_id', $user->id)
                 ->get();
@@ -145,6 +163,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('footer', function () {
             $user = app('user');
             $userCurrentLang = app('userCurrentLang');
+            if (empty($user) || !is_object($user) || empty($userCurrentLang)) {
+                return null;
+            }
             $footer = UserFooter::where('language_id', $userCurrentLang->id)
                 ->where('user_id', $user->id)
                 ->first();
@@ -153,6 +174,9 @@ class AppServiceProvider extends ServiceProvider
         //user currency
         $this->app->singleton('userCurrency', function () {
             $user = app('user');
+            if (empty($user) || !is_object($user) || !isset($user->id)) {
+                return collect([]);
+            }
             $userCurrency = UserCurrency::where('user_id', $user->id)
                 ->get();
             if ($userCurrency->isEmpty()) {
@@ -171,6 +195,9 @@ class AppServiceProvider extends ServiceProvider
         //user languages
         $this->app->singleton('userLangs', function () {
             $user = app('user');
+            if (empty($user) || !is_object($user) || !isset($user->id)) {
+                return collect([]);
+            }
             $userLangs = UserLanguage::where('user_id', $user->id)->get();
             return $userLangs;
         });
@@ -178,6 +205,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('userContact', function () {
             $user = app('user');
             $userCurrentLang = app('userCurrentLang');
+            if (empty($user) || !is_object($user) || empty($userCurrentLang)) {
+                return null;
+            }
             $userContact = UserContact::where([
                 ['user_id', $user->id],
                 ['language_id', $userCurrentLang->id]
@@ -187,12 +217,18 @@ class AppServiceProvider extends ServiceProvider
         //user shoping settings
         $this->app->singleton('shop_settings', function () {
             $user = app('user');
+            if (empty($user) || !is_object($user) || !isset($user->id)) {
+                return null;
+            }
             $shop_settings = UserShopSetting::where('user_id', $user->id)->first();
             return $shop_settings;
         });
         //user social_medias
         $this->app->singleton('social_medias', function () {
             $user = app('user');
+            if (empty($user) || !is_object($user) || !isset($user->id)) {
+                return collect([]);
+            }
             $social_medias = $user->social_media()->get() ?? collect([]);
             return $social_medias;
         });
@@ -217,6 +253,11 @@ class AppServiceProvider extends ServiceProvider
             } else {
                 $user = app('user');
             }
+
+            if (empty($user) || !is_object($user) || !isset($user->id)) {
+                return null;
+            }
+
 
             if (session()->has('user_curr_' . $user->username)) {
                 $userCurrentCurr = UserCurrency::where('id', session()->get('user_curr_' . $user->username))->first();
