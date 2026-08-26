@@ -542,6 +542,7 @@ class HomeController extends Controller
         }
 
         $data['blogs'] = UserBlog::join('user_blog_contents', 'user_blogs.id', '=', 'user_blog_contents.blog_id')
+            ->leftJoin('user_blog_categories', 'user_blog_categories.id', '=', 'user_blog_contents.category_id')
             ->where('user_blogs.user_id', $id)
             ->where('user_blog_contents.language_id', $uLang)
             ->when($catid, function ($query, $catid) {
