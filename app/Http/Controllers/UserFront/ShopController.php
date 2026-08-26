@@ -465,10 +465,24 @@ class ShopController extends Controller
     {
         $user = app('user');
         $userCurrentLang = app('userCurrentLang');
-        $uLang = $userCurrentLang->id;
-        $itemId =  UserItemContent::where([['slug', $slug], ['user_id', $user->id]])->pluck('item_id')->firstOrFail();
+        $uLang = !empty($userCurrentLang) ? $userCurrentLang->id : 0;
 
-        $data['uLang'] = $userCurrentLang->id;
+        $itemContent = UserItemContent::where('slug', $slug)
+            ->when(!empty($user), function ($q) use ($user) {
+                return $q->where('user_id', $user->id);
+            })
+            ->first();
+
+        if (empty($itemContent)) {
+            $itemContent = UserItemContent::where('slug', $slug)->first();
+        }
+
+        if (empty($itemContent)) {
+            abort(404);
+        }
+
+        $itemId = $itemContent->item_id;
+        $data['uLang'] = $uLang;
 
         $data['product'] = UserItemContent::with('item', 'item.sliders', 'variations')
             ->where('language_id', '=', $uLang)
@@ -476,11 +490,11 @@ class ShopController extends Controller
             ->first();
 
         if (is_null($data['product'])) {
-            abort(404);
+            $data['product'] = $itemContent;
         }
 
-        $category_id = $data['product']->category_id;
-        $category = UserItemCategory::where([['id', $category_id], ['status', 1]])->select('slug')->first();
+        $category_id = $data['product']->category_id ?? null;
+        $category = !empty($category_id) ? UserItemCategory::where([['id', $category_id], ['status', 1]])->select('slug')->first() : null;
         $data['category_slug'] = @$category->slug;
 
         $data['related_product'] = UserItemContent::with('item', 'item.sliders', 'variations')
@@ -488,7 +502,8 @@ class ShopController extends Controller
             ->where('category_id', '=', $category_id)
             ->where('slug', '!=', $slug)
             ->get();
-        $data['ubs'] = BasicSetting::where('user_id', $user->id)->firstOrFail();
+
+        $data['ubs'] = (!empty($user) ? BasicSetting::where('user_id', $user->id)->first() : null) ?? app('userBs');
 
         $data['reviews'] = UserItemReview::where('item_id', $data['product']->item_id)->get();
         $data['product_variations'] = ProductVariation::where('item_id', $data['product']->item_id)->get();
