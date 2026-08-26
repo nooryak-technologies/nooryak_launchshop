@@ -137,59 +137,69 @@ class TenantDatabaseMiddleware
         // 4. Try connecting to candidates in order of priority
         $currentDb = config('database.connections.mysql.database');
         $origUser  = config('database.connections.mysql.username');
+        $origUser  = config('database.connections.mysql.username');
         $origPass  = config('database.connections.mysql.password');
 
-        // On cPanel, bazaarwa_sass_admindb is the owner of all agency DBs (bazaarwa_ps_*).
-        // Using Sass Admin credentials bypasses user privilege boundaries automatically.
         $tenantUser = env('SASS_ADMIN_DB_USER', env('DB_USERNAME_admin', $origUser));
         $tenantPass = env('SASS_ADMIN_DB_PASS', env('DB_PASSWORD_admin', $origPass));
+
+        $userPairs = array_values(array_filter([
+            ['user' => $tenantUser, 'pass' => $tenantPass],
+            ['user' => $origUser,   'pass' => $origPass],
+        ], function ($item) {
+            return !empty($item['user']);
+        }));
 
         $switched = false;
 
         foreach ($candidates as $targetDb) {
-            try {
-                DB::purge('mysql');
-                config([
-                    'database.connections.mysql.database' => $targetDb,
-                    'database.connections.mysql.username' => $tenantUser,
-                    'database.connections.mysql.password' => $tenantPass,
-                ]);
-                DB::reconnect('mysql');
-                DB::connection('mysql')->getPdo(); // throws if DB inaccessible
-
-                session(['tenant_db' => $targetDb]);
-                if ($agencySlug) {
-                    session(['tenant_agency_slug' => $agencySlug]);
-                }
-
-                // Auto-heal empty or un-provisioned tenant databases
-                try {
-                    $hasPackages = DB::select("SHOW TABLES LIKE 'packages'");
-                    $hasUsers    = DB::select("SHOW TABLES LIKE 'users'");
-                    if (empty($hasPackages) || empty($hasUsers)) {
-                        Log::info("TenantMiddleware: Tenant DB '{$targetDb}' is missing core tables (packages/users). Auto-importing clean schema template...");
-                        $this->autoImportCleanSchemaTemplate();
-                    }
-                } catch (\Throwable $checkEx) {
-                    Log::warning("TenantMiddleware: Table check/import failed for '{$targetDb}': " . $checkEx->getMessage());
-                }
-
-                Log::info("TenantMiddleware: Switched to tenant DB '{$targetDb}' as user '{$tenantUser}'");
-                $switched = true;
-                break;
-            } catch (\Throwable $e) {
-                Log::warning("TenantMiddleware: Candidate DB '{$targetDb}' connection failed as '{$tenantUser}': " . $e->getMessage());
-                // Restore main DB connection before trying next candidate
+            foreach ($userPairs as $pair) {
+                $u = $pair['user'];
+                $p = $pair['pass'];
                 try {
                     DB::purge('mysql');
                     config([
-                        'database.connections.mysql.database' => $currentDb,
-                        'database.connections.mysql.username' => $origUser,
-                        'database.connections.mysql.password' => $origPass,
+                        'database.connections.mysql.database' => $targetDb,
+                        'database.connections.mysql.username' => $u,
+                        'database.connections.mysql.password' => $p,
                     ]);
                     DB::reconnect('mysql');
-                } catch (\Throwable $restoreEx) {
-                    Log::error("TenantMiddleware: Failed to restore main DB: " . $restoreEx->getMessage());
+                    DB::connection('mysql')->getPdo(); // throws if DB inaccessible
+
+                    session(['tenant_db' => $targetDb]);
+                    if ($agencySlug) {
+                        session(['tenant_agency_slug' => $agencySlug]);
+                    }
+
+                    // Auto-heal empty or un-provisioned tenant databases
+                    try {
+                        $hasPackages = DB::select("SHOW TABLES LIKE 'packages'");
+                        $hasUsers    = DB::select("SHOW TABLES LIKE 'users'");
+                        if (empty($hasPackages) || empty($hasUsers)) {
+                            Log::info("TenantMiddleware: Tenant DB '{$targetDb}' is missing core tables (packages/users). Auto-importing clean schema template...");
+                            $this->autoImportCleanSchemaTemplate();
+                        }
+                    } catch (\Throwable $checkEx) {
+                        Log::warning("TenantMiddleware: Table check/import failed for '{$targetDb}': " . $checkEx->getMessage());
+                    }
+
+                    Log::info("TenantMiddleware: Switched to tenant DB '{$targetDb}' as user '{$u}'");
+                    $switched = true;
+                    break 2;
+                } catch (\Throwable $e) {
+                    Log::warning("TenantMiddleware: Candidate DB '{$targetDb}' connection failed as user '{$u}': " . $e->getMessage());
+                    // Restore main DB connection before trying next candidate
+                    try {
+                        DB::purge('mysql');
+                        config([
+                            'database.connections.mysql.database' => $currentDb,
+                            'database.connections.mysql.username' => $origUser,
+                            'database.connections.mysql.password' => $origPass,
+                        ]);
+                        DB::reconnect('mysql');
+                    } catch (\Throwable $restoreEx) {
+                        Log::error("TenantMiddleware: Failed to restore main DB: " . $restoreEx->getMessage());
+                    }
                 }
             }
         }
@@ -227,7 +237,6 @@ class TenantDatabaseMiddleware
         $dbPort = env('SASS_ADMIN_DB_PORT', env('DB_PORT', '3306'));
 
         if (!$dbName || !$dbUser) {
-            // Credentials not configured — fall back to same-user cross-DB (works on local)
             return null;
         }
 
@@ -236,18 +245,28 @@ class TenantDatabaseMiddleware
             return $pdo;
         }
 
-        try {
-            $dsn = "mysql:host={$dbHost};port={$dbPort};dbname={$dbName};charset=utf8mb4";
-            $pdo = new \PDO($dsn, $dbUser, $dbPass, [
-                \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
-                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ,
-                \PDO::ATTR_TIMEOUT            => 5,
-            ]);
-            return $pdo;
-        } catch (\Throwable $e) {
-            Log::warning("TenantMiddleware: Cannot connect to Sass Admin DB '{$dbName}': " . $e->getMessage());
-            return null;
+        $dbNameCandidates = array_values(array_unique(array_filter([
+            $dbName,
+            strtolower($dbName),
+            'bazaarwa_sass_admindb',
+            'bazaarwa_Sass_admindb',
+        ])));
+
+        foreach ($dbNameCandidates as $candDb) {
+            try {
+                $dsn = "mysql:host={$dbHost};port={$dbPort};dbname={$candDb};charset=utf8mb4";
+                $pdo = new \PDO($dsn, $dbUser, $dbPass, [
+                    \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+                    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ,
+                    \PDO::ATTR_TIMEOUT            => 5,
+                ]);
+                return $pdo;
+            } catch (\Throwable $e) {
+                Log::debug("TenantMiddleware: Cannot connect to Sass Admin DB candidate '{$candDb}': " . $e->getMessage());
+            }
         }
+
+        return null;
     }
 
     /**
