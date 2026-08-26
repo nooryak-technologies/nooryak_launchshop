@@ -514,13 +514,16 @@ class AppServiceProvider extends ServiceProvider
 
             View::composer(['user-front.*'], function ($view) {
                 $user = app('user');
+                if (empty($user) || !is_object($user) || !isset($user->id)) {
+                    return;
+                }
                 // change package_id in 'user_permissions'
                 $this->changePreferences($user->id);
 
                 $userCurrentLang = app('userCurrentLang');
-                $keywords = json_decode($userCurrentLang->keywords, true);
+                $keywords = (!empty($userCurrentLang) && !empty($userCurrentLang->keywords)) ? json_decode($userCurrentLang->keywords, true) : [];
 
-                if (UserMenu::where('language_id', $userCurrentLang->id)->where('user_id', $user->id)->count() > 0) {
+                if (!empty($userCurrentLang) && isset($userCurrentLang->id) && UserMenu::where('language_id', $userCurrentLang->id)->where('user_id', $user->id)->count() > 0) {
                     $userMenus = UserMenu::where('language_id', $userCurrentLang->id)->where('user_id', $user->id)->first()->menus;
                 } else {
                     $userMenus = json_encode([]);
@@ -529,39 +532,40 @@ class AppServiceProvider extends ServiceProvider
                 $userBe = app('userBe');
                 $userContact = app('userContact');
                 $userCurrency = app('userCurrency');
-                $userLangs = app('userLangs');
-                $userLangs = app('userLangs');
-                $social_medias = app('social_medias');
+                $userLangs = app('userLangs') ?? collect([]);
+                $social_medias = app('social_medias') ?? collect([]);
                 $userCurrentCurr = app('userCurrentCurr');
+
+                $currSign = is_object($userCurrentCurr) ? ($userCurrentCurr->symbol ?? '₹') : '₹';
+                $currId = is_object($userCurrentCurr) ? ($userCurrentCurr->id ?? 999999) : 999999;
 
                 if (session()->has('user_curr_' . $user->username)) {
                     session()->put('user_curr_' . $user->username, session()->get('user_curr_' . $user->username));
-                    session()->put('user_curr_sign_' . $user->username, $userCurrentCurr->symbol);
+                    session()->put('user_curr_sign_' . $user->username, $currSign);
                 } else {
                     $defaultCurr = UserCurrency::where('user_id', $user->id)->where('is_default', 1)->first();
                     if (is_null($defaultCurr)) {
                         $defaultCurr = UserCurrency::where('user_id', $user->id)->first();
                     }
 
-                    session()->put('user_curr_' . $user->username, $defaultCurr->id);
-                    session()->put('user_curr_sign_' . $user->username, $defaultCurr->symbol);
+                    $defCurrId = $defaultCurr ? $defaultCurr->id : $currId;
+                    $defCurrSign = $defaultCurr ? $defaultCurr->symbol : $currSign;
+
+                    session()->put('user_curr_' . $user->username, $defCurrId);
+                    session()->put('user_curr_sign_' . $user->username, $defCurrSign);
                 }
 
-                $ulinks =  app('ulinks');
-                $header =  app('header');
-                $footer =  app('footer');
-                $categories =  app('categories');
-                $shop_settings =  app('shop_settings');
+                $ulinks = app('ulinks') ?? collect([]);
+                $header = app('header');
+                $footer = app('footer');
+                $categories = app('categories') ?? collect([]);
+                $shop_settings = app('shop_settings');
 
-                $packagePermissions = UserPermissionHelper::packagePermission($user->id);
-                $packagePermissions = json_decode($packagePermissions, true);
+                $packagePermissionsRaw = UserPermissionHelper::packagePermission($user->id);
+                $packagePermissions = !empty($packagePermissionsRaw) ? json_decode($packagePermissionsRaw, true) : [];
                 $ubs = app('userBs');
 
-                if ($userCurrentLang->rtl == 1) {
-                    $rtl = 1;
-                } else {
-                    $rtl = 0;
-                }
+                $rtl = (!empty($userCurrentLang) && isset($userCurrentLang->rtl) && $userCurrentLang->rtl == 1) ? 1 : 0;
 
                 $user_id = $user->id;
                 $compareCount = 0;
@@ -569,10 +573,10 @@ class AppServiceProvider extends ServiceProvider
                     $compare = Session::get('compare');
                     if (!is_null($compare) && is_array($compare)) {
                         $compare = array_filter($compare, function ($item) use ($user_id) {
-                            return $item['user_id'] == $user_id;
+                            return isset($item['user_id']) && $item['user_id'] == $user_id;
                         });
                     }
-                    $compareCount = count($compare);
+                    $compareCount = is_array($compare) || $compare instanceof \Countable ? count($compare) : 0;
                 }
 
                 if (!empty($user)) {
@@ -592,10 +596,10 @@ class AppServiceProvider extends ServiceProvider
                 if ($cart) {
                     if (!is_null($cart) && is_array($cart)) {
                         $cart = array_filter($cart, function ($item) use ($user_id) {
-                            return $item['user_id'] == $user_id;
+                            return isset($item['user_id']) && $item['user_id'] == $user_id;
                         });
                     }
-                    $cartCount = count($cart);
+                    $cartCount = is_array($cart) || $cart instanceof \Countable ? count($cart) : 0;
                 }
 
                 $view->with('wishListCount', $wishListCount);
