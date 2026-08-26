@@ -6,7 +6,7 @@
 @section('og-meta')
   <!--- For Social Media Share Thumbnail --->
   <meta property="og:title" content="{{ $user->username }}">
-  <meta property="og:image" content="{{ !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : '' }}">
+  <meta property="og:image" content="{{ !empty($userBs->logo ?? $ubs->logo) ? asset('assets/front/img/user/' . ($userBs->logo ?? $ubs->logo)) : '' }}">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1024">
   <meta property="og:image:height" content="1024">
@@ -15,7 +15,8 @@
 
 @section('content')
   @php
-    $additional_section_status = json_decode($userBs->additional_section_status, true);
+    $userBsObj = $userBs ?? $ubs ?? null;
+    $additional_section_status = json_decode(@$userBsObj->additional_section_status ?? '', true);
   @endphp
 
   @if ($ubs->slider_section == 1)
@@ -144,7 +145,7 @@
   @endif
 
   <!-- Category Start -->
-  @if ($userBs->category_section == 1)
+  @if ((@$userBsObj->category_section ?? 1) == 1)
     <section class="category category-6 ">
       <div class="container">
         <div class="row">

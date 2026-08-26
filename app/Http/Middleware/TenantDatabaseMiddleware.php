@@ -20,10 +20,35 @@ class TenantDatabaseMiddleware
     public function handle($request, Closure $next)
     {
         $host = $request->getHost();
+        $normalizedHost = strtolower(preg_replace('/^www\./', '', $host));
+        $cleanHost = preg_replace('/^(launchshop|app|www)\./', '', $normalizedHost);
+
+        $mainHosts = array_filter([
+            'nooryak.in',
+            '127.0.0.1',
+            'localhost',
+            'launchshop.in',
+            'launchshop.cockroachjantaparty.top',
+            strtolower((string) env('WEBSITE_HOST', '')),
+        ]);
+
+        $isMainHostRequest = in_array($cleanHost, $mainHosts)
+            || in_array($normalizedHost, $mainHosts);
 
         // 1. Check if explicit agency or tenant DB is passed in query param or session
         $agencySlug = $request->query('agency') ?? $request->query('tenant') ?? session('tenant_agency_slug');
         $tenantDb   = $request->query('tenant_db') ?? session('tenant_db');
+
+        // Main host should never continue with stale tenant DB from old session.
+        $hasExplicitTenantOverride = $request->query('agency') || $request->query('tenant') || $request->query('tenant_db');
+        if ($isMainHostRequest && !$hasExplicitTenantOverride) {
+            if (session()->has('tenant_db') || session()->has('tenant_agency_slug')) {
+                Log::info("TenantMiddleware: Clearing stale tenant session on main host '{$normalizedHost}'.");
+            }
+            session()->forget(['tenant_db', 'tenant_agency_slug']);
+            $agencySlug = null;
+            $tenantDb = null;
+        }
 
         // Guard: if session has a tenant_db, verify it still actually exists in MySQL
         if ($tenantDb && !$request->query('tenant_db')) {
