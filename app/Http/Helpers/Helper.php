@@ -700,22 +700,26 @@ if (!function_exists('getUser')) {
             if (($host == $username . '.' . env('WEBSITE_HOST')) || ($host . '/' . $username == env('WEBSITE_HOST') . '/' . $username)) {
                 $user = User::where('username', $username)
                     ->where('status', 1)
-                    ->whereHas('memberships', function ($q) {
-                        $q->where('status', '=', 1)
-                            ->where('start_date', '<=', Carbon::now()->format('Y-m-d'))
-                            ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'));
+                    ->where(function($query) {
+                        $query->where('preview_template', 1)
+                            ->orWhereHas('memberships', function ($q) {
+                                $q->where('status', '=', 1)
+                                    ->where('start_date', '<=', Carbon::now()->format('Y-m-d'))
+                                    ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'));
+                            });
                     })
                     ->first();
-                    if(empty($user)){
-                        return view('errors.404');
-                    }
 
-                                        if($user->online_status != 1 && $user->preview_template != 1){
-                      return view('errors.404');
-                    }
+                if (empty($user)) {
+                    return view('errors.404');
+                }
 
-                // if the current url is a subdomain
-                if ($host != env('WEBSITE_HOST')) {
+                if ($user->online_status != 1 && $user->preview_template != 1) {
+                    return view('errors.404');
+                }
+
+                // if the current url is a subdomain and not a template
+                if ($host != env('WEBSITE_HOST') && $user->preview_template != 1) {
                     if (!cPackageHasSubdomain($user)) {
                         return view('errors.404');
                     }

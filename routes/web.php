@@ -2,7 +2,21 @@
 
 use App\Models\User;
 
-$domain = $_SERVER['HTTP_HOST'] ?? env('WEBSITE_HOST');
+$domain = env('WEBSITE_HOST');
+
+if (!app()->runningInConsole() && isset($_SERVER['HTTP_HOST'])) {
+    $host = str_replace('www.', '', strtolower($_SERVER['HTTP_HOST']));
+    $mainHosts = array_filter([strtolower((string)env('WEBSITE_HOST')), 'launchshop.in', 'nooryak.in', 'localhost', '127.0.0.1']);
+
+    if (in_array($host, $mainHosts)) {
+        if (substr($_SERVER['HTTP_HOST'], 0, 4) === 'www.') {
+            $domain = 'www.' . env('WEBSITE_HOST');
+        } else {
+            $domain = env('WEBSITE_HOST');
+        }
+    }
+}
+
 Route::fallback(function () {
     return view('errors.404');
 })->middleware('setlang');
