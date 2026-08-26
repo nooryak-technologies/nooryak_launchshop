@@ -28,15 +28,11 @@ class TenantDatabaseMiddleware
             '127.0.0.1',
             'localhost',
             'launchshop.in',
-            'cockroachjantaparty.top',
-            'launchshop.cockroachjantaparty.top',
             strtolower((string) env('WEBSITE_HOST', '')),
         ]);
 
         $isMainHostRequest = in_array($cleanHost, $mainHosts)
-            || in_array($normalizedHost, $mainHosts)
-            || str_ends_with($cleanHost, 'cockroachjantaparty.top')
-            || str_ends_with($normalizedHost, 'cockroachjantaparty.top');
+            || in_array($normalizedHost, $mainHosts);
 
 
         // 1. Check if explicit agency or tenant DB is passed in query param or session
@@ -106,14 +102,10 @@ class TenantDatabaseMiddleware
                 '127.0.0.1',
                 'localhost',
                 'launchshop.in',
-                'cockroachjantaparty.top',
-                'launchshop.cockroachjantaparty.top',
                 env('WEBSITE_HOST', ''),
             ];
             $isMain = in_array($cleanHost, $mainHosts)
-                   || in_array($host, $mainHosts)
-                   || str_ends_with($cleanHost, 'cockroachjantaparty.top')
-                   || str_ends_with($host, 'cockroachjantaparty.top');
+                   || in_array($host, $mainHosts);
 
 
             if (!$isMain) {
@@ -131,7 +123,11 @@ class TenantDatabaseMiddleware
                     }
                     Log::info("TenantMiddleware: domain '{$cleanHost}' -> agency '{$agency->name}'");
                 } else {
-                    Log::info("TenantMiddleware: No agency for domain '{$cleanHost}' — staying on main DB.");
+                    // Fallback for agency domains like cockroachjantaparty.top -> ysquare agency DB
+                    if (str_contains($cleanHost, 'cockroachjantaparty.top') || str_contains($host, 'cockroachjantaparty.top')) {
+                        $candidates[] = 'bazaarwa_ps_ysquare_launchshop';
+                    }
+                    Log::info("TenantMiddleware: No agency found by domain query for '{$cleanHost}'. Candidate count: " . count($candidates));
                 }
             }
         }
