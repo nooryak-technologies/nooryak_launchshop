@@ -77,14 +77,11 @@ class TenantDatabaseMiddleware
                 '127.0.0.1',
                 'localhost',
                 'launchshop.in',
-                'cockroachjantaparty.top',
-                'launchshop.cockroachjantaparty.top',
                 env('WEBSITE_HOST', ''),
             ];
             $isMain = in_array($cleanHost, $mainHosts)
                    || in_array($host, $mainHosts)
-                   || str_ends_with($cleanHost, '.cockroachjantaparty.top')
-                   || str_ends_with($host, '.cockroachjantaparty.top');
+                   ;
 
             if (!$isMain) {
                 $agency = $this->findAgencyByDomain($cleanHost);

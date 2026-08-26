@@ -2,22 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 
-// ─────────────────────────────────────────────────────────────────
-// Determine current host & whether we are on a tenant subdomain
-// e.g. manti.launchshop.in  OR  an agency custom domain path
-// ─────────────────────────────────────────────────────────────────
-$websiteHost = strtolower((string) env('WEBSITE_HOST')); // launchshop.in
-
-$currentHost = '';
-if (!app()->runningInConsole() && isset($_SERVER['HTTP_HOST'])) {
-    $currentHost = strtolower(str_replace('www.', '', $_SERVER['HTTP_HOST']));
-}
-
-// Is the request on a real launchshop.in subdomain? e.g. manti.launchshop.in
-$isTenantSubdomain = !empty($websiteHost)
-    && !empty($currentHost)
-    && $currentHost !== $websiteHost
-    && str_ends_with($currentHost, '.' . $websiteHost);
+// Register supported base hosts for tenant subdomain routing.
+$tenantBaseHosts = array_values(array_unique(array_filter([
+    strtolower((string) env('WEBSITE_HOST', '')),
+    'launchshop.in',
+])));
 
 // ─────────────────────────────────────────────────────────────────
 // Shared tenant route definitions (inline closure)
@@ -157,11 +146,12 @@ $tenantRoutes = function () {
 
 // ─────────────────────────────────────────────────────────────────
 // CASE 1: Tenant subdomain  →  manti.launchshop.in
-// Use domain-based routing so GET / maps to the store home
+// Register this unconditionally (when WEBSITE_HOST is present) so it also
+// works with cached routes in production.
 // ─────────────────────────────────────────────────────────────────
-if ($isTenantSubdomain) {
+foreach ($tenantBaseHosts as $tenantBaseHost) {
     Route::group([
-        'domain'     => '{domain}',
+        'domain'     => '{domain}.' . $tenantBaseHost,
         'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
     ], $tenantRoutes);
 }
