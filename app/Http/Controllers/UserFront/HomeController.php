@@ -7,6 +7,7 @@ use App\Http\Helpers\BasicMailer;
 use App\Http\Helpers\Common;
 use App\Http\Helpers\UserPermissionHelper;
 use App\Models\User\Banner;
+use App\Models\User\BasicSetting;
 use App\Models\User\Blog as UserBlog;
 use App\Models\User\BlogCategory as UserBlogCategory;
 use App\Models\User\BlogContent as UserBlogContent;
