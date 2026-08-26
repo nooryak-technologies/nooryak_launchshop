@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="{{ asset('assets/user-front/css/common/zoom-fix.css?v=' . time()) }}">
 <link rel="stylesheet" href="{{ asset('assets/user-front/css/tinymce-content.css?v=' . time()) }}">
 
-@if ($userBs->theme == 'vegetables')
+@if ($userBs->theme == 'vegetables' || $userBs->theme == 'grocery')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/grocery/home-1.css?v=' . time()) }}">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/grocery/custom-styles.css?v=' . time()) }}">
 @elseif ($userBs->theme == 'furniture')
