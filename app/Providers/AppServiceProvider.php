@@ -350,7 +350,7 @@ class AppServiceProvider extends ServiceProvider
 
         Paginator::useBootstrap();
 
-        if (!app()->runningInConsole() || isset($_SERVER['HTTP_HOST'])) {
+        if (!app()->runningInConsole()) {
             $socials = Social::orderBy('serial_number', 'ASC')->get();
             $langs = app('langs');
 

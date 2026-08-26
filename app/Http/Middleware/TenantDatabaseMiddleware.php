@@ -28,12 +28,16 @@ class TenantDatabaseMiddleware
             '127.0.0.1',
             'localhost',
             'launchshop.in',
+            'cockroachjantaparty.top',
             'launchshop.cockroachjantaparty.top',
             strtolower((string) env('WEBSITE_HOST', '')),
         ]);
 
         $isMainHostRequest = in_array($cleanHost, $mainHosts)
-            || in_array($normalizedHost, $mainHosts);
+            || in_array($normalizedHost, $mainHosts)
+            || str_ends_with($cleanHost, 'cockroachjantaparty.top')
+            || str_ends_with($normalizedHost, 'cockroachjantaparty.top');
+
 
         // 1. Check if explicit agency or tenant DB is passed in query param or session
         $agencySlug = $request->query('agency') ?? $request->query('tenant') ?? session('tenant_agency_slug');
@@ -102,12 +106,15 @@ class TenantDatabaseMiddleware
                 '127.0.0.1',
                 'localhost',
                 'launchshop.in',
+                'cockroachjantaparty.top',
                 'launchshop.cockroachjantaparty.top',
                 env('WEBSITE_HOST', ''),
             ];
             $isMain = in_array($cleanHost, $mainHosts)
                    || in_array($host, $mainHosts)
-                   ;
+                   || str_ends_with($cleanHost, 'cockroachjantaparty.top')
+                   || str_ends_with($host, 'cockroachjantaparty.top');
+
 
             if (!$isMain) {
                 $agency = $this->findAgencyByDomain($cleanHost);

@@ -60,9 +60,6 @@ class HomeController extends Controller
         $uLang = $userCurrentLang->id;
         $data['uLang'] = $userCurrentLang->id;
         $data['ubs'] = app('userBs');
-        $data['userBs'] = app('userBs');
-        $data['userCurrentCurr'] = app('userCurrentCurr');
-        $data['userCurrentLang'] = $userCurrentLang;
 
         $data['sliders'] = HeroSlider::where('language_id', $userCurrentLang->id)
             ->where('user_id', $user->id)

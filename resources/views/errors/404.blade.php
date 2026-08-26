@@ -102,4 +102,19 @@
     </div>
   </div>
   <!--    Error section end   -->
+
+  @if (config('app.debug') || request()->has('debug'))
+    <div class="container my-4 p-4 bg-dark text-white rounded" style="font-size: 13px; font-family: monospace; z-index: 9999; position: relative;">
+      <h5 class="text-warning">🐞 Debug Information (404 Page Diagnostic)</h5>
+      <ul class="mb-0">
+        <li><strong>Active Database:</strong> {{ DB::connection()->getDatabaseName() }}</li>
+        <li><strong>HTTP_HOST:</strong> {{ $_SERVER['HTTP_HOST'] ?? 'N/A' }}</li>
+        <li><strong>REQUEST_URI:</strong> {{ $_SERVER['REQUEST_URI'] ?? 'N/A' }}</li>
+        <li><strong>Request Path:</strong> {{ request()->path() }}</li>
+        <li><strong>getParam():</strong> {{ json_encode(getParam()) }}</li>
+        <li><strong>app('user'):</strong> {{ app()->bound('user') && app('user') ? app('user')->username . ' (ID: '.app('user')->id.', preview_template: '.app('user')->preview_template.')' : 'NULL (User Not Found)' }}</li>
+      </ul>
+    </div>
+  @endif
 @endsection
+
