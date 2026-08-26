@@ -132,9 +132,8 @@ Route::group(['prefix' => 'X9_AdMiN-Portal_V7', 'middleware' => 'guest:admin'], 
 
 Route::get('/sso-agency-login', 'User\Auth\LoginController@ssoAgencyLogin')->name('user.sso_login');
 
-if (!$isTenantSubdomain) {
-    Route::group(['middleware' => 'setlang'], function () {
-        Route::get('/', 'Front\FrontendController@index')->name('front.index');
+Route::group(['middleware' => 'setlang'], function () {
+    Route::get('/', 'Front\FrontendController@index')->name('front.index');
         Route::post('/subscribe', 'Front\FrontendController@subscribe')->name('front.subscribe');
         Route::get('/shops', 'Front\FrontendController@shops')->name('front.user.view');
         Route::get('/templates', 'Front\FrontendController@templates')->name('front.templates.view');
@@ -214,5 +213,4 @@ if (!$isTenantSubdomain) {
 
         Route::any('membership/cancel', 'Front\CheckoutController@cancelPayment')->name('membership.cancel');
     });
-}
 
