@@ -34,6 +34,9 @@
           <a class="nav-link {{ request()->input('active_tab') !== 'verified' ? 'active' : '' }}"
             id="registered-tab" href="{{ route('admin.register.user') }}" role="tab">
             <i class="fas fa-users mr-1"></i> {{ __('Registered Customers') }}
+            @if(isset($users) && method_exists($users, 'total'))
+              <span class="badge badge-primary ml-1">{{ $users->total() }}</span>
+            @endif
           </a>
         </li>
         <li class="nav-item">
@@ -60,6 +63,9 @@
             <div class="col-lg-6">
               <div class="card-title">
                 {{ __('Registered Users') }}
+                @if(isset($users) && method_exists($users, 'total'))
+                  <span class="badge badge-pill badge-info font-weight-bold ml-2">{{ $users->total() }} {{ __('Clients Total') }}</span>
+                @endif
               </div>
             </div>
             <div class="col-lg-6 mt-2 mt-lg-0 d-block d-lg-flex justify-content-end gap-3">
@@ -90,6 +96,7 @@
                         </th>
                         <th scope="col">{{ __('Username') }}</th>
                         <th scope="col">{{ __('Email') }}</th>
+                        <th scope="col">{{ __('Product') }}</th>
                         <th scope="col">{{ __('Featured') }}</th>
                         <th scope="col">{{ __('Preview Template') }}</th>
                         <th scope="col">{{ __('WhatsApp') }}</th>
@@ -106,6 +113,11 @@
                           </td>
                           <td>{{ $user->username }}</td>
                           <td>{{ $user->email }}</td>
+                          <td>
+                            <span class="badge badge-light border border-info text-primary font-weight-bold px-2 py-1">
+                              <i class="fas fa-box mr-1"></i>Launchshop
+                            </span>
+                          </td>
 
                           <td>
                             <form id="userFrom{{ $user->id }}" class="d-inline-block"

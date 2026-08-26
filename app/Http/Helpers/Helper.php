@@ -659,24 +659,36 @@ if (!function_exists('getUser')) {
     function getUser()
     {
         $parsedUrl = parse_url(url()->current());
-
         $host =  $parsedUrl['host'];
+
+        // 1. Direct path-based username check for Agency domains / subdomains / path-based requests
+        $currentPath = $parsedUrl['path'] ?? '/';
+        $appPath = parse_url(env('APP_URL'), PHP_URL_PATH) ?? '';
+        if (!empty($appPath) && strpos($currentPath, $appPath) === 0) {
+            $currentPath = substr($currentPath, strlen($appPath));
+        }
+        $pathSegments = explode('/', trim($currentPath, '/'));
+        $usernameFromPath = $pathSegments[0] ?? null;
+
+        $reservedKeywords = ['admin', 'user', 'front', 'api', 'login', 'register', 'checkout', 'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs', 'whitelabel-panel', 'master'];
+        if (!empty($usernameFromPath) && !in_array(strtolower($usernameFromPath), $reservedKeywords)) {
+            $pathUser = User::where('username', $usernameFromPath)
+                ->where('status', 1)
+                ->where(function($q) {
+                    $q->where('online_status', 1)->orWhere('preview_template', 1);
+                })
+                ->first();
+            if ($pathUser) {
+                return $pathUser;
+            }
+        }
 
         // if the current URL contains the website domain
         if (strpos($host, env('WEBSITE_HOST')) !== false) {
             $host = str_replace('www.', '', $host);
             // if current URL is a path based URL
             if ($host == env('WEBSITE_HOST')) {
-                // Remove APP_URL base path to extract username correctly
-                $appPath = parse_url(env('APP_URL'), PHP_URL_PATH) ?? '';
-                $currentPath = $parsedUrl['path'];
-                
-                if (!empty($appPath) && strpos($currentPath, $appPath) === 0) {
-                    $currentPath = substr($currentPath, strlen($appPath));
-                }
-                
-                $path = explode('/', trim($currentPath, '/'));
-                $username = $path[0] ?? null;
+                $username = $usernameFromPath;
             }
             // if the current URL is a subdomain
             else {
@@ -1020,8 +1032,10 @@ if (!function_exists('detailsUrl')) {
 
     function detailsUrl($user)
     {
+        $username = is_object($user) ? strtolower($user->username) : strtolower((string)$user);
+
         if (is_object($user) && method_exists($user, 'custom_domains')) {
-            // Skip custom domain check for templates so they always preview on the platform subdomain
+            // Skip custom domain check for templates so they always preview on the platform subdomain/path
             if (empty($user->preview_template)) {
                 $customDomain = getCdomain($user);
                 if ($customDomain !== false) {
@@ -1029,7 +1043,33 @@ if (!function_exists('detailsUrl')) {
                 }
             }
         }
-        return '//' . strtolower($user->username) . '.' . env('WEBSITE_HOST');
+
+        $host = request()->getHost();
+        $cleanHost = preg_replace('/^(www|app)\./i', '', strtolower($host));
+        $mainHosts = array_filter([
+            env('WEBSITE_HOST'),
+            'launchshop.in',
+            'nooryak.in',
+            'localhost',
+            '127.0.0.1'
+        ]);
+
+        $isMainSite = false;
+        foreach ($mainHosts as $mHost) {
+            if ($cleanHost === strtolower($mHost) || str_ends_with($cleanHost, '.' . strtolower($mHost))) {
+                $isMainSite = true;
+                break;
+            }
+        }
+
+        // For Agency domain/subdomain (e.g. launchshop.cockroachjantaparty.top or wibro.launchshop.in):
+        // Return path-based URL under the current agency host: https://{agency_host}/{username}
+        if (!$isMainSite && !empty($host)) {
+            $scheme = request()->getScheme() ?: 'https';
+            return $scheme . '://' . $host . '/' . $username;
+        }
+
+        return '//' . $username . '.' . env('WEBSITE_HOST');
     }
 }
 

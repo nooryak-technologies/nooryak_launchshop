@@ -2,7 +2,7 @@
 
 $domain = env('WEBSITE_HOST');
 
-if (!app()->runningInConsole()) {
+if (!app()->runningInConsole() && isset($_SERVER['HTTP_HOST'])) {
     if (substr($_SERVER['HTTP_HOST'], 0, 4) === 'www.') {
         $domain = 'www.' . env('WEBSITE_HOST');
     }
@@ -10,17 +10,29 @@ if (!app()->runningInConsole()) {
 
 $parsedUrl = parse_url(url()->current());
 
-$host = str_replace("www.", "", $parsedUrl['host']);
+$host = str_replace("www.", "", $parsedUrl['host'] ?? env('WEBSITE_HOST'));
+$prefix = '';
+
 if (array_key_exists('host', $parsedUrl)) {
-    // if it is a path based URL
-    if ($host == env('WEBSITE_HOST')) {
-        $domain = $domain;
-        $prefix = '/{username}';
+    $cleanHost = preg_replace('/^(www|app)\./i', '', strtolower($host));
+    $isMainHost = in_array($cleanHost, array_filter([strtolower((string)env('WEBSITE_HOST')), 'launchshop.in', 'nooryak.in', 'localhost', '127.0.0.1']));
+
+    $appPath = parse_url(env('APP_URL'), PHP_URL_PATH) ?? '';
+    $currentPath = $parsedUrl['path'] ?? '/';
+    if (!empty($appPath) && strpos($currentPath, $appPath) === 0) {
+        $currentPath = substr($currentPath, strlen($appPath));
     }
-    // if it is a subdomain / custom domain
-    else {
+    $pathSegments = explode('/', trim($currentPath, '/'));
+    $firstSegment = $pathSegments[0] ?? null;
+
+    $reservedKeywords = ['admin', 'user', 'front', 'api', 'login', 'register', 'checkout', 'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs', 'whitelabel-panel', 'master'];
+
+    if ($isMainHost || (!empty($firstSegment) && !in_array(strtolower($firstSegment), $reservedKeywords))) {
+        $domain = $parsedUrl['host'];
+        $prefix = '/{username}';
+    } else {
         if (!app()->runningInConsole()) {
-            if (substr($_SERVER['HTTP_HOST'], 0, 4) === 'www.') {
+            if (substr($_SERVER['HTTP_HOST'] ?? '', 0, 4) === 'www.') {
                 $domain = 'www.{domain}';
             } else {
                 $domain = '{domain}';
