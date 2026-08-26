@@ -9,13 +9,13 @@ if (!app()->runningInConsole() && isset($_SERVER['HTTP_HOST'])) {
 }
 
 $parsedUrl = parse_url(url()->current());
-
 $host = str_replace("www.", "", $parsedUrl['host'] ?? env('WEBSITE_HOST'));
 $prefix = '';
 
 if (array_key_exists('host', $parsedUrl)) {
     $cleanHost = preg_replace('/^(www|app)\./i', '', strtolower($host));
-    $isMainHost = in_array($cleanHost, array_filter([strtolower((string)env('WEBSITE_HOST')), 'launchshop.in', 'nooryak.in', 'localhost', '127.0.0.1']));
+    $mainHosts = array_filter([strtolower((string)env('WEBSITE_HOST')), 'launchshop.in', 'nooryak.in', 'localhost', '127.0.0.1']);
+    $isMainHost = in_array($cleanHost, $mainHosts);
 
     $appPath = parse_url(env('APP_URL'), PHP_URL_PATH) ?? '';
     $currentPath = $parsedUrl['path'] ?? '/';
@@ -25,9 +25,9 @@ if (array_key_exists('host', $parsedUrl)) {
     $pathSegments = explode('/', trim($currentPath, '/'));
     $firstSegment = $pathSegments[0] ?? null;
 
-    $reservedKeywords = ['admin', 'user', 'front', 'api', 'login', 'register', 'checkout', 'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs', 'whitelabel-panel', 'master'];
+    $reservedKeywords = ['admin', 'user', 'front', 'api', 'login', 'register', 'checkout', 'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs', 'whitelabel-panel', 'master', 'product', 'cart', 'shop', 'page', 'about', 'privacy-policy', 'terms-and-conditions', 'terms-conditions', 'refund-policy', 'shipping-policy'];
 
-    if ($isMainHost || (!empty($firstSegment) && !in_array(strtolower($firstSegment), $reservedKeywords))) {
+    if ($isMainHost && !empty($firstSegment) && !in_array(strtolower($firstSegment), $reservedKeywords)) {
         $domain = $parsedUrl['host'];
         $prefix = '/{username}';
     } else {
@@ -38,7 +38,17 @@ if (array_key_exists('host', $parsedUrl)) {
                 $domain = '{domain}';
             }
         }
-        $prefix = '';
+        if (!$isMainHost && !empty($firstSegment) && !in_array(strtolower($firstSegment), $reservedKeywords)) {
+            $tenantUserExists = \App\Models\User::where('username', strtolower($firstSegment))->where('status', 1)->exists();
+            if ($tenantUserExists) {
+                $domain = $parsedUrl['host'];
+                $prefix = '/{username}';
+            } else {
+                $prefix = '';
+            }
+        } else {
+            $prefix = '';
+        }
     }
 }
 
