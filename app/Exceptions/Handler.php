@@ -112,7 +112,7 @@ class Handler extends ExceptionHandler
             }
             // main website 404 page
             else {
-                return response()->view('errors.404', [], 404);
+                return response()->view('errors.404', ['exception' => $exception], 404);
             }
         }
         return parent::render($request, $exception);

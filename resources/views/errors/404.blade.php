@@ -169,11 +169,17 @@
       </div>
 
       @if (isset($exception) && $exception instanceof \Throwable)
-        <hr class="border-secondary my-2">
-        <div class="text-danger">
-          <strong>⚠️ Exception Details:</strong>
-          <div><strong>Message:</strong> {{ $exception->getMessage() }}</div>
-          <div><strong>File:</strong> {{ $exception->getFile() }}:{{ $exception->getLine() }}</div>
+        <hr class="border-secondary my-3">
+        <div>
+          <h6 class="text-warning mb-2">⚠️ Detailed Exception & Trace:</h6>
+          <p class="mb-1 text-light"><strong>Exception Class:</strong> <code class="text-warning">{{ get_class($exception) }}</code></p>
+          <p class="mb-1 text-light"><strong>Error Message:</strong> <span class="bg-danger text-white px-2 py-1 rounded">{{ $exception->getMessage() }}</span></p>
+          <p class="mb-1 text-light"><strong>Triggered In:</strong> <code class="text-info">{{ $exception->getFile() }}:{{ $exception->getLine() }}</code></p>
+          <p class="mb-1 text-light"><strong>Route Name:</strong> <code>{{ request()->route() ? request()->route()->getName() : 'N/A' }}</code></p>
+          <p class="mb-1 text-light"><strong>Action Controller:</strong> <code>{{ request()->route() ? request()->route()->getActionName() : 'N/A' }}</code></p>
+          
+          <p class="mt-3 mb-1 text-warning"><strong>📜 Call Stack Trace:</strong></p>
+          <pre class="bg-black text-warning p-3 rounded shadow-inner" style="max-height: 400px; overflow-y: auto; font-size: 11px; white-space: pre-wrap; word-break: break-all; border: 1px solid #444;">{{ $exception->getTraceAsString() }}</pre>
         </div>
       @endif
     </div>
