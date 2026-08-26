@@ -8,8 +8,23 @@ if (!app()->runningInConsole() && isset($_SERVER['HTTP_HOST'])) {
     $host = str_replace('www.', '', strtolower($_SERVER['HTTP_HOST']));
     $mainHosts = array_filter([strtolower((string)env('WEBSITE_HOST')), 'launchshop.in', 'nooryak.in', 'localhost', '127.0.0.1']);
 
-    if (!in_array($host, $mainHosts)) {
-        $isTenantSubdomain = true;
+    if (!in_array($host, $mainHosts) && str_contains($host, '.')) {
+        $parts = explode('.', $host);
+        $subdomainCandidate = $parts[0] ?? '';
+        if (!empty($subdomainCandidate)) {
+            try {
+                $websiteHost = strtolower((string)env('WEBSITE_HOST'));
+                if (!empty($websiteHost) && str_ends_with($host, '.' . $websiteHost)) {
+                    $isTenantSubdomain = User::where('username', $subdomainCandidate)
+                        ->where(function($q) {
+                            $q->where('status', 1)->orWhere('preview_template', 1);
+                        })
+                        ->exists();
+                }
+            } catch (\Exception $e) {
+                $isTenantSubdomain = false;
+            }
+        }
     }
 }
 
