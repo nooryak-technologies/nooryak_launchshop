@@ -49,13 +49,20 @@ class HomeController extends Controller
         $user = app('user');
         $userCurrentLang = app('userCurrentLang');
 
-        if (empty($userCurrentLang)) {
+        if (empty($userCurrentLang) && !empty($user)) {
             $userCurrentLang = UserLanguage::where('user_id', $user->id)->orderBy('id', 'asc')->first();
         }
 
-        if (empty($userCurrentLang)) {
-            abort(404);
+        if (empty($userCurrentLang) && !empty($user)) {
+            $userCurrentLang = new UserLanguage();
+            $userCurrentLang->id = 0;
+            $userCurrentLang->user_id = $user->id;
+            $userCurrentLang->name = 'English';
+            $userCurrentLang->code = 'en';
+            $userCurrentLang->is_default = 1;
+            $userCurrentLang->keywords = json_encode([]);
         }
+
 
         $uLang = $userCurrentLang->id;
         $data['uLang'] = $userCurrentLang->id;
