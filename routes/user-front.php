@@ -1,31 +1,28 @@
-
 <?php
 
 use Illuminate\Support\Facades\Route;
 
-$domain = env('WEBSITE_HOST');
+// ─────────────────────────────────────────────────────────────────
+// Determine current host & whether we are on a tenant subdomain
+// e.g. manti.launchshop.in  OR  an agency custom domain path
+// ─────────────────────────────────────────────────────────────────
+$websiteHost = strtolower((string) env('WEBSITE_HOST')); // launchshop.in
 
+$currentHost = '';
 if (!app()->runningInConsole() && isset($_SERVER['HTTP_HOST'])) {
-    if (substr($_SERVER['HTTP_HOST'], 0, 4) === 'www.') {
-        $domain = 'www.' . env('WEBSITE_HOST');
-    }
+    $currentHost = strtolower(str_replace('www.', '', $_SERVER['HTTP_HOST']));
 }
 
-$parsedUrl = parse_url(url()->current());
-$host = str_replace("www.", "", $parsedUrl['host'] ?? env('WEBSITE_HOST'));
-$cleanHost = preg_replace('/^(www|app)\./i', '', strtolower($host));
-$mainHosts = array_filter([strtolower((string)env('WEBSITE_HOST')), 'launchshop.in', 'nooryak.in', 'localhost', '127.0.0.1']);
-$isMainHost = in_array($cleanHost, $mainHosts);
+// Is the request on a real launchshop.in subdomain? e.g. manti.launchshop.in
+$isTenantSubdomain = !empty($websiteHost)
+    && !empty($currentHost)
+    && $currentHost !== $websiteHost
+    && str_ends_with($currentHost, '.' . $websiteHost);
 
-/*
-|--------------------------------------------------------------------------
-| Path-Based Tenant Routes (e.g. launchshop.cockroachjantaparty.top/grocery)
-|--------------------------------------------------------------------------
-*/
-Route::group([
-    'prefix' => '/{username}',
-    'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance']
-], function () {
+// ─────────────────────────────────────────────────────────────────
+// Shared tenant route definitions (inline closure)
+// ─────────────────────────────────────────────────────────────────
+$tenantRoutes = function () {
     Route::get('/', 'UserFront\HomeController@userDetailView')
         ->name('front.user.detail.view');
     Route::get('/invoice', 'UserFront\HomeController@invoice')
@@ -89,7 +86,7 @@ Route::group([
     Route::get('/login/google/callback', 'UserFront\CustomerController@handleGoogleCallback')->name('customer.google.callback');
 
     Route::prefix('/customer')->middleware(['guest:customer'])->group(function () {
-        Route::get('/login',  'UserFront\CustomerController@login')->name('customer.login');
+        Route::get('/login', 'UserFront\CustomerController@login')->name('customer.login');
         Route::post('/login-submit', 'UserFront\CustomerController@loginSubmit')->name('customer.login_submit');
         Route::get('/forgot-password', 'UserFront\CustomerController@forgetPassword')->name('customer.forget_password');
         Route::post('/send-forget-password-mail', 'UserFront\CustomerController@sendMail')->name('customer.send_forget_password_mail')->middleware('Demo');
@@ -115,12 +112,11 @@ Route::group([
         Route::get('/remove-from-wishlist/{id}', 'UserFront\CustomerController@removefromWish')->name('customer.removefromWish');
         Route::get('/checkout/process', 'UserFront\ItemController@checkout_process')->name('front.user.checkout');
         Route::get('/checkout', 'UserFront\ItemController@checkout')->name('front.user.checkout.final_step');
-        Route::get('/change-password',  'UserFront\CustomerController@changePassword')->name('customer.change_password');
-        Route::post('/update-password',  'UserFront\CustomerController@updatePassword')->name('customer.update_password');
-        Route::get('/logout',  'UserFront\CustomerController@logoutSubmit')->name('customer.logout');
+        Route::get('/change-password', 'UserFront\CustomerController@changePassword')->name('customer.change_password');
+        Route::post('/update-password', 'UserFront\CustomerController@updatePassword')->name('customer.update_password');
+        Route::get('/logout', 'UserFront\CustomerController@logoutSubmit')->name('customer.logout');
     });
 
-    Route::post('/coupon', 'UserFront\ItemController@coupon')->name('front.coupon');
     Route::get('/checkout/guest', 'UserFront\ItemController@checkoutGuest')->name('front.user.checkout.guest');
     Route::post('/item/payment/submit', 'UserFront\UsercheckoutController@checkout')->name('item.payment.submit')->middleware('Demo');
 
@@ -131,6 +127,7 @@ Route::group([
     Route::group(['middleware' => ['routeAccess:Contact']], function () {
         Route::post('/contact/message', 'Front\FrontendController@contactMessage')->name('front.contact.message')->middleware('Demo');
     });
+
     Route::get('/user/changelanguage', 'Front\FrontendController@changeUserLanguage')->name('changeUserLanguage');
     Route::post('/product/payment/instruction', 'UserFront\UsercheckoutController@paymentInstruction')->name('product.payment.paymentInstruction');
     Route::post('/push', 'UserFront\PushController@store')->name('front.user.push-notification.store_endpoint');
@@ -156,8 +153,31 @@ Route::group([
         Route::get('/offline/success', 'UserFront\UsercheckoutController@offlineSuccess')->name('customer.itemcheckout.offline.success');
         Route::post('paytm/payment-status', "User\Payment\PaytmController@paymentStatus")->name('customer.itemcheckout.paytm.status');
     });
-});
+};
 
+// ─────────────────────────────────────────────────────────────────
+// CASE 1: Tenant subdomain  →  manti.launchshop.in
+// Use domain-based routing so GET / maps to the store home
+// ─────────────────────────────────────────────────────────────────
+if ($isTenantSubdomain) {
+    Route::group([
+        'domain'     => '{domain}',
+        'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
+    ], $tenantRoutes);
+}
+
+// ─────────────────────────────────────────────────────────────────
+// CASE 2: Path-based tenant  →  agency.top/manti  OR  launchshop.in/manti
+// Use prefix-based routing so GET /{username} maps to store home
+// ─────────────────────────────────────────────────────────────────
+Route::group([
+    'prefix'     => '/{username}',
+    'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
+], $tenantRoutes);
+
+// ─────────────────────────────────────────────────────────────────
+// Fallback 404
+// ─────────────────────────────────────────────────────────────────
 Route::fallback(function () {
     return view('errors.404');
 })->middleware('setlang');

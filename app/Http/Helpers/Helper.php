@@ -669,7 +669,8 @@ if (!function_exists('getUser')) {
         $parsedUrl = parse_url(url()->current());
         $host =  $parsedUrl['host'];
 
-        // 1. Direct path-based username check for Agency domains / subdomains / path-based requests
+        // 1. Direct path-based username check
+        //    Works for: agency.top/manti, launchshop.in/manti, manti.launchshop.in (path = /)
         $currentPath = $parsedUrl['path'] ?? '/';
         $appPath = parse_url(env('APP_URL'), PHP_URL_PATH) ?? '';
         if (!empty($appPath) && strpos($currentPath, $appPath) === 0) {
@@ -678,14 +679,17 @@ if (!function_exists('getUser')) {
         $pathSegments = explode('/', trim($currentPath, '/'));
         $usernameFromPath = $pathSegments[0] ?? null;
 
-        $reservedKeywords = ['admin', 'user', 'front', 'api', 'login', 'register', 'checkout', 'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs', 'whitelabel-panel', 'master', 'product', 'cart', 'shop', 'page', 'about', 'privacy-policy', 'terms-and-conditions', 'terms-conditions', 'refund-policy', 'shipping-policy'];
+        $reservedKeywords = ['admin', 'user', 'front', 'api', 'login', 'register', 'checkout',
+            'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs', 'whitelabel-panel',
+            'master', 'product', 'cart', 'shop', 'page', 'about', 'privacy-policy',
+            'terms-and-conditions', 'terms-conditions', 'refund-policy', 'shipping-policy',
+            'assets', 'storage', 'favicon.ico', 'sitemap.xml', 'robots.txt'];
+
         if (!empty($usernameFromPath) && !in_array(strtolower($usernameFromPath), $reservedKeywords)) {
+            // Only require status=1 here. online_status visibility is enforced by UserVisibilityCheck middleware.
             $pathUser = User::where('username', strtolower($usernameFromPath))
-                ->where(function($q) {
-                    $q->where('preview_template', 1)
-                      ->orWhere(function($q2) {
-                          $q2->where('status', 1)->where('online_status', 1);
-                      });
+                ->where(function ($q) {
+                    $q->where('preview_template', 1)->orWhere('status', 1);
                 })
                 ->first();
             if ($pathUser) {
