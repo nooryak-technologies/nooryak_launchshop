@@ -71,30 +71,36 @@ body, html {
 }
 
 /* ==========================================================================
-   TOP NAVBAR STYLING (Matching Image 1)
+   TOP NAVBAR & LOGO HEADER STYLING (Eliminating White Line Gap)
    ========================================================================== */
 .main-header {
-  background-color: var(--header-bg) !important;
-  border-bottom: 1px solid var(--header-border) !important;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03) !important;
-}
-
-.navbar-header {
-  background-color: var(--header-bg) !important;
-  min-height: 70px !important;
-}
-
-/* Logo Header (Fix white line / gap under logo bar) */
-.logo-header,
-.logo-header[data-background-color] {
-  background-color: var(--sidebar-bg) !important;
-  border-bottom: 1px solid var(--sidebar-border) !important;
+  background: transparent !important;
+  border-bottom: none !important;
   box-shadow: none !important;
+}
+
+.logo-header,
+.logo-header[data-background-color],
+.main-header .logo-header {
+  background-color: #0C0E1A !important;
+  border-bottom: 1px solid #1E2238 !important;
+  border-right: 1px solid #1E2238 !important;
+  box-shadow: none !important;
+  height: 62px !important;
+  z-index: 1002 !important;
 }
 
 .logo-header::after,
 .logo-header::before {
   display: none !important;
+}
+
+.navbar-header,
+.navbar-header[data-background-color] {
+  background-color: var(--header-bg) !important;
+  border-bottom: 1px solid var(--header-border) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03) !important;
+  min-height: 62px !important;
 }
 
 /* Global Top Search Bar */
@@ -240,6 +246,7 @@ body, html {
   border-right: 1px solid var(--sidebar-border) !important;
   border-top: none !important;
   box-shadow: 4px 0 25px rgba(0, 0, 0, 0.15) !important;
+  margin-top: 62px !important;
 }
 
 .sidebar .sidebar-wrapper,
