@@ -579,31 +579,6 @@ if (!function_exists('reviewCount')) {
 if (!function_exists('getParam')) {
     function getParam()
     {
-        $host = request()->getHost();
-        $cleanHost = preg_replace('/^(www|app)\./i', '', strtolower($host));
-        
-        $subdomainBaseHosts = array_values(array_unique(array_filter([
-            strtolower((string) env('WEBSITE_HOST', '')),
-            'launchshop.in',
-            'nooryak.in',
-        ])));
-
-        // Check if current request is on a subdomain or custom domain (where no URL path prefix is needed)
-        foreach ($subdomainBaseHosts as $baseHost) {
-            if (!empty($baseHost) && str_ends_with($cleanHost, '.' . $baseHost) && $cleanHost !== $baseHost) {
-                // Subdomain mode (e.g. grocery.launchshop.in) -> NO path parameter!
-                return null;
-            }
-        }
-
-        // Check custom domain
-        $isMainDomain = in_array($cleanHost, array_merge(['localhost', '127.0.0.1'], $subdomainBaseHosts)) || str_contains($cleanHost, 'cockroachjantaparty.top');
-        if (!$isMainDomain) {
-            // Custom domain (e.g. maturednature.com) -> NO path parameter!
-            return null;
-        }
-
-        // On main domain / agency path-based routing (e.g. agency.top/username):
         $user = getUser();
         if (!empty($user) && !empty($user->username)) {
             return strtolower($user->username);
@@ -620,7 +595,7 @@ if (!function_exists('getParam')) {
             return strtolower(urldecode($firstSegment));
         }
 
-        return null;
+        return 'default';
     }
 }
 
@@ -783,35 +758,42 @@ if (!function_exists('getUser')) {
         }
 
         // ── CASE 3: fully custom domain  ──────────────────────────────────
-        // e.g. www.mystore.com mapped via user_custom_domains table
-        $hostWithWww    = 'www.' . $requestHost;
-        $hostWithoutWww = $requestHost;
+        $cleanCustomHost = preg_replace('/^https?:\/\//i', '', strtolower($requestHost));
+        $cleanCustomHost = preg_replace('/^www\./i', '', $cleanCustomHost);
 
-        $user = User::where('status', 1)
-            ->whereHas('user_custom_domains', function ($q) use ($hostWithWww, $hostWithoutWww) {
-                $q->where('status', 1)
-                    ->where(function ($query) use ($hostWithWww, $hostWithoutWww) {
-                        $query->where('requested_domain', $hostWithWww)
-                            ->orWhere('requested_domain', $hostWithoutWww);
-                    });
-            })
-            ->whereHas('memberships', function ($q) {
-                $q->where('status', 1)
-                    ->where('start_date', '<=', Carbon::now()->format('Y-m-d'))
-                    ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'));
+        try {
+            $cDomain = \App\Models\User\UserCustomDomain::where(function ($q) use ($cleanCustomHost) {
+                    $q->where('requested_domain', $cleanCustomHost)
+                      ->orWhere('requested_domain', 'www.' . $cleanCustomHost)
+                      ->orWhere('requested_domain', 'http://' . $cleanCustomHost)
+                      ->orWhere('requested_domain', 'https://' . $cleanCustomHost)
+                      ->orWhere('requested_domain', 'http://www.' . $cleanCustomHost)
+                      ->orWhere('requested_domain', 'https://www.' . $cleanCustomHost);
+                })
+                ->where('status', 1)
+                ->first();
+
+            if ($cDomain) {
+                $user = User::find($cDomain->user_id);
+                if ($user) {
+                    return $user;
+                }
+            }
+        } catch (\Throwable $e) {
+            // ignore
+        }
+
+        $user = User::where(function ($q) use ($cleanCustomHost) {
+                $q->where('custom_domain', $cleanCustomHost)
+                  ->orWhere('custom_domain', 'www.' . $cleanCustomHost);
             })
             ->first();
 
-        if (empty($user)) {
-            return null;
+        if (!empty($user)) {
+            return $user;
         }
-        if ($user->online_status != 1 && $user->preview_template != 1) {
-            return null;
-        }
-        if (!cPackageHasCdomain($user)) {
-            return null;
-        }
-        return $user;
+
+        return null;
     }
 }
 

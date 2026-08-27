@@ -151,7 +151,7 @@ $tenantRoutes = function () {
 // ─────────────────────────────────────────────────────────────────
 foreach ($tenantBaseHosts as $tenantBaseHost) {
     Route::group([
-        'domain'     => '{domain}.' . $tenantBaseHost,
+        'domain'     => '{username}.' . $tenantBaseHost,
         'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
     ], $tenantRoutes);
 }
