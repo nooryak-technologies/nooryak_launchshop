@@ -625,7 +625,7 @@ if (!function_exists('getParam')) {
         $pathSegments = explode('/', trim($currentPath, '/'));
         $firstSegment = $pathSegments[0] ?? null;
 
-        $reservedKeywords = ['admin', 'user', 'front', 'api', 'login', 'register', 'checkout', 'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs', 'whitelabel-panel', 'master', 'product', 'cart', 'shop', 'page', 'about', 'privacy-policy', 'terms-and-conditions', 'terms-conditions', 'refund-policy', 'shipping-policy'];
+        $reservedKeywords = ['admin', 'user', 'front', 'api', 'login', 'register', 'checkout', 'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs', 'whitelabel-panel', 'master', 'product', 'cart', 'shop', 'page', 'about', 'privacy-policy', 'terms-and-conditions', 'terms-conditions', 'refund-policy', 'shipping-policy', 'x9_admin-portal_v7'];
 
         if (!empty($firstSegment) && !in_array(strtolower($firstSegment), $reservedKeywords)) {
             return strtolower(urldecode($firstSegment));
@@ -736,6 +736,7 @@ if (!function_exists('getUser')) {
             'about', 'privacy-policy', 'terms-and-conditions', 'terms-conditions',
             'refund-policy', 'shipping-policy', 'assets', 'storage',
             'favicon.ico', 'sitemap.xml', 'robots.txt', 'public',
+            'x9_admin-portal_v7',
         ];
 
         // ── CASE 1: path-based tenant ─────────────────────────────────────
