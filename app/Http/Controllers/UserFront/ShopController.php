@@ -505,6 +505,7 @@ class ShopController extends Controller
 
         $data['ubs'] = (!empty($user) ? BasicSetting::where('user_id', $user->id)->first() : null) ?? app('userBs');
 
+        $data['user'] = $user ?? (app('user') ?? getUser());
         $data['reviews'] = UserItemReview::where('item_id', $data['product']->item_id)->get();
         $data['product_variations'] = ProductVariation::where('item_id', $data['product']->item_id)->get();
         $data['item_id'] = $data['product']->item_id;

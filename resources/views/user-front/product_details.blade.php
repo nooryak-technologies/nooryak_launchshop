@@ -1,10 +1,14 @@
 @extends('user-front.layout')
+@php
+  $user = $user ?? (app('user') ?? getUser());
+  $username = $user ? $user->username : '';
+@endphp
 @section('page-title', $product->title ?? ($keywords['Product_Details'] ?? __('Product Details')))
 @section('breadcrumb_title', $product->title ?? ($keywords['Product_Details'] ?? __('Product Details')))
 @section('breadcrumb_second_title', $keywords['Product_Details'] ?? __('Product Details'))
 @section('og-meta')
   <!--- For Social Media Share Thumbnail --->
-  <meta property="og:title" content="{{ $product->title . ' | ' . $user->username }}">
+  <meta property="og:title" content="{{ $product->title . ' | ' . $username }}">
   <meta property="og:description" content="{{ $product->summary }}">
   <meta property="og:image" content="{{ asset('assets/front/img/user/items/thumbnail/' . $product->item->thumbnail) }}">
   <meta property="og:url" content="{{ url()->current() }}">

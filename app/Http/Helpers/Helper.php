@@ -580,12 +580,15 @@ if (!function_exists('getParam')) {
 
     function getParam()
     {
-        $parsedUrl = parse_url(url()->current());
-        $host = str_replace("www.", "", $parsedUrl['host'] ?? env('WEBSITE_HOST'));
+        $user = getUser();
+        if (!empty($user) && !empty($user->username)) {
+            return strtolower($user->username);
+        }
 
-        $appPath = parse_url(env('APP_URL'), PHP_URL_PATH) ?? '';
+        $parsedUrl = parse_url(url()->current());
         $currentPath = $parsedUrl['path'] ?? '/';
 
+        $appPath = parse_url(env('APP_URL'), PHP_URL_PATH) ?? '';
         if (!empty($appPath) && strpos($currentPath, $appPath) === 0) {
             $currentPath = substr($currentPath, strlen($appPath));
         }
@@ -596,17 +599,16 @@ if (!function_exists('getParam')) {
         $reservedKeywords = ['admin', 'user', 'front', 'api', 'login', 'register', 'checkout', 'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs', 'whitelabel-panel', 'master', 'product', 'cart', 'shop', 'page', 'about', 'privacy-policy', 'terms-and-conditions', 'terms-conditions', 'refund-policy', 'shipping-policy'];
 
         if (!empty($firstSegment) && !in_array(strtolower($firstSegment), $reservedKeywords)) {
-            $tenantUserExists = \App\Models\User::where('username', strtolower($firstSegment))
-                ->where(function($q) {
-                    $q->where('status', 1)->orWhere('preview_template', 1);
-                })
-                ->exists();
-            if ($tenantUserExists) {
-                return strtolower($firstSegment);
-            }
+            return strtolower(urldecode($firstSegment));
         }
 
-        return $host;
+        $host = str_replace("www.", "", $parsedUrl['host'] ?? env('WEBSITE_HOST', ''));
+        $parts = explode('.', $host);
+        if (count($parts) >= 3 && !in_array(strtolower($parts[0]), ['www', 'app', 'launchshop', 'admin', 'localhost'])) {
+            return strtolower($parts[0]);
+        }
+
+        return strtolower($firstSegment ?? 'default');
     }
 }
 
