@@ -9,41 +9,45 @@
 @endphp
 
 @section('content')
-    <!-- Top Welcome Banner -->
-    <div class="welcome-banner">
+    <!-- Top Welcome Banner (Image 1 Match) -->
+    <div class="welcome-banner-v2">
         <div>
-            <h1 class="welcome-title">{{ __('Welcome back,') }} <span class="text-purple">{{ Auth::guard('admin')->user()->first_name }} {{ Auth::guard('admin')->user()->last_name }}!</span> 👋</h1>
-            <p class="welcome-subtitle">{{ __('Here\'s what\'s happening with your platform today.') }}</p>
+            <h1 class="welcome-title-v2">{{ __('Welcome back,') }} <span class="grad-purple">Launchshop Admin!</span> 👋</h1>
+            <div class="welcome-accent-line"></div>
+            <p class="welcome-subtitle-v2">{{ __('Here\'s what\'s happening with your platform today.') }}</p>
         </div>
-        <div class="welcome-rocket-graphic d-none d-lg-flex">
-            <div class="rocket-text">
-                <span class="b1">Build</span>
-                <span class="b2">Launch</span>
-                <span class="b3">Grow</span>
+        <div class="welcome-rocket-box d-none d-lg-flex">
+            <div class="r-labels">
+                <span class="l1">Build</span>
+                <span class="l2">Launch</span>
+                <span class="l3">Grow</span>
             </div>
-            <span style="font-size: 2.75rem; filter: drop-shadow(0 10px 20px rgba(124, 58, 237, 0.35));">🚀</span>
+            <span style="font-size: 2.8rem; filter: drop-shadow(0 10px 20px rgba(124, 58, 237, 0.4));">🚀</span>
         </div>
     </div>
 
-    <!-- 6 Main Stat Cards Grid -->
-    <div class="stat-card-grid">
+    <!-- 6 Main Stat Cards Grid (Image 1 Pixel Match) -->
+    <div class="stat-card-grid-v2">
         @if (empty($admin->role) || (!empty($permissions) && in_array('Users Management', $permissions)))
-            <a class="stat-card-v2 bg-blue-grad" href="{{ route('admin.register.user') }}">
-                <div class="card-top-row">
-                    <div class="card-icon-wrapper">
+            <a class="stat-card-pixel c-blue" href="{{ route('admin.register.user') }}">
+                <div class="row-top">
+                    <div class="icon-circle">
                         <i class="fas fa-users"></i>
                     </div>
-                    <div class="card-action-btn">
+                    <div class="arrow-btn">
                         <i class="fas fa-chevron-right"></i>
                     </div>
                 </div>
-                <div class="stat-category">{{ __('Registered Users') }}</div>
-                <div class="stat-number">{{ App\Models\User::count() }}</div>
-                <div class="card-bottom-row">
-                    <div class="stat-growth">
-                        <i class="fas fa-arrow-up"></i> 12% from last month
+                <div>
+                    <div class="c-category">{{ __('Registered Users') }}</div>
+                    <div class="c-number">{{ App\Models\User::count() }}</div>
+                </div>
+                <div class="row-bottom">
+                    <div class="growth-text">
+                        <span class="growth-val"><i class="fas fa-arrow-up"></i> 12%</span>
+                        <span class="growth-lbl">from last month</span>
                     </div>
-                    <div class="stat-sparkline-bars">
+                    <div class="sparkline-graphic">
                         <span style="height: 35%"></span>
                         <span style="height: 55%"></span>
                         <span style="height: 40%"></span>
@@ -55,22 +59,25 @@
         @endif
 
         @if (empty($admin->role) || (!empty($permissions) && in_array('Package Management', $permissions)))
-            <a class="stat-card-v2 bg-green-grad" href="{{ route('admin.package.index') }}">
-                <div class="card-top-row">
-                    <div class="card-icon-wrapper">
+            <a class="stat-card-pixel c-green" href="{{ route('admin.package.index') }}">
+                <div class="row-top">
+                    <div class="icon-circle">
                         <i class="fas fa-list-ul"></i>
                     </div>
-                    <div class="card-action-btn">
+                    <div class="arrow-btn">
                         <i class="fas fa-chevron-right"></i>
                     </div>
                 </div>
-                <div class="stat-category">{{ __('Packages') }}</div>
-                <div class="stat-number">{{ App\Models\Package::count() }}</div>
-                <div class="card-bottom-row">
-                    <div class="stat-growth">
-                        <i class="fas fa-arrow-up"></i> 33% from last month
+                <div>
+                    <div class="c-category">{{ __('Packages') }}</div>
+                    <div class="c-number">{{ App\Models\Package::count() }}</div>
+                </div>
+                <div class="row-bottom">
+                    <div class="growth-text">
+                        <span class="growth-val"><i class="fas fa-arrow-up"></i> 33%</span>
+                        <span class="growth-lbl">from last month</span>
                     </div>
-                    <div class="stat-sparkline-bars">
+                    <div class="sparkline-graphic">
                         <span style="height: 45%"></span>
                         <span style="height: 60%"></span>
                         <span style="height: 50%"></span>
@@ -82,22 +89,25 @@
         @endif
 
         @if (empty($admin->role) || (!empty($permissions) && in_array('Payment Log', $permissions)))
-            <a class="stat-card-v2 bg-red-grad" href="{{ route('admin.payment-log.index') }}">
-                <div class="card-top-row">
-                    <div class="card-icon-wrapper">
+            <a class="stat-card-pixel c-red" href="{{ route('admin.payment-log.index') }}">
+                <div class="row-top">
+                    <div class="icon-circle">
                         <i class="fas fa-file-invoice-dollar"></i>
                     </div>
-                    <div class="card-action-btn">
+                    <div class="arrow-btn">
                         <i class="fas fa-chevron-right"></i>
                     </div>
                 </div>
-                <div class="stat-category">{{ __('Payment Logs') }}</div>
-                <div class="stat-number">{{ App\Models\Membership::count() }}</div>
-                <div class="card-bottom-row">
-                    <div class="stat-growth">
-                        <i class="fas fa-arrow-up"></i> 18% from last month
+                <div>
+                    <div class="c-category">{{ __('Payment Logs') }}</div>
+                    <div class="c-number">{{ App\Models\Membership::count() }}</div>
+                </div>
+                <div class="row-bottom">
+                    <div class="growth-text">
+                        <span class="growth-val"><i class="fas fa-arrow-up"></i> 18%</span>
+                        <span class="growth-lbl">from last month</span>
                     </div>
-                    <div class="stat-sparkline-bars">
+                    <div class="sparkline-graphic">
                         <span style="height: 30%"></span>
                         <span style="height: 50%"></span>
                         <span style="height: 45%"></span>
@@ -109,22 +119,25 @@
         @endif
 
         @if (empty($admin->role) || (!empty($permissions) && in_array('Admins Management', $permissions)))
-            <a class="stat-card-v2 bg-purple-grad" href="{{ route('admin.user.index') }}">
-                <div class="card-top-row">
-                    <div class="card-icon-wrapper">
+            <a class="stat-card-pixel c-purple" href="{{ route('admin.user.index') }}">
+                <div class="row-top">
+                    <div class="icon-circle">
                         <i class="fas fa-user-shield"></i>
                     </div>
-                    <div class="card-action-btn">
+                    <div class="arrow-btn">
                         <i class="fas fa-chevron-right"></i>
                     </div>
                 </div>
-                <div class="stat-category">{{ __('Registered Admins') }}</div>
-                <div class="stat-number">{{ App\Models\Admin::count() }}</div>
-                <div class="card-bottom-row">
-                    <div class="stat-growth">
-                        <i class="fas fa-arrow-up"></i> 0% from last month
+                <div>
+                    <div class="c-category">{{ __('Registered Admins') }}</div>
+                    <div class="c-number">{{ App\Models\Admin::count() }}</div>
+                </div>
+                <div class="row-bottom">
+                    <div class="growth-text">
+                        <span class="growth-val"><i class="fas fa-arrow-up"></i> 0%</span>
+                        <span class="growth-lbl">from last month</span>
                     </div>
-                    <div class="stat-sparkline-bars">
+                    <div class="sparkline-graphic">
                         <span style="height: 40%"></span>
                         <span style="height: 40%"></span>
                         <span style="height: 60%"></span>
@@ -136,22 +149,25 @@
         @endif
 
         @if (empty($admin->role) || (!empty($permissions) && in_array('Pages', $permissions)))
-            <a class="stat-card-v2 bg-cyan-grad" href="{{ route('admin.blog.index', ['language' => $defaultLang->code]) }}">
-                <div class="card-top-row">
-                    <div class="card-icon-wrapper">
+            <a class="stat-card-pixel c-cyan" href="{{ route('admin.blog.index', ['language' => $defaultLang ? $defaultLang->code : 'en']) }}">
+                <div class="row-top">
+                    <div class="icon-circle">
                         <i class="fas fa-rss"></i>
                     </div>
-                    <div class="card-action-btn">
+                    <div class="arrow-btn">
                         <i class="fas fa-chevron-right"></i>
                     </div>
                 </div>
-                <div class="stat-category">{{ __('Blog') }}</div>
-                <div class="stat-number">{{ $defaultLang ? $defaultLang->blogs()->count() : 0 }}</div>
-                <div class="card-bottom-row">
-                    <div class="stat-growth">
-                        <i class="fas fa-arrow-up"></i> 25% from last month
+                <div>
+                    <div class="c-category">{{ __('Blog') }}</div>
+                    <div class="c-number">{{ $defaultLang ? $defaultLang->blogs()->count() : 0 }}</div>
+                </div>
+                <div class="row-bottom">
+                    <div class="growth-text">
+                        <span class="growth-val"><i class="fas fa-arrow-up"></i> 25%</span>
+                        <span class="growth-lbl">from last month</span>
                     </div>
-                    <div class="stat-sparkline-bars">
+                    <div class="sparkline-graphic">
                         <span style="height: 30%"></span>
                         <span style="height: 50%"></span>
                         <span style="height: 65%"></span>
@@ -163,22 +179,25 @@
         @endif
 
         @if (empty($admin->role) || (!empty($permissions) && in_array('Users Management', $permissions)))
-            <a class="stat-card-v2 bg-orange-grad" href="{{ route('admin.subscriber.index') }}">
-                <div class="card-top-row">
-                    <div class="card-icon-wrapper">
+            <a class="stat-card-pixel c-orange" href="{{ route('admin.subscriber.index') }}">
+                <div class="row-top">
+                    <div class="icon-circle">
                         <i class="fas fa-envelope-open-text"></i>
                     </div>
-                    <div class="card-action-btn">
+                    <div class="arrow-btn">
                         <i class="fas fa-chevron-right"></i>
                     </div>
                 </div>
-                <div class="stat-category">{{ __('Subscribers') }}</div>
-                <div class="stat-number">{{ App\Models\Subscriber::count() }}</div>
-                <div class="card-bottom-row">
-                    <div class="stat-growth">
-                        <i class="fas fa-arrow-up"></i> 50% from last month
+                <div>
+                    <div class="c-category">{{ __('Subscribers') }}</div>
+                    <div class="c-number">{{ App\Models\Subscriber::count() }}</div>
+                </div>
+                <div class="row-bottom">
+                    <div class="growth-text">
+                        <span class="growth-val"><i class="fas fa-arrow-up"></i> 50%</span>
+                        <span class="growth-lbl">from last month</span>
                     </div>
-                    <div class="stat-sparkline-bars">
+                    <div class="sparkline-graphic">
                         <span style="height: 25%"></span>
                         <span style="height: 45%"></span>
                         <span style="height: 55%"></span>
@@ -190,26 +209,29 @@
         @endif
     </div>
 
-    <!-- AI Engine Cards Grid -->
-    <div class="stat-card-grid mb-4">
+    <!-- AI Engine Cards Grid (Image 1 Pixel Match) -->
+    <div class="stat-card-grid-v2 mb-4">
         @if (!empty($aiEngineStats))
             @foreach ($aiEngineStats as $key => $stat)
                 @php
                     $engineName = strtoupper($stat['engine']);
-                    $cardClass = str_contains($engineName, 'OPENAI') ? 'openai-card' : 'gemini-card';
+                    $cardClass = str_contains($engineName, 'OPENAI') ? 'p-orange' : 'p-purple';
                 @endphp
-                <div class="ai-card-custom {{ $cardClass }}">
-                    <div class="d-flex align-items-center justify-content-between mb-3">
-                        <div class="card-icon-wrapper" style="width:40px; height:40px; font-size:1rem;">
+                <div class="ai-card-pixel {{ $cardClass }}">
+                    <div class="ai-head">
+                        <div class="icon-circle" style="width:36px; height:36px; font-size:0.95rem;">
                             <i class="fas fa-coins"></i>
                         </div>
-                        <div class="ai-title" style="margin-bottom:0;">{{ __('AI Engine') }} : {{ $engineName }}</div>
+                        <div class="ai-title">{{ __('AI Engine') }} : {{ $engineName }}</div>
                     </div>
-                    <div class="ai-info-line"><strong>{{ __('Required AI Tokens') }} :</strong> {{ $stat['token_required'] }}</div>
-                    <div class="ai-info-line"><strong>{{ __('Used AI Tokens') }} :</strong> {{ $stat['token_used'] }}</div>
-                    <div class="ai-info-line"><strong>{{ __('Remaining AI Tokens') }} :</strong> {{ $stat['token_remaining'] }}</div>
-                    <div class="ai-progress-track">
-                        <div class="ai-progress-bar" style="width: 0%;"></div>
+                    <div class="ai-metric">Required AI Tokens : {{ $stat['token_required'] }}</div>
+                    <div class="ai-metric">Used AI Tokens : {{ $stat['token_used'] }}</div>
+                    <div class="ai-metric">Remaining AI Tokens : {{ $stat['token_remaining'] }}</div>
+                    <div class="ai-progress-row">
+                        <div class="ai-progress-bar-bg">
+                            <div class="ai-progress-bar-fill" style="width: 0%;"></div>
+                        </div>
+                        <span class="ai-progress-percent">0%</span>
                     </div>
                 </div>
             @endforeach
@@ -219,35 +241,45 @@
             @foreach ($aiEngineStats as $key => $stat)
                 @php
                     $engineName = strtoupper($stat['engine']);
-                    $cardClass = str_contains($engineName, 'OPENAI') ? 'image-openai-card' : 'image-gemini-card';
+                    $cardClass = str_contains($engineName, 'OPENAI') ? 'p-blue' : 'p-indigo';
                 @endphp
-                <div class="ai-card-custom {{ $cardClass }}">
-                    <div class="d-flex align-items-center justify-content-between mb-3">
-                        <div class="card-icon-wrapper" style="width:40px; height:40px; font-size:1rem;">
+                <div class="ai-card-pixel {{ $cardClass }}">
+                    <div class="ai-head">
+                        <div class="icon-circle" style="width:36px; height:36px; font-size:0.95rem;">
                             <i class="fas fa-image"></i>
                         </div>
-                        <div class="ai-title" style="margin-bottom:0;">{{ __('AI Image Engine') }} : {{ $engineName }}</div>
+                        <div class="ai-title">{{ __('AI Image Engine') }} : {{ $engineName }}</div>
                     </div>
-                    <div class="ai-info-line"><strong>{{ __('Required AI Images') }} :</strong> {{ $stat['image_required'] }}</div>
-                    <div class="ai-info-line"><strong>{{ __('Used AI Images') }} :</strong> {{ $stat['image_used'] }}</div>
-                    <div class="ai-info-line"><strong>{{ __('Remaining AI Images') }} :</strong> {{ $stat['image_remaining'] }}</div>
-                    <div class="ai-progress-track">
-                        <div class="ai-progress-bar" style="width: 0%;"></div>
+                    <div class="ai-metric">Required AI Images : {{ $stat['image_required'] }}</div>
+                    <div class="ai-metric">Used AI Images : {{ $stat['image_used'] }}</div>
+                    <div class="ai-metric">Remaining AI Images : {{ $stat['image_remaining'] }}</div>
+                    <div class="ai-progress-row">
+                        <div class="ai-progress-bar-bg">
+                            <div class="ai-progress-bar-fill" style="width: 0%;"></div>
+                        </div>
+                        <span class="ai-progress-percent">0%</span>
                     </div>
                 </div>
             @endforeach
         @endif
 
-        <div class="ai-info-notice-card">
+        <!-- AI Image Statistics Info Box -->
+        <div class="ai-info-box-pixel">
             <div class="d-flex align-items-center gap-2 mb-2">
-                <i class="fas fa-chart-pie" style="font-size: 1.2rem; color: #4F46E5;"></i>
-                <h6 class="m-0">{{ __('AI Image Statistics (All Active Tenants)') }}</h6>
+                <i class="fas fa-chart-pie" style="font-size: 1.25rem; color: #3B82F6;"></i>
+                <div class="info-title m-0">{{ __('AI Image Statistics (All Active Tenants)') }}</div>
             </div>
-            <p><strong>Scope:</strong> This data is calculated by combining all ACTIVE tenant memberships only.</p>
-            <p><strong>Required AI Images:</strong> Total image generation quota allocated across all active tenants.</p>
-            <p><strong>Used AI Images:</strong> Total number of AI-generated images created.</p>
-            <p><strong>Remaining AI Images:</strong> Remaining available images for all tenants combined.</p>
-            <p class="text-muted m-0" style="font-size:0.7rem;">Important: These numbers represent combined usage across all tenants.</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Scope:</strong> This data is calculated by combining all ACTIVE tenant memberships only.</p>
+                    <p><strong>Required AI Images:</strong> Total quota allocated for this AI engine across all active tenants.</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Used AI Images:</strong> Total number of AI-generated images created.</p>
+                    <p><strong>Remaining AI Images:</strong> Remaining available images for all tenants combined.</p>
+                </div>
+            </div>
+            <p class="text-muted m-0" style="font-size:0.7rem;">Important: These numbers represent combined usage across all tenants, not individual user limits.</p>
         </div>
     </div>
 
@@ -255,13 +287,13 @@
     <div class="row">
         @if (empty($admin->role) || (!empty($permissions) && in_array('Payment Log', $permissions)))
             <div class="col-lg-6 mb-4">
-                <div class="card-chart-custom">
-                    <div class="card-header-flex">
-                        <div class="chart-title">
+                <div class="card-chart-pixel">
+                    <div class="c-head">
+                        <div class="c-title">
                             <i class="far fa-calendar-alt text-primary"></i>
                             <span>{{ __('Monthly Income') }} ({{ date('Y') }})</span>
                         </div>
-                        <select class="select-year-dropdown">
+                        <select class="c-select">
                             <option value="2026" selected>2026</option>
                             <option value="2025">2025</option>
                         </select>
@@ -277,13 +309,13 @@
 
         @if (empty($admin->role) || (!empty($permissions) && in_array('Users Management', $permissions)))
             <div class="col-lg-6 mb-4">
-                <div class="card-chart-custom">
-                    <div class="card-header-flex">
-                        <div class="chart-title">
+                <div class="card-chart-pixel">
+                    <div class="c-head">
+                        <div class="c-title">
                             <i class="far fa-calendar-check text-purple"></i>
                             <span>{{ __('Monthly Premium Users') }} ({{ date('Y') }})</span>
                         </div>
-                        <select class="select-year-dropdown">
+                        <select class="c-select">
                             <option value="2026" selected>2026</option>
                             <option value="2025">2025</option>
                         </select>

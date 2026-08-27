@@ -9,24 +9,34 @@
 <div class="sidebar sidebar-style-2" @if (request()->cookie('admin-theme') == 'dark') data-background-color="dark2" @endif>
   <div class="sidebar-wrapper scrollbar scrollbar-inner">
     <div class="sidebar-content">
-      <div class="sidebar-user-card">
-        @if (!empty(Auth::guard('admin')->user()->image))
-          <img src="{{ asset('assets/admin/img/propics/' . Auth::guard('admin')->user()->image) }}" alt="user image">
-        @else
-          <img src="{{ asset('assets/admin/img/propics/blank_user.jpg') }}" alt="user image">
-        @endif
-        <div style="line-height: 1.2; flex: 1;">
-          <div class="s-name">{{ Auth::guard('admin')->user()->first_name }} {{ Auth::guard('admin')->user()->last_name }}</div>
-          <div class="s-role">{{ is_null(@Auth::guard('admin')->user()->role->name) ? __('Super Admin') : @Auth::guard('admin')->user()->role->name }}</div>
-        </div>
+      <!-- Sidebar Brand Header -->
+      <div class="sidebar-logo-header">
+        <div class="brand-name">Launchshop.in</div>
+        <div class="brand-slogan">Build. Launch. Grow.</div>
       </div>
 
-      <div class="sidebar-search-container">
-        <div style="position: relative;">
-          <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #64748B; font-size: 0.85rem;"></i>
-          <input name="term" type="text" class="form-control sidebar-search-input sidebar-search ltr" value="" placeholder="{{ __('Search Menu Here...') }}">
+      <!-- User Profile Pill Card (Image 1 Match) -->
+      <div class="sidebar-user-pill-card">
+        <div class="d-flex align-items-center">
+          @if (!empty(Auth::guard('admin')->user()->image))
+            <img src="{{ asset('assets/admin/img/propics/' . Auth::guard('admin')->user()->image) }}" alt="user" class="u-avatar">
+          @else
+            <img src="{{ asset('assets/admin/img/propics/blank_user.jpg') }}" alt="user" class="u-avatar">
+          @endif
+          <div class="ml-2">
+            <h6 class="u-title">Launchshop</h6>
+            <span class="u-sub">Super Admin</span>
+          </div>
         </div>
+        <i class="fas fa-chevron-down" style="font-size: 0.75rem; opacity: 0.85;"></i>
       </div>
+
+      <!-- Search Menu Box -->
+      <div class="sidebar-search-box-v2">
+        <i class="fas fa-search s-icon"></i>
+        <input name="term" type="text" class="sidebar-search ltr" value="" placeholder="{{ __('Search Menu Here...') }}">
+      </div>
+
 
       <ul class="nav nav-primary">
 
