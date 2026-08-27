@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 $tenantBaseHosts = array_values(array_unique(array_filter([
     strtolower((string) env('WEBSITE_HOST', '')),
     'launchshop.in',
+    'nooryak.in',
 ])));
 
 // ─────────────────────────────────────────────────────────────────
@@ -145,35 +146,77 @@ $tenantRoutes = function () {
 };
 
 // ─────────────────────────────────────────────────────────────────
-// CASE 1: Tenant subdomain  →  manti.launchshop.in
+// Context Detection & Execution
 // ─────────────────────────────────────────────────────────────────
+$requestHost = isset($_SERVER['HTTP_HOST'])
+    ? strtolower(str_replace('www.', '', $_SERVER['HTTP_HOST']))
+    : strtolower(str_replace('www.', '', (string) env('WEBSITE_HOST', 'localhost')));
+
+$cleanRequestHost = preg_replace('/^(www|app)\./i', '', $requestHost);
+
+$isTenantSubdomain = false;
+$tenantSubdomainName = null;
+
 foreach ($tenantBaseHosts as $tenantBaseHost) {
-    Route::group([
-        'domain'     => '{username}.' . $tenantBaseHost,
-        'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
-    ], $tenantRoutes);
+    if (!empty($tenantBaseHost) && $cleanRequestHost !== $tenantBaseHost && str_ends_with($cleanRequestHost, '.' . $tenantBaseHost)) {
+        $isTenantSubdomain = true;
+        $tenantSubdomainName = explode('.', $cleanRequestHost)[0] ?? null;
+        break;
+    }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// CASE 2: Custom domain direct root routing  →  womenart.in
-// ─────────────────────────────────────────────────────────────────
-$requestHost = request()->getHost();
-$cleanRequestHost = preg_replace('/^(www|app)\./i', '', strtolower($requestHost));
 $isMainHost = in_array($cleanRequestHost, array_merge(['localhost', '127.0.0.1'], $tenantBaseHosts));
+$isCustomDomain = !$isMainHost && !isAgencyDomain($cleanRequestHost) && !$isTenantSubdomain;
 
-if (!$isMainHost && !isAgencyDomain($cleanRequestHost)) {
-    Route::group([
-        'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
-    ], $tenantRoutes);
+// ─────────────────────────────────────────────────────────────────
+// Auto 301 Redirect: ecomgrocery.launchshop.in/ecomgrocery/shop -> ecomgrocery.launchshop.in/shop
+// ─────────────────────────────────────────────────────────────────
+if ($isTenantSubdomain && !empty($tenantSubdomainName) && !app()->runningInConsole()) {
+    try {
+        $requestPath = ltrim(app('request')->path(), '/');
+        $pathSegments = explode('/', $requestPath);
+        if (isset($pathSegments[0]) && strtolower(urldecode($pathSegments[0])) === strtolower($tenantSubdomainName)) {
+            array_shift($pathSegments);
+            $cleanPath = implode('/', $pathSegments);
+            $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+            $targetUrl = $scheme . '://' . $requestHost . '/' . ltrim($cleanPath, '/');
+            if (isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING'])) {
+                $targetUrl .= '?' . $_SERVER['QUERY_STRING'];
+            }
+            header("Location: " . $targetUrl, true, 301);
+            exit();
+        }
+    } catch (\Throwable $e) {
+        // Fallback gracefully if request object is unavailable
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────
-// CASE 3: Path-based tenant for White Label Agency domains  →  agency.top/manti
+// ROUTE REGISTRATION BASED ON CONTEXT
 // ─────────────────────────────────────────────────────────────────
-Route::group([
-    'prefix'     => '/{username}',
-    'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
-], $tenantRoutes);
+if ($isTenantSubdomain) {
+    // Subdomain Context: ecomgrocery.launchshop.in
+    foreach ($tenantBaseHosts as $tenantBaseHost) {
+        if (str_ends_with($cleanRequestHost, '.' . $tenantBaseHost)) {
+            Route::group([
+                'domain'     => '{username}.' . $tenantBaseHost,
+                'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
+            ], $tenantRoutes);
+            break;
+        }
+    }
+} elseif ($isCustomDomain) {
+    // Custom Domain Context: womenart.in
+    Route::group([
+        'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
+    ], $tenantRoutes);
+} else {
+    // Main Host / Agency Path-based Context: launchshop.in/ecomgrocery
+    Route::group([
+        'prefix'     => '/{username}',
+        'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
+    ], $tenantRoutes);
+}
 
 // ─────────────────────────────────────────────────────────────────
 // Fallback 404
