@@ -161,7 +161,7 @@ $requestHost = request()->getHost();
 $cleanRequestHost = preg_replace('/^(www|app)\./i', '', strtolower($requestHost));
 $isMainHost = in_array($cleanRequestHost, array_merge(['localhost', '127.0.0.1'], $tenantBaseHosts));
 
-if (!$isMainHost && !str_contains($cleanRequestHost, 'cockroachjantaparty.top')) {
+if (!$isMainHost && !isAgencyDomain($cleanRequestHost)) {
     Route::group([
         'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
     ], $tenantRoutes);

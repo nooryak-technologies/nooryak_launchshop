@@ -576,6 +576,42 @@ if (!function_exists('reviewCount')) {
 }
 
 
+if (!function_exists('isAgencyDomain')) {
+    function isAgencyDomain($host = null)
+    {
+        if (empty($host)) {
+            $host = request()->getHost();
+        }
+        $cleanHost = preg_replace('/^(www|app)\./i', '', strtolower($host));
+
+        $knownAgencies = ['cockroachjantaparty.top', 'maturednature.com', 'maturenatu'];
+        foreach ($knownAgencies as $agencyHost) {
+            if (str_contains($cleanHost, $agencyHost)) {
+                return true;
+            }
+        }
+
+        try {
+            $agency = \Illuminate\Support\Facades\DB::table('agencies')
+                ->where(function ($q) use ($cleanHost) {
+                    $q->where('custom_domain', $cleanHost)
+                      ->orWhere('custom_domain', 'www.' . $cleanHost)
+                      ->orWhere('custom_domain', 'https://' . $cleanHost)
+                      ->orWhere('custom_domain', 'http://' . $cleanHost);
+                })
+                ->first();
+
+            if (!empty($agency)) {
+                return true;
+            }
+        } catch (\Throwable $e) {
+            // fallback
+        }
+
+        return false;
+    }
+}
+
 if (!function_exists('getParam')) {
     function getParam()
     {
@@ -588,20 +624,25 @@ if (!function_exists('getParam')) {
             'nooryak.in',
         ])));
 
-        // 1. Subdomain mode (e.g. manti.launchshop.in) -> NO path parameter!
+        $isMainBaseDomain = in_array($cleanHost, array_merge(['localhost', '127.0.0.1'], $subdomainBaseHosts));
+
+        $isSubdomain = false;
         foreach ($subdomainBaseHosts as $baseHost) {
             if (!empty($baseHost) && str_ends_with($cleanHost, '.' . $baseHost) && $cleanHost !== $baseHost) {
+                $isSubdomain = true;
+                break;
+            }
+        }
+
+        // Custom domain check (e.g. womenart.in)
+        if (!$isMainBaseDomain && !$isSubdomain) {
+            if (!isAgencyDomain($cleanHost)) {
+                // Merchant Custom Domain -> NO path/route parameter needed
                 return null;
             }
         }
 
-        // 2. Custom Domain mode (e.g. womenart.in) -> NO path parameter!
-        $isMainDomain = in_array($cleanHost, array_merge(['localhost', '127.0.0.1'], $subdomainBaseHosts)) || str_contains($cleanHost, 'cockroachjantaparty.top');
-        if (!$isMainDomain) {
-            return null;
-        }
-
-        // 3. White Label Agency path-based routing (e.g. agency.top/manti):
+        // For Subdomain mode, Agency Path mode, or Main domain path mode:
         $user = getUser();
         if (!empty($user) && !empty($user->username)) {
             return strtolower($user->username);
@@ -618,7 +659,7 @@ if (!function_exists('getParam')) {
             return strtolower(urldecode($firstSegment));
         }
 
-        return null;
+        return 'default';
     }
 }
 
