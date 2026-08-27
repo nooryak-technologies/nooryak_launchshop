@@ -2,32 +2,30 @@
 
 use App\Models\User;
 
+$requestHost = isset($_SERVER['HTTP_HOST'])
+    ? strtolower(str_replace('www.', '', $_SERVER['HTTP_HOST']))
+    : strtolower(str_replace('www.', '', (string) env('WEBSITE_HOST', 'localhost')));
+
+$cleanRequestHost = preg_replace('/^(www|app)\./i', '', $requestHost);
+
+$tenantBaseHosts = array_values(array_unique(array_filter([
+    strtolower((string) env('WEBSITE_HOST', '')),
+    'launchshop.in',
+    'nooryak.in',
+    'localhost',
+    '127.0.0.1',
+])));
+
 $isTenantSubdomain = false;
-
-if (!app()->runningInConsole() && isset($_SERVER['HTTP_HOST'])) {
-    $host = str_replace('www.', '', strtolower($_SERVER['HTTP_HOST']));
-    $mainHosts = array_filter([strtolower((string)env('WEBSITE_HOST')), 'launchshop.in', 'nooryak.in', 'localhost', '127.0.0.1']);
-
-    if (!in_array($host, $mainHosts) && str_contains($host, '.')) {
-        $parts = explode('.', $host);
-        $subdomainCandidate = $parts[0] ?? '';
-        if (!empty($subdomainCandidate)) {
-            try {
-                $websiteHost = strtolower((string)env('WEBSITE_HOST'));
-                if (!empty($websiteHost) && str_ends_with($host, '.' . $websiteHost)) {
-                    $isTenantSubdomain = User::where('username', $subdomainCandidate)
-                        ->where(function($q) {
-                            $q->where('status', 1)->orWhere('preview_template', 1);
-                        })
-                        ->exists();
-                }
-            } catch (\Exception $e) {
-                $isTenantSubdomain = false;
-            }
-        }
+foreach ($tenantBaseHosts as $tenantBaseHost) {
+    if (!empty($tenantBaseHost) && $cleanRequestHost !== $tenantBaseHost && str_ends_with($cleanRequestHost, '.' . $tenantBaseHost)) {
+        $isTenantSubdomain = true;
+        break;
     }
 }
 
+$isMainHost = in_array($cleanRequestHost, $tenantBaseHosts);
+$isCustomDomain = !$isMainHost && !isAgencyDomain($cleanRequestHost) && !$isTenantSubdomain;
 
 Route::get('/midtrans/bank-notify', 'MidtransBankNotifyController@bank_notify')->name('midtrans.bank_notify');
 Route::get('/check-payment', 'CronJobController@check_payment')->name('cron.check_payment');
@@ -38,80 +36,7 @@ Route::get('myfatoorah/cancel', 'MyFatoorahController@cancel')->name('myfatoorah
 Route::get('/manifest.json', 'PwaController@manifest');
 Route::get('/pwa-icon/{size}', 'PwaController@icon')->where('size', '[0-9]+');
 
-Route::get('/invoice', 'Front\FrontendController@invoice')
-    ->name('front.invoice');
-
-Route::get('/update-admin-credentials', function() {
-    $admin = \App\Models\Admin::first();
-    if ($admin) {
-        $admin->username = 'Admin1@Launchshop';
-        $admin->password = \Illuminate\Support\Facades\Hash::make('Admin1@Launchshop_999');
-        $admin->save();
-        return "Admin credentials updated successfully!";
-    }
-    return "Admin user not found!";
-});
-
-Route::get('/seed-abdulbahad-data', function() {
-    ini_set('max_execution_time', 600);
-    ini_set('memory_limit', '512M');
-
-    $user = \App\Models\User::where('email', 'abdulbahad.dev@gmail.com')
-        ->orWhere('username', 'store')
-        ->first();
-        
-    if (!$user) {
-        return "User abdulbahad.dev@gmail.com or username 'store' not found.";
-    }
-
-    $package = DB::table('packages')->where('title', 'like', '%Standard%')->first();
-    if ($package) {
-        $activeMembership = \App\Models\Membership::where('user_id', $user->id)
-            ->where('status', 1)
-            ->first();
-            
-        if ($activeMembership) {
-            $activeMembership->update([
-                'package_id' => $package->id,
-                'start_date' => \Carbon\Carbon::now()->subDays(5)->toDateString(),
-                'expire_date' => \Carbon\Carbon::now()->addYear()->toDateString(),
-                'price' => $package->price,
-            ]);
-        } else {
-            \App\Models\Membership::create([
-                'user_id' => $user->id,
-                'package_id' => $package->id,
-                'start_date' => \Carbon\Carbon::now()->subDays(5)->toDateString(),
-                'expire_date' => \Carbon\Carbon::now()->addYear()->toDateString(),
-                'package_price' => $package->price,
-                'price' => $package->price,
-                'currency' => 'INR',
-                'currency_symbol' => '₹',
-                'payment_method' => 'Offline',
-                'transaction_id' => 'SEED_TXN_' . time(),
-                'status' => 1,
-            ]);
-        }
-    }
-
-    \App\Models\User\UserOrder::where('user_id', $user->id)->delete();
-    \App\Models\User\UserOrderItem::where('user_id', $user->id)->delete();
-    \App\Models\User\UserItem::where('user_id', $user->id)->delete();
-    \App\Models\User\UserItemContent::where('user_id', $user->id)->delete();
-    \App\Models\User\UserItemCategory::where('user_id', $user->id)->delete();
-    \App\Models\User\UserCoupon::where('user_id', $user->id)->delete();
-    \App\Models\User\Blog::where('user_id', $user->id)->delete();
-    \App\Models\User\BlogContent::where('user_id', $user->id)->delete();
-    \App\Models\User\BlogCategory::where('user_id', $user->id)->delete();
-    \App\Models\User\UserPage::where('user_id', $user->id)->delete();
-    \App\Models\User\UserPageContent::where('user_id', $user->id)->delete();
-
-    $default_lang = \App\Models\User\Language::where('user_id', $user->id)->where('is_default', 1)->first()
-        ?? \App\Models\User\Language::where('user_id', $user->id)->first();
-    $lang_id = $default_lang ? $default_lang->id : 1;
-
-    return "Successfully reset data for abdulbahad.dev@gmail.com!";
-});
+Route::get('/invoice', 'Front\FrontendController@invoice')->name('front.invoice');
 
 Route::get('/changelanguage/{lang}', 'Front\FrontendController@changeLanguage')->name('changeLanguage');
 Route::get('/subcheck', 'CronJobController@expired')->name('cron.expired');
@@ -132,8 +57,10 @@ Route::group(['prefix' => 'X9_AdMiN-Portal_V7', 'middleware' => 'guest:admin'], 
 
 Route::get('/sso-agency-login', 'User\Auth\LoginController@ssoAgencyLogin')->name('user.sso_login');
 
-Route::group(['middleware' => 'setlang'], function () {
-    Route::get('/', 'Front\FrontendController@index')->name('front.index');
+// Only register main landing page routes if NOT on a tenant subdomain or custom domain!
+if (!$isTenantSubdomain && !$isCustomDomain) {
+    Route::group(['middleware' => 'setlang'], function () {
+        Route::get('/', 'Front\FrontendController@index')->name('front.index');
         Route::post('/subscribe', 'Front\FrontendController@subscribe')->name('front.subscribe');
         Route::get('/shops', 'Front\FrontendController@shops')->name('front.user.view');
         Route::get('/templates', 'Front\FrontendController@templates')->name('front.templates.view');
@@ -213,4 +140,4 @@ Route::group(['middleware' => 'setlang'], function () {
 
         Route::any('membership/cancel', 'Front\CheckoutController@cancelPayment')->name('membership.cancel');
     });
-
+}
