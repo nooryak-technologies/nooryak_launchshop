@@ -85,13 +85,13 @@ class SeedTemplateCatalogForUser extends Command
             'electronics' => 'electi',
             'fashion' => 'fashclo',
             'furniture' => 'furial',
-            'grocery' => 'grocery',
+            'grocery' => 'ecomgrocery',
             'kids' => 'kidsfa',
             'manti' => 'manti',
             'pet' => 'petrashop',
             'skinflow' => 'skinflow',
             'jewellery' => 'jewellery',
-            'vegetables' => 'grocery',
+            'vegetables' => 'ecomgrocery',
             'clothing' => 'clothing',
         ];
 
