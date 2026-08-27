@@ -615,34 +615,6 @@ if (!function_exists('isAgencyDomain')) {
 if (!function_exists('getParam')) {
     function getParam()
     {
-        $host = request()->getHost();
-        $cleanHost = preg_replace('/^(www|app)\./i', '', strtolower($host));
-        
-        $subdomainBaseHosts = array_values(array_unique(array_filter([
-            strtolower((string) env('WEBSITE_HOST', '')),
-            'launchshop.in',
-            'nooryak.in',
-        ])));
-
-        $isMainBaseDomain = in_array($cleanHost, array_merge(['localhost', '127.0.0.1'], $subdomainBaseHosts));
-
-        $isSubdomain = false;
-        foreach ($subdomainBaseHosts as $baseHost) {
-            if (!empty($baseHost) && str_ends_with($cleanHost, '.' . $baseHost) && $cleanHost !== $baseHost) {
-                $isSubdomain = true;
-                break;
-            }
-        }
-
-        // Custom domain check (e.g. womenart.in)
-        if (!$isMainBaseDomain && !$isSubdomain) {
-            if (!isAgencyDomain($cleanHost)) {
-                // Merchant Custom Domain -> NO path/route parameter needed
-                return null;
-            }
-        }
-
-        // For Subdomain mode, Agency Path mode, or Main domain path mode:
         $user = getUser();
         if (!empty($user) && !empty($user->username)) {
             return strtolower($user->username);
