@@ -659,8 +659,11 @@ class HomeController extends Controller
         }
     }
 
-    public function userBlogDetail($domain, $slug)
+    public function userBlogDetail($domain = null, $slug = null)
     {
+        if (empty($slug)) {
+            $slug = $domain;
+        }
         $user = app('user');
         $userId = $user->id;
         $userCurrentLang = app('userCurrentLang');
