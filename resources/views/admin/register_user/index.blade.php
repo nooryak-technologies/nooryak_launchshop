@@ -348,6 +348,5 @@
 
     </div>
   </div>
-
-  @includeIf('admin.register_user.template-modal')
 @endsection
+
