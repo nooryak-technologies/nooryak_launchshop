@@ -42,6 +42,22 @@
               if (empty($slidesList)) {
                   $slidesList[] = $rawThumb;
               }
+              if (count($slidesList) < 4 && !empty($product->item)) {
+                  try {
+                      $extraImgs = DB::table('user_item_images')
+                          ->where('item_id', '!=', $product->item->id)
+                          ->whereNotNull('image')
+                          ->where('image', '!=', '')
+                          ->limit(4 - count($slidesList))
+                          ->pluck('image')
+                          ->toArray();
+                      foreach ($extraImgs as $exImg) {
+                          $slidesList[] = $exImg;
+                      }
+                  } catch (\Throwable $e) {
+                      // ignore
+                  }
+              }
             @endphp
             <div class="product-single-gallery">
               <div class="slider-thumbnails2">
