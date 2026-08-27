@@ -18,4 +18,6 @@
   <link rel="stylesheet" href="{{ asset('assets/admin/css/rtl-style.css') }}">
 @endif
 <link rel="stylesheet" href="{{ asset('assets/admin/css/custom.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/admin/css/modern-admin.css') }}">
 @yield('styles')
+
