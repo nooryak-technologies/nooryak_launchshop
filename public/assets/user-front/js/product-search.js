@@ -1,34 +1,8 @@
 'use strict';
 
-function updateBrowserUrl() {
-    var params = new URLSearchParams();
-    var cat = $('#category').val();
-    var subcat = $('#subcategory').val();
-    var kw = $('#keyword-id').val();
-    var min = $('#min-id').val();
-    var max = $('#max-id').val();
-    var sort = $('#sort-id').val();
-    var onSale = $('#on-sale-id').val();
-    var viewType = $('#view-type').val();
-
-    if (cat) params.set('category', cat);
-    if (subcat) params.set('subcategory', subcat);
-    if (kw) params.set('keyword', kw);
-    if (min) params.set('min', min);
-    if (max) params.set('max', max);
-    if (sort) params.set('sort', sort);
-    if (onSale) params.set('on_sale', onSale);
-    if (viewType) params.set('view_type', viewType);
-
-    var newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
-    window.history.pushState({ path: newUrl }, '', newUrl);
-}
-
 function clickSubmit(type = null) {
     $('#show-products').html('');
     $('#skeleton-loader').removeClass('d-none');
-
-    updateBrowserUrl();
 
     var formData = $('#filtersForm').serialize();
     $.ajax({
@@ -36,15 +10,18 @@ function clickSubmit(type = null) {
         type: 'GET',
         data: formData,
         success: function (result) {
-            $('#skeleton-loader').addClass('d-none');
-            $('#show-products').html(result);
-            var tooltipTriggerList = [].slice.call($('[data-bs-toggle="tooltip"]'))
-            tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl)
-            })
+            if (type != null) {
+                location.reload();
+            } else {
+                $('#skeleton-loader').addClass('d-none');
+                $('#show-products').html(result);
+                var tooltipTriggerList = [].slice.call($('[data-bs-toggle="tooltip"]'))
+                tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl)
+                })
+            }
         },
         error: function (xhr, status, error) {
-            $('#skeleton-loader').addClass('d-none');
         }
     });
 }
@@ -87,27 +64,21 @@ function clickSubmitVariation() {
 $('body').on('click', '.category', function (e) {
     e.preventDefault();
 
+    $('#filtersForm input').val('');
     var slug = $(this).data('slug');
-
-    $('.category-radio').prop('checked', false);
-    if (slug) {
-        $('.category-radio[value="' + slug + '"]').prop('checked', true);
-    } else {
-        $('.category-radio[value=""]').prop('checked', true);
-    }
-
     $('#categories .list-dropdown').removeClass('open');
     if (slug) {
         var targetCategory = $('#categories .category').filter(function () {
             return $(this).data('slug') === slug;
         });
         targetCategory.closest('.list-dropdown').addClass('open');
-        $('#category').val(slug);
-    } else {
+    }
+    if (typeof (slug) == 'undefined') {
         $('#category').val('');
         $('#categories .list-dropdown:first').addClass('open');
     }
     $('#subcategory').val('');
+    $('#category').val(slug);
     $('#selected-variants').val('');
     $("#rating_div").load(location.href + " #rating_div > *");
     $("#on_sale_div").load(location.href + " #on_sale_div > *");
@@ -123,22 +94,6 @@ $('body').on('click', '.category', function (e) {
             }, 600);
         }
     }, 400);
-});
-
-// Category Radio Button Click Handler
-$('body').on('change click', '.category-radio', function (e) {
-    e.stopPropagation();
-    var slug = $(this).val();
-    var catAnchor = $('.category[data-slug="' + slug + '"]');
-    if (!slug) {
-        catAnchor = $('.category[data-category-slug-="all"]');
-    }
-    if (catAnchor.length) {
-        catAnchor.trigger('click');
-    } else {
-        $('#category').val(slug);
-        clickSubmit();
-    }
 });
 
 // search product by subcategory

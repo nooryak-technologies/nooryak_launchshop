@@ -70,7 +70,6 @@
                       <li
                         class="list-dropdown {{ Route::current()->getName() == 'front.user.shop' && empty(request()->input('category')) ? 'open' : '' }}">
                         <a class="category d-inline-flex align-items-center gap-2" href="#" data-category-slug-="all">
-                          <input type="radio" class="input-radio category-radio" name="category_sidebar_radio" value="" {{ empty(request()->input('category')) ? 'checked' : '' }}>
                           <span>{{ $keywords['All'] ?? __('All') }}</span>
                           <span class="qty">({{ $all_category_product_count }})</span>
                         </a>
@@ -104,7 +103,6 @@
                         @endphp
                         <li class="list-dropdown {{ request()->input('category') == $category->slug ? 'open' : '' }}">
                           <a class="category d-inline-flex align-items-center gap-2" href="#" data-slug="{{ $category->slug }}">
-                            <input type="radio" class="input-radio category-radio" name="category_sidebar_radio" value="{{ $category->slug }}" {{ request()->input('category') == $category->slug ? 'checked' : '' }}>
                             @if(!empty($category->image))
                               <img src="{{ asset('assets/front/img/user/items/categories/' . $category->image) }}" alt="{{ $category->name }}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;">
                             @endif
@@ -323,13 +321,13 @@
                 data-bs-toggle="offcanvas" data-bs-target="#widgetOffcanvas" aria-controls="widgetOffcanvas">
                 {{ $keywords['Filters'] ?? __('Filters') }} <i class="fal fa-filter"></i></button>
               <div class="view">
-                <li class="item"><a href="#"
-                    class="btn-icon {{ Session::get('view_type') == 'grid' || !Session::has('view_type') ? 'active' : '' }} view-type"
-                    data-view-type="grid" title="Grid View"><i class="fas fa-th"></i></a>
+                <li class="item"><a href=""
+                    class="btn-icon {{ Session::get('view_type') == 'grid' ? 'active' : '' }}{{ !Session::has('view_type') ? 'active' : '' }} view-type"
+                    data-view-type="grid"><i class="fas fa-th"></i></a>
                 </li>
-                <li class="item"><a href="#"
-                    class="btn-icon {{ Session::get('view_type') == 'list' ? 'active' : '' }} view-type"
-                    data-view-type="list" title="List View"><i class="fas fa-list"></i></a>
+                <li class="item"><a href="{{ route('front.user.shop.shop_type', ['type' => 'list', getParam()]) }}"
+                    class="btn-icon {{ Session::get('view_type') == 'list' ? 'active' : '' }}  view-type"
+                    data-view-type="list"><i class="fas fa-list"></i></a>
                 </li>
               </div>
             </div>

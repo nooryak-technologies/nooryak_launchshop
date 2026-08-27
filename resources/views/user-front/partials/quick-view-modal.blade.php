@@ -28,15 +28,6 @@
     if (empty($slides)) {
         $slides[] = $mainThumbSrc;
     }
-    $origSlides = $slides;
-    while (count($slides) < 4) {
-        foreach ($origSlides as $origItem) {
-            $slides[] = $origItem;
-            if (count($slides) >= 4) {
-                break;
-            }
-        }
-    }
   @endphp
 
   <div class="col-lg-6 product-single-default">

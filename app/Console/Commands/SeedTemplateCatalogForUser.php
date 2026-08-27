@@ -320,24 +320,11 @@ class SeedTemplateCatalogForUser extends Command
                 $this->safeSave($newItem);
                 $itemMap[$sourceItem->id] = $newItem->id;
 
-                $sourceImages = UserItemImage::where('item_id', $sourceItem->id)->get();
-                foreach ($sourceImages as $sourceImage) {
+                foreach (UserItemImage::where('item_id', $sourceItem->id)->get() as $sourceImage) {
                     UserItemImage::create([
                         'item_id' => $newItem->id,
                         'image' => $this->duplicateAsset($sourceImage->image, 'assets/front/img/user/items/slider-images/'),
                     ]);
-                }
-                $currentImgCount = UserItemImage::where('item_id', $newItem->id)->count();
-                if ($currentImgCount < 4) {
-                    $existingImages = UserItemImage::where('item_id', $newItem->id)->get();
-                    $fillImg = $existingImages->first() ? $existingImages->first()->image : $newItem->thumbnail;
-                    while ($currentImgCount < 4) {
-                        UserItemImage::create([
-                            'item_id' => $newItem->id,
-                            'image' => $fillImg,
-                        ]);
-                        $currentImgCount++;
-                    }
                 }
 
                 foreach ($itemContents as $sourceContent) {

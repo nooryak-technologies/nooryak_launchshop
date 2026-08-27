@@ -42,15 +42,6 @@
               if (empty($slidesList)) {
                   $slidesList[] = $rawThumb;
               }
-              $origSlidesList = $slidesList;
-              while (count($slidesList) < 4) {
-                  foreach ($origSlidesList as $origItem) {
-                      $slidesList[] = $origItem;
-                      if (count($slidesList) >= 4) {
-                          break;
-                      }
-                  }
-              }
             @endphp
             <div class="product-single-gallery">
               <div class="slider-thumbnails2">
