@@ -46,7 +46,7 @@ use PDF;
 
 class HomeController extends Controller
 {
-    public function userDetailView($domain)
+    public function userDetailView($domain = null)
     {
         $user = app('user');
         if (empty($user)) {

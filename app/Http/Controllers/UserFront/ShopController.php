@@ -461,8 +461,11 @@ class ShopController extends Controller
         return themeView('variant-content', $data)->render();
     }
 
-    public function productDetails($domain, $slug)
+    public function productDetails($domain = null, $slug = null)
     {
+        if (empty($slug)) {
+            $slug = $domain;
+        }
         $user = app('user');
         $userCurrentLang = app('userCurrentLang');
         $uLang = !empty($userCurrentLang) ? $userCurrentLang->id : 0;
@@ -512,8 +515,11 @@ class ShopController extends Controller
         return themeView('product_details', $data);
     }
 
-    public function productDetailsQuickview($domain, $slug)
+    public function productDetailsQuickview($domain = null, $slug = null)
     {
+        if (empty($slug)) {
+            $slug = $domain;
+        }
         $userCurrentLang = app('userCurrentLang');
 
         session()->put('user_lang', $userCurrentLang->code);
