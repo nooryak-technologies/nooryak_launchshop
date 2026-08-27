@@ -579,6 +579,29 @@ if (!function_exists('reviewCount')) {
 if (!function_exists('getParam')) {
     function getParam()
     {
+        $host = request()->getHost();
+        $cleanHost = preg_replace('/^(www|app)\./i', '', strtolower($host));
+        
+        $subdomainBaseHosts = array_values(array_unique(array_filter([
+            strtolower((string) env('WEBSITE_HOST', '')),
+            'launchshop.in',
+            'nooryak.in',
+        ])));
+
+        // 1. Subdomain mode (e.g. manti.launchshop.in) -> NO path parameter!
+        foreach ($subdomainBaseHosts as $baseHost) {
+            if (!empty($baseHost) && str_ends_with($cleanHost, '.' . $baseHost) && $cleanHost !== $baseHost) {
+                return null;
+            }
+        }
+
+        // 2. Custom Domain mode (e.g. womenart.in) -> NO path parameter!
+        $isMainDomain = in_array($cleanHost, array_merge(['localhost', '127.0.0.1'], $subdomainBaseHosts)) || str_contains($cleanHost, 'cockroachjantaparty.top');
+        if (!$isMainDomain) {
+            return null;
+        }
+
+        // 3. White Label Agency path-based routing (e.g. agency.top/manti):
         $user = getUser();
         if (!empty($user) && !empty($user->username)) {
             return strtolower($user->username);
@@ -595,7 +618,7 @@ if (!function_exists('getParam')) {
             return strtolower(urldecode($firstSegment));
         }
 
-        return 'default';
+        return null;
     }
 }
 

@@ -146,8 +146,6 @@ $tenantRoutes = function () {
 
 // ─────────────────────────────────────────────────────────────────
 // CASE 1: Tenant subdomain  →  manti.launchshop.in
-// Register this unconditionally (when WEBSITE_HOST is present) so it also
-// works with cached routes in production.
 // ─────────────────────────────────────────────────────────────────
 foreach ($tenantBaseHosts as $tenantBaseHost) {
     Route::group([
@@ -157,8 +155,20 @@ foreach ($tenantBaseHosts as $tenantBaseHost) {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// CASE 2: Path-based tenant  →  agency.top/manti  OR  launchshop.in/manti
-// Use prefix-based routing so GET /{username} maps to store home
+// CASE 2: Custom domain direct root routing  →  womenart.in
+// ─────────────────────────────────────────────────────────────────
+$requestHost = request()->getHost();
+$cleanRequestHost = preg_replace('/^(www|app)\./i', '', strtolower($requestHost));
+$isMainHost = in_array($cleanRequestHost, array_merge(['localhost', '127.0.0.1'], $tenantBaseHosts));
+
+if (!$isMainHost && !str_contains($cleanRequestHost, 'cockroachjantaparty.top')) {
+    Route::group([
+        'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
+    ], $tenantRoutes);
+}
+
+// ─────────────────────────────────────────────────────────────────
+// CASE 3: Path-based tenant for White Label Agency domains  →  agency.top/manti
 // ─────────────────────────────────────────────────────────────────
 Route::group([
     'prefix'     => '/{username}',
