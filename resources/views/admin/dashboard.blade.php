@@ -6,10 +6,24 @@
         $permissions = $admin->role->permissions;
         $permissions = json_decode($permissions, true);
     }
+
+    $tokenTooltipText = '<strong>' . __('AI Token Statistics') . ' (' . __('All Active Tenants') . ')</strong><br><br>' .
+        '<strong>Scope:</strong> ' . __('Calculated by combining all ACTIVE tenant memberships only.') . '<br>' .
+        '<strong>Required AI Tokens:</strong> ' . __('Total allocated tokens for this AI engine across all active tenant plans.') . '<br>' .
+        '<strong>Used AI Tokens:</strong> ' . __('Total number of tokens already used by tenant users.') . '<br>' .
+        '<strong>Remaining AI Tokens:</strong> ' . __('Remaining available tokens for all tenants combined.') . '<br><br>' .
+        '<em>' . __('Important: Combined usage across all tenants, not individual limits.') . '</em>';
+
+    $imageTooltipText = '<strong>' . __('AI Image Statistics') . ' (' . __('All Active Tenants') . ')</strong><br><br>' .
+        '<strong>Scope:</strong> ' . __('Calculated by combining all ACTIVE tenant memberships only.') . '<br>' .
+        '<strong>Required AI Images:</strong> ' . __('Total image quota allocated for this AI engine across active tenants.') . '<br>' .
+        '<strong>Used AI Images:</strong> ' . __('Total number of AI-generated images already created.') . '<br>' .
+        '<strong>Remaining AI Images:</strong> ' . __('Remaining available images for all tenants combined.') . '<br><br>' .
+        '<em>' . __('Important: Combined usage across all tenants, not individual limits.') . '</em>';
 @endphp
 
 @section('content')
-    <!-- Top Welcome Banner (Image 1 Match) -->
+    <!-- Top Welcome Banner -->
     <div class="welcome-banner-v2">
         <div>
             <h1 class="welcome-title-v2">{{ __('Welcome back,') }} <span class="grad-purple">Launchshop Admin!</span> 👋</h1>
@@ -26,7 +40,7 @@
         </div>
     </div>
 
-    <!-- 6 Main Stat Cards Grid (Image 1 Pixel Match) -->
+    <!-- 6 Main Stat Cards Grid (Mobile 2-Columns Per Row Responsive) -->
     <div class="stat-card-grid-v2">
         @if (empty($admin->role) || (!empty($permissions) && in_array('Users Management', $permissions)))
             <a class="stat-card-pixel c-blue" href="{{ route('admin.register.user') }}">
@@ -209,7 +223,7 @@
         @endif
     </div>
 
-    <!-- AI Engine Cards Grid (Image 1 Pixel Match) -->
+    <!-- AI Engine Cards Grid with Hover Tooltip Display (Task 2) -->
     <div class="stat-card-grid-v2 mb-4">
         @if (!empty($aiEngineStats))
             @foreach ($aiEngineStats as $key => $stat)
@@ -217,7 +231,9 @@
                     $engineName = strtoupper($stat['engine']);
                     $cardClass = str_contains($engineName, 'OPENAI') ? 'p-orange' : 'p-purple';
                 @endphp
-                <div class="ai-card-pixel {{ $cardClass }}">
+                <div class="ai-card-pixel {{ $cardClass }}"
+                    data-toggle="tooltip" data-placement="top" data-html="true"
+                    title="{!! $tokenTooltipText !!}">
                     <div class="ai-head">
                         <div class="icon-circle" style="width:36px; height:36px; font-size:0.95rem;">
                             <i class="fas fa-coins"></i>
@@ -243,7 +259,9 @@
                     $engineName = strtoupper($stat['engine']);
                     $cardClass = str_contains($engineName, 'OPENAI') ? 'p-blue' : 'p-indigo';
                 @endphp
-                <div class="ai-card-pixel {{ $cardClass }}">
+                <div class="ai-card-pixel {{ $cardClass }}"
+                    data-toggle="tooltip" data-placement="top" data-html="true"
+                    title="{!! $imageTooltipText !!}">
                     <div class="ai-head">
                         <div class="icon-circle" style="width:36px; height:36px; font-size:0.95rem;">
                             <i class="fas fa-image"></i>
@@ -264,7 +282,9 @@
         @endif
 
         <!-- AI Image Statistics Info Box -->
-        <div class="ai-info-box-pixel">
+        <div class="ai-info-box-pixel"
+            data-toggle="tooltip" data-placement="top" data-html="true"
+            title="{!! $imageTooltipText !!}">
             <div class="d-flex align-items-center gap-2 mb-2">
                 <i class="fas fa-chart-pie" style="font-size: 1.25rem; color: #3B82F6;"></i>
                 <div class="info-title m-0">{{ __('AI Image Statistics (All Active Tenants)') }}</div>
@@ -382,6 +402,15 @@
         var userTotals = {{ json_encode($userTotals) }};
         var Monthly_Income = "{{ __('Monthly Income') }}";
         var Monthly_Premium_Users = "{{ __('Monthly Premium Users') }}";
+
+        $(document).ready(function() {
+            if ($.fn.tooltip) {
+                $('[data-toggle="tooltip"]').tooltip({
+                    trigger: 'hover',
+                    container: 'body'
+                });
+            }
+        });
     </script>
     <script src="{{ asset('assets/admin/js/chart-init.js') }}"></script>
 @endsection

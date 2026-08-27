@@ -8,12 +8,8 @@
 
 <div class="sidebar sidebar-style-2" @if (request()->cookie('admin-theme') == 'dark') data-background-color="dark2" @endif>
   <div class="sidebar-wrapper scrollbar scrollbar-inner">
-    <div class="sidebar-content">
-      <!-- Sidebar Brand Header -->
-      <div class="sidebar-logo-header">
-        <div class="brand-name">Launchshop.in</div>
-        <div class="brand-slogan">Build. Launch. Grow.</div>
-      </div>
+    <div class="sidebar-content pt-2">
+
 
       <!-- User Profile Pill Card (Image 1 Match) -->
       <div class="sidebar-user-pill-card">

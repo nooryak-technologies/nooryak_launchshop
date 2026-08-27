@@ -234,28 +234,11 @@ body, html {
   background: var(--sidebar-bg) !important;
 }
 
-/* Sidebar Top Logo Header */
-.sidebar-logo-header {
-  padding: 1.25rem 1.5rem;
-  display: flex;
-  flex-direction: column;
+.sidebar-content {
+  padding-top: 0.5rem !important;
 }
 
-.sidebar-logo-header .brand-name {
-  font-size: 1.35rem;
-  font-weight: 800;
-  color: #FFFFFF;
-  letter-spacing: -0.02em;
-}
-
-.sidebar-logo-header .brand-slogan {
-  font-size: 0.7rem;
-  color: #94A3B8;
-  font-style: italic;
-  letter-spacing: 0.03em;
-}
-
-/* Sidebar User Profile Pill Card (Matching Image 1 Top Left Widget) */
+/* Sidebar User Profile Pill Card */
 .sidebar-user-pill-card {
   margin: 0.5rem 1rem 1rem 1rem;
   background: linear-gradient(135deg, #635BFF 0%, #4F46E5 100%);
@@ -319,7 +302,7 @@ body, html {
   font-size: 0.85rem;
 }
 
-/* Sidebar Navigation Items & Active State */
+/* Sidebar Navigation Items & Active State Fix */
 .sidebar .nav.nav-primary {
   padding: 0 0.75rem !important;
 }
@@ -353,26 +336,27 @@ body, html {
   text-align: center;
 }
 
-.sidebar .nav.nav-primary > .nav-item:hover > a,
-.sidebar .nav.nav-primary > .nav-item:hover > a p,
-.sidebar .nav.nav-primary > .nav-item:hover > a i {
-  color: #FFFFFF !important;
-}
-
-/* Active Item Solid Purple Pill Background (Matching Image 1) */
-.sidebar.sidebar-style-2 .nav.nav-primary > .nav-item.active > a,
-.sidebar .nav.nav-primary > .nav-item.active > a {
+/* Active Item Solid Purple Pill Background (Max Specificity Override for Task 4) */
+html body .sidebar .nav .nav-item.active > a,
+html body .sidebar.sidebar-style-2 .nav .nav-item.active > a,
+html body .sidebar[data-background-color] .nav .nav-item.active > a,
+html body .sidebar[data-background-color] .nav.nav-primary > .nav-item.active > a,
+html body .sidebar.sidebar-style-2[data-background-color] .nav .nav-item.active > a,
+html body .sidebar.sidebar-style-2[data-background-color="dark2"] .nav .nav-item.active > a,
+html body .sidebar.sidebar-style-2[data-background-color="dark2"] .nav.nav-primary > .nav-item.active > a,
+html body .sidebar.sidebar-style-2[data-background-color="dark2"] .nav .nav-item.selected > a,
+html body[data-background-color] .sidebar .nav .nav-item.active > a {
   background: linear-gradient(135deg, #7C3AED 0%, #6366F1 100%) !important;
-  color: #FFFFFF !important;
   box-shadow: 0 8px 20px -4px rgba(124, 58, 237, 0.5) !important;
   border-radius: 12px !important;
 }
 
-.sidebar.sidebar-style-2 .nav.nav-primary > .nav-item.active > a p,
-.sidebar.sidebar-style-2 .nav.nav-primary > .nav-item.active > a i,
-.sidebar.sidebar-style-2 .nav.nav-primary > .nav-item.active > a .caret,
-.sidebar .nav.nav-primary > .nav-item.active > a p,
-.sidebar .nav.nav-primary > .nav-item.active > a i {
+html body .sidebar .nav .nav-item.active > a *,
+html body .sidebar.sidebar-style-2 .nav .nav-item.active > a *,
+html body .sidebar[data-background-color] .nav .nav-item.active > a *,
+html body .sidebar.sidebar-style-2[data-background-color] .nav .nav-item.active > a *,
+html body .sidebar.sidebar-style-2[data-background-color="dark2"] .nav .nav-item.active > a *,
+html body[data-background-color] .sidebar .nav .nav-item.active > a * {
   color: #FFFFFF !important;
   opacity: 1 !important;
   font-weight: 700 !important;
@@ -441,7 +425,7 @@ body, html {
 }
 
 /* ==========================================================================
-   DASHBOARD WELCOME BANNER & STAT CARDS (Matching Image 1)
+   DASHBOARD WELCOME BANNER & STAT CARDS
    ========================================================================== */
 .welcome-banner-v2 {
   display: flex;
@@ -506,11 +490,62 @@ body, html {
   .stat-card-grid-v2 { grid-template-columns: repeat(2, 1fr); }
 }
 
+/* TASK 3 MOBILE VIEW FIX: 2 COLUMNS PER ROW ON MOBILE (<767px) */
 @media (max-width: 767px) {
-  .stat-card-grid-v2 { grid-template-columns: 1fr; }
+  .stat-card-grid-v2 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.65rem !important;
+  }
+  .stat-card-pixel {
+    min-height: 125px !important;
+    padding: 0.75rem 0.7rem !important;
+    border-radius: 14px !important;
+  }
+  .stat-card-pixel .icon-circle {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.85rem !important;
+    border-radius: 8px !important;
+  }
+  .stat-card-pixel .arrow-btn {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 0.6rem !important;
+  }
+  .stat-card-pixel .c-category {
+    font-size: 0.72rem !important;
+    margin-top: 0.3rem !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .stat-card-pixel .c-number {
+    font-size: 1.4rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+  .stat-card-pixel .row-bottom {
+    align-items: flex-end !important;
+  }
+  .stat-card-pixel .growth-text {
+    font-size: 0.62rem !important;
+    line-height: 1.1 !important;
+  }
+  .stat-card-pixel .growth-text .growth-val {
+    font-size: 0.65rem !important;
+  }
+  .stat-card-pixel .growth-text .growth-lbl {
+    font-size: 0.55rem !important;
+  }
+  .sparkline-graphic {
+    height: 18px !important;
+    gap: 2px !important;
+  }
+  .sparkline-graphic span {
+    width: 3px !important;
+  }
 }
 
-/* Stat Card Pixel-Match Layout (Image 1) */
+/* Stat Card Pixel-Match Layout */
 .stat-card-pixel {
   border-radius: 18px !important;
   padding: 1.25rem 1.5rem !important;
@@ -613,7 +648,7 @@ body, html {
   display: block;
 }
 
-/* White Vertical Sparkline Bar Chart Graphic (Matching Image 1) */
+/* White Vertical Sparkline Bar Chart Graphic */
 .sparkline-graphic {
   display: flex;
   align-items: flex-end;
@@ -628,7 +663,7 @@ body, html {
   border-radius: 2px;
 }
 
-/* AI Cards Pixel Match */
+/* AI Cards Pixel Match & Hover Popover Effect (Task 2) */
 .ai-card-pixel {
   border-radius: 18px !important;
   padding: 1.25rem 1.5rem !important;
@@ -636,6 +671,13 @@ body, html {
   position: relative !important;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12) !important;
   border: none !important;
+  cursor: pointer !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+}
+
+.ai-card-pixel:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.2) !important;
 }
 
 .ai-card-pixel.p-purple { background: linear-gradient(135deg, #7C3AED 0%, #8B5CF6 100%) !important; }
@@ -689,6 +731,24 @@ body, html {
   font-weight: 700;
   color: #FFFFFF;
 }
+
+/* Custom Tooltip / Popover Styling for Task 2 */
+.tooltip-inner {
+  max-width: 320px !important;
+  padding: 10px 14px !important;
+  background-color: #0F172A !important;
+  color: #FFFFFF !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+  font-size: 0.78rem !important;
+  text-align: left !important;
+  line-height: 1.4 !important;
+}
+
+.bs-tooltip-top .arrow::before { border-top-color: #0F172A !important; }
+.bs-tooltip-bottom .arrow::before { border-bottom-color: #0F172A !important; }
+.bs-tooltip-left .arrow::before { border-left-color: #0F172A !important; }
+.bs-tooltip-right .arrow::before { border-right-color: #0F172A !important; }
 
 /* AI Info Card */
 .ai-info-box-pixel {
