@@ -806,16 +806,6 @@ if (!function_exists('getUser')) {
             // ignore
         }
 
-        $user = User::where(function ($q) use ($cleanCustomHost) {
-                $q->where('custom_domain', $cleanCustomHost)
-                  ->orWhere('custom_domain', 'www.' . $cleanCustomHost);
-            })
-            ->first();
-
-        if (!empty($user)) {
-            return $user;
-        }
-
         return null;
     }
 }
