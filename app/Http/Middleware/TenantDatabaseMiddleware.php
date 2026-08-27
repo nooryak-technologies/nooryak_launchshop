@@ -123,11 +123,37 @@ class TenantDatabaseMiddleware
                     }
                     Log::info("TenantMiddleware: domain '{$cleanHost}' -> agency '{$agency->name}'");
                 } else {
+                    // Check if domain is a tenant custom domain (e.g. maturednature.com)
+                    try {
+                        $cDomainRow = DB::table('user_custom_domains')
+                            ->where('status', 1)
+                            ->where(function ($q) use ($host, $cleanHost) {
+                                $q->where('requested_domain', $host)
+                                  ->orWhere('requested_domain', $cleanHost)
+                                  ->orWhere('requested_domain', 'www.' . $cleanHost)
+                                  ->orWhere('requested_domain', 'http://' . $cleanHost)
+                                  ->orWhere('requested_domain', 'https://' . $cleanHost);
+                            })
+                            ->first();
+
+                        if ($cDomainRow) {
+                            $userObj = DB::table('users')->where('id', $cDomainRow->user_id)->first();
+                            if ($userObj && !empty($userObj->username)) {
+                                $cdb = $this->findExistingDbBySlug($userObj->username);
+                                if ($cdb) {
+                                    $candidates[] = $cdb;
+                                }
+                            }
+                        }
+                    } catch (\Throwable $e) {
+                        Log::warning("TenantMiddleware custom domain check error: " . $e->getMessage());
+                    }
+
                     // Fallback for agency domains like cockroachjantaparty.top -> ysquare agency DB
                     if (str_contains($cleanHost, 'cockroachjantaparty.top') || str_contains($host, 'cockroachjantaparty.top')) {
                         $candidates[] = 'bazaarwa_ps_ysquare_launchshop';
                     }
-                    Log::info("TenantMiddleware: No agency found by domain query for '{$cleanHost}'. Candidate count: " . count($candidates));
+                    Log::info("TenantMiddleware: Domain '{$cleanHost}'. Candidate count: " . count($candidates));
                 }
             }
         }

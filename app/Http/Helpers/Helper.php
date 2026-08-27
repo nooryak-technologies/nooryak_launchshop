@@ -577,9 +577,33 @@ if (!function_exists('reviewCount')) {
 
 
 if (!function_exists('getParam')) {
-
     function getParam()
     {
+        $host = request()->getHost();
+        $cleanHost = preg_replace('/^(www|app)\./i', '', strtolower($host));
+        
+        $subdomainBaseHosts = array_values(array_unique(array_filter([
+            strtolower((string) env('WEBSITE_HOST', '')),
+            'launchshop.in',
+            'nooryak.in',
+        ])));
+
+        // Check if current request is on a subdomain or custom domain (where no URL path prefix is needed)
+        foreach ($subdomainBaseHosts as $baseHost) {
+            if (!empty($baseHost) && str_ends_with($cleanHost, '.' . $baseHost) && $cleanHost !== $baseHost) {
+                // Subdomain mode (e.g. grocery.launchshop.in) -> NO path parameter!
+                return null;
+            }
+        }
+
+        // Check custom domain
+        $isMainDomain = in_array($cleanHost, array_merge(['localhost', '127.0.0.1'], $subdomainBaseHosts)) || str_contains($cleanHost, 'cockroachjantaparty.top');
+        if (!$isMainDomain) {
+            // Custom domain (e.g. maturednature.com) -> NO path parameter!
+            return null;
+        }
+
+        // On main domain / agency path-based routing (e.g. agency.top/username):
         $user = getUser();
         if (!empty($user) && !empty($user->username)) {
             return strtolower($user->username);
@@ -587,12 +611,6 @@ if (!function_exists('getParam')) {
 
         $parsedUrl = parse_url(url()->current());
         $currentPath = $parsedUrl['path'] ?? '/';
-
-        $appPath = parse_url(env('APP_URL'), PHP_URL_PATH) ?? '';
-        if (!empty($appPath) && strpos($currentPath, $appPath) === 0) {
-            $currentPath = substr($currentPath, strlen($appPath));
-        }
-
         $pathSegments = explode('/', trim($currentPath, '/'));
         $firstSegment = $pathSegments[0] ?? null;
 
@@ -602,13 +620,7 @@ if (!function_exists('getParam')) {
             return strtolower(urldecode($firstSegment));
         }
 
-        $host = str_replace("www.", "", $parsedUrl['host'] ?? env('WEBSITE_HOST', ''));
-        $parts = explode('.', $host);
-        if (count($parts) >= 3 && !in_array(strtolower($parts[0]), ['www', 'app', 'launchshop', 'admin', 'localhost'])) {
-            return strtolower($parts[0]);
-        }
-
-        return strtolower($firstSegment ?? 'default');
+        return null;
     }
 }
 
@@ -632,7 +644,8 @@ if (!function_exists('cPackageHasSubdomain')) {
 }
 
 
-// checks if 'current package has custom domain ?'
+// checks if 'current package has customdomain ?'
+
 if (!function_exists('cPackageHasCdomain')) {
     function cPackageHasCdomain($user)
     {
@@ -642,16 +655,15 @@ if (!function_exists('cPackageHasCdomain')) {
         $currPackageFeatures = UserPermissionHelper::packagePermission($user->id);
         $currPackageFeatures = json_decode($currPackageFeatures, true);
 
+        // if the current package does not contain customdomain
         if (empty($currPackageFeatures) || !is_array($currPackageFeatures) || !in_array('Custom Domain', $currPackageFeatures)) {
             return false;
         }
-
         return true;
     }
 }
 
 if (!function_exists('getCdomain')) {
-
     function getCdomain($user)
     {
         if (empty($user) || !is_object($user) || empty($user->id)) {
