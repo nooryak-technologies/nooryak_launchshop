@@ -84,9 +84,17 @@ body, html {
   min-height: 70px !important;
 }
 
-.logo-header {
+/* Logo Header (Fix white line / gap under logo bar) */
+.logo-header,
+.logo-header[data-background-color] {
   background-color: var(--sidebar-bg) !important;
   border-bottom: 1px solid var(--sidebar-border) !important;
+  box-shadow: none !important;
+}
+
+.logo-header::after,
+.logo-header::before {
+  display: none !important;
 }
 
 /* Global Top Search Bar */
@@ -222,20 +230,31 @@ body, html {
 }
 
 /* ==========================================================================
-   SIDEBAR STYLING (Matching Image 1)
+   SIDEBAR STYLING
    ========================================================================== */
-.sidebar, .sidebar.sidebar-style-2 {
+.sidebar,
+.sidebar.sidebar-style-2,
+.sidebar[data-background-color],
+.sidebar.sidebar-style-2[data-background-color] {
   background: var(--sidebar-bg) !important;
   border-right: 1px solid var(--sidebar-border) !important;
+  border-top: none !important;
   box-shadow: 4px 0 25px rgba(0, 0, 0, 0.15) !important;
 }
 
-.sidebar .sidebar-wrapper {
+.sidebar .sidebar-wrapper,
+.sidebar[data-background-color] .sidebar-wrapper {
   background: var(--sidebar-bg) !important;
+  border-top: none !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
 }
 
 .sidebar-content {
   padding-top: 0.5rem !important;
+  background: var(--sidebar-bg) !important;
+  margin-top: 0 !important;
+  border-top: none !important;
 }
 
 /* Sidebar User Profile Pill Card */
@@ -336,7 +355,7 @@ body, html {
   text-align: center;
 }
 
-/* Active Item Solid Purple Pill Background (Max Specificity Override for Task 4) */
+/* Active Item Solid Purple Pill Background (Max Specificity Override) */
 html body .sidebar .nav .nav-item.active > a,
 html body .sidebar.sidebar-style-2 .nav .nav-item.active > a,
 html body .sidebar[data-background-color] .nav .nav-item.active > a,
@@ -490,7 +509,7 @@ html body[data-background-color] .sidebar .nav .nav-item.active > a * {
   .stat-card-grid-v2 { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* TASK 3 MOBILE VIEW FIX: 2 COLUMNS PER ROW ON MOBILE (<767px) */
+/* MOBILE VIEW FIX: 2 COLUMNS PER ROW ON MOBILE (<767px) */
 @media (max-width: 767px) {
   .stat-card-grid-v2 {
     grid-template-columns: repeat(2, 1fr) !important;
@@ -663,7 +682,7 @@ html body[data-background-color] .sidebar .nav .nav-item.active > a * {
   border-radius: 2px;
 }
 
-/* AI Cards Pixel Match & Hover Popover Effect (Task 2) */
+/* AI Cards Pixel Match & Hover Popover Effect */
 .ai-card-pixel {
   border-radius: 18px !important;
   padding: 1.25rem 1.5rem !important;
@@ -732,7 +751,7 @@ html body[data-background-color] .sidebar .nav .nav-item.active > a * {
   color: #FFFFFF;
 }
 
-/* Custom Tooltip / Popover Styling for Task 2 */
+/* Custom Tooltip Styling */
 .tooltip-inner {
   max-width: 320px !important;
   padding: 10px 14px !important;
@@ -749,29 +768,6 @@ html body[data-background-color] .sidebar .nav .nav-item.active > a * {
 .bs-tooltip-bottom .arrow::before { border-bottom-color: #0F172A !important; }
 .bs-tooltip-left .arrow::before { border-left-color: #0F172A !important; }
 .bs-tooltip-right .arrow::before { border-right-color: #0F172A !important; }
-
-/* AI Info Card */
-.ai-info-box-pixel {
-  background: var(--bg-card) !important;
-  border: 1px solid var(--border-card) !important;
-  border-radius: 18px !important;
-  padding: 1.25rem 1.5rem !important;
-  box-shadow: var(--shadow-card) !important;
-}
-
-.ai-info-box-pixel .info-title {
-  color: #3B82F6;
-  font-weight: 800;
-  font-size: 0.95rem;
-  margin-bottom: 0.75rem;
-}
-
-.ai-info-box-pixel p {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-bottom: 0.4rem;
-  line-height: 1.4;
-}
 
 /* Chart Cards */
 .card-chart-pixel {

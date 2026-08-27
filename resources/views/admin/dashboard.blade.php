@@ -281,27 +281,8 @@
             @endforeach
         @endif
 
-        <!-- AI Image Statistics Info Box -->
-        <div class="ai-info-box-pixel"
-            data-toggle="tooltip" data-placement="top" data-html="true"
-            title="{!! $imageTooltipText !!}">
-            <div class="d-flex align-items-center gap-2 mb-2">
-                <i class="fas fa-chart-pie" style="font-size: 1.25rem; color: #3B82F6;"></i>
-                <div class="info-title m-0">{{ __('AI Image Statistics (All Active Tenants)') }}</div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <p><strong>Scope:</strong> This data is calculated by combining all ACTIVE tenant memberships only.</p>
-                    <p><strong>Required AI Images:</strong> Total quota allocated for this AI engine across all active tenants.</p>
-                </div>
-                <div class="col-md-6">
-                    <p><strong>Used AI Images:</strong> Total number of AI-generated images created.</p>
-                    <p><strong>Remaining AI Images:</strong> Remaining available images for all tenants combined.</p>
-                </div>
-            </div>
-            <p class="text-muted m-0" style="font-size:0.7rem;">Important: These numbers represent combined usage across all tenants, not individual user limits.</p>
-        </div>
     </div>
+
 
     <!-- Monthly Charts Section -->
     <div class="row">
