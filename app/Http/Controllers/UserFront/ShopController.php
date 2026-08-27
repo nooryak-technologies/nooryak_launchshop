@@ -527,7 +527,7 @@ class ShopController extends Controller
         $uLang = $userCurrentLang->id;
         $data['uLang'] = $uLang;
 
-        $data['product'] = UserItemContent::with(['item' => ['sliders'], 'variations'])
+        $data['product'] = UserItemContent::with(['item', 'item.sliders', 'variations'])
             ->where('language_id', $uLang)
             ->where('slug', $slug)
             ->first();
