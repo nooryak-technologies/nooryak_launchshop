@@ -29,29 +29,6 @@
     if (empty($slides)) {
         $slides[] = $mainThumbSrc;
     }
-
-    if (count($slides) < 4 && !empty($product->item)) {
-        try {
-            $extraImages = DB::table('user_item_images')
-                ->where('item_id', '!=', $product->item->id)
-                ->whereNotNull('image')
-                ->where('image', '!=', '')
-                ->limit(4 - count($slides))
-                ->pluck('image');
-
-            foreach ($extraImages as $extraImg) {
-                if (str_starts_with($extraImg, 'http')) {
-                    $slides[] = $extraImg;
-                } elseif (str_starts_with($extraImg, 'assets/')) {
-                    $slides[] = asset($extraImg);
-                } elseif (!empty($extraImg)) {
-                    $slides[] = asset('assets/front/img/user/items/slider-images/' . $extraImg);
-                }
-            }
-        } catch (\Throwable $e) {
-            // ignore fallback error
-        }
-    }
   @endphp
 
   <div class="col-lg-6 product-single-default">
