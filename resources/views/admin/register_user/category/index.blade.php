@@ -1,7 +1,8 @@
 @extends('admin.layout')
 
 @php
-    $selLang = \App\Models\Language::where('code', request()->input('language'))->first();
+    $selLang = $lang ?? \App\Models\Language::where('code', request()->input('language'))->first() ?? \App\Models\Language::where('is_default', 1)->first();
+    $categoriesList = $bcategories ?? $categories ?? [];
 @endphp
 
 @section('content')
@@ -31,7 +32,7 @@
   <div class="row">
     <div class="col-md-12">
       <div class="card">
-        <!-- Card Header (Matching Reference Image 3) -->
+        <!-- Card Header -->
         <div class="card-header d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
           <div class="card-title m-0">
             <span class="cat-icon-badge i-purple m-0" style="width:36px; height:36px; font-size:0.95rem;">
@@ -42,9 +43,9 @@
           <div class="d-flex align-items-center gap-3">
             @if (!empty($langs))
               <select name="language" class="form-control form-control-sm" onchange="window.location.href='{{ url()->current() }}?language=' + this.value" style="min-width: 140px;">
-                @foreach ($langs as $lang)
-                  <option value="{{ $lang->code }}" {{ $lang->code == request()->input('language') ? 'selected' : '' }}>
-                    🌐 {{ $lang->name }}
+                @foreach ($langs as $l)
+                  <option value="{{ $l->code }}" {{ $l->code == ($selLang ? $selLang->code : 'en') ? 'selected' : '' }}>
+                    🌐 {{ $l->name }}
                   </option>
                 @endforeach
               </select>
@@ -60,7 +61,7 @@
         <div class="card-body">
           <div class="row">
             <div class="col-lg-12">
-              @if (empty($bcategories) || count($bcategories) == 0)
+              @if (empty($categoriesList) || count($categoriesList) == 0)
                 <h3 class="text-center py-4 text-muted">{{ __('NO CATEGORY FOUND') }}</h3>
               @else
                 <div class="table-responsive">
@@ -75,7 +76,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      @foreach ($bcategories as $key => $category)
+                      @foreach ($categoriesList as $key => $category)
                         @php
                             $cName = strtolower($category->name);
                             $badgeClass = 'i-purple';
@@ -114,7 +115,7 @@
                           <td class="text-right">
                             <div class="d-inline-flex align-items-center gap-2">
                               <a class="btn-action-square b-edit"
-                                href="{{ route('register.user.category_edit', $category->id) . '?language=' . request()->input('language') }}"
+                                href="{{ route('register.user.category_edit', $category->id) . '?language=' . ($selLang ? $selLang->code : 'en') }}"
                                 title="{{ __('Edit') }}">
                                 <i class="fas fa-pencil-alt"></i>
                               </a>

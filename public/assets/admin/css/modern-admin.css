@@ -53,6 +53,20 @@ html[data-background-color="dark"] {
   --table-row-hover: #1A2234 !important;
 }
 
+/* Protect FontAwesome & Flaticon Icon Fonts */
+i.fas, i.far, i.fa, .fas, .far, .fa {
+  font-family: "Font Awesome 5 Free" !important;
+  font-weight: 900 !important;
+}
+
+i.fab, .fab {
+  font-family: "Font Awesome 5 Brands" !important;
+}
+
+[class^="flaticon-"], [class*=" flaticon-"] {
+  font-family: "flaticon" !important;
+}
+
 /* Global Reset & Transition */
 body, html {
   font-family: var(--font-primary) !important;
@@ -427,6 +441,327 @@ html body[data-background-color] .sidebar .nav .nav-item.active > a * {
 }
 
 /* ==========================================================================
+   DASHBOARD WELCOME BANNER & STAT CARDS
+   ========================================================================== */
+.welcome-banner-v2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+  padding-bottom: 0.5rem;
+  position: relative;
+}
+
+.welcome-title-v2 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.025em;
+  margin-bottom: 0.25rem;
+}
+
+.welcome-title-v2 span.grad-purple {
+  background: linear-gradient(135deg, #7C3AED 0%, #6366F1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.welcome-accent-line {
+  width: 36px;
+  height: 4px;
+  background: linear-gradient(90deg, #7C3AED, #6366F1);
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.welcome-subtitle-v2 {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.welcome-rocket-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.welcome-rocket-box .r-labels {
+  text-align: right;
+  line-height: 1.15;
+}
+
+.welcome-rocket-box .r-labels .l1 { font-weight: 800; font-size: 1rem; color: var(--text-main); display: block; }
+.welcome-rocket-box .r-labels .l2 { font-weight: 700; font-size: 0.9rem; color: #6366F1; display: block; }
+.welcome-rocket-box .r-labels .l3 { font-weight: 800; font-size: 1rem; color: #EC4899; display: block; }
+
+/* Stat Cards Grid */
+.stat-card-grid-v2 {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 1.25rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+@media (max-width: 1199px) {
+  .stat-card-grid-v2 { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+/* MOBILE VIEW FIX: 2 COLUMNS PER ROW ON MOBILE (<767px) */
+@media (max-width: 767px) {
+  .stat-card-grid-v2 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.65rem !important;
+  }
+  .stat-card-pixel {
+    min-height: 125px !important;
+    padding: 0.75rem 0.7rem !important;
+    border-radius: 14px !important;
+  }
+  .stat-card-pixel .icon-circle {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.85rem !important;
+    border-radius: 8px !important;
+  }
+  .stat-card-pixel .arrow-btn {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 0.6rem !important;
+  }
+  .stat-card-pixel .c-category {
+    font-size: 0.72rem !important;
+    margin-top: 0.3rem !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .stat-card-pixel .c-number {
+    font-size: 1.4rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+  .stat-card-pixel .row-bottom {
+    align-items: flex-end !important;
+  }
+  .stat-card-pixel .growth-text {
+    font-size: 0.62rem !important;
+    line-height: 1.1 !important;
+  }
+  .stat-card-pixel .growth-text .growth-val {
+    font-size: 0.65rem !important;
+  }
+  .stat-card-pixel .growth-text .growth-lbl {
+    font-size: 0.55rem !important;
+  }
+  .sparkline-graphic {
+    height: 18px !important;
+    gap: 2px !important;
+  }
+  .sparkline-graphic span {
+    width: 3px !important;
+  }
+}
+
+/* Stat Card Pixel-Match Layout */
+.stat-card-pixel {
+  border-radius: 18px !important;
+  padding: 1.25rem 1.5rem !important;
+  color: #FFFFFF !important;
+  position: relative !important;
+  overflow: hidden !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12) !important;
+  border: none !important;
+  text-decoration: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  min-height: 155px !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+}
+
+.stat-card-pixel:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Exact Gradients */
+.stat-card-pixel.c-blue   { background: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%) !important; }
+.stat-card-pixel.c-green  { background: linear-gradient(135deg, #059669 0%, #10B981 100%) !important; }
+.stat-card-pixel.c-red    { background: linear-gradient(135deg, #E11D48 0%, #F43F5E 100%) !important; }
+.stat-card-pixel.c-purple { background: linear-gradient(135deg, #7C3AED 0%, #8B5CF6 100%) !important; }
+.stat-card-pixel.c-cyan   { background: linear-gradient(135deg, #0284C7 0%, #06B6D4 100%) !important; }
+.stat-card-pixel.c-orange { background: linear-gradient(135deg, #EA580C 0%, #F97316 100%) !important; }
+
+/* Stat Card Row 1: Top Icon + Arrow Circle */
+.stat-card-pixel .row-top {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.stat-card-pixel .icon-circle {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.2rem !important;
+  color: #FFFFFF !important;
+}
+
+.stat-card-pixel .arrow-btn {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.75rem !important;
+  color: #FFFFFF !important;
+}
+
+/* Stat Card Content */
+.stat-card-pixel .c-category {
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.1rem !important;
+}
+
+.stat-card-pixel .c-number {
+  font-size: 2.25rem !important;
+  font-weight: 800 !important;
+  color: #FFFFFF !important;
+  line-height: 1 !important;
+  margin-bottom: 0.5rem !important;
+  letter-spacing: -0.02em !important;
+}
+
+/* Stat Card Bottom Row: Multi-line Growth text + Sparklines */
+.stat-card-pixel .row-bottom {
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: space-between !important;
+}
+
+.stat-card-pixel .growth-text {
+  font-size: 0.75rem !important;
+  line-height: 1.25 !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.stat-card-pixel .growth-text .growth-val {
+  font-weight: 700 !important;
+  display: block !important;
+}
+
+.stat-card-pixel .growth-text .growth-lbl {
+  font-size: 0.68rem !important;
+  opacity: 0.8 !important;
+  display: block !important;
+}
+
+/* White Vertical Sparkline Bar Chart Graphic */
+.sparkline-graphic {
+  display: flex !important;
+  align-items: flex-end !important;
+  gap: 3px !important;
+  height: 28px !important;
+  opacity: 0.7 !important;
+}
+
+.sparkline-graphic span {
+  width: 4px !important;
+  background: #FFFFFF !important;
+  border-radius: 2px !important;
+}
+
+/* AI Cards Pixel Match & Hover Popover Effect */
+.ai-card-pixel {
+  border-radius: 18px !important;
+  padding: 1.25rem 1.5rem !important;
+  color: #FFFFFF !important;
+  position: relative !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12) !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+}
+
+.ai-card-pixel:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.2) !important;
+}
+
+.ai-card-pixel.p-purple { background: linear-gradient(135deg, #7C3AED 0%, #8B5CF6 100%) !important; }
+.ai-card-pixel.p-orange { background: linear-gradient(135deg, #EA580C 0%, #F97316 100%) !important; }
+.ai-card-pixel.p-indigo { background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%) !important; }
+.ai-card-pixel.p-blue   { background: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%) !important; }
+
+.ai-card-pixel .ai-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.ai-card-pixel .ai-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.ai-card-pixel .ai-metric {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.2rem;
+}
+
+.ai-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.ai-progress-bar-bg {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.ai-progress-bar-fill {
+  height: 100%;
+  background: #FFFFFF;
+  border-radius: 10px;
+}
+
+.ai-progress-percent {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+/* Custom Tooltip Styling */
+.tooltip-inner {
+  max-width: 320px !important;
+  padding: 10px 14px !important;
+  background-color: #0F172A !important;
+  color: #FFFFFF !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+  font-size: 0.78rem !important;
+  text-align: left !important;
+  line-height: 1.4 !important;
+}
+
+/* ==========================================================================
    CARDS & CONTAINERS (Matching Reference Images 1, 2, 3)
    ========================================================================== */
 .card {
@@ -507,9 +842,7 @@ html body[data-background-color] .sidebar .nav .nav-item.active > a * {
   color: #FFFFFF !important;
 }
 
-/* ==========================================================================
-   FORM INPUTS & ICON CIRCLE ROWS (Matching Reference Image 1)
-   ========================================================================== */
+/* Form Rows & Inputs */
 .form-row-icon-group {
   display: flex;
   align-items: flex-start;
@@ -565,9 +898,7 @@ label {
   margin-top: 0.35rem !important;
 }
 
-/* ==========================================================================
-   DATA TABLES & BADGES (Matching Reference Images 2 & 3)
-   ========================================================================== */
+/* Data Tables */
 .table-responsive {
   border-radius: 14px;
 }
@@ -599,7 +930,7 @@ label {
   background-color: var(--table-row-hover) !important;
 }
 
-/* User Avatar Initials Badge (Reference Image 2) */
+/* User Avatar Initials Badge */
 .user-avatar-initials {
   width: 36px;
   height: 36px;
@@ -617,7 +948,7 @@ label {
 .user-avatar-initials.a-green  { background: #DCFCE7; color: #16A34A; }
 .user-avatar-initials.a-blue   { background: #DBEAFE; color: #2563EB; }
 
-/* Category Icon Badge (Reference Image 3) */
+/* Category Icon Badge */
 .cat-icon-badge {
   width: 40px;
   height: 40px;
@@ -660,7 +991,7 @@ label {
   gap: 0.35rem !important;
 }
 
-/* Square Action Buttons (Edit, Delete, More) */
+/* Square Action Buttons */
 .btn-action-square {
   width: 34px !important;
   height: 34px !important;
@@ -695,9 +1026,7 @@ label {
   gap: 0.35rem !important;
 }
 
-/* ==========================================================================
-   PAGINATION (Reference Images 2 & 3)
-   ========================================================================== */
+/* Pagination */
 .pagination {
   gap: 6px !important;
 }
@@ -716,6 +1045,43 @@ label {
   background: #6366F1 !important;
   border-color: #6366F1 !important;
   color: #FFFFFF !important;
+}
+
+/* Chart Cards */
+.card-chart-pixel {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-card) !important;
+  border-radius: 18px !important;
+  box-shadow: var(--shadow-card) !important;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.card-chart-pixel .c-head {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-card);
+}
+
+.card-chart-pixel .c-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-chart-pixel .c-select {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-main);
 }
 
 /* Footer Copyright Note */
