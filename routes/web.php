@@ -73,6 +73,7 @@ if ($isTenantSubdomain || $isCustomDomain) {
     Route::get('/platform-terms-conditions', 'Front\FrontendController@termsConditions')->name('front.terms-conditions');
     Route::get('/platform-refund-policy', 'Front\FrontendController@refundPolicy')->name('front.refund-policy');
     Route::get('/platform-shipping-policy', 'Front\FrontendController@shippingPolicy')->name('front.shipping-policy');
+    Route::get('/platform-login', 'User\Auth\LoginController@showLoginForm')->name('user.login');
 }
 
 // Only register main landing page routes if NOT on a tenant subdomain or custom domain!
