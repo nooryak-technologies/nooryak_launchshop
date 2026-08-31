@@ -207,38 +207,40 @@ if (!function_exists('getHref')) {
     {
         $href = "#";
 
-        if ($link["type"] == 'home') {
-            $href = route('front.index');
-        } else if ($link["type"] == 'profiles') {
-            $href = route('front.user.view');
-        } else if ($link["type"] == 'listings') {
-            $href = route('front.user.view');
-        } else if ($link["type"] == 'pricing') {
-            $href = route('front.pricing');
-        } else if ($link["type"] == 'faq') {
-            $href = route('front.faq.view');
-        } else if ($link["type"] == 'blog') {
-            $href = route('front.blogs');
-        } else if ($link["type"] == 'contact') {
-            $href = route('front.contact');
-        } else if ($link["type"] == 'templates') {
-            $href = route('front.templates.view');
-        } else if ($link["type"] == 'about') {
-            $href = route('front.about');
-        } else if ($link["type"] == 'custom') {
-            if (empty($link["href"])) {
-                $href = "#";
+        try {
+            if ($link["type"] == 'home') {
+                $href = \Illuminate\Support\Facades\Route::has('front.index') ? route('front.index') : url('/');
+            } else if ($link["type"] == 'profiles' || $link["type"] == 'listings') {
+                $href = \Illuminate\Support\Facades\Route::has('front.user.view') ? route('front.user.view') : url('/shops');
+            } else if ($link["type"] == 'pricing') {
+                $href = \Illuminate\Support\Facades\Route::has('front.pricing') ? route('front.pricing') : url('/pricing');
+            } else if ($link["type"] == 'faq') {
+                $href = \Illuminate\Support\Facades\Route::has('front.faq.view') ? route('front.faq.view') : url('/faqs');
+            } else if ($link["type"] == 'blog') {
+                $href = \Illuminate\Support\Facades\Route::has('front.blogs') ? route('front.blogs') : url('/blog');
+            } else if ($link["type"] == 'contact') {
+                $href = \Illuminate\Support\Facades\Route::has('front.contact') ? route('front.contact') : url('/contact');
+            } else if ($link["type"] == 'templates') {
+                $href = \Illuminate\Support\Facades\Route::has('front.templates.view') ? route('front.templates.view') : url('/templates');
+            } else if ($link["type"] == 'about') {
+                $href = \Illuminate\Support\Facades\Route::has('front.about') ? route('front.about') : url('/about');
+            } else if ($link["type"] == 'custom') {
+                if (empty($link["href"])) {
+                    $href = "#";
+                } else {
+                    $href = $link["href"];
+                }
             } else {
-                $href = $link["href"];
+                $pageid = (int) $link["type"];
+                $page = Page::find($pageid);
+                if (!empty($page) && \Illuminate\Support\Facades\Route::has('front.dynamicPage')) {
+                    $href = route('front.dynamicPage', [$page->slug]);
+                } else {
+                    $href = "#";
+                }
             }
-        } else {
-            $pageid = (int) $link["type"];
-            $page = Page::find($pageid);
-            if (!empty($page)) {
-                $href = route('front.dynamicPage', [$page->slug]);
-            } else {
-                $href = "#";
-            }
+        } catch (\Throwable $e) {
+            $href = "#";
         }
 
         return $href;
