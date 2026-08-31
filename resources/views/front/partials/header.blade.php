@@ -4,7 +4,7 @@
     <div class="container">
       <div class="main-responsive-menu">
         <div class="logo">
-          <a href="{{ route('front.index') }}">
+          <a href="{{ Route::has('front.index') ? route('front.index') : url('/') }}">
             <img src="{{ asset('assets/front/img/' . $bs->logo) }}" onerror="this.onerror=null;this.src='{{ asset('images/logo.png') }}'" alt="logo">
           </a>
         </div>
@@ -15,7 +15,7 @@
     <div class="container-fluid px-lg-5 px-3">
       <nav class="navbar navbar-expand-lg">
         <!-- Logo -->
-        <a class="navbar-brand" href="{{ route('front.index') }}">
+        <a class="navbar-brand" href="{{ Route::has('front.index') ? route('front.index') : url('/') }}">
           <img src="{{ asset('assets/front/img/' . $bs->logo) }}" onerror="this.onerror=null;this.src='{{ asset('images/logo.png') }}'" alt="Logo">
         </a>
         <!-- Navigation items -->
@@ -125,7 +125,7 @@
         <div class="side-option">
           @guest
             <div class="item">
-              <a href="{{ route('front.contact') }}" class="btn-ls-outline btn-sm">
+              <a href="{{ Route::has('front.contact') ? route('front.contact') : url('/contact') }}" class="btn-ls-outline btn-sm">
                 <span>{{ __('Book Demo') }}</span>
               </a>
             </div>

@@ -61,9 +61,18 @@ Route::group(['prefix' => 'X9_AdMiN-Portal_V7', 'middleware' => 'guest:admin'], 
 });
 
 
-// Always ensure front.index route exists globally to prevent RouteNotFoundException in admin/error views
+// Always ensure essential front.* named routes exist globally to prevent RouteNotFoundException in views/templates/errors
 if ($isTenantSubdomain || $isCustomDomain) {
     Route::get('/platform-home', 'Front\FrontendController@index')->name('front.index');
+    Route::get('/platform-shops', 'Front\FrontendController@shops')->name('front.user.view');
+    Route::get('/platform-templates', 'Front\FrontendController@templates')->name('front.templates.view');
+    Route::get('/platform-pricing', 'Front\FrontendController@pricing')->name('front.pricing');
+    Route::get('/platform-contact', 'Front\FrontendController@contactView')->name('front.contact');
+    Route::get('/platform-about', 'Front\FrontendController@about')->name('front.about');
+    Route::get('/platform-privacy-policy', 'Front\FrontendController@privacyPolicy')->name('front.privacy-policy');
+    Route::get('/platform-terms-conditions', 'Front\FrontendController@termsConditions')->name('front.terms-conditions');
+    Route::get('/platform-refund-policy', 'Front\FrontendController@refundPolicy')->name('front.refund-policy');
+    Route::get('/platform-shipping-policy', 'Front\FrontendController@shippingPolicy')->name('front.shipping-policy');
 }
 
 // Only register main landing page routes if NOT on a tenant subdomain or custom domain!
@@ -88,7 +97,6 @@ if (!$isTenantSubdomain && !$isCustomDomain) {
         Route::get('/p/{slug}', 'Front\FrontendController@dynamicPage')->name('front.dynamicPage');
         Route::get('/success', 'Front\CheckoutController@paymentSuccess')->name('success.page');
         Route::get('/about', 'Front\FrontendController@about')->name('front.about');
-        Route::get('/contact', 'Front\FrontendController@contact')->name('front.contact');
         Route::get('/privacy-policy', 'Front\FrontendController@privacyPolicy')->name('front.privacy-policy');
         Route::get('/terms-conditions', 'Front\FrontendController@termsConditions')->name('front.terms-conditions');
         Route::get('/cookie-policy', 'Front\FrontendController@cookiePolicy')->name('front.cookie-policy');
