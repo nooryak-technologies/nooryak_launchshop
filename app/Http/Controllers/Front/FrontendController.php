@@ -64,11 +64,6 @@ class FrontendController extends Controller
 
     public function index()
     {
-        $agency = getAgencyFromHost();
-        if ($agency) {
-            return view('front.agency_landing', compact('agency'));
-        }
-
         $requestHost = strtolower(str_replace('www.', '', request()->getHost()));
         $tenantBaseHosts = array_values(array_unique(array_filter([
             strtolower((string) env('WEBSITE_HOST', '')),
@@ -187,11 +182,6 @@ class FrontendController extends Controller
 
     public function about()
     {
-        $agency = getAgencyFromHost();
-        if ($agency) {
-            return view('front.agency_legal', ['type' => 'about', 'agency' => $agency]);
-        }
-
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
@@ -1254,10 +1244,6 @@ class FrontendController extends Controller
 
     public function privacyPolicy()
     {
-        $agency = getAgencyFromHost();
-        if ($agency) {
-            return view('front.agency_legal', ['type' => 'privacy', 'agency' => $agency]);
-        }
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
@@ -1270,10 +1256,6 @@ class FrontendController extends Controller
 
     public function termsConditions()
     {
-        $agency = getAgencyFromHost();
-        if ($agency) {
-            return view('front.agency_legal', ['type' => 'terms', 'agency' => $agency]);
-        }
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
@@ -1286,10 +1268,6 @@ class FrontendController extends Controller
 
     public function cookiePolicy()
     {
-        $agency = getAgencyFromHost();
-        if ($agency) {
-            return view('front.agency_legal', ['type' => 'cookie', 'agency' => $agency]);
-        }
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
@@ -1302,10 +1280,6 @@ class FrontendController extends Controller
 
     public function refundPolicy()
     {
-        $agency = getAgencyFromHost();
-        if ($agency) {
-            return view('front.agency_legal', ['type' => 'refund', 'agency' => $agency]);
-        }
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
@@ -1318,10 +1292,6 @@ class FrontendController extends Controller
 
     public function shippingPolicy()
     {
-        $agency = getAgencyFromHost();
-        if ($agency) {
-            return view('front.agency_legal', ['type' => 'shipping', 'agency' => $agency]);
-        }
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
@@ -1332,13 +1302,8 @@ class FrontendController extends Controller
         return view('front.shipping-policy', $data);
     }
 
-
     public function contact()
     {
-        $agency = getAgencyFromHost();
-        if ($agency) {
-            return view('front.agency_legal', ['type' => 'contact', 'agency' => $agency]);
-        }
         return redirect()->route('front.index');
     }
 }

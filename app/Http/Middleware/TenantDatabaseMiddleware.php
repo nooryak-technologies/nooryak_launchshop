@@ -149,15 +149,6 @@ class TenantDatabaseMiddleware
                         Log::warning("TenantMiddleware custom domain check error: " . $e->getMessage());
                     }
 
-                    // Fallback for agency domains
-                    if (str_contains($cleanHost, 'maturednature.com') || str_contains($host, 'maturednature.com')) {
-                        $candidates[] = 'bazaarwa_ps_lane_launchshop';
-                        $candidates[] = 'bazaarwa_ps_maturednature_launchshop';
-                    }
-
-                    if (str_contains($cleanHost, 'cockroachjantaparty.top') || str_contains($host, 'cockroachjantaparty.top')) {
-                        $candidates[] = 'bazaarwa_ps_ysquare_launchshop';
-                    }
                     Log::info("TenantMiddleware: Domain '{$cleanHost}'. Candidate count: " . count($candidates));
                 }
             }

@@ -11,7 +11,6 @@ $cleanRequestHost = preg_replace('/^(launchshop|checkout|www|app)\./i', '', $req
 $tenantBaseHosts = array_values(array_unique(array_filter([
     strtolower((string) env('WEBSITE_HOST', '')),
     'launchshop.in',
-    'maturednature.com',
     'nooryak.in',
     'localhost',
     '127.0.0.1',
@@ -61,7 +60,6 @@ Route::group(['prefix' => 'X9_AdMiN-Portal_V7', 'middleware' => 'guest:admin'], 
     Route::post('/sendmail', 'Admin\ForgetController@sendmail')->name('admin.forget.mail')->middleware('Demo');
 });
 
-Route::get('/sso-agency-login', 'User\Auth\LoginController@ssoAgencyLogin')->name('user.sso_login');
 
 // Always ensure front.index route exists globally to prevent RouteNotFoundException in admin/error views
 if ($isTenantSubdomain || $isCustomDomain) {
