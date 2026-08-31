@@ -6,7 +6,7 @@ $requestHost = isset($_SERVER['HTTP_HOST'])
     ? strtolower(str_replace('www.', '', $_SERVER['HTTP_HOST']))
     : strtolower(str_replace('www.', '', (string) env('WEBSITE_HOST', 'localhost')));
 
-$cleanRequestHost = preg_replace('/^(launchshop|checkout|www|app)\./i', '', $requestHost);
+$cleanRequestHost = preg_replace('/^(www|app)\./i', '', $requestHost);
 
 $tenantBaseHosts = array_values(array_unique(array_filter([
     strtolower((string) env('WEBSITE_HOST', '')),
@@ -17,15 +17,10 @@ $tenantBaseHosts = array_values(array_unique(array_filter([
 ])));
 
 $isTenantSubdomain = false;
-$reservedSubdomains = ['launchshop', 'checkout', 'www', 'app', 'admin'];
-
 foreach ($tenantBaseHosts as $tenantBaseHost) {
     if (!empty($tenantBaseHost) && $cleanRequestHost !== $tenantBaseHost && str_ends_with($cleanRequestHost, '.' . $tenantBaseHost)) {
-        $sub = explode('.', $cleanRequestHost)[0] ?? null;
-        if (!in_array(strtolower($sub), $reservedSubdomains)) {
-            $isTenantSubdomain = true;
-            break;
-        }
+        $isTenantSubdomain = true;
+        break;
     }
 }
 
@@ -60,21 +55,7 @@ Route::group(['prefix' => 'X9_AdMiN-Portal_V7', 'middleware' => 'guest:admin'], 
     Route::post('/sendmail', 'Admin\ForgetController@sendmail')->name('admin.forget.mail')->middleware('Demo');
 });
 
-
-// Always ensure essential front.* named routes exist globally to prevent RouteNotFoundException in views/templates/errors
-if ($isTenantSubdomain || $isCustomDomain) {
-    Route::get('/platform-home', 'Front\FrontendController@index')->name('front.index');
-    Route::get('/platform-shops', 'Front\FrontendController@shops')->name('front.user.view');
-    Route::get('/platform-templates', 'Front\FrontendController@templates')->name('front.templates.view');
-    Route::get('/platform-pricing', 'Front\FrontendController@pricing')->name('front.pricing');
-    Route::get('/platform-contact', 'Front\FrontendController@contactView')->name('front.contact');
-    Route::get('/platform-about', 'Front\FrontendController@about')->name('front.about');
-    Route::get('/platform-privacy-policy', 'Front\FrontendController@privacyPolicy')->name('front.privacy-policy');
-    Route::get('/platform-terms-conditions', 'Front\FrontendController@termsConditions')->name('front.terms-conditions');
-    Route::get('/platform-refund-policy', 'Front\FrontendController@refundPolicy')->name('front.refund-policy');
-    Route::get('/platform-shipping-policy', 'Front\FrontendController@shippingPolicy')->name('front.shipping-policy');
-    Route::get('/platform-login', 'User\Auth\LoginController@showLoginForm')->name('user.login');
-}
+Route::get('/sso-agency-login', 'User\Auth\LoginController@ssoAgencyLogin')->name('user.sso_login');
 
 // Only register main landing page routes if NOT on a tenant subdomain or custom domain!
 if (!$isTenantSubdomain && !$isCustomDomain) {
@@ -100,7 +81,6 @@ if (!$isTenantSubdomain && !$isCustomDomain) {
         Route::get('/about', 'Front\FrontendController@about')->name('front.about');
         Route::get('/privacy-policy', 'Front\FrontendController@privacyPolicy')->name('front.privacy-policy');
         Route::get('/terms-conditions', 'Front\FrontendController@termsConditions')->name('front.terms-conditions');
-        Route::get('/cookie-policy', 'Front\FrontendController@cookiePolicy')->name('front.cookie-policy');
         Route::get('/refund-policy', 'Front\FrontendController@refundPolicy')->name('front.refund-policy');
         Route::get('/shipping-policy', 'Front\FrontendController@shippingPolicy')->name('front.shipping-policy');
     });

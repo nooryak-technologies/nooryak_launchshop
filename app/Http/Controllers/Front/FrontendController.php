@@ -267,20 +267,13 @@ class FrontendController extends Controller
         $request->validate([
             'phone_number' => 'required',
             'country_code' => 'required',
-            'email' => 'required|email'
+            'email' => 'required|email|unique:users'
         ]);
 
         $phone = ltrim($request->phone_number, '0');
         $countryCode = $request->country_code;
         $name = $request->input('name', '');
         $email = $request->email;
-
-        if (User::where('email', $email)->exists()) {
-            return response()->json([
-                'success' => false,
-                'message' => __('This email address is already registered. Please login or use a different email.')
-            ]);
-        }
 
         // Persist typed data in session immediately
         Session::put('otp_phone', $phone);
@@ -332,7 +325,7 @@ class FrontendController extends Controller
 
             if ($response->successful()) {
                 $resData = $response->json();
-                if (!$resData || (is_array($resData) && (!isset($resData['success']) || $resData['success'] !== false) && (!isset($resData['status']) || $resData['status'] !== 'error'))) {
+                if (is_array($resData) && isset($resData['success']) && $resData['success']) {
                     $whatsappSent = true;
                     $debugLogs[] = "SUCCESS! WhatsApp OTP sent via Meta Merge Cloud.";
                 }
@@ -1266,18 +1259,6 @@ class FrontendController extends Controller
         return view('front.terms-conditions', $data);
     }
 
-    public function cookiePolicy()
-    {
-        if (session()->has('lang')) {
-            $currentLang = Language::where('code', session()->get('lang'))->first();
-        } else {
-            $currentLang = Language::where('is_default', 1)->first();
-        }
-        $data['pageHeading'] = __('Cookie Policy');
-        $data['seo'] = Seo::where('language_id', $currentLang->id)->first();
-        return view('front.privacy-policy', $data);
-    }
-
     public function refundPolicy()
     {
         if (session()->has('lang')) {
@@ -1300,10 +1281,5 @@ class FrontendController extends Controller
         $data['pageHeading'] = __('Shipping & Delivery Policy');
         $data['seo'] = Seo::where('language_id', $currentLang->id)->first();
         return view('front.shipping-policy', $data);
-    }
-
-    public function contact()
-    {
-        return redirect()->route('front.index');
     }
 }

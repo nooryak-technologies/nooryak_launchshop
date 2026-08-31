@@ -21,7 +21,7 @@ class TenantDatabaseMiddleware
     {
         $host = $request->getHost();
         $normalizedHost = strtolower(preg_replace('/^www\./', '', $host));
-        $cleanHost = preg_replace('/^(launchshop|checkout|app|www)\./i', '', $normalizedHost);
+        $cleanHost = preg_replace('/^(launchshop|app|www)\./', '', $normalizedHost);
 
         $mainHosts = array_filter([
             'nooryak.in',
@@ -93,7 +93,7 @@ class TenantDatabaseMiddleware
                 $candidates[] = $this->findExistingDbBySlug($agencySlug);
             }
         } else {
-            $cleanHost = preg_replace('/^(launchshop|checkout|app|www)\./i', '', $host);
+            $cleanHost = preg_replace('/^(launchshop|app|www)\./', '', $host);
 
             // ── Main / infrastructure hosts — never switch databases ───────────
             // Add any domain here that should always use the main DB connection.
@@ -149,6 +149,10 @@ class TenantDatabaseMiddleware
                         Log::warning("TenantMiddleware custom domain check error: " . $e->getMessage());
                     }
 
+                    // Fallback for agency domains like cockroachjantaparty.top -> ysquare agency DB
+                    if (str_contains($cleanHost, 'cockroachjantaparty.top') || str_contains($host, 'cockroachjantaparty.top')) {
+                        $candidates[] = 'bazaarwa_ps_ysquare_launchshop';
+                    }
                     Log::info("TenantMiddleware: Domain '{$cleanHost}'. Candidate count: " . count($candidates));
                 }
             }
