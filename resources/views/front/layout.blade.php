@@ -78,7 +78,7 @@
     section,
     header,
     footer {
-      overflow-x: hidden !important;
+      /* overflow-x: hidden !important; */
       max-width: 100% !important;
     }
   </style>
