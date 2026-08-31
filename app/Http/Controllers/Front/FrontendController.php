@@ -64,6 +64,11 @@ class FrontendController extends Controller
 
     public function index()
     {
+        $agency = getAgencyFromHost();
+        if ($agency) {
+            return view('front.agency_landing', compact('agency'));
+        }
+
         $requestHost = strtolower(str_replace('www.', '', request()->getHost()));
         $tenantBaseHosts = array_values(array_unique(array_filter([
             strtolower((string) env('WEBSITE_HOST', '')),
@@ -267,13 +272,20 @@ class FrontendController extends Controller
         $request->validate([
             'phone_number' => 'required',
             'country_code' => 'required',
-            'email' => 'required|email|unique:users'
+            'email' => 'required|email'
         ]);
 
         $phone = ltrim($request->phone_number, '0');
         $countryCode = $request->country_code;
         $name = $request->input('name', '');
         $email = $request->email;
+
+        if (User::where('email', $email)->exists()) {
+            return response()->json([
+                'success' => false,
+                'message' => __('This email address is already registered. Please login or use a different email.')
+            ]);
+        }
 
         // Persist typed data in session immediately
         Session::put('otp_phone', $phone);
@@ -325,7 +337,7 @@ class FrontendController extends Controller
 
             if ($response->successful()) {
                 $resData = $response->json();
-                if (is_array($resData) && isset($resData['success']) && $resData['success']) {
+                if (!$resData || (is_array($resData) && (!isset($resData['success']) || $resData['success'] !== false) && (!isset($resData['status']) || $resData['status'] !== 'error'))) {
                     $whatsappSent = true;
                     $debugLogs[] = "SUCCESS! WhatsApp OTP sent via Meta Merge Cloud.";
                 }
@@ -1237,6 +1249,10 @@ class FrontendController extends Controller
 
     public function privacyPolicy()
     {
+        $agency = getAgencyFromHost();
+        if ($agency) {
+            return view('front.agency_legal', ['type' => 'privacy', 'agency' => $agency]);
+        }
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
@@ -1249,6 +1265,10 @@ class FrontendController extends Controller
 
     public function termsConditions()
     {
+        $agency = getAgencyFromHost();
+        if ($agency) {
+            return view('front.agency_legal', ['type' => 'terms', 'agency' => $agency]);
+        }
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
@@ -1259,8 +1279,28 @@ class FrontendController extends Controller
         return view('front.terms-conditions', $data);
     }
 
+    public function cookiePolicy()
+    {
+        $agency = getAgencyFromHost();
+        if ($agency) {
+            return view('front.agency_legal', ['type' => 'cookie', 'agency' => $agency]);
+        }
+        if (session()->has('lang')) {
+            $currentLang = Language::where('code', session()->get('lang'))->first();
+        } else {
+            $currentLang = Language::where('is_default', 1)->first();
+        }
+        $data['pageHeading'] = __('Cookie Policy');
+        $data['seo'] = Seo::where('language_id', $currentLang->id)->first();
+        return view('front.privacy-policy', $data);
+    }
+
     public function refundPolicy()
     {
+        $agency = getAgencyFromHost();
+        if ($agency) {
+            return view('front.agency_legal', ['type' => 'refund', 'agency' => $agency]);
+        }
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
@@ -1273,6 +1313,10 @@ class FrontendController extends Controller
 
     public function shippingPolicy()
     {
+        $agency = getAgencyFromHost();
+        if ($agency) {
+            return view('front.agency_legal', ['type' => 'shipping', 'agency' => $agency]);
+        }
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
@@ -1281,5 +1325,23 @@ class FrontendController extends Controller
         $data['pageHeading'] = __('Shipping & Delivery Policy');
         $data['seo'] = Seo::where('language_id', $currentLang->id)->first();
         return view('front.shipping-policy', $data);
+    }
+
+    public function about()
+    {
+        $agency = getAgencyFromHost();
+        if ($agency) {
+            return view('front.agency_legal', ['type' => 'about', 'agency' => $agency]);
+        }
+        return redirect()->route('front.index');
+    }
+
+    public function contact()
+    {
+        $agency = getAgencyFromHost();
+        if ($agency) {
+            return view('front.agency_legal', ['type' => 'contact', 'agency' => $agency]);
+        }
+        return redirect()->route('front.index');
     }
 }
