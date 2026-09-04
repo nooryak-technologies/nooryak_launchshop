@@ -17,7 +17,7 @@
 @section('content')
   <!-- ==================== HERO SLIDER AREA ==================== -->
   <section class="g2-hero-section pt-3">
-    <div class="container">
+    <div class="g2-hero-container">
       <div class="row g-4">
         <!-- Main Hero Slider -->
         <div class="col-xl-8 col-lg-12 mb-4">
