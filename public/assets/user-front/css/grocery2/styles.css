@@ -579,6 +579,19 @@ body.show-mobile-menu .grocery2-header {
     padding-bottom: 20px;
 }
 
+/*
+ * Make the hero container match the grocery2 header container
+ * so the hero banner aligns flush with the navigation bar above it.
+ * Bootstrap .container caps at ~960px on lg screens; the header uses
+ * max-width: 1450px with 25px padding — override to match exactly.
+ */
+.g2-hero-section > .container {
+    max-width: 1450px !important;
+    width: 100% !important;
+    padding-left: 25px !important;
+    padding-right: 25px !important;
+}
+
 @media (min-width: 992px) {
     .g2-hero-section .row {
         --bs-gutter-x: 24px;
