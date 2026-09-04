@@ -579,16 +579,36 @@ body.show-mobile-menu .grocery2-header {
     padding-bottom: 20px;
 }
 
+/* ── Grocery2: Hero section container left/right padding ── */
+.g2-hero-section > .container {
+    padding-left: 30px !important;
+    padding-right: 30px !important;
+}
+
 @media (min-width: 992px) {
+    .g2-hero-section > .container {
+        padding-left: 40px !important;
+        padding-right: 40px !important;
+    }
+
     .g2-hero-section .row {
         --bs-gutter-x: 24px;
+        /* 24px horizontal in-between gap */
     }
 
     .g2-promo-stack {
         display: flex;
         flex-direction: column;
         gap: 20px;
+        /* 20px vertical gap between right side promo cards */
         height: 440px !important;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .g2-hero-section > .container {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
     }
 }
 
@@ -596,8 +616,6 @@ body.show-mobile-menu .grocery2-header {
 .g2-hero-slider .slick-list,
 .g2-hero-slider .slick-track {
     height: 440px !important;
-    position: relative;
-    border-radius: 16px;
 }
 
 .g2-hero-slider .slick-slide {
@@ -605,8 +623,10 @@ body.show-mobile-menu .grocery2-header {
     padding-right: 0 !important;
 }
 
-.g2-hero-slider {
-    width: 100% !important;
+@media (min-width: 1200px) {
+    .g2-hero-slider {
+        max-width: 940px !important;
+    }
 }
 
 .g2-slider-item {
@@ -617,15 +637,22 @@ body.show-mobile-menu .grocery2-header {
     height: 440px !important;
     display: flex !important;
     align-items: center !important;
-    padding: 40px 50px !important;
+    padding: 40px 50px 40px 60px !important;  /* extra left breathing room */
     position: relative !important;
     overflow: hidden !important;
 }
 
+@media (max-width: 767.98px) {
+    .g2-slider-item {
+        padding: 30px 24px !important;
+    }
+}
+
 .g2-slider-content {
-    max-width: 440px;
+    max-width: 480px;
     position: relative;
     z-index: 2;
+    text-align: left !important;
 }
 
 .g2-badge {
@@ -641,12 +668,11 @@ body.show-mobile-menu .grocery2-header {
 }
 
 .g2-title {
-    font-size: 36px !important;
+    font-size: 38px !important;
     font-weight: 700 !important;
-    line-height: 1.25 !important;
+    line-height: 1.2 !important;
     color: #2b4d75 !important;
     margin-bottom: 14px !important;
-    word-break: break-word;
 }
 
 .g2-text {
@@ -662,7 +688,6 @@ body.show-mobile-menu .grocery2-header {
 }
 
 .g2-btn-primary {
-    background-color: var(--g2-primary) !important;
     color: #ffffff !important;
     font-weight: 700 !important;
     font-size: 14px !important;
@@ -674,7 +699,6 @@ body.show-mobile-menu .grocery2-header {
 
 .g2-btn-primary:hover {
     background: #299e64 !important;
-    color: #ffffff !important;
 }
 
 .g2-btn-secondary {
@@ -690,86 +714,6 @@ body.show-mobile-menu .grocery2-header {
 
 .g2-btn-secondary:hover {
     background: #1e3654 !important;
-    color: #ffffff !important;
-}
-
-/* Hero Slider Slick Dots & Arrows Alignment */
-#g2-main-slider .slick-dots {
-    position: absolute !important;
-    bottom: 22px !important;
-    left: 50px !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    list-style: none !important;
-    z-index: 10 !important;
-    width: auto !important;
-}
-
-#g2-main-slider .slick-dots li {
-    margin: 0 !important;
-    padding: 0 !important;
-    line-height: 1 !important;
-    display: inline-block !important;
-}
-
-#g2-main-slider .slick-dots li button {
-    font-size: 0 !important;
-    width: 9px !important;
-    height: 9px !important;
-    border-radius: 50% !important;
-    background: #cbd5e1 !important;
-    border: none !important;
-    padding: 0 !important;
-    transition: all 0.3s ease !important;
-    cursor: pointer !important;
-    display: block !important;
-}
-
-#g2-main-slider .slick-dots li.slick-active button {
-    background: #3bb77e !important;
-    width: 24px !important;
-    border-radius: 5px !important;
-}
-
-.g2-slider-arrow {
-    position: absolute !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    z-index: 10 !important;
-    width: 40px !important;
-    height: 40px !important;
-    border-radius: 50% !important;
-    background: #ffffff !important;
-    border: 1px solid #e2e8f0 !important;
-    color: #2b4d75 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer !important;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1) !important;
-    transition: all 0.25s ease !important;
-    opacity: 0;
-}
-
-#g2-main-slider:hover .g2-slider-arrow {
-    opacity: 1;
-}
-
-.g2-slider-arrow.slick-prev {
-    left: 20px !important;
-}
-
-.g2-slider-arrow.slick-next {
-    right: 20px !important;
-}
-
-.g2-slider-arrow:hover {
-    background: #3bb77e !important;
-    color: #ffffff !important;
-    border-color: #3bb77e !important;
 }
 
 /* Right Side Promo Stack */
@@ -824,8 +768,84 @@ body.show-mobile-menu .grocery2-header {
 }
 
 .g2-link-btn:hover {
-    background: #3bb77e !important;
+    /* background: #3bb77e !important; */
     color: #ffffff !important;
+}
+
+.g2-slider-btns {
+    display: flex;
+    gap: 15px;
+}
+
+.btn.g2-btn-primary {
+    background-color: var(--g2-primary);
+    color: #ffffff !important;
+    font-weight: 700;
+    padding: 12px 25px;
+    border-radius: 5px;
+    border: none;
+}
+
+.btn.g2-btn-primary:hover {
+    background-color: var(--g2-primary-hover);
+}
+
+.btn.g2-btn-secondary {
+    background-color: var(--g2-dark-blue);
+    color: #ffffff !important;
+    font-weight: 700;
+    padding: 12px 25px;
+    border-radius: 5px;
+    border: none;
+}
+
+.btn.g2-btn-secondary:hover {
+    background-color: #1e2d3b;
+}
+
+/* Side promo stack */
+.g2-promo-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 480px;
+}
+
+.g2-side-promo {
+    background-size: cover;
+    background-position: center right;
+    border-radius: 15px;
+    flex: 1;
+    height: calc(480px / 2 - 10px);
+    display: flex;
+    align-items: center;
+    padding: 30px;
+    position: relative;
+}
+
+.g2-side-promo-content h3 {
+    font-size: 20px;
+    color: var(--g2-dark-blue);
+    margin-bottom: 15px;
+    line-height: 1.3;
+}
+
+.g2-link-btn {
+    background-color: var(--g2-dark-blue);
+    color: #ffffff !important;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 8px 18px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.g2-link-btn.primary-bg-btn {
+    background-color: var(--g2-primary);
+}
+
+.g2-link-btn:hover {
+    opacity: 0.9;
 }
 
 /* ==========================================
@@ -2163,12 +2183,6 @@ body.show-mobile-menu .grocery2-header {
         border: 1px solid rgba(255, 255, 255, 0.4) !important;
         box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15) !important;
         box-sizing: border-box !important;
-    }
-
-    #g2-main-slider .slick-dots {
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        bottom: 12px !important;
     }
 
     .g2-promo-stack {
