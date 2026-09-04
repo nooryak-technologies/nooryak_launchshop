@@ -372,7 +372,7 @@
           }
           $hasSubdomain = true;
       } else {
-          $storeUrl     = auth()->check() ? route('user-dashboard') : route('front.index');
+          $storeUrl     = auth()->check() ? (Route::has('user-dashboard') ? route('user-dashboard') : url('/user/dashboard')) : (Route::has('front.index') ? route('front.index') : url('/'));
           $displayUrl   = '';
           $hasSubdomain = false;
       }

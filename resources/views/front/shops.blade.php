@@ -90,7 +90,7 @@
             </p>
             
             <div class="shops-hero-btns d-flex align-items-center flex-wrap gap-3 mb-4">
-              <a href="{{ route('front.pricing') }}" class="btn-shops-primary" style="background: #ff5a2c; color: #ffffff; padding: 12px 28px; border-radius: 12px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s ease; box-shadow: 0 4px 14px rgba(255, 90, 44, 0.25);" onmouseover="this.style.background='#e0451a';" onmouseout="this.style.background='#ff5a2c';">
+              <a href="{{ Route::has('front.pricing') ? route('front.pricing') : url('/') }}" class="btn-shops-primary" style="background: #ff5a2c; color: #ffffff; padding: 12px 28px; border-radius: 12px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s ease; box-shadow: 0 4px 14px rgba(255, 90, 44, 0.25);" onmouseover="this.style.background='#e0451a';" onmouseout="this.style.background='#ff5a2c';">
                 {{ __('Get Started') }} <i class="fas fa-arrow-right"></i>
               </a>
               <a href="#shops-grid-section" class="btn-shops-outline" onclick="document.getElementById('shops-grid-section').scrollIntoView({behavior: 'smooth'}); return false;">
@@ -189,7 +189,7 @@
     <div class="container">
       
       <!-- Filter and Search Form -->
-      <form action="{{ route('front.user.view') }}" method="GET" id="userSearchForm" class="shops-filter-search">
+      <form action="{{ Route::has('front.user.view') ? route('front.user.view') : url('/shops') }}" method="GET" id="userSearchForm" class="shops-filter-search">
         <!-- Hidden category value that updates when clicking horizontal tabs -->
         <input type="hidden" name="category" id="searchCategoryInput" value="{{ request()->input('category') }}">
         
@@ -614,7 +614,7 @@
           <p class="shops-footer-cta-desc">{{ __('Join thousands of successful merchants and start your online journey today.') }}</p>
           
           <div class="shops-hero-btns">
-            <a href="{{ route('front.templates.view') }}" class="btn-shops-outline">
+            <a href="{{ Route::has('front.templates.view') ? route('front.templates.view') : url('/') }}" class="btn-shops-outline">
               {{ __('Explore Themes') }}
             </a>
           </div>

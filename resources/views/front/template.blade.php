@@ -387,7 +387,7 @@
               }
               
               $previewUrl = detailsUrl($template);
-              $purchaseUrl = route('front.pricing') . '?template=' . urlencode($template->username);
+              $purchaseUrl = (Route::has('front.pricing') ? route('front.pricing') : url('/')) . '?template=' . urlencode($template->username);
             @endphp
             
             <div class="col-lg-4 col-md-6 template-card-item" data-category="{{ $category }}" data-search="{{ strtolower(trim($displayName . ' ' . ($template->shop_name ?? '') . ' ' . $template->username . ' ' . ($themeName ?? '') . ' ' . $category)) }}">
@@ -419,7 +419,7 @@
                       <a href="{{ $previewUrl }}" target="_blank" class="btn-template-action outline-btn" style="flex: 1; justify-content: center; display: inline-flex; align-items: center;">
                         <i class="fas fa-eye me-2"></i> {{ __('Live Preview') }}
                       </a>
-                      <a href="{{ route('front.templates.autologin', $template->username) }}" target="_blank" class="btn-template-action admin-btn" style="flex: 1; justify-content: center; display: inline-flex; align-items: center;">
+                      <a href="{{ Route::has('front.templates.autologin') ? route('front.templates.autologin', $template->username) : url('/') }}" target="_blank" class="btn-template-action admin-btn" style="flex: 1; justify-content: center; display: inline-flex; align-items: center;">
                         <i class="fas fa-user-cog me-2"></i> {{ __('Admin') }}
                       </a>
                     </div>
@@ -452,7 +452,7 @@
               $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
               $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
             @endphp
-            <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-register-more-themes">
+            <a href="{{ Route::has('front.register.view') ? route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) : url('/') }}" class="btn-register-more-themes">
               {{ __('Register For More Themes') }} <i class="fas fa-arrow-right ms-2"></i>
             </a>
           </div>
@@ -469,7 +469,7 @@
                   </div>
                 </div>
                 <div class="col-lg-4 text-lg-end">
-                  <a href="{{ route('front.contact') }}" class="btn-banner-action">
+                  <a href="{{ Route::has('front.contact') ? route('front.contact') : url('/') }}" class="btn-banner-action">
                     <i class="fas fa-comment-alt-lines me-2"></i> {{ __('Talk to Our Designers') }}
                   </a>
                 </div>
@@ -553,7 +553,7 @@
                 $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
               @endphp
               <div class="mt-4" style="text-align: left;">
-                <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-start-journey">
+                <a href="{{ Route::has('front.register.view') ? route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) : url('/') }}" class="btn-start-journey">
                   {{ __('Start Your Journey') }} <i class="fas fa-arrow-right ms-2"></i>
                 </a>
               </div>

@@ -44,7 +44,7 @@
           <p style="font-size:15px; font-weight:600; color:#4a5568; margin-bottom:10px;">
             {{ __('Looking for a specific store style?') }}
           </p>
-          <a href="{{ route('front.templates.view') }}" style="display:inline-flex; align-items:center; gap:8px; background:#ff5a2c; color:#fff; font-size:16px; font-weight:700; padding:12px 28px; border-radius:10px; text-decoration:none; transition:all 0.2s ease; box-shadow:0 4px 14px rgba(255,90,44,0.25);" onmouseover="this.style.background='#e04d24';this.style.boxShadow='0 6px 20px rgba(255,90,44,0.35)';" onmouseout="this.style.background='#ff5a2c';this.style.boxShadow='0 4px 14px rgba(255,90,44,0.25)';">
+          <a href="{{ Route::has('front.templates.view') ? route('front.templates.view') : url('/') }}" style="display:inline-flex; align-items:center; gap:8px; background:#ff5a2c; color:#fff; font-size:16px; font-weight:700; padding:12px 28px; border-radius:10px; text-decoration:none; transition:all 0.2s ease; box-shadow:0 4px 14px rgba(255,90,44,0.25);" onmouseover="this.style.background='#e04d24';this.style.boxShadow='0 6px 20px rgba(255,90,44,0.35)';" onmouseout="this.style.background='#ff5a2c';this.style.boxShadow='0 4px 14px rgba(255,90,44,0.25)';">
             <i class="fas fa-palette"></i> {{ __('Explore Store Themes') }} <i class="fas fa-arrow-right"></i>
           </a>
         </div>
@@ -319,7 +319,7 @@
                   $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
                   $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
                 @endphp
-                <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
+                <a href="{{ Route::has('front.register.view') ? route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) : url('/') }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
                   {{ __('Launch Your Store') }} <i class="fas fa-hand-pointer animated-click-hand"></i>
                 </a>
               </div>
@@ -331,7 +331,7 @@
               
               <!-- Mobile Button (Renders ONLY below the image on mobile screens) -->
               <div class="cta-revamp-btns d-lg-none d-flex justify-content-center text-center mt-3 pb-4 px-3 w-100">
-                <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
+                <a href="{{ Route::has('front.register.view') ? route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) : url('/') }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
                   {{ __('Launch Your Store') }} <i class="fas fa-hand-pointer animated-click-hand"></i>
                 </a>
               </div>

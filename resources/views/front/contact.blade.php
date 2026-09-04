@@ -309,7 +309,7 @@
       <!-- Subtle Breadcrumbs -->
       <!-- <nav aria-label="breadcrumb" class="custom-contact-breadcrumb mb-4" data-aos="fade-down">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="{{ route('front.index') }}">{{ __('Home') }}</a></li>
+          <li class="breadcrumb-item"><a href="{{ Route::has('front.index') ? route('front.index') : url('/') }}">{{ __('Home') }}</a></li>
           <li class="breadcrumb-item active" aria-current="page">{{ $pageHeading ?? __('Contact') }}</li>
         </ol>
       </nav> -->
