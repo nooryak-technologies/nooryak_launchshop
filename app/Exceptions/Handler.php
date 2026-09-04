@@ -93,12 +93,18 @@ class Handler extends ExceptionHandler
                     }
 
                     $user = User::whereHas('user_custom_domains', function ($q) use ($host) {
-                        $q->where('status', '=', 1)
-                            ->where(function ($query) use ($host) {
+                        $cleanHost = preg_replace('/^www\./i', '', strtolower($host));
+                        $q->where(function ($sq) {
+                                $sq->where('status', 1)->orWhere('status', '1')->orWhere('status', 0);
+                            })
+                            ->where(function ($query) use ($host, $cleanHost) {
                                 $query->where('requested_domain', '=', $host)
-                                    ->orWhere('requested_domain', '=', str_replace("www.", "", $host));
+                                    ->orWhere('requested_domain', '=', $cleanHost)
+                                    ->orWhere('requested_domain', 'LIKE', '%' . $cleanHost . '%')
+                                    ->orWhere('current_domain', '=', $host)
+                                    ->orWhere('current_domain', '=', $cleanHost)
+                                    ->orWhere('current_domain', 'LIKE', '%' . $cleanHost . '%');
                             });
-                        // fetch the custom domain , if it matches 'with www.' URL or 'without www.' URL
                     });
 
                     if ($user->count() > 0) {

@@ -126,14 +126,22 @@ class TenantDatabaseMiddleware
                     // Check if domain is a tenant custom domain (e.g. maturednature.com)
                     try {
                         $cDomainRow = DB::table('user_custom_domains')
-                            ->where('status', 1)
+                            ->where(function ($sq) {
+                                $sq->where('status', 1)->orWhere('status', '1')->orWhere('status', 0);
+                            })
                             ->where(function ($q) use ($host, $cleanHost) {
                                 $q->where('requested_domain', $host)
                                   ->orWhere('requested_domain', $cleanHost)
                                   ->orWhere('requested_domain', 'www.' . $cleanHost)
                                   ->orWhere('requested_domain', 'http://' . $cleanHost)
-                                  ->orWhere('requested_domain', 'https://' . $cleanHost);
+                                  ->orWhere('requested_domain', 'https://' . $cleanHost)
+                                  ->orWhere('requested_domain', 'LIKE', '%' . $cleanHost . '%')
+                                  ->orWhere('current_domain', $host)
+                                  ->orWhere('current_domain', $cleanHost)
+                                  ->orWhere('current_domain', 'www.' . $cleanHost)
+                                  ->orWhere('current_domain', 'LIKE', '%' . $cleanHost . '%');
                             })
+                            ->orderByRaw("CASE WHEN status = 1 OR status = '1' THEN 0 ELSE 1 END")
                             ->first();
 
                         if ($cDomainRow) {

@@ -797,6 +797,7 @@ if (!function_exists('getUser')) {
         // ── CASE 3: fully custom domain  ──────────────────────────────────
         $cleanCustomHost = preg_replace('/^https?:\/\//i', '', strtolower($requestHost));
         $cleanCustomHost = preg_replace('/^www\./i', '', $cleanCustomHost);
+        $cleanCustomHost = trim(explode(':', $cleanCustomHost)[0], '/ ');
 
         try {
             $cDomain = \App\Models\User\UserCustomDomain::where(function ($q) use ($cleanCustomHost) {
@@ -805,9 +806,16 @@ if (!function_exists('getUser')) {
                       ->orWhere('requested_domain', 'http://' . $cleanCustomHost)
                       ->orWhere('requested_domain', 'https://' . $cleanCustomHost)
                       ->orWhere('requested_domain', 'http://www.' . $cleanCustomHost)
-                      ->orWhere('requested_domain', 'https://www.' . $cleanCustomHost);
+                      ->orWhere('requested_domain', 'https://www.' . $cleanCustomHost)
+                      ->orWhere('requested_domain', 'LIKE', '%' . $cleanCustomHost . '%')
+                      ->orWhere('current_domain', $cleanCustomHost)
+                      ->orWhere('current_domain', 'www.' . $cleanCustomHost)
+                      ->orWhere('current_domain', 'LIKE', '%' . $cleanCustomHost . '%');
                 })
-                ->where('status', 1)
+                ->where(function ($sq) {
+                    $sq->where('status', 1)->orWhere('status', '1')->orWhere('status', 0);
+                })
+                ->orderByRaw("CASE WHEN status = 1 OR status = '1' THEN 0 ELSE 1 END")
                 ->first();
 
             if ($cDomain) {
@@ -836,16 +844,20 @@ if (!function_exists('getUserNullCheck')) {
         try {
             $parsedUrl = parse_url(url()->current());
             $host = $parsedUrl['host'] ?? Request::getHost();
-            $hostWithoutWww = str_replace('www.', '', $host);
-            $hostWithWww    = 'www.' . $hostWithoutWww;
+            $cleanHost = preg_replace('/^www\./i', '', strtolower($host));
+            $cleanHost = trim(explode(':', $cleanHost)[0], '/ ');
 
-            return User::where('online_status', 1)
-                ->where('status', 1)
-                ->whereHas('user_custom_domains', function ($q) use ($hostWithWww, $hostWithoutWww) {
-                    $q->where('status', 1)
-                        ->where(function ($query) use ($hostWithWww, $hostWithoutWww) {
-                            $query->where('requested_domain', $hostWithWww)
-                                ->orWhere('requested_domain', $hostWithoutWww);
+            return User::whereHas('user_custom_domains', function ($q) use ($cleanHost) {
+                    $q->where(function ($sq) {
+                            $sq->where('status', 1)->orWhere('status', '1')->orWhere('status', 0);
+                        })
+                        ->where(function ($query) use ($cleanHost) {
+                            $query->where('requested_domain', $cleanHost)
+                                ->orWhere('requested_domain', 'www.' . $cleanHost)
+                                ->orWhere('requested_domain', 'LIKE', '%' . $cleanHost . '%')
+                                ->orWhere('current_domain', $cleanHost)
+                                ->orWhere('current_domain', 'www.' . $cleanHost)
+                                ->orWhere('current_domain', 'LIKE', '%' . $cleanHost . '%');
                         });
                 })
                 ->first();
