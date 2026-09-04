@@ -727,39 +727,51 @@ if (!function_exists('getUser')) {
         $subdomainBaseHosts = array_values(array_unique(array_filter([
             strtolower((string) env('WEBSITE_HOST', '')),
             'launchshop.in',
+            'nooryak.in',
         ])));
 
-        $reservedKeywords = [
-            'admin', 'user', 'front', 'api', 'login', 'register', 'checkout',
-            'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs',
-            'whitelabel-panel', 'master', 'product', 'cart', 'shop', 'page',
-            'about', 'privacy-policy', 'terms-and-conditions', 'terms-conditions',
-            'refund-policy', 'shipping-policy', 'assets', 'storage',
-            'favicon.ico', 'sitemap.xml', 'robots.txt', 'public',
-            'x9_admin-portal_v7',
-        ];
+        $mainPlatformHosts = array_values(array_unique(array_filter([
+            strtolower((string) env('WEBSITE_HOST', '')),
+            'launchshop.in',
+            'nooryak.in',
+            'localhost',
+            '127.0.0.1',
+        ])));
 
-        // ── CASE 1: path-based tenant ─────────────────────────────────────
-        // Works for: launchshop.in/manti  OR  agency.top/manti
-        // online_status is the middleware's job — NOT checked here.
-        if (!empty($usernameFromPath) && !in_array(strtolower($usernameFromPath), $reservedKeywords)) {
-            $rawUsername  = strtolower(urldecode($usernameFromPath));
-            $cleanUsername = str_replace(' ', '', $rawUsername);
+        $cleanCustomHost = preg_replace('/^https?:\/\//i', '', strtolower($requestHost));
+        $cleanCustomHost = preg_replace('/^www\./i', '', $cleanCustomHost);
+        $cleanCustomHost = trim(explode(':', $cleanCustomHost)[0], '/ ');
 
-            $pathUser = User::where(function ($query) use ($rawUsername, $cleanUsername) {
-                    $query->where('username', $rawUsername)
-                        ->orWhere('username', $cleanUsername);
-                })
-                ->where(function ($q) {
-                    $q->where('preview_template', 1)->orWhere('status', 1);
-                })
-                ->first();
-            if ($pathUser) {
-                return $pathUser;
+        // ── CASE 1: fully custom domain (prioritized for external hosts) ─────
+        if (!in_array($cleanCustomHost, $mainPlatformHosts)) {
+            try {
+                $cDomain = \App\Models\User\UserCustomDomain::where(function ($q) use ($cleanCustomHost) {
+                        $q->where('requested_domain', $cleanCustomHost)
+                          ->orWhere('requested_domain', 'www.' . $cleanCustomHost)
+                          ->orWhere('requested_domain', 'http://' . $cleanCustomHost)
+                          ->orWhere('requested_domain', 'https://' . $cleanCustomHost)
+                          ->orWhere('requested_domain', 'http://www.' . $cleanCustomHost)
+                          ->orWhere('requested_domain', 'https://www.' . $cleanCustomHost)
+                          ->orWhere('requested_domain', 'LIKE', '%' . $cleanCustomHost . '%')
+                          ->orWhere('current_domain', $cleanCustomHost)
+                          ->orWhere('current_domain', 'www.' . $cleanCustomHost)
+                          ->orWhere('current_domain', 'LIKE', '%' . $cleanCustomHost . '%');
+                    })
+                    ->orderByRaw("CASE WHEN status = 1 OR status = '1' THEN 0 WHEN status = 0 OR status = '0' THEN 1 ELSE 2 END")
+                    ->first();
+
+                if ($cDomain) {
+                    $user = User::find($cDomain->user_id);
+                    if ($user) {
+                        return $user;
+                    }
+                }
+            } catch (\Throwable $e) {
+                // ignore
             }
         }
 
-        // ── CASE 2: subdomain of supported base host(s)  ───────────────────
+        // ── CASE 2: subdomain of supported base host(s) ───────────────────
         // e.g. manti.launchshop.in
         foreach ($subdomainBaseHosts as $websiteHost) {
             if (empty($websiteHost)
@@ -794,38 +806,33 @@ if (!function_exists('getUser')) {
             return $user;
         }
 
-        // ── CASE 3: fully custom domain  ──────────────────────────────────
-        $cleanCustomHost = preg_replace('/^https?:\/\//i', '', strtolower($requestHost));
-        $cleanCustomHost = preg_replace('/^www\./i', '', $cleanCustomHost);
-        $cleanCustomHost = trim(explode(':', $cleanCustomHost)[0], '/ ');
+        $reservedKeywords = [
+            'admin', 'user', 'front', 'api', 'login', 'register', 'checkout',
+            'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs',
+            'whitelabel-panel', 'master', 'product', 'cart', 'shop', 'page',
+            'about', 'privacy-policy', 'terms-and-conditions', 'terms-conditions',
+            'refund-policy', 'shipping-policy', 'assets', 'storage',
+            'favicon.ico', 'sitemap.xml', 'robots.txt', 'public',
+            'x9_admin-portal_v7',
+        ];
 
-        try {
-            $cDomain = \App\Models\User\UserCustomDomain::where(function ($q) use ($cleanCustomHost) {
-                    $q->where('requested_domain', $cleanCustomHost)
-                      ->orWhere('requested_domain', 'www.' . $cleanCustomHost)
-                      ->orWhere('requested_domain', 'http://' . $cleanCustomHost)
-                      ->orWhere('requested_domain', 'https://' . $cleanCustomHost)
-                      ->orWhere('requested_domain', 'http://www.' . $cleanCustomHost)
-                      ->orWhere('requested_domain', 'https://www.' . $cleanCustomHost)
-                      ->orWhere('requested_domain', 'LIKE', '%' . $cleanCustomHost . '%')
-                      ->orWhere('current_domain', $cleanCustomHost)
-                      ->orWhere('current_domain', 'www.' . $cleanCustomHost)
-                      ->orWhere('current_domain', 'LIKE', '%' . $cleanCustomHost . '%');
+        // ── CASE 3: path-based tenant ─────────────────────────────────────
+        // Works for: launchshop.in/manti OR agency.top/manti
+        if (!empty($usernameFromPath) && !in_array(strtolower($usernameFromPath), $reservedKeywords)) {
+            $rawUsername  = strtolower(urldecode($usernameFromPath));
+            $cleanUsername = str_replace(' ', '', $rawUsername);
+
+            $pathUser = User::where(function ($query) use ($rawUsername, $cleanUsername) {
+                    $query->where('username', $rawUsername)
+                        ->orWhere('username', $cleanUsername);
                 })
-                ->where(function ($sq) {
-                    $sq->where('status', 1)->orWhere('status', '1')->orWhere('status', 0);
+                ->where(function ($q) {
+                    $q->where('preview_template', 1)->orWhere('status', 1);
                 })
-                ->orderByRaw("CASE WHEN status = 1 OR status = '1' THEN 0 ELSE 1 END")
                 ->first();
-
-            if ($cDomain) {
-                $user = User::find($cDomain->user_id);
-                if ($user) {
-                    return $user;
-                }
+            if ($pathUser) {
+                return $pathUser;
             }
-        } catch (\Throwable $e) {
-            // ignore
         }
 
         return null;
@@ -848,10 +855,7 @@ if (!function_exists('getUserNullCheck')) {
             $cleanHost = trim(explode(':', $cleanHost)[0], '/ ');
 
             return User::whereHas('user_custom_domains', function ($q) use ($cleanHost) {
-                    $q->where(function ($sq) {
-                            $sq->where('status', 1)->orWhere('status', '1')->orWhere('status', 0);
-                        })
-                        ->where(function ($query) use ($cleanHost) {
+                    $q->where(function ($query) use ($cleanHost) {
                             $query->where('requested_domain', $cleanHost)
                                 ->orWhere('requested_domain', 'www.' . $cleanHost)
                                 ->orWhere('requested_domain', 'LIKE', '%' . $cleanHost . '%')

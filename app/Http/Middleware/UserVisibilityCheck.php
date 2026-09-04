@@ -22,15 +22,25 @@ class UserVisibilityCheck
         if (empty($user) || !is_object($user) || !isset($user->id)) {
             return $next($request);
         }
-        $safeRedirect = Route::has('front.index')
-            ? route('front.index')
-            : (Route::has('front.user.detail.view') ? route('front.user.detail.view', getParam()) : url('/'));
 
-        if (Auth::check() && Auth::user()->id != $user->id && $user->online_status != 1 && $user->preview_template != 1) {
-            return redirect($safeRedirect);
-        } elseif (!Auth::check() && $user->online_status != 1 && $user->preview_template != 1) {
-            return redirect($safeRedirect);
+        if ($user->online_status != 1 && $user->preview_template != 1) {
+            // Store owner can preview their own store
+            if (Auth::check() && Auth::user()->id == $user->id) {
+                return $next($request);
+            }
+
+            // Redirect to main platform index if available and not circular
+            if (Route::has('front.index')) {
+                $target = route('front.index');
+                if ($request->url() !== $target) {
+                    return redirect($target);
+                }
+            }
+
+            // On custom domains where front.index isn't the current route or is unavailable, abort 404 cleanly
+            abort(404);
         }
+
         return $next($request);
     }
 }

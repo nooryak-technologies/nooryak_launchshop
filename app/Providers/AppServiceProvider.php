@@ -91,7 +91,11 @@ class AppServiceProvider extends ServiceProvider
                 return null;
             }
             $userBs = BasicSetting::where('user_id', $user->id)->first();
-            if ($userBs && app()->bound('theme.service')) {
+            if (empty($userBs)) {
+                $userBs = new BasicSetting();
+                $userBs->user_id = $user->id;
+                $userBs->theme = 'grocery';
+            } elseif (app()->bound('theme.service')) {
                 $userBs->theme = app('theme.service')->getActiveTheme();
             }
             return $userBs;
