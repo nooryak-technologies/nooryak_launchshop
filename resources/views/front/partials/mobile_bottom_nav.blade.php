@@ -41,7 +41,7 @@
 
     <!-- 4. ACCOUNT -->
     @auth
-      <a href="{{ route('user-dashboard') }}" class="mobile-nav-item {{ request()->routeIs('user-dashboard') ? 'active' : '' }}">
+      <a href="{{ Route::has('user-dashboard') ? route('user-dashboard') : url('/user/dashboard') }}" class="mobile-nav-item {{ request()->routeIs('user-dashboard') ? 'active' : '' }}">
     @else
       <a href="{{ Route::has('front.register.view') ? route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) : url('/') }}" class="mobile-nav-item {{ (request()->routeIs('user.login') || request()->routeIs('user.register') || request()->routeIs('front.register.view')) ? 'active' : '' }}">
     @endauth

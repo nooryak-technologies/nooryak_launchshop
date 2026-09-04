@@ -118,12 +118,12 @@
 
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Gst Billing.</li>
                             <li>
-                                <a href="{{ route('front.pricing') }}?term=yearly" class="gd-more-features gd-btn-standard-trigger">
+                                <a href="{{ Route::has('front.pricing') ? route('front.pricing') : url('/') }}?term=yearly" class="gd-more-features gd-btn-standard-trigger">
                                    More Features &nbsp;<span class="gd-plus-circle"><i class="fas fa-plus"></i></span>
                                 </a>
                             </li>
                         </ul>
-                        <a href="{{ route('front.pricing') }}?term=yearly" class="gd-btn-border" id="gdChooseStandard">Choose Standard &nbsp;→</a>
+                        <a href="{{ Route::has('front.pricing') ? route('front.pricing') : url('/') }}?term=yearly" class="gd-btn-border" id="gdChooseStandard">Choose Standard &nbsp;→</a>
                     </div>
 
                     {{-- Premium Card --}}
@@ -165,14 +165,14 @@
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Push Notification</li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Payment Option</li>
                             <li>
-                                <a href="{{ route('front.pricing') }}?term=yearly" class="gd-more-features gd-btn-premium-trigger">
+                                <a href="{{ Route::has('front.pricing') ? route('front.pricing') : url('/') }}?term=yearly" class="gd-more-features gd-btn-premium-trigger">
                                     Advanced Features &nbsp;<span class="gd-plus-circle"><i class="fas fa-plus"></i></span>
                                 </a>
                             </li>
                         </ul>
                         <div class="gd-select-premium-wrap">
                             <span class="gd-click-hand" aria-hidden="true">👆</span>
-                            <a href="{{ route('front.pricing') }}?term=yearly" class="gd-btn-fill" id="gdUpgradePremium">Select Premium &nbsp;→</a>
+                            <a href="{{ Route::has('front.pricing') ? route('front.pricing') : url('/') }}?term=yearly" class="gd-btn-fill" id="gdUpgradePremium">Select Premium &nbsp;→</a>
                         </div>
                         <span class="gd-card-sparkle">✦</span>
                     </div>

@@ -79,7 +79,7 @@
                 {{ $data->user_not_found_subtitle ?? ($keywords['The page you are looking for might have been moved, renamed, or might never have existed.'] ?? __('The page you are looking for might have been moved, renamed, or might never have existed.')) }}
               </p>
 
-              <a href="{{ route('front.user.detail.view', getParam()) }}"
+              <a href="{{ Route::has('front.user.detail.view') ? route('front.user.detail.view', getParam()) : (Route::has('user.front.index') ? route('user.front.index') : url('/')) }}"
                 class="btn btn-md btn-primary radius-sm">{{ $keywords['Back Home'] ?? __('Back Home') }}</a>
             @else
               @php

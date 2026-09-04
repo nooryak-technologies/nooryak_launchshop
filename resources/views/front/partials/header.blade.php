@@ -65,7 +65,7 @@
                 @endguest
                 @auth
                   <div class="menu-action-item">
-                    <a href="{{ route('user-dashboard') }}" class="btn-ls-primary">
+                    <a href="{{ Route::has('user-dashboard') ? route('user-dashboard') : url('/user/dashboard') }}" class="btn-ls-primary">
                       <span>{{ __('Dashboard') }}</span>
                     </a>
                   </div>
@@ -130,14 +130,14 @@
               </a>
             </div>
             <div class="item">
-              <a href="{{ route('user.login') }}" class="btn-ls-primary btn-sm">
+              <a href="{{ Route::has('user.login') ? route('user.login') : url('/login') }}" class="btn-ls-primary btn-sm">
                 <span>{{ __('Login') }}</span>
               </a>
             </div>
           @endguest
           @auth
             <div class="item">
-              <a href="{{ route('user-dashboard') }}" class="btn-ls-primary btn-sm">
+              <a href="{{ Route::has('user-dashboard') ? route('user-dashboard') : url('/user/dashboard') }}" class="btn-ls-primary btn-sm">
                 <span>{{ __('Dashboard') }}</span>
               </a>
             </div>

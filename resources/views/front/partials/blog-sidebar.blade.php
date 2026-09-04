@@ -18,10 +18,10 @@
     <div class="blog-cat-list pl-45 pr-45">
       <ul>
         <li class="single-category @if (empty(request()->input('category'))) active @endif"><a
-            href="{{ route('front.blogs') }}"><i class="fal fa-folder"></i> {{ __('All') }} <span></span></a></li>
+            href="{{ Route::has('front.blogs') ? route('front.blogs') : url('/') }}"><i class="fal fa-folder"></i> {{ __('All') }} <span></span></a></li>
         @foreach ($bcats as $key => $bcat)
           <li class="single-category @if (request()->input('category') == $bcat->id) active @endif">
-            <a href="{{ route('front.blogs', ['category' => $bcat->id]) }}"><i
+            <a href="{{ Route::has('front.blogs') ? route('front.blogs', ['category' => $bcat->id]) : url('/') }}"><i
                 class="fal fa-folder"></i>{{ $bcat->name }} <span></span></a>
           </li>
         @endforeach
@@ -38,7 +38,7 @@
           <!-- article-item -->
           <article class="article-item">
             <div class="image">
-              <a href="{{ route('front.blogdetails', ['id' => $blog->id, 'slug' => $blog->slug]) }}"
+              <a href="{{ Route::has('front.blogdetails') ? route('front.blogdetails', ['id' => $blog->id, 'slug' => $blog->slug]) : url('/') }}"
                 class="lazy-container ratio ratio-1-1">
                 <img class="lazy-image ls-is-cached lazyload"
                   src="{{ asset('assets/front/img/blogs/' . $blog->main_image) }}"
@@ -48,7 +48,7 @@
 
             <div class="content">
               <h6><a
-                  href="{{ route('front.blogdetails', ['id' => $blog->id, 'slug' => $blog->slug]) }}">{{ $blog->title }}</a>
+                  href="{{ Route::has('front.blogdetails') ? route('front.blogdetails', ['id' => $blog->id, 'slug' => $blog->slug]) : url('/') }}">{{ $blog->title }}</a>
               </h6>
               <div class="time">{{ \Carbon\Carbon::parse($blog->created_at)->format('F j, Y') }}</div>
             </div>

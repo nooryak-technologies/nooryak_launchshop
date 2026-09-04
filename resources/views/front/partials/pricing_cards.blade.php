@@ -236,18 +236,18 @@
               // CTA href
               if ($package->is_trial === '1' && $package->price != 0) {
                 $ctaHref = $selectedTemplate
-                  ? route('front.register.view', ['status'=>'regular','id'=>$package->id]).'?template='.urlencode($selectedTemplate)
-                  : route('front.select.template', ['status'=>'regular','id'=>$package->id]);
+                  ? (Route::has('front.register.view') ? route('front.register.view', ['status'=>'regular','id'=>$package->id]).'?template='.urlencode($selectedTemplate) : url('/'))
+                  : (Route::has('front.select.template') ? route('front.select.template', ['status'=>'regular','id'=>$package->id]) : url('/'));
               } elseif ($package->price == 0) {
                 $ctaHref = $selectedTemplate
-                  ? route('front.register.view', ['status'=>'regular','id'=>$package->id]).'?template='.urlencode($selectedTemplate)
-                  : route('front.select.template', ['status'=>'regular','id'=>$package->id]);
+                  ? (Route::has('front.register.view') ? route('front.register.view', ['status'=>'regular','id'=>$package->id]).'?template='.urlencode($selectedTemplate) : url('/'))
+                  : (Route::has('front.select.template') ? route('front.select.template', ['status'=>'regular','id'=>$package->id]) : url('/'));
               } else {
                 $ctaHref = $selectedTemplate
-                  ? route('front.register.view', ['status'=>'regular','id'=>$package->id]).'?template='.urlencode($selectedTemplate)
-                  : route('front.select.template', ['status'=>'regular','id'=>$package->id]);
+                  ? (Route::has('front.register.view') ? route('front.register.view', ['status'=>'regular','id'=>$package->id]).'?template='.urlencode($selectedTemplate) : url('/'))
+                  : (Route::has('front.select.template') ? route('front.select.template', ['status'=>'regular','id'=>$package->id]) : url('/'));
               }
-            @endphp
+@endphp
 
             <div class="pricing-card-v2 {{ $cardClass }} package-{{ $package->id }} plan-{{ $titleKey }}">
               @if($titleKey == 'standard')
@@ -495,7 +495,7 @@
                 <li><i class="fas fa-check fi-check"></i><span>Priority 24/7 Support</span></li>
               </ul>
               <div style="display:flex;gap:8px;margin-top:auto;width:100%;">
-                <a href="{{ route('front.contact') }}" class="plan-v2-btn" style="flex:1;margin-top:0;">Talk to Sales</a>
+                <a href="{{ Route::has('front.contact') ? route('front.contact') : url('/') }}" class="plan-v2-btn" style="flex:1;margin-top:0;">Talk to Sales</a>
                 <a href="https://wa.me/917200770351?text=Hi%2C%20I%20want%20to%20enquire%20about%20the%20Enterprise%20Plan%20for%20LaunchShop." target="_blank" class="plan-v2-wa-btn">
                   <i class="fab fa-whatsapp"></i>
                 </a>
