@@ -6,7 +6,7 @@
         <div class="col-lg-3 col-md-12">
           <div class="footer-widget" data-aos="fade-up" data-aos-delay="100">
             <div style="margin-bottom: 8px;">
-              <a href="{{ route('front.index') }}">
+              <a href="{{ Route::has('front.index') ? route('front.index') : url('/') }}">
                 <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
                   data-src="{{ asset('assets/front/img/' . $bs->footer_logo) }}" alt="Logo">
               </a>

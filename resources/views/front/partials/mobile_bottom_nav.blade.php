@@ -6,7 +6,7 @@
 <div class="mobile-bottom-nav-bar">
   <div class="mobile-nav-items">
     <!-- 1. HOME -->
-    <a href="{{ route('front.index') }}" class="mobile-nav-item {{ request()->routeIs('front.index') ? 'active' : '' }}">
+    <a href="{{ Route::has('front.index') ? route('front.index') : url('/') }}" class="mobile-nav-item {{ request()->routeIs('front.index') ? 'active' : '' }}">
       <div class="mobile-nav-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v6H4a1 1 0 0 1-1-1V9.5z"/>
