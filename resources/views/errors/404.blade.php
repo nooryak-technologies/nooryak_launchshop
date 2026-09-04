@@ -94,7 +94,7 @@
               @endphp
               <h2>{{ __("You're lost") }}...</h2>
               <p>{{ __('The page you are looking for might have been moved, renamed, or might never existed.') }}</p>
-              <a href="{{ route('front.index') }}" class="btn btn-md btn-primary radius-sm">{{ __('Back Home') }}</a>
+              <a href="{{ Route::has('front.index') ? route('front.index') : url('/') }}" class="btn btn-md btn-primary radius-sm">{{ __('Back Home') }}</a>
             @endif
           </div>
         </div>

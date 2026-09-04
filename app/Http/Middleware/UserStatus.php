@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Auth;
 use Session;
+use Illuminate\Support\Facades\Route;
 
 class UserStatus
 {
@@ -21,7 +22,7 @@ class UserStatus
             if (Auth::user()->status != 1) {
                 Auth::guard('web')->logout();
                 Session::flash('error', 'Your account has been banned!');
-                return redirect(route('front.index'));
+                return redirect(Route::has('front.index') ? route('front.index') : url('/'));
             }
         }
         return $next($request);
