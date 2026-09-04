@@ -208,23 +208,23 @@ if (!function_exists('getHref')) {
         $href = "#";
 
         if ($link["type"] == 'home') {
-            $href = route('front.index');
+            $href = \Illuminate\Support\Facades\Route::has('front.index') ? route('front.index') : url('/');
         } else if ($link["type"] == 'profiles') {
-            $href = route('front.user.view');
+            $href = \Illuminate\Support\Facades\Route::has('front.user.view') ? route('front.user.view') : url('/');
         } else if ($link["type"] == 'listings') {
-            $href = route('front.user.view');
+            $href = \Illuminate\Support\Facades\Route::has('front.user.view') ? route('front.user.view') : url('/');
         } else if ($link["type"] == 'pricing') {
-            $href = route('front.pricing');
+            $href = \Illuminate\Support\Facades\Route::has('front.pricing') ? route('front.pricing') : url('/');
         } else if ($link["type"] == 'faq') {
-            $href = route('front.faq.view');
+            $href = \Illuminate\Support\Facades\Route::has('front.faq.view') ? route('front.faq.view') : url('/');
         } else if ($link["type"] == 'blog') {
-            $href = route('front.blogs');
+            $href = \Illuminate\Support\Facades\Route::has('front.blogs') ? route('front.blogs') : url('/');
         } else if ($link["type"] == 'contact') {
-            $href = route('front.contact');
+            $href = \Illuminate\Support\Facades\Route::has('front.contact') ? route('front.contact') : url('/');
         } else if ($link["type"] == 'templates') {
-            $href = route('front.templates.view');
+            $href = \Illuminate\Support\Facades\Route::has('front.templates.view') ? route('front.templates.view') : url('/');
         } else if ($link["type"] == 'about') {
-            $href = route('front.about');
+            $href = \Illuminate\Support\Facades\Route::has('front.about') ? route('front.about') : url('/');
         } else if ($link["type"] == 'custom') {
             if (empty($link["href"])) {
                 $href = "#";
@@ -235,7 +235,7 @@ if (!function_exists('getHref')) {
             $pageid = (int) $link["type"];
             $page = Page::find($pageid);
             if (!empty($page)) {
-                $href = route('front.dynamicPage', [$page->slug]);
+                $href = \Illuminate\Support\Facades\Route::has('front.dynamicPage') ? route('front.dynamicPage', [$page->slug]) : url('/');
             } else {
                 $href = "#";
             }
