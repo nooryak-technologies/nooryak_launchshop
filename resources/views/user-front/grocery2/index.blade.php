@@ -27,8 +27,10 @@
                 <div class="g2-slider-item" style="background-image: url('{{ asset('assets/front/img/hero_slider/' . $slider->img) }}');">
                   <div class="g2-slider-content">
                     <span class="g2-badge">TRENDING NOW</span>
-                    <h1 class="g2-title">{{ $slider->title ?? $slider->subtitle }}</h1>
-                    <p class="g2-text">{{ $slider->text }}</p>
+                    <h1 class="g2-title">{!! html_entity_decode($slider->title ?? $slider->subtitle) !!}</h1>
+                    @if(!empty($slider->text))
+                      <p class="g2-text">{!! html_entity_decode($slider->text) !!}</p>
+                    @endif
                     <div class="g2-slider-btns">
                       @if ($slider->btn_url && $slider->btn_name)
                         <a href="{{ $slider->btn_url }}" class="btn g2-btn-primary">{{ $slider->btn_name }}</a>
@@ -43,7 +45,7 @@
             @else
               <div class="g2-slider-item" style="background-image: url('{{ asset('assets/front/img/hero_slider/ecom_grocery_banner_clean.png') }}');">
                 <div class="g2-slider-content">
-                  <h1 class="g2-title">{{ $user->shop_name ?? 'Welcome to Our Store' }}</h1>
+                  <h1 class="g2-title">{!! html_entity_decode($user->shop_name ?? 'Welcome to Our Store') !!}</h1>
                   <p class="g2-text">{{ __('Shop the latest deals and products') }}</p>
                   <div class="g2-slider-btns">
                     <a href="{{ route('front.user.shop', getParam()) }}" class="btn g2-btn-primary">{{ __('Shop Now') }}</a>
@@ -61,7 +63,7 @@
               @foreach($banners->take(2) as $b)
                 <div class="g2-side-promo" style="background-image: url('{{ asset('assets/front/img/user/banners/' . $b->banner_img) }}');">
                   <div class="g2-side-promo-content">
-                    @if(!empty($b->title)) <h3>{{ $b->title }}</h3> @endif
+                    @if(!empty($b->title)) <h3>{!! html_entity_decode($b->title) !!}</h3> @endif
                     <a href="{{ $b->banner_url ?? $b->url ?? route('front.user.shop', getParam()) }}" class="g2-link-btn">{{ __('Shop Now') }} <i class="far fa-long-arrow-right"></i></a>
                   </div>
                 </div>
