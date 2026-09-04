@@ -584,7 +584,7 @@ if (!function_exists('isAgencyDomain')) {
         }
         $cleanHost = preg_replace('/^(www|app)\./i', '', strtolower($host));
 
-        $knownAgencies = ['cockroachjantaparty.top', 'maturednature.com', 'maturenatu'];
+        $knownAgencies = ['cockroachjantaparty.top'];
         foreach ($knownAgencies as $agencyHost) {
             if (str_contains($cleanHost, $agencyHost)) {
                 return true;
