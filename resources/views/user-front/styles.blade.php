@@ -660,13 +660,45 @@
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/grocery2/styles.css?v=' . time()) }}">
   <style>
-    .g2-hero-slider .slick-slide {
-      padding-left: 0 !important;
-      padding-right: 0 !important;
+    /* Grocery2 only: restore banner inner padding (slick-slide must not zero it) */
+    .theme-grocery2 .g2-hero-slider.slick-slider .slick-list {
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+    .theme-grocery2 .g2-hero-slider .g2-slider-item,
+    .theme-grocery2 .g2-hero-slider .slick-slide.g2-slider-item {
+      padding: 48px 48px 48px 56px !important;
+    }
+    .theme-grocery2 .g2-slider-content {
+      text-align: left !important;
+      padding-left: 4px;
+    }
+    .theme-grocery2 .g2-side-promo {
+      padding: 28px 24px 28px 40px !important;
+    }
+    .theme-grocery2 .g2-side-promo-content {
+      text-align: left;
+      padding-left: 4px;
+    }
+    .theme-grocery2 .container {
+      max-width: 1450px !important;
+      padding-left: 25px !important;
+      padding-right: 25px !important;
     }
     @media (min-width: 1200px) {
       .g2-hero-slider {
         max-width: 940px !important;
+      }
+    }
+    @media (max-width: 767.98px) {
+      .theme-grocery2 .g2-hero-slider .g2-slider-item,
+      .theme-grocery2 .g2-hero-slider .slick-slide.g2-slider-item {
+        padding: 16px !important;
+      }
+      .theme-grocery2 .g2-side-promo {
+        padding: 24px 20px 24px 24px !important;
       }
     }
   </style>

@@ -103,6 +103,14 @@
     padding: 0 25px;
 }
 
+/* Match header / hero left edge for Featured Categories and other sections */
+.theme-grocery2 .container {
+    max-width: 1450px !important;
+    width: 100% !important;
+    padding-left: 25px !important;
+    padding-right: 25px !important;
+}
+
 /* Topbar Banner */
 .grocery2-topbar {
     background-color: #ff8e29;
@@ -579,25 +587,8 @@ body.show-mobile-menu .grocery2-header {
     padding-bottom: 20px;
 }
 
-/*
- * Custom container — covers BOTH cases:
- *   1. New template (g2-hero-container class): directly matched
- *   2. Old cached template (.container class): matched via parent selector
- * Both rules use the same values as .grocery2-header-container (max-width: 1450px).
- */
-.g2-hero-container,
-.g2-hero-section > .container {
-    max-width: 1450px !important;
-    width: 100% !important;
-    margin-right: auto !important;
-    margin-left: auto !important;
-    padding-left: 25px !important;
-    padding-right: 25px !important;
-}
-
 @media (min-width: 992px) {
-    .g2-hero-section .row,
-    .g2-hero-section > .g2-hero-container > .row {
+    .g2-hero-section .row {
         --bs-gutter-x: 24px;
         /* 24px horizontal in-between gap */
     }
@@ -611,15 +602,27 @@ body.show-mobile-menu .grocery2-header {
     }
 }
 
+.g2-hero-container,
+.g2-hero-section > .container {
+    max-width: 1450px !important;
+    width: 100% !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+    padding-left: 25px !important;
+    padding-right: 25px !important;
+}
+
 .g2-hero-slider,
 .g2-hero-slider .slick-list,
 .g2-hero-slider .slick-track {
     height: 440px !important;
 }
 
-.g2-hero-slider .slick-slide {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+.g2-hero-slider.slick-slider .slick-list {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 @media (min-width: 1200px) {
@@ -628,7 +631,9 @@ body.show-mobile-menu .grocery2-header {
     }
 }
 
-.g2-slider-item {
+.g2-slider-item,
+.g2-hero-slider .g2-slider-item,
+.g2-hero-slider .slick-slide.g2-slider-item {
     background-size: cover !important;
     background-position: center right !important;
     background-repeat: no-repeat !important;
@@ -636,14 +641,16 @@ body.show-mobile-menu .grocery2-header {
     height: 440px !important;
     display: flex !important;
     align-items: center !important;
-    padding: 40px 50px 40px 55px !important;
+    padding: 48px 48px 48px 56px !important;
     position: relative !important;
     overflow: hidden !important;
 }
 
 @media (max-width: 767.98px) {
-    .g2-slider-item {
-        padding: 30px 24px !important;
+    .g2-slider-item,
+    .g2-hero-slider .g2-slider-item,
+    .g2-hero-slider .slick-slide.g2-slider-item {
+        padding: 16px !important;
     }
 }
 
@@ -652,6 +659,7 @@ body.show-mobile-menu .grocery2-header {
     position: relative;
     z-index: 2;
     text-align: left !important;
+    padding-left: 4px;
 }
 
 .g2-badge {
@@ -730,7 +738,7 @@ body.show-mobile-menu .grocery2-header {
     background-position: center right !important;
     background-repeat: no-repeat !important;
     border-radius: 16px !important;
-    padding: 24px 30px !important;
+    padding: 28px 24px 28px 40px !important;
     display: flex !important;
     align-items: center !important;
     position: relative !important;
@@ -742,6 +750,8 @@ body.show-mobile-menu .grocery2-header {
     max-width: 240px;
     position: relative;
     z-index: 2;
+    padding-left: 4px;
+    text-align: left;
 }
 
 .g2-side-promo-content h3 {
@@ -818,7 +828,7 @@ body.show-mobile-menu .grocery2-header {
     height: calc(480px / 2 - 10px);
     display: flex;
     align-items: center;
-    padding: 30px;
+    padding: 28px 24px 28px 40px;
     position: relative;
 }
 
@@ -2158,7 +2168,8 @@ body.show-mobile-menu .grocery2-header {
         height: 340px !important;
     }
 
-    .g2-hero-slider .g2-slider-item {
+    .g2-hero-slider .g2-slider-item,
+    .g2-hero-slider .slick-slide.g2-slider-item {
         border-radius: 16px !important;
         padding: 16px !important;
         height: 340px !important;
