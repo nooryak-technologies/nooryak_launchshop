@@ -580,20 +580,24 @@ body.show-mobile-menu .grocery2-header {
 }
 
 /*
- * Custom container for the hero section — does NOT use Bootstrap .container
- * so Bootstrap JS/CSS can never override it. Matches the header width exactly.
+ * Custom container — covers BOTH cases:
+ *   1. New template (g2-hero-container class): directly matched
+ *   2. Old cached template (.container class): matched via parent selector
+ * Both rules use the same values as .grocery2-header-container (max-width: 1450px).
  */
-.g2-hero-container {
-    max-width: 1450px;
-    width: 100%;
-    margin-right: auto;
-    margin-left: auto;
-    padding-left: 25px;
-    padding-right: 25px;
+.g2-hero-container,
+.g2-hero-section > .container {
+    max-width: 1450px !important;
+    width: 100% !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+    padding-left: 25px !important;
+    padding-right: 25px !important;
 }
 
 @media (min-width: 992px) {
-    .g2-hero-section .row {
+    .g2-hero-section .row,
+    .g2-hero-section > .g2-hero-container > .row {
         --bs-gutter-x: 24px;
         /* 24px horizontal in-between gap */
     }
