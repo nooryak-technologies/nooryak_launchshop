@@ -579,18 +579,7 @@ body.show-mobile-menu .grocery2-header {
     padding-bottom: 20px;
 }
 
-/* ── Grocery2: Hero section container left/right padding ── */
-.g2-hero-section > .container {
-    padding-left: 30px !important;
-    padding-right: 30px !important;
-}
-
 @media (min-width: 992px) {
-    .g2-hero-section > .container {
-        padding-left: 40px !important;
-        padding-right: 40px !important;
-    }
-
     .g2-hero-section .row {
         --bs-gutter-x: 24px;
         /* 24px horizontal in-between gap */
@@ -602,13 +591,6 @@ body.show-mobile-menu .grocery2-header {
         gap: 20px;
         /* 20px vertical gap between right side promo cards */
         height: 440px !important;
-    }
-}
-
-@media (max-width: 767.98px) {
-    .g2-hero-section > .container {
-        padding-left: 15px !important;
-        padding-right: 15px !important;
     }
 }
 
@@ -637,7 +619,7 @@ body.show-mobile-menu .grocery2-header {
     height: 440px !important;
     display: flex !important;
     align-items: center !important;
-    padding: 40px 50px 40px 60px !important;  /* extra left breathing room */
+    padding: 40px 50px 40px 55px !important;
     position: relative !important;
     overflow: hidden !important;
 }
