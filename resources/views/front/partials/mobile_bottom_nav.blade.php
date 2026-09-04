@@ -16,7 +16,7 @@
     </a>
 
     <!-- 2. THEME -->
-    <a href="{{ route('front.templates.view') }}" class="mobile-nav-item {{ request()->routeIs('front.templates.view') ? 'active' : '' }}">
+    <a href="{{ Route::has('front.templates.view') ? route('front.templates.view') : url('/') }}" class="mobile-nav-item {{ request()->routeIs('front.templates.view') ? 'active' : '' }}">
       <div class="mobile-nav-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="3" width="7" height="7" rx="1.5"/>
@@ -29,7 +29,7 @@
     </a>
 
     <!-- 3. PRICING --> 
-    <a href="{{ route('front.pricing') }}" class="mobile-nav-item {{ request()->routeIs('front.pricing') ? 'active' : '' }}">
+    <a href="{{ Route::has('front.pricing') ? route('front.pricing') : url('/') }}" class="mobile-nav-item {{ request()->routeIs('front.pricing') ? 'active' : '' }}">
       <div class="mobile-nav-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="m20.59 13.41-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
@@ -43,7 +43,7 @@
     @auth
       <a href="{{ route('user-dashboard') }}" class="mobile-nav-item {{ request()->routeIs('user-dashboard') ? 'active' : '' }}">
     @else
-      <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="mobile-nav-item {{ (request()->routeIs('user.login') || request()->routeIs('user.register') || request()->routeIs('front.register.view')) ? 'active' : '' }}">
+      <a href="{{ Route::has('front.register.view') ? route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) : url('/') }}" class="mobile-nav-item {{ (request()->routeIs('user.login') || request()->routeIs('user.register') || request()->routeIs('front.register.view')) ? 'active' : '' }}">
     @endauth
       <div class="mobile-nav-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -55,7 +55,7 @@
     </a>
 
     <!-- 5. CONTACT -->
-    <a href="{{ route('front.contact') }}" class="mobile-nav-item {{ request()->routeIs('front.contact') ? 'active' : '' }}">
+    <a href="{{ Route::has('front.contact') ? route('front.contact') : url('/') }}" class="mobile-nav-item {{ request()->routeIs('front.contact') ? 'active' : '' }}">
       <div class="mobile-nav-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>

@@ -53,12 +53,12 @@
               <div class="menu-action-item-wrapper">
                 @guest
                   <div class="menu-action-item">
-                    <a href="{{ route('front.contact') }}" class="btn-ls-outline">
+                    <a href="{{ Route::has('front.contact') ? route('front.contact') : url('/') }}" class="btn-ls-outline">
                       <span>{{ __('Book Demo') }}</span>
                     </a>
                   </div>
                   <div class="menu-action-item">
-                    <a href="{{ route('front.pricing') }}" class="btn-ls-primary">
+                    <a href="{{ Route::has('front.pricing') ? route('front.pricing') : url('/') }}" class="btn-ls-primary">
                       <span>{{ __('Start Free Trial') }}</span>
                     </a>
                   </div>
@@ -125,7 +125,7 @@
         <div class="side-option">
           @guest
             <div class="item">
-              <a href="{{ route('front.contact') }}" class="btn-ls-outline btn-sm">
+              <a href="{{ Route::has('front.contact') ? route('front.contact') : url('/') }}" class="btn-ls-outline btn-sm">
                 <span>{{ __('Book Demo') }}</span>
               </a>
             </div>
