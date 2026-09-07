@@ -3,11 +3,9 @@
 use Illuminate\Support\Facades\Route;
 
 // Register supported base hosts for tenant subdomain routing.
-$tenantBaseHosts = array_values(array_unique(array_filter([
-    strtolower((string) env('WEBSITE_HOST', '')),
-    'launchshop.in',
-    'nooryak.in',
-])));
+$tenantBaseHosts = array_values(array_filter(platformBaseHosts(), function ($host) {
+    return !in_array($host, ['localhost', '127.0.0.1'], true) && substr_count($host, '.') >= 1;
+}));
 
 // ─────────────────────────────────────────────────────────────────
 // Shared tenant route definitions (inline closure)
@@ -148,25 +146,13 @@ $tenantRoutes = function () {
 // ─────────────────────────────────────────────────────────────────
 // Context Detection & Execution
 // ─────────────────────────────────────────────────────────────────
-$requestHost = isset($_SERVER['HTTP_HOST'])
-    ? strtolower(str_replace('www.', '', $_SERVER['HTTP_HOST']))
-    : strtolower(str_replace('www.', '', (string) env('WEBSITE_HOST', 'localhost')));
+$requestHost = $_SERVER['HTTP_HOST'] ?? (string) env('WEBSITE_HOST', 'localhost');
+$cleanRequestHost = normalizeRequestHost($requestHost);
 
-$cleanRequestHost = preg_replace('/^(www|app)\./i', '', $requestHost);
-
-$isTenantSubdomain = false;
-$tenantSubdomainName = null;
-
-foreach ($tenantBaseHosts as $tenantBaseHost) {
-    if (!empty($tenantBaseHost) && $cleanRequestHost !== $tenantBaseHost && str_ends_with($cleanRequestHost, '.' . $tenantBaseHost)) {
-        $isTenantSubdomain = true;
-        $tenantSubdomainName = explode('.', $cleanRequestHost)[0] ?? null;
-        break;
-    }
-}
-
-$isMainHost = in_array($cleanRequestHost, array_merge(['localhost', '127.0.0.1'], $tenantBaseHosts));
-$isCustomDomain = !$isMainHost && !isAgencyDomain($cleanRequestHost) && !$isTenantSubdomain;
+$isTenantSubdomain = isPlatformSubdomainHost($cleanRequestHost);
+$tenantSubdomainName = $isTenantSubdomain ? (explode('.', $cleanRequestHost)[0] ?? null) : null;
+$isMainHost = isPlatformMainHost($cleanRequestHost);
+$isCustomDomain = !$isMainHost && !$isTenantSubdomain && (isShopCustomDomainHost($cleanRequestHost) || !isAgencyDomain($cleanRequestHost));
 
 // ─────────────────────────────────────────────────────────────────
 // Auto 301 Redirect: ecomgrocery.launchshop.in/ecomgrocery/shop -> ecomgrocery.launchshop.in/shop

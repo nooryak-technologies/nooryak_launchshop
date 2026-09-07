@@ -576,17 +576,167 @@ if (!function_exists('reviewCount')) {
 }
 
 
+if (!function_exists('normalizeRequestHost')) {
+    function normalizeRequestHost($host = null)
+    {
+        if (empty($host)) {
+            $host = $_SERVER['HTTP_HOST'] ?? (string) env('WEBSITE_HOST', 'localhost');
+        }
+
+        $host = strtolower(trim((string) $host));
+        $host = preg_replace('/^https?:\/\//i', '', $host);
+        $host = explode('/', $host)[0];
+        $host = explode(':', $host)[0];
+        $host = preg_replace('/^(www|app)\./i', '', $host);
+
+        return trim($host, './ ');
+    }
+}
+
+if (!function_exists('platformBaseHosts')) {
+    function platformBaseHosts()
+    {
+        return array_values(array_unique(array_filter([
+            strtolower((string) env('WEBSITE_HOST', '')),
+            'launchshop.in',
+            'nooryak.in',
+            'localhost',
+            '127.0.0.1',
+        ], function ($host) {
+            return !empty($host) && $host !== 'com';
+        })));
+    }
+}
+
+if (!function_exists('isPlatformMainHost')) {
+    function isPlatformMainHost($host = null)
+    {
+        return in_array(normalizeRequestHost($host), platformBaseHosts(), true);
+    }
+}
+
+if (!function_exists('isPlatformSubdomainHost')) {
+    function isPlatformSubdomainHost($host = null)
+    {
+        $cleanHost = normalizeRequestHost($host);
+        foreach (platformBaseHosts() as $baseHost) {
+            if (empty($baseHost) || $cleanHost === $baseHost) {
+                continue;
+            }
+            if (substr_count($baseHost, '.') < 1) {
+                continue;
+            }
+            if (str_ends_with($cleanHost, '.' . $baseHost)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+if (!function_exists('customDomainHostVariants')) {
+    function customDomainHostVariants($host = null)
+    {
+        $cleanHost = normalizeRequestHost($host);
+        if (empty($cleanHost)) {
+            return [];
+        }
+
+        return array_values(array_unique([
+            $cleanHost,
+            'www.' . $cleanHost,
+            'http://' . $cleanHost,
+            'https://' . $cleanHost,
+            'http://www.' . $cleanHost,
+            'https://www.' . $cleanHost,
+            $cleanHost . '/',
+            'www.' . $cleanHost . '/',
+        ]));
+    }
+}
+
+if (!function_exists('findShopUserByCustomDomain')) {
+    function findShopUserByCustomDomain($host = null)
+    {
+        $cleanHost = normalizeRequestHost($host);
+        if (empty($cleanHost) || isPlatformMainHost($cleanHost)) {
+            return null;
+        }
+
+        $variants = customDomainHostVariants($cleanHost);
+        $mainDb = env('DB_DATABASE');
+        $currentDb = config('database.connections.mysql.database');
+        $origUser = config('database.connections.mysql.username');
+        $origPass = config('database.connections.mysql.password');
+        $switchedToMain = false;
+
+        try {
+            if (!empty($mainDb) && $currentDb !== $mainDb) {
+                \Illuminate\Support\Facades\DB::purge('mysql');
+                config(['database.connections.mysql.database' => $mainDb]);
+                \Illuminate\Support\Facades\DB::reconnect('mysql');
+                $switchedToMain = true;
+            }
+
+            $domainRow = \Illuminate\Support\Facades\DB::table('user_custom_domains')
+                ->where(function ($q) use ($cleanHost, $variants) {
+                    $q->whereIn('requested_domain', $variants)
+                        ->orWhereIn('current_domain', $variants)
+                        ->orWhereRaw('LOWER(TRIM(BOTH "/" FROM TRIM(REPLACE(REPLACE(REPLACE(requested_domain, "https://", ""), "http://", ""), "www.", "")))) = ?', [$cleanHost])
+                        ->orWhereRaw('LOWER(TRIM(BOTH "/" FROM TRIM(REPLACE(REPLACE(REPLACE(current_domain, "https://", ""), "http://", ""), "www.", "")))) = ?', [$cleanHost]);
+                })
+                ->whereIn('status', [0, 1, '0', '1'])
+                ->orderByRaw("CASE WHEN status = 1 OR status = '1' THEN 0 ELSE 1 END")
+                ->orderByDesc('id')
+                ->first();
+
+            if ($domainRow && !empty($domainRow->user_id)) {
+                $user = User::find($domainRow->user_id);
+                if ($user) {
+                    return $user;
+                }
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Custom domain lookup failed: ' . $e->getMessage());
+        }
+
+        if ($switchedToMain) {
+            try {
+                \Illuminate\Support\Facades\DB::purge('mysql');
+                config([
+                    'database.connections.mysql.database' => $currentDb,
+                    'database.connections.mysql.username' => $origUser,
+                    'database.connections.mysql.password' => $origPass,
+                ]);
+                \Illuminate\Support\Facades\DB::reconnect('mysql');
+            } catch (\Throwable $e) {
+                // keep main connection if restore fails
+            }
+        }
+
+        return null;
+    }
+}
+
+if (!function_exists('isShopCustomDomainHost')) {
+    function isShopCustomDomainHost($host = null)
+    {
+        return !empty(findShopUserByCustomDomain($host));
+    }
+}
+
 if (!function_exists('isAgencyDomain')) {
     function isAgencyDomain($host = null)
     {
-        if (empty($host)) {
-            $host = request()->getHost();
+        $cleanHost = normalizeRequestHost($host);
+        if (isShopCustomDomainHost($cleanHost)) {
+            return false;
         }
-        $cleanHost = preg_replace('/^(www|app)\./i', '', strtolower($host));
 
         $knownAgencies = ['cockroachjantaparty.top'];
         foreach ($knownAgencies as $agencyHost) {
-            if (str_contains($cleanHost, $agencyHost)) {
+            if ($cleanHost === $agencyHost || str_ends_with($cleanHost, '.' . $agencyHost)) {
                 return true;
             }
         }
@@ -738,36 +888,13 @@ if (!function_exists('getUser')) {
             '127.0.0.1',
         ])));
 
-        $cleanCustomHost = preg_replace('/^https?:\/\//i', '', strtolower($requestHost));
-        $cleanCustomHost = preg_replace('/^www\./i', '', $cleanCustomHost);
-        $cleanCustomHost = trim(explode(':', $cleanCustomHost)[0], '/ ');
+        $cleanCustomHost = normalizeRequestHost($requestHost);
 
         // ── CASE 1: fully custom domain (prioritized for external hosts) ─────
-        if (!in_array($cleanCustomHost, $mainPlatformHosts)) {
-            try {
-                $cDomain = \App\Models\User\UserCustomDomain::where(function ($q) use ($cleanCustomHost) {
-                        $q->where('requested_domain', $cleanCustomHost)
-                          ->orWhere('requested_domain', 'www.' . $cleanCustomHost)
-                          ->orWhere('requested_domain', 'http://' . $cleanCustomHost)
-                          ->orWhere('requested_domain', 'https://' . $cleanCustomHost)
-                          ->orWhere('requested_domain', 'http://www.' . $cleanCustomHost)
-                          ->orWhere('requested_domain', 'https://www.' . $cleanCustomHost)
-                          ->orWhere('requested_domain', 'LIKE', '%' . $cleanCustomHost . '%')
-                          ->orWhere('current_domain', $cleanCustomHost)
-                          ->orWhere('current_domain', 'www.' . $cleanCustomHost)
-                          ->orWhere('current_domain', 'LIKE', '%' . $cleanCustomHost . '%');
-                    })
-                    ->orderByRaw("CASE WHEN status = 1 OR status = '1' THEN 0 WHEN status = 0 OR status = '0' THEN 1 ELSE 2 END")
-                    ->first();
-
-                if ($cDomain) {
-                    $user = User::find($cDomain->user_id);
-                    if ($user) {
-                        return $user;
-                    }
-                }
-            } catch (\Throwable $e) {
-                // ignore
+        if (!in_array($cleanCustomHost, $mainPlatformHosts, true)) {
+            $customDomainUser = findShopUserByCustomDomain($cleanCustomHost);
+            if ($customDomainUser) {
+                return $customDomainUser;
             }
         }
 

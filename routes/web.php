@@ -2,30 +2,10 @@
 
 use App\Models\User;
 
-$requestHost = isset($_SERVER['HTTP_HOST'])
-    ? strtolower(str_replace('www.', '', $_SERVER['HTTP_HOST']))
-    : strtolower(str_replace('www.', '', (string) env('WEBSITE_HOST', 'localhost')));
-
-$cleanRequestHost = preg_replace('/^(www|app)\./i', '', $requestHost);
-
-$tenantBaseHosts = array_values(array_unique(array_filter([
-    strtolower((string) env('WEBSITE_HOST', '')),
-    'launchshop.in',
-    'nooryak.in',
-    'localhost',
-    '127.0.0.1',
-])));
-
-$isTenantSubdomain = false;
-foreach ($tenantBaseHosts as $tenantBaseHost) {
-    if (!empty($tenantBaseHost) && $cleanRequestHost !== $tenantBaseHost && str_ends_with($cleanRequestHost, '.' . $tenantBaseHost)) {
-        $isTenantSubdomain = true;
-        break;
-    }
-}
-
-$isMainHost = in_array($cleanRequestHost, $tenantBaseHosts);
-$isCustomDomain = !$isMainHost && !isAgencyDomain($cleanRequestHost) && !$isTenantSubdomain;
+$cleanRequestHost = normalizeRequestHost();
+$isTenantSubdomain = isPlatformSubdomainHost($cleanRequestHost);
+$isMainHost = isPlatformMainHost($cleanRequestHost);
+$isCustomDomain = !$isMainHost && !$isTenantSubdomain && (isShopCustomDomainHost($cleanRequestHost) || !isAgencyDomain($cleanRequestHost));
 
 Route::get('/midtrans/bank-notify', 'MidtransBankNotifyController@bank_notify')->name('midtrans.bank_notify');
 Route::get('/check-payment', 'CronJobController@check_payment')->name('cron.check_payment');

@@ -1,7 +1,10 @@
 @php
   $layoutDirectory = null;
   $pageTitle = App\Models\Admin\Heading::where('language_id', $currentLang->id)->pluck('not_found_title')->first();
-  $user = App\Models\User::where('username', getParam())->first();
+  $user = getUser();
+  if (!$user) {
+    $user = App\Models\User::where('username', getParam())->first();
+  }
   $userCurrentLang = null;
   if ($user) {
     $userCurrentLang = app('userCurrentLang');
@@ -137,7 +140,7 @@
     } catch (\Throwable $uerr) {}
   @endphp
 
-  @if (config('app.debug') || request()->has('debug') || true)
+  @if (config('app.debug') || request()->has('debug'))
     <div class="container my-4 p-4 bg-dark text-white rounded shadow-lg" style="font-size: 13px; font-family: monospace; z-index: 9999; position: relative; border-left: 5px solid #ffc107;">
       <h5 class="text-warning mb-3">🐞 Live Database & System Diagnostics (404 Debug)</h5>
       

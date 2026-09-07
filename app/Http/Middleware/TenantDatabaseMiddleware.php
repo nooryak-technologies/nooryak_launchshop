@@ -21,7 +21,14 @@ class TenantDatabaseMiddleware
     {
         $host = $request->getHost();
         $normalizedHost = strtolower(preg_replace('/^www\./', '', $host));
-        $cleanHost = preg_replace('/^(launchshop|app|www)\./', '', $normalizedHost);
+        $cleanHost = function_exists('normalizeRequestHost')
+            ? normalizeRequestHost($host)
+            : preg_replace('/^(launchshop|app|www)\./', '', $normalizedHost);
+
+        $mainDb    = env('DB_DATABASE');
+        $origUser  = config('database.connections.mysql.username');
+        $origPass  = config('database.connections.mysql.password');
+        $currentDb = config('database.connections.mysql.database');
 
         $mainHosts = array_filter([
             'nooryak.in',
@@ -32,18 +39,45 @@ class TenantDatabaseMiddleware
         ]);
 
         $isMainHostRequest = in_array($cleanHost, $mainHosts)
-            || in_array($normalizedHost, $mainHosts);
+            || in_array($normalizedHost, $mainHosts)
+            || (function_exists('isPlatformMainHost') && isPlatformMainHost($cleanHost));
 
+        $isShopCustomDomain = !$isMainHostRequest
+            && (!function_exists('isPlatformSubdomainHost') || !isPlatformSubdomainHost($cleanHost));
+
+        // Shop custom domains (e.g. maturednature.com) live in the MAIN Launchshop DB.
+        // Never inherit a leftover white-label tenant session (e.g. hikmadh) here.
+        if ($isShopCustomDomain) {
+            if (!empty($mainDb) && $currentDb !== $mainDb) {
+                $this->connectMysql($mainDb, $origUser, $origPass);
+                $currentDb = $mainDb;
+            }
+
+            $shopUser = function_exists('findShopUserByCustomDomain')
+                ? findShopUserByCustomDomain($cleanHost)
+                : null;
+
+            if ($shopUser) {
+                session()->forget(['tenant_db', 'tenant_agency_slug']);
+                Log::info("TenantMiddleware: shop custom domain '{$cleanHost}' stays on main DB '{$currentDb}' (user {$shopUser->username}).");
+                try {
+                    app()->forgetInstance('user');
+                } catch (\Throwable $e) {
+                    // ignore
+                }
+                return $next($request);
+            }
+        }
 
         // 1. Check if explicit agency or tenant DB is passed in query param or session
         $agencySlug = $request->query('agency') ?? $request->query('tenant') ?? session('tenant_agency_slug');
         $tenantDb   = $request->query('tenant_db') ?? session('tenant_db');
 
-        // Main host should never continue with stale tenant DB from old session.
+        // Main host / shop custom domain should never continue with stale tenant DB from old session.
         $hasExplicitTenantOverride = $request->query('agency') || $request->query('tenant') || $request->query('tenant_db');
-        if ($isMainHostRequest && !$hasExplicitTenantOverride) {
+        if (($isMainHostRequest || $isShopCustomDomain) && !$hasExplicitTenantOverride) {
             if (session()->has('tenant_db') || session()->has('tenant_agency_slug')) {
-                Log::info("TenantMiddleware: Clearing stale tenant session on main host '{$normalizedHost}'.");
+                Log::info("TenantMiddleware: Clearing stale tenant session on host '{$normalizedHost}'.");
             }
             session()->forget(['tenant_db', 'tenant_agency_slug']);
             $agencySlug = null;
@@ -123,39 +157,8 @@ class TenantDatabaseMiddleware
                     }
                     Log::info("TenantMiddleware: domain '{$cleanHost}' -> agency '{$agency->name}'");
                 } else {
-                    // Check if domain is a tenant custom domain (e.g. maturednature.com)
-                    try {
-                        $cDomainRow = DB::table('user_custom_domains')
-                            ->where(function ($sq) {
-                                $sq->where('status', 1)->orWhere('status', '1')->orWhere('status', 0);
-                            })
-                            ->where(function ($q) use ($host, $cleanHost) {
-                                $q->where('requested_domain', $host)
-                                  ->orWhere('requested_domain', $cleanHost)
-                                  ->orWhere('requested_domain', 'www.' . $cleanHost)
-                                  ->orWhere('requested_domain', 'http://' . $cleanHost)
-                                  ->orWhere('requested_domain', 'https://' . $cleanHost)
-                                  ->orWhere('requested_domain', 'LIKE', '%' . $cleanHost . '%')
-                                  ->orWhere('current_domain', $host)
-                                  ->orWhere('current_domain', $cleanHost)
-                                  ->orWhere('current_domain', 'www.' . $cleanHost)
-                                  ->orWhere('current_domain', 'LIKE', '%' . $cleanHost . '%');
-                            })
-                            ->orderByRaw("CASE WHEN status = 1 OR status = '1' THEN 0 ELSE 1 END")
-                            ->first();
-
-                        if ($cDomainRow) {
-                            $userObj = DB::table('users')->where('id', $cDomainRow->user_id)->first();
-                            if ($userObj && !empty($userObj->username)) {
-                                $cdb = $this->findExistingDbBySlug($userObj->username);
-                                if ($cdb) {
-                                    $candidates[] = $cdb;
-                                }
-                            }
-                        }
-                    } catch (\Throwable $e) {
-                        Log::warning("TenantMiddleware custom domain check error: " . $e->getMessage());
-                    }
+                    // Shop custom domains stay on the current/main Launchshop database.
+                    // Do not map a store username onto a white-label tenant DB.
 
                     // Fallback for agency domains like cockroachjantaparty.top -> ysquare agency DB
                     if (str_contains($cleanHost, 'cockroachjantaparty.top') || str_contains($host, 'cockroachjantaparty.top')) {
@@ -239,6 +242,18 @@ class TenantDatabaseMiddleware
         }
 
         return $next($request);
+    }
+
+    protected function connectMysql(string $database, $username, $password): void
+    {
+        DB::purge('mysql');
+        config([
+            'database.connections.mysql.database' => $database,
+            'database.connections.mysql.username' => $username,
+            'database.connections.mysql.password' => $password,
+        ]);
+        DB::reconnect('mysql');
+        DB::connection('mysql')->getPdo();
     }
 
     /**
@@ -352,7 +367,6 @@ class TenantDatabaseMiddleware
                    OR custom_domain = ?
                    OR custom_domain = ?
                    OR custom_domain = ?
-                   OR custom_domain LIKE ?
                 LIMIT 1";
 
         $rows = $this->sassQuery($sql, [
@@ -362,7 +376,6 @@ class TenantDatabaseMiddleware
             "http://{$cleanHost}",
             "https://{$rootHost}",
             "http://{$rootHost}",
-            "%{$rootHost}%",
         ]);
 
         return $rows[0] ?? null;

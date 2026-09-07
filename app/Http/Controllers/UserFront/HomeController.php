@@ -50,6 +50,12 @@ class HomeController extends Controller
     {
         $user = app('user');
         if (empty($user)) {
+            $user = findShopUserByCustomDomain();
+            if ($user) {
+                app()->instance('user', $user);
+            }
+        }
+        if (empty($user)) {
             abort(404);
         }
         $userCurrentLang = app('userCurrentLang');
@@ -72,6 +78,9 @@ class HomeController extends Controller
         $uLang = $userCurrentLang->id;
         $data['uLang'] = $userCurrentLang->id;
         $data['ubs'] = app('userBs');
+        if (empty($data['ubs'])) {
+            $data['ubs'] = (object) ['theme' => 'grocery2'];
+        }
 
         $data['sliders'] = HeroSlider::where('language_id', $userCurrentLang->id)
             ->where('user_id', $user->id)
@@ -144,6 +153,12 @@ class HomeController extends Controller
                 ->get();
         }
         $shop_settings =  app('shop_settings');
+        if (empty($shop_settings)) {
+            $shop_settings = (object) [
+                'top_rated_count' => 6,
+                'top_selling_count' => 6,
+            ];
+        }
         $shopSet = $shop_settings;
         $data['shopSet'] = $shopSet;
 

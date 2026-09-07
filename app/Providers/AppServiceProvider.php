@@ -49,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
             return new \App\Libraries\QrCodeGenerator();
         });
 
-        $this->app->singleton('user', function () {
+        $this->app->bind('user', function () {
             return getUser();
         });
 
@@ -348,6 +348,10 @@ class AppServiceProvider extends ServiceProvider
         $preference = UserPermission::where([
             ['user_id', $userId]
         ])->first();
+
+        if (empty($preference)) {
+            return;
+        }
 
         // if current package does not match with 'package_id' of 'user_permissions' table, then change 'package_id' in 'user_permissions'
         if (!empty($currentPackage) && ($currentPackage->id != $preference->package_id)) {

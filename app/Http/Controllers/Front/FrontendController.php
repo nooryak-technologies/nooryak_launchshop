@@ -64,6 +64,11 @@ class FrontendController extends Controller
 
     public function index()
     {
+        $customDomainUser = findShopUserByCustomDomain();
+        if ($customDomainUser && !isPlatformMainHost() && !isPlatformSubdomainHost()) {
+            return app(UserFrontHomeController::class)->userDetailView($customDomainUser->username);
+        }
+
         $requestHost = strtolower(str_replace('www.', '', request()->getHost()));
         $tenantBaseHosts = array_values(array_unique(array_filter([
             strtolower((string) env('WEBSITE_HOST', '')),
