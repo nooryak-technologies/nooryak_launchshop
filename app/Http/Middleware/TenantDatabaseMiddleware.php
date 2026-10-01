@@ -113,7 +113,7 @@ class TenantDatabaseMiddleware
         }
 
         // 2. Extract subdomain (e.g. wibro.launchshop.nooryak.in -> wibro)
-        if (!$agencySlug && !$tenantDb) {
+        if (!$agencySlug && !$tenantDb && !$isPlatformSubdomain) {
             $parts = explode('.', $host);
             if (count($parts) >= 3 && !in_array(strtolower($parts[0]), ['www', 'app', 'launchshop', 'admin', 'localhost'])) {
                 $subCandidate = strtolower($parts[0]);
