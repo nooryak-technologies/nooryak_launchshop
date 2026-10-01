@@ -23,7 +23,7 @@ class TenantDatabaseMiddleware
         $normalizedHost = strtolower(preg_replace('/^www\./', '', $host));
         $cleanHost = function_exists('normalizeRequestHost')
             ? normalizeRequestHost($host)
-            : preg_replace('/^(launchshop|app|www)\./', '', $normalizedHost);
+            : preg_replace('/^(app|www)\./', '', $normalizedHost);
 
         $mainDb    = env('DB_DATABASE');
         $origUser  = config('database.connections.mysql.username');
