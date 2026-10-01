@@ -31,7 +31,7 @@ class TenantDatabaseMiddleware
         $currentDb = config('database.connections.mysql.database');
 
         $mainHosts = array_filter([
-            'saasreselling.in',
+            'nooryak.in',
             '127.0.0.1',
             'localhost',
             'launchshop.in',
@@ -42,8 +42,19 @@ class TenantDatabaseMiddleware
             || in_array($normalizedHost, $mainHosts)
             || (function_exists('isPlatformMainHost') && isPlatformMainHost($cleanHost));
 
-        $isShopCustomDomain = !$isMainHostRequest
-            && (!function_exists('isPlatformSubdomainHost') || !isPlatformSubdomainHost($cleanHost));
+        $isPlatformSubdomain = function_exists('isPlatformSubdomainHost') && isPlatformSubdomainHost($cleanHost);
+
+        $isShopCustomDomain = !$isMainHostRequest && !$isPlatformSubdomain;
+
+        // Platform subdomains (*.launchshop.in) live in the MAIN Launchshop DB.
+        if ($isPlatformSubdomain) {
+            if (!empty($mainDb) && $currentDb !== $mainDb) {
+                $this->connectMysql($mainDb, $origUser, $origPass);
+            }
+            session()->forget(['tenant_db', 'tenant_agency_slug']);
+            Log::info("TenantMiddleware: Platform subdomain '{$cleanHost}' stays on main DB.");
+            return $next($request);
+        }
 
         // Shop custom domains (e.g. maturednature.com) live in the MAIN Launchshop DB.
         // Never inherit a leftover white-label tenant session (e.g. hikmadh) here.
@@ -73,10 +84,9 @@ class TenantDatabaseMiddleware
         $agencySlug = $request->query('agency') ?? $request->query('tenant') ?? session('tenant_agency_slug');
         $tenantDb   = $request->query('tenant_db') ?? session('tenant_db');
 
-        // Main host / shop custom domain / platform subdomain should never continue with stale tenant DB from old session.
-        $isPlatformSub = function_exists('isPlatformSubdomainHost') && isPlatformSubdomainHost($cleanHost);
+        // Main host / shop custom domain should never continue with stale tenant DB from old session.
         $hasExplicitTenantOverride = $request->query('agency') || $request->query('tenant') || $request->query('tenant_db');
-        if (($isMainHostRequest || $isShopCustomDomain || $isPlatformSub) && !$hasExplicitTenantOverride) {
+        if (($isMainHostRequest || $isShopCustomDomain) && !$hasExplicitTenantOverride) {
             if (session()->has('tenant_db') || session()->has('tenant_agency_slug')) {
                 Log::info("TenantMiddleware: Clearing stale tenant session on host '{$normalizedHost}'.");
             }
@@ -127,7 +137,7 @@ class TenantDatabaseMiddleware
                     $baseHosts = array_filter([
                         env('WEBSITE_HOST', 'launchshop.in'),
                         'launchshop.in',
-                        'saasreselling.in'
+                        'nooryak.in'
                     ]);
                     $isPlatformSubdomain = false;
                     foreach ($baseHosts as $bHost) {
@@ -164,7 +174,7 @@ class TenantDatabaseMiddleware
             // ── Main / infrastructure hosts — never switch databases ───────────
             // Add any domain here that should always use the main DB connection.
             $mainHosts = [
-                'saasreselling.in',
+                'nooryak.in',
                 '127.0.0.1',
                 'localhost',
                 'launchshop.in',
