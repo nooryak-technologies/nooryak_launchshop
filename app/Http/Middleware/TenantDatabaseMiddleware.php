@@ -105,7 +105,16 @@ class TenantDatabaseMiddleware
         if (!$agencySlug && !$tenantDb) {
             $parts = explode('.', $host);
             if (count($parts) >= 3 && !in_array(strtolower($parts[0]), ['www', 'app', 'launchshop', 'admin', 'localhost'])) {
-                $agencySlug = $parts[0];
+                $subCandidate = strtolower($parts[0]);
+                $isPlatformUser = false;
+                try {
+                    $isPlatformUser = \App\Models\User::where('username', $subCandidate)->exists();
+                } catch (\Throwable $e) {
+                    // fallback
+                }
+                if (!$isPlatformUser) {
+                    $agencySlug = $subCandidate;
+                }
             }
         }
 
@@ -122,8 +131,6 @@ class TenantDatabaseMiddleware
                     $candidates[] = $dbFromPivot;
                 }
                 $candidates[] = $this->findExistingDbBySlug($agency->slug ?? '');
-                $candidates[] = $this->findExistingDbBySlug($agencySlug);
-            } else {
                 $candidates[] = $this->findExistingDbBySlug($agencySlug);
             }
         } else {

@@ -927,7 +927,7 @@ if (!function_exists('getUser')) {
             if ($user->online_status != 1 && $user->preview_template != 1) {
                 return null;
             }
-            if (!cPackageHasSubdomain($user)) {
+            if (!cPackageHasSubdomain($user) && $user->preview_template != 1) {
                 return null;
             }
             return $user;
