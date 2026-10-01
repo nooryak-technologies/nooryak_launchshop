@@ -909,6 +909,15 @@ if (!function_exists('getUser')) {
             }
 
             $sub  = explode('.', $requestHost)[0];
+            $themeAliasMap = [
+                'ecomgrocery' => 'grocery2',
+                'grocery'     => 'vegetables',
+                'multipurpose'=> 'manti',
+            ];
+            if (isset($themeAliasMap[strtolower($sub)])) {
+                $sub = $themeAliasMap[strtolower($sub)];
+            }
+
             $user = User::where('username', $sub)
                 ->where('status', 1)
                 ->where(function ($query) {

@@ -106,14 +106,38 @@ class TenantDatabaseMiddleware
             $parts = explode('.', $host);
             if (count($parts) >= 3 && !in_array(strtolower($parts[0]), ['www', 'app', 'launchshop', 'admin', 'localhost'])) {
                 $subCandidate = strtolower($parts[0]);
+                $themeAliasMap = [
+                    'ecomgrocery' => 'grocery2',
+                    'grocery'     => 'vegetables',
+                    'multipurpose'=> 'manti',
+                ];
+                if (isset($themeAliasMap[$subCandidate])) {
+                    $subCandidate = $themeAliasMap[$subCandidate];
+                }
+
                 $isPlatformUser = false;
                 try {
                     $isPlatformUser = \App\Models\User::where('username', $subCandidate)->exists();
                 } catch (\Throwable $e) {
                     // fallback
                 }
+
                 if (!$isPlatformUser) {
-                    $agencySlug = $subCandidate;
+                    $baseHosts = array_filter([
+                        env('WEBSITE_HOST', 'launchshop.in'),
+                        'launchshop.in',
+                        'nooryak.in'
+                    ]);
+                    $isPlatformSubdomain = false;
+                    foreach ($baseHosts as $bHost) {
+                        if (!empty($bHost) && str_ends_with($host, '.' . $bHost)) {
+                            $isPlatformSubdomain = true;
+                            break;
+                        }
+                    }
+                    if (!$isPlatformSubdomain) {
+                        $agencySlug = $subCandidate;
+                    }
                 }
             }
         }
