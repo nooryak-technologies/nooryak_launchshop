@@ -31,7 +31,7 @@ class TenantDatabaseMiddleware
         $currentDb = config('database.connections.mysql.database');
 
         $mainHosts = array_filter([
-            'nooryak.in',
+            'saasreselling.in',
             '127.0.0.1',
             'localhost',
             'launchshop.in',
@@ -73,9 +73,10 @@ class TenantDatabaseMiddleware
         $agencySlug = $request->query('agency') ?? $request->query('tenant') ?? session('tenant_agency_slug');
         $tenantDb   = $request->query('tenant_db') ?? session('tenant_db');
 
-        // Main host / shop custom domain should never continue with stale tenant DB from old session.
+        // Main host / shop custom domain / platform subdomain should never continue with stale tenant DB from old session.
+        $isPlatformSub = function_exists('isPlatformSubdomainHost') && isPlatformSubdomainHost($cleanHost);
         $hasExplicitTenantOverride = $request->query('agency') || $request->query('tenant') || $request->query('tenant_db');
-        if (($isMainHostRequest || $isShopCustomDomain) && !$hasExplicitTenantOverride) {
+        if (($isMainHostRequest || $isShopCustomDomain || $isPlatformSub) && !$hasExplicitTenantOverride) {
             if (session()->has('tenant_db') || session()->has('tenant_agency_slug')) {
                 Log::info("TenantMiddleware: Clearing stale tenant session on host '{$normalizedHost}'.");
             }
@@ -126,7 +127,7 @@ class TenantDatabaseMiddleware
                     $baseHosts = array_filter([
                         env('WEBSITE_HOST', 'launchshop.in'),
                         'launchshop.in',
-                        'nooryak.in'
+                        'saasreselling.in'
                     ]);
                     $isPlatformSubdomain = false;
                     foreach ($baseHosts as $bHost) {
@@ -163,7 +164,7 @@ class TenantDatabaseMiddleware
             // ── Main / infrastructure hosts — never switch databases ───────────
             // Add any domain here that should always use the main DB connection.
             $mainHosts = [
-                'nooryak.in',
+                'saasreselling.in',
                 '127.0.0.1',
                 'localhost',
                 'launchshop.in',
