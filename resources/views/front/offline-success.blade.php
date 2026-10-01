@@ -278,22 +278,6 @@
   }
   .success-info-chip i { color: #10b981; font-size: 11px; }
 
-  /* ── Confetti particles ── */
-  .confetti-particle {
-    position: fixed;
-    width: 8px;
-    height: 8px;
-    border-radius: 2px;
-    pointer-events: none;
-    animation: confettiFall linear forwards;
-    z-index: 9999;
-    top: -10px;
-  }
-  @keyframes confettiFall {
-    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
-  }
-
   /* Responsive */
   @media (max-width: 575.98px) {
     .success-card { padding: 40px 24px; border-radius: 20px; }
@@ -407,24 +391,6 @@
         window.location.href = storeUrl;
       }
     }, 1000);
-
-    // Celebration Confetti burst
-    const colors = ['#ff5a2c', '#0e1b3d', '#10b981', '#f59e0b', '#6366f1', '#ec4899'];
-    for (let i = 0; i < 60; i++) {
-      setTimeout(function () {
-        const el = document.createElement('div');
-        el.classList.add('confetti-particle');
-        el.style.left  = Math.random() * 100 + 'vw';
-        el.style.background = colors[Math.floor(Math.random() * colors.length)];
-        el.style.animationDuration = (Math.random() * 2.5 + 1.5) + 's';
-        el.style.animationDelay    = (Math.random() * 0.5) + 's';
-        el.style.width  = (Math.random() * 8 + 5) + 'px';
-        el.style.height = (Math.random() * 8 + 5) + 'px';
-        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-        document.body.appendChild(el);
-        setTimeout(function () { el.remove(); }, 4000);
-      }, i * 30);
-    }
   });
 </script>
 @endsection

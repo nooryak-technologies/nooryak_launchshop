@@ -297,7 +297,6 @@ class MegaMailer
     }
 
     /**
-    /**
      * Send a beautifully formatted welcome email containing credentials and plan details.
      */
     public function sendWelcomeCredentialsEmail($user, $password, $planName, $planPrice)
@@ -307,26 +306,17 @@ class MegaMailer
         } else {
             $currentLang = Language::where('is_default', 1)->first();
         }
-        $be = $currentLang->basic_extended ?? new \stdClass();
-        $bs = $currentLang->basic_setting ?? new \stdClass();
+        $be = $currentLang->basic_extended;
+        $bs = $currentLang->basic_setting;
 
+        $storeLiveLink = '';
         $host = request()->getHost();
-        $mainDomains = ['launchshop.in', 'launchshop.top', 'www.launchshop.in', 'www.launchshop.top'];
-        $cleanHost = str_replace('www.', '', $host);
-        $baseHost = preg_replace('/^(websitebuilder|checkout|agency|app|admin)\./i', '', $cleanHost);
-
         if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
             $storeLiveLink = 'http://' . $user->username . '.localhost:8000';
-            $loginLink     = 'http://localhost:8000/login';
-        } elseif (in_array(strtolower($cleanHost), $mainDomains)) {
-            $storeLiveLink = 'https://' . $user->username . '.' . $cleanHost;
-            $loginLink     = 'https://' . $cleanHost . '/login';
         } else {
-            $storeLiveLink = 'https://' . $user->username . '.' . $baseHost;
-            $loginLink     = 'https://' . $baseHost . '/login';
+            $storeLiveLink = 'https://' . $user->username . '.' . $host;
         }
-
-        $websiteTitle = $bs->website_title ?? 'LaunchShop';
+        $loginLink = route('user.login');
 
         // Build premium HTML email template inline
         $html = '
@@ -356,24 +346,28 @@ class MegaMailer
         <body>
             <div class="card">
                 <div class="header">
-                    <h1>🎉 Welcome to ' . htmlspecialchars($websiteTitle) . '!</h1>
+                    <h1>🎉 Welcome to ' . htmlspecialchars($bs->website_title) . '!</h1>
                 </div>
                 <div class="content">
-                    <p class="welcome-msg">Hi <strong>' . htmlspecialchars($user->first_name ?? $user->username) . '</strong>,</p>
-                    <p class="welcome-msg">Your online store account has been created successfully. Below are your account details and store links:</p>
+                    <p class="welcome-msg">Hi <strong>' . htmlspecialchars($user->first_name) . '</strong>,</p>
+                    <p class="welcome-msg">Your online store has been successfully created. Below are your store details, login credentials, and links to get started:</p>
                     
                     <div class="info-box">
                         <div class="info-row">
                             <div class="info-label">👤 Store Name:</div>
-                            <div class="info-value">' . htmlspecialchars($user->shop_name ?? $user->username) . '</div>
+                            <div class="info-value">' . htmlspecialchars($user->shop_name) . '</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">👤 Username:</div>
+                            <div class="info-value">' . htmlspecialchars($user->username) . '</div>
                         </div>
                         <div class="info-row">
                             <div class="info-label">📧 Email:</div>
                             <div class="info-value">' . htmlspecialchars($user->email) . '</div>
                         </div>
                         <div class="info-row">
-                            <div class="info-label">📞 Phone Number:</div>
-                            <div class="info-value">' . htmlspecialchars($user->phone ?? '') . '</div>
+                            <div class="info-label">📞 Phone:</div>
+                            <div class="info-value">' . htmlspecialchars($user->phone) . '</div>
                         </div>
                         <div class="info-row">
                             <div class="info-label">🔑 Password:</div>
@@ -386,56 +380,50 @@ class MegaMailer
                     </div>
 
                     <div class="btn-group">
-                        <a href="' . $storeLiveLink . '" target="_blank" class="btn btn-primary">🔗 Store Live Link</a>
+                        <a href="' . $storeLiveLink . '" target="_blank" class="btn btn-primary">🔗 Visit Live Store</a>
                         <a href="' . $loginLink . '" target="_blank" class="btn btn-secondary">🔗 Login Dashboard</a>
                     </div>
                 </div>
                 <div class="footer">
                     Need help? Chat with us anytime.<br>
-                    – Team LaunchShop 🚀
+                    &copy; ' . date('Y') . ' ' . htmlspecialchars($bs->website_title) . '. All rights reserved.
                 </div>
             </div>
         </body>
         </html>
         ';
 
-        $smtpHost = (!empty($be->smtp_host)) ? $be->smtp_host : env('MAIL_HOST', 'mail.nooryak.in');
-        $smtpPort = (!empty($be->smtp_port)) ? $be->smtp_port : env('MAIL_PORT', 465);
-        $smtpEnc  = (!empty($be->encryption)) ? $be->encryption : env('MAIL_ENCRYPTION', 'ssl');
-        $smtpUser = (!empty($be->smtp_username)) ? $be->smtp_username : env('MAIL_USERNAME', 'infosaasreselling@nooryak.in');
-        $smtpPass = (!empty($be->smtp_password)) ? $be->smtp_password : env('MAIL_PASSWORD', 'Admin@nooryak');
-        $fromMail = (!empty($be->from_mail)) ? $be->from_mail : env('MAIL_FROM_ADDRESS', 'infosaasreselling@nooryak.in');
-        $fromName = $be->from_name ?? $websiteTitle;
+        if ($be->is_smtp == 1) {
+            try {
+                $smtp = [
+                    'transport' => 'smtp',
+                    'host' => $be->smtp_host,
+                    'port' => $be->smtp_port,
+                    'encryption' => $be->encryption,
+                    'username' => $be->smtp_username,
+                    'password' => $be->smtp_password,
+                    'timeout' => null,
+                    'auth_mode' => null,
+                ];
+                Config::set('mail.mailers.smtp', $smtp);
 
-        try {
-            $smtp = [
-                'transport'  => 'smtp',
-                'host'       => $smtpHost,
-                'port'       => $smtpPort,
-                'encryption' => $smtpEnc,
-                'username'   => $smtpUser,
-                'password'   => $smtpPass,
-                'timeout'    => null,
-                'auth_mode'  => null,
-            ];
-            Config::set('mail.mailers.smtp', $smtp);
+                $mailData = [
+                    'from_mail' => $be->from_mail,
+                    'from_name' => $be->from_name ?? $bs->website_title,
+                    'toMail' => $user->email,
+                    'subject' => '🎉 Welcome to ' . $bs->website_title . '! Your Store is Ready',
+                    'body' => $html
+                ];
 
-            $mailData = [
-                'from_mail' => $fromMail,
-                'from_name' => $fromName,
-                'toMail'    => $user->email,
-                'subject'   => '🎉 Welcome to ' . $websiteTitle . '! Your Store is Ready',
-                'body'      => $html
-            ];
-
-            Mail::send([], [], function (Message $message) use ($mailData) {
-                $message->to($mailData['toMail'])
-                    ->from($mailData['from_mail'], $mailData['from_name'])
-                    ->subject($mailData['subject'])
-                    ->html($mailData['body'], 'text/html');
-            });
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::warning('SMTP Welcome credentials email failed: ' . $e->getMessage());
+                Mail::send([], [], function (Message $message) use ($mailData) {
+                    $message->to($mailData['toMail'])
+                        ->from($mailData['from_mail'], $mailData['from_name'])
+                        ->subject($mailData['subject'])
+                        ->html($mailData['body'], 'text/html');
+                });
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::warning('SMTP Welcome credentials email failed: ' . $e->getMessage());
+            }
         }
     }
 }
