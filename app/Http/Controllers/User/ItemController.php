@@ -285,13 +285,24 @@ class ItemController extends Controller
             $thumbnail = $request->file('thumbnail');
             if ($request->hasFile('thumbnail')) {
                 $dir = public_path('assets/front/img/user/items/thumbnail/');
-
-                $thumbnail_name = uniqid() . '.webp';
-                $image = Image::make($thumbnail->getRealPath());
-
                 @mkdir($dir, 0775, true);
-                $image->resize(255, 255);
-                $image->save($dir . $thumbnail_name);
+
+                $processed = false;
+                if (extension_loaded('fileinfo')) {
+                    try {
+                        $thumbnail_name = uniqid() . '.webp';
+                        $image = Image::make($thumbnail->getRealPath());
+                        $image->resize(255, 255);
+                        $image->save($dir . $thumbnail_name);
+                        $processed = true;
+                    } catch (\Throwable $imgEx) {
+                        $processed = false;
+                    }
+                }
+
+                if (!$processed) {
+                    $thumbnail_name = Uploader::upload_picture($dir, $thumbnail);
+                }
             } elseif (!empty($request->ai_generated_image)) {
                 $thumbnail_name = moveAiStorageImageToPublicAssets(
                     $request->ai_generated_image,
@@ -566,14 +577,27 @@ class ItemController extends Controller
         if ($request->hasFile('thumbnail')) {
 
             $dir = public_path('assets/front/img/user/items/thumbnail/');
-            @unlink($dir . $item->thumbnail);
-
-            $thumbnail_name = uniqid() . '.webp';
-            $image = Image::make($thumbnail->getRealPath());
-
+            if (!empty($item->thumbnail) && file_exists($dir . $item->thumbnail)) {
+                @unlink($dir . $item->thumbnail);
+            }
             @mkdir($dir, 0775, true);
-            $image->resize(255, 255);
-            $image->save($dir . $thumbnail_name);
+
+            $processed = false;
+            if (extension_loaded('fileinfo')) {
+                try {
+                    $thumbnail_name = uniqid() . '.webp';
+                    $image = Image::make($thumbnail->getRealPath());
+                    $image->resize(255, 255);
+                    $image->save($dir . $thumbnail_name);
+                    $processed = true;
+                } catch (\Throwable $imgEx) {
+                    $processed = false;
+                }
+            }
+
+            if (!$processed) {
+                $thumbnail_name = Uploader::upload_picture($dir, $thumbnail);
+            }
         }
 
         $item->stock = $request->stock;
