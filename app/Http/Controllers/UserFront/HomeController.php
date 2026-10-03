@@ -49,6 +49,15 @@ class HomeController extends Controller
     public function userDetailView($domain = null)
     {
         $user = app('user');
+        if (empty($user) && !empty($domain)) {
+            $user = \App\Models\User::where('username', $domain)->first();
+            if (empty($user)) {
+                $user = findShopUserByCustomDomain($domain);
+            }
+            if ($user) {
+                app()->instance('user', $user);
+            }
+        }
         if (empty($user)) {
             $user = findShopUserByCustomDomain();
             if ($user) {

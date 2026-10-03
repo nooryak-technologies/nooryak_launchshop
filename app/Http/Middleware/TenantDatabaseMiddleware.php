@@ -117,20 +117,31 @@ class TenantDatabaseMiddleware
             $parts = explode('.', $host);
             if (count($parts) >= 3 && !in_array(strtolower($parts[0]), ['www', 'app', 'launchshop', 'admin', 'localhost'])) {
                 $subCandidate = strtolower($parts[0]);
-                $themeAliasMap = [
-                    'ecomgrocery' => 'grocery2',
-                    'grocery'     => 'vegetables',
-                    'multipurpose'=> 'manti',
-                ];
-                if (isset($themeAliasMap[$subCandidate])) {
-                    $subCandidate = $themeAliasMap[$subCandidate];
-                }
 
                 $isPlatformUser = false;
                 try {
                     $isPlatformUser = \App\Models\User::where('username', $subCandidate)->exists();
                 } catch (\Throwable $e) {
                     // fallback
+                }
+
+                if (!$isPlatformUser) {
+                    $themeAliasMap = [
+                        'ecomgrocery' => 'grocery2',
+                        'grocery'     => 'vegetables',
+                        'multipurpose'=> 'manti',
+                    ];
+                    if (isset($themeAliasMap[$subCandidate])) {
+                        $aliasCandidate = $themeAliasMap[$subCandidate];
+                        try {
+                            if (\App\Models\User::where('username', $aliasCandidate)->exists()) {
+                                $subCandidate = $aliasCandidate;
+                                $isPlatformUser = true;
+                            }
+                        } catch (\Throwable $e) {
+                            // fallback
+                        }
+                    }
                 }
 
                 if (!$isPlatformUser) {

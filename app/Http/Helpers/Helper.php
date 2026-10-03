@@ -908,38 +908,41 @@ if (!function_exists('getUser')) {
                 continue;
             }
 
-            $sub  = explode('.', $requestHost)[0];
+            $rawSub = strtolower(explode('.', $requestHost)[0]);
+            $candidates = [$rawSub];
+
             $themeAliasMap = [
                 'ecomgrocery' => 'grocery2',
                 'grocery'     => 'vegetables',
                 'multipurpose'=> 'manti',
             ];
-            if (isset($themeAliasMap[strtolower($sub)])) {
-                $sub = $themeAliasMap[strtolower($sub)];
+            if (isset($themeAliasMap[$rawSub]) && $themeAliasMap[$rawSub] !== $rawSub) {
+                $candidates[] = $themeAliasMap[$rawSub];
             }
 
-            $user = User::where('username', $sub)
-                ->where('status', 1)
-                ->where(function ($query) {
-                    $query->where('preview_template', 1)
-                        ->orWhereHas('memberships', function ($q) {
-                            $q->where('status', 1)
-                                ->where('start_date', '<=', Carbon::now()->format('Y-m-d'))
-                                ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'));
-                        });
-                })
-                ->first();
+            foreach ($candidates as $sub) {
+                $user = User::where('username', $sub)
+                    ->where(function ($query) {
+                        $query->where('preview_template', 1)
+                            ->orWhere('status', 1)
+                            ->orWhereHas('memberships', function ($q) {
+                                $q->where('status', 1)
+                                    ->where('start_date', '<=', Carbon::now()->format('Y-m-d'))
+                                    ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'));
+                            });
+                    })
+                    ->first();
 
-            if (empty($user)) {
-                return null;
+                if (!empty($user)) {
+                    if ($user->online_status == 1 || $user->preview_template == 1) {
+                        if (cPackageHasSubdomain($user) || $user->preview_template == 1) {
+                            return $user;
+                        }
+                    }
+                }
             }
-            if ($user->online_status != 1 && $user->preview_template != 1) {
-                return null;
-            }
-            if (!cPackageHasSubdomain($user) && $user->preview_template != 1) {
-                return null;
-            }
-            return $user;
+
+            return null;
         }
 
         $reservedKeywords = [
@@ -957,17 +960,26 @@ if (!function_exists('getUser')) {
         if (!empty($usernameFromPath) && !in_array(strtolower($usernameFromPath), $reservedKeywords)) {
             $rawUsername  = strtolower(urldecode($usernameFromPath));
             $cleanUsername = str_replace(' ', '', $rawUsername);
+            $pathCandidates = array_unique([$rawUsername, $cleanUsername]);
 
-            $pathUser = User::where(function ($query) use ($rawUsername, $cleanUsername) {
-                    $query->where('username', $rawUsername)
-                        ->orWhere('username', $cleanUsername);
-                })
-                ->where(function ($q) {
-                    $q->where('preview_template', 1)->orWhere('status', 1);
-                })
-                ->first();
-            if ($pathUser) {
-                return $pathUser;
+            $themeAliasMap = [
+                'ecomgrocery' => 'grocery2',
+                'grocery'     => 'vegetables',
+                'multipurpose'=> 'manti',
+            ];
+            if (isset($themeAliasMap[$rawUsername]) && !in_array($themeAliasMap[$rawUsername], $pathCandidates)) {
+                $pathCandidates[] = $themeAliasMap[$rawUsername];
+            }
+
+            foreach ($pathCandidates as $cand) {
+                $pathUser = User::where('username', $cand)
+                    ->where(function ($q) {
+                        $q->where('preview_template', 1)->orWhere('status', 1);
+                    })
+                    ->first();
+                if ($pathUser) {
+                    return $pathUser;
+                }
             }
         }
 
