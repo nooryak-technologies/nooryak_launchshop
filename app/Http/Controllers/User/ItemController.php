@@ -1064,7 +1064,19 @@ class ItemController extends Controller
 
         // file OR image_url
         $validator = Validator::make($request->all(), [
-            'file'      => 'required_without:image_url|mimes:jpg,jpeg,png',
+            'file'      => [
+                'required_without:image_url',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->hasFile('file')) {
+                        $file = $request->file('file');
+                        $allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'];
+                        $ext = strtolower($file->getClientOriginalExtension());
+                        if (!in_array($ext, $allowedExts)) {
+                            return $fail(__('Only jpeg, png, jpg, webp, gif, svg files are allowed.'));
+                        }
+                    }
+                }
+            ],
             'image_url' => [
                 'required_without:file',
                 'max:2000',
@@ -1439,10 +1451,23 @@ class ItemController extends Controller
     public function importCsv(Request $request)
     {
         $request->validate([
-            'csv_file' => 'required|file|mimes:csv,txt|max:5120'
+            'csv_file' => [
+                'required',
+                'file',
+                'max:5120',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->hasFile('csv_file')) {
+                        $file = $request->file('csv_file');
+                        $allowedExts = ['csv', 'txt'];
+                        $ext = strtolower($file->getClientOriginalExtension());
+                        if (!in_array($ext, $allowedExts)) {
+                            return $fail(__('Only CSV files are allowed.'));
+                        }
+                    }
+                }
+            ]
         ], [
             'csv_file.required' => __('Please select a CSV file to upload.'),
-            'csv_file.mimes' => __('Only CSV files are allowed.')
         ]);
 
         $userId = Auth::guard('web')->user()->id;
@@ -2027,10 +2052,20 @@ class ItemController extends Controller
 
         $request->validate([
             'images' => 'required|array|min:1',
-            'images.*' => 'required|file|mimes:jpeg,jpg,png,webp,gif,svg|max:10240'
+            'images.*' => [
+                'required',
+                'file',
+                'max:10240',
+                function ($attribute, $value, $fail) {
+                    $allowedExts = ['jpeg', 'jpg', 'png', 'webp', 'gif', 'svg'];
+                    $ext = strtolower($value->getClientOriginalExtension());
+                    if (!in_array($ext, $allowedExts)) {
+                        return $fail(__('Only JPG, JPEG, PNG, WEBP, GIF, and SVG images are allowed.'));
+                    }
+                }
+            ]
         ], [
-            'images.required' => __('Please select at least one image file to upload.'),
-            'images.*.mimes' => __('Only JPG, JPEG, PNG, WEBP, GIF, and SVG images are allowed.')
+            'images.required' => __('Please select at least one image file to upload.')
         ]);
 
         $thumbDir = public_path('assets/front/img/user/items/thumbnail/');
