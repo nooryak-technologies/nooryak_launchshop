@@ -208,11 +208,16 @@ class ItemController extends Controller
                     'required',
                     'max:255',
                     function ($attribute, $value, $fail) use ($language, $request, $code) {
-                        $slug = make_slug($request[$code . '_title']);
-                        $ics = UserItemContent::where('language_id', $language->id)->where('user_id', Auth::guard('web')->user()->id)->get();
-                        foreach ($ics as $key => $ic) {
-                            if (strtolower($slug) == strtolower($ic->slug)) {
-                                $fail(__('The title field must be unique for') . ' ' . $language->name . ' ' . __('language'));
+                        $titleVal = $request->input($code . '_title');
+                        if (!empty($titleVal)) {
+                            $slug = make_slug($titleVal);
+                            if (!empty($slug)) {
+                                $ics = UserItemContent::where('language_id', $language->id)->where('user_id', Auth::guard('web')->user()->id)->get();
+                                foreach ($ics as $key => $ic) {
+                                    if (!empty($ic->slug) && strtolower($slug) == strtolower($ic->slug)) {
+                                        $fail(__('The title field must be unique for') . ' ' . $language->name . ' ' . __('language'));
+                                    }
+                                }
                             }
                         }
                     }
@@ -263,7 +268,10 @@ class ItemController extends Controller
         }
 
         $user_currency = UserCurrency::where('is_default', 1)->where('user_id', Auth::guard('web')->user()->id)->first();
-        $currency_id = $user_currency->id;
+        if (empty($user_currency)) {
+            $user_currency = UserCurrency::where('user_id', Auth::guard('web')->user()->id)->first();
+        }
+        $currency_id = $user_currency ? $user_currency->id : null;
 
         $thumbnail_name = null;
         $item = new UserItem();
@@ -299,11 +307,15 @@ class ItemController extends Controller
         $item->download_link = $request->download_link;
         $item->background_color = $request->background_color;
         $item->save();
-        foreach ($request->image as $value) {
-            UserItemImage::create([
-                'item_id' => $item->id,
-                'image' => $value,
-            ]);
+        if (!empty($request->image) && is_array($request->image)) {
+            foreach ($request->image as $value) {
+                if (!empty($value)) {
+                    UserItemImage::create([
+                        'item_id' => $item->id,
+                        'image' => $value,
+                    ]);
+                }
+            }
         }
         // store varations as json
         $selectedCategory = UserItemCategory::where('id', $request->category)->first();
@@ -366,13 +378,14 @@ class ItemController extends Controller
                 $adContent->language_id = $language->id;
                 $adContent->category_id = $categoryId;
                 $adContent->subcategory_id = $subcategoryId;
-                $adContent->label_id = $request[$code . '_label_id'];
-                $adContent->title = $request[$code . '_title'];
-                $adContent->slug = make_slug($request[$code . '_title']);
-                $adContent->summary = Purifier::clean($request[$code . '_summary'], 'youtube');
-                $adContent->description = Purifier::clean($request[$code . '_description'], 'youtube');
-                $adContent->meta_keywords = $request[$code . '_meta_keywords'];
-                $adContent->meta_description = $request[$code . '_meta_description'];
+                $adContent->label_id = $request->input($code . '_label_id');
+                $titleInput = $request->input($code . '_title');
+                $adContent->title = $titleInput;
+                $adContent->slug = !empty($titleInput) ? make_slug($titleInput) : '';
+                $adContent->summary = Purifier::clean($request->input($code . '_summary', ''), 'youtube');
+                $adContent->description = Purifier::clean($request->input($code . '_description', ''), 'youtube');
+                $adContent->meta_keywords = $request->input($code . '_meta_keywords');
+                $adContent->meta_description = $request->input($code . '_meta_description');
                 $adContent->save();
             }
         }
@@ -465,11 +478,16 @@ class ItemController extends Controller
                     'required',
                     'max:255',
                     function ($attribute, $value, $fail) use ($language, $request, $code) {
-                        $slug = make_slug($request[$code . '_title']);
-                        $ics = UserItemContent::where('language_id', $language->id)->where('user_id', Auth::guard('web')->user()->id)->where('item_id', '<>', $request->item_id)->get();
-                        foreach ($ics as $key => $ic) {
-                            if (strtolower($slug) == strtolower($ic->slug)) {
-                                $fail(__('The title field must be unique for') . ' ' . $language->name . ' ' . __('language'));
+                        $titleVal = $request->input($code . '_title');
+                        if (!empty($titleVal)) {
+                            $slug = make_slug($titleVal);
+                            if (!empty($slug)) {
+                                $ics = UserItemContent::where('language_id', $language->id)->where('user_id', Auth::guard('web')->user()->id)->where('item_id', '<>', $request->item_id)->get();
+                                foreach ($ics as $key => $ic) {
+                                    if (!empty($ic->slug) && strtolower($slug) == strtolower($ic->slug)) {
+                                        $fail(__('The title field must be unique for') . ' ' . $language->name . ' ' . __('language'));
+                                    }
+                                }
                             }
                         }
                     }
@@ -554,12 +572,14 @@ class ItemController extends Controller
         $item->download_link = $request->download_link;
         $item->background_color = $request->background_color;
         $item->save();
-        if ($request->image) {
+        if (!empty($request->image) && is_array($request->image)) {
             foreach ($request->image as $value) {
-                UserItemImage::create([
-                    'item_id' => $item->id,
-                    'image' => $value,
-                ]);
+                if (!empty($value)) {
+                    UserItemImage::create([
+                        'item_id' => $item->id,
+                        'image' => $value,
+                    ]);
+                }
             }
         }
 
@@ -629,13 +649,14 @@ class ItemController extends Controller
             ) {
                 $adContent->category_id = $categoryId;
                 $adContent->subcategory_id = $subcategoryId;
-                $adContent->label_id = $request[$code . '_label_id'];
-                $adContent->title = $request[$code . '_title'];
-                $adContent->slug = make_slug($request[$code . '_title']);
-                $adContent->summary = Purifier::clean($request[$code . '_summary'], 'youtube');
-                $adContent->description = Purifier::clean($request[$code . '_description'], 'youtube');
-                $adContent->meta_keywords = $request[$code . '_meta_keywords'];
-                $adContent->meta_description = $request[$code . '_meta_description'];
+                $adContent->label_id = $request->input($code . '_label_id');
+                $titleInput = $request->input($code . '_title');
+                $adContent->title = $titleInput;
+                $adContent->slug = !empty($titleInput) ? make_slug($titleInput) : '';
+                $adContent->summary = Purifier::clean($request->input($code . '_summary', ''), 'youtube');
+                $adContent->description = Purifier::clean($request->input($code . '_description', ''), 'youtube');
+                $adContent->meta_keywords = $request->input($code . '_meta_keywords');
+                $adContent->meta_description = $request->input($code . '_meta_description');
                 $adContent->save();
             }
         }
