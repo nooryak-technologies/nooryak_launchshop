@@ -204,11 +204,6 @@ class ItemController extends Controller
                 $request->input($code . '_meta_keywords') ||
                 $request->input($code . '_meta_description')
             ) {
-                //check category is exist for every input langauge
-                if (!in_array($language->id, $categoryLangIds)) {
-                    $rules[$code . '_category'] = 'required';
-                    $messages[$code . '_category.required'] = __('Please add') . ' ' . $language->name . ' ' . __('content for this category before submitting content in this language.');
-                }
                 $rules[$code . '_title'] = [
                     'required',
                     'max:255',
@@ -311,10 +306,10 @@ class ItemController extends Controller
             ]);
         }
         // store varations as json
-        $catUnique_id = UserItemCategory::where('id', $request->category)
-            ->pluck('unique_id')->first();
-        $subcatUnique_id = UserItemSubCategory::where('id', $request->subcategory)
-            ->pluck('unique_id')->first();
+        $selectedCategory = UserItemCategory::where('id', $request->category)->first();
+        $catUnique_id = $selectedCategory ? $selectedCategory->unique_id : null;
+        $selectedSubCategory = !empty($request->subcategory) ? UserItemSubCategory::where('id', $request->subcategory)->first() : null;
+        $subcatUnique_id = $selectedSubCategory ? $selectedSubCategory->unique_id : null;
 
         foreach ($languages as $language) {
             $code = $language->code;
@@ -327,8 +322,43 @@ class ItemController extends Controller
                 $request->input($code . '_meta_keywords') ||
                 $request->input($code . '_meta_description')
             ) {
-                $categoryId = UserItemCategory::where([['language_id', $language->id], ['unique_id', $catUnique_id]])->pluck('id')->first();
-                $subcategoryId = UserItemSubCategory::where([['language_id', $language->id], ['unique_id', $subcatUnique_id]])->pluck('id')->first();
+                $categoryId = null;
+                if ($selectedCategory) {
+                    $categoryObj = UserItemCategory::where([['language_id', $language->id], ['unique_id', $catUnique_id]])->first();
+                    if (!$categoryObj) {
+                        $categoryObj = new UserItemCategory();
+                        $categoryObj->unique_id = $selectedCategory->unique_id;
+                        $categoryObj->user_id = Auth::guard('web')->user()->id;
+                        $categoryObj->language_id = $language->id;
+                        $categoryObj->name = $selectedCategory->name;
+                        $categoryObj->slug = make_slug($selectedCategory->name);
+                        $categoryObj->color = $selectedCategory->color;
+                        $categoryObj->image = $selectedCategory->image;
+                        $categoryObj->category_background_image = $selectedCategory->category_background_image;
+                        $categoryObj->status = $selectedCategory->status;
+                        $categoryObj->serial_number = $selectedCategory->serial_number;
+                        $categoryObj->save();
+                    }
+                    $categoryId = $categoryObj->id;
+                }
+
+                $subcategoryId = null;
+                if ($selectedSubCategory) {
+                    $subCategoryObj = UserItemSubCategory::where([['language_id', $language->id], ['unique_id', $subcatUnique_id]])->first();
+                    if (!$subCategoryObj) {
+                        $subCategoryObj = new UserItemSubCategory();
+                        $subCategoryObj->unique_id = $selectedSubCategory->unique_id;
+                        $subCategoryObj->user_id = Auth::guard('web')->user()->id;
+                        $subCategoryObj->language_id = $language->id;
+                        $subCategoryObj->category_id = $categoryId;
+                        $subCategoryObj->name = $selectedSubCategory->name;
+                        $subCategoryObj->slug = make_slug($selectedSubCategory->name);
+                        $subCategoryObj->status = $selectedSubCategory->status;
+                        $subCategoryObj->serial_number = $selectedSubCategory->serial_number;
+                        $subCategoryObj->save();
+                    }
+                    $subcategoryId = $subCategoryObj->id;
+                }
 
                 $adContent = new UserItemContent();
                 $adContent->item_id = $item->id;
@@ -431,11 +461,6 @@ class ItemController extends Controller
                 $request->input($code . '_meta_keywords') ||
                 $request->input($code . '_meta_description')
             ) {
-                //check category is exist for every input langauge
-                if (!in_array($language->id, $categoryLangIds)) {
-                    $rules[$code . '_category'] = 'required';
-                    $messages[$code . '_category.required'] = __('Please add') . ' ' . $language->name . ' ' . __('content for this category before submitting content in this language.');
-                }
                 $rules[$code . '_title'] = [
                     'required',
                     'max:255',
@@ -538,15 +563,50 @@ class ItemController extends Controller
             }
         }
 
-        $catUnique_id = UserItemCategory::where('id', $request->category)
-            ->pluck('unique_id')->first();
-        $subcatUnique_id = UserItemSubCategory::where('id', $request->subcategory)
-            ->pluck('unique_id')->first();
+        $selectedCategory = UserItemCategory::where('id', $request->category)->first();
+        $catUnique_id = $selectedCategory ? $selectedCategory->unique_id : null;
+        $selectedSubCategory = !empty($request->subcategory) ? UserItemSubCategory::where('id', $request->subcategory)->first() : null;
+        $subcatUnique_id = $selectedSubCategory ? $selectedSubCategory->unique_id : null;
 
         foreach ($languages as $language) {
             $code = $language->code;
-            $categoryId = UserItemCategory::where([['language_id', $language->id], ['unique_id', $catUnique_id]])->pluck('id')->first();
-            $subcategoryId = UserItemSubCategory::where([['unique_id', $subcatUnique_id], ['language_id', $language->id]])->pluck('id')->first();
+            $categoryId = null;
+            if ($selectedCategory) {
+                $categoryObj = UserItemCategory::where([['language_id', $language->id], ['unique_id', $catUnique_id]])->first();
+                if (!$categoryObj) {
+                    $categoryObj = new UserItemCategory();
+                    $categoryObj->unique_id = $selectedCategory->unique_id;
+                    $categoryObj->user_id = Auth::guard('web')->user()->id;
+                    $categoryObj->language_id = $language->id;
+                    $categoryObj->name = $selectedCategory->name;
+                    $categoryObj->slug = make_slug($selectedCategory->name);
+                    $categoryObj->color = $selectedCategory->color;
+                    $categoryObj->image = $selectedCategory->image;
+                    $categoryObj->category_background_image = $selectedCategory->category_background_image;
+                    $categoryObj->status = $selectedCategory->status;
+                    $categoryObj->serial_number = $selectedCategory->serial_number;
+                    $categoryObj->save();
+                }
+                $categoryId = $categoryObj->id;
+            }
+
+            $subcategoryId = null;
+            if ($selectedSubCategory) {
+                $subCategoryObj = UserItemSubCategory::where([['language_id', $language->id], ['unique_id', $subcatUnique_id]])->first();
+                if (!$subCategoryObj) {
+                    $subCategoryObj = new UserItemSubCategory();
+                    $subCategoryObj->unique_id = $selectedSubCategory->unique_id;
+                    $subCategoryObj->user_id = Auth::guard('web')->user()->id;
+                    $subCategoryObj->language_id = $language->id;
+                    $subCategoryObj->category_id = $categoryId;
+                    $subCategoryObj->name = $selectedSubCategory->name;
+                    $subCategoryObj->slug = make_slug($selectedSubCategory->name);
+                    $subCategoryObj->status = $selectedSubCategory->status;
+                    $subCategoryObj->serial_number = $selectedSubCategory->serial_number;
+                    $subCategoryObj->save();
+                }
+                $subcategoryId = $subCategoryObj->id;
+            }
 
 
             $adContent = UserItemContent::where('item_id', $request->item_id)
