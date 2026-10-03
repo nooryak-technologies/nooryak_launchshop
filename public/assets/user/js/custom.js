@@ -579,9 +579,21 @@ $(function ($) {
                 $('#postErrors').removeClass('d-none');
                 let errors = ``;
 
-                for (let x in error.responseJSON.errors) {
+                if (error.responseJSON && error.responseJSON.errors) {
+                    for (let x in error.responseJSON.errors) {
+                        let errArr = error.responseJSON.errors[x];
+                        let msg = Array.isArray(errArr) ? errArr[0] : errArr;
+                        errors += `<li>
+              <p class="text-danger mb-0">${msg}</p>
+            </li>`;
+                    }
+                } else if (error.responseJSON && error.responseJSON.message) {
                     errors += `<li>
-              <p class="text-danger mb-0">${error.responseJSON.errors[x][0]}</p>
+              <p class="text-danger mb-0">${error.responseJSON.message}</p>
+            </li>`;
+                } else {
+                    errors += `<li>
+              <p class="text-danger mb-0">An unexpected error occurred while saving item. Please try again.</p>
             </li>`;
                 }
 

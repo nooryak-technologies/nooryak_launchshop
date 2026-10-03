@@ -152,16 +152,18 @@ class ItemController extends Controller
         $defaulLang = Language::where([['user_id', Auth::guard('web')->user()->id], ['is_default', 1]])->first();
         $messages = [];
         $rules = [];
-        $sliderImgURLs = $request->has('image') ? $request->image : [];
-        $allowedExtensions = array('jpg', 'jpeg', 'png', 'svg');
-        $sliderImgExts = [];
+        $allowedExtensions = array('jpg', 'jpeg', 'png', 'svg', 'webp');
         $rules['image'] = [
             'required',
-            function ($attribute, $value, $fail) use ($allowedExtensions, $sliderImgExts) {
-                if (!empty($sliderImgExts)) {
-                    foreach ($sliderImgExts as $sliderImgExt) {
-                        if (!in_array($sliderImgExt, $allowedExtensions)) {
-                            $fail(__('Only jpeg,png,svg,jpg files are allowed'));
+            function ($attribute, $value, $fail) use ($allowedExtensions, $request) {
+                $images = $request->input('image', []);
+                if (!empty($images) && is_array($images)) {
+                    foreach ($images as $img) {
+                        if (!is_string($img)) continue;
+                        $n = strrpos($img, ".");
+                        $ext = strtolower(($n === false) ? "" : substr($img, $n + 1));
+                        if (!empty($ext) && !in_array($ext, $allowedExtensions)) {
+                            $fail(__('Only jpeg,png,svg,jpg,webp files are allowed'));
                             break;
                         }
                     }
@@ -242,13 +244,6 @@ class ItemController extends Controller
         }
 
         $validator = Validator::make($request->all(), $rules, $messages);
-        if (!empty($sliderImgURLs)) {
-            foreach ($sliderImgURLs as $sliderImgURL) {
-                $n = strrpos($sliderImgURL, ".");
-                $extension = ($n === false) ? "" : substr($sliderImgURL, $n + 1);
-                array_push($sliderImgExts, $extension);
-            }
-        }
 
         if ($validator->fails()) {
             return Response::json([
@@ -267,130 +262,150 @@ class ItemController extends Controller
             }
         }
 
-        $user_currency = UserCurrency::where('is_default', 1)->where('user_id', Auth::guard('web')->user()->id)->first();
-        if (empty($user_currency)) {
-            $user_currency = UserCurrency::where('user_id', Auth::guard('web')->user()->id)->first();
-        }
-        $currency_id = $user_currency ? $user_currency->id : null;
+        try {
+            $user_currency = UserCurrency::where('is_default', 1)->where('user_id', Auth::guard('web')->user()->id)->first();
+            if (empty($user_currency)) {
+                $user_currency = UserCurrency::where('user_id', Auth::guard('web')->user()->id)->first();
+            }
+            if (empty($user_currency)) {
+                $user_currency = UserCurrency::create([
+                    'user_id' => Auth::guard('web')->user()->id,
+                    'text' => 'INR',
+                    'symbol' => '₹',
+                    'value' => '1',
+                    'is_default' => 1,
+                    'text_position' => 'left',
+                    'symbol_position' => 'left',
+                ]);
+            }
+            $currency_id = $user_currency->id;
 
-        $thumbnail_name = null;
-        $item = new UserItem();
-        $thumbnail = $request->file('thumbnail');
-        if ($request->hasFile('thumbnail')) {
-            $dir = public_path('assets/front/img/user/items/thumbnail/');
+            $thumbnail_name = null;
+            $item = new UserItem();
+            $thumbnail = $request->file('thumbnail');
+            if ($request->hasFile('thumbnail')) {
+                $dir = public_path('assets/front/img/user/items/thumbnail/');
 
-            $thumbnail_name = uniqid() . '.webp';
-            $image = Image::make($thumbnail->getRealPath());
+                $thumbnail_name = uniqid() . '.webp';
+                $image = Image::make($thumbnail->getRealPath());
 
-            @mkdir($dir, 0775, true);
-            $image->resize(255, 255);
-            $image->save($dir . $thumbnail_name);
-        } elseif (!empty($request->ai_generated_image)) {
-            $thumbnail_name = moveAiStorageImageToPublicAssets(
-                $request->ai_generated_image,
-                public_path('assets/front/img/user/items/thumbnail/')
-            );
-        }
+                @mkdir($dir, 0775, true);
+                $image->resize(255, 255);
+                $image->save($dir . $thumbnail_name);
+            } elseif (!empty($request->ai_generated_image)) {
+                $thumbnail_name = moveAiStorageImageToPublicAssets(
+                    $request->ai_generated_image,
+                    public_path('assets/front/img/user/items/thumbnail/')
+                );
+            }
 
-        $sliderDir = public_path('assets/front/img/user/items/slider-images/');
-        @mkdir($sliderDir, 0775, true);
-        $item->user_id = Auth::guard('web')->user()->id;
-        $item->stock = $request->stock;
-        $item->sku = $request->sku;
-        $item->thumbnail = $thumbnail_name;
-        $item->status = $request->status;
-        $item->current_price = $request->current_price;
-        $item->previous_price = $request->previous_price;
-        $item->currency_id = $currency_id;
-        $item->type = $request->type;
-        $item->download_file = $filename ?? null;
-        $item->download_link = $request->download_link;
-        $item->background_color = $request->background_color;
-        $item->save();
-        if (!empty($request->image) && is_array($request->image)) {
-            foreach ($request->image as $value) {
-                if (!empty($value)) {
-                    UserItemImage::create([
-                        'item_id' => $item->id,
-                        'image' => $value,
-                    ]);
+            $sliderDir = public_path('assets/front/img/user/items/slider-images/');
+            @mkdir($sliderDir, 0775, true);
+            $item->user_id = Auth::guard('web')->user()->id;
+            $item->stock = $request->stock;
+            $item->sku = $request->sku;
+            $item->thumbnail = $thumbnail_name;
+            $item->status = $request->status;
+            $item->current_price = $request->current_price;
+            $item->previous_price = $request->previous_price;
+            $item->currency_id = $currency_id;
+            $item->type = $request->type;
+            $item->download_file = $filename ?? null;
+            $item->download_link = $request->download_link;
+            $item->background_color = $request->background_color;
+            $item->save();
+            if (!empty($request->image) && is_array($request->image)) {
+                foreach ($request->image as $value) {
+                    if (!empty($value)) {
+                        UserItemImage::create([
+                            'item_id' => $item->id,
+                            'image' => $value,
+                        ]);
+                    }
                 }
             }
-        }
-        // store varations as json
-        $selectedCategory = UserItemCategory::where('id', $request->category)->first();
-        $catUnique_id = $selectedCategory ? $selectedCategory->unique_id : null;
-        $selectedSubCategory = !empty($request->subcategory) ? UserItemSubCategory::where('id', $request->subcategory)->first() : null;
-        $subcatUnique_id = $selectedSubCategory ? $selectedSubCategory->unique_id : null;
+            // store varations as json
+            $selectedCategory = UserItemCategory::where('id', $request->category)->first();
+            $catUnique_id = $selectedCategory ? $selectedCategory->unique_id : null;
+            $selectedSubCategory = !empty($request->subcategory) ? UserItemSubCategory::where('id', $request->subcategory)->first() : null;
+            $subcatUnique_id = $selectedSubCategory ? $selectedSubCategory->unique_id : null;
 
-        foreach ($languages as $language) {
-            $code = $language->code;
-            if (
-                $language->is_default == 1 ||
-                $request->input($code . '_title') ||
-                $request->input($code . '_label_id') ||
-                $request->input($code . '_summary') ||
-                $request->input($code . '_description') ||
-                $request->input($code . '_meta_keywords') ||
-                $request->input($code . '_meta_description')
-            ) {
-                $categoryId = null;
-                if ($selectedCategory) {
-                    $categoryObj = UserItemCategory::where([['language_id', $language->id], ['unique_id', $catUnique_id]])->first();
-                    if (!$categoryObj) {
-                        $categoryObj = new UserItemCategory();
-                        $categoryObj->unique_id = $selectedCategory->unique_id;
-                        $categoryObj->user_id = Auth::guard('web')->user()->id;
-                        $categoryObj->language_id = $language->id;
-                        $categoryObj->name = $selectedCategory->name;
-                        $categoryObj->slug = make_slug($selectedCategory->name);
-                        $categoryObj->color = $selectedCategory->color;
-                        $categoryObj->image = $selectedCategory->image;
-                        $categoryObj->category_background_image = $selectedCategory->category_background_image;
-                        $categoryObj->status = $selectedCategory->status;
-                        $categoryObj->serial_number = $selectedCategory->serial_number;
-                        $categoryObj->save();
+            foreach ($languages as $language) {
+                $code = $language->code;
+                if (
+                    $language->is_default == 1 ||
+                    $request->input($code . '_title') ||
+                    $request->input($code . '_label_id') ||
+                    $request->input($code . '_summary') ||
+                    $request->input($code . '_description') ||
+                    $request->input($code . '_meta_keywords') ||
+                    $request->input($code . '_meta_description')
+                ) {
+                    $categoryId = null;
+                    if ($selectedCategory) {
+                        $categoryObj = UserItemCategory::where([['language_id', $language->id], ['unique_id', $catUnique_id]])->first();
+                        if (!$categoryObj) {
+                            $categoryObj = new UserItemCategory();
+                            $categoryObj->unique_id = $selectedCategory->unique_id;
+                            $categoryObj->user_id = Auth::guard('web')->user()->id;
+                            $categoryObj->language_id = $language->id;
+                            $categoryObj->name = $selectedCategory->name;
+                            $categoryObj->slug = make_slug($selectedCategory->name);
+                            $categoryObj->color = $selectedCategory->color;
+                            $categoryObj->image = $selectedCategory->image;
+                            $categoryObj->category_background_image = $selectedCategory->category_background_image;
+                            $categoryObj->status = $selectedCategory->status;
+                            $categoryObj->serial_number = $selectedCategory->serial_number;
+                            $categoryObj->save();
+                        }
+                        $categoryId = $categoryObj->id;
                     }
-                    $categoryId = $categoryObj->id;
-                }
 
-                $subcategoryId = null;
-                if ($selectedSubCategory) {
-                    $subCategoryObj = UserItemSubCategory::where([['language_id', $language->id], ['unique_id', $subcatUnique_id]])->first();
-                    if (!$subCategoryObj) {
-                        $subCategoryObj = new UserItemSubCategory();
-                        $subCategoryObj->unique_id = $selectedSubCategory->unique_id;
-                        $subCategoryObj->user_id = Auth::guard('web')->user()->id;
-                        $subCategoryObj->language_id = $language->id;
-                        $subCategoryObj->category_id = $categoryId;
-                        $subCategoryObj->name = $selectedSubCategory->name;
-                        $subCategoryObj->slug = make_slug($selectedSubCategory->name);
-                        $subCategoryObj->status = $selectedSubCategory->status;
-                        $subCategoryObj->serial_number = $selectedSubCategory->serial_number;
-                        $subCategoryObj->save();
+                    $subcategoryId = null;
+                    if ($selectedSubCategory) {
+                        $subCategoryObj = UserItemSubCategory::where([['language_id', $language->id], ['unique_id', $subcatUnique_id]])->first();
+                        if (!$subCategoryObj) {
+                            $subCategoryObj = new UserItemSubCategory();
+                            $subCategoryObj->unique_id = $selectedSubCategory->unique_id;
+                            $subCategoryObj->user_id = Auth::guard('web')->user()->id;
+                            $subCategoryObj->language_id = $language->id;
+                            $subCategoryObj->category_id = $categoryId;
+                            $subCategoryObj->name = $selectedSubCategory->name;
+                            $subCategoryObj->slug = make_slug($selectedSubCategory->name);
+                            $subCategoryObj->status = $selectedSubCategory->status;
+                            $subCategoryObj->serial_number = $selectedSubCategory->serial_number;
+                            $subCategoryObj->save();
+                        }
+                        $subcategoryId = $subCategoryObj->id;
                     }
-                    $subcategoryId = $subCategoryObj->id;
-                }
 
-                $adContent = new UserItemContent();
-                $adContent->item_id = $item->id;
-                $adContent->user_id = Auth::guard('web')->user()->id;
-                $adContent->language_id = $language->id;
-                $adContent->category_id = $categoryId;
-                $adContent->subcategory_id = $subcategoryId;
-                $adContent->label_id = $request->input($code . '_label_id');
-                $titleInput = $request->input($code . '_title');
-                $adContent->title = $titleInput;
-                $adContent->slug = !empty($titleInput) ? make_slug($titleInput) : '';
-                $adContent->summary = Purifier::clean($request->input($code . '_summary', ''), 'youtube');
-                $adContent->description = Purifier::clean($request->input($code . '_description', ''), 'youtube');
-                $adContent->meta_keywords = $request->input($code . '_meta_keywords');
-                $adContent->meta_description = $request->input($code . '_meta_description');
-                $adContent->save();
+                    $adContent = new UserItemContent();
+                    $adContent->item_id = $item->id;
+                    $adContent->user_id = Auth::guard('web')->user()->id;
+                    $adContent->language_id = $language->id;
+                    $adContent->category_id = $categoryId;
+                    $adContent->subcategory_id = $subcategoryId;
+                    $adContent->label_id = $request->input($code . '_label_id');
+                    $titleInput = $request->input($code . '_title');
+                    $adContent->title = $titleInput;
+                    $adContent->slug = !empty($titleInput) ? make_slug($titleInput) : '';
+                    $adContent->summary = Purifier::clean($request->input($code . '_summary', ''), 'youtube');
+                    $adContent->description = Purifier::clean($request->input($code . '_description', ''), 'youtube');
+                    $adContent->meta_keywords = $request->input($code . '_meta_keywords');
+                    $adContent->meta_description = $request->input($code . '_meta_description');
+                    $adContent->save();
+                }
             }
+            Session::flash('success', __('Created successfully'));
+            return 'success';
+        } catch (\Throwable $e) {
+            \Log::error('Item store error: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+            return Response::json([
+                'errors' => [
+                    'system_error' => [$e->getMessage()]
+                ]
+            ], 500);
         }
-        Session::flash('success', __('Created successfully'));
-        return 'success';
     }
     public function edit(Request $request, $id)
     {
