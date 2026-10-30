@@ -660,7 +660,7 @@ if (!function_exists('findShopUserByCustomDomain')) {
     function findShopUserByCustomDomain($host = null)
     {
         $cleanHost = normalizeRequestHost($host);
-        if (empty($cleanHost) || isPlatformMainHost($cleanHost)) {
+        if (empty($cleanHost) || isPlatformMainHost($cleanHost) || isAgencyDomain($cleanHost)) {
             return null;
         }
 
@@ -891,7 +891,7 @@ if (!function_exists('getUser')) {
         $cleanCustomHost = normalizeRequestHost($requestHost);
 
         // ── CASE 1: fully custom domain (prioritized for external hosts) ─────
-        if (!in_array($cleanCustomHost, $mainPlatformHosts, true)) {
+        if (!in_array($cleanCustomHost, $mainPlatformHosts, true) && !isAgencyDomain($cleanCustomHost)) {
             $customDomainUser = findShopUserByCustomDomain($cleanCustomHost);
             if ($customDomainUser) {
                 return $customDomainUser;

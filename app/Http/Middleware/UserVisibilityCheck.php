@@ -18,9 +18,24 @@ class UserVisibilityCheck
      */
     public function handle(Request $request, Closure $next)
     {
+        $routeUsername = $request->route('username');
+        if (!empty($routeUsername)) {
+            $user = \App\Models\User::where('username', $routeUsername)->first();
+            if (!$user) {
+                abort(404);
+            }
+            if ($user->status == 0 && $user->online_status != 1 && $user->preview_template != 1) {
+                if (!Auth::check() || Auth::user()->id != $user->id) {
+                    abort(404);
+                }
+            }
+            app()->instance('user', $user);
+            return $next($request);
+        }
+
         $user = getUser();
         if (empty($user) || !is_object($user) || !isset($user->id)) {
-            return $next($request);
+            abort(404);
         }
 
         if ($user->online_status != 1 && $user->preview_template != 1) {
