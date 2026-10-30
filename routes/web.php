@@ -2,10 +2,41 @@
 
 use App\Models\User;
 
-$cleanRequestHost = normalizeRequestHost();
-$isTenantSubdomain = isPlatformSubdomainHost($cleanRequestHost);
-$isMainHost = isPlatformMainHost($cleanRequestHost);
-$isCustomDomain = !$isMainHost && !$isTenantSubdomain && (isShopCustomDomainHost($cleanRequestHost) || !isAgencyDomain($cleanRequestHost));
+$requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? env('WEBSITE_HOST', 'localhost'))));
+$requestHost = preg_replace('/:\d+$/', '', $requestHost);
+
+$cleanRequestHost = preg_replace('/^(launchshop|checkout|www|app|websitebuilder|website-builder)\./i', '', $requestHost);
+
+$envHost = strtolower((string) env('WEBSITE_HOST', ''));
+$appHost = strtolower((string) parse_url(env('APP_URL', ''), PHP_URL_HOST));
+
+$tenantBaseHosts = array_values(array_unique(array_filter([
+    'localhost',
+    '127.0.0.1',
+    $envHost,
+    $appHost,
+    $cleanRequestHost,
+])));
+
+$isTenantSubdomain = false;
+$reservedSubdomains = ['launchshop', 'checkout', 'www', 'app', 'admin', 'websitebuilder', 'website-builder', 'whatsappbulk', 'whatsapp'];
+
+foreach ($tenantBaseHosts as $tenantBaseHost) {
+    if (!empty($tenantBaseHost) && $cleanRequestHost !== $tenantBaseHost && str_ends_with($cleanRequestHost, '.' . $tenantBaseHost)) {
+        $sub = explode('.', $cleanRequestHost)[0] ?? null;
+        if (!in_array(strtolower($sub), $reservedSubdomains)) {
+            $isTenantSubdomain = true;
+            break;
+        }
+    }
+}
+
+$isLaunchShopCustomDomain = !empty(request()->attributes->get('is_launchshop_custom_domain')) || (function_exists('isLaunchShopCustomDomain') && isLaunchShopCustomDomain($cleanRequestHost));
+$isWbAgencyDomain = !empty(isWbAgencyCustomDomain($cleanRequestHost)) && !$isLaunchShopCustomDomain;
+$isWbHost = (str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.') || str_contains($requestHost, 'websitebuilder.') || str_contains($requestHost, 'website-builder.') || $isWbAgencyDomain);
+$isWaHost = (str_starts_with($requestHost, 'whatsappbulk.') || str_starts_with($requestHost, 'whatsapp-bulk.') || str_starts_with($requestHost, 'whatsapp.'));
+$isMainHost = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'checkout.') || str_starts_with($requestHost, 'www.') || str_starts_with($requestHost, 'app.') || in_array($cleanRequestHost, $tenantBaseHosts);
+$isCustomDomain = $isLaunchShopCustomDomain || (!$isWbHost && !$isWaHost && !$isMainHost && !isAgencyDomain($cleanRequestHost) && !$isTenantSubdomain);
 
 Route::get('/midtrans/bank-notify', 'MidtransBankNotifyController@bank_notify')->name('midtrans.bank_notify');
 Route::get('/check-payment', 'CronJobController@check_payment')->name('cron.check_payment');
@@ -19,8 +50,31 @@ Route::get('/pwa-icon/{size}', 'PwaController@icon')->where('size', '[0-9]+');
 Route::get('/invoice', 'Front\FrontendController@invoice')->name('front.invoice');
 
 Route::get('/changelanguage/{lang}', 'Front\FrontendController@changeLanguage')->name('changeLanguage');
+
+// Subscription Expiry Testing & Simulator Hub (Global Aliases for Admin Testing)
+Route::group(['middleware' => ['web']], function () {
+    Route::get('/admin/subscription_test', 'Admin\SubscriptionTestController@index');
+    Route::post('/admin/subscription_test', 'Admin\SubscriptionTestController@execute');
+    Route::post('/admin/subscription_test/execute', 'Admin\SubscriptionTestController@execute');
+
+    Route::get('/admin/subscription-test', 'Admin\SubscriptionTestController@index');
+    Route::post('/admin/subscription-test', 'Admin\SubscriptionTestController@execute');
+    Route::post('/admin/subscription-test/execute', 'Admin\SubscriptionTestController@execute');
+
+    Route::get('/subscription_test', 'Admin\SubscriptionTestController@index');
+    Route::post('/subscription_test', 'Admin\SubscriptionTestController@execute');
+    Route::post('/subscription_test/execute', 'Admin\SubscriptionTestController@execute');
+
+    Route::get('/subscription-test', 'Admin\SubscriptionTestController@index');
+    Route::post('/subscription-test', 'Admin\SubscriptionTestController@execute');
+    Route::post('/subscription-test/execute', 'Admin\SubscriptionTestController@execute');
+});
 Route::get('/subcheck', 'CronJobController@expired')->name('cron.expired');
 Route::post('/push', 'Front\PushController@store')->name('push-notification.store_endpoint');
+Route::post('/checkout/client-sync', [\App\Http\Controllers\WebsiteBuilder\FrontendController::class, 'syncCustomerFromClient'])->name('checkout.client-sync.global');
+Route::post('/checkout/launchshop-client-sync', [\App\Http\Controllers\Front\CheckoutController::class, 'syncLaunchshopUserFromClient'])->name('checkout.launchshop-client-sync');
+Route::get('/checkout/whatsappbulk', [\App\Http\Controllers\Payment\RazorpayController::class, 'whatsappBulkCheckout'])->name('checkout.whatsappbulk');
+Route::post('/checkout/whatsappbulk/success', [\App\Http\Controllers\Payment\RazorpayController::class, 'whatsappBulkSuccess'])->name('checkout.whatsappbulk.success');
 
 /*=======================================================
 ******************** Admin Dashboard Routes **********************
@@ -36,9 +90,34 @@ Route::group(['prefix' => 'X9_AdMiN-Portal_V7', 'middleware' => 'guest:admin'], 
 });
 
 Route::get('/sso-agency-login', 'User\Auth\LoginController@ssoAgencyLogin')->name('user.sso_login');
+Route::get('/agency-sso-login', 'User\Auth\LoginController@ssoAgencyLogin');
 
-// Only register main landing page routes if NOT on a tenant subdomain or custom domain!
-if (!$isTenantSubdomain && !$isCustomDomain) {
+// Whitelabel Agency Portal Redirects
+Route::get('/whitelabel/login', function () {
+    $host = env('MAIN_ADMIN_HOST', 'saasreselling.com');
+    return redirect()->away("https://{$host}/whitelabel-panel/login");
+});
+Route::get('/whitelabel-panel/login', function () {
+    $host = env('MAIN_ADMIN_HOST', 'saasreselling.com');
+    return redirect()->away("https://{$host}/whitelabel-panel/login");
+});
+Route::get('/whitelabel/dashboard', function () {
+    $host = env('MAIN_ADMIN_HOST', 'saasreselling.com');
+    return redirect()->away("https://{$host}/whitelabel/dashboard");
+});
+Route::get('/agency-portal/login', function () {
+    $host = env('MAIN_ADMIN_HOST', 'saasreselling.com');
+    return redirect()->away("https://{$host}/agency-portal/login");
+});
+
+// Always ensure front.index and user.login routes exist globally to prevent RouteNotFoundException in admin/subdomain views
+if ($isWbHost || $isTenantSubdomain || $isCustomDomain) {
+    Route::get('/platform-home', 'Front\FrontendController@index')->name('front.index');
+    Route::get('/platform-login', 'User\Auth\LoginController@showLoginForm')->name('user.login');
+}
+
+// Only register main landing page routes if NOT on a tenant subdomain, custom domain or websitebuilder subdomain!
+if (!$isWbHost && !$isWaHost && !$isTenantSubdomain && !$isCustomDomain) {
     Route::group(['middleware' => 'setlang'], function () {
         Route::get('/', 'Front\FrontendController@index')->name('front.index');
         Route::post('/subscribe', 'Front\FrontendController@subscribe')->name('front.subscribe');
@@ -61,12 +140,14 @@ if (!$isTenantSubdomain && !$isCustomDomain) {
         Route::get('/about', 'Front\FrontendController@about')->name('front.about');
         Route::get('/privacy-policy', 'Front\FrontendController@privacyPolicy')->name('front.privacy-policy');
         Route::get('/terms-conditions', 'Front\FrontendController@termsConditions')->name('front.terms-conditions');
+        Route::get('/cookie-policy', 'Front\FrontendController@cookiePolicy')->name('front.cookie-policy');
         Route::get('/refund-policy', 'Front\FrontendController@refundPolicy')->name('front.refund-policy');
         Route::get('/shipping-policy', 'Front\FrontendController@shippingPolicy')->name('front.shipping-policy');
     });
 
     Route::group(['middleware' => ['web', 'guest', 'setlang']], function () {
         Route::get('/registration/final-step', 'Front\FrontendController@step2')->name('front.registration.step2');
+        Route::get('/registration/final_step', 'Front\FrontendController@step2')->name('front.registration.final_step');
         Route::post('/checkout', 'Front\FrontendController@checkout')->name('front.checkout.view');
 
         Route::get('/login', 'User\Auth\LoginController@showLoginForm')->name('user.login');
@@ -86,6 +167,15 @@ if (!$isTenantSubdomain && !$isCustomDomain) {
 
     Route::group(['middleware' => ['web', 'setlang']], function () {
         Route::post('/membership/checkout', 'Front\CheckoutController@checkout')->name('front.membership.checkout')->middleware('Demo');
+        Route::get('/membership/checkout', function () {
+            if (function_exists('isWebsiteBuilderCheckout') && isWebsiteBuilderCheckout()) {
+                return redirect()->route('website-builder.checkout');
+            }
+            if (session()->has('data') || session()->has('errors')) {
+                return redirect()->route('front.registration.step2');
+            }
+            return redirect()->route('front.index');
+        })->name('front.membership.checkout.get');
         Route::post('/payment/instructions', 'Front\FrontendController@paymentInstruction')->name('front.payment.instructions');
         Route::prefix('membership')->group(function () {
             Route::get('paypal/success', "Payment\PaypalController@successPayment")->name('membership.paypal.success');
@@ -121,3 +211,18 @@ if (!$isTenantSubdomain && !$isCustomDomain) {
         Route::any('membership/cancel', 'Front\CheckoutController@cancelPayment')->name('membership.cancel');
     });
 }
+
+// Website Builder Product Suite (Isolated Module)
+if (file_exists(base_path('routes/website-builder.php'))) {
+    require base_path('routes/website-builder.php');
+}
+// WhatsApp Automation Product Suite (Isolated Module)
+if (file_exists(base_path('routes/whatsapp-automation.php'))) {
+    require base_path('routes/whatsapp-automation.php');
+}
+
+
+// Dynamic WhatsApp SaaS Landing Page (Pixel-by-pixel match of reference)
+Route::get('/landing', 'Front\LandingPageController@index')->name('front.landing');
+Route::get('/whatsapp-bulk', 'Front\LandingPageController@index')->name('front.landing.whatsapp_bulk');
+Route::get('/whatsapp', 'Front\LandingPageController@index')->name('front.landing.whatsapp');

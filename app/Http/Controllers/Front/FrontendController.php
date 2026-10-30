@@ -21,6 +21,7 @@ use App\Models\Admin\UserCategory;
 use App\Models\Faq;
 use App\Models\Feature;
 use App\Models\Language;
+use App\Models\Merchant;
 use App\Models\OfflineGateway;
 use App\Models\Package;
 use App\Models\Page;
@@ -64,15 +65,30 @@ class FrontendController extends Controller
 
     public function index()
     {
-        $customDomainUser = findShopUserByCustomDomain();
-        if ($customDomainUser && !isPlatformMainHost() && !isPlatformSubdomainHost()) {
-            return app(UserFrontHomeController::class)->userDetailView($customDomainUser->username);
+        $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
+        $cleanHost = preg_replace('/^(launchshop|checkout|app|www|websitebuilder|website-builder|whatsappbulk|whatsapp)\./i', '', $requestHost);
+        $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') 
+            || str_starts_with($requestHost, 'checkout.')
+            || str_starts_with($requestHost, 'websitebuilder.') 
+            || str_starts_with($requestHost, 'website-builder.') 
+            || str_starts_with($requestHost, 'whatsappbulk.') 
+            || str_starts_with($requestHost, 'whatsapp.');
+
+        $agency = getAgencyFromHost();
+        if ($agency && !$isProductSubdomain) {
+            return view('front.agency_landing', compact('agency'));
         }
 
         $requestHost = strtolower(str_replace('www.', '', request()->getHost()));
+        $reservedSubdomains = ['launchshop', 'checkout', 'www', 'app', 'admin', 'websitebuilder', 'website-builder', 'localhost'];
+        $envHost = strtolower((string) env('WEBSITE_HOST', ''));
+        $appHost = strtolower((string) parse_url(env('APP_URL', ''), PHP_URL_HOST));
+        $cleanHost = preg_replace('/^(launchshop|checkout|app|www|websitebuilder|website-builder)\./i', '', $requestHost);
+
         $tenantBaseHosts = array_values(array_unique(array_filter([
-            strtolower((string) env('WEBSITE_HOST', '')),
-            'launchshop.in',
+            $envHost,
+            $appHost,
+            $cleanHost,
         ])));
 
         foreach ($tenantBaseHosts as $baseHost) {
@@ -81,7 +97,7 @@ class FrontendController extends Controller
                 && str_ends_with($requestHost, '.' . $baseHost)
             ) {
                 $subdomain = explode('.', $requestHost)[0] ?? null;
-                if (!empty($subdomain)) {
+                if (!empty($subdomain) && !in_array(strtolower($subdomain), $reservedSubdomains)) {
                     return app(UserFrontHomeController::class)->userDetailView($subdomain);
                 }
             }
@@ -96,36 +112,62 @@ class FrontendController extends Controller
         }
 
         if (session()->has('lang')) {
-            $currentLang = Language::where('code', session()->get('lang'))->first();
+            try {
+                $currentLang = Language::where('code', session()->get('lang'))->first();
+            } catch (\Throwable $e) { $currentLang = null; }
         } else {
-            $currentLang = Language::where('is_default', 1)->first();
+            try {
+                $currentLang = Language::where('is_default', 1)->first();
+            } catch (\Throwable $e) { $currentLang = null; }
         }
-        $lang_id = $currentLang->id;
+        $lang_id = $currentLang->id ?? 1;
 
-        $data['processes'] = Process::where('language_id', $lang_id)->orderBy('serial_number', 'ASC')->get();
-        $data['features'] = Feature::where('language_id', $lang_id)->orderBy('serial_number', 'ASC')->get();
-        $data['featured_users'] = User::where([
-            ['featured', 1],
-            ['status', 1]
-        ])
-            ->whereHas('memberships', function ($q) {
-                $q->where('status', '=', 1)
-                    ->where('start_date', '<=', Carbon::now()->format('Y-m-d'))
-                    ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'));
-            })->orderBy('feature_time', 'DESC')->get();
+        try {
+            $data['processes'] = \Illuminate\Support\Facades\Schema::hasTable('processes') ? Process::where('language_id', $lang_id)->orderBy('serial_number', 'ASC')->get() : collect([]);
+        } catch (\Throwable $e) {
+            $data['processes'] = collect([]);
+        }
 
+        try {
+            $data['features'] = \Illuminate\Support\Facades\Schema::hasTable('features') ? Feature::where('language_id', $lang_id)->orderBy('serial_number', 'ASC')->get() : collect([]);
+        } catch (\Throwable $e) {
+            $data['features'] = collect([]);
+        }
+        try {
+            $data['featured_users'] = User::where([
+                ['featured', 1],
+                ['status', 1]
+            ]);
+            if (\Illuminate\Support\Facades\Schema::hasTable('memberships')) {
+                $data['featured_users'] = $data['featured_users']->whereHas('memberships', function ($q) {
+                    $q->where('status', '=', 1)
+                        ->where('start_date', '<=', Carbon::now()->format('Y-m-d'))
+                        ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'));
+                });
+            }
+            $data['featured_users'] = $data['featured_users']->orderBy('feature_time', 'DESC')->get();
+        } catch (\Throwable $e) {
+            $data['featured_users'] = collect([]);
+        }
 
-        $data['templates'] = User::where([
-            ['preview_template', 1],
-            ['status', 1],
-            ['online_status', 1],
-            ['featured', 1]
-        ])
-            ->whereHas('memberships', function ($q) {
-                $q->where('status', '=', 1)
-                    ->where('start_date', '<=', Carbon::now()->format('Y-m-d'))
-                    ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'));
-            })->orderBy('template_serial_number', 'ASC')->get();
+        try {
+            $data['templates'] = User::where([
+                ['preview_template', 1],
+                ['status', 1],
+                ['online_status', 1],
+                ['featured', 1]
+            ]);
+            if (\Illuminate\Support\Facades\Schema::hasTable('memberships')) {
+                $data['templates'] = $data['templates']->whereHas('memberships', function ($q) {
+                    $q->where('status', '=', 1)
+                        ->where('start_date', '<=', Carbon::now()->format('Y-m-d'))
+                        ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'));
+                });
+            }
+            $data['templates'] = $data['templates']->orderBy('template_serial_number', 'ASC')->get();
+        } catch (\Throwable $e) {
+            $data['templates'] = collect([]);
+        }
 
         // Debug logging to help diagnose missing templates on the templates page
         try {
@@ -136,15 +178,23 @@ class FrontendController extends Controller
         }
 
 
-        $data['testimonials'] = Testimonial::where('language_id', $lang_id)
-            ->orderBy('serial_number', 'ASC')
-            ->get();
-        $data['blogs'] = Blog::where('language_id', $lang_id)->orderBy('id', 'DESC')->take(5)->get();
+        try {
+            $data['testimonials'] = \Illuminate\Support\Facades\Schema::hasTable('testimonials') ? Testimonial::where('language_id', $lang_id)->orderBy('serial_number', 'ASC')->get() : collect([]);
+        } catch (\Throwable $e) {
+            $data['testimonials'] = collect([]);
+        }
+        try {
+            $data['blogs'] = \Illuminate\Support\Facades\Schema::hasTable('blogs') ? Blog::where('language_id', $lang_id)->orderBy('id', 'DESC')->take(5)->get() : collect([]);
+        } catch (\Throwable $e) {
+            $data['blogs'] = collect([]);
+        }
+        try {
+            $data['partners'] = \Illuminate\Support\Facades\Schema::hasTable('partners') ? Partner::orderBy('serial_number', 'ASC')->get() : collect([]);
+        } catch (\Throwable $e) {
+            $data['partners'] = collect([]);
+        }
 
-        $data['partners'] = Partner::orderBy('serial_number', 'ASC')
-            ->get();
-
-        $data['seo'] = Seo::where('language_id', $lang_id)->first();
+        $data['seo'] = \Illuminate\Support\Facades\Schema::hasTable('seos') ? Seo::where('language_id', $lang_id)->first() : null;
 
         $terms = [];
         if (Package::query()->where('status', '1')->where('featured', '1')->where('term', 'monthly')->count() > 0) {
@@ -180,13 +230,46 @@ class FrontendController extends Controller
                 ->orderBy('serial_number', 'asc')
                 ->get();
         }
+        ImageText::ensureColumnsExist();
         $data['homeSec'] = ImageText::where('language_id', $lang_id)->first();
         $data['lang_id'] = $lang_id;
+
+        try {
+            $data['processes'] = \Illuminate\Support\Facades\Schema::hasTable('processes') ? Process::where('language_id', $lang_id)->orderBy('serial_number', 'ASC')->get() : collect([]);
+        } catch (\Throwable $e) {
+            $data['processes'] = collect([]);
+        }
+
+        try {
+            $data['features'] = \Illuminate\Support\Facades\Schema::hasTable('features') ? Feature::where('language_id', $lang_id)->orderBy('serial_number', 'ASC')->get() : collect([]);
+        } catch (\Throwable $e) {
+            $data['features'] = collect([]);
+        }
+
+        try {
+            $data['counters'] = \Illuminate\Support\Facades\Schema::hasTable('counter_informations') ? CounterInformation::where('language_id', $lang_id)->orderBy('serial_number', 'ASC')->get() : collect([]);
+        } catch (\Throwable $e) {
+            $data['counters'] = collect([]);
+        }
+
+        try {
+            $data['counterSection'] = \Illuminate\Support\Facades\Schema::hasTable('counter_sections') ? CounterSection::where('language_id', $lang_id)->first() : null;
+        } catch (\Throwable $e) {
+            $data['counterSection'] = null;
+        }
+
         return view('front.index', $data);
     }
 
     public function about()
     {
+        $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
+        $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
+        $agency = getAgencyFromHost();
+        if ($agency && !$isProductSubdomain) {
+            return view('front.agency_legal', ['type' => 'about', 'agency' => $agency]);
+        }
+
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
@@ -207,7 +290,7 @@ class FrontendController extends Controller
         $data['partners'] = Partner::orderBy('serial_number', 'ASC')
             ->get();
 
-        $data['seo'] = Seo::where('language_id', $lang_id)->first();
+        $data['seo'] = \Illuminate\Support\Facades\Schema::hasTable('seos') ? Seo::where('language_id', $lang_id)->first() : null;
 
         $data['counters'] = CounterInformation::where('language_id', $lang_id)->get();
 
@@ -272,13 +355,20 @@ class FrontendController extends Controller
         $request->validate([
             'phone_number' => 'required',
             'country_code' => 'required',
-            'email' => 'required|email|unique:users'
+            'email' => 'required|email'
         ]);
 
         $phone = ltrim($request->phone_number, '0');
         $countryCode = $request->country_code;
         $name = $request->input('name', '');
         $email = $request->email;
+
+        if (User::where('email', $email)->exists()) {
+            return response()->json([
+                'success' => false,
+                'message' => __('This email address is already registered. Please login or use a different email.')
+            ]);
+        }
 
         // Persist typed data in session immediately
         Session::put('otp_phone', $phone);
@@ -289,11 +379,13 @@ class FrontendController extends Controller
         // Reset verified status since they are initiating a new verification
         Session::forget(['phone_verified', 'verified_phone', 'verified_email']);
 
-        $cleanPhone = preg_replace('/[^0-9]/', '', $phone);
-        $cleanCountryCode = preg_replace('/[^0-9]/', '', $countryCode);
+        // Clean and strip leading zeroes and formatting spaces
+        $rawDigits = preg_replace('/[^0-9]/', '', (string) $request->phone_number);
+        $cleanPhone = ltrim($rawDigits, '0');
+        $cleanCountryCode = preg_replace('/[^0-9]/', '', (string) $countryCode) ?: '91';
 
         // Construct the full international number for WhatsApp API
-        if (strpos($cleanPhone, $cleanCountryCode) === 0) {
+        if (strpos($cleanPhone, $cleanCountryCode) === 0 && strlen($cleanPhone) > 10) {
             $mobileNo = $cleanPhone;
         } else {
             $mobileNo = $cleanCountryCode . $cleanPhone;
@@ -302,50 +394,15 @@ class FrontendController extends Controller
         $otp = rand(100000, 999999);
         $whatsappSent = false;
 
-        // Meta Merge Cloud WhatsApp API integration
-        $apiKey = 'a09a0ee3aae408f843020cbd6bccf590';
-        $digitsOnly = preg_replace('/[^0-9]/', '', $mobileNo);
-        $otpMessage = "Your OTP verification code is *" . $otp . "* for *Launchshop Ecommerce* - This code is valid for *5 minutes* - Please do not share it with anyone.";
-
-        $debugLogs = [];
-        $debugLogs[] = date('Y-m-d H:i:s') . " --- Meta Merge WhatsApp API Call for " . $digitsOnly;
-
+        // WhatsApp Gateway OTP integration
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Content-Type'  => 'application/json',
-                'Accept'        => 'application/json'
-            ])->withoutVerifying()->post('https://app.metamerged.com/api/send', [
-                'number'  => $digitsOnly,
-                'type'    => 'text',
-                'message' => $otpMessage,
-            ]);
-
-            $status = $response->status();
-            $bodyStr = $response->body();
-
-            $logEntry = "Meta Merge WhatsApp | Status: {$status} | Body: {$bodyStr}";
-            $debugLogs[] = $logEntry;
-            Log::info("Meta Merge WhatsApp: " . $logEntry);
-
-            if ($response->successful()) {
-                $resData = $response->json();
-                if (is_array($resData) && isset($resData['success']) && $resData['success']) {
-                    $whatsappSent = true;
-                    $debugLogs[] = "SUCCESS! WhatsApp OTP sent via Meta Merge Cloud.";
-                }
+            $agency = function_exists('getAgencyFromHost') ? getAgencyFromHost() : null;
+            $waResult = \App\Services\WhatsAppNotificationService::sendOtp($mobileNo, $otp, 'Ecom Builder', $agency);
+            if ($waResult['success'] ?? false) {
+                $whatsappSent = true;
             }
-        } catch (\Exception $e) {
-            $debugLogs[] = "Meta Merge WhatsApp Exception: " . $e->getMessage();
-            Log::error("Meta Merge Exception: " . $e->getMessage());
-        }
-
-        // Save trace to storage/logs/metamerge_debug.log
-        try {
-            $logFilePath = storage_path('logs/metamerge_debug.log');
-            file_put_contents($logFilePath, implode("\n", $debugLogs) . "\n\n", FILE_APPEND);
-        } catch (\Exception $logEx) {
-            // Ignore file write errors
+        } catch (\Throwable $waEx) {
+            Log::error('WhatsApp OTP Gateway exception: ' . $waEx->getMessage());
         }
 
         // Always store OTP session so user can verify without restriction
@@ -354,26 +411,48 @@ class FrontendController extends Controller
         Session::put('otp_expires_at', time() + 300);
         Session::put('otp_email', $email);
 
-        // Always send OTP to email
+        // Only fallback to email if WhatsApp delivery fails or is unavailable
         $emailSent = false;
-        try {
-            $be = BE::first();
-            $mailData = [
-                'smtp_status' => $be->is_smtp,
-                'smtp_host' => $be->smtp_host,
-                'smtp_username' => $be->smtp_username,
-                'smtp_password' => $be->smtp_password,
-                'encryption' => $be->encryption,
-                'smtp_port' => $be->smtp_port,
-                'from_mail' => $be->from_mail,
-                'recipient' => $email,
-                'subject' => "OTP Verification Code",
-                'body' => "Your OTP verification code is <b>" . $otp . "</b> for <b>Launchshop Ecommerce</b> - This code is valid for <b>5 minutes</b> - Please do not share it with anyone.",
-            ];
-            BasicMailer::sendMail($mailData);
-            $emailSent = true;
-        } catch (\Exception $mailEx) {
-            Log::error('OTP Email send failed: ' . $mailEx->getMessage());
+        if (!$whatsappSent) {
+            try {
+                $be = BE::first();
+                $smtpHost = env('MAIL_HOST', ($be && !empty($be->smtp_host)) ? $be->smtp_host : 'mail.nooryak.in');
+                $smtpUser = env('MAIL_USERNAME', ($be && !empty($be->smtp_username)) ? $be->smtp_username : 'infosaasreselling@nooryak.in');
+                $smtpPass = env('MAIL_PASSWORD', ($be && !empty($be->smtp_password)) ? $be->smtp_password : 'Admin@nooryak');
+                $smtpPort = env('MAIL_PORT', ($be && !empty($be->smtp_port)) ? $be->smtp_port : 465);
+                $smtpEnc  = env('MAIL_ENCRYPTION', ($be && !empty($be->encryption)) ? $be->encryption : 'ssl');
+                $fromMail = env('MAIL_FROM_ADDRESS', ($be && !empty($be->from_mail)) ? $be->from_mail : 'infosaasreselling@nooryak.in');
+
+                $rawLogoUrl = asset('assets/landing_page/ecombuilderemail.png');
+                $ecomLogoUrl = str_starts_with($rawLogoUrl, 'http://') ? str_replace('http://', 'https://', $rawLogoUrl) : $rawLogoUrl;
+                if (str_contains($ecomLogoUrl, 'localhost') || str_contains($ecomLogoUrl, '127.0.0.1')) {
+                    $ecomLogoUrl = 'https://launchshop.saasreselling.com/assets/landing_page/ecombuilderemail.png';
+                }
+                $otpBody = "<p style=\"font-size:15px;color:#334155;margin:0 0 10px 0;\">Your OTP verification code is <b style=\"font-size:22px;color:#ff6f61;letter-spacing:1px;\">" . $otp . "</b> for <b>Ecom Builder</b>.</p>"
+                    . "<p style=\"font-size:13px;color:#64748b;margin:0;\">Valid for <b>5 minutes</b>. Please do not share it with anyone.</p>";
+
+                $wrappedBody = class_exists('\App\Http\Helpers\Common') 
+                    ? \App\Http\Helpers\Common::wrapEmailBody($otpBody, "OTP Verification Code - Ecom Builder", null, $ecomLogoUrl, 'Ecom Builder')
+                    : $otpBody;
+
+                $mailData = [
+                    'smtp_status'   => 1,
+                    'smtp_host'     => $smtpHost,
+                    'smtp_username' => $smtpUser,
+                    'smtp_password' => $smtpPass,
+                    'encryption'    => $smtpEnc,
+                    'smtp_port'      => $smtpPort,
+                    'from_mail'      => $fromMail,
+                    'recipient'      => $email,
+                    'subject'        => "OTP Verification Code - Ecom Builder",
+                    'body'           => $wrappedBody,
+                ];
+                Config::set('mail.default', 'smtp');
+                BasicMailer::sendMail($mailData);
+                $emailSent = true;
+            } catch (\Exception $mailEx) {
+                Log::error('OTP Email send failed: ' . $mailEx->getMessage());
+            }
         }
 
         // Save / update phone lead in DB for admin visibility
@@ -393,14 +472,12 @@ class FrontendController extends Controller
             Log::warning('VerifiedPhoneLead save failed: ' . $leadEx->getMessage());
         }
 
-        if ($whatsappSent && $emailSent) {
-            $msg = __('OTP sent successfully to your WhatsApp and Email!');
+        if ($whatsappSent) {
+            $msg = __('OTP sent successfully to your WhatsApp (+:number)!', ['number' => $mobileNo]);
         } elseif ($emailSent) {
-            $msg = __('OTP sent to your Email address (' . $email . ')!');
-        } elseif ($whatsappSent) {
-            $msg = __('OTP sent successfully to your WhatsApp!');
+            $msg = __('WhatsApp delivery unavailable. OTP sent to your Email address (:email)!', ['email' => $email]);
         } else {
-            $msg = __('OTP code generated! Check your email: ' . $email);
+            $msg = __('OTP code generated! Check your email: :email', ['email' => $email]);
         }
 
         return response()->json([
@@ -519,8 +596,8 @@ class FrontendController extends Controller
 
     public function step1($status, $id)
     {
-        // Clear phone verification session if it has expired (3 minutes / 180 seconds)
-        if (Session::has('phone_verified') && (time() - Session::get('phone_verified_at', 0)) > 180) {
+        // Clear phone verification session if it has expired (2 hours / 7200 seconds)
+        if (Session::has('phone_verified') && (time() - Session::get('phone_verified_at', 0)) > 7200) {
             Session::forget(['phone_verified', 'verified_phone', 'phone_verified_at']);
         }
 
@@ -572,26 +649,73 @@ class FrontendController extends Controller
         });
         $data['packages'] = $packages;
 
-        // Pass selected template username (from query string) to the form
-        $selected_template = request()->query('template', '');
-        $data['selected_template'] = $selected_template;
+        // Pass selected template username (from query string, session, or alias fallback)
+        $rawTemplate = request()->query('template') 
+            ?: (request()->query('selected_template') 
+            ?: session()->get('selected_template', ''));
 
-        // Resolve selected template details
+        $themeAliasMap = [
+            'multipurpose' => 'manti',
+            'manti'        => 'manti',
+            'grocery'      => 'ecomgrocery',
+            'vegetables'   => 'ecomgrocery',
+            'grocery2'     => 'ecomgrocery',
+            'ecomgrocery'  => 'ecomgrocery',
+            'electronics'  => 'electi',
+            'electi'       => 'electi',
+            'fashion'      => 'fashclo',
+            'fashclo'      => 'fashclo',
+            'furniture'    => 'furial',
+            'furial'       => 'furial',
+            'clothing'     => 'clothing',
+            'skinflow'     => 'skinflow',
+            'beauty'       => 'skinflow',
+            'jewellery'    => 'jewellery',
+            'pet'          => 'petrashop',
+            'petrashop'    => 'petrashop',
+            'kids'         => 'kidsfa',
+            'kidsfa'       => 'kidsfa',
+        ];
+
+        $selected_template = '';
         $selectedTemplateName = __('No template selected');
         $selectedTemplateImg = null;
-        if (!empty($selected_template)) {
-            $templateUser = User::where('username', $selected_template)->first();
+
+        if (!empty($rawTemplate)) {
+            $cleanKey = strtolower(trim($rawTemplate));
+            $targetUsername = $themeAliasMap[$cleanKey] ?? $cleanKey;
+
+            $templateUser = User::where('username', $targetUsername)
+                ->orWhere('username', $cleanKey)
+                ->first();
+
             if ($templateUser) {
+                $selected_template = $templateUser->username;
+                session()->put('selected_template', $selected_template);
+
                 $themeName = \App\Models\User\BasicSetting::where('user_id', $templateUser->id)->value('theme');
                 $selectedTemplateName = match($themeName) {
-                    'vegetables' => __('Grocery Theme'),
-                    'manti'      => __('Multipurpose Theme'),
-                    'grocery2'   => __('Ecom Grocery Theme'),
-                    default      => __(ucfirst($themeName ?? 'Default') . ' Theme'),
+                    'vegetables'  => __('Grocery Theme'),
+                    'manti'       => __('Multipurpose Theme'),
+                    'grocery2'    => __('Ecom Grocery Theme'),
+                    'electronics' => __('Electronics Theme'),
+                    'fashion'     => __('Fashion Theme'),
+                    'clothing'    => __('Clothing Theme'),
+                    'furniture'   => __('Furniture Theme'),
+                    'skinflow'    => __('Skinflow Theme'),
+                    'jewellery'   => __('Jewellery Theme'),
+                    'pet'         => __('Pet Theme'),
+                    'kids'        => __('Kids Theme'),
+                    default       => __(ucfirst($themeName ?? 'Default') . ' Theme'),
                 };
                 $selectedTemplateImg = $templateUser->template_img;
+            } else {
+                $selected_template = $rawTemplate;
+                session()->put('selected_template', $selected_template);
             }
         }
+
+        $data['selected_template'] = $selected_template;
         $data['selectedTemplateName'] = $selectedTemplateName;
         $data['selectedTemplateImg'] = $selectedTemplateImg;
 
@@ -610,10 +734,18 @@ class FrontendController extends Controller
         $templates->map(function ($template) {
             $themeName = \App\Models\User\BasicSetting::where('user_id', $template->id)->value('theme');
             $template->display_name = match($themeName) {
-                'vegetables' => __('Grocery Theme'),
-                'manti'      => __('Multipurpose Theme'),
-                'grocery2'   => __('Ecom Grocery Theme'),
-                default      => __(ucfirst($themeName ?? 'Default') . ' Theme'),
+                'vegetables'  => __('Grocery Theme'),
+                'manti'       => __('Multipurpose Theme'),
+                'grocery2'    => __('Ecom Grocery Theme'),
+                'electronics' => __('Electronics Theme'),
+                'fashion'     => __('Fashion Theme'),
+                'clothing'    => __('Clothing Theme'),
+                'furniture'   => __('Furniture Theme'),
+                'skinflow'    => __('Skinflow Theme'),
+                'jewellery'   => __('Jewellery Theme'),
+                'pet'         => __('Pet Theme'),
+                'kids'        => __('Kids Theme'),
+                default       => __(ucfirst($themeName ?? 'Default') . ' Theme'),
             };
             return $template;
         });
@@ -624,28 +756,105 @@ class FrontendController extends Controller
 
     public function step2(Request $request)
     {
+        $sessionData = $request->session()->get('data');
+        if (empty($sessionData) || !isset($sessionData['package'])) {
+            $pkgId = old('package_id', $request->query('id', $request->query('package_id')));
+            $package = null;
+            if (!empty($pkgId)) {
+                $package = Package::find($pkgId);
+            }
+            if (!$package) {
+                $package = Package::where('status', 1)->first();
+            }
+
+            if ($package) {
+                if (empty($sessionData) || !is_array($sessionData)) {
+                    $sessionData = [];
+                }
+                $sessionData['package'] = $package;
+                $sessionData['id'] = $package->id;
+                $sessionData['status'] = old('package_type', 'regular');
+                $sessionData['first_name'] = old('first_name', '');
+                $sessionData['username'] = old('username', '');
+                $sessionData['email'] = old('email', '');
+                $sessionData['phone'] = old('phone', '');
+                $sessionData['country_code'] = old('country_code', '+91');
+                $sessionData['shop_name'] = old('shop_name', '');
+                $sessionData['selected_template'] = old('selected_template', session('selected_template', ''));
+                
+                $online = PaymentGateway::query()->where('status', 1)->get()->filter(function($gateway) {
+                    return strtolower($gateway->name) !== 'upi' && strtolower($gateway->keyword ?? '') !== 'upi';
+                })->unique(function ($item) {
+                    return strtolower($item->keyword ?? $item->name);
+                });
+                $offline = OfflineGateway::where('status', 1)->get();
+                $sessionData['offline'] = $offline;
+                $sessionData['payment_methods'] = $online->toBase()->merge($offline->toBase())->unique(function ($item) {
+                    return strtolower($item->keyword ?? $item->name);
+                });
+                $request->session()->put('data', $sessionData);
+            } else {
+                return redirect()->route('front.pricing')->with('warning', __('Please select a package to proceed with registration.'));
+            }
+        }
+
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
             $currentLang = Language::where('is_default', 1)->first();
         }
         $data['pageHeading'] = $this->getPageHeading($currentLang);
-        $data['data'] = $request->session()->get('data');
+        $data['data'] = $sessionData;
 
         return view('front.checkout', $data);
     }
 
     public function checkout(Request $request)
     {
-        // Clear phone verification session if it has expired (3 minutes / 180 seconds)
-        if (Session::has('phone_verified') && (time() - Session::get('phone_verified_at', 0)) > 180) {
+        // Clear phone verification session if it has expired (2 hours / 7200 seconds)
+        if (Session::has('phone_verified') && (time() - Session::get('phone_verified_at', 0)) > 7200) {
             Session::forget(['phone_verified', 'verified_phone', 'verified_email', 'phone_verified_at']);
         }
 
+        $sessionPhone = Session::get('verified_phone');
+        $sessionEmail = Session::get('verified_email');
+        $cleanReqPhone = preg_replace('/[^0-9]/', '', (string)$request->phone);
+        $cleanSesPhone = preg_replace('/[^0-9]/', '', (string)$sessionPhone);
+
+        $isPhoneMatch = Session::get('phone_verified') && !empty($cleanSesPhone) && (
+            $cleanReqPhone === $cleanSesPhone ||
+            (strlen($cleanReqPhone) >= 10 && strlen($cleanSesPhone) >= 10 && substr($cleanReqPhone, -10) === substr($cleanSesPhone, -10))
+        );
+        $isEmailMatch = !empty($sessionEmail) && strtolower(trim($sessionEmail)) === strtolower(trim($request->email));
+
+        // Database fallback check: if verified via OTP in verified_phone_leads in the last 4 hours
+        if ((!$isPhoneMatch || !$isEmailMatch) && strlen($cleanReqPhone) >= 10) {
+            try {
+                $lead = \App\Models\VerifiedPhoneLead::where('phone', 'like', '%' . substr($cleanReqPhone, -10))
+                    ->where('is_verified', true)
+                    ->where('updated_at', '>=', now()->subHours(4))
+                    ->first();
+                if ($lead) {
+                    $isPhoneMatch = true;
+                    $isEmailMatch = true;
+                    Session::put('phone_verified', true);
+                    Session::put('verified_phone', $request->phone);
+                    Session::put('verified_email', $request->email);
+                    Session::put('phone_verified_at', time());
+                }
+            } catch (\Throwable $leadEx) {}
+        }
+
         // Validate backend phone and email verification status
-        if (!Session::get('phone_verified') || Session::get('verified_phone') !== $request->phone || Session::get('verified_email') !== $request->email) {
+        if (!$isPhoneMatch || !$isEmailMatch) {
             return redirect()->back()->withErrors(['phone' => __('Please verify your details first.')])->withInput();
         }
+
+        // Keep session verified across any subsequent validation redirects (e.g., password mismatch)
+        Session::put('phone_verified', true);
+        Session::put('verified_phone', $request->phone);
+        Session::put('verified_email', $request->email);
+        Session::put('phone_verified_at', time());
 
         if ($request->has('phone')) {
             $request->merge([
@@ -666,7 +875,7 @@ class FrontendController extends Controller
         } else {
             $currentLang = Language::where('is_default', 1)->first();
         }
-        $seo = Seo::where('language_id', $currentLang->id)->first();
+        $seo = \Illuminate\Support\Facades\Schema::hasTable('seos') ? Seo::where('language_id', $currentLang->id)->first() : null;
         $be = $currentLang->basic_extended;
         $data['bex'] = $be;
         $data['first_name'] = $request->first_name;
@@ -677,12 +886,51 @@ class FrontendController extends Controller
         $data['country_code'] = $request->country_code;
         $data['phone'] = $request->phone;
 
+        // Store and resolve selected_template from request or session
+        $selectedTemplate = $request->selected_template 
+            ?: ($request->template 
+            ?: session()->get('selected_template', ''));
+
+        if (!empty($selectedTemplate)) {
+            session()->put('selected_template', $selectedTemplate);
+        }
+
+        // Map theme/alias names to canonical template usernames
+        $themeAliasMap = [
+            'multipurpose' => 'manti',
+            'manti'        => 'manti',
+            'grocery'      => 'ecomgrocery',
+            'vegetables'   => 'ecomgrocery',
+            'grocery2'     => 'ecomgrocery',
+            'ecomgrocery'  => 'ecomgrocery',
+            'electronics'  => 'electi',
+            'electi'       => 'electi',
+            'fashion'      => 'fashclo',
+            'fashclo'      => 'fashclo',
+            'furniture'    => 'furial',
+            'furial'       => 'furial',
+            'clothing'     => 'clothing',
+            'skinflow'     => 'skinflow',
+            'beauty'       => 'skinflow',
+            'jewellery'    => 'jewellery',
+            'pet'          => 'petrashop',
+            'petrashop'    => 'petrashop',
+            'kids'         => 'kidsfa',
+            'kidsfa'       => 'kidsfa',
+        ];
+
         // Automatically resolve Category ID from template or use a default fallback
         $categoryId = null;
-        if (!empty($request->selected_template)) {
-            $templateUser = User::where('username', $request->selected_template)->first();
+        if (!empty($selectedTemplate)) {
+            $cleanKey = strtolower(trim($selectedTemplate));
+            $mappedUsername = $themeAliasMap[$cleanKey] ?? $cleanKey;
+            $templateUser = User::where('username', $mappedUsername)
+                ->orWhere('username', $cleanKey)
+                ->first();
             if ($templateUser) {
                 $categoryId = $templateUser->category_id;
+                $selectedTemplate = $templateUser->username;
+                session()->put('selected_template', $selectedTemplate);
             }
         }
         if (empty($categoryId)) {
@@ -698,11 +946,17 @@ class FrontendController extends Controller
         }
         $data['category'] = $categoryId;
         $data['id'] = $request->id;
-        $data['selected_template'] = $request->selected_template ?? '';
-        $online = PaymentGateway::query()->where('status', 1)->get();
+        $data['selected_template'] = $selectedTemplate;
+        $online = PaymentGateway::query()->where('status', 1)->get()->filter(function($gateway) {
+            return strtolower($gateway->name) !== 'upi' && strtolower($gateway->keyword ?? '') !== 'upi';
+        })->unique(function ($item) {
+            return strtolower($item->keyword ?? $item->name);
+        });
         $offline = OfflineGateway::where('status', 1)->get();
         $data['offline'] = $offline;
-        $data['payment_methods'] = $online->merge($offline);
+        $data['payment_methods'] = $online->toBase()->merge($offline->toBase())->unique(function ($item) {
+            return strtolower($item->keyword ?? $item->name);
+        });
         $data['package'] = Package::query()->findOrFail($request->id);
         $data['seo'] = $seo;
         $data['pageHeading'] = $this->getPageHeading($currentLang);
@@ -713,13 +967,19 @@ class FrontendController extends Controller
     // packages start
     public function pricing(Request $request)
     {
+        if ($request->has('template') || $request->has('selected_template')) {
+            $tplParam = $request->query('template') ?: $request->query('selected_template');
+            if (!empty($tplParam)) {
+                session()->put('selected_template', $tplParam);
+            }
+        }
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
             $currentLang = Language::where('is_default', 1)->first();
         }
         $data['pageHeading'] = $this->getPageHeading($currentLang);
-        $data['seo'] = Seo::where('language_id', $currentLang->id)->first();
+        $data['seo'] = \Illuminate\Support\Facades\Schema::hasTable('seos') ? Seo::where('language_id', $currentLang->id)->first() : null;
 
         $data['bex'] = BE::first();
         $data['abs'] = BS::first();
@@ -744,6 +1004,8 @@ class FrontendController extends Controller
             ->orderBy('serial_number', 'asc')
             ->get();
 
+        $data['homeSec'] = ImageText::where('language_id', $currentLang->id)->first() ?? ImageText::first();
+
         return view('front.pricing', $data);
     }
 
@@ -756,7 +1018,7 @@ class FrontendController extends Controller
             $currentLang = Language::where('is_default', 1)->first();
         }
         $data['pageHeading'] = $this->getPageHeading($currentLang);
-        $data['seo'] = Seo::where('language_id', $currentLang->id)->first();
+        $data['seo'] = \Illuminate\Support\Facades\Schema::hasTable('seos') ? Seo::where('language_id', $currentLang->id)->first() : null;
 
         $data['currentLang'] = $currentLang;
 
@@ -805,14 +1067,22 @@ class FrontendController extends Controller
 
     public function contactView()
     {
+        $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
+        $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
+        $agency = function_exists('getAgencyFromHost') ? getAgencyFromHost() : null;
+        if ($agency && !$isProductSubdomain) {
+            return view('front.agency_legal', ['type' => 'contact', 'agency' => $agency]);
+        }
+
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
             $currentLang = Language::where('is_default', 1)->first();
         }
         $data['pageHeading'] = $this->getPageHeading($currentLang);
-        $data['seo'] = Seo::where('language_id', $currentLang->id)->first();
-        $data['recaptchaInfo'] = BS::select('is_recaptcha')->first();
+        $data['seo'] = \Illuminate\Support\Facades\Schema::hasTable('seos') ? Seo::where('language_id', $currentLang->id)->first() : null;
+        $data['recaptchaInfo'] = BS::select('is_recaptcha', 'google_recaptcha_site_key', 'google_recaptcha_secret_key')->first();
+        $data['homeSec'] = ImageText::where('language_id', $currentLang->id)->first() ?? ImageText::first();
 
         return view('front.contact', $data);
     }
@@ -825,7 +1095,7 @@ class FrontendController extends Controller
             $currentLang = Language::where('is_default', 1)->first();
         }
         $data['pageHeading'] = $this->getPageHeading($currentLang);
-        $data['seo'] = Seo::where('language_id', $currentLang->id)->first();
+        $data['seo'] = \Illuminate\Support\Facades\Schema::hasTable('seos') ? Seo::where('language_id', $currentLang->id)->first() : null;
 
         $lang_id = $currentLang->id;
         $data['faqs'] = Faq::where('language_id', $lang_id)
@@ -874,8 +1144,9 @@ class FrontendController extends Controller
             $currentLang = Language::where('is_default', 1)->first();
         }
         $data['pageHeading'] = $this->getPageHeading($currentLang);
-        $data['seo'] = Seo::where('language_id', $currentLang->id)->first();
+        $data['seo'] = \Illuminate\Support\Facades\Schema::hasTable('seos') ? Seo::where('language_id', $currentLang->id)->first() : null;
         $data['categories'] = UserCategory::query()->where('language_id', $currentLang->id)->get();
+        $data['homeSec'] = ImageText::where('language_id', $currentLang->id)->first() ?? ImageText::first();
 
         $selectedCategoryUniqueId = null;
         if (!empty($request->category)) {
@@ -936,13 +1207,21 @@ class FrontendController extends Controller
             })
             ->paginate(10);
 
+                Merchant::ensureTableExistsAndSeeded($currentLang->id);
+        $data['featuredMerchants'] = Merchant::where('type', 'featured')->where('language_id', $currentLang->id)->where('status', 1)->orderBy('serial_number', 'ASC')->get();
+        $data['lovedMerchants'] = Merchant::where('type', 'review')->where('language_id', $currentLang->id)->where('status', 1)->orderBy('serial_number', 'ASC')->get();
+        $data['whyChooseCards'] = Merchant::where('type', 'why_choose')->where('language_id', $currentLang->id)->where('status', 1)->orderBy('serial_number', 'ASC')->get();
+
         $data['users'] = $users;
 
         return view('front.shops', $data);
     }
 
-    public function customPage($domain, $slug)
+    public function customPage($domain = null, $slug = null)
     {
+        if (is_null($slug) && !is_null($domain)) {
+            $slug = $domain;
+        }
         $user = app('user');
         $userCurrentLang = app('userCurrentLang');
         $id = $user->id;
@@ -983,6 +1262,13 @@ class FrontendController extends Controller
         $offline = OfflineGateway::where('name', $request->name)
             ->select('short_description', 'instructions', 'is_receipt')
             ->first();
+        if (!$offline) {
+            return response()->json([
+                'description' => '',
+                'instructions' => '',
+                'is_receipt' => 0
+            ]);
+        }
         return response()->json([
             'description' => $offline->short_description,
             'instructions' => $offline->instructions,
@@ -990,7 +1276,7 @@ class FrontendController extends Controller
         ]);
     }
 
-    public function contactMessage($domain, Request $request)
+    public function contactMessage(?Request $request = null, $domain = null)
     {
         $rules = [
             'fullname' => 'required',
@@ -1019,15 +1305,15 @@ class FrontendController extends Controller
     public function adminContactMessage(Request $request)
     {
         $rules = [
-            'name' => 'required',
-            'email' => 'required|email:rfc,dns',
-            'subject' => 'required',
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255',
+            'subject' => 'required|max:255',
             'message' => 'required'
         ];
 
-        $bs = BS::select('is_recaptcha')->first();
+        $bs = BS::select('is_recaptcha', 'google_recaptcha_secret_key')->first();
 
-        if ($bs->is_recaptcha == 1) {
+        if ($bs && $bs->is_recaptcha == 1) {
             $rules['g-recaptcha-response'] = 'required|captcha';
         }
         $messages = [
@@ -1040,34 +1326,48 @@ class FrontendController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
+        // Store submitted lead inquiry into database
+        \App\Models\AdminContactMessage::ensureTableExists();
+        \App\Models\AdminContactMessage::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'describe_issues' => $request->describe_issues,
+            'subject' => $request->subject,
+            'message' => $request->message,
+            'status' => 'unread'
+        ]);
 
+        $be = BE::first();
+        if ($be && $be->is_smtp == 1) {
+            try {
+                $subject = $request->subject;
+                $msg = '<p>A new contact/lead inquiry has been submitted.<br/>' .
+                    '<strong>Name: </strong>' . e($request->name) . '<br/>' .
+                    '<strong>Email: </strong>' . e($request->email) . '<br/>' .
+                    '<strong>Phone: </strong>' . e($request->phone) . '<br/>' .
+                    '<strong>Describe Issues: </strong>' . e($request->describe_issues) . '</p>' .
+                    '<p><strong>Message:</strong><br/>' . nl2br(e($request->message)) . '</p>';
 
-        $be =  BE::firstOrFail();
-        if ($be->is_smtp == 1) {
-            $subject = $request->subject;
-
-            $msg = '<p>A new quote request has been sent.<br/><strong>Client Name: </strong>' . $request->name . '<br/><strong>Client Mail: </strong>' . $request->email . '</p><p>Message : ' . nl2br(Purifier::clean($request->message, 'youtube')) . '</p>';
-
-            $data = [];
-            //add smtp info in array
-            $data['smtp_status'] = $be->is_smtp;
-            $data['smtp_host'] = $be->smtp_host;
-            $data['smtp_username'] = $be->smtp_username;
-            $data['smtp_password'] = $be->smtp_password;
-            $data['encryption'] = $be->encryption;
-            $data['smtp_port'] = $be->smtp_port;
-
-            //mail info in array
-            $data['from_mail'] = $be->from_mail;
-            $data['recipient'] = $be->to_mail;
-            $data['subject'] = $subject;
-            $data['body'] = $msg;
-
-            // Send Mail
-            BasicMailer::sendMail($data);
+                $data = [
+                    'smtp_status' => $be->is_smtp,
+                    'smtp_host' => $be->smtp_host,
+                    'smtp_username' => $be->smtp_username,
+                    'smtp_password' => $be->smtp_password,
+                    'encryption' => $be->encryption,
+                    'smtp_port' => $be->smtp_port,
+                    'from_mail' => $be->from_mail,
+                    'recipient' => $be->to_mail,
+                    'subject' => $subject,
+                    'body' => $msg
+                ];
+                BasicMailer::sendMail($data);
+            } catch (\Throwable $e) {
+                \Log::warning('SMTP contact mail error: ' . $e->getMessage());
+            }
         }
 
-        Session::flash('success', __('Message sent successfully'));
+        Session::flash('success', __('Thank you! Your message has been sent successfully.'));
         return back();
     }
 
@@ -1077,7 +1377,7 @@ class FrontendController extends Controller
         app()->setLocale($lang);
         return redirect()->back();
     }
-    public function changeUserLanguage(Request $request, $domain)
+    public function changeUserLanguage(Request $request, $domain = null)
     {
         session()->put('user_lang', $request->code);
         return redirect()->route('front.user.detail.view', $domain);
@@ -1108,6 +1408,8 @@ class FrontendController extends Controller
             ->orderBy('serial_number', 'asc')
             ->get();
 
+        $data['homeSec'] = ImageText::where('language_id', $currentLang->id)->first() ?? ImageText::first();
+
         return view('front.template', $data);
     }
 
@@ -1125,92 +1427,7 @@ class FrontendController extends Controller
 
     public function invoice()
     {
-        if (request()->query('seed') == '1') {
-            $user = User::where('email', 'bahadabdul539@gmail.com')
-                ->orWhere('username', 'horizonium')
-                ->first();
-                
-            if (!$user) {
-                return "User bahadabdul539@gmail.com or horizonium not found.";
-            }
-
-            \App\Models\User\UserOrder::where('user_id', $user->id)->delete();
-
-            $customer = \App\Models\Customer::where('user_id', $user->id)->first();
-            if (!$customer) {
-                $customer = \App\Models\Customer::create([
-                    'user_id' => $user->id,
-                    'first_name' => 'Mohamed',
-                    'last_name' => 'Imran',
-                    'email' => 'bahadabdul539@gmail.com',
-                    'phone' => '9876543210',
-                    'status' => 1
-                ]);
-            }
-
-            $user_currency = \App\Models\User\UserCurrency::where('user_id', $user->id)->where('is_default', 1)->first();
-            if (!$user_currency) {
-                $user_currency = \App\Models\User\UserCurrency::where('user_id', $user->id)->first();
-            }
-            $currency_code = $user_currency ? $user_currency->code : 'INR';
-            $currency_sign = $user_currency ? $user_currency->symbol : '₹';
-
-            $firstNames = ['John', 'Emily', 'Michael', 'Sarah', 'David', 'Jessica', 'James', 'Ashley', 'Robert', 'Amanda'];
-            $lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Miller', 'Davis', 'Garcia', 'Rodriguez', 'Wilson'];
-            $gateways = ['Stripe', 'PayPal', 'Razorpay', 'Offline'];
-            $statuses = ['completed', 'pending', 'processing', 'rejected'];
-
-            for ($i = 0; $i < 100; $i++) {
-                $daysAgo = rand(0, 29);
-                $orderDate = Carbon::now()->subDays($daysAgo)->subHours(rand(0, 23))->subMinutes(rand(0, 59));
-                
-                $cart_total = rand(200, 3000);
-                $tax = round($cart_total * 0.1, 2);
-                $shipping_charge = rand(0, 1) ? 0 : rand(30, 120);
-                $total = $cart_total + $tax + $shipping_charge;
-
-                $status = $statuses[array_rand($statuses)];
-                $payment_status = ($status == 'rejected') ? 'Pending' : 'Completed';
-
-                \App\Models\User\UserOrder::create([
-                    'customer_id' => $customer->id,
-                    'user_id' => $user->id,
-                    'billing_country' => 'India',
-                    'billing_fname' => $firstNames[array_rand($firstNames)],
-                    'billing_lname' => $lastNames[array_rand($lastNames)],
-                    'billing_address' => 'Street ' . rand(1, 200),
-                    'billing_city' => 'Chennai',
-                    'billing_email' => 'customer' . rand(1, 100) . '@demo.com',
-                    'billing_number' => '98765' . rand(10000, 99999),
-                    'shipping_country' => 'India',
-                    'shipping_fname' => $firstNames[array_rand($firstNames)],
-                    'shipping_lname' => $lastNames[array_rand($lastNames)],
-                    'shipping_address' => 'Street ' . rand(1, 200),
-                    'shipping_city' => 'Chennai',
-                    'shipping_email' => 'customer' . rand(1, 100) . '@demo.com',
-                    'shipping_number' => '98765' . rand(10000, 99999),
-                    'cart_total' => $cart_total,
-                    'discount' => 0,
-                    'tax' => $tax,
-                    'tax_percentage' => 10.00,
-                    'total' => $total,
-                    'method' => $gateways[array_rand($gateways)],
-                    'gateway_type' => 'online',
-                    'currency_code' => $currency_code,
-                    'currency_sign' => $currency_sign,
-                    'currency_id' => $user_currency ? $user_currency->id : 1,
-                    'order_number' => strtoupper(\Illuminate\Support\Str::random(4)) . time() . rand(10, 99),
-                    'shipping_method' => 'Standard Delivery',
-                    'shipping_charge' => $shipping_charge,
-                    'payment_status' => $payment_status,
-                    'order_status' => $status,
-                    'created_at' => $orderDate,
-                    'updated_at' => $orderDate
-                ]);
-            }
-
-            return "Successfully seeded 100 dummy orders for bahadabdul539@gmail.com (horizonium)!";
-        }
+        // Seed backdoor removed for production safety
 
         $data = [];
         $request = [
@@ -1242,49 +1459,98 @@ class FrontendController extends Controller
 
     public function privacyPolicy()
     {
+        $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
+        $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
+        $agency = getAgencyFromHost();
+        if ($agency && !$isProductSubdomain) {
+            return view('front.agency_legal', ['type' => 'privacy', 'agency' => $agency]);
+        }
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
             $currentLang = Language::where('is_default', 1)->first();
         }
         $data['pageHeading'] = __('Privacy Policy');
-        $data['seo'] = Seo::where('language_id', $currentLang->id)->first();
+        $data['seo'] = \Illuminate\Support\Facades\Schema::hasTable('seos') ? Seo::where('language_id', $currentLang->id)->first() : null;
         return view('front.privacy-policy', $data);
     }
 
     public function termsConditions()
     {
+        $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
+        $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
+        $agency = getAgencyFromHost();
+        if ($agency && !$isProductSubdomain) {
+            return view('front.agency_legal', ['type' => 'terms', 'agency' => $agency]);
+        }
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
             $currentLang = Language::where('is_default', 1)->first();
         }
         $data['pageHeading'] = __('Terms & Conditions');
-        $data['seo'] = Seo::where('language_id', $currentLang->id)->first();
+        $data['seo'] = \Illuminate\Support\Facades\Schema::hasTable('seos') ? Seo::where('language_id', $currentLang->id)->first() : null;
         return view('front.terms-conditions', $data);
+    }
+
+    public function cookiePolicy()
+    {
+        $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
+        $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
+        $agency = getAgencyFromHost();
+        if ($agency && !$isProductSubdomain) {
+            return view('front.agency_legal', ['type' => 'cookie', 'agency' => $agency]);
+        }
+        if (session()->has('lang')) {
+            $currentLang = Language::where('code', session()->get('lang'))->first();
+        } else {
+            $currentLang = Language::where('is_default', 1)->first();
+        }
+        $data['pageHeading'] = __('Cookie Policy');
+        $data['seo'] = \Illuminate\Support\Facades\Schema::hasTable('seos') ? Seo::where('language_id', $currentLang->id)->first() : null;
+        return view('front.privacy-policy', $data);
     }
 
     public function refundPolicy()
     {
+        $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
+        $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
+        $agency = getAgencyFromHost();
+        if ($agency && !$isProductSubdomain) {
+            return view('front.agency_legal', ['type' => 'refund', 'agency' => $agency]);
+        }
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
             $currentLang = Language::where('is_default', 1)->first();
         }
         $data['pageHeading'] = __('Cancellation & Refund Policy');
-        $data['seo'] = Seo::where('language_id', $currentLang->id)->first();
+        $data['seo'] = \Illuminate\Support\Facades\Schema::hasTable('seos') ? Seo::where('language_id', $currentLang->id)->first() : null;
         return view('front.refund-policy', $data);
     }
 
     public function shippingPolicy()
     {
+        $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
+        $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
+        $agency = getAgencyFromHost();
+        if ($agency && !$isProductSubdomain) {
+            return view('front.agency_legal', ['type' => 'shipping', 'agency' => $agency]);
+        }
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
             $currentLang = Language::where('is_default', 1)->first();
         }
         $data['pageHeading'] = __('Shipping & Delivery Policy');
-        $data['seo'] = Seo::where('language_id', $currentLang->id)->first();
+        $data['seo'] = \Illuminate\Support\Facades\Schema::hasTable('seos') ? Seo::where('language_id', $currentLang->id)->first() : null;
         return view('front.shipping-policy', $data);
+    }
+
+
+
+    public function contact()
+    {
+        return $this->contactView();
     }
 }

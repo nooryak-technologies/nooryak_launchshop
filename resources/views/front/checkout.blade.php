@@ -659,33 +659,68 @@
       </div>
     </div>
 
+    @php
+      $data = $data ?? session('data') ?? [];
+      $reqHost = strtolower(trim((string)(request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? ''))));
+      $reqHost = preg_replace('/:\d+$/', '', $reqHost);
+      $reqHost = preg_replace('/^www\./i', '', $reqHost);
+      $cleanAgencyHost = preg_replace('/^(launchshop|checkout|app|www|websitebuilder|website-builder|whatsappbulk|whatsapp-bulk|whatsapp|wa)\./i', '', $reqHost);
+
+      $scheme = (request()->secure() || str_contains(request()->fullUrl(), 'https://') || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')) ? 'https://' : 'http://';
+
+      if (!empty($cleanAgencyHost) && $cleanAgencyHost !== 'localhost' && $cleanAgencyHost !== '127.0.0.1') {
+          $checkoutFormAction = "{$scheme}checkout.{$cleanAgencyHost}/membership/checkout";
+      } else {
+          $checkoutFormAction = route('front.membership.checkout');
+      }
+    @endphp
     {{-- Main checkout form --}}
-    <form action="{{ route('front.membership.checkout') }}" method="POST" enctype="multipart/form-data" id="my-checkout-form" novalidate>
+    <form action="{{ $checkoutFormAction }}" method="POST" enctype="multipart/form-data" id="my-checkout-form" novalidate>
       @csrf
 
+      @if ($errors->any())
+        <div class="row">
+          <div class="col-12 mb-3">
+            <div class="alert alert-danger shadow-sm border-0 d-flex align-items-start gap-3 p-3" style="border-radius: 12px; background: #fef2f2; border-left: 5px solid #ef4444 !important; color: #991b1b;">
+              <i class="fas fa-exclamation-triangle fa-lg mt-1 text-danger"></i>
+              <div>
+                <h5 class="mb-1 font-weight-bold" style="font-size: 15px; color: #991b1b;">{{ __('Please resolve the following before placing your order:') }}</h5>
+                <ul class="mb-0 ps-3" style="font-size: 13.5px;">
+                  @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                  @endforeach
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      @endif
+
       {{-- Hidden fields --}}
-      <input type="hidden" name="first_name"        value="{{ $data['first_name'] }}">
-      <input type="hidden" name="category"          value="{{ $data['category'] }}">
-      <input type="hidden" name="username"          value="{{ $data['username'] }}">
-      <input type="hidden" name="password"          value="{{ $data['password'] }}">
-      <input type="hidden" name="package_type"      value="{{ $data['status'] }}">
-      <input type="hidden" name="email"             value="{{ $data['email'] }}">
-      <input type="hidden" name="price"             value="{{ $data['status'] == 'trial' ? 0 : $data['package']->price }}">
-      <input type="hidden" name="package_id"        value="{{ $data['id'] }}">
-      <input type="hidden" name="payment_method"    id="payment" value="{{ old('payment_method') }}">
-      <input type="hidden" name="trial_days"        id="trial_days" value="{{ $data['package']->trial_days }}">
+      <input type="hidden" name="first_name"        value="{{ $data['first_name'] ?? '' }}">
+      <input type="hidden" name="category"          value="{{ $data['category'] ?? '' }}">
+      <input type="hidden" name="username"          value="{{ $data['username'] ?? '' }}">
+      <input type="hidden" name="password"          value="{{ $data['password'] ?? '' }}">
+      <input type="hidden" name="package_type"      value="{{ $data['status'] ?? 'regular' }}">
+      <input type="hidden" name="email"             value="{{ $data['email'] ?? '' }}">
+      <input type="hidden" name="price"             value="{{ ($data['status'] ?? '') == 'trial' ? 0 : ($data['package']->price ?? 0) }}">
+      <input type="hidden" name="package_id"        value="{{ $data['id'] ?? ($data['package']->id ?? '') }}">
+      <input type="hidden" id="payment" value="{{ old('payment_method') }}">
+      <input type="hidden" name="trial_days"        id="trial_days" value="{{ $data['package']->trial_days ?? 0 }}">
       <input type="hidden" name="start_date"        value="{{ \Carbon\Carbon::today()->format('d-m-Y') }}">
-      <input type="hidden" name="selected_template" value="{{ $data['selected_template'] ?? '' }}">
-      @if ($data['status'] === 'trial')
-        <input type="hidden" name="expire_date" value="{{ \Carbon\Carbon::today()->addDay($data['package']->trial_days)->format('d-m-Y') }}">
+      <input type="hidden" name="product_type"       value="launchshop">
+      <input type="hidden" name="selected_template" value="{{ $data['selected_template'] ?? session('selected_template') ?? '' }}">
+      <input type="hidden" name="template" value="{{ $data['selected_template'] ?? session('selected_template') ?? '' }}">
+      @if (($data['status'] ?? '') === 'trial')
+        <input type="hidden" name="expire_date" value="{{ \Carbon\Carbon::today()->addDay($data['package']->trial_days ?? 14)->format('d-m-Y') }}">
       @else
-        @if ($data['package']->term === 'daily')
+        @if (isset($data['package']) && $data['package']->term === 'daily')
           <input type="hidden" name="expire_date" value="{{ \Carbon\Carbon::today()->addDay()->format('d-m-Y') }}">
-        @elseif($data['package']->term === 'weekly')
+        @elseif(isset($data['package']) && $data['package']->term === 'weekly')
           <input type="hidden" name="expire_date" value="{{ \Carbon\Carbon::today()->addWeek()->format('d-m-Y') }}">
-        @elseif($data['package']->term === 'monthly')
+        @elseif(isset($data['package']) && $data['package']->term === 'monthly')
           <input type="hidden" name="expire_date" value="{{ \Carbon\Carbon::today()->addMonth()->format('d-m-Y') }}">
-        @elseif($data['package']->term === 'lifetime')
+        @elseif(isset($data['package']) && $data['package']->term === 'lifetime')
           <input type="hidden" name="expire_date" value="{{ \Carbon\Carbon::maxValue()->format('d-m-Y') }}">
         @else
           <input type="hidden" name="expire_date" value="{{ \Carbon\Carbon::today()->addYear()->format('d-m-Y') }}">
@@ -752,7 +787,7 @@
                   <div class="co-input-wrap">
                     <i class="fal fa-envelope co-input-icon"></i>
                     <input id="email" type="email" class="co-input" name="email"
-                      value="{{ $data['email'] }}" disabled>
+                      value="{{ $data['email'] ?? '' }}" readonly>
                   </div>
                   @if ($errors->has('email'))
                     <p class="co-error">{{ $errors->first('email') }}</p>
@@ -828,7 +863,7 @@
           </div>
 
           {{-- Payment Method Card (only when not free/trial) --}}
-          @if ($data['package']->price != 0 && $data['status'] != 'trial')
+          @if (isset($data['package']) && ($data['package']->price ?? 0) != 0 && ($data['status'] ?? '') != 'trial')
           <div class="co-card">
             <div class="co-card-title">
               <div class="co-card-title-icon">
@@ -838,11 +873,17 @@
             </div>
 
             <div class="co-field">
+              @php
+                $paymentMethodsList = collect($data['payment_methods'] ?? [])->unique(function($item) {
+                    return strtolower($item->keyword ?? $item->name);
+                });
+              @endphp
+
               {{-- Visually hide but keep select functional for forms --}}
               <div class="co-select-wrap d-none">
                 <select id="payment-gateway" name="payment_method" class="co-select">
                   <option value="" selected disabled>{{ __('Choose a payment method') }}</option>
-                  @foreach ($data['payment_methods'] as $payment_method)
+                  @foreach ($paymentMethodsList as $payment_method)
                     <option value="{{ $payment_method->name }}"
                       {{ old('payment_method') == $payment_method->name ? 'selected' : '' }}>
                       {{ __($payment_method->name) }}
@@ -854,7 +895,7 @@
 
               {{-- Beautiful grid of visual payment methods --}}
               <div class="co-payment-methods-grid">
-                @foreach ($data['payment_methods'] as $payment_method)
+                @foreach ($paymentMethodsList as $payment_method)
                   @php
                     $methodName = $payment_method->name;
                     $iconClass = getGatewayIcon($methodName);
@@ -945,9 +986,11 @@
           {{-- Offline Gateway Receipt --}}
           <div>
             <div id="instructions"></div>
-            <input type="hidden" name="is_receipt" value="0" id="is_receipt">
+            <input type="hidden" name="is_receipt" value="{{ old('is_receipt', 0) }}" id="is_receipt">
             @if ($errors->has('receipt'))
-              <p class="co-error"><strong>{{ $errors->first('receipt') }}</strong></p>
+              <div class="alert alert-danger py-2 px-3 mt-2" style="font-size: 13px; font-weight: 600; border-radius: 8px; border-left: 4px solid #ef4444; background: #fef2f2; color: #b91c1c;">
+                <i class="fas fa-exclamation-circle mr-1"></i> {{ $errors->first('receipt') }}
+              </div>
             @endif
           </div>
 
@@ -965,11 +1008,11 @@
             {{-- Package badge --}}
             <div class="co-pkg-badge">
               <span class="co-pkg-label">{{ __('Selected Plan') }}</span>
-              <span class="co-pkg-name">{{ $data['package']->title }}</span>
+              <span class="co-pkg-name">{{ $data['package']->title ?? 'Selected Plan' }}</span>
               <span class="co-pkg-term">
-                @if ($data['status'] === 'trial')
-                  {{ $data['package']->trial_days }} {{ __('days free trial') }}
-                @elseif($data['package']->term === 'lifetime')
+                @if (($data['status'] ?? '') === 'trial')
+                  {{ $data['package']->trial_days ?? 14 }} {{ __('days free trial') }}
+                @elseif(isset($data['package']) && $data['package']->term === 'lifetime')
                   {{ __('One-time payment') }}
                 @else
                   {{ ucfirst($data['package']->term ?? 'plan') }} {{ __('subscription') }}
@@ -985,15 +1028,15 @@
             <div class="co-summary-row">
               <div class="key"><i class="fal fa-calendar-times"></i> {{ __('Expiry Date') }}</div>
               <div class="val">
-                @if ($data['status'] === 'trial')
-                  {{ \Carbon\Carbon::today()->addDay($data['package']->trial_days)->format('d-m-Y') }}
-                @elseif($data['package']->term === 'daily')
+                @if (($data['status'] ?? '') === 'trial')
+                  {{ \Carbon\Carbon::today()->addDay($data['package']->trial_days ?? 14)->format('d-m-Y') }}
+                @elseif(isset($data['package']) && $data['package']->term === 'daily')
                   {{ \Carbon\Carbon::today()->addDay()->format('d-m-Y') }}
-                @elseif($data['package']->term === 'weekly')
+                @elseif(isset($data['package']) && $data['package']->term === 'weekly')
                   {{ \Carbon\Carbon::today()->addWeek()->format('d-m-Y') }}
-                @elseif($data['package']->term === 'monthly')
+                @elseif(isset($data['package']) && $data['package']->term === 'monthly')
                   {{ \Carbon\Carbon::today()->addMonth()->format('d-m-Y') }}
-                @elseif($data['package']->term === 'lifetime')
+                @elseif(isset($data['package']) && $data['package']->term === 'lifetime')
                   <span style="color: #10b981; font-weight: 800;">{{ __('Lifetime') }}</span>
                 @else
                   {{ \Carbon\Carbon::today()->addYear()->format('d-m-Y') }}
@@ -1005,12 +1048,12 @@
             <div class="co-total-row">
               <div class="co-total-label">{{ __('Total Due') }}</div>
               <div class="co-total-amount">
-                @if ($data['status'] === 'trial')
+                @if (($data['status'] ?? '') === 'trial')
                   {{ __('Free') }}
-                @elseif($data['package']->price == 0)
+                @elseif(isset($data['package']) && $data['package']->price == 0)
                   {{ __('Free') }}
                 @else
-                  {{ format_price($data['package']->price) }}
+                  {{ format_price($data['package']->price ?? 0) }}
                 @endif
               </div>
             </div>
@@ -1066,5 +1109,33 @@
 
   <script type="text/javascript" src="{{ $anetSrc }}" charset="utf-8"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="{{ asset('assets/front/js/membership-checkout.js') }}"></script>
+  <script src="{{ asset('assets/front/js/membership-checkout.js') }}?v={{ file_exists(public_path('assets/front/js/membership-checkout.js')) ? filemtime(public_path('assets/front/js/membership-checkout.js')) : time() }}"></script>
+  <script>
+    document.getElementById('my-checkout-form')?.addEventListener('submit', function() {
+      try {
+        var usernameVal = document.querySelector('input[name="username"]')?.value || '';
+        var emailVal = document.querySelector('input[name="email"]')?.value || '';
+        var shopNameVal = document.querySelector('input[name="shop_name"]')?.value || '';
+        var firstNameVal = document.querySelector('input[name="first_name"]')?.value || '';
+        var phoneVal = document.querySelector('input[name="phone"]')?.value || '';
+        var countryCodeVal = document.querySelector('input[name="country_code"]')?.value || '+91';
+        var passwordVal = document.querySelector('input[name="password"]')?.value || '';
+
+        var selectedTemplateVal = document.querySelector('input[name="selected_template"]')?.value || '';
+        var pendingLS = {
+          username: usernameVal,
+          email: emailVal,
+          shop_name: shopNameVal,
+          first_name: firstNameVal,
+          phone: phoneVal,
+          country_code: countryCodeVal,
+          password: passwordVal,
+          selected_template: selectedTemplateVal,
+          template: selectedTemplateVal,
+          timestamp: Date.now()
+        };
+        localStorage.setItem('ls_pending_checkout_user', JSON.stringify(pendingLS));
+      } catch(e) {}
+    });
+  </script>
 @endsection

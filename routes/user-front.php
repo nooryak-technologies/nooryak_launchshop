@@ -3,9 +3,11 @@
 use Illuminate\Support\Facades\Route;
 
 // Register supported base hosts for tenant subdomain routing.
-$tenantBaseHosts = array_values(array_filter(platformBaseHosts(), function ($host) {
-    return !in_array($host, ['localhost', '127.0.0.1'], true) && substr_count($host, '.') >= 1;
-}));
+$tenantBaseHosts = array_values(array_unique(array_filter([
+    strtolower((string) env('WEBSITE_HOST', '')),
+    'maturednature.com',
+    'cockroachjantaparty.top',
+])));
 
 // ─────────────────────────────────────────────────────────────────
 // Shared tenant route definitions (inline closure)
@@ -146,13 +148,50 @@ $tenantRoutes = function () {
 // ─────────────────────────────────────────────────────────────────
 // Context Detection & Execution
 // ─────────────────────────────────────────────────────────────────
-$requestHost = $_SERVER['HTTP_HOST'] ?? (string) env('WEBSITE_HOST', 'localhost');
-$cleanRequestHost = normalizeRequestHost($requestHost);
+$requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? env('WEBSITE_HOST', 'localhost'))));
+$requestHost = preg_replace('/:\d+$/', '', $requestHost);
 
-$isTenantSubdomain = isPlatformSubdomainHost($cleanRequestHost);
-$tenantSubdomainName = $isTenantSubdomain ? (explode('.', $cleanRequestHost)[0] ?? null) : null;
-$isMainHost = isPlatformMainHost($cleanRequestHost);
-$isCustomDomain = !$isMainHost && !$isTenantSubdomain && (isShopCustomDomainHost($cleanRequestHost) || !isAgencyDomain($cleanRequestHost));
+if (str_contains($requestHost, 'launchshop.in')) {
+    $parts = explode('.', $requestHost);
+    if (count($parts) >= 3 && !in_array($parts[0], ['www', 'app', 'launchshop', 'admin'])) {
+        $subCandidate = strtolower($parts[0]);
+        $themeAliasMap = [
+            'ecomgrocery' => 'grocery2',
+            'grocery'     => 'vegetables',
+            'multipurpose'=> 'manti',
+        ];
+        if (isset($themeAliasMap[$subCandidate])) {
+            $subCandidate = $themeAliasMap[$subCandidate];
+        }
+        header("Location: https://launchshop.in/" . $subCandidate, true, 301);
+        exit();
+    }
+    header("Location: https://launchshop.in" . ($_SERVER['REQUEST_URI'] ?? '/'), true, 301);
+    exit();
+}
+
+$cleanRequestHost = preg_replace('/^(launchshop|checkout|www|app|websitebuilder|website-builder)\./i', '', $requestHost);
+
+$isTenantSubdomain = false;
+$tenantSubdomainName = null;
+$reservedSubdomains = ['launchshop', 'checkout', 'www', 'app', 'admin', 'websitebuilder', 'website-builder'];
+
+foreach ($tenantBaseHosts as $tenantBaseHost) {
+    if (!empty($tenantBaseHost) && $cleanRequestHost !== $tenantBaseHost && str_ends_with($cleanRequestHost, '.' . $tenantBaseHost)) {
+        $sub = explode('.', $cleanRequestHost)[0] ?? null;
+        if (!in_array(strtolower($sub), $reservedSubdomains)) {
+            $isTenantSubdomain = true;
+            $tenantSubdomainName = $sub;
+            break;
+        }
+    }
+}
+
+$isLaunchShopCustomDomain = !empty(request()->attributes->get('is_launchshop_custom_domain')) || (function_exists('isLaunchShopCustomDomain') && isLaunchShopCustomDomain($cleanRequestHost));
+$isWbAgencyDomain = !empty(isWbAgencyCustomDomain($cleanRequestHost)) && !$isLaunchShopCustomDomain;
+$isWbHost = (str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.') || str_contains($requestHost, 'websitebuilder.') || str_contains($requestHost, 'website-builder.') || $isWbAgencyDomain);
+$isMainHost = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'checkout.') || str_starts_with($requestHost, 'www.') || str_starts_with($requestHost, 'app.') || in_array($cleanRequestHost, array_merge(['localhost', '127.0.0.1'], $tenantBaseHosts));
+$isCustomDomain = $isLaunchShopCustomDomain || (!$isWbHost && !$isMainHost && !isAgencyDomain($cleanRequestHost) && !$isTenantSubdomain);
 
 // ─────────────────────────────────────────────────────────────────
 // Auto 301 Redirect: ecomgrocery.launchshop.in/ecomgrocery/shop -> ecomgrocery.launchshop.in/shop
@@ -180,28 +219,31 @@ if ($isTenantSubdomain && !empty($tenantSubdomainName) && !app()->runningInConso
 // ─────────────────────────────────────────────────────────────────
 // ROUTE REGISTRATION BASED ON CONTEXT
 // ─────────────────────────────────────────────────────────────────
-if ($isTenantSubdomain) {
-    // Subdomain Context: ecomgrocery.launchshop.in
-    foreach ($tenantBaseHosts as $tenantBaseHost) {
-        if (str_ends_with($cleanRequestHost, '.' . $tenantBaseHost)) {
-            Route::group([
-                'domain'     => '{username}.' . $tenantBaseHost,
-                'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
-            ], $tenantRoutes);
-            break;
+if (!$isWbHost) {
+    if ($isTenantSubdomain) {
+        // Subdomain Context: ecomgrocery.launchshop.in
+        foreach ($tenantBaseHosts as $tenantBaseHost) {
+            if (str_ends_with($cleanRequestHost, '.' . $tenantBaseHost)) {
+                Route::group([
+                    'domain'     => '{username}.' . $tenantBaseHost,
+                    'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
+                ], $tenantRoutes);
+                break;
+            }
         }
+    } elseif ($isCustomDomain) {
+        // Custom Domain Context: e.g. womenart.in
+        Route::group([
+            'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
+        ], $tenantRoutes);
+    } else {
+        // Main Host / Agency Path-based Context: launchshop.in/ecomgrocery
+        Route::group([
+            'prefix'     => '/{username}',
+            'where'      => ['username' => '^(?!(registration|membership|checkout|login|register|password|about|pricing|blog|blogs|success|otp|p|terms-conditions|privacy-policy|cookie-policy|refund-policy|shipping-policy)$).*'],
+            'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
+        ], $tenantRoutes);
     }
-} elseif ($isCustomDomain) {
-    // Custom Domain Context: womenart.in
-    Route::group([
-        'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
-    ], $tenantRoutes);
-} else {
-    // Main Host / Agency Path-based Context: launchshop.in/ecomgrocery
-    Route::group([
-        'prefix'     => '/{username}',
-        'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
-    ], $tenantRoutes);
 }
 
 // ─────────────────────────────────────────────────────────────────
