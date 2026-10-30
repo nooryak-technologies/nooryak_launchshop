@@ -98,7 +98,10 @@ class RazorpayController extends Controller
 
     public function successPayment(Request $request)
     {
-        $requestData = Session::get('request');
+        $requestData = Session::get('request') ?: $request->all();
+        if (is_array($requestData) && empty($requestData['selected_template'])) {
+            $requestData['selected_template'] = $request->input('selected_template') ?: session('selected_template', '');
+        }
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
