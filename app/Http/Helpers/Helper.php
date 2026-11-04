@@ -1,4 +1,11 @@
 <?php
+if (!function_exists('getAgencyFromHost')) {
+    function getAgencyFromHost($host = null)
+    {
+        return null;
+    }
+}
+
 
 use App\Http\Helpers\UserPermissionHelper;
 use App\Models\CustomerWishList;

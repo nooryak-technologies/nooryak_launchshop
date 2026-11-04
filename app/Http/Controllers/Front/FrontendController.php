@@ -74,7 +74,7 @@ class FrontendController extends Controller
             || str_starts_with($requestHost, 'whatsappbulk.') 
             || str_starts_with($requestHost, 'whatsapp.');
 
-        $agency = getAgencyFromHost();
+        $agency = function_exists('getAgencyFromHost') ? getAgencyFromHost() : null;
         if ($agency && !$isProductSubdomain) {
             return view('front.agency_landing', compact('agency'));
         }
@@ -265,7 +265,7 @@ class FrontendController extends Controller
     {
         $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
         $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
-        $agency = getAgencyFromHost();
+        $agency = function_exists('getAgencyFromHost') ? getAgencyFromHost() : null;
         if ($agency && !$isProductSubdomain) {
             return view('front.agency_legal', ['type' => 'about', 'agency' => $agency]);
         }
@@ -1496,7 +1496,7 @@ class FrontendController extends Controller
     {
         $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
         $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
-        $agency = getAgencyFromHost();
+        $agency = function_exists('getAgencyFromHost') ? getAgencyFromHost() : null;
         if ($agency && !$isProductSubdomain) {
             return view('front.agency_legal', ['type' => 'privacy', 'agency' => $agency]);
         }
@@ -1514,7 +1514,7 @@ class FrontendController extends Controller
     {
         $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
         $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
-        $agency = getAgencyFromHost();
+        $agency = function_exists('getAgencyFromHost') ? getAgencyFromHost() : null;
         if ($agency && !$isProductSubdomain) {
             return view('front.agency_legal', ['type' => 'terms', 'agency' => $agency]);
         }
@@ -1532,7 +1532,7 @@ class FrontendController extends Controller
     {
         $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
         $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
-        $agency = getAgencyFromHost();
+        $agency = function_exists('getAgencyFromHost') ? getAgencyFromHost() : null;
         if ($agency && !$isProductSubdomain) {
             return view('front.agency_legal', ['type' => 'cookie', 'agency' => $agency]);
         }
@@ -1550,7 +1550,7 @@ class FrontendController extends Controller
     {
         $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
         $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
-        $agency = getAgencyFromHost();
+        $agency = function_exists('getAgencyFromHost') ? getAgencyFromHost() : null;
         if ($agency && !$isProductSubdomain) {
             return view('front.agency_legal', ['type' => 'refund', 'agency' => $agency]);
         }
@@ -1568,7 +1568,7 @@ class FrontendController extends Controller
     {
         $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
         $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
-        $agency = getAgencyFromHost();
+        $agency = function_exists('getAgencyFromHost') ? getAgencyFromHost() : null;
         if ($agency && !$isProductSubdomain) {
             return view('front.agency_legal', ['type' => 'shipping', 'agency' => $agency]);
         }
