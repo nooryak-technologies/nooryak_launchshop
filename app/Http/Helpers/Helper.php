@@ -1511,3 +1511,122 @@ if (!function_exists('themeAsset')) {
         return asset("assets/user-front/themes/{$theme}/" . ltrim($path, '/'));
     }
 }
+
+
+/**
+ * Check if the application is currently using the agency database
+ *
+ * @return bool
+ */
+if (!function_exists('isUsingAgencyDb')) {
+    function isUsingAgencyDb(): bool
+    {
+        return session('using_agency_db', false) === true;
+    }
+}
+
+/**
+ * Get current custom domain information if active
+ *
+ * @return array|null
+ */
+if (!function_exists('getCustomDomainInfo')) {
+    function getCustomDomainInfo(): ?array
+    {
+        if (!session('custom_domain_active', false)) {
+            return null;
+        }
+
+        return [
+            'user_id' => session('custom_domain_user_id'),
+            'domain' => session('custom_domain_name'),
+            'using_agency_db' => session('using_agency_db', false),
+        ];
+    }
+}
+
+/**
+ * Get the current database name
+ *
+ * @return string
+ */
+if (!function_exists('getCurrentDatabaseName')) {
+    function getCurrentDatabaseName(): string
+    {
+        return config('database.connections.mysql.database', 'maindb');
+    }
+}
+
+/**
+ * Standalone LaunchShop: Website Builder checkout is disabled.
+ */
+if (!function_exists('isWebsiteBuilderCheckout')) {
+    function isWebsiteBuilderCheckout($request = null): bool
+    {
+        return false;
+    }
+}
+
+if (!function_exists('user_item_image_url')) {
+    /**
+     * Resolve a product thumbnail/slider filename to a public URL.
+     * Checks slider-images and thumbnail folders so gallery images load
+     * even when records point at the other directory.
+     */
+    function user_item_image_url($image, $prefer = 'auto')
+    {
+        $placeholder = asset('assets/front/images/placeholder.png');
+        if (empty($image) || $image === 'noimage.jpg') {
+            return $placeholder;
+        }
+
+        $image = trim((string) $image);
+
+        if (str_starts_with($image, '//')) {
+            return 'https:' . $image;
+        }
+        if (str_starts_with($image, 'http://') || str_starts_with($image, 'https://')) {
+            return $image;
+        }
+        if (str_starts_with($image, '/storage/') || str_starts_with($image, 'storage/')) {
+            $rel = ltrim($image, '/');
+            return file_exists(public_path($rel)) ? asset($rel) : $placeholder;
+        }
+        if (str_starts_with($image, 'assets/')) {
+            return file_exists(public_path($image)) ? asset($image) : $placeholder;
+        }
+
+        $image = ltrim($image, '/');
+        $base = basename($image);
+        $candidates = [];
+
+        if ($prefer === 'slider') {
+            $candidates[] = 'assets/front/img/user/items/slider-images/' . $base;
+            $candidates[] = 'assets/front/img/user/items/' . $image;
+            $candidates[] = 'assets/front/img/user/items/thumbnail/' . $base;
+        } elseif ($prefer === 'thumbnail') {
+            $candidates[] = 'assets/front/img/user/items/thumbnail/' . $base;
+            $candidates[] = 'assets/front/img/user/items/slider-images/' . $base;
+            $candidates[] = 'assets/front/img/user/items/' . $image;
+        } elseif (str_starts_with($image, 'thumbnail/')) {
+            $candidates[] = 'assets/front/img/user/items/' . $image;
+            $candidates[] = 'assets/front/img/user/items/thumbnail/' . $base;
+            $candidates[] = 'assets/front/img/user/items/slider-images/' . $base;
+        } elseif (str_starts_with($image, 'slider-images/')) {
+            $candidates[] = 'assets/front/img/user/items/' . $image;
+            $candidates[] = 'assets/front/img/user/items/slider-images/' . $base;
+            $candidates[] = 'assets/front/img/user/items/thumbnail/' . $base;
+        } else {
+            $candidates[] = 'assets/front/img/user/items/slider-images/' . $base;
+            $candidates[] = 'assets/front/img/user/items/thumbnail/' . $base;
+        }
+
+        foreach ($candidates as $rel) {
+            if (file_exists(public_path($rel))) {
+                return asset($rel);
+            }
+        }
+
+        return !empty($candidates) ? asset($candidates[0]) : $placeholder;
+    }
+}

@@ -16,9 +16,9 @@ class DashboardController extends Controller
   {
     // Get database status for display
     $data['database_info'] = [
-      'current_db' => getCurrentDatabaseName(),
-      'is_using_agency_db' => isUsingAgencyDb(),
-      'custom_domain_info' => getCustomDomainInfo(),
+      'current_db' => function_exists('getCurrentDatabaseName') ? getCurrentDatabaseName() : config('database.connections.mysql.database', 'maindb'),
+      'is_using_agency_db' => function_exists('isUsingAgencyDb') ? isUsingAgencyDb() : false,
+      'custom_domain_info' => function_exists('getCustomDomainInfo') ? getCustomDomainInfo() : null,
     ];
 
     try {
@@ -75,37 +75,6 @@ class DashboardController extends Controller
           ->get();
       }
     } catch (\Throwable $e) {}
-
-    // $engineStats = [];
-    // foreach ($activeMemberships as $membership) {
-    //   $engineLabel = trim((string) $membership->ai_engine);
-    //   if ($engineLabel === '') {
-    //     $engineLabel = 'Unknown';
-    //   }
-    //   $engineKey = strtolower($engineLabel);
-
-    //   if (!isset($engineStats[$engineKey])) {
-    //     $engineStats[$engineKey] = [
-    //       'engine' => $engineLabel,
-    //       'token_required' => 0,
-    //       'token_used' => 0,
-    //       'image_required' => 0,
-    //       'image_used' => 0,
-    //     ];
-    //   }
-
-    //   $tokenLimit = max(0, (int) $membership->ai_token_limit);
-    //   $tokenPurchased = max(0, (int) $membership->ai_token_purchased);
-    //   $tokenUsed = max(0, (int) $membership->ai_used_tokens);
-    //   $imageLimit = max(0, (int) $membership->ai_image_limit);
-    //   $imagePurchased = max(0, (int) $membership->ai_image_purchased);
-    //   $imageUsed = max(0, (int) $membership->ai_used_images);
-
-    //   $engineStats[$engineKey]['token_required'] += $tokenLimit + $tokenPurchased;
-    //   $engineStats[$engineKey]['token_used'] += $tokenUsed;
-    //   $engineStats[$engineKey]['image_required'] += $imageLimit + $imagePurchased;
-    //   $engineStats[$engineKey]['image_used'] += $imageUsed;
-    // }
 
     $defaultEngines = ['gemini', 'openai', 'pollinations'];
     $engineStats = [];
