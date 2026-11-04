@@ -228,19 +228,43 @@ class FrontendController extends Controller
                 ->get();
         }
         ImageText::ensureColumnsExist();
-        $data['homeSec'] = ImageText::where('language_id', $lang_id)->first();
+        $data['homeSec'] = ImageText::where('language_id', $lang_id)->first() ?? ImageText::first();
         $data['lang_id'] = $lang_id;
 
         try {
-            $data['processes'] = \Illuminate\Support\Facades\Schema::hasTable('processes') ? Process::where('language_id', $lang_id)->orderBy('serial_number', 'ASC')->get() : collect([]);
+            $procs = \Illuminate\Support\Facades\Schema::hasTable('processes') 
+                ? Process::where('language_id', $lang_id)->orderBy('serial_number', 'ASC')->get() 
+                : collect([]);
+            if ($procs->isEmpty() && \Illuminate\Support\Facades\Schema::hasTable('processes')) {
+                $procs = Process::orderBy('serial_number', 'ASC')->get();
+            }
+            $data['processes'] = $procs;
         } catch (\Throwable $e) {
             $data['processes'] = collect([]);
         }
 
         try {
-            $data['features'] = \Illuminate\Support\Facades\Schema::hasTable('features') ? Feature::where('language_id', $lang_id)->orderBy('serial_number', 'ASC')->get() : collect([]);
+            $feats = \Illuminate\Support\Facades\Schema::hasTable('features') 
+                ? Feature::where('language_id', $lang_id)->orderBy('serial_number', 'ASC')->get() 
+                : collect([]);
+            if ($feats->isEmpty() && \Illuminate\Support\Facades\Schema::hasTable('features')) {
+                $feats = Feature::orderBy('serial_number', 'ASC')->get();
+            }
+            $data['features'] = $feats;
         } catch (\Throwable $e) {
             $data['features'] = collect([]);
+        }
+
+        try {
+            if (class_exists('\App\Models\PageCta')) {
+                \App\Models\PageCta::ensureTableExists();
+                $data['homeCta'] = \App\Models\PageCta::where('language_id', $lang_id)->where('page', 'home')->first()
+                    ?? \App\Models\PageCta::where('page', 'home')->first();
+            } else {
+                $data['homeCta'] = null;
+            }
+        } catch (\Throwable $e) {
+            $data['homeCta'] = null;
         }
 
         try {

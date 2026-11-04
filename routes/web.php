@@ -51,24 +51,6 @@ Route::get('/invoice', 'Front\FrontendController@invoice')->name('front.invoice'
 
 Route::get('/changelanguage/{lang}', 'Front\FrontendController@changeLanguage')->name('changeLanguage');
 
-// Subscription Expiry Testing & Simulator Hub (Global Aliases for Admin Testing)
-Route::group(['middleware' => ['web']], function () {
-    Route::get('/admin/subscription_test', 'Admin\SubscriptionTestController@index');
-    Route::post('/admin/subscription_test', 'Admin\SubscriptionTestController@execute');
-    Route::post('/admin/subscription_test/execute', 'Admin\SubscriptionTestController@execute');
-
-    Route::get('/admin/subscription-test', 'Admin\SubscriptionTestController@index');
-    Route::post('/admin/subscription-test', 'Admin\SubscriptionTestController@execute');
-    Route::post('/admin/subscription-test/execute', 'Admin\SubscriptionTestController@execute');
-
-    Route::get('/subscription_test', 'Admin\SubscriptionTestController@index');
-    Route::post('/subscription_test', 'Admin\SubscriptionTestController@execute');
-    Route::post('/subscription_test/execute', 'Admin\SubscriptionTestController@execute');
-
-    Route::get('/subscription-test', 'Admin\SubscriptionTestController@index');
-    Route::post('/subscription-test', 'Admin\SubscriptionTestController@execute');
-    Route::post('/subscription-test/execute', 'Admin\SubscriptionTestController@execute');
-});
 Route::get('/subcheck', 'CronJobController@expired')->name('cron.expired');
 Route::post('/push', 'Front\PushController@store')->name('push-notification.store_endpoint');
 Route::post('/checkout/launchshop-client-sync', [\App\Http\Controllers\Front\CheckoutController::class, 'syncLaunchshopUserFromClient'])->name('checkout.launchshop-client-sync');

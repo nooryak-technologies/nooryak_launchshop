@@ -12,8 +12,8 @@ class WhatsAppNotificationService
      * Default constants and fallbacks
      */
     const DEFAULT_GATEWAY_URL = 'http://localhost:8000';
-    const DEFAULT_ACCESS_TOKEN = '6005c0f6de385fe7';
-    const DEFAULT_INSTANCE_ID = 'E351BB42DC82';
+    const DEFAULT_ACCESS_TOKEN = 'token_6005c0f6de385fe7';
+    const DEFAULT_INSTANCE_ID = 'E6C34AF85064';
     const DEFAULT_DB_NAME = 'nooryak_whatautomation';
 
     const DEFAULT_OTP_TEMPLATE = "Your OTP verification code is *{otp}* for *{product_name}* - This code is valid for *{validity_minutes} minutes* - Please do not share it with anyone.";
@@ -69,24 +69,61 @@ class WhatsAppNotificationService
             return $cached;
         }
 
+        $bs = null;
+        try {
+            if (class_exists('\App\Http\Controllers\Admin\WhatsAppOtpController')) {
+                \App\Http\Controllers\Admin\WhatsAppOtpController::ensureColumnsExist();
+            }
+            $bs = \App\Models\BasicSetting::first();
+        } catch (\Throwable $e) {}
+
+        $endpoint = (!empty($bs) && !empty($bs->whatsapp_endpoint))
+            ? $bs->whatsapp_endpoint
+            : env('WHATSAPP_SERVER_URL', self::DEFAULT_GATEWAY_URL);
+
+        $accessToken = (!empty($bs) && !empty($bs->whatsapp_access_token))
+            ? $bs->whatsapp_access_token
+            : env('WHATSAPP_ACCESS_TOKEN', self::DEFAULT_ACCESS_TOKEN);
+
+        $instanceId = (!empty($bs) && !empty($bs->whatsapp_instance_id))
+            ? $bs->whatsapp_instance_id
+            : env('WHATSAPP_INSTANCE_ID', self::DEFAULT_INSTANCE_ID);
+
+        $isActive = (!empty($bs) && isset($bs->whatsapp_status))
+            ? (int)$bs->whatsapp_status
+            : (int)env('WHATSAPP_NOTIFICATIONS_ENABLED', 1);
+
+        $otpActive = (!empty($bs) && isset($bs->whatsapp_status))
+            ? (int)$bs->whatsapp_status
+            : (int)env('WHATSAPP_OTP_ENABLED', 1);
+
+        $dualOtpStatus = (!empty($bs) && isset($bs->dual_otp_status))
+            ? (int)$bs->dual_otp_status
+            : 1;
+
+        $otpTemplate = (!empty($bs) && !empty($bs->whatsapp_otp_template))
+            ? $bs->whatsapp_otp_template
+            : env('WHATSAPP_OTP_TEMPLATE', self::DEFAULT_OTP_TEMPLATE);
+
         $config = [
-            'endpoint' => self::getEndpoint(),
-            'access_token' => self::getAccessToken(),
-            'instance_id' => self::getInstanceId(),
+            'endpoint' => $endpoint,
+            'access_token' => $accessToken,
+            'instance_id' => $instanceId,
             'db' => self::getDatabaseName(),
 
-            'is_active' => (int)env('WHATSAPP_NOTIFICATIONS_ENABLED', 1),
-            'otp_active' => (int)env('WHATSAPP_OTP_ENABLED', 1),
+            'is_active' => $isActive,
+            'otp_active' => $otpActive,
+            'dual_otp_status' => $dualOtpStatus,
             'credentials_active' => (int)env('WHATSAPP_CREDENTIALS_ENABLED', 1),
             'invoice_active' => (int)env('WHATSAPP_INVOICE_ENABLED', 1),
 
-            'otp_template' => env('WHATSAPP_OTP_TEMPLATE', self::DEFAULT_OTP_TEMPLATE),
+            'otp_template' => $otpTemplate,
             'credentials_template' => env('WHATSAPP_CREDENTIALS_TEMPLATE', self::DEFAULT_CREDENTIALS_TEMPLATE),
             'invoice_template' => env('WHATSAPP_INVOICE_TEMPLATE', self::DEFAULT_INVOICE_TEMPLATE),
         ];
 
         try {
-            Cache::put($cacheKey, $config, 300);
+            Cache::put($cacheKey, $config, 60);
         } catch (\Throwable $e) {}
 
         return $config;
@@ -293,7 +330,8 @@ class WhatsAppNotificationService
         ];
 
         foreach ($endpointCandidates as $candEndpoint) {
-            $sendPath = rtrim($candEndpoint, '/') . '/send_message';
+            $baseEndpoint = preg_replace('/\/send_message\/?$/i', '', rtrim($candEndpoint, '/'));
+            $sendPath = $baseEndpoint . '/send_message';
             foreach ($instancesToTry as $currentInstance) {
                 foreach ($tokensToTry as $currentToken) {
                     $queryUrl = $sendPath . '?' . http_build_query([

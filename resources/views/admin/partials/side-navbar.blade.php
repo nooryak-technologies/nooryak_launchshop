@@ -126,12 +126,6 @@
 
                 @if (empty($admin->role) || (!empty($permissions) && (in_array('Mail to Subscribers', $permissions) || in_array('Users Management', $permissions))))
                 <li class="@if (request()->routeIs('admin.mailsubscriber')) active @endif">
-                  <li class="@if (request()->routeIs('admin.subscription.test') || request()->is('*subscription*test*')) active @endif">
-                  <a href="{{ url('/admin/subscription_test') }}">
-                    <span class="sub-item font-weight-bold text-warning"><i class="fas fa-stopwatch mr-1"></i> {{ __('Subscription Test Hub') }}</span>
-                  </a>
-                </li>
-                <li>
                   <a href="{{ route('admin.mailsubscriber') }}">
                     <span class="sub-item">{{ __('Mail to Subscribers') }}</span>
                   </a>
@@ -944,6 +938,7 @@
             <div
               class="collapse
                 @if (request()->path() == 'admin/general-settings') show
+                @elseif(request()->routeIs('admin.whatsapp_otp.*') || request()->path() == 'admin/whatsapp-otp-settings') show
                 @elseif(request()->path() == 'admin/social') show
                 @elseif(request()->is('admin/social/*')) show
                 @elseif(request()->path() == 'admin/heading') show
@@ -969,6 +964,12 @@
                 <li class="@if (request()->routeIs('admin.general-settings') || request()->path() == 'admin/general-settings' || request()->is('admin/general-settings*')) active @endif">
                   <a href="{{ route('admin.general-settings') }}">
                     <span class="sub-item">{{ __('General Settings') }}</span>
+                  </a>
+                </li>
+
+                <li class="@if (request()->routeIs('admin.whatsapp_otp.*') || request()->path() == 'admin/whatsapp-otp-settings') active @endif">
+                  <a href="{{ route('admin.whatsapp_otp.settings') }}">
+                    <span class="sub-item">{{ __('WhatsApp & Dual OTP') }}</span>
                   </a>
                 </li>
 

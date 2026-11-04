@@ -26,6 +26,11 @@ Route::group(['prefix' => 'X9_AdMiN-Portal_V7', 'middleware' => ['auth:admin', '
             Route::post('/general-settings/post', 'Admin\BasicController@updateGeneralSetting')->name('admin.general-settings.update');
             Route::get('/general-settings/remove-img/{language_id}', 'Admin\BasicController@removeImage')->name('admin.basic_settings.removeImage');
 
+            // Admin WhatsApp Gateway & Dual OTP Routes
+            Route::get('/whatsapp-otp-settings', 'Admin\WhatsAppOtpController@index')->name('admin.whatsapp_otp.settings');
+            Route::post('/whatsapp-otp-settings', 'Admin\WhatsAppOtpController@update')->name('admin.whatsapp_otp.update');
+            Route::post('/whatsapp-otp-settings/test', 'Admin\WhatsAppOtpController@testSend')->name('admin.whatsapp_otp.test');
+
 
             // Admin Email Settings Routes
             Route::get('/mail-from-admin', 'Admin\EmailController@mailFromAdmin')->name('admin.mailFromAdmin');
@@ -282,13 +287,7 @@ Route::group(['prefix' => 'X9_AdMiN-Portal_V7', 'middleware' => ['auth:admin', '
             Route::get('register/users/secret-login/{id}', 'Admin\RegisterUserController@secret_login')->name('register.user.secret_login');
             Route::post('register/users/reseed-store', 'Admin\RegisterUserController@reseedStore')->name('register.user.reseed_store');
 
-            // Fast Subscription Expiry Testing & Gatekeeper Tool
-            Route::get('/subscription-test', 'Admin\SubscriptionTestController@index')->name('admin.subscription.test');
-            Route::post('/subscription-test/execute', 'Admin\SubscriptionTestController@execute')->name('admin.subscription.test.execute');
-            Route::get('/subscription_test', 'Admin\SubscriptionTestController@index');
-            Route::post('/subscription_test', 'Admin\SubscriptionTestController@execute');
-            Route::post('/subscription_test/execute', 'Admin\SubscriptionTestController@execute');
-
+            
             // Admin Subscriber Routes
                         // Recurring Warning Settings
             Route::get('/recurring-warning', 'Admin\BasicController@recurringWarning')->name('admin.recurring-warning.index');
@@ -499,11 +498,3 @@ Route::group(['prefix' => 'X9_AdMiN-Portal_V7', 'middleware' => ['auth:admin', '
     });
 
 
-Route::group(['prefix' => 'admin', 'middleware' => ['web']], function () {
-    Route::get('/subscription-test', 'Admin\SubscriptionTestController@index');
-    Route::post('/subscription-test', 'Admin\SubscriptionTestController@execute');
-    Route::post('/subscription-test/execute', 'Admin\SubscriptionTestController@execute');
-    Route::get('/subscription_test', 'Admin\SubscriptionTestController@index');
-    Route::post('/subscription_test', 'Admin\SubscriptionTestController@execute');
-    Route::post('/subscription_test/execute', 'Admin\SubscriptionTestController@execute');
-});

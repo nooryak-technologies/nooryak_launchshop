@@ -337,16 +337,16 @@
           <div class="col-lg-5 col-xl-5 order-2 order-lg-1">
             <div class="hero-content" data-aos="fade-right">
               <div class="hero-badge">
-                <span style="font-weight:800; margin-right:4px;">#1</span> Ecommerce Builder For Sales & Growth🎉
+                {!! !empty($homeSec->hero_section_desc) ? $homeSec->hero_section_desc : '<span style="font-weight:800; margin-right:4px;">#1</span> Ecommerce Builder For Sales & Growth🎉' !!}
               </div>
               
-              <h1 class="hero-title">Launch Your  <br><span>Online Store In</span> Just 2 minutes</h1>
+              <h1 class="hero-title">{!! !empty($homeSec->hero_section_title) ? $homeSec->hero_section_title : 'Launch Your  <br><span>Online Store In</span> Just 2 minutes' !!}</h1>
               
-              <p class="hero-text">{{ __('Manage products, payments, and sales effortlessly. Everything you need to grow your business is just a click away. Start today and simplify your e-commerce journey.') }}</p>
+              <p class="hero-text">{{ !empty($homeSec->hero_section_text) ? $homeSec->hero_section_text : __('Manage products, payments, and sales effortlessly. Everything you need to grow your business is just a click away. Start today and simplify your e-commerce journey.') }}</p>
               
               <div class="d-flex align-items-center gap-3 hero-btns">
-                <a href="{{ route('front.pricing') }}" class="btn-ls-primary">
-                  {{ __('Get Started Now') }}
+                <a href="{{ !empty($homeSec->hero_section_button_url) ? $homeSec->hero_section_button_url : route('front.pricing') }}" class="btn-ls-primary">
+                  {{ !empty($homeSec->hero_section_button_text) ? $homeSec->hero_section_button_text : __('Get Started Now') }}
                   <svg class="ms-2" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
                     <path d="M10 6V2.5a1.5 1.5 0 0 1 3 0v8.5a.5.5 0 0 0 .5.5.5.5 0 0 0 .5-.5V8.5a1.5 1.5 0 0 1 3 0v2.5a.5.5 0 0 0 .5.5.5.5 0 0 0 .5-.5V9.5a1.5 1.5 0 0 1 3 0v3.5a6 6 0 0 1-6 6h-2a6 6 0 0 1-6-6V11a2 2 0 0 1 2-2 1.5 1.5 0 0 1 1.5 1.5v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
@@ -369,8 +369,8 @@
                     </svg>
                   </div>
                   <div class="feat-content">
-                    <div class="feat-title">{{ __('10-Days Money') }}</div>
-                    <div class="feat-sub">{{ __('Back Guarantee') }}</div>
+                    <div class="feat-title">{{ !empty($homeSec->hero_badge1_title) ? $homeSec->hero_badge1_title : __('10-Days Money') }}</div>
+                    <div class="feat-sub">{{ !empty($homeSec->hero_badge1_subtitle) ? $homeSec->hero_badge1_subtitle : __('Back Guarantee') }}</div>
                   </div>
                 </div>
                 <div class="feat-divider"></div>
@@ -382,8 +382,8 @@
                     </svg>
                   </div>
                   <div class="feat-content">
-                    <div class="feat-title">{{ __('Launch store') }}</div>
-                    <div class="feat-sub">{{ __('Instantly') }}</div>
+                    <div class="feat-title">{{ !empty($homeSec->hero_badge2_title) ? $homeSec->hero_badge2_title : __('Launch store') }}</div>
+                    <div class="feat-sub">{{ !empty($homeSec->hero_badge2_subtitle) ? $homeSec->hero_badge2_subtitle : __('Instantly') }}</div>
                   </div>
                 </div>
                 <div class="feat-divider"></div>
@@ -396,8 +396,8 @@
                     </svg>
                   </div>
                   <div class="feat-content">
-                    <div class="feat-title">{{ __('24/7 Expert') }}</div>
-                    <div class="feat-sub">{{ __('Support') }}</div>
+                    <div class="feat-title">{{ !empty($homeSec->hero_badge3_title) ? $homeSec->hero_badge3_title : __('24/7 Expert') }}</div>
+                    <div class="feat-sub">{{ !empty($homeSec->hero_badge3_subtitle) ? $homeSec->hero_badge3_subtitle : __('Support') }}</div>
                   </div>
                 </div>
               </div>
@@ -405,8 +405,13 @@
           </div>
           <div class="col-lg-7 col-xl-7 order-1 order-lg-2 position-relative">
             <div class="hero-mockup-wrapper text-center" data-aos="fade-left">
+              @php
+                $heroImgPath = (!empty($homeSec->image) && file_exists(public_path('assets/front/img/' . $homeSec->image))) 
+                  ? asset('assets/front/img/' . $homeSec->image) 
+                  : asset('images/hero-section.png');
+              @endphp
               <img class="img-fluid lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
-                data-src="{{ asset('images/hero-section.png') }}" 
+                data-src="{{ $heroImgPath }}" 
                 alt="Storefront Mockup" style="width: 100%; height: auto; max-width: 100%; display: block; margin: 0 auto;">
 
               {{-- ===== Rocket Animation ===== --}}
@@ -466,11 +471,11 @@
           <!-- Stat 1 -->
           <div class="hiw-stat-card">
             <div class="hiw-stat-icon hiw-icon-orange">
-              <i class="fas fa-store"></i>
+              <i class="{{ !empty($homeSec->hero_stat1_icon) ? $homeSec->hero_stat1_icon : 'fas fa-store' }}"></i>
             </div>
             <div class="hiw-stat-info">
-              <div class="hiw-stat-value"><span class="odometer" data-count="250">0</span>+</div>
-              <div class="hiw-stat-label">{{ __('Stores Launched') }}</div>
+              <div class="hiw-stat-value"><span class="odometer" data-count="{{ !empty($homeSec->hero_stat1_value) ? preg_replace('/[^0-9]/', '', $homeSec->hero_stat1_value) : 250 }}">0</span>+</div>
+              <div class="hiw-stat-label">{{ !empty($homeSec->hero_stat1_label) ? $homeSec->hero_stat1_label : __('Stores Launched') }}</div>
             </div>
           </div>
           <!-- Divider -->
@@ -478,11 +483,11 @@
           <!-- Stat 2 -->
           <div class="hiw-stat-card">
             <div class="hiw-stat-icon hiw-icon-purple">
-              <i class="fas fa-gem"></i>
+              <i class="{{ !empty($homeSec->hero_stat2_icon) ? $homeSec->hero_stat2_icon : 'fas fa-gem' }}"></i>
             </div>
             <div class="hiw-stat-info">
-              <div class="hiw-stat-value"><span class="odometer" data-count="15">0</span>+</div>
-              <div class="hiw-stat-label">{{ __('Premium Themes') }}</div>
+              <div class="hiw-stat-value"><span class="odometer" data-count="{{ !empty($homeSec->hero_stat2_value) ? preg_replace('/[^0-9]/', '', $homeSec->hero_stat2_value) : 15 }}">0</span>+</div>
+              <div class="hiw-stat-label">{{ !empty($homeSec->hero_stat2_label) ? $homeSec->hero_stat2_label : __('Premium Themes') }}</div>
             </div>
           </div>
           <!-- Divider -->
@@ -490,11 +495,11 @@
           <!-- Stat 3 -->
           <div class="hiw-stat-card">
             <div class="hiw-stat-icon hiw-icon-green">
-              <i class="fas fa-shield-alt"></i>
+              <i class="{{ !empty($homeSec->hero_stat3_icon) ? $homeSec->hero_stat3_icon : 'fas fa-shield-alt' }}"></i>
             </div>
             <div class="hiw-stat-info">
-              <div class="hiw-stat-value"><span class="odometer" data-count="99">0</span>.99%</div>
-              <div class="hiw-stat-label">{{ __('Uptime Guarantee') }}</div>
+              <div class="hiw-stat-value"><span class="odometer" data-count="{{ !empty($homeSec->hero_stat3_value) ? preg_replace('/[^0-9]/', '', $homeSec->hero_stat3_value) : 99 }}">0</span>.99%</div>
+              <div class="hiw-stat-label">{{ !empty($homeSec->hero_stat3_label) ? $homeSec->hero_stat3_label : __('Uptime Guarantee') }}</div>
             </div>
           </div>
           <!-- Divider -->
@@ -502,11 +507,11 @@
           <!-- Stat 4 -->
           <div class="hiw-stat-card">
             <div class="hiw-stat-icon hiw-icon-yellow">
-              <i class="fas fa-user-friends"></i>
+              <i class="{{ !empty($homeSec->hero_stat4_icon) ? $homeSec->hero_stat4_icon : 'fas fa-user-friends' }}"></i>
             </div>
             <div class="hiw-stat-info">
-              <div class="hiw-stat-value"><span class="odometer" data-count="500">0</span>+</div>
-              <div class="hiw-stat-label">{{ __('Happy Merchants') }}</div>
+              <div class="hiw-stat-value"><span class="odometer" data-count="{{ !empty($homeSec->hero_stat4_value) ? preg_replace('/[^0-9]/', '', $homeSec->hero_stat4_value) : 500 }}">0</span>+</div>
+              <div class="hiw-stat-label">{{ !empty($homeSec->hero_stat4_label) ? $homeSec->hero_stat4_label : __('Happy Merchants') }}</div>
             </div>
           </div>
         </div>
@@ -514,7 +519,7 @@
         <!-- Section Title -->
         <div class="hiw-title-wrap" data-aos="fade-up">
           <span class="hiw-decor-dot left"></span>
-          <h2 class="hiw-section-title">{{ __('How Launchshop Works') }}</h2>
+          <h2 class="hiw-section-title">{{ !empty($homeSec->work_process_section_title) ? $homeSec->work_process_section_title : __('How Launchshop Works') }}</h2>
           <span class="hiw-decor-dot right"></span>
         </div>
 
@@ -614,8 +619,8 @@
                 <i class="fas fa-palette me-2"></i>{{ __('15+ Premium Themes') }}
               </span>
             </div>
-            <h2 class="section-title mb-3 text-center" data-aos="fade-up" style="font-size: 38px; font-weight: 800; color: #1E2335;">{{ __('Professional Themes for Every Industry') }}</h2>
-            <p class="section-subtitle-text" data-aos="fade-up" style="font-size: 16px; color: #718096; max-width: 600px; margin: 0 auto 10px; text-align: center !important;">{{ __('Explore our optimized scrolling templates built for speed, responsiveness, and conversions.') }}</p>
+            <h2 class="section-title mb-3 text-center" data-aos="fade-up" style="font-size: 38px; font-weight: 800; color: #1E2335;">{{ !empty($homeSec->template_section_title) ? $homeSec->template_section_title : __('Professional Themes for Every Industry') }}</h2>
+            <p class="section-subtitle-text" data-aos="fade-up" style="font-size: 16px; color: #718096; max-width: 600px; margin: 0 auto 10px; text-align: center !important;">{{ !empty($homeSec->template_section_subtitle) ? $homeSec->template_section_subtitle : __('Explore our optimized scrolling templates built for speed, responsiveness, and conversions.') }}</p>
           </div>
         </div>
 
@@ -784,76 +789,99 @@
         <!-- Left Column: Rocket Image -->
         <div class="col-lg-6 col-md-12 text-center position-relative mb-5 mb-lg-0">
           <div class="rocket-visual-wrap">
-            <img src="{{ asset('images/rocket_leftside.png') }}" alt="Rocket Launch" class="img-fluid rocket-main-img" style="max-width: 85%;">
+            @php
+              $wpImgPath = (!empty($homeSec->work_process_image) && file_exists(public_path('assets/front/img/' . $homeSec->work_process_image))) 
+                ? asset('assets/front/img/' . $homeSec->work_process_image) 
+                : asset('images/rocket_leftside.png');
+            @endphp
+            <img src="{{ $wpImgPath }}" alt="Rocket Launch" class="img-fluid rocket-main-img" style="max-width: 85%;">
           </div>
         </div>
         
         <!-- Right Column: 5 Simple Steps -->
         <div class="col-lg-6 col-md-12">
           <div class="steps-content-wrap ps-lg-4 text-start">
-            <span class="steps-badge d-inline-block">{{ __('Simple Steps. Big Results.') }}</span>
-            <h2 class="steps-main-title mb-4" style="font-weight: 800; font-size: 34px; color: #1e293b;">{{ __('Launch your dream store in five simple steps.') }}</h2>
+            <span class="steps-badge d-inline-block">{{ !empty($homeSec->work_process_section_subtitle) ? $homeSec->work_process_section_subtitle : __('Simple Steps. Big Results.') }}</span>
+            <h2 class="steps-main-title mb-4" style="font-weight: 800; font-size: 34px; color: #1e293b;">{{ !empty($homeSec->work_process_section_title) ? $homeSec->work_process_section_title : __('Launch your dream store in five simple steps.') }}</h2>
             
             <div class="steps-list mt-30">
-              <!-- Step 1 -->
-              <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
-                <div class="step-icon-container step-icon-purple">
-                  <i class="fas fa-clipboard-list"></i>
+              @php
+                $stepDesignStyles = [
+                  ['icon' => 'fas fa-clipboard-list', 'class' => 'step-icon-purple'],
+                  ['icon' => 'fas fa-store', 'class' => 'step-icon-orange'],
+                  ['icon' => 'fas fa-cog', 'class' => 'step-icon-pink'],
+                  ['icon' => 'fas fa-credit-card', 'class' => 'step-icon-green'],
+                  ['icon' => 'fas fa-rocket', 'class' => 'step-icon-blue'],
+                ];
+              @endphp
+              @if(isset($processes) && $processes->count() > 0)
+                @foreach($processes->take(5) as $pIdx => $pStep)
+                  @php
+                    $stInfo = $stepDesignStyles[$pIdx % count($stepDesignStyles)];
+                    $stIcon = !empty($pStep->icon) ? $pStep->icon : $stInfo['icon'];
+                  @endphp
+                  <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
+                    <div class="step-icon-container {{ $stInfo['class'] }}">
+                      <i class="{{ $stIcon }}"></i>
+                    </div>
+                    <div class="step-text-container">
+                      <h4 class="step-item-title">{{ ($pIdx + 1) . '. ' . $pStep->title }}</h4>
+                      <p class="step-item-desc">{{ $pStep->text }}</p>
+                    </div>
+                  </div>
+                @endforeach
+              @else
+                <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
+                  <div class="step-icon-container step-icon-purple">
+                    <i class="fas fa-clipboard-list"></i>
+                  </div>
+                  <div class="step-text-container">
+                    <h4 class="step-item-title">{{ __('1. Select Your Plan') }}</h4>
+                    <p class="step-item-desc">{{ __('Choose the perfect pricing plan that fits your business needs.') }}</p>
+                  </div>
                 </div>
-                <div class="step-text-container">
-                  <h4 class="step-item-title">{{ __('1. Select Your Plan') }}</h4>
-                  <p class="step-item-desc">{{ __('Choose the perfect pricing plan that fits your business needs.') }}</p>
+                <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
+                  <div class="step-icon-container step-icon-orange">
+                    <i class="fas fa-store"></i>
+                  </div>
+                  <div class="step-text-container">
+                    <h4 class="step-item-title">{{ __('2. Choose Your Theme') }}</h4>
+                    <p class="step-item-desc">{{ __('Pick a professional theme that matches your brand.') }}</p>
+                  </div>
                 </div>
-              </div>
-
-              <!-- Step 2 -->
-              <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
-                <div class="step-icon-container step-icon-orange">
-                  <i class="fas fa-store"></i>
+                <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
+                  <div class="step-icon-container step-icon-pink">
+                    <i class="fas fa-cog"></i>
+                  </div>
+                  <div class="step-text-container">
+                    <h4 class="step-item-title">{{ __('3. Customize & Setup') }}</h4>
+                    <p class="step-item-desc">{{ __('Add your products, customize design & settings.') }}</p>
+                  </div>
                 </div>
-                <div class="step-text-container">
-                  <h4 class="step-item-title">{{ __('2. Choose Your Theme') }}</h4>
-                  <p class="step-item-desc">{{ __('Pick a professional theme that matches your brand.') }}</p>
+                <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
+                  <div class="step-icon-container step-icon-green">
+                    <i class="fas fa-credit-card"></i>
+                  </div>
+                  <div class="step-text-container">
+                    <h4 class="step-item-title">{{ __('4. Configure Payments') }}</h4>
+                    <p class="step-item-desc">{{ __('Set up payment methods and shipping options.') }}</p>
+                  </div>
                 </div>
-              </div>
-              
-              <!-- Step 3 -->
-              <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
-                <div class="step-icon-container step-icon-pink">
-                  <i class="fas fa-cog"></i>
+                <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
+                  <div class="step-icon-container step-icon-blue">
+                    <i class="fas fa-rocket"></i>
+                  </div>
+                  <div class="step-text-container">
+                    <h4 class="step-item-title">{{ __('5. Launch Your Store') }}</h4>
+                    <p class="step-item-desc">{{ __('Your store is live! Start selling and growing.') }}</p>
+                  </div>
                 </div>
-                <div class="step-text-container">
-                  <h4 class="step-item-title">{{ __('3. Customize & Setup') }}</h4>
-                  <p class="step-item-desc">{{ __('Add your products, customize design & settings.') }}</p>
-                </div>
-              </div>
-              
-              <!-- Step 4 -->
-              <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
-                <div class="step-icon-container step-icon-green">
-                  <i class="fas fa-credit-card"></i>
-                </div>
-                <div class="step-text-container">
-                  <h4 class="step-item-title">{{ __('4. Configure Payments') }}</h4>
-                  <p class="step-item-desc">{{ __('Set up payment methods and shipping options.') }}</p>
-                </div>
-              </div>
-              
-              <!-- Step 5 -->
-              <div class="step-item-custom d-flex align-items-start mb-4" style="gap: 16px;">
-                <div class="step-icon-container step-icon-blue">
-                  <i class="fas fa-rocket"></i>
-                </div>
-                <div class="step-text-container">
-                  <h4 class="step-item-title">{{ __('5. Launch Your Store') }}</h4>
-                  <p class="step-item-desc">{{ __('Your store is live! Start selling and growing.') }}</p>
-                </div>
-              </div>
+              @endif
             </div>
             
             <div class="mt-4" style="text-align: left;">
-              <a href="{{ route('front.pricing') }}" class="btn-start-journey">
-                {{ __('Start Your Journey') }} <i class="fas fa-arrow-right ms-2"></i>
+              <a href="{{ !empty($homeSec->work_process_btn_url) ? $homeSec->work_process_btn_url : route('front.pricing') }}" class="btn-start-journey">
+                {{ !empty($homeSec->work_process_btn_text) ? $homeSec->work_process_btn_text : __('Start Your Journey') }} <i class="fas fa-arrow-right ms-2"></i>
               </a>
             </div>
           </div>
@@ -867,11 +895,11 @@
           <div class="col-lg-3 col-md-6 col-sm-6 col-6 d-flex align-items-center justify-content-start justify-content-lg-center">
             <div class="stat-item-wrap d-flex align-items-center" style="gap: 16px;">
               <div class="stat-bar-icon-box stat-icon-orange">
-                <i class="fas fa-store"></i>
+                <i class="{{ !empty($homeSec->process_stat1_icon) ? $homeSec->process_stat1_icon : 'fas fa-store' }}"></i>
               </div>
               <div class="stat-bar-info">
-                <h3 class="stat-bar-val">250+</h3>
-                <p class="stat-bar-lbl">{{ __('Live Stores') }}</p>
+                <h3 class="stat-bar-val">{{ !empty($homeSec->process_stat1_value) ? $homeSec->process_stat1_value : '250+' }}</h3>
+                <p class="stat-bar-lbl">{{ !empty($homeSec->process_stat1_label) ? $homeSec->process_stat1_label : __('Live Stores') }}</p>
               </div>
             </div>
           </div>
@@ -880,11 +908,11 @@
           <div class="col-lg-3 col-md-6 col-sm-6 col-6 d-flex align-items-center justify-content-start justify-content-lg-center">
             <div class="stat-item-wrap d-flex align-items-center" style="gap: 16px;">
               <div class="stat-bar-icon-box stat-icon-pink">
-                <i class="fas fa-users"></i>
+                <i class="{{ !empty($homeSec->process_stat2_icon) ? $homeSec->process_stat2_icon : 'fas fa-users' }}"></i>
               </div>
               <div class="stat-bar-info">
-                <h3 class="stat-bar-val">500+</h3>
-                <p class="stat-bar-lbl">{{ __('Happy Merchants') }}</p>
+                <h3 class="stat-bar-val">{{ !empty($homeSec->process_stat2_value) ? $homeSec->process_stat2_value : '500+' }}</h3>
+                <p class="stat-bar-lbl">{{ !empty($homeSec->process_stat2_label) ? $homeSec->process_stat2_label : __('Happy Merchants') }}</p>
               </div>
             </div>
           </div>
@@ -893,11 +921,11 @@
           <div class="col-lg-3 col-md-6 col-sm-6 col-6 d-flex align-items-center justify-content-start justify-content-lg-center">
             <div class="stat-item-wrap d-flex align-items-center" style="gap: 16px;">
               <div class="stat-bar-icon-box stat-icon-blue">
-                <i class="fas fa-gem"></i>
+                <i class="{{ !empty($homeSec->process_stat3_icon) ? $homeSec->process_stat3_icon : 'fas fa-gem' }}"></i>
               </div>
               <div class="stat-bar-info">
-                <h3 class="stat-bar-val">15+</h3>
-                <p class="stat-bar-lbl">{{ __('Premium Themes') }}</p>
+                <h3 class="stat-bar-val">{{ !empty($homeSec->process_stat3_value) ? $homeSec->process_stat3_value : '15+' }}</h3>
+                <p class="stat-bar-lbl">{{ !empty($homeSec->process_stat3_label) ? $homeSec->process_stat3_label : __('Premium Themes') }}</p>
               </div>
             </div>
           </div>
@@ -906,11 +934,11 @@
           <div class="col-lg-3 col-md-6 col-sm-6 col-6 d-flex align-items-center justify-content-start justify-content-lg-center">
             <div class="stat-item-wrap d-flex align-items-center" style="gap: 16px;">
               <div class="stat-bar-icon-box stat-icon-green">
-                <i class="fas fa-check-circle"></i>
+                <i class="{{ !empty($homeSec->process_stat4_icon) ? $homeSec->process_stat4_icon : 'fas fa-check-circle' }}"></i>
               </div>
               <div class="stat-bar-info">
-                <h3 class="stat-bar-val">99.99%</h3>
-                <p class="stat-bar-lbl">{{ __('Customer Satisfaction') }}</p>
+                <h3 class="stat-bar-val">{{ !empty($homeSec->process_stat4_value) ? $homeSec->process_stat4_value : '99.99%' }}</h3>
+                <p class="stat-bar-lbl">{{ !empty($homeSec->process_stat4_label) ? $homeSec->process_stat4_label : __('Customer Satisfaction') }}</p>
               </div>
             </div>
           </div>
@@ -927,26 +955,26 @@
         <!-- Left Text Column -->
         <div class="col-lg-3 col-md-12 mb-5 mb-lg-0" data-aos="fade-right">
           <div class="dashboard-text-wrap">
-            <span class="dashboard-subtitle mb-2 d-block">{{ __('Everything Under One Roof') }}</span>
-            <h2 class="dashboard-title mb-3">{{ __('Powerful Dashboard Built for Growth') }}</h2>
-            <p class="dashboard-desc mb-4">{{ __('From analytics to orders, products to customers, manage every part of your business from one smart dashboard.') }}</p>
+            <span class="dashboard-subtitle mb-2 d-block">{{ !empty($homeSec->features_section_subtitle) ? $homeSec->features_section_subtitle : __('Everything Under One Roof') }}</span>
+            <h2 class="dashboard-title mb-3">{{ !empty($homeSec->features_section_title) ? $homeSec->features_section_title : __('Powerful Dashboard Built for Growth') }}</h2>
+            <p class="dashboard-desc mb-4">{{ !empty($homeSec->features_section_text) ? $homeSec->features_section_text : __('From analytics to orders, products to customers, manage every part of your business from one smart dashboard.') }}</p>
             
             <ul class="dashboard-bullets-list list-unstyled mb-4">
               <li class="mb-3 d-flex align-items-center gap-2">
                 <span class="bullet-check-icon"><i class="fas fa-check"></i></span>
-                <span class="bullet-txt">{{ __('Real-time sales & analytics') }}</span>
+                <span class="bullet-txt">{{ !empty($homeSec->features_bullet1) ? $homeSec->features_bullet1 : __('Real-time sales & analytics') }}</span>
               </li>
               <li class="mb-3 d-flex align-items-center gap-2">
                 <span class="bullet-check-icon"><i class="fas fa-check"></i></span>
-                <span class="bullet-txt">{{ __('Manage products & inventory') }}</span>
+                <span class="bullet-txt">{{ !empty($homeSec->features_bullet2) ? $homeSec->features_bullet2 : __('Manage products & inventory') }}</span>
               </li>
               <li class="mb-3 d-flex align-items-center gap-2">
                 <span class="bullet-check-icon"><i class="fas fa-check"></i></span>
-                <span class="bullet-txt">{{ __('Track orders, payments & shipping') }}</span>
+                <span class="bullet-txt">{{ !empty($homeSec->features_bullet3) ? $homeSec->features_bullet3 : __('Track orders, payments & shipping') }}</span>
               </li>
               <li class="mb-3 d-flex align-items-center gap-2">
                 <span class="bullet-check-icon"><i class="fas fa-check"></i></span>
-                <span class="bullet-txt">{{ __('Customers, coupons & reports') }}</span>
+                <span class="bullet-txt">{{ !empty($homeSec->features_bullet4) ? $homeSec->features_bullet4 : __('Customers, coupons & reports') }}</span>
               </li>
             </ul>
             
@@ -956,74 +984,71 @@
             @endphp
             @php
               $firstTemplate = $templates->first();
+              $exploreUrl = !empty($homeSec->features_section_btn_url) 
+                ? $homeSec->features_section_btn_url 
+                : ($firstTemplate ? route('front.templates.autologin', $firstTemplate->username) : route('front.templates.view'));
+              $exploreBtnText = !empty($homeSec->features_section_btn_text) ? $homeSec->features_section_btn_text : __('Explore Dashboard');
             @endphp
-            @if($firstTemplate)
-            <a href="{{ route('front.templates.autologin', $firstTemplate->username) }}" target="_blank" class="btn-dashboard-explore px-4 py-3 d-inline-flex align-items-center gap-2">
-              {{ __('Explore Dashboard ') }} <i class="fas fa-arrow-right"></i>
+            <a href="{{ $exploreUrl }}" target="_blank" class="btn-dashboard-explore px-4 py-3 d-inline-flex align-items-center gap-2">
+              {{ $exploreBtnText }} <i class="fas fa-arrow-right"></i>
             </a>
-            @else
-            <a href="{{ route('front.templates.view') }}" class="btn-dashboard-explore px-4 py-3 d-inline-flex align-items-center gap-2">
-              {{ __('Explore Dashboard ') }} <i class="fas fa-arrow-right"></i>
-            </a>
-            @endif
           </div>
         </div>
 
         <!-- Center Dashboard Column -->
         <div class="col-lg-6 col-md-12 mb-5 mb-lg-0" data-aos="fade-up">
           <div class="simulated-dashboard-card">
-            <img src="{{ asset('images/user_dashboard.png') }}" alt="User Dashboard" style="width: 100%; height: auto; display: block; object-fit: cover;">
+            @php
+              $dashImgPath = (!empty($homeSec->dashboard_image) && file_exists(public_path('assets/front/img/' . $homeSec->dashboard_image))) 
+                ? asset('assets/front/img/' . $homeSec->dashboard_image) 
+                : asset('images/user_dashboard.png');
+            @endphp
+            <img src="{{ $dashImgPath }}" alt="User Dashboard" style="width: 100%; height: auto; display: block; object-fit: cover;">
           </div>
         </div>
 
-        <!-- Right Features Column -->
+        <!-- Right Features Column (4 Feature Cards - Fully Dynamic) -->
         <div class="col-lg-3 col-md-12" data-aos="fade-left">
+          @php
+            $cardStyles = [
+              ['class' => 'purple', 'default_icon' => 'fas fa-chart-pie', 'default_title' => 'Analytics & Reports', 'default_desc' => 'Make data-driven decisions'],
+              ['class' => 'orange', 'default_icon' => 'fas fa-boxes', 'default_title' => 'Inventory Management', 'default_desc' => 'Never run out of stock'],
+              ['class' => 'green', 'default_icon' => 'fas fa-shield-alt', 'default_title' => 'Secure Payments', 'default_desc' => 'Track all transactions in one place'],
+              ['class' => 'pink', 'default_icon' => 'fas fa-user-friends', 'default_title' => 'Customer Insights', 'default_desc' => 'Understand your customers better'],
+            ];
+          @endphp
           <div class="dashboard-side-features d-flex flex-column gap-3">
-            
-            <!-- Feature 1 -->
-            <div class="dash-side-feat-card d-flex align-items-center">
-              <div class="side-feat-icon-box purple">
-                <i class="fas fa-chart-pie"></i>
-              </div>
-              <div class="side-feat-info">
-                <h4 class="side-feat-title mb-1">{{ __('Analytics & Reports') }}</h4>
-                <p class="side-feat-desc mb-0">{{ __('Make data-driven decisions') }}</p>
-              </div>
-            </div>
-
-            <!-- Feature 2 -->
-            <div class="dash-side-feat-card d-flex align-items-center">
-              <div class="side-feat-icon-box orange">
-                <i class="fas fa-boxes"></i>
-              </div>
-              <div class="side-feat-info">
-                <h4 class="side-feat-title mb-1">{{ __('Inventory Management') }}</h4>
-                <p class="side-feat-desc mb-0">{{ __('Never run out of stock') }}</p>
-              </div>
-            </div>
-
-            <!-- Feature 3 -->
-            <div class="dash-side-feat-card d-flex align-items-center">
-              <div class="side-feat-icon-box green">
-                <i class="fas fa-shield-alt"></i>
-              </div>
-              <div class="side-feat-info">
-                <h4 class="side-feat-title mb-1">{{ __('Secure Payments') }}</h4>
-                <p class="side-feat-desc mb-0">{{ __('Track all transactions in one place') }}</p>
-              </div>
-            </div>
-
-            <!-- Feature 4 -->
-            <div class="dash-side-feat-card d-flex align-items-center">
-              <div class="side-feat-icon-box pink">
-                <i class="fas fa-user-friends"></i>
-              </div>
-              <div class="side-feat-info">
-                <h4 class="side-feat-title mb-1">{{ __('Customer Insights') }}</h4>
-                <p class="side-feat-desc mb-0">{{ __('Understand your customers better') }}</p>
-              </div>
-            </div>
-
+            @if(isset($features) && $features->count() > 0)
+              @foreach($features->take(4) as $fIndex => $feat)
+                @php
+                  $cStyle = $cardStyles[$fIndex % count($cardStyles)];
+                  $cardIcon = !empty($feat->icon) ? $feat->icon : $cStyle['default_icon'];
+                  $cardTitle = !empty($feat->title) ? $feat->title : __($cStyle['default_title']);
+                  $cardDesc = !empty($feat->text) ? $feat->text : __($cStyle['default_desc']);
+                @endphp
+                <div class="dash-side-feat-card d-flex align-items-center">
+                  <div class="side-feat-icon-box {{ $cStyle['class'] }}">
+                    <i class="{{ $cardIcon }}"></i>
+                  </div>
+                  <div class="side-feat-info">
+                    <h4 class="side-feat-title mb-1">{{ $cardTitle }}</h4>
+                    <p class="side-feat-desc mb-0">{{ $cardDesc }}</p>
+                  </div>
+                </div>
+              @endforeach
+            @else
+              @foreach($cardStyles as $cStyle)
+                <div class="dash-side-feat-card d-flex align-items-center">
+                  <div class="side-feat-icon-box {{ $cStyle['class'] }}">
+                    <i class="{{ $cStyle['default_icon'] }}"></i>
+                  </div>
+                  <div class="side-feat-info">
+                    <h4 class="side-feat-title mb-1">{{ __($cStyle['default_title']) }}</h4>
+                    <p class="side-feat-desc mb-0">{{ __($cStyle['default_desc']) }}</p>
+                  </div>
+                </div>
+              @endforeach
+            @endif
           </div>
         </div>
 
@@ -1076,8 +1101,8 @@
         <!-- Hero Header Section matching pricing page -->
         <div class="pricing-hero-center text-center" data-aos="fade-up">
           <div class="pricing-eyebrow-badge" style="font-size: 13px; font-weight: 800; color: #ff5a2c; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px;">SIMPLE, TRANSPARENT PRICING</div>
-          <h2 class="section-title mb-3" style="font-size: 38px; font-weight: 800; color: #1e2335; line-height: 1.2;">Choose the <span style="color: #ff5a2c;">perfect plan</span> for your business</h2>
-          <p class="subtitle font-weight-medium" style="font-size: 16px; color: #64748b; max-width: 600px; margin: 0 auto 24px;">Launch your store in minutes and scale as your business grows.</p>
+          <h2 class="section-title mb-3" style="font-size: 38px; font-weight: 800; color: #1e2335; line-height: 1.2;">{!! !empty($homeSec->pricing_section_title) ? $homeSec->pricing_section_title : 'Choose the <span style="color: #ff5a2c;">' . __('perfect plan') . '</span> ' . __('for your business') !!}</h2>
+          <p class="subtitle font-weight-medium" style="font-size: 16px; color: #64748b; max-width: 600px; margin: 0 auto 24px;">{{ !empty($homeSec->pricing_section_subtitle) ? $homeSec->pricing_section_subtitle : __('Launch your store in minutes and scale as your business grows.') }}</p>
         </div>
 
         @include('front.partials.pricing_cards')
@@ -1240,8 +1265,8 @@
           
           <!-- Left Column (Text & Buttons) -->
           <div class="col-lg-6 col-md-12 p-4 p-sm-5 text-center text-lg-start">
-            <h2 class="cta-revamp-title mb-3">{{ __('Ready to Launch Your Dream Store?') }}</h2>
-            <p class="cta-revamp-desc mb-4">{{ __('Join thousands of entrepreneurs and start selling online with Launchshop in just minutes.') }}</p>
+            <h2 class="cta-revamp-title mb-3">{{ !empty($homeCta->title) ? $homeCta->title : (!empty($homeSec->featured_shop_section_title) ? $homeSec->featured_shop_section_title : __('Ready to Launch Your Dream Store?')) }}</h2>
+            <p class="cta-revamp-desc mb-4">{{ !empty($homeCta->subtitle) ? $homeCta->subtitle : (!empty($homeSec->featured_shop_section_subtitle) ? $homeSec->featured_shop_section_subtitle : __('Join thousands of entrepreneurs and start selling online with Launchshop in just minutes.')) }}</p>
             
             <!-- Desktop Button (Laptop / Desktop only) -->
             <div class="cta-revamp-btns d-none d-lg-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">

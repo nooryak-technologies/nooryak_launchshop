@@ -56,6 +56,12 @@ class BasicSetting extends Model
         'pollinations_secret_key',
         'pollinations_text_model',
         'pollinations_image_model',
+        'whatsapp_status',
+        'whatsapp_endpoint',
+        'whatsapp_access_token',
+        'whatsapp_instance_id',
+        'dual_otp_status',
+        'whatsapp_otp_template',
     ];
 
     public function language()
