@@ -661,13 +661,7 @@
 
     @php
       $data = $data ?? session('data') ?? [];
-      $reqHost = strtolower(trim((string)(request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? ''))));
-      $reqHost = preg_replace('/:\d+$/', '', $reqHost);
-      $reqHost = preg_replace('/^www\./i', '', $reqHost);
       $checkoutFormAction = route('front.membership.checkout');
-      } else {
-          $checkoutFormAction = route('front.membership.checkout');
-      }
     @endphp
     {{-- Main checkout form --}}
     <form action="{{ $checkoutFormAction }}" method="POST" enctype="multipart/form-data" id="my-checkout-form" novalidate>
