@@ -47,7 +47,7 @@ class BasicMailer
               : (!empty($username) ? $username : env('MAIL_FROM_ADDRESS', 'admin@saasreselling.com'));
           $fromName = !empty($data['from_name'])
               ? $data['from_name']
-              : env('MAIL_FROM_NAME', 'Ecom Builder');
+              : env('MAIL_FROM_NAME', 'LaunchShop');
           $subject = $data['subject'] ?? 'Notification';
           $body = Common::wrapEmailBody($data['body'] ?? '', $subject, null, null, $fromName);
           $message->to($data['recipient'])
@@ -72,7 +72,7 @@ class BasicMailer
         $fromMail = (!empty($data['from_mail']) && !str_contains($data['from_mail'], 'metroshop.in') && !str_contains($data['from_mail'], 'nooryak.in'))
             ? $data['from_mail']
             : config('mail.from.address', 'admin@saasreselling.com');
-        $fromName = $data['from_name'] ?? config('mail.from.name', 'Ecom Builder');
+        $fromName = $data['from_name'] ?? config('mail.from.name', 'LaunchShop');
         $subject  = $data['subject'] ?? 'Notification';
         $body     = Common::wrapEmailBody($data['body'] ?? '', $subject, null, null, $fromName);
         $headers  = "MIME-Version: 1.0\r\n";

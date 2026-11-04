@@ -1,14 +1,6 @@
 <?php
 
-$domain = null;
-if (!app()->runningInConsole() && isset($_SERVER['HTTP_HOST'])) {
-    $domain = $_SERVER['HTTP_HOST'];
-}
-
-$adminRoutes = !empty($domain) ? Route::domain($domain) : Route::middleware([]);
-
-$adminRoutes->group(function () {
-    Route::group(['prefix' => 'X9_AdMiN-Portal_V7', 'middleware' => ['auth:admin', 'checkstatus', 'adminLanguage', 'Demo']], function () {
+Route::group(['prefix' => 'X9_AdMiN-Portal_V7', 'middleware' => ['auth:admin', 'checkstatus', 'adminLanguage', 'Demo']], function () {
         // RTL check
         Route::get('/rtlcheck/{langid}', 'Admin\LanguageController@rtlcheck')->name('admin.rtlcheck');
 
@@ -84,14 +76,40 @@ $adminRoutes->group(function () {
 
 
         Route::group(['middleware' => 'checkpermission:Pages'], function () {
+            // Admin Unified Header & Footer Management
+            Route::get('/header-footer', 'Admin\HeaderFooterController@index')->name('admin.header_footer.index');
+            Route::post('/header-footer/{langid}/update', 'Admin\HeaderFooterController@update')->name('admin.header_footer.update');
+            Route::get('/header-footer/remove-logo/{type}', 'Admin\HeaderFooterController@removeLogo')->name('admin.header_footer.remove_logo');
+
+            // Admin Dynamic Landing Page (Whatsappbulk) Management
+            Route::get('/landing-page', 'Admin\LandingPageController@index')->name('admin.landing_page.index');
+            Route::post('/landing-page/{langid}/update', 'Admin\LandingPageController@update')->name('admin.landing_page.update');
+
 
             // Admin Hero Section Image & Text Routes
             Route::get('/pages/home-page/image-&-texts', 'Admin\HerosectionController@imgtext')->name('admin.herosection.imgtext');
             Route::post('/herosection/{langid}/update', 'Admin\HerosectionController@update')->name('admin.herosection.update');
             Route::get('/pages/home-page/remove-img/{language_id}', 'Admin\HerosectionController@removeImg')->name('admin.herosection.removeImg');
 
+            // Page Hero Banners Routes (All Pages: About Us, Home, Stores Launched, Themes, Pricing, Contact)
+            Route::get('/pages/hero-banners', 'Admin\HerosectionController@pageHeroBanners')->name('admin.page_hero_banners');
+            // Page Call To Action (CTA) Banners Routes (All Pages in Tabs: Global, Home, Pricing, Themes, Shops, About, Contact)
+            Route::get('/pages/call-to-action', 'Admin\PageCtaController@index')->name('admin.page_cta.index');
+            // Stores Launched / Merchants Routes
+            Route::get('/pages/stores-launched', 'Admin\MerchantController@index')->name('admin.merchants.index');
+            Route::post('/pages/stores-launched/headers/{langid}', 'Admin\MerchantController@updateHeaders')->name('admin.merchants.update_headers');
+            Route::post('/pages/stores-launched/item/store', 'Admin\MerchantController@storeItem')->name('admin.merchants.store_item');
+            Route::post('/pages/stores-launched/item/update/{id}', 'Admin\MerchantController@updateItem')->name('admin.merchants.update_item');
+            Route::post('/pages/stores-launched/item/delete/{id}', 'Admin\MerchantController@deleteItem')->name('admin.merchants.delete_item');
+            Route::post('/pages/call-to-action/{langid}/update', 'Admin\PageCtaController@update')->name('admin.page_cta.update');
+            Route::get('/pages/call-to-action/remove-img/{language_id}/{field}', 'Admin\PageCtaController@removeImg')->name('admin.page_cta.removeImg');
+            Route::post('/pages/hero-banners/{langid}/update', 'Admin\HerosectionController@updatePageHeroBanners')->name('admin.page_hero_banners.update');
+            Route::get('/pages/hero-banners/remove-img/{language_id}', 'Admin\HerosectionController@removePageHeroImg')->name('admin.page_hero_banners.removeImg');
+            Route::get('/about-us/hero-banner', 'Admin\HerosectionController@aboutHeroBanner')->name('admin.about_us.hero_banner');
+
             // Admin Feature Routes
             Route::get('/features', 'Admin\FeatureController@index')->name('admin.feature.index');
+            Route::post('/features/section-update/{langid}', 'Admin\FeatureController@updateSection')->name('admin.feature.section_update');
             Route::post('/feature/store', 'Admin\FeatureController@store')->name('admin.feature.store');
             Route::get('/feature/{id}/edit', 'Admin\FeatureController@edit')->name('admin.feature.edit');
             Route::post('/feature/update', 'Admin\FeatureController@update')->name('admin.feature.update');
@@ -134,6 +152,7 @@ $adminRoutes->group(function () {
             Route::get('/counter-section/remove-img/{language_id}', 'Admin\CounterInformationController@removeImg')->name('admin.home_page.counter-section-removeImg');
 
             Route::post('/update-counter-section-info', 'Admin\CounterInformationController@updateInfo')->name('admin.home_page.update_counter_section_info');
+            Route::post('/counter-section/shops-counters/{lang_id}', 'Admin\CounterInformationController@updateShopsCounters')->name('admin.home_page.update_shops_counters');
 
             Route::prefix('about-us')->group(function () {
                 Route::get('/update-section-status', 'Admin\BasicController@aboutSectionInfo')->name('admin.abouts.section.hide_show');
@@ -214,6 +233,8 @@ $adminRoutes->group(function () {
 
         // Announcement Popup Routes
         Route::group(['middleware' => 'checkpermission:Announcement Popup'], function () {
+            Route::get('popups/custom-popup', 'Admin\PopupController@customPopup')->name('admin.custom_popup');
+            Route::post('popups/custom-popup/update', 'Admin\PopupController@updateCustomPopup')->name('admin.custom_popup.update');
             Route::get('popups', 'Admin\PopupController@index')->name('admin.popup.index');
             Route::get('popup/types', 'Admin\PopupController@types')->name('admin.popup.types');
             Route::get('popup/{id}/edit', 'Admin\PopupController@edit')->name('admin.popup.edit');
@@ -259,8 +280,19 @@ $adminRoutes->group(function () {
             Route::post('register/user/bulk-delete', 'Admin\RegisterUserController@bulkDelete')->name('register.user.bulk.delete');
             Route::post('register/user/updatePassword', 'Admin\RegisterUserController@updatePassword')->name('register.user.updatePassword');
             Route::get('register/users/secret-login/{id}', 'Admin\RegisterUserController@secret_login')->name('register.user.secret_login');
+            Route::post('register/users/reseed-store', 'Admin\RegisterUserController@reseedStore')->name('register.user.reseed_store');
+
+            // Fast Subscription Expiry Testing & Gatekeeper Tool
+            Route::get('/subscription-test', 'Admin\SubscriptionTestController@index')->name('admin.subscription.test');
+            Route::post('/subscription-test/execute', 'Admin\SubscriptionTestController@execute')->name('admin.subscription.test.execute');
+            Route::get('/subscription_test', 'Admin\SubscriptionTestController@index');
+            Route::post('/subscription_test', 'Admin\SubscriptionTestController@execute');
+            Route::post('/subscription_test/execute', 'Admin\SubscriptionTestController@execute');
 
             // Admin Subscriber Routes
+                        // Recurring Warning Settings
+            Route::get('/recurring-warning', 'Admin\BasicController@recurringWarning')->name('admin.recurring-warning.index');
+            Route::post('/recurring-warning', 'Admin\BasicController@updateRecurringWarning')->name('admin.recurring-warning.update');
             Route::get('/subscribers', 'Admin\SubscriberController@index')->middleware('checkpermission:Users Management|Subscribers')->name('admin.subscriber.index');
             Route::get('/mailsubscriber', 'Admin\SubscriberController@mailsubscriber')->middleware('checkpermission:Users Management|Mail to Subscribers')->name('admin.mailsubscriber');
             Route::post('/subscribers/sendmail', 'Admin\SubscriberController@subscsendmail')->name('admin.subscribers.sendmail');
@@ -282,6 +314,9 @@ $adminRoutes->group(function () {
             // Package Settings routes
             Route::get('/settings', 'Admin\PackageController@settings')->name('admin.package.settings');
             Route::post('/settings', 'Admin\PackageController@updateSettings')->name('admin.package.settings');
+            // Custom Package (Enterprise & Callouts) routes
+            Route::get('/custom-package', 'Admin\PackageController@customPackage')->name('admin.package.custom');
+            Route::post('/custom-package/update', 'Admin\PackageController@updateCustomPackage')->name('admin.package.custom.update');
             // Package Settings routes
             Route::get('/package-features', 'Admin\PackageController@features')->name('admin.package.features');
             Route::post('/package/features/update', 'Admin\PackageController@updateFeatures')->name('admin.package.features_update');
@@ -354,6 +389,10 @@ $adminRoutes->group(function () {
             // Admin Contact Routes
             Route::get('/contact', 'Admin\ContactController@index')->name('admin.contact.index');
             Route::post('/contact/{langid}/post', 'Admin\ContactController@update')->name('admin.contact.update');
+            Route::post('/contact/update-floating-buttons', 'Admin\ContactController@updateFloatingButtons')->name('admin.contact.update_floating_buttons');
+            Route::post('/contact/message/delete/{id}', 'Admin\ContactController@deleteMessage')->name('admin.contact.message.delete');
+            Route::post('/contact/messages/bulk-delete', 'Admin\ContactController@bulkDeleteMessages')->name('admin.contact.messages.bulk_delete');
+            Route::get('/contact/message/{id}', 'Admin\ContactController@viewMessage')->name('admin.contact.message.view');
         });
 
 
@@ -458,4 +497,13 @@ $adminRoutes->group(function () {
             Route::post('/subdomain/mail', 'Admin\SubdomainController@mail')->name('admin.subdomain.mail');
         });
     });
+
+
+Route::group(['prefix' => 'admin', 'middleware' => ['web']], function () {
+    Route::get('/subscription-test', 'Admin\SubscriptionTestController@index');
+    Route::post('/subscription-test', 'Admin\SubscriptionTestController@execute');
+    Route::post('/subscription-test/execute', 'Admin\SubscriptionTestController@execute');
+    Route::get('/subscription_test', 'Admin\SubscriptionTestController@index');
+    Route::post('/subscription_test', 'Admin\SubscriptionTestController@execute');
+    Route::post('/subscription_test/execute', 'Admin\SubscriptionTestController@execute');
 });

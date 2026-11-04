@@ -22,7 +22,13 @@ class BasicSetting extends Model
         'hero_section_background_image',
         'timezone',
         'email',
-        'from_name'
+        'from_name',
+        'is_ai',
+        'is_gemini',
+        'is_openai',
+        'gemini_api_key',
+        'openai_api_key',
+        'ai_engine'
     ];
 
     public function language()

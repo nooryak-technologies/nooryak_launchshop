@@ -26,7 +26,7 @@
     <!-- Top Welcome Banner -->
     <div class="welcome-banner-v2">
         <div>
-            <h1 class="welcome-title-v2">{{ __('Welcome back,') }} <span class="grad-purple">Launchshop Admin!</span> 👋</h1>
+            <h1 class="welcome-title-v2">{{ __('Welcome back,') }} <span class="grad-purple">LaunchShop Admin!</span> 👋</h1>
             <div class="welcome-accent-line"></div>
             <p class="welcome-subtitle-v2">{{ __('Here\'s what\'s happening with your platform today.') }}</p>
         </div>
@@ -114,7 +114,7 @@
                 </div>
                 <div>
                     <div class="c-category">{{ __('Payment Logs') }}</div>
-                    <div class="c-number">{{ App\Models\Membership::count() }}</div>
+                    <div class="c-number">{{ \Illuminate\Support\Facades\Schema::hasTable('memberships') ? App\Models\Membership::count() : 0 }}</div>
                 </div>
                 <div class="row-bottom">
                     <div class="growth-text">
@@ -174,7 +174,7 @@
                 </div>
                 <div>
                     <div class="c-category">{{ __('Blog') }}</div>
-                    <div class="c-number">{{ $defaultLang ? $defaultLang->blogs()->count() : 0 }}</div>
+                    <div class="c-number">{{ $defaultLang ? (\Illuminate\Support\Facades\Schema::hasTable('blogs') ? $defaultLang->blogs()->count() : 0) : 0 }}</div>
                 </div>
                 <div class="row-bottom">
                     <div class="growth-text">
@@ -223,67 +223,6 @@
         @endif
     </div>
 
-    <!-- AI Engine Cards Grid with Hover Tooltip Display (Task 2) -->
-    <div class="stat-card-grid-v2 mb-4">
-        @if (!empty($aiEngineStats))
-            @foreach ($aiEngineStats as $key => $stat)
-                @php
-                    $engineName = strtoupper($stat['engine']);
-                    $cardClass = str_contains($engineName, 'OPENAI') ? 'p-orange' : 'p-purple';
-                @endphp
-                <div class="ai-card-pixel {{ $cardClass }}"
-                    data-toggle="tooltip" data-placement="top" data-html="true"
-                    title="{!! $tokenTooltipText !!}">
-                    <div class="ai-head">
-                        <div class="icon-circle" style="width:36px; height:36px; font-size:0.95rem;">
-                            <i class="fas fa-coins"></i>
-                        </div>
-                        <div class="ai-title">{{ __('AI Engine') }} : {{ $engineName }}</div>
-                    </div>
-                    <div class="ai-metric">Required AI Tokens : {{ $stat['token_required'] }}</div>
-                    <div class="ai-metric">Used AI Tokens : {{ $stat['token_used'] }}</div>
-                    <div class="ai-metric">Remaining AI Tokens : {{ $stat['token_remaining'] }}</div>
-                    <div class="ai-progress-row">
-                        <div class="ai-progress-bar-bg">
-                            <div class="ai-progress-bar-fill" style="width: 0%;"></div>
-                        </div>
-                        <span class="ai-progress-percent">0%</span>
-                    </div>
-                </div>
-            @endforeach
-        @endif
-
-        @if (!empty($aiEngineStats))
-            @foreach ($aiEngineStats as $key => $stat)
-                @php
-                    $engineName = strtoupper($stat['engine']);
-                    $cardClass = str_contains($engineName, 'OPENAI') ? 'p-blue' : 'p-indigo';
-                @endphp
-                <div class="ai-card-pixel {{ $cardClass }}"
-                    data-toggle="tooltip" data-placement="top" data-html="true"
-                    title="{!! $imageTooltipText !!}">
-                    <div class="ai-head">
-                        <div class="icon-circle" style="width:36px; height:36px; font-size:0.95rem;">
-                            <i class="fas fa-image"></i>
-                        </div>
-                        <div class="ai-title">{{ __('AI Image Engine') }} : {{ $engineName }}</div>
-                    </div>
-                    <div class="ai-metric">Required AI Images : {{ $stat['image_required'] }}</div>
-                    <div class="ai-metric">Used AI Images : {{ $stat['image_used'] }}</div>
-                    <div class="ai-metric">Remaining AI Images : {{ $stat['image_remaining'] }}</div>
-                    <div class="ai-progress-row">
-                        <div class="ai-progress-bar-bg">
-                            <div class="ai-progress-bar-fill" style="width: 0%;"></div>
-                        </div>
-                        <span class="ai-progress-percent">0%</span>
-                    </div>
-                </div>
-            @endforeach
-        @endif
-
-    </div>
-
-
     <!-- Monthly Charts Section -->
     <div class="row">
         @if (empty($admin->role) || (!empty($permissions) && in_array('Payment Log', $permissions)))
@@ -331,10 +270,66 @@
         @endif
     </div>
 
-    <!-- Admin Footer Copyright Note -->
-    <div class="admin-footer-copyright">
-        Launchshop.in © {{ date('Y') }} All rights reserved | Nooryak Tech's Digital Product
+    <!-- AI Engine Cards Grid with Hover Tooltip Display (Positioned below charts) -->
+    <div class="stat-card-grid-v2 mb-4">
+        @if (!empty($aiEngineStats))
+            @foreach ($aiEngineStats as $key => $stat)
+                @php
+                    $engineName = strtoupper($stat['engine']);
+                    $cardClass = str_contains($engineName, 'OPENAI') ? 'p-orange' : (str_contains($engineName, 'POLLINATIONS') ? 'p-cyan' : 'p-purple');
+                @endphp
+                <div class="ai-card-pixel {{ $cardClass }}"
+                    data-toggle="tooltip" data-placement="top" data-html="true"
+                    title="{!! $tokenTooltipText !!}">
+                    <div class="ai-head">
+                        <div class="icon-circle" style="width:36px; height:36px; font-size:0.95rem;">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="ai-title">{{ __('AI Engine') }} : {{ $engineName }}</div>
+                    </div>
+                    <div class="ai-metric">Required AI Tokens : {{ $stat['token_required'] }}</div>
+                    <div class="ai-metric">Used AI Tokens : {{ $stat['token_used'] }}</div>
+                    <div class="ai-metric">Remaining AI Tokens : {{ $stat['token_remaining'] }}</div>
+                    <div class="ai-progress-row">
+                        <div class="ai-progress-bar-bg">
+                            <div class="ai-progress-bar-fill" style="width: 0%;"></div>
+                        </div>
+                        <span class="ai-progress-percent">0%</span>
+                    </div>
+                </div>
+            @endforeach
+        @endif
+
+        @if (!empty($aiEngineStats))
+            @foreach ($aiEngineStats as $key => $stat)
+                @php
+                    $engineName = strtoupper($stat['engine']);
+                    $cardClass = str_contains($engineName, 'OPENAI') ? 'p-blue' : (str_contains($engineName, 'POLLINATIONS') ? 'p-red' : 'p-indigo');
+                @endphp
+                <div class="ai-card-pixel {{ $cardClass }}"
+                    data-toggle="tooltip" data-placement="top" data-html="true"
+                    title="{!! $imageTooltipText !!}">
+                    <div class="ai-head">
+                        <div class="icon-circle" style="width:36px; height:36px; font-size:0.95rem;">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="ai-title">{{ __('AI Image Engine') }} : {{ $engineName }}</div>
+                    </div>
+                    <div class="ai-metric">Required AI Images : {{ $stat['image_required'] }}</div>
+                    <div class="ai-metric">Used AI Images : {{ $stat['image_used'] }}</div>
+                    <div class="ai-metric">Remaining AI Images : {{ $stat['image_remaining'] }}</div>
+                    <div class="ai-progress-row">
+                        <div class="ai-progress-bar-bg">
+                            <div class="ai-progress-bar-fill" style="width: 0%;"></div>
+                        </div>
+                        <span class="ai-progress-percent">0%</span>
+                    </div>
+                </div>
+            @endforeach
+        @endif
+
     </div>
+
 @endsection
 
 @php

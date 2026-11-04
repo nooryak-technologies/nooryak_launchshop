@@ -500,14 +500,14 @@ class Common
         return json_decode($userCurrentLang->keywords, true);
     }
 
-    public static function wrapEmailBody($body, $subject, $user = null)
+    public static function wrapEmailBody($body, $subject, $user = null, $customLogoUrl = null, $customTitle = null)
     {
         if (strpos($body, 'email-container') !== false || strpos($body, '<html') !== false) {
             return $body;
         }
 
         $logo_url = null;
-        $website_title = 'Launchshop';
+        $website_title = !empty($customTitle) ? $customTitle : 'LaunchShop';
         $base_color = 'ff6f61'; // fallback brand color
 
         if (!empty($user) && is_object($user) && isset($user->id)) {

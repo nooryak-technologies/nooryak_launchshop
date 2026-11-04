@@ -20,7 +20,7 @@
             <img src="{{ asset('assets/admin/img/propics/blank_user.jpg') }}" alt="user" class="u-avatar">
           @endif
           <div class="ml-2">
-            <h6 class="u-title">Launchshop</h6>
+            <h6 class="u-title">LaunchShop</h6>
             <span class="u-sub">Super Admin</span>
           </div>
         </div>
@@ -38,10 +38,16 @@
 
 
         {{-- Dashboard --}}
-        <li class="nav-item @if (request()->path() == 'admin/dashboard') active @endif">
+        <li class="nav-item @if (request()->routeIs('admin.dashboard') || request()->path() == 'admin/dashboard' || request()->is('admin/dashboard')) active @endif">
           <a href="{{ route('admin.dashboard') }}">
             <i class="la flaticon-paint-palette"></i>
             <p>{{ __('Dashboard') }}</p>
+          </a>
+        </li>
+                <li class="nav-item @if (request()->routeIs('admin.recurring-warning.*')) active @endif">
+          <a href="{{ route('admin.recurring-warning.index') }}">
+            <i class="fal fa-bell text-warning"></i>
+            <p>{{ __('Expire Alert') }}</p>
           </a>
         </li>
         {{-- Users Management --}}
@@ -120,6 +126,12 @@
 
                 @if (empty($admin->role) || (!empty($permissions) && (in_array('Mail to Subscribers', $permissions) || in_array('Users Management', $permissions))))
                 <li class="@if (request()->routeIs('admin.mailsubscriber')) active @endif">
+                  <li class="@if (request()->routeIs('admin.subscription.test') || request()->is('*subscription*test*')) active @endif">
+                  <a href="{{ url('/admin/subscription_test') }}">
+                    <span class="sub-item font-weight-bold text-warning"><i class="fas fa-stopwatch mr-1"></i> {{ __('Subscription Test Hub') }}</span>
+                  </a>
+                </li>
+                <li>
                   <a href="{{ route('admin.mailsubscriber') }}">
                     <span class="sub-item">{{ __('Mail to Subscribers') }}</span>
                   </a>
@@ -148,7 +160,7 @@
                     @if (request()->routeIs('admin.package.settings')) active
                     @elseif(request()->routeIs('admin.package.index')) active
                     @elseif(request()->routeIs('admin.package.features')) active
-                    @elseif(request()->routeIs('admin.package.edit')) active @endif">
+                    @elseif(request()->routeIs('admin.package.edit')) active @elseif(request()->routeIs('admin.package.custom')) active @endif">
             <a data-toggle="collapse" href="#packageManagement">
               <i class="fas fa-receipt"></i>
               <p>{{ __('Package Management') }}</p>
@@ -159,12 +171,17 @@
                         @if (request()->routeIs('admin.package.settings')) show
                         @elseif(request()->routeIs('admin.package.index')) show
                         @elseif(request()->routeIs('admin.package.features')) show
-                        @elseif(request()->routeIs('admin.package.edit')) show @endif"
+                        @elseif(request()->routeIs('admin.package.edit')) show @elseif(request()->routeIs('admin.package.custom')) show @endif"
               id="packageManagement">
               <ul class="nav nav-collapse">
                 <li class="@if (request()->routeIs('admin.package.settings')) active @endif">
                   <a href="{{ route('admin.package.settings') }}">
                     <span class="sub-item">{{ __('Settings') }}</span>
+                  </a>
+                </li>
+                <li class="@if (request()->routeIs('admin.package.custom')) active @endif">
+                  <a href="{{ route('admin.package.custom') }}">
+                    <span class="sub-item">{{ __('Custom Package') }}</span>
                   </a>
                 </li>
                 <li class="@if (request()->routeIs('admin.package.features')) active @endif">
@@ -174,7 +191,7 @@
                 </li>
                 <li
                   class="@if (request()->routeIs('admin.package.index')) active
-                                @elseif(request()->routeIs('admin.package.edit')) active @endif">
+                                @elseif(request()->routeIs('admin.package.edit')) active @elseif(request()->routeIs('admin.package.custom')) active @endif">
                   <a href="{{ route('admin.package.index') . '?language=' . $default->code }}">
                     <span class="sub-item">{{ __('Packages') }}</span>
                   </a>
@@ -186,7 +203,7 @@
 
         @if (empty($admin->role) || (!empty($permissions) && in_array('Payment Logs', $permissions)))
           <li class="nav-item
-                        @if (request()->path() == 'admin/payment-log') active @endif">
+                        @if (request()->routeIs('admin.payment-log.*') || request()->path() == 'admin/payment-log') active @endif">
             <a href="{{ route('admin.payment-log.index') }}">
               <i class="fas fa-file-invoice-dollar"></i>
               <p>{{ __('Payment Logs') }}</p>
@@ -197,40 +214,38 @@
         @if (empty($admin->role) || (!empty($permissions) && in_array('Custom Domains', $permissions)))
           <li
             class="nav-item
-                        @if (request()->path() == 'admin/domains') active
-                        @elseif(request()->path() == 'admin/domain/texts') active @endif">
-            <a data-toggle="collapse" href="#customDomains">
+                        @if (request()->routeIs('admin.custom-domain.*') || request()->path() == 'admin/domains' || request()->path() == 'admin/domain/texts') active @endif">
+            <a data-toggle="collapse" href="#customDomains" aria-expanded="@if (request()->routeIs('admin.custom-domain.*') || request()->path() == 'admin/domains' || request()->path() == 'admin/domain/texts') true @else false @endif">
               <i class="fas fa-link"></i>
               <p>{{ __('Custom Domains') }}</p>
               <span class="caret"></span>
             </a>
             <div
               class="collapse
-                            @if (request()->path() == 'admin/domains') show
-                            @elseif(request()->path() == 'admin/domain/texts') show @endif"
+                            @if (request()->routeIs('admin.custom-domain.*') || request()->path() == 'admin/domains' || request()->path() == 'admin/domain/texts') show @endif"
               id="customDomains">
               <ul class="nav nav-collapse">
-                <li class="@if (request()->path() == 'admin/domain/texts') active @endif">
+                <li class="@if (request()->routeIs('admin.custom-domain.texts') || request()->path() == 'admin/domain/texts') active @endif">
                   <a href="{{ route('admin.custom-domain.texts') }}">
                     <span class="sub-item">{{ __('Request Page Texts') }}</span>
                   </a>
                 </li>
-                <li class="@if (request()->path() == 'admin/domains' && empty(request()->input('type'))) active @endif">
+                <li class="@if (request()->routeIs('admin.custom-domain.index') && empty(request()->input('type')) && request()->path() == 'admin/domains') active @endif">
                   <a href="{{ route('admin.custom-domain.index') }}">
                     <span class="sub-item">{{ __('All Requests') }}</span>
                   </a>
                 </li>
-                <li class="@if (request()->path() == 'admin/domains' && request()->input('type') == 'pending') active @endif">
+                <li class="@if (request()->input('type') == 'pending') active @endif">
                   <a href="{{ route('admin.custom-domain.index', ['type' => 'pending']) }}">
                     <span class="sub-item">{{ __('Pending Requests') }}</span>
                   </a>
                 </li>
-                <li class="@if (request()->path() == 'admin/domains' && request()->input('type') == 'connected') active @endif">
+                <li class="@if (request()->input('type') == 'connected') active @endif">
                   <a href="{{ route('admin.custom-domain.index', ['type' => 'connected']) }}">
                     <span class="sub-item">{{ __('Connected Requests') }}</span>
                   </a>
                 </li>
-                <li class="@if (request()->path() == 'admin/domains' && request()->input('type') == 'rejected') active @endif">
+                <li class="@if (request()->input('type') == 'rejected') active @endif">
                   <a href="{{ route('admin.custom-domain.index', ['type' => 'rejected']) }}">
                     <span class="sub-item">{{ __('Rejected Requests') }}</span>
                   </a>
@@ -242,27 +257,27 @@
 
         @if (empty($admin->role) || (!empty($permissions) && in_array('Subdomains', $permissions)))
           <li class="nav-item
-                        @if (request()->path() == 'admin/subdomains') active @endif">
-            <a data-toggle="collapse" href="#subDomains">
+                        @if (request()->routeIs('admin.subdomain.*') || request()->path() == 'admin/subdomains') active @endif">
+            <a data-toggle="collapse" href="#subDomains" aria-expanded="@if (request()->routeIs('admin.subdomain.*') || request()->path() == 'admin/subdomains') true @else false @endif">
               <i class="far fa-link"></i>
               <p>{{ __('Subdomains') }}</p>
               <span class="caret"></span>
             </a>
             <div class="collapse
-                            @if (request()->path() == 'admin/subdomains') show @endif"
+                            @if (request()->routeIs('admin.subdomain.*') || request()->path() == 'admin/subdomains') show @endif"
               id="subDomains">
               <ul class="nav nav-collapse">
-                <li class="@if (request()->path() == 'admin/subdomains' && empty(request()->input('type'))) active @endif">
+                <li class="@if (request()->routeIs('admin.subdomain.index') && empty(request()->input('type'))) active @endif">
                   <a href="{{ route('admin.subdomain.index') }}">
                     <span class="sub-item">{{ __('All Subdomains') }}</span>
                   </a>
                 </li>
-                <li class="@if (request()->path() == 'admin/subdomains' && request()->input('type') == 'pending') active @endif">
+                <li class="@if (request()->input('type') == 'pending') active @endif">
                   <a href="{{ route('admin.subdomain.index', ['type' => 'pending']) }}">
                     <span class="sub-item">{{ __('Pending Subdomains') }}</span>
                   </a>
                 </li>
-                <li class="@if (request()->path() == 'admin/subdomains' && request()->input('type') == 'connected') active @endif">
+                <li class="@if (request()->input('type') == 'connected') active @endif">
                   <a href="{{ route('admin.subdomain.index', ['type' => 'connected']) }}">
                     <span class="sub-item">{{ __('Connected Subdomains') }}</span>
                   </a>
@@ -294,7 +309,9 @@
               @elseif (request()->path() == 'admin/blog') active
               @elseif (request()->is('admin/blog/*/edit')) active
               @elseif (request()->routeIs('admin.contact.index')) active
-          @elseif(request()->routeIs('admin.bcategory.edit')) active
+                @elseif (request()->routeIs('admin.header_footer.*')) active
+              @elseif (request()->routeIs('admin.landing_page.*')) active
+                          @elseif(request()->routeIs('admin.bcategory.edit')) active
               @elseif (request()->path() == 'admin/features') active
               @elseif(request()->routeIs('admin.herosection.imgtext')) active
               @elseif(request()->is('admin/feature/*/edit')) active
@@ -340,7 +357,10 @@
               @elseif (request()->path() == 'admin/blog') show
               @elseif (request()->is('admin/blog/*/edit')) show
               @elseif (request()->routeIs('admin.contact.index')) show
-    @elseif(request()->routeIs('admin.bcategory.edit')) show
+              @elseif (request()->routeIs('admin.page_cta.*')) show
+                @elseif (request()->routeIs('admin.header_footer.*')) show
+              @elseif (request()->routeIs('admin.landing_page.*')) show
+                    @elseif(request()->routeIs('admin.bcategory.edit')) show
               @elseif (request()->path() == 'admin/features') show
               @elseif(request()->routeIs('admin.herosection.imgtext')) show
               @elseif(request()->is('admin/feature/*/edit')) show
@@ -372,6 +392,12 @@
               @elseif (request()->routeIs('admin.about_us.additional_section.edit')) show @endif"
               id="pages">
               <ul class="nav nav-collapse">
+
+                <li class="@if (request()->routeIs('admin.package.custom')) active @endif">
+                  <a href="{{ route('admin.package.custom') }}">
+                    <span class="sub-item font-weight-bold text-warning"><i class="fas fa-building mr-1"></i> {{ __('Custom Package') }}</span>
+                  </a>
+                </li>
 
                 <li
                   class="submenu
@@ -440,7 +466,13 @@
                     <ul class="nav nav-collapse subnav">
                       <li class="@if (request()->routeIs('admin.herosection.imgtext')) active @endif">
                         <a href="{{ route('admin.herosection.imgtext') . '?language=' . $default->code }}">
-                          <span class="sub-item">{{ __('Images & Texts') }}</span>
+                          <span class="sub-item">{{ __('Home Section') }}</span>
+                        </a>
+                      </li>
+
+                      <li class="@if (request()->routeIs('admin.home_page.counter-section')) active @endif">
+                        <a href="{{ route('admin.home_page.counter-section') . '?language=' . $default->code }}">
+                          <span class="sub-item">{{ __('Counter Section') }}</span>
                         </a>
                       </li>
 
@@ -458,7 +490,7 @@
                           @if (request()->path() == 'admin/process') active
                           @elseif(request()->is('admin/process/*/edit')) active @endif">
                         <a href="{{ route('admin.process.index') . '?language=' . $default->code }}">
-                          <span class="sub-item">{{ __('Work Process') }}</span>
+                          <span class="sub-item">{{ __('Process Steps List') }}</span>
                         </a>
                       </li>
 
@@ -467,7 +499,7 @@
                           @if (request()->path() == 'admin/features') active
                           @elseif(request()->is('admin/feature/*/edit')) active @endif">
                         <a href="{{ route('admin.feature.index') . '?language=' . $default->code }}">
-                          <span class="sub-item">{{ __('Features') }}</span>
+                          <span class="sub-item">{{ __('Why Choose Us / Features') }}</span>
                         </a>
                       </li>
 
@@ -523,9 +555,16 @@
                   </div>
                 </li>
 
+                                <li class="@if (request()->routeIs('admin.page_hero_banners')) active @endif">
+                  <a href="{{ route('admin.page_hero_banners') . '?language=' . $default->code }}">
+                    <span class="sub-item font-weight-bold text-warning"><i class="fas fa-layer-group mr-1"></i> {{ __('Page Hero Banners') }}</span>
+                  </a>
+                </li>
+
                 <li
                   class="submenu
-                    @if (request()->routeIs('admin.home_page.counter-section')) selected
+                    @if (request()->routeIs('admin.page_hero_banners')) selected
+                    @elseif (request()->routeIs('admin.home_page.counter-section')) selected
                     @elseif (request()->routeIs('admin.abouts.section.hide_show')) selected
                     @elseif (request()->routeIs('admin.about_us.additional_sections')) selected
                     @elseif (request()->routeIs('admin.about_us.additional_section.create')) selected
@@ -547,6 +586,12 @@
                       @elseif (request()->routeIs('admin.about_us.additional_section.edit')) show @endif"
                     id="aboutUs_section">
                     <ul class="nav nav-collapse subnav">
+                      <li>
+                        <a href="{{ route('admin.page_hero_banners') . '?language=' . $default->code }}#tab-about">
+                          <span class="sub-item">{{ __('Hero Banner') }}</span>
+                        </a>
+                      </li>
+
                       <li class="@if (request()->routeIs('admin.home_page.counter-section')) active @endif">
                         <a href="{{ route('admin.home_page.counter-section') . '?language=' . $default->code }}">
                           <span class="sub-item">{{ __('Counter Section') }}</span>
@@ -651,6 +696,25 @@
                     <span class="sub-item">{{ __('Contact Page') }}</span>
                   </a>
                 </li>
+
+                <li class="@if (request()->routeIs('admin.page_cta.*')) active @endif">
+                  <a href="{{ route('admin.page_cta.index') . '?language=' . $default->code }}">
+                    <span class="sub-item">{{ __('Call To Action') }}</span>
+                  </a>
+                </li>
+
+                <li class="@if (request()->routeIs('admin.header_footer.*')) active @endif">
+                  <a href="{{ route('admin.header_footer.index') . '?language=' . $default->code }}">
+                    <span class="sub-item">{{ __('Header & Footer') }}</span>
+                  </a>
+                </li>
+
+                <li class="@if (request()->routeIs('admin.merchants.*')) active @endif">
+                  <a href="{{ route('admin.merchants.index') . '?language=' . $default->code }}">
+                    <span class="sub-item">{{ __('Stores Launched') }}</span>
+                  </a>
+                </li>
+
 
                 <li
                   class="submenu
@@ -783,35 +847,33 @@
         @if (empty($admin->role) || (!empty($permissions) && in_array('Announcement Popup', $permissions)))
           <li
             class="nav-item
-                    @if (request()->path() == 'admin/popup/create') active
-                    @elseif(request()->path() == 'admin/popup/types') active
-                    @elseif(request()->is('admin/popup/*/edit')) active
-                    @elseif(request()->path() == 'admin/popups') active @endif">
-            <a data-toggle="collapse" href="#announcementPopup">
+                    @if (request()->routeIs('admin.popup.*') || request()->routeIs('admin.custom_popup') || request()->path() == 'admin/popup/create' || request()->path() == 'admin/popup/types' || request()->is('admin/popup/*') || request()->path() == 'admin/popups') active @endif">
+            <a data-toggle="collapse" href="#announcementPopup" aria-expanded="@if (request()->routeIs('admin.popup.*') || request()->routeIs('admin.custom_popup') || request()->path() == 'admin/popup/create' || request()->path() == 'admin/popup/types' || request()->is('admin/popup/*') || request()->path() == 'admin/popups') true @else false @endif">
               <i class="fas fa-bullhorn"></i>
               <p>{{ __('Announcement Popup') }}</p>
               <span class="caret"></span>
             </a>
             <div
               class="collapse
-                        @if (request()->path() == 'admin/popup/create') show
-                        @elseif(request()->path() == 'admin/popup/types') show
-                        @elseif(request()->path() == 'admin/popups') show
-                        @elseif(request()->is('admin/popup/*/edit')) show @endif"
+                        @if (request()->routeIs('admin.popup.*') || request()->routeIs('admin.custom_popup') || request()->path() == 'admin/popup/create' || request()->path() == 'admin/popup/types' || request()->path() == 'admin/popups' || request()->is('admin/popup/*')) show @endif"
               id="announcementPopup">
               <ul class="nav nav-collapse">
                 <li
-                  class="@if (request()->path() == 'admin/popup/types') active
-                                @elseif(request()->path() == 'admin/popup/create') active @endif">
+                  class="@if (request()->routeIs('admin.popup.types') || request()->routeIs('admin.popup.create') || request()->path() == 'admin/popup/types' || request()->path() == 'admin/popup/create') active @endif">
                   <a href="{{ route('admin.popup.types') }}">
                     <span class="sub-item">{{ __('Add Popup') }}</span>
                   </a>
                 </li>
                 <li
-                  class="@if (request()->path() == 'admin/popups') active
-                                @elseif(request()->is('admin/popup/*/edit')) active @endif">
+                  class="@if (request()->routeIs('admin.popup.index') || request()->routeIs('admin.popup.edit') || request()->path() == 'admin/popups' || request()->is('admin/popup/*/edit')) active @endif">
                   <a href="{{ route('admin.popup.index') . '?language=' . $default->code }}">
                     <span class="sub-item">{{ __('Popups') }}</span>
+                  </a>
+                </li>
+                <li
+                  class="@if (request()->routeIs('admin.custom_popup')) active @endif">
+                  <a href="{{ route('admin.custom_popup') . '?language=' . $default->code }}">
+                    <span class="sub-item">{{ __('Custom Popup') }}</span>
                   </a>
                 </li>
               </ul>
@@ -824,25 +886,23 @@
           {{-- Push Notification --}}
           <li
             class="nav-item
-                  @if (request()->path() == 'admin/pushnotification/settings') active
-                  @elseif(request()->path() == 'admin/pushnotification/send') active @endif">
-            <a data-toggle="collapse" href="#pushNotification">
+                  @if (request()->routeIs('admin.pushnotification.*') || request()->path() == 'admin/pushnotification/settings' || request()->path() == 'admin/pushnotification/send' || request()->is('admin/pushnotification/*')) active @endif">
+            <a data-toggle="collapse" href="#pushNotification" aria-expanded="@if (request()->routeIs('admin.pushnotification.*') || request()->path() == 'admin/pushnotification/settings' || request()->path() == 'admin/pushnotification/send' || request()->is('admin/pushnotification/*')) true @else false @endif">
               <i class="far fa-bell"></i>
               <p>{{ __('Push Notification') }}</p>
               <span class="caret"></span>
             </a>
             <div
               class="collapse
-                    @if (request()->path() == 'admin/pushnotification/settings') show
-                    @elseif(request()->path() == 'admin/pushnotification/send') show @endif"
+                    @if (request()->routeIs('admin.pushnotification.*') || request()->path() == 'admin/pushnotification/settings' || request()->path() == 'admin/pushnotification/send' || request()->is('admin/pushnotification/*')) show @endif"
               id="pushNotification">
               <ul class="nav nav-collapse">
-                <li class="@if (request()->path() == 'admin/pushnotification/settings') active @endif">
+                <li class="@if (request()->routeIs('admin.pushnotification.settings') || request()->path() == 'admin/pushnotification/settings') active @endif">
                   <a href="{{ route('admin.pushnotification.settings') }}">
                     <span class="sub-item">{{ __('Settings') }}</span>
                   </a>
                 </li>
-                <li class="@if (request()->path() == 'admin/pushnotification/send') active @endif">
+                <li class="@if (request()->routeIs('admin.pushnotification.send') || request()->path() == 'admin/pushnotification/send') active @endif">
                   <a href="{{ route('admin.pushnotification.send') }}">
                     <span class="sub-item">{{ __('Send Notification') }}</span>
                   </a>
@@ -906,7 +966,7 @@
               @elseif(request()->routeIs('admin.language.user_frontend.editKeyword')) show @endif"
               id="basic">
               <ul class="nav nav-collapse">
-                <li class="@if (request()->path() == 'admin/general-settings') active @endif">
+                <li class="@if (request()->routeIs('admin.general-settings') || request()->path() == 'admin/general-settings' || request()->is('admin/general-settings*')) active @endif">
                   <a href="{{ route('admin.general-settings') }}">
                     <span class="sub-item">{{ __('General Settings') }}</span>
                   </a>
@@ -914,10 +974,7 @@
 
                 <li
                   class="submenu
-                    @if (request()->routeIs('admin.mail_from_admin')) selected
-                    @elseif (request()->routeIs('admin.mail_to_admin')) selected
-                    @elseif (request()->routeIs('admin.mail_templates')) selected
-                    @elseif (request()->routeIs('admin.edit_mail_template')) selected @endif">
+                    @if (request()->routeIs('admin.mailFromAdmin') || request()->routeIs('admin.mailToAdmin') || request()->routeIs('admin.mail_templates') || request()->routeIs('admin.edit_mail_template') || request()->path() == 'admin/mail-from-admin' || request()->path() == 'admin/mail-to-admin') selected @endif">
                   <a data-toggle="collapse" href="#emailset"
                     aria-expanded="{{ request()->path() == 'admin/mail-from-admin' || request()->path() == 'admin/mail-to-admin' || request()->routeIs('admin.mail_templates') || request()->routeIs('admin.edit_mail_template') ? 'true' : 'false' }}">
                     <span class="sub-item">{{ __('Email Settings') }}</span>
@@ -927,20 +984,19 @@
                     class="collapse {{ request()->path() == 'admin/mail-from-admin' || request()->path() == 'admin/mail-to-admin' || request()->routeIs('admin.mail_templates') || request()->routeIs('admin.edit_mail_template') ? 'show' : '' }}"
                     id="emailset">
                     <ul class="nav nav-collapse subnav">
-                      <li class="@if (request()->path() == 'admin/mail-from-admin') active @endif">
+                      <li class="@if (request()->routeIs('admin.mailFromAdmin') || request()->path() == 'admin/mail-from-admin') active @endif">
                         <a href="{{ route('admin.mailFromAdmin') }}">
                           <span class="sub-item">{{ __('Mail from Admin') }}</span>
                         </a>
                       </li>
-                      <li class="@if (request()->path() == 'admin/mail-to-admin') active @endif">
+                      <li class="@if (request()->routeIs('admin.mailToAdmin') || request()->path() == 'admin/mail-to-admin') active @endif">
                         <a href="{{ route('admin.mailToAdmin') }}">
                           <span class="sub-item">{{ __('Mail to Admin') }}</span>
                         </a>
                       </li>
                       <li
                         class="
-                        @if (request()->routeIs('admin.mail_templates')) active
-                        @elseif (request()->routeIs('admin.edit_mail_template')) active @endif">
+                        @if (request()->routeIs('admin.mail_templates') || request()->routeIs('admin.edit_mail_template')) active @endif">
                         <a href="{{ route('admin.mail_templates') }}">
                           <span class="sub-item">{{ __('Mail Templates') }}</span>
                         </a>
@@ -951,8 +1007,7 @@
 
                 <li
                   class="submenu
-                    @if (request()->path() == 'admin/gateways') selected
-                    @elseif(request()->path() == 'admin/offline/gateways') selected @endif
+                    @if (request()->routeIs('admin.gateway.*') || request()->path() == 'admin/gateways' || request()->path() == 'admin/offline/gateways') selected @endif
                     ">
                   <a data-toggle="collapse" href="#payment-gateways"
                     aria-expanded="@if (request()->path() == 'admin/gateways') true
@@ -967,12 +1022,12 @@
                       "
                     id="payment-gateways">
                     <ul class="nav nav-collapse subnav">
-                      <li class="@if (request()->path() == 'admin/gateways') active @endif">
+                      <li class="@if (request()->routeIs('admin.gateway.index') || request()->path() == 'admin/gateways') active @endif">
                         <a href="{{ route('admin.gateway.index') }}">
                           <span class="sub-item">{{ __('Online Gateways') }}</span>
                         </a>
                       </li>
-                      <li class="@if (request()->path() == 'admin/offline/gateways') active @endif">
+                      <li class="@if (request()->routeIs('admin.gateway.offline') || request()->path() == 'admin/offline/gateways') active @endif">
                         <a href="{{ route('admin.gateway.offline') . '?language=' . $default->code }}">
                           <span class="sub-item">{{ __('Offline Gateways') }}</span>
                         </a>
@@ -984,37 +1039,31 @@
 
                 <li
                   class="
-                    @if (request()->path() == 'admin/languages') active
-                    @elseif(request()->is('admin/language/*/edit')) active
-                    @elseif(request()->is('admin/language/*/edit/keyword')) active
-                    @elseif(request()->routeIs('admin.language.admin_dashboard.editKeyword')) active
-              @elseif(request()->routeIs('admin.language.user_dashboard.editKeyword')) active
-              @elseif(request()->routeIs('admin.language.user_frontend.editKeyword')) active @endif">
+                    @if (request()->routeIs('admin.language.*') || request()->path() == 'admin/languages' || request()->is('admin/language*')) active @endif">
                   <a href="{{ route('admin.language.index') }}">
                     <span class="sub-item">{{ __('Languages') }}</span>
                   </a>
                 </li>
 
-                <li class="@if (request()->routeIs('admin.script')) active @endif">
+                <li class="@if (request()->routeIs('admin.script') || request()->path() == 'admin/script') active @endif">
                   <a href="{{ route('admin.script') }}">
                     <span class="sub-item">{{ __('Plugins') }}</span>
                   </a>
                 </li>
 
-                <li class="@if (request()->path() == 'admin/maintainance') active @endif">
+                <li class="@if (request()->routeIs('admin.maintainance') || request()->path() == 'admin/maintainance') active @endif">
                   <a href="{{ route('admin.maintainance') }}">
                     <span class="sub-item">{{ __('Maintenance Mode') }}</span>
                   </a>
                 </li>
-                <li class="@if (request()->path() == 'admin/cookie-alert') active @endif">
+                <li class="@if (request()->routeIs('admin.cookie.alert') || request()->path() == 'admin/cookie-alert') active @endif">
                   <a href="{{ route('admin.cookie.alert') . '?language=' . $default->code }}">
                     <span class="sub-item">{{ __('Cookie Alert') }}</span>
                   </a>
                 </li>
 
                 <li
-                  class="@if (request()->path() == 'admin/social') active
-                                @elseif(request()->is('admin/social/*')) active @endif">
+                  class="@if (request()->routeIs('admin.social.*') || request()->path() == 'admin/social' || request()->is('admin/social*')) active @endif">
                   <a href="{{ route('admin.social.index') }}">
                     <span class="sub-item">{{ __('Social Links') }}</span>
                   </a>
@@ -1030,35 +1079,27 @@
 
           <li
             class="nav-item
-              @if (request()->path() == 'admin/users') active
-              @elseif(request()->is('admin/user/*/edit')) active
-              @elseif (request()->path() == 'admin/roles') active
-              @elseif(request()->is('admin/role/*/permissions/manage')) active @endif">
-            <a data-toggle="collapse" href="#admins_management">
+              @if (request()->routeIs('admin.role.*') || request()->routeIs('admin.user.*') || request()->path() == 'admin/users' || request()->path() == 'admin/roles' || request()->is('admin/role/*') || request()->is('admin/user/*') || request()->is('admin/roles')) active @endif">
+            <a data-toggle="collapse" href="#admins_management" aria-expanded="@if (request()->routeIs('admin.role.*') || request()->routeIs('admin.user.*') || request()->path() == 'admin/users' || request()->path() == 'admin/roles' || request()->is('admin/role/*') || request()->is('admin/user/*') || request()->is('admin/roles')) true @else false @endif">
               <i class="fas fa-users-cog"></i>
               <p>{{ __('Admins Management') }}</p>
               <span class="caret"></span>
             </a>
             <div
               class="collapse
-                @if (request()->path() == 'admin/users') show
-                @elseif(request()->is('admin/user/*/edit')) show
-                @elseif (request()->path() == 'admin/roles') show
-                @elseif(request()->is('admin/role/*/permissions/manage')) show @endif"
+                @if (request()->routeIs('admin.role.*') || request()->routeIs('admin.user.*') || request()->path() == 'admin/users' || request()->path() == 'admin/roles' || request()->is('admin/role/*') || request()->is('admin/user/*') || request()->is('admin/roles')) show @endif"
               id="admins_management">
               <ul class="nav nav-collapse">
 
                 <li
-                  class="@if (request()->path() == 'admin/roles') active
-                  @elseif(request()->is('admin/role/*/permissions/manage')) active @endif">
+                  class="@if (request()->routeIs('admin.role.*') || request()->path() == 'admin/roles' || request()->is('admin/role/*') || request()->is('admin/roles')) active @endif">
                   <a href="{{ route('admin.role.index') }}">
                     <span class="sub-item">{{ __('Role & Permissions') }}</span>
                   </a>
                 </li>
 
                 <li
-                  class="@if (request()->path() == 'admin/users') active
-                    @elseif(request()->is('admin/user/*/edit')) active @endif">
+                  class="@if (request()->routeIs('admin.user.*') || request()->path() == 'admin/users' || request()->is('admin/user/*')) active @endif">
                   <a href="{{ route('admin.user.index') }}">
                     <span class="sub-item">{{ __('Registerd Admins') }}</span>
                   </a>
@@ -1071,7 +1112,7 @@
         @if (empty($admin->role) || (!empty($permissions) && in_array('Sitemaps', $permissions)))
           {{-- Sitemap --}}
           <li class="nav-item
-            @if (request()->path() == 'admin/sitemap') active @endif">
+            @if (request()->routeIs('admin.sitemap.*') || request()->path() == 'admin/sitemap' || request()->is('admin/sitemap*')) active @endif">
             <a href="{{ route('admin.sitemap.index') . '?language=' . $default->code }}">
               <i class="fa fa-sitemap"></i>
               <p>{{ __('Sitemaps') }}</p>
@@ -1086,16 +1127,6 @@
             <p>{{ __('Clear Cache') }}</p>
           </a>
         </li>
-
-        {{-- Sidebar Grow Your Business Promo Card --}}
-        <div class="sidebar-promo-card">
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <h6>Grow Your Business</h6>
-            <span style="font-size: 1.25rem;">🚀</span>
-          </div>
-          <p>Powerful tools to scale your business to the next level.</p>
-          <a href="javascript:void(0)" class="btn-promo">Upgrade Now</a>
-        </div>
       </ul>
     </div>
   </div>

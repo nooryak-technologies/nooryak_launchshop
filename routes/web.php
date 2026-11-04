@@ -71,10 +71,7 @@ Route::group(['middleware' => ['web']], function () {
 });
 Route::get('/subcheck', 'CronJobController@expired')->name('cron.expired');
 Route::post('/push', 'Front\PushController@store')->name('push-notification.store_endpoint');
-Route::post('/checkout/client-sync', [\App\Http\Controllers\WebsiteBuilder\FrontendController::class, 'syncCustomerFromClient'])->name('checkout.client-sync.global');
 Route::post('/checkout/launchshop-client-sync', [\App\Http\Controllers\Front\CheckoutController::class, 'syncLaunchshopUserFromClient'])->name('checkout.launchshop-client-sync');
-Route::get('/checkout/whatsappbulk', [\App\Http\Controllers\Payment\RazorpayController::class, 'whatsappBulkCheckout'])->name('checkout.whatsappbulk');
-Route::post('/checkout/whatsappbulk/success', [\App\Http\Controllers\Payment\RazorpayController::class, 'whatsappBulkSuccess'])->name('checkout.whatsappbulk.success');
 
 /*=======================================================
 ******************** Admin Dashboard Routes **********************
@@ -91,24 +88,6 @@ Route::group(['prefix' => 'X9_AdMiN-Portal_V7', 'middleware' => 'guest:admin'], 
 
 Route::get('/sso-agency-login', 'User\Auth\LoginController@ssoAgencyLogin')->name('user.sso_login');
 Route::get('/agency-sso-login', 'User\Auth\LoginController@ssoAgencyLogin');
-
-// Whitelabel Agency Portal Redirects
-Route::get('/whitelabel/login', function () {
-    $host = env('MAIN_ADMIN_HOST', 'saasreselling.com');
-    return redirect()->away("https://{$host}/whitelabel-panel/login");
-});
-Route::get('/whitelabel-panel/login', function () {
-    $host = env('MAIN_ADMIN_HOST', 'saasreselling.com');
-    return redirect()->away("https://{$host}/whitelabel-panel/login");
-});
-Route::get('/whitelabel/dashboard', function () {
-    $host = env('MAIN_ADMIN_HOST', 'saasreselling.com');
-    return redirect()->away("https://{$host}/whitelabel/dashboard");
-});
-Route::get('/agency-portal/login', function () {
-    $host = env('MAIN_ADMIN_HOST', 'saasreselling.com');
-    return redirect()->away("https://{$host}/agency-portal/login");
-});
 
 // Always ensure front.index and user.login routes exist globally to prevent RouteNotFoundException in admin/subdomain views
 if ($isWbHost || $isTenantSubdomain || $isCustomDomain) {

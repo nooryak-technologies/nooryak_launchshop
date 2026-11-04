@@ -13,6 +13,7 @@ use App\Models\Seo;
 use App\Models\Timezone;
 use Artisan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Purifier;
 use Validator;
@@ -102,6 +103,17 @@ class BasicController extends Controller
         if ($request->hasFile('preloader')) {
             $preloadername = Uploader::upload_picture($dir, $img3);
         }
+
+        try {
+            if (!Schema::hasColumn('basic_settings', 'is_gemini')) {
+                \Illuminate\Support\Facades\DB::statement("ALTER TABLE basic_settings ADD COLUMN is_gemini TINYINT(1) NOT NULL DEFAULT 0");
+            }
+        } catch (\Throwable $e) {}
+        try {
+            if (!Schema::hasColumn('basic_settings', 'is_openai')) {
+                \Illuminate\Support\Facades\DB::statement("ALTER TABLE basic_settings ADD COLUMN is_openai TINYINT(1) NOT NULL DEFAULT 0");
+            }
+        } catch (\Throwable $e) {}
 
         $bss = BasicSetting::all();
         foreach ($bss as $key => $bs) {
@@ -217,7 +229,7 @@ class BasicController extends Controller
             @mkdir($dir, 0775, true);
             $filename = Uploader::upload_picture($dir, $img);
 
-            $bss = BasicSetting::all();
+        $bss = BasicSetting::all();
             foreach ($bss as $key => $bs) {
                 @unlink($dir . $bs->breadcrumb);
                 $bs->breadcrumb = $filename;
@@ -231,12 +243,57 @@ class BasicController extends Controller
 
     public function script()
     {
+        try {
+            if (!Schema::hasColumn('basic_settings', 'is_gemini')) {
+                \Illuminate\Support\Facades\DB::statement("ALTER TABLE basic_settings ADD COLUMN is_gemini TINYINT(1) NOT NULL DEFAULT 0");
+            }
+        } catch (\Throwable $e) {}
+        try {
+            if (!Schema::hasColumn('basic_settings', 'is_openai')) {
+                \Illuminate\Support\Facades\DB::statement("ALTER TABLE basic_settings ADD COLUMN is_openai TINYINT(1) NOT NULL DEFAULT 0");
+            }
+        } catch (\Throwable $e) {}
+
         $data = BasicSetting::first();
+        if ($data) {
+            $dirty = false;
+            if (!empty($data->openai_api_key) && (str_contains($data->openai_api_key, 'XXXX') || str_contains($data->openai_api_key, 'DUMMY') || str_contains(strtolower($data->openai_api_key), 'dummy'))) {
+                $data->openai_api_key = null;
+                if (Schema::hasColumn('basic_settings', 'is_openai')) {
+                    $data->is_openai = 0;
+                }
+                $dirty = true;
+            }
+            if (!empty($data->gemini_api_key) && (str_contains($data->gemini_api_key, 'XXXX') || str_contains($data->gemini_api_key, 'DUMMY') || str_contains(strtolower($data->gemini_api_key), 'dummy'))) {
+                $data->gemini_api_key = null;
+                if (Schema::hasColumn('basic_settings', 'is_gemini')) {
+                    $data->is_gemini = 0;
+                }
+                $dirty = true;
+            }
+            if ($dirty) {
+                try {
+                    $data->save();
+                } catch (\Throwable $e) {
+                }
+            }
+        }
         return view('admin.basic.scripts', ['data' => $data]);
     }
 
     public function updatescript(Request $request)
     {
+
+        try {
+            if (!Schema::hasColumn('basic_settings', 'is_gemini')) {
+                \Illuminate\Support\Facades\DB::statement("ALTER TABLE basic_settings ADD COLUMN is_gemini TINYINT(1) NOT NULL DEFAULT 0");
+            }
+        } catch (\Throwable $e) {}
+        try {
+            if (!Schema::hasColumn('basic_settings', 'is_openai')) {
+                \Illuminate\Support\Facades\DB::statement("ALTER TABLE basic_settings ADD COLUMN is_openai TINYINT(1) NOT NULL DEFAULT 0");
+            }
+        } catch (\Throwable $e) {}
 
         $bss = BasicSetting::all();
 
@@ -259,15 +316,31 @@ class BasicController extends Controller
             $bs->whatsapp_popup_message = Purifier::clean($request->whatsapp_popup_message);
             $bs->whatsapp_popup = $request->whatsapp_popup;
 
-            $bs->openai_api_key = $request->openai_api_key;
+            // OpenAI Credentials and Status
+            $openaiKey = trim((string)$request->openai_api_key);
+            if (str_contains($openaiKey, 'XXXX') || str_contains($openaiKey, 'DUMMY') || str_contains(strtolower($openaiKey), 'dummy')) {
+                $openaiKey = '';
+            }
+            $bs->is_openai = $request->has('is_openai') ? (int)$request->is_openai : 0;
+            $bs->openai_api_key = !empty($openaiKey) ? $openaiKey : null;
             $bs->openai_text_model = $request->openai_text_model;
             $bs->openai_image_model = $request->openai_image_model;
 
-            $bs->gemini_api_key = $request->gemini_api_key;
+            // Google Gemini Credentials and Status
+            $geminiKey = trim((string)$request->gemini_api_key);
+            if (str_contains($geminiKey, 'XXXX') || str_contains($geminiKey, 'DUMMY') || str_contains(strtolower($geminiKey), 'dummy')) {
+                $geminiKey = '';
+            }
+            $bs->is_gemini = $request->has('is_gemini') ? (int)$request->is_gemini : 0;
+            $bs->gemini_api_key = !empty($geminiKey) ? $geminiKey : null;
             $bs->gemini_text_model = $request->gemini_text_model;
             $bs->gemini_image_model = $request->gemini_image_model;
 
-            $bs->pollinations_secret_key = $request->pollinations_secret_key;
+            $pollinationsKey = trim((string)$request->pollinations_secret_key);
+            if (str_contains($pollinationsKey, 'XXXX') || str_contains($pollinationsKey, 'DUMMY') || str_contains(strtolower($pollinationsKey), 'dummy')) {
+                $pollinationsKey = '';
+            }
+            $bs->pollinations_secret_key = !empty($pollinationsKey) ? $pollinationsKey : null;
             $bs->pollinations_text_model = $request->pollinations_text_model;
             $bs->pollinations_image_model = $request->pollinations_image_model;
 
@@ -275,13 +348,13 @@ class BasicController extends Controller
         }
 
         $envUpdates = [
-            'OPENAI_API_KEY' => $request->openai_api_key ?? '',
+            'OPENAI_API_KEY' => '',
             'OPENAI_TEXT_MODEL' => $request->openai_text_model ?? '',
             'OPENAI_IMAGE_MODEL' => $request->openai_image_model ?? '',
-            'GEMINI_API_KEY' => $request->gemini_api_key ?? '',
+            'GEMINI_API_KEY' => '',
             'GEMINI_TEXT_MODEL' => $request->gemini_text_model ?? '',
             'GEMINI_IMAGE_MODEL' => $request->gemini_image_model ?? '',
-            'POLLINATIONS_SECRET_KEY' => $request->pollinations_secret_key ?? '',
+            'POLLINATIONS_SECRET_KEY' => '',
             'POLLINATIONS_TEXT_MODEL' => $request->pollinations_text_model ?? '',
             'POLLINATIONS_IMAGE_MODEL' => $request->pollinations_image_model ?? '',
         ];
@@ -371,6 +444,17 @@ class BasicController extends Controller
 
     public function updatesections(Request $request)
     {
+        try {
+            if (!Schema::hasColumn('basic_settings', 'is_gemini')) {
+                \Illuminate\Support\Facades\DB::statement("ALTER TABLE basic_settings ADD COLUMN is_gemini TINYINT(1) NOT NULL DEFAULT 0");
+            }
+        } catch (\Throwable $e) {}
+        try {
+            if (!Schema::hasColumn('basic_settings', 'is_openai')) {
+                \Illuminate\Support\Facades\DB::statement("ALTER TABLE basic_settings ADD COLUMN is_openai TINYINT(1) NOT NULL DEFAULT 0");
+            }
+        } catch (\Throwable $e) {}
+
         $bss = BasicSetting::all();
         $in = $request->all();
         $in['additional_section_status'] = json_encode($request->additional_sections, true);
@@ -398,6 +482,17 @@ class BasicController extends Controller
 
     public function aboutSectionInfoUpdate(Request $request)
     {
+        try {
+            if (!Schema::hasColumn('basic_settings', 'is_gemini')) {
+                \Illuminate\Support\Facades\DB::statement("ALTER TABLE basic_settings ADD COLUMN is_gemini TINYINT(1) NOT NULL DEFAULT 0");
+            }
+        } catch (\Throwable $e) {}
+        try {
+            if (!Schema::hasColumn('basic_settings', 'is_openai')) {
+                \Illuminate\Support\Facades\DB::statement("ALTER TABLE basic_settings ADD COLUMN is_openai TINYINT(1) NOT NULL DEFAULT 0");
+            }
+        } catch (\Throwable $e) {}
+
         $bss = BasicSetting::all();
         $in = $request->all();
         $in['about_additional_section_status'] = json_encode($request->additional_sections, true);
@@ -501,5 +596,43 @@ class BasicController extends Controller
 
         session()->flash('success', __('Updated successfully'));
         return 'success';
+    }
+
+    public function recurringWarning()
+    {
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('basic_settings', 'recurring_warning_first_days')) {
+                \Illuminate\Support\Facades\Schema::table('basic_settings', function (\Illuminate\Database\Schema\Blueprint $table) {
+                    $table->string('recurring_warning_first_days')->nullable()->default('30');
+                    $table->string('recurring_warning_second_days')->nullable()->default('7');
+                    $table->string('recurring_warning_daily_days')->nullable()->default('3');
+                    $table->text('recurring_warning_message')->nullable();
+                    $table->string('recurring_warning_status')->nullable()->default('1');
+                });
+            }
+        } catch (\Throwable $e) {}
+
+        $data['basic'] = \App\Models\BasicSetting::first();
+        return view('admin.basic.recurring_warning', $data);
+    }
+
+    public function updateRecurringWarning(\Illuminate\Http\Request $request)
+    {
+        $validated = $request->validate([
+            'recurring_warning_first_days'  => 'nullable|integer|min:1|max:365',
+            'recurring_warning_second_days' => 'nullable|integer|min:1|max:365',
+            'recurring_warning_daily_days'  => 'nullable|integer|min:1|max:365',
+            'recurring_warning_message'     => 'nullable|string',
+        ]);
+
+        $validated['recurring_warning_status'] = $request->has('recurring_warning_status') ? '1' : '0';
+
+        $basic = \App\Models\BasicSetting::first();
+        if ($basic) {
+            $basic->update($validated);
+        }
+
+        \Illuminate\Support\Facades\Session::flash('success', __('Payment recurring warning settings updated successfully!'));
+        return back();
     }
 }

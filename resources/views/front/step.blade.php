@@ -1090,12 +1090,15 @@
             $('#phone-feedback').html('<span class="text-success"><i class="fas fa-check-circle"></i> ' + response.message + '</span>');
             $('#otp-whatsapp-badge').removeClass('d-none');
             $('#otp-group').removeClass('d-none');
-            if (response.channel === 'email') {
+            if (response.channel === 'both' || (response.whatsapp_sent && response.email_sent)) {
+              $('#otp-channel-label').text(@json(__('Enter OTP sent to your WhatsApp or Email')) + ' *');
+              $('#otp-whatsapp-badge .badge-desc').text(@json(__('Check your WhatsApp and Email for LaunchShop Verification Code.')));
+            } else if (response.channel === 'email') {
               $('#otp-channel-label').text(@json(__('Enter OTP sent to your Email Address')) + ' *');
-              $('#otp-whatsapp-badge .badge-desc').text(@json(__('Check Your Email (Inbox or Spam/Promotions folder) for Ecom Builder Verification Code.')));
+              $('#otp-whatsapp-badge .badge-desc').text(@json(__('Check Your Email (Inbox or Spam/Promotions folder) for LaunchShop Verification Code.')));
             } else {
               $('#otp-channel-label').text(@json(__('Enter OTP sent to your Whatsapp Number')) + ' *');
-              $('#otp-whatsapp-badge .badge-desc').text(@json(__('Check Your Whatsapp For Ecom Builder Verification | Otp Recieve From Nooryak Technologies.')));
+              $('#otp-whatsapp-badge .badge-desc').text(@json(__('Check Your WhatsApp for LaunchShop Verification Code.')));
             }
             $btn.text(@json(__('Sent')));
             startOtpTimer();
@@ -1139,12 +1142,15 @@
           if (response.success) {
             $('#phone-feedback').html('<span class="text-success"><i class="fas fa-check-circle"></i> ' + response.message + '</span>');
             $('#otp-whatsapp-badge').removeClass('d-none');
-            if (response.channel === 'email') {
+            if (response.channel === 'both' || (response.whatsapp_sent && response.email_sent)) {
+              $('#otp-channel-label').text(@json(__('Enter OTP sent to your WhatsApp or Email')) + ' *');
+              $('#otp-whatsapp-badge .badge-desc').text(@json(__('Check your WhatsApp and Email for LaunchShop Verification Code.')));
+            } else if (response.channel === 'email') {
               $('#otp-channel-label').text(@json(__('Enter OTP sent to your Email Address')) + ' *');
-              $('#otp-whatsapp-badge .badge-desc').text(@json(__('Check Your Email (Inbox or Spam/Promotions folder) for Ecom Builder Verification Code.')));
+              $('#otp-whatsapp-badge .badge-desc').text(@json(__('Check Your Email (Inbox or Spam/Promotions folder) for LaunchShop Verification Code.')));
             } else {
               $('#otp-channel-label').text(@json(__('Enter OTP sent to your Whatsapp Number')) + ' *');
-              $('#otp-whatsapp-badge .badge-desc').text(@json(__('Check Your Whatsapp For Ecom Builder Verification | Otp Recieve From Nooryak Technologies.')));
+              $('#otp-whatsapp-badge .badge-desc').text(@json(__('Check Your WhatsApp for LaunchShop Verification Code.')));
             }
             startOtpTimer();
           } else {

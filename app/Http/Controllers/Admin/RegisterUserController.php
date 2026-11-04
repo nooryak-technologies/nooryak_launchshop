@@ -93,12 +93,18 @@ class RegisterUserController extends Controller
 
         $term = $request->term;
         $users = User::when($term, function ($query, $term) {
-            $query->where('username', 'like', '%' . $term . '%')->orWhere('email', 'like', '%' . $term . '%');
+            $query->where('username', 'like', '%' . $term . '%')
+                ->orWhere('email', 'like', '%' . $term . '%')
+                ->orWhere('shop_name', 'like', '%' . $term . '%');
         })->orderBy('id', 'DESC')->paginate(10);
 
-        $online = PaymentGateway::query()->where('status', 1)->get();
+        $online = PaymentGateway::query()->where('status', 1)->get()->unique(function ($item) {
+            return strtolower($item->keyword ?? $item->name);
+        });
         $offline = OfflineGateway::where('status', 1)->get();
-        $gateways = $online->merge($offline);
+        $gateways = $online->merge($offline)->unique(function ($item) {
+            return strtolower($item->keyword ?? $item->name);
+        });
         $packages = Package::query()->where('status', '1')->get();
 
         $categories = UserCategory::where('language_id', $language->id)->get();
@@ -130,11 +136,62 @@ class RegisterUserController extends Controller
 
         $user = User::findOrFail($id);
         $packages = Package::query()->where('status', '1')->get();
-        $online = PaymentGateway::query()->where('status', 1)->get();
+        $online = PaymentGateway::query()->where('status', 1)->get()->unique(function ($item) {
+            return strtolower($item->keyword ?? $item->name);
+        });
         $offline = OfflineGateway::where('status', 1)->get();
-        $gateways = $online->merge($offline);
+        $gateways = $online->merge($offline)->unique(function ($item) {
+            return strtolower($item->keyword ?? $item->name);
+        });
         $category =  UserCategory::query()->where([['language_id', $language->id], ['id', $user->category_id]])->pluck('name')->first();
         return view('admin.register_user.details', compact('user', 'packages', 'gateways', 'category'));
+    }
+
+    /**
+     * Re-seed the template catalog for an existing user store.
+     * This is used to fix stores that were launched before the seeding fixes were applied.
+     */
+    public function reseedStore(Request $request)
+    {
+        $userId = $request->input('user_id');
+        if (empty($userId)) {
+            return response()->json(['success' => false, 'message' => 'User ID is required.'], 422);
+        }
+
+        $user = User::find($userId);
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'User not found.'], 404);
+        }
+
+        try {
+            $seedArgs = [
+                'user'    => $user->id,
+                '--force' => true,
+            ];
+
+            // Use source if provided
+            $source = $request->input('source');
+            if (!empty($source)) {
+                $seedArgs['--source'] = $source;
+            }
+
+            Artisan::call('template:seed-user', $seedArgs);
+            $output = Artisan::output();
+
+            \Log::info("Admin re-seeded store for user #{$user->id} ({$user->username}). Output: " . $output);
+
+            return response()->json([
+                'success' => true,
+                'message' => "Store data re-seeded successfully for user: {$user->username} ({$user->email})",
+                'output'  => $output,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error("Admin re-seed failed for user #{$user->id}: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Re-seeding failed: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function store(Request $request)
@@ -608,18 +665,7 @@ class RegisterUserController extends Controller
                     break;
                 }
 
-                // Verify if the product's categories are cloned
                 $itemContents = UserItemContent::where('item_id', $sourceItem->id)->get();
-                $hasValidCategory = true;
-                foreach ($itemContents as $sourceContent) {
-                    if (!empty($sourceContent->category_id) && !isset($categoryMap[$sourceContent->category_id])) {
-                        $hasValidCategory = false;
-                        break;
-                    }
-                }
-                if (!$hasValidCategory) {
-                    continue;
-                }
 
                 $newItem = $sourceItem->replicate();
                 $newItem->user_id = $user->id;
@@ -629,10 +675,46 @@ class RegisterUserController extends Controller
                 $newItem->save();
                 $itemMap[$sourceItem->id] = $newItem->id;
 
-                foreach (UserItemImage::where('item_id', $sourceItem->id)->get() as $sourceImage) {
+                $sourceImages = UserItemImage::where('item_id', $sourceItem->id)->get();
+                if ($sourceImages->isEmpty()) {
+                    $sqlImages = \App\Http\Helpers\ItemImageSqlHelper::getSliderImagesFromSql($sourceItem->id);
+                    if (!empty($sqlImages)) {
+                        $sourceImages = collect(array_map(function ($img) use ($sourceItem) {
+                            return (object) ['item_id' => $sourceItem->id, 'image' => $img];
+                        }, $sqlImages));
+                    }
+                }
+                if ($sourceImages->isEmpty()) {
+                    $masterMapFile = base_path('scratch/item_slider_map.php');
+                    if (file_exists($masterMapFile)) {
+                        $masterMap = require $masterMapFile;
+                        if (isset($masterMap[$sourceItem->id])) {
+                            $sourceImages = collect(array_map(function ($img) use ($sourceItem) {
+                                return (object) ['item_id' => $sourceItem->id, 'image' => $img];
+                            }, $masterMap[$sourceItem->id]));
+                        }
+                    }
+                }
+
+                // Filter out noimage.jpg placeholders before copying
+                $validSourceImages = $sourceImages->filter(function ($img) {
+                    return !empty($img->image) && $img->image !== 'noimage.jpg';
+                });
+
+                if ($validSourceImages->isNotEmpty()) {
+                    foreach ($validSourceImages as $sourceImage) {
+                        $copiedImg = $this->duplicateAsset($sourceImage->image, 'assets/front/img/user/items/slider-images/');
+                        UserItemImage::create([
+                            'item_id' => $newItem->id,
+                            'image'   => $copiedImg ?: $newItem->thumbnail,
+                        ]);
+                    }
+                } else {
+                    // No real slider images — use thumbnail as slider fallback
+                    $fallbackImg = !empty($newItem->thumbnail) ? $newItem->thumbnail : 'placeholder.png';
                     UserItemImage::create([
                         'item_id' => $newItem->id,
-                        'image' => $this->duplicateAsset($sourceImage->image, 'assets/front/img/user/items/slider-images/'),
+                        'image'   => $fallbackImg,
                     ]);
                 }
 
@@ -641,7 +723,7 @@ class RegisterUserController extends Controller
                     $newContent->user_id = $user->id;
                     $newContent->item_id = $newItem->id;
                     $newContent->language_id = $languageMap[$sourceContent->language_id] ?? $sourceContent->language_id;
-                    $newContent->category_id = $categoryMap[$sourceContent->category_id] ?? $sourceContent->category_id;
+                    $newContent->category_id = $categoryMap[$sourceContent->category_id] ?? (!empty($categoryMap) ? reset($categoryMap) : null);
                     $newContent->subcategory_id = $subcategoryMap[$sourceContent->subcategory_id] ?? $sourceContent->subcategory_id;
                     $newContent->save();
                 }
@@ -830,6 +912,12 @@ class RegisterUserController extends Controller
                 $newAdditionalSectionContent->save();
             }
         });
+
+        try {
+            \App\Http\Helpers\ItemImageSqlHelper::ensureItemImagesForUser($user->id);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('ensureItemImagesForUser error: ' . $e->getMessage());
+        }
     }
 
     private function buildLanguageMap(int $sourceUserId, int $targetUserId): array
@@ -893,8 +981,44 @@ class RegisterUserController extends Controller
     public function userban(Request $request)
     {
         $user = User::where('id', $request->user_id)->first();
-        $user->status = $request->status;
+        if (!$user) {
+            Session::flash('error', __('User not found'));
+            return back();
+        }
+        $newStatus = (int)$request->status;
+        $user->status = $newStatus;
         $user->save();
+
+        if ($newStatus === 0) { // Suspended
+            if (!empty($user->phone)) {
+                $msg = "⚠️ *Store Account Suspended*\n\nHello *{$user->fullname}*,\n\nYour *LaunchShop* store account (*{$user->username}*) has been *suspended* by administration.\n\nYour dashboard access and live store have been suspended. To reactivate your store, please contact administration support.\n\n– Team LaunchShop";
+                try {
+                    \App\Services\WhatsAppNotificationService::sendMessage($user->phone, $msg);
+                } catch (\Throwable $e) {}
+            }
+            if (!empty($user->email)) {
+                try {
+                    \Illuminate\Support\Facades\Mail::raw("Hello {$user->fullname},\n\nYour LaunchShop store account ({$user->username}) has been suspended by administration.\n\nYour dashboard and live store are currently suspended. Please contact support to reactivate your store.\n\nThank you,\nLaunchShop Administration", function ($m) use ($user) {
+                        $m->to($user->email, $user->fullname)->subject("Account Suspended - LaunchShop");
+                    });
+                } catch (\Throwable $e) {}
+            }
+        } elseif ($newStatus === 1) { // Unsuspended
+            if (!empty($user->phone)) {
+                $msg = "✅ *Store Account Reactivated*\n\nHello *{$user->fullname}*,\n\nYour *LaunchShop* store account (*{$user->username}*) has been *reactivated* by administration. Your store is now active and accessible again!\n\n🔗 *Login:*\n" . route('user.login') . "\n\n– Team LaunchShop";
+                try {
+                    \App\Services\WhatsAppNotificationService::sendMessage($user->phone, $msg);
+                } catch (\Throwable $e) {}
+            }
+            if (!empty($user->email)) {
+                try {
+                    \Illuminate\Support\Facades\Mail::raw("Hello {$user->fullname},\n\nYour LaunchShop store account ({$user->username}) has been reactivated. You can now login to your store dashboard.\n\nLogin URL: " . route('user.login') . "\n\nThank you,\nLaunchShop Administration", function ($m) use ($user) {
+                        $m->to($user->email, $user->fullname)->subject("Account Reactivated - LaunchShop");
+                    });
+                } catch (\Throwable $e) {}
+            }
+        }
+
         Session::flash('success', __('Updated Successfully'));
         return back();
     }
