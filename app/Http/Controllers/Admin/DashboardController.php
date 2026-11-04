@@ -14,12 +14,7 @@ class DashboardController extends Controller
 {
   public function dashboard()
   {
-    // Get database status for display
-    $data['database_info'] = [
-      'current_db' => function_exists('getCurrentDatabaseName') ? getCurrentDatabaseName() : config('database.connections.mysql.database', 'maindb'),
-      'is_using_agency_db' => function_exists('isUsingAgencyDb') ? isUsingAgencyDb() : false,
-      'custom_domain_info' => function_exists('getCustomDomainInfo') ? getCustomDomainInfo() : null,
-    ];
+    $data = [];
 
     try {
       if (\Illuminate\Support\Facades\Schema::hasTable('memberships')) {

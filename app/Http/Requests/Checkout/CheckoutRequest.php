@@ -106,7 +106,7 @@ class CheckoutRequest extends FormRequest
 
         // ── Step 2: Normalize fields for the detected product type ───────────────
         if (isWebsiteBuilderCheckout($this)) {
-            $cName  = $this->input('customer_name') ?: ($this->input('first_name') ?: ($this->input('shop_name') ?: 'Agency Owner'));
+            $cName  = $this->input('customer_name') ?: ($this->input('first_name') ?: ($this->input('shop_name') ?: 'Shop Owner'));
             $cEmail = $this->input('customer_email') ?: ($this->input('email') ?: '');
             $cPhone = $this->input('customer_phone') ?: ($this->input('phone') ?: '9360157880');
             $cSub   = $this->input('subdomain') ?: ($this->input('username') ?: '');

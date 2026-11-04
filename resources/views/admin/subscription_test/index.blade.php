@@ -382,7 +382,7 @@
                 @if ($currentProduct === 'websitebuilder')
                   @foreach ($wbCustomers as $c)
                     @php
-                      $pkgTitle = !empty($c->package->name) ? $c->package->name : (!empty($c->package->title) ? $c->package->title : 'Agency Pro');
+                      $pkgTitle = !empty($c->package->name) ? $c->package->name : (!empty($c->package->title) ? $c->package->title : 'LaunchShop Pro');
                       $expStr = !empty($c->expire_date) ? \Carbon\Carbon::parse($c->expire_date)->format('M d, h:i A') : 'Active';
                     @endphp
                     <option value="{{ $c->id ?? '' }}" {{ (!empty($selectedUser) && (string)($selectedUser->id ?? '') === (string)($c->id ?? '')) ? 'selected' : '' }}>
@@ -454,7 +454,7 @@
                   <small class="text-primary font-weight-bold d-block mt-1">
                     <i class="fas fa-cube mr-1"></i> 
                     @if ($currentProduct === 'websitebuilder')
-                      {{ !empty($selectedUser->package->name) ? $selectedUser->package->name : 'Agency Plan' }}
+                      {{ !empty($selectedUser->package->name) ? $selectedUser->package->name : 'LaunchShop Plan' }}
                     @elseif ($currentProduct === 'whatsappbulk')
                       {{ !empty($selectedUser->package_name) ? $selectedUser->package_name : 'Enterprise Broadcast' }}
                     @else

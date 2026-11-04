@@ -171,10 +171,10 @@ foreach ($tenantBaseHosts as $tenantBaseHost) {
 }
 
 $isLaunchShopCustomDomain = !empty(request()->attributes->get('is_launchshop_custom_domain')) || (function_exists('isLaunchShopCustomDomain') && isLaunchShopCustomDomain($cleanRequestHost));
-$isWbAgencyDomain = (function_exists('isWbAgencyCustomDomain') && !empty(isWbAgencyCustomDomain($cleanRequestHost))) && !$isLaunchShopCustomDomain;
-$isWbHost = (str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.') || str_contains($requestHost, 'websitebuilder.') || str_contains($requestHost, 'website-builder.') || $isWbAgencyDomain);
+
+$isWbHost = (str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.') || str_contains($requestHost, 'websitebuilder.') || str_contains($requestHost, 'website-builder.') );
 $isMainHost = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'checkout.') || str_starts_with($requestHost, 'www.') || str_starts_with($requestHost, 'app.') || in_array($cleanRequestHost, array_merge(['localhost', '127.0.0.1'], $tenantBaseHosts));
-$isCustomDomain = $isLaunchShopCustomDomain || (!$isWbHost && !$isMainHost && !isAgencyDomain($cleanRequestHost) && !$isTenantSubdomain);
+$isCustomDomain = $isLaunchShopCustomDomain || (!$isWbHost && !$isMainHost && !$isTenantSubdomain);
 
 // ─────────────────────────────────────────────────────────────────
 // Auto 301 Redirect: ecomgrocery.saasreselling.com/ecomgrocery/shop -> ecomgrocery.saasreselling.com/shop
@@ -220,7 +220,7 @@ if (!$isWbHost) {
             'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
         ], $tenantRoutes);
     } else {
-        // Main Host / Agency Path-based Context: saasreselling.com/ecomgrocery
+        // Main Host Path-based Context: saasreselling.com/ecomgrocery
         Route::group([
             'prefix'     => '/{username}',
             'where'      => ['username' => '^(?!(registration|membership|checkout|login|register|password|about|pricing|blog|blogs|success|otp|p|terms-conditions|privacy-policy|cookie-policy|refund-policy|shipping-policy)$)[^/]+'],

@@ -1,10 +1,4 @@
 <?php
-if (!function_exists('getAgencyFromHost')) {
-    function getAgencyFromHost($host = null)
-    {
-        return null;
-    }
-}
 
 
 use App\Http\Helpers\UserPermissionHelper;
@@ -667,7 +661,7 @@ if (!function_exists('findShopUserByCustomDomain')) {
     function findShopUserByCustomDomain($host = null)
     {
         $cleanHost = normalizeRequestHost($host);
-        if (empty($cleanHost) || isPlatformMainHost($cleanHost) || isAgencyDomain($cleanHost)) {
+        if (empty($cleanHost) || isPlatformMainHost($cleanHost) ) {
             return null;
         }
 
@@ -733,41 +727,7 @@ if (!function_exists('isShopCustomDomainHost')) {
     }
 }
 
-if (!function_exists('isAgencyDomain')) {
-    function isAgencyDomain($host = null)
-    {
-        $cleanHost = normalizeRequestHost($host);
-        if (isShopCustomDomainHost($cleanHost)) {
-            return false;
-        }
 
-        $knownAgencies = ['cockroachjantaparty.top'];
-        foreach ($knownAgencies as $agencyHost) {
-            if ($cleanHost === $agencyHost || str_ends_with($cleanHost, '.' . $agencyHost)) {
-                return true;
-            }
-        }
-
-        try {
-            $agency = \Illuminate\Support\Facades\DB::table('agencies')
-                ->where(function ($q) use ($cleanHost) {
-                    $q->where('custom_domain', $cleanHost)
-                      ->orWhere('custom_domain', 'www.' . $cleanHost)
-                      ->orWhere('custom_domain', 'https://' . $cleanHost)
-                      ->orWhere('custom_domain', 'http://' . $cleanHost);
-                })
-                ->first();
-
-            if (!empty($agency)) {
-                return true;
-            }
-        } catch (\Throwable $e) {
-            // fallback
-        }
-
-        return false;
-    }
-}
 
 if (!function_exists('getParam')) {
     function getParam()
@@ -898,7 +858,7 @@ if (!function_exists('getUser')) {
         $cleanCustomHost = normalizeRequestHost($requestHost);
 
         // ── CASE 1: fully custom domain (prioritized for external hosts) ─────
-        if (!in_array($cleanCustomHost, $mainPlatformHosts, true) && !isAgencyDomain($cleanCustomHost)) {
+        if (!in_array($cleanCustomHost, $mainPlatformHosts, true) ) {
             $customDomainUser = findShopUserByCustomDomain($cleanCustomHost);
             if ($customDomainUser) {
                 return $customDomainUser;
@@ -963,7 +923,7 @@ if (!function_exists('getUser')) {
         ];
 
         // ── CASE 3: path-based tenant ─────────────────────────────────────
-        // Works for: launchshop.in/manti OR agency.top/manti
+        // Works for: launchshop.in/manti
         if (!empty($usernameFromPath) && !in_array(strtolower($usernameFromPath), $reservedKeywords)) {
             $rawUsername  = strtolower(urldecode($usernameFromPath));
             $cleanUsername = str_replace(' ', '', $rawUsername);
@@ -1235,12 +1195,7 @@ if (!function_exists('detailsUrl')) {
             }
         }
 
-        // For Agency domain/subdomain (e.g. launchshop.cockroachjantaparty.top or wibro.launchshop.in):
-        // Return path-based URL under the current agency host: https://{agency_host}/{username}
-        if (!$isMainSite && !empty($host)) {
-            $scheme = request()->getScheme() ?: 'https';
-            return $scheme . '://' . $host . '/' . $username;
-        }
+        
 
         return '//' . $username . '.' . env('WEBSITE_HOST');
     }
@@ -1511,55 +1466,6 @@ if (!function_exists('themeAsset')) {
         return asset("assets/user-front/themes/{$theme}/" . ltrim($path, '/'));
     }
 }
-
-
-/**
- * Check if the application is currently using the agency database
- *
- * @return bool
- */
-if (!function_exists('isUsingAgencyDb')) {
-    function isUsingAgencyDb(): bool
-    {
-        return session('using_agency_db', false) === true;
-    }
-}
-
-/**
- * Get current custom domain information if active
- *
- * @return array|null
- */
-if (!function_exists('getCustomDomainInfo')) {
-    function getCustomDomainInfo(): ?array
-    {
-        if (!session('custom_domain_active', false)) {
-            return null;
-        }
-
-        return [
-            'user_id' => session('custom_domain_user_id'),
-            'domain' => session('custom_domain_name'),
-            'using_agency_db' => session('using_agency_db', false),
-        ];
-    }
-}
-
-/**
- * Get the current database name
- *
- * @return string
- */
-if (!function_exists('getCurrentDatabaseName')) {
-    function getCurrentDatabaseName(): string
-    {
-        return config('database.connections.mysql.database', 'maindb');
-    }
-}
-
-/**
- * Standalone LaunchShop: Website Builder checkout is disabled.
- */
 if (!function_exists('isWebsiteBuilderCheckout')) {
     function isWebsiteBuilderCheckout($request = null): bool
     {

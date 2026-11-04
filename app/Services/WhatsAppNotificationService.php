@@ -59,193 +59,35 @@ class WhatsAppNotificationService
     }
 
     /**
-     * Connect to Sass Admin DB via PDO to query settings and agency configs.
+     * Resolve WhatsApp Gateway configuration for LaunchShop.
      */
-    protected static function getSassAdminPdo(): ?\PDO
+    public static function getWhatsAppConfig(): array
     {
-        static $pdo = null;
-        if ($pdo !== null) {
-            return $pdo;
-        }
-
-        $host = env('SASS_ADMIN_DB_HOST', env('DB_HOST', '127.0.0.1'));
-        $port = env('SASS_ADMIN_DB_PORT', env('DB_PORT', '3306'));
-        $cpanelUser = env('CPANEL_USER', 'nooryak');
-
-        $userPairs = array_values(array_filter([
-            ['user' => 'nooryak_sassadmindbuser', 'pass' => 'MySecretPass123!'],
-            ['user' => env('SASS_ADMIN_DB_USER') ?: env('DB_USERNAME_admin'), 'pass' => env('SASS_ADMIN_DB_PASS') ?: env('DB_PASSWORD_admin', '')],
-            ['user' => config('database.connections.mysql.username'), 'pass' => config('database.connections.mysql.password')],
-            ['user' => env('DB_USERNAME'), 'pass' => env('DB_PASSWORD', '')],
-            ['user' => 'root', 'pass' => ''],
-        ], function ($item) {
-            return !empty($item['user']) || $item['user'] === '';
-        }));
-
-        $dbCandidates = array_values(array_unique(array_filter([
-            "{$cpanelUser}_Sass_admindb",
-            "{$cpanelUser}_sass_admindb",
-            'nooryak_Sass_admindb',
-            'nooryak_sass_admindb',
-            env('SASS_ADMIN_DB'),
-            env('DB_DATABASE_admin'),
-            'sass_admin',
-        ])));
-
-        foreach ($dbCandidates as $dbName) {
-            foreach ($userPairs as $pair) {
-                try {
-                    $dsn = "mysql:host={$host};port={$port};dbname={$dbName};charset=utf8mb4";
-                    $conn = new \PDO($dsn, $pair['user'], $pair['pass'], [
-                        \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_SILENT,
-                        \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ,
-                        \PDO::ATTR_TIMEOUT            => 2,
-                    ]);
-                    $pdo = $conn;
-                    return $pdo;
-                } catch (\Throwable $e) {}
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Dynamically resolve WhatsApp Gateway configuration:
-     * 1. Check if current request belongs to a WhiteLabel Agency
-     * 2. If agency has custom gateway/template settings, use them
-     * 3. Fallback to SuperAdmin global settings in Sass_admin settings table
-     * 4. Fallback to defaults
-     */
-    public static function getWhatsAppConfig(?object $agency = null): array
-    {
-        $pdo = self::getSassAdminPdo();
-
-        // 1. Resolve agency from host first if not passed
-        if (!$agency && function_exists('getAgencyFromHost')) {
-            try {
-                $agency = getAgencyFromHost();
-            } catch (\Throwable $e) {}
-        }
-
-        // 2. If agency is still null or missing instance_id, query agencies table dynamically
-        if ((!$agency || empty($agency->whatsapp_instance_id)) && $pdo) {
-            try {
-                $host = request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '');
-                $rawHost = strtolower(trim((string)$host));
-                $rawHost = preg_replace('/:\d+$/', '', $rawHost);
-                $rawHost = preg_replace('/^www\./i', '', $rawHost);
-                $cleanHost = preg_replace('/^(launchshop|checkout|app|www|websitebuilder|website-builder|whatsappbulk|whatsapp-bulk|whatsapp|wa)\./i', '', $rawHost);
-                $subSlug = explode('.', $cleanHost)[0];
-
-                $stmt = $pdo->prepare("SELECT * FROM agencies WHERE (whatsapp_instance_id IS NOT NULL AND whatsapp_instance_id != '') AND (custom_domain = ? OR custom_domain = ? OR custom_domain LIKE ? OR slug = ? OR slug = ?) ORDER BY (custom_domain = ? OR slug = ?) DESC, id DESC LIMIT 1");
-                $stmt->execute([$rawHost, $cleanHost, "%{$cleanHost}%", $cleanHost, $subSlug, $cleanHost, $subSlug]);
-                $foundAgency = $stmt->fetch(\PDO::FETCH_OBJ);
-                if ($foundAgency) {
-                    $agency = $foundAgency;
-                }
-            } catch (\Throwable $e) {}
-        }
-
-        // 3. Fallback: If still no agency with instance, load ANY agency with an active instance
-        if ((!$agency || empty($agency->whatsapp_instance_id)) && $pdo) {
-            try {
-                $stmt = $pdo->query("SELECT * FROM agencies WHERE (whatsapp_instance_id IS NOT NULL AND whatsapp_instance_id != '') ORDER BY id DESC LIMIT 1");
-                $fallbackAgency = $stmt ? $stmt->fetch(\PDO::FETCH_OBJ) : null;
-                if ($fallbackAgency) {
-                    $agency = $fallbackAgency;
-                }
-            } catch (\Throwable $e) {}
-        }
-
-        $agencyId = ($agency && isset($agency->id)) ? $agency->id : 'global';
-        $cacheKey = 'whatsapp_gateway_config_' . $agencyId;
+        $cacheKey = 'whatsapp_gateway_config_launchshop';
         $cached = Cache::get($cacheKey);
-        if ($cached && is_array($cached) && !empty($cached['instance_id']) && $cached['instance_id'] !== self::DEFAULT_INSTANCE_ID) {
+        if ($cached && is_array($cached) && !empty($cached['instance_id'])) {
             return $cached;
         }
 
-        $globalSettings = [];
-        if ($pdo) {
-            try {
-                $stmt = $pdo->query("SELECT `key`, `value` FROM settings WHERE `key` LIKE 'whatsapp_%'");
-                if ($stmt) {
-                    $rows = $stmt->fetchAll(\PDO::FETCH_OBJ);
-                    foreach ($rows as $r) {
-                        $globalSettings[$r->key] = $r->value;
-                    }
-                }
-            } catch (\Throwable $e) {}
-        }
-
-        // Base configuration from global SuperAdmin settings
         $config = [
-            'is_active' => isset($globalSettings['whatsapp_is_active']) ? (int)$globalSettings['whatsapp_is_active'] : 1,
-            'otp_active' => isset($globalSettings['whatsapp_otp_active']) ? (int)$globalSettings['whatsapp_otp_active'] : 1,
-            'credentials_active' => isset($globalSettings['whatsapp_credentials_active']) ? (int)$globalSettings['whatsapp_credentials_active'] : 1,
-            'invoice_active' => isset($globalSettings['whatsapp_invoice_active']) ? (int)$globalSettings['whatsapp_invoice_active'] : 1,
-            
-            'endpoint' => !empty($globalSettings['whatsapp_gateway_url']) ? $globalSettings['whatsapp_gateway_url'] : self::getEndpoint(),
-            'access_token' => !empty($globalSettings['whatsapp_access_token']) ? $globalSettings['whatsapp_access_token'] : self::getAccessToken(),
-            'instance_id' => !empty($globalSettings['whatsapp_instance_id']) ? $globalSettings['whatsapp_instance_id'] : self::getInstanceId(),
-            'db' => !empty($globalSettings['whatsapp_database']) ? $globalSettings['whatsapp_database'] : self::getDatabaseName(),
+            'endpoint' => self::getEndpoint(),
+            'access_token' => self::getAccessToken(),
+            'instance_id' => self::getInstanceId(),
+            'db' => self::getDatabaseName(),
 
-            'otp_template' => !empty($globalSettings['whatsapp_otp_template']) ? $globalSettings['whatsapp_otp_template'] : self::DEFAULT_OTP_TEMPLATE,
-            'credentials_template' => !empty($globalSettings['whatsapp_credentials_template']) ? $globalSettings['whatsapp_credentials_template'] : self::DEFAULT_CREDENTIALS_TEMPLATE,
-            'invoice_template' => !empty($globalSettings['whatsapp_invoice_template']) ? $globalSettings['whatsapp_invoice_template'] : self::DEFAULT_INVOICE_TEMPLATE,
-            'agency_id' => $agency->id ?? null,
-            'agency_name' => $agency->name ?? null,
+            'is_active' => (int)env('WHATSAPP_NOTIFICATIONS_ENABLED', 1),
+            'otp_active' => (int)env('WHATSAPP_OTP_ENABLED', 1),
+            'credentials_active' => (int)env('WHATSAPP_CREDENTIALS_ENABLED', 1),
+            'invoice_active' => (int)env('WHATSAPP_INVOICE_ENABLED', 1),
+
+            'otp_template' => env('WHATSAPP_OTP_TEMPLATE', self::DEFAULT_OTP_TEMPLATE),
+            'credentials_template' => env('WHATSAPP_CREDENTIALS_TEMPLATE', self::DEFAULT_CREDENTIALS_TEMPLATE),
+            'invoice_template' => env('WHATSAPP_INVOICE_TEMPLATE', self::DEFAULT_INVOICE_TEMPLATE),
         ];
 
-        // Overlay agency custom settings if configured
-        if ($agency) {
-            $config['is_active'] = (isset($agency->is_whatsapp_active) && $agency->is_whatsapp_active !== null && $agency->is_whatsapp_active !== '') ? (int)$agency->is_whatsapp_active : 1;
-            $config['otp_active'] = (isset($agency->is_whatsapp_otp_active) && $agency->is_whatsapp_otp_active !== null && $agency->is_whatsapp_otp_active !== '') ? (int)$agency->is_whatsapp_otp_active : 1;
-            $config['credentials_active'] = (isset($agency->is_whatsapp_credentials_active) && $agency->is_whatsapp_credentials_active !== null && $agency->is_whatsapp_credentials_active !== '') ? (int)$agency->is_whatsapp_credentials_active : 1;
-            $config['invoice_active'] = (isset($agency->is_whatsapp_invoice_active) && $agency->is_whatsapp_invoice_active !== null && $agency->is_whatsapp_invoice_active !== '') ? (int)$agency->is_whatsapp_invoice_active : 1;
-
-            if (!empty($agency->whatsapp_gateway_url) && $agency->whatsapp_gateway_url !== 'http://localhost:8000') {
-                $config['endpoint'] = $agency->whatsapp_gateway_url;
-            } else {
-                $config['endpoint'] = env('WHATSAPP_SERVER_URL', 'http://127.0.0.1:8000');
-            }
-
-            $tokenCandidate = $agency->whatsapp_access_token ?: ($agency->whatsapp_api_key ?? null);
-            if (!empty($tokenCandidate)) {
-                $config['access_token'] = trim((string)$tokenCandidate);
-            }
-            if (!empty($agency->whatsapp_instance_id)) {
-                $config['instance_id'] = trim((string)$agency->whatsapp_instance_id);
-            }
-
-            $cpanelUser = env('CPANEL_USER', 'nooryak');
-            $agencySlug = str_replace(['-', ' '], '_', strtolower($agency->slug ?? preg_replace('/[^a-zA-Z0-9]/', '', $agency->name ?? '')));
-            $autoAgencyDb = "{$cpanelUser}_ps_{$agencySlug}_whatsapp";
-
-            if (!empty($agency->whatsapp_database) && !in_array($agency->whatsapp_database, ['nooryak_whatautomation', 'replix_automation'])) {
-                $config['db'] = $agency->whatsapp_database;
-            } else {
-                $config['db'] = $autoAgencyDb;
-            }
-
-            if (!empty($agency->whatsapp_otp_template)) {
-                $config['otp_template'] = $agency->whatsapp_otp_template;
-            }
-            if (!empty($agency->whatsapp_credentials_template)) {
-                $config['credentials_template'] = $agency->whatsapp_credentials_template;
-            }
-            if (!empty($agency->whatsapp_invoice_template)) {
-                $config['invoice_template'] = $agency->whatsapp_invoice_template;
-            }
-            $config['agency_id'] = $agency->id ?? null;
-            $config['agency_name'] = $agency->name ?? null;
-        }
-
-        if (!empty($config['instance_id']) && $config['instance_id'] !== self::DEFAULT_INSTANCE_ID) {
-            try {
-                Cache::put($cacheKey, $config, 10);
-            } catch (\Throwable $e) {}
-        }
+        try {
+            Cache::put($cacheKey, $config, 300);
+        } catch (\Throwable $e) {}
 
         return $config;
     }
@@ -420,7 +262,7 @@ class WhatsAppNotificationService
             env('WHATSAPP_SERVER_URL', 'http://127.0.0.1:8000'),
         ])));
 
-        // Check if explicit instance and token were supplied by agency
+        // Check if explicit instance and token were supplied
         $accessToken = $config['access_token'] ?: self::getAccessToken();
         $instanceId = $config['instance_id'] ?: self::getInstanceId();
         $dbName = $config['db'] ?: self::getDatabaseName();
@@ -551,11 +393,11 @@ class WhatsAppNotificationService
     /**
      * Send OTP Verification Code via WhatsApp using dynamic templates and placeholders.
      */
-    public static function sendOtp($phone, $otp, string $productName = 'LaunchShop', ?object $agency = null): array
+    public static function sendOtp($phone, $otp, string $productName = 'LaunchShop'): array
     {
         $cleanProductName = 'LaunchShop';
 
-        $config = self::getWhatsAppConfig($agency);
+        $config = self::getWhatsAppConfig();
 
         if (empty($config['is_active']) || empty($config['otp_active'])) {
             Log::info("WhatsAppNotificationService: OTP notifications toggled OFF in settings. Skipping.");
@@ -659,10 +501,9 @@ class WhatsAppNotificationService
         string $daysLeft,
         string $expireDate,
         string $renewalUrl,
-        string $productName = 'LaunchShop',
-        ?object $agency = null
+        string $productName = 'LaunchShop'
     ): array {
-        $config = self::getWhatsAppConfig($agency);
+        $config = self::getWhatsAppConfig();
 
         if (empty($config['is_active'])) {
             Log::info("WhatsAppNotificationService: WhatsApp notifications disabled in settings. Skipping expiry reminder.");
@@ -694,10 +535,9 @@ class WhatsAppNotificationService
         string $customerName,
         string $planName,
         string $expireDate,
-        string $productName = 'LaunchShop',
-        ?object $agency = null
+        string $productName = 'LaunchShop'
     ): array {
-        $config = self::getWhatsAppConfig($agency);
+        $config = self::getWhatsAppConfig();
 
         if (empty($config['is_active'])) {
             Log::info("WhatsAppNotificationService: WhatsApp notifications disabled in settings. Skipping plan renewed notification.");

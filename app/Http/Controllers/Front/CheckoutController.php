@@ -761,12 +761,7 @@ class CheckoutController extends Controller
         if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
             $storeLiveLink = 'http://localhost:8000/' . $username;
             $loginLink = 'http://localhost:8000/login';
-        } elseif (!in_array(strtolower($host), $mainDomains)) {
-            // Agency Domain format: https://launchshop.cockroachjantaparty.top/wezan
-            $storeLiveLink = 'https://' . $host . '/' . $username;
-            $loginLink = 'https://' . $host . '/login';
         } else {
-            // Main Domain format: https://wezan.launchshop.top
             $cleanHost = str_replace('www.', '', $host);
             $storeLiveLink = 'https://' . $username . '.' . $cleanHost;
             $loginLink = 'https://' . $cleanHost . '/login';

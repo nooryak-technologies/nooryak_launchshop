@@ -346,12 +346,10 @@
     $mainDomains  = ['launchshop.in', 'launchshop.top', 'www.launchshop.in', 'www.launchshop.top'];
 
     if ($username) {
-        if (!in_array(strtolower($currentHost), $mainDomains) && strpos($currentHost, 'localhost') === false && strpos($currentHost, '127.0.0.1') === false) {
-            // Agency Domain format: https://launchshop.cockroachjantaparty.top/wezan
-            $storeUrl   = 'https://' . $currentHost . '/' . $username;
-            $displayUrl = $currentHost . '/' . $username;
+        if (strpos($currentHost, 'localhost') !== false || strpos($currentHost, '127.0.0.1') !== false) {
+            $storeUrl   = 'http://localhost:8000/' . $username;
+            $displayUrl = 'localhost:8000/' . $username;
         } else {
-            // Main Domain format: https://wezan.launchshop.top
             $cleanHost  = str_replace('www.', '', $currentHost);
             $storeUrl   = 'https://' . $username . '.' . $cleanHost;
             $displayUrl = $username . '.' . $cleanHost;

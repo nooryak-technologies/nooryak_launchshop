@@ -32,11 +32,11 @@ foreach ($tenantBaseHosts as $tenantBaseHost) {
 }
 
 $isLaunchShopCustomDomain = !empty(request()->attributes->get('is_launchshop_custom_domain')) || (function_exists('isLaunchShopCustomDomain') && isLaunchShopCustomDomain($cleanRequestHost));
-$isWbAgencyDomain = (function_exists('isWbAgencyCustomDomain') && !empty(isWbAgencyCustomDomain($cleanRequestHost))) && !$isLaunchShopCustomDomain;
-$isWbHost = (str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.') || str_contains($requestHost, 'websitebuilder.') || str_contains($requestHost, 'website-builder.') || $isWbAgencyDomain);
+
+$isWbHost = (str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.') || str_contains($requestHost, 'websitebuilder.') || str_contains($requestHost, 'website-builder.') );
 $isWaHost = (str_starts_with($requestHost, 'whatsappbulk.') || str_starts_with($requestHost, 'whatsapp-bulk.') || str_starts_with($requestHost, 'whatsapp.'));
 $isMainHost = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'checkout.') || str_starts_with($requestHost, 'www.') || str_starts_with($requestHost, 'app.') || in_array($cleanRequestHost, $tenantBaseHosts);
-$isCustomDomain = $isLaunchShopCustomDomain || (!$isWbHost && !$isWaHost && !$isMainHost && !isAgencyDomain($cleanRequestHost) && !$isTenantSubdomain);
+$isCustomDomain = $isLaunchShopCustomDomain || (!$isWbHost && !$isWaHost && !$isMainHost && !$isTenantSubdomain);
 
 Route::get('/midtrans/bank-notify', 'MidtransBankNotifyController@bank_notify')->name('midtrans.bank_notify');
 Route::get('/check-payment', 'CronJobController@check_payment')->name('cron.check_payment');
@@ -86,8 +86,8 @@ Route::group(['prefix' => 'X9_AdMiN-Portal_V7', 'middleware' => 'guest:admin'], 
     Route::post('/sendmail', 'Admin\ForgetController@sendmail')->name('admin.forget.mail')->middleware('Demo');
 });
 
-Route::get('/sso-agency-login', 'User\Auth\LoginController@ssoAgencyLogin')->name('user.sso_login');
-Route::get('/agency-sso-login', 'User\Auth\LoginController@ssoAgencyLogin');
+
+
 
 // Always ensure front.index and user.login routes exist globally to prevent RouteNotFoundException in admin/subdomain views
 if ($isWbHost || $isTenantSubdomain || $isCustomDomain) {

@@ -74,10 +74,7 @@ class FrontendController extends Controller
             || str_starts_with($requestHost, 'whatsappbulk.') 
             || str_starts_with($requestHost, 'whatsapp.');
 
-        $agency = function_exists('getAgencyFromHost') ? getAgencyFromHost() : null;
-        if ($agency && !$isProductSubdomain) {
-            return view('front.agency_landing', compact('agency'));
-        }
+        
 
         $requestHost = strtolower(str_replace('www.', '', request()->getHost()));
         $reservedSubdomains = ['launchshop', 'checkout', 'www', 'app', 'admin', 'websitebuilder', 'website-builder', 'localhost'];
@@ -263,12 +260,7 @@ class FrontendController extends Controller
 
     public function about()
     {
-        $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
-        $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
-        $agency = function_exists('getAgencyFromHost') ? getAgencyFromHost() : null;
-        if ($agency && !$isProductSubdomain) {
-            return view('front.agency_legal', ['type' => 'about', 'agency' => $agency]);
-        }
+        
 
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
@@ -1102,12 +1094,7 @@ class FrontendController extends Controller
 
     public function contactView()
     {
-        $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
-        $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
-        $agency = function_exists('getAgencyFromHost') ? getAgencyFromHost() : null;
-        if ($agency && !$isProductSubdomain) {
-            return view('front.agency_legal', ['type' => 'contact', 'agency' => $agency]);
-        }
+        
 
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
@@ -1494,12 +1481,7 @@ class FrontendController extends Controller
 
     public function privacyPolicy()
     {
-        $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
-        $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
-        $agency = function_exists('getAgencyFromHost') ? getAgencyFromHost() : null;
-        if ($agency && !$isProductSubdomain) {
-            return view('front.agency_legal', ['type' => 'privacy', 'agency' => $agency]);
-        }
+        
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
@@ -1512,12 +1494,7 @@ class FrontendController extends Controller
 
     public function termsConditions()
     {
-        $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
-        $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
-        $agency = function_exists('getAgencyFromHost') ? getAgencyFromHost() : null;
-        if ($agency && !$isProductSubdomain) {
-            return view('front.agency_legal', ['type' => 'terms', 'agency' => $agency]);
-        }
+        
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
@@ -1530,12 +1507,7 @@ class FrontendController extends Controller
 
     public function cookiePolicy()
     {
-        $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
-        $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
-        $agency = function_exists('getAgencyFromHost') ? getAgencyFromHost() : null;
-        if ($agency && !$isProductSubdomain) {
-            return view('front.agency_legal', ['type' => 'cookie', 'agency' => $agency]);
-        }
+        
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
@@ -1548,12 +1520,7 @@ class FrontendController extends Controller
 
     public function refundPolicy()
     {
-        $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
-        $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
-        $agency = function_exists('getAgencyFromHost') ? getAgencyFromHost() : null;
-        if ($agency && !$isProductSubdomain) {
-            return view('front.agency_legal', ['type' => 'refund', 'agency' => $agency]);
-        }
+        
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
@@ -1566,12 +1533,7 @@ class FrontendController extends Controller
 
     public function shippingPolicy()
     {
-        $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
-        $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.');
-        $agency = function_exists('getAgencyFromHost') ? getAgencyFromHost() : null;
-        if ($agency && !$isProductSubdomain) {
-            return view('front.agency_legal', ['type' => 'shipping', 'agency' => $agency]);
-        }
+        
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
