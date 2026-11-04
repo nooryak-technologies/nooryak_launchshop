@@ -56,3 +56,4 @@ class AddWhatsappAndDualOtpToBasicSettings extends Migration
         }
     }
 }
+

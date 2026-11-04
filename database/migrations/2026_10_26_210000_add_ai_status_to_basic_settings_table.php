@@ -14,14 +14,24 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('basic_settings', function (Blueprint $table) {
-            if (!Schema::hasColumn('basic_settings', 'is_openai')) {
-                $table->tinyInteger('is_openai')->default(0)->after('whatsapp_popup');
-            }
-            if (!Schema::hasColumn('basic_settings', 'is_gemini')) {
-                $table->tinyInteger('is_gemini')->default(0)->after('openai_image_model');
-            }
-        });
+        if (Schema::hasTable('basic_settings')) {
+            Schema::table('basic_settings', function (Blueprint $table) {
+                if (!Schema::hasColumn('basic_settings', 'is_openai')) {
+                    if (Schema::hasColumn('basic_settings', 'whatsapp_popup')) {
+                        $table->tinyInteger('is_openai')->default(0)->after('whatsapp_popup');
+                    } else {
+                        $table->tinyInteger('is_openai')->default(0);
+                    }
+                }
+                if (!Schema::hasColumn('basic_settings', 'is_gemini')) {
+                    if (Schema::hasColumn('basic_settings', 'openai_image_model')) {
+                        $table->tinyInteger('is_gemini')->default(0)->after('openai_image_model');
+                    } else {
+                        $table->tinyInteger('is_gemini')->default(0);
+                    }
+                }
+            });
+        }
 
         // Clean up any dummy keys in basic_settings
         try {
