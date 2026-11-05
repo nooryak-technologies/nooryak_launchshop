@@ -983,11 +983,20 @@
               $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
             @endphp
             @php
-              $firstTemplate = $templates->first();
-              $exploreUrl = !empty($homeSec->features_section_btn_url) 
-                ? $homeSec->features_section_btn_url 
-                : ($firstTemplate ? route('front.templates.autologin', $firstTemplate->username) : route('front.templates.view'));
-              $exploreBtnText = !empty($homeSec->features_section_btn_text) ? $homeSec->features_section_btn_text : __('Explore Dashboard');
+              $groceryTemplate = \App\Models\User::where('preview_template', 1)
+                  ->where(function($q) {
+                      $q->where('username', 'like', '%grocery%')
+                        ->orWhere('theme', 'like', '%grocery%');
+                  })->first();
+              if (!$groceryTemplate) {
+                  $groceryTemplate = (isset($templates) && $templates->count() > 0)
+                      ? $templates->first()
+                      : \App\Models\User::where('preview_template', 1)->first();
+              }
+              $exploreUrl = $groceryTemplate
+                  ? route('front.templates.autologin', $groceryTemplate->username)
+                  : route('front.templates.view');
+              $exploreBtnText = __('Explore Dashboard');
             @endphp
             <a href="{{ $exploreUrl }}" target="_blank" class="btn-dashboard-explore px-4 py-3 d-inline-flex align-items-center gap-2">
               {{ $exploreBtnText }} <i class="fas fa-arrow-right"></i>

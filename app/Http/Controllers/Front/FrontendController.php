@@ -66,9 +66,11 @@ class FrontendController extends Controller
     public function index()
     {
         $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
-        $cleanHost = preg_replace('/^(launchshop|checkout|app|www|websitebuilder|website-builder|whatsappbulk|whatsapp)\./i', '', $requestHost);
+        $cleanHost = preg_replace('/^(launchshop|checkout|app|www|websitebuilder|website-builder|whatsappbulk|whatsapp|wa|ecombuilder|ecom-builder)\./i', '', $requestHost);
         $isProductSubdomain = str_starts_with($requestHost, 'launchshop.') 
             || str_starts_with($requestHost, 'checkout.')
+            || str_starts_with($requestHost, 'ecombuilder.')
+            || str_starts_with($requestHost, 'ecom-builder.')
             || str_starts_with($requestHost, 'websitebuilder.') 
             || str_starts_with($requestHost, 'website-builder.') 
             || str_starts_with($requestHost, 'whatsappbulk.') 
@@ -77,10 +79,10 @@ class FrontendController extends Controller
         
 
         $requestHost = strtolower(str_replace('www.', '', request()->getHost()));
-        $reservedSubdomains = ['launchshop', 'checkout', 'www', 'app', 'admin', 'websitebuilder', 'website-builder', 'localhost'];
+        $reservedSubdomains = ['launchshop', 'checkout', 'www', 'app', 'admin', 'websitebuilder', 'website-builder', 'localhost', 'ecombuilder', 'ecom-builder'];
         $envHost = strtolower((string) env('WEBSITE_HOST', ''));
         $appHost = strtolower((string) parse_url(env('APP_URL', ''), PHP_URL_HOST));
-        $cleanHost = preg_replace('/^(launchshop|checkout|app|www|websitebuilder|website-builder)\./i', '', $requestHost);
+        $cleanHost = preg_replace('/^(launchshop|checkout|app|www|websitebuilder|website-builder|whatsappbulk|whatsapp|wa|ecombuilder|ecom-builder)\./i', '', $requestHost);
 
         $tenantBaseHosts = array_values(array_unique(array_filter([
             $envHost,
