@@ -447,61 +447,90 @@ class AppServiceProvider extends ServiceProvider
 
                     //for translate tenant dashboard start
                     $cookieName = 'userDashboardLang_' . $userId;
+                    $userDashboardLang = null;
+
                     if (Cookie::has($cookieName)) {
-                        $isLang = UserLanguage::where([['code', Cookie::get($cookieName)], ['user_id', Auth::guard('web')->user()->id]])->exists();
-
-                        if ($isLang == true) {
-                            $userDashboardLang = UserLanguage::where('code', Cookie::get($cookieName))
-                                ->where('user_id', $userId)
-                                ->first();
-                        } else {
-                            $userDashboardLang = UserLanguage::where([['dashboard_default', 1], ['user_id', Auth::guard('web')->user()->id]])->first();
-                            // Set all to 0 first
-                            UserLanguage::where('user_id', $userId)->update(['dashboard_default' => 0]);
-
-                            // Then set the default one to 1
-                            UserLanguage::where([
-                                ['user_id', $userId],
-                                ['is_default', 1]
-                            ])->update(['dashboard_default' => 1]);
-                            Cookie::queue('userDashboardLang', $userDashboardLang->code, 60 * 24 * 30);
-                        }
-                    } else {
-                        $userDashboardLang = UserLanguage::where('dashboard_default', 1)
-                            ->where('user_id', $userId)
-                            ->first();
+                        $userDashboardLang = UserLanguage::where('code', Cookie::get($cookieName))->where('user_id', $userId)->first();
+                    }
+                    if (empty($userDashboardLang) && Cookie::has('userDashboardLang')) {
+                        $userDashboardLang = UserLanguage::where('code', Cookie::get('userDashboardLang'))->where('user_id', $userId)->first();
+                    }
+                    if (empty($userDashboardLang) && session()->has('userDashboardLang')) {
+                        $userDashboardLang = UserLanguage::where('code', session()->get('userDashboardLang'))->where('user_id', $userId)->first();
+                    }
+                    if (empty($userDashboardLang)) {
+                        $hasDashColUser = \Illuminate\Support\Facades\Schema::hasColumn('user_languages', 'dashboard_default');
+                        $userDashboardLang = $hasDashColUser ? UserLanguage::where('dashboard_default', 1)->where('user_id', $userId)->first() : null;
+                    }
+                    if (empty($userDashboardLang)) {
+                        $userDashboardLang = UserLanguage::where('is_default', 1)->where('user_id', $userId)->first();
+                    }
+                    if (empty($userDashboardLang)) {
+                        $userDashboardLang = UserLanguage::where('code', 'en')->where('user_id', $userId)->first();
+                    }
+                    if (empty($userDashboardLang)) {
+                        $userDashboardLang = UserLanguage::where('user_id', $userId)->first();
+                    }
+                    if (empty($userDashboardLang)) {
+                        $userDashboardLang = new UserLanguage();
+                        $userDashboardLang->id = 0;
+                        $userDashboardLang->user_id = $userId;
+                        $userDashboardLang->name = 'English';
+                        $userDashboardLang->code = 'en';
+                        $userDashboardLang->is_default = 1;
+                        $userDashboardLang->dashboard_default = 1;
+                        $userDashboardLang->rtl = 0;
                     }
 
-                    Session::put('user_lang', 'user_' . $userDashboardLang->code);
-                    app()->setLocale('user_' . $userDashboardLang->code);
+                    if ($userDashboardLang && isset($userDashboardLang->code)) {
+                        Cookie::queue($cookieName, $userDashboardLang->code, 60 * 24 * 30);
+                        Cookie::queue('userDashboardLang', $userDashboardLang->code, 60 * 24 * 30);
+                        Session::put('user_lang', 'user_' . $userDashboardLang->code);
+                        Session::put('user_lang_' . Auth::guard('web')->user()->username, $userDashboardLang->code);
+                        Session::put('userDashboardLang', $userDashboardLang->code);
+                        app()->setLocale('user_' . $userDashboardLang->code);
+                    }
 
-                    $uLang = Language::where('code', $userDashboardLang->code)->first();
+                    $uLang = null;
+                    if ($userDashboardLang && isset($userDashboardLang->code)) {
+                        $uLang = Language::where('code', $userDashboardLang->code)->first();
+                    }
                     if (is_null($uLang)) {
-                        $uLang = Language::where('is_default', 1)->first();
+                        $uLang = Language::where('is_default', 1)->first() ?? Language::first();
                     }
 
                     $shopSetting = UserShopSetting::where('user_id', $userId)->select('time_format')->first();
 
-                    $be = BasicExtended::where('language_id', $uLang->id)->select('package_features', 'cname_record_section_text', 'cname_record_section_title')->first();
-                    
-                    $adminLngLanguage = Language::where('code', $userDashboardLang->code)->first();
-                    if(is_null($adminLngLanguage)){
-                        $adminLngLanguage = Language::where('dashboard_default', 1)->first();
+                    $be = null;
+                    if ($uLang && isset($uLang->id)) {
+                        $be = BasicExtended::where('language_id', $uLang->id)->select('package_features', 'cname_record_section_text', 'cname_record_section_title')->first();
                     }
-                    $bss = $adminLngLanguage->basic_setting;
+                    if (!$be) {
+                        $be = BasicExtended::first();
+                    }
+
+                    $adminLngLanguage = null;
+                    if ($userDashboardLang && isset($userDashboardLang->code)) {
+                        $adminLngLanguage = Language::where('code', $userDashboardLang->code)->first();
+                    }
+                    if (is_null($adminLngLanguage)) {
+                        $hasDashColLang = \Illuminate\Support\Facades\Schema::hasColumn('languages', 'dashboard_default');
+                        $adminLngLanguage = $hasDashColLang ? Language::where('dashboard_default', 1)->first() : Language::where('is_default', 1)->first() ?? Language::first();
+                    }
+                    $bss = is_object($adminLngLanguage) ? $adminLngLanguage->basic_setting : null;
 
                     $view->with([
                         'userBs' => $userBs,
                         'bs' => $bss,
                         'dashboard_language' => $userDashboardLang,
-                        'defaultLang' => $userDashboardLang->code,
+                        'defaultLang' => is_object($userDashboardLang) ? $userDashboardLang->code : 'en',
                         'shopSetting' => $shopSetting,
-                        'package_features' => $be->package_features,
+                        'package_features' => $be ? $be->package_features : json_encode([]),
                         'package' => $package,
-                        'cname_record_section_text' => $be->cname_record_section_text,
-                        'cname_record_section_title' => $be->cname_record_section_title
+                        'cname_record_section_text' => $be ? $be->cname_record_section_text : '',
+                        'cname_record_section_title' => $be ? $be->cname_record_section_title : ''
                     ]);
-                }
+                    }
             });
             View::composer(['admin.*'], function ($view) {
                
