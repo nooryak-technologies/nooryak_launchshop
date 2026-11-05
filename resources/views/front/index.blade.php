@@ -727,14 +727,9 @@
                     <hr class="card-divider" style="border-top: 1px solid #e2e8f0; margin: 15px 0;">
                     
                     <div class="card-action-row" style="display: flex; flex-direction: column; gap: 8px;">
-                      <div class="d-flex gap-2" style="width: 100%;">
-                        <a href="{{ $previewUrl }}" target="_blank" class="btn-template-action outline-btn" style="flex: 1; justify-content: center; display: inline-flex; align-items: center; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 10px; font-size: 14px; font-weight: 600; color: #4a5568; text-decoration: none;">
-                          <i class="fas fa-eye me-2"></i> {{ __('Live Preview') }}
-                        </a>
-                        <a href="{{ route('front.templates.autologin', $template->username) }}" target="_blank" class="btn-template-action admin-btn" style="flex: 1; justify-content: center; display: inline-flex; align-items: center; border: 1.5px solid #0e1b3d; background: #0e1b3d; color: #ffffff; border-radius: 8px; padding: 10px; font-size: 14px; font-weight: 600; text-decoration: none;">
-                          <i class="fas fa-user-cog me-2"></i> {{ __('Admin') }}
-                        </a>
-                      </div>
+                      <a href="{{ $previewUrl }}" target="_blank" class="btn-template-action outline-btn" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 10px; font-size: 14px; font-weight: 600; color: #4a5568; text-decoration: none;">
+                        <i class="fas fa-eye me-2"></i> {{ __('Live Preview') }}
+                      </a>
                       <a href="{{ $purchaseUrl }}" class="btn-template-action primary-btn" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; border: 1.5px solid #ff5a2c; background: #ff5a2c; color: #ffffff; border-radius: 8px; padding: 10px; font-size: 14px; font-weight: 600; text-decoration: none;">
                         <i class="fas fa-shopping-cart me-2"></i> {{ __('Purchase') }}
                       </a>
