@@ -378,42 +378,117 @@ class Common
         }
     }
 
-    public static function sendMails($order)
+    public static function sendOrderConfirmationAndInvoice($order, $user = null)
     {
-        $user = getUser();
-        $data['user'] = $user;
-        $data['userBs'] = BasicSetting::where('user_id', $user->id)->first();
-        $fileName = \Str::random(4) . time() . '.pdf';
-        $dir = public_path('assets/front/invoices/');
-        $path = $dir . $fileName;
-        @mkdir($dir, 0777, true);
-        $data['order']  = $order;
-        $pdf = PDF::setOptions([
-            'isHtml5ParserEnabled' => true,
-            'isRemoteEnabled' => true,
-            'logOutputFile' => storage_path('logs/log.htm'),
-            'tempDir' => storage_path('logs/')
-        ])->loadView('pdf.item', $data)->save($path);
-        UserOrder::where('id', $order->id)->update([
-            'invoice_number' => $fileName
-        ]);
+        if (!$user) {
+            $user = getUser() ?? User::find($order->user_id);
+        }
+        if (!$user) {
+            return;
+        }
 
-        // Send Mail to Buyer
-        $mailer = new MegaMailer();
+        // Ensure order items relation is loaded
+        if (!$order->relationLoaded('orderitems')) {
+            $order->load('orderitems');
+        }
+
+        // Ensure invoice PDF exists
+        if (empty($order->invoice_number) || !file_exists(public_path('assets/front/invoices/' . $order->invoice_number))) {
+            try {
+                $order->invoice_number = static::generateInvoice($order, $user);
+                $order->save();
+            } catch (\Throwable $e) {
+                \Log::warning('Invoice PDF generation failed: ' . $e->getMessage());
+            }
+        }
+
+        // Resolve buyer email (supports Guest via instant order and registered customer)
+        $buyerEmail = !empty($order->billing_email) ? trim($order->billing_email) : '';
+        if (empty($buyerEmail) && !empty($order->customer_id) && $order->customer_id != 9999999) {
+            $cust = \App\Models\Customer::find($order->customer_id);
+            if ($cust) {
+                $buyerEmail = trim($cust->billing_email ?: $cust->email);
+            }
+        }
+        if (empty($buyerEmail) && !empty($order->shipping_email)) {
+            $buyerEmail = trim($order->shipping_email);
+        }
+
+        if (empty($buyerEmail)) {
+            \Log::warning("sendOrderConfirmationAndInvoice: Recipient email is empty for order #{$order->order_number}");
+            return;
+        }
+
+        // Resolve customer display name
+        $customerName = trim(($order->billing_fname ?? '') . ' ' . ($order->billing_lname ?? ''));
+        if (empty($customerName) && !empty($order->customer_id) && $order->customer_id != 9999999) {
+            $cust = \App\Models\Customer::find($order->customer_id);
+            if ($cust) {
+                $customerName = trim(($cust->first_name ?? '') . ' ' . ($cust->last_name ?? ''));
+            }
+        }
+        if (empty($customerName)) {
+            $customerName = trim(($order->shipping_fname ?? '') . ' ' . ($order->shipping_lname ?? ''));
+        }
+        if (empty($customerName)) {
+            $customerName = 'Valued Customer';
+        }
+
+        $userBs = BasicSetting::where('user_id', $user->id)->first();
+        $websiteTitle = $userBs->website_title ?? $user->shop_name ?? $user->username ?? 'Store';
+
+        // Check if custom template exists in db
+        $mailTemplate = UserEmailTemplate::where([['email_type', 'product_order'], ['user_id', $user->id]])->first();
+        $subject = ($mailTemplate && !empty($mailTemplate->email_subject))
+            ? str_replace(['{order_number}', '{customer_name}', '{website_title}'], [$order->order_number, $customerName, $websiteTitle], $mailTemplate->email_subject)
+            : "Order Confirmation - #{$order->order_number} | {$websiteTitle}";
+
+        // Render dedicated order confirmation & invoice email view
+        $htmlBody = view('mail.order_confirmation', [
+            'order'         => $order,
+            'user'          => $user,
+            'userBs'        => $userBs,
+            'customerName'  => $customerName,
+            'website_title' => $websiteTitle,
+            'subject'       => $subject,
+        ])->render();
+
+        $info = DB::table('basic_extendeds')
+            ->select('is_smtp', 'smtp_host', 'smtp_port', 'encryption', 'smtp_username', 'smtp_password', 'from_mail', 'from_name')
+            ->first();
+
         $data = [
-            'toMail' => $order->billing_email,
-            'toName' => $order->billing_fname,
-            'attachment' => $fileName,
-            'customer_name' => $order->billing_fname,
-            'order_number' => $order->order_number,
-            'order_link' => '',
-            'website_title' => $data['userBs']->website_title,
-            'templateType' => 'product_order',
-            'type' => 'productOrder'
+            'smtp_status'   => $info->is_smtp ?? 1,
+            'smtp_host'     => $info->smtp_host ?? env('MAIL_HOST'),
+            'smtp_port'     => $info->smtp_port ?? env('MAIL_PORT', 465),
+            'encryption'    => $info->encryption ?? env('MAIL_ENCRYPTION', 'ssl'),
+            'smtp_username' => $info->smtp_username ?? env('MAIL_USERNAME'),
+            'smtp_password' => $info->smtp_password ?? env('MAIL_PASSWORD'),
+            'from_mail'     => $info->from_mail ?? env('MAIL_FROM_ADDRESS'),
+            'from_name'     => $info->from_name ?? $websiteTitle,
+            'recipient'     => $buyerEmail,
+            'subject'       => $subject,
+            'body'          => $htmlBody,
         ];
-        $mailer->mailFromUser($data);
+
+        if (!empty($order->invoice_number) && file_exists(public_path('assets/front/invoices/' . $order->invoice_number))) {
+            $data['invoice'] = public_path('assets/front/invoices/' . $order->invoice_number);
+        }
+
+        try {
+            BasicMailer::sendMail($data);
+        } catch (\Throwable $e) {
+            \Log::warning("Order confirmation email failed for #{$order->order_number}: " . $e->getMessage());
+        }
+
         Session::forget('cart_' . $user->username);
         Session::forget('coupon');
+        Session::forget('user_coupon_' . $user->username);
+    }
+
+    public static function sendMails($order)
+    {
+        return static::sendOrderConfirmationAndInvoice($order);
     }
 
     public static function generateInvoice($order, $user)
@@ -438,55 +513,9 @@ class Common
         return $fileName;
     }
 
-    public static function OrderCompletedMail($order, $user)
+    public static function OrderCompletedMail($order, $user = null)
     {
-        // first, get the mail template information from db
-        $mailTemplate = UserEmailTemplate::where([['email_type', 'product_order'], ['user_id', $user->id]])->first();
-        $mailSubject = $mailTemplate ? $mailTemplate->email_subject : "Order Confirmation - {order_number}";
-        $mailBody = $mailTemplate ? $mailTemplate->email_body : "Hello {customer_name},<br><br>Thank you for your order {order_number}.<br><br>{order_link}<br><br>Best regards,<br>{website_title}";
-
-        // second, send a password reset link to user via email
-        $info = DB::table('basic_extendeds')
-            ->select('is_smtp', 'smtp_host', 'smtp_port', 'encryption', 'smtp_username', 'smtp_password', 'from_mail', 'from_name')
-            ->first();
-
-        $website_title = $user->shop_name;
-        $link = '';
-        $mailBody = str_replace('{customer_name}', $order->billing_fname . ' ' . $order->billing_lname, $mailBody);
-        $mailBody = str_replace('{order_number}', $order->order_number, $mailBody);
-
-        $mailBody = str_replace('{shipping_fname}', $order->shipping_fname, $mailBody);
-        $mailBody = str_replace('{shipping_lname}', $order->shipping_lname, $mailBody);
-        $mailBody = str_replace('{shipping_address}', $order->shipping_address, $mailBody);
-        $mailBody = str_replace('{shipping_city}', $order->shipping_city, $mailBody);
-        $mailBody = str_replace('{shipping_country}', $order->shipping_country, $mailBody);
-        $mailBody = str_replace('{shipping_number}', $order->shipping_number, $mailBody);
-
-        $mailBody = str_replace('{billing_fname}', $order->billing_fname, $mailBody);
-        $mailBody = str_replace('{billing_lname}', $order->billing_lname, $mailBody);
-        $mailBody = str_replace('{billing_address}', $order->billing_address, $mailBody);
-        $mailBody = str_replace('{billing_city}', $order->billing_city, $mailBody);
-        $mailBody = str_replace('{billing_country}', $order->billing_country, $mailBody);
-        $mailBody = str_replace('{billing_number}', $order->billing_number, $mailBody);
-        $mailBody = str_replace('{order_link}', $link, $mailBody);
-        $mailBody = str_replace('{website_title}', $website_title, $mailBody);
-
-        $data = [];
-        $data['smtp_status'] = $info->is_smtp;
-        $data['smtp_host'] = $info->smtp_host;
-        $data['smtp_port'] = $info->smtp_port;
-        $data['encryption'] = $info->encryption;
-        $data['smtp_username'] = $info->smtp_username;
-        $data['smtp_password'] = $info->smtp_password;
-
-        //mail info in array
-        $data['from_mail'] = $info->from_mail;
-        $data['recipient'] = $order->billing_email;
-        $data['subject'] = $mailSubject;
-        $data['body'] = $mailBody;
-        $data['invoice'] = public_path('assets/front/invoices/' . $order->invoice_number);
-        BasicMailer::sendMail($data);
-        return;
+        return static::sendOrderConfirmationAndInvoice($order, $user);
     }
 
     public static function getUserCurrentCurrency($userId)

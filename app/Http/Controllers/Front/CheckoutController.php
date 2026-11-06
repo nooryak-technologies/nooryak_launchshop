@@ -594,10 +594,10 @@ class CheckoutController extends Controller
 
             // ── WhatsApp welcome message with store and plan details ──
             try {
-                $cleanPhone  = preg_replace('/[^0-9]/', '', $request['phone'] ?? '');
-                $cleanCode   = preg_replace('/[^0-9]/', '', $request['country_code'] ?? '');
-                $mobileNo    = (strpos($cleanPhone, $cleanCode) === 0) ? $cleanPhone : $cleanCode . $cleanPhone;
-                $this->sendWelcomeWhatsApp($mobileNo, $request['username'], $password, $planName, $planPrice, $user->shop_name, $user->email, $user->phone);
+                $phoneInput = $request['phone'] ?? '';
+                $countryCodeInput = $request['country_code'] ?? '91';
+                $mobileNo = \App\Services\WhatsAppNotificationService::formatNumber($phoneInput, $countryCodeInput);
+                $this->sendWelcomeWhatsApp($mobileNo, $request['username'], $password, $planName, $planPrice, $user->shop_name ?? $user->first_name, $user->email, $mobileNo, $user->first_name);
             } catch (\Exception $waEx) {
                 Log::warning('Welcome WhatsApp send failed: ' . $waEx->getMessage());
             }
@@ -625,6 +625,18 @@ class CheckoutController extends Controller
             }
         } else {
             $user = $user->first();
+            // Send WhatsApp congratulations & store credentials for existing user launching/renewing theme
+            try {
+                $packageObj  = Package::find($request['package_id']);
+                $planName    = $packageObj ? $packageObj->title : 'Your Plan';
+                $planPrice   = $packageObj ? ($be->base_currency_symbol . $packageObj->price) : '';
+                $phoneInput  = $user->phone ?: ($request['phone'] ?? '');
+                $countryCode = $user->country_code ?: ($request['country_code'] ?? '91');
+                $mobileNo    = \App\Services\WhatsAppNotificationService::formatNumber($phoneInput, $countryCode);
+                $this->sendWelcomeWhatsApp($mobileNo, $user->username, $password, $planName, $planPrice, $user->shop_name ?? $user->first_name, $user->email, $mobileNo, $user->first_name);
+            } catch (\Throwable $waEx) {
+                Log::warning('Welcome WhatsApp send for existing user failed: ' . $waEx->getMessage());
+            }
         }
 
         // Mark the verified phone lead as purchased (if one exists for this number)
@@ -753,7 +765,7 @@ class CheckoutController extends Controller
     /**
      * Send a welcome WhatsApp message with account credentials and store details after registration.
      */
-    private function sendWelcomeWhatsApp(string $mobileNo, string $username, string $password, string $planName, string $planPrice, string $shopName, string $email, string $phone): void
+    public function sendWelcomeWhatsApp(string $mobileNo, string $username, string $password, string $planName, string $planPrice, string $shopName, string $email, string $phone, ?string $firstName = null): void
     {
         $host = request()->getHost();
         $mainDomains = ['launchshop.in', 'launchshop.top', 'www.launchshop.in', 'www.launchshop.top'];
@@ -767,22 +779,37 @@ class CheckoutController extends Controller
             $loginLink = 'https://' . $cleanHost . '/login';
         }
 
-        $message = "🎉 *Welcome to LaunchShop!*\n\n"
-            . "Your store account has been created successfully.\n\n"
+        $greetingName = !empty($firstName) ? $firstName : (!empty($shopName) ? $shopName : 'Valued Merchant');
+
+        $message = "🎉 *Congratulations! Your LaunchShop Store is Live!* 🚀\n\n"
+            . "Hello *" . $greetingName . "*,\n"
+            . "Congratulations on launching your store *" . $shopName . "*! Your online storefront and management dashboard are now fully ready.\n\n"
             . "👤 *Store Name:* " . $shopName . "\n"
-            . "📧 *Email:* " . $email . "\n"
-            . "📞 *Phone Number:* " . $phone . "\n"
+            . "🌐 *Store Live Link:* " . $storeLiveLink . "\n"
+            . "🔐 *Store Admin Login:*\n" . $loginLink . "\n\n"
+            . "📋 *Your Login Credentials:*\n"
+            . "📧 *Username / Email:* " . $username . " (" . $email . ")\n"
             . "🔑 *Password:* " . $password . "\n"
-            . "📦 *Plan:* " . $planName . ($planPrice ? " (" . $planPrice . ")" : "") . "\n\n"
-            . "🔗 *Store Live Link:* " . $storeLiveLink . "\n"
-            . "🔗 *Login to your store dashboard:*\n"
-            . $loginLink . "\n\n"
-            . "Need help? Chat with us anytime.\n"
+            . "📦 *Membership Plan:* " . $planName . ($planPrice ? " (" . $planPrice . ")" : "") . "\n\n"
+            . "You can now add your products, customize your theme, and start accepting customer orders!\n\n"
+            . "Need help? Reply to this message or chat with our support anytime.\n"
             . "– Team LaunchShop 🚀";
 
-        $apiKey = 'a09a0ee3aae408f843020cbd6bccf590';
-        $digitsOnly = preg_replace('/[^0-9]/', '', $mobileNo);
+        $digitsOnly = \App\Services\WhatsAppNotificationService::formatNumber($mobileNo);
+        if (empty($digitsOnly)) {
+            Log::warning('sendWelcomeWhatsApp: Empty formatted number for input: ' . $mobileNo);
+            return;
+        }
 
+        // 1. Dispatch via local WhatsApp gateway
+        try {
+            \App\Services\WhatsAppNotificationService::sendMessage($digitsOnly, $message);
+        } catch (\Throwable $waEx) {
+            Log::warning('Local WhatsApp Gateway send failed: ' . $waEx->getMessage());
+        }
+
+        // 2. Dispatch via MetaMerged cloud API
+        $apiKey = 'a09a0ee3aae408f843020cbd6bccf590';
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $apiKey,
@@ -799,7 +826,7 @@ class CheckoutController extends Controller
                 'status'   => $response->status(),
                 'response' => $response->json(),
             ]);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error('Meta Merge Welcome WhatsApp Exception: ' . $e->getMessage());
         }
     }
