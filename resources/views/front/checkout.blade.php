@@ -5,7 +5,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <style>
     /* ================================================
-       Premium Checkout Page â€” Inline Overrides
+       Premium Checkout Page Ã¢â‚¬â€ Inline Overrides
     ================================================ */
     :root {
       --co-primary: var(--color-primary, #ff5a2c);
@@ -19,14 +19,14 @@
     /* Hide default breadcrumb */
     .page-title-area { display: none !important; }
 
-    /* â”€â”€ Page wrapper â”€â”€ */
+    /* Ã¢â€â‚¬Ã¢â€â‚¬ Page wrapper Ã¢â€â‚¬Ã¢â€â‚¬ */
     .co-page {
       background: var(--co-bg);
       min-height: 100vh;
       padding: 60px 0 80px;
     }
 
-    /* â”€â”€ Section header â”€â”€ */
+    /* Ã¢â€â‚¬Ã¢â€â‚¬ Section header Ã¢â€â‚¬Ã¢â€â‚¬ */
     .co-page-header {
       text-align: center;
       margin-bottom: 48px;
@@ -58,7 +58,7 @@
       margin: 0 auto;
     }
 
-    /* â”€â”€ Step indicators â”€â”€ */
+    /* Ã¢â€â‚¬Ã¢â€â‚¬ Step indicators Ã¢â€â‚¬Ã¢â€â‚¬ */
     .co-steps {
       display: flex;
       align-items: center;
@@ -106,7 +106,7 @@
     }
     .co-step-connector.active { background: var(--co-primary); }
 
-    /* â”€â”€ Card base â”€â”€ */
+    /* Ã¢â€â‚¬Ã¢â€â‚¬ Card base Ã¢â€â‚¬Ã¢â€â‚¬ */
     .co-card {
       background: #ffffff;
       border-radius: 18px;
@@ -140,7 +140,7 @@
       margin: 0;
     }
 
-    /* â”€â”€ Form fields â”€â”€ */
+    /* Ã¢â€â‚¬Ã¢â€â‚¬ Form fields Ã¢â€â‚¬Ã¢â€â‚¬ */
     .co-field {
       margin-bottom: 20px;
     }
@@ -192,7 +192,7 @@
       cursor: not-allowed;
     }
 
-    /* â”€â”€ Payment method select â”€â”€ */
+    /* Ã¢â€â‚¬Ã¢â€â‚¬ Payment method select Ã¢â€â‚¬Ã¢â€â‚¬ */
     .co-select-wrap {
       position: relative;
     }
@@ -226,7 +226,7 @@
       pointer-events: none;
     }
 
-    /* â”€â”€ Payment method cards (radio style) â”€â”€ */
+    /* Ã¢â€â‚¬Ã¢â€â‚¬ Payment method cards (radio style) Ã¢â€â‚¬Ã¢â€â‚¬ */
     .co-payment-cards {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -275,7 +275,7 @@
       color: var(--co-dark);
     }
 
-    /* â”€â”€ Order Summary Sidebar â”€â”€ */
+    /* Ã¢â€â‚¬Ã¢â€â‚¬ Order Summary Sidebar Ã¢â€â‚¬Ã¢â€â‚¬ */
     .co-summary-card {
       background: #ffffff;
       border-radius: 18px;
@@ -411,7 +411,7 @@
       font-size: 14px;
     }
 
-    /* â”€â”€ Submit Button â”€â”€ */
+    /* Ã¢â€â‚¬Ã¢â€â‚¬ Submit Button Ã¢â€â‚¬Ã¢â€â‚¬ */
     .co-submit-btn {
       display: flex;
       align-items: center;
@@ -441,7 +441,7 @@
       transform: translateY(0);
     }
 
-    /* â”€â”€ Stripe element wrapper â”€â”€ */
+    /* Ã¢â€â‚¬Ã¢â€â‚¬ Stripe element wrapper Ã¢â€â‚¬Ã¢â€â‚¬ */
     #stripe-element {
       padding: 14px 16px;
       border: 1.5px solid var(--co-border);
@@ -450,7 +450,7 @@
       margin-bottom: 8px;
     }
 
-    /* â”€â”€ Validation error highlight â”€â”€ */
+    /* Ã¢â€â‚¬Ã¢â€â‚¬ Validation error highlight Ã¢â€â‚¬Ã¢â€â‚¬ */
     .co-input.is-invalid {
       border-color: #ef4444 !important;
       background: #fdf2f2 !important;
@@ -462,7 +462,7 @@
       border-color: rgba(239, 68, 68, 0.4) !important;
     }
 
-    /* â”€â”€ Payment methods grid â”€â”€ */
+    /* Ã¢â€â‚¬Ã¢â€â‚¬ Payment methods grid Ã¢â€â‚¬Ã¢â€â‚¬ */
     .co-payment-methods-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -523,7 +523,7 @@
       transform: scale(1);
     }
 
-    /* â”€â”€ Offline instructions UI overrides â”€â”€ */
+    /* Ã¢â€â‚¬Ã¢â€â‚¬ Offline instructions UI overrides Ã¢â€â‚¬Ã¢â€â‚¬ */
     #instructions {
       margin-top: 16px;
     }
@@ -558,7 +558,7 @@
       border-color: var(--co-primary);
     }
 
-    /* â”€â”€ Premium SweetAlert2 overrides â”€â”€ */
+    /* Ã¢â€â‚¬Ã¢â€â‚¬ Premium SweetAlert2 overrides Ã¢â€â‚¬Ã¢â€â‚¬ */
     .swal2-premium-popup {
       border-radius: 20px !important;
       padding: 30px !important;
@@ -577,7 +577,7 @@
       font-size: 15px !important;
     }
 
-    /* â”€â”€ Responsive â”€â”€ */
+    /* Ã¢â€â‚¬Ã¢â€â‚¬ Responsive Ã¢â€â‚¬Ã¢â€â‚¬ */
     @media (max-width: 991.98px) {
       .co-summary-card { position: static; }
       .co-page { padding: 40px 0 60px; }
@@ -665,13 +665,14 @@
       $reqHost = preg_replace('/:\d+$/', '', $reqHost);
       $reqHost = preg_replace('/^www\./i', '', $reqHost);
       $cleanAgencyHost = preg_replace('/^(launchshop|checkout|app|www|websitebuilder|website-builder|whatsappbulk|whatsapp-bulk|whatsapp|wa|ecombuilder|ecom-builder)\./i', '', $reqHost);
-      if ($cleanAgencyHost === 'in' || $cleanAgencyHost === 'com' || str_ends_with($reqHost, 'launchshop.in') || in_array($reqHost, ['launchshop.in', 'www.launchshop.in'])) {
-          $cleanAgencyHost = 'launchshop.in';
-      }
 
       $scheme = (request()->secure() || str_contains(request()->fullUrl(), 'https://') || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')) ? 'https://' : 'http://';
 
-      if (!empty($cleanAgencyHost) && $cleanAgencyHost !== 'localhost' && $cleanAgencyHost !== '127.0.0.1') {
+      $isLaunchShopHost = in_array($reqHost, ['launchshop.in', 'www.launchshop.in', 'localhost', '127.0.0.1'])
+          || str_ends_with($reqHost, 'launchshop.in')
+          || str_contains($reqHost, 'launchshop');
+
+      if (!$isLaunchShopHost && !empty($cleanAgencyHost) && !in_array($cleanAgencyHost, ['localhost', '127.0.0.1', 'in', 'com'])) {
           $checkoutFormAction = "{$scheme}checkout.{$cleanAgencyHost}/membership/checkout";
       } else {
           $checkoutFormAction = route('front.membership.checkout');
