@@ -6,6 +6,7 @@ $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SER
 $requestHost = preg_replace('/:\d+$/', '', $requestHost);
 
 $cleanRequestHost = preg_replace('/^(launchshop|checkout|www|app|websitebuilder|website-builder|whatsappbulk|whatsapp-bulk|whatsapp|wa|ecombuilder|ecom-builder)\./i', '', $requestHost);
+if ($cleanRequestHost === 'in' || $cleanRequestHost === 'com' || str_ends_with($requestHost, 'launchshop.in') || in_array($requestHost, ['launchshop.in', 'www.launchshop.in'])) { $cleanRequestHost = 'launchshop.in'; }
 
 $envHost = strtolower((string) env('WEBSITE_HOST', ''));
 $appHost = strtolower((string) parse_url(env('APP_URL', ''), PHP_URL_HOST));

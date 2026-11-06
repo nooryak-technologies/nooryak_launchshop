@@ -5,7 +5,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <style>
     /* ================================================
-       Premium Checkout Page — Inline Overrides
+       Premium Checkout Page â€” Inline Overrides
     ================================================ */
     :root {
       --co-primary: var(--color-primary, #ff5a2c);
@@ -19,14 +19,14 @@
     /* Hide default breadcrumb */
     .page-title-area { display: none !important; }
 
-    /* ── Page wrapper ── */
+    /* â”€â”€ Page wrapper â”€â”€ */
     .co-page {
       background: var(--co-bg);
       min-height: 100vh;
       padding: 60px 0 80px;
     }
 
-    /* ── Section header ── */
+    /* â”€â”€ Section header â”€â”€ */
     .co-page-header {
       text-align: center;
       margin-bottom: 48px;
@@ -58,7 +58,7 @@
       margin: 0 auto;
     }
 
-    /* ── Step indicators ── */
+    /* â”€â”€ Step indicators â”€â”€ */
     .co-steps {
       display: flex;
       align-items: center;
@@ -106,7 +106,7 @@
     }
     .co-step-connector.active { background: var(--co-primary); }
 
-    /* ── Card base ── */
+    /* â”€â”€ Card base â”€â”€ */
     .co-card {
       background: #ffffff;
       border-radius: 18px;
@@ -140,7 +140,7 @@
       margin: 0;
     }
 
-    /* ── Form fields ── */
+    /* â”€â”€ Form fields â”€â”€ */
     .co-field {
       margin-bottom: 20px;
     }
@@ -192,7 +192,7 @@
       cursor: not-allowed;
     }
 
-    /* ── Payment method select ── */
+    /* â”€â”€ Payment method select â”€â”€ */
     .co-select-wrap {
       position: relative;
     }
@@ -226,7 +226,7 @@
       pointer-events: none;
     }
 
-    /* ── Payment method cards (radio style) ── */
+    /* â”€â”€ Payment method cards (radio style) â”€â”€ */
     .co-payment-cards {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -275,7 +275,7 @@
       color: var(--co-dark);
     }
 
-    /* ── Order Summary Sidebar ── */
+    /* â”€â”€ Order Summary Sidebar â”€â”€ */
     .co-summary-card {
       background: #ffffff;
       border-radius: 18px;
@@ -411,7 +411,7 @@
       font-size: 14px;
     }
 
-    /* ── Submit Button ── */
+    /* â”€â”€ Submit Button â”€â”€ */
     .co-submit-btn {
       display: flex;
       align-items: center;
@@ -441,7 +441,7 @@
       transform: translateY(0);
     }
 
-    /* ── Stripe element wrapper ── */
+    /* â”€â”€ Stripe element wrapper â”€â”€ */
     #stripe-element {
       padding: 14px 16px;
       border: 1.5px solid var(--co-border);
@@ -450,7 +450,7 @@
       margin-bottom: 8px;
     }
 
-    /* ── Validation error highlight ── */
+    /* â”€â”€ Validation error highlight â”€â”€ */
     .co-input.is-invalid {
       border-color: #ef4444 !important;
       background: #fdf2f2 !important;
@@ -462,7 +462,7 @@
       border-color: rgba(239, 68, 68, 0.4) !important;
     }
 
-    /* ── Payment methods grid ── */
+    /* â”€â”€ Payment methods grid â”€â”€ */
     .co-payment-methods-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -523,7 +523,7 @@
       transform: scale(1);
     }
 
-    /* ── Offline instructions UI overrides ── */
+    /* â”€â”€ Offline instructions UI overrides â”€â”€ */
     #instructions {
       margin-top: 16px;
     }
@@ -558,7 +558,7 @@
       border-color: var(--co-primary);
     }
 
-    /* ── Premium SweetAlert2 overrides ── */
+    /* â”€â”€ Premium SweetAlert2 overrides â”€â”€ */
     .swal2-premium-popup {
       border-radius: 20px !important;
       padding: 30px !important;
@@ -577,7 +577,7 @@
       font-size: 15px !important;
     }
 
-    /* ── Responsive ── */
+    /* â”€â”€ Responsive â”€â”€ */
     @media (max-width: 991.98px) {
       .co-summary-card { position: static; }
       .co-page { padding: 40px 0 60px; }
@@ -665,6 +665,9 @@
       $reqHost = preg_replace('/:\d+$/', '', $reqHost);
       $reqHost = preg_replace('/^www\./i', '', $reqHost);
       $cleanAgencyHost = preg_replace('/^(launchshop|checkout|app|www|websitebuilder|website-builder|whatsappbulk|whatsapp-bulk|whatsapp|wa|ecombuilder|ecom-builder)\./i', '', $reqHost);
+      if ($cleanAgencyHost === 'in' || $cleanAgencyHost === 'com' || str_ends_with($reqHost, 'launchshop.in') || in_array($reqHost, ['launchshop.in', 'www.launchshop.in'])) {
+          $cleanAgencyHost = 'launchshop.in';
+      }
 
       $scheme = (request()->secure() || str_contains(request()->fullUrl(), 'https://') || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')) ? 'https://' : 'http://';
 
