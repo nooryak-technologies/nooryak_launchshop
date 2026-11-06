@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use PDF;
+use App\Models\User\BasicSetting;
 
 class ItemOrderController extends Controller
 {
@@ -160,6 +162,18 @@ class ItemOrderController extends Controller
         $msg = $request->message;
         $to = $request->email;
 
+        // Verify recipient belongs to an order of the authenticated merchant to prevent open relay abuse
+        $merchantId = Auth::guard('web')->id();
+        $isCustomer = UserOrder::where('user_id', $merchantId)
+            ->where(function($q) use ($to) {
+                $q->where('billing_email', $to)
+                  ->orWhere('shipping_email', $to);
+            })->exists();
+
+        if (!$isCustomer && !Auth::guard('admin')->check()) {
+            return response()->json(['error' => __('Recipient is not a customer of your store.')], 403);
+        }
+
         /******** Send mail to user ********/
         $data = [];
         $data['smtp_status'] = $be->is_smtp;
@@ -270,6 +284,63 @@ class ItemOrderController extends Controller
             return back();
         }
         return Excel::download(new PorductOrderExport($orders), 'product-orders.csv');
+    }
+
+    public function completedOrdersPdf(Request $request)
+    {
+        $userId = Auth::guard('web')->user()->id;
+        $user = Auth::guard('web')->user();
+        $userBs = BasicSetting::where('user_id', $userId)->first();
+        $keywords = Common::get_keywords();
+
+        $query = UserOrder::with('orderitems')
+            ->where('user_id', $userId)
+            ->where(function ($q) {
+                $q->whereRaw('LOWER(order_status) = ?', ['completed']);
+            })
+            ->where(function ($q) {
+                $q->whereRaw('LOWER(payment_status) = ?', ['completed']);
+            });
+
+        // Apply date range filter if provided
+        $filteredQuery = $this->applyRangeFilter($query, $request);
+
+        if ($request->filled('search')) {
+            $filteredQuery->where('order_number', $request->search);
+        }
+
+        $orders = $filteredQuery->orderBy('id', 'DESC')->get();
+
+        if ($orders->isEmpty()) {
+            Session::flash('warning', __('No completed orders with completed payment status found to download.'));
+            return back();
+        }
+
+        $totalRevenue = $orders->sum('total');
+        $totalTax = $orders->sum('tax');
+        $totalShipping = $orders->sum('shipping_charge');
+        $totalDiscount = $orders->sum('discount');
+
+        $data = [
+            'orders' => $orders,
+            'user' => $user,
+            'userBs' => $userBs,
+            'keywords' => $keywords,
+            'totalRevenue' => $totalRevenue,
+            'totalTax' => $totalTax,
+            'totalShipping' => $totalShipping,
+            'totalDiscount' => $totalDiscount,
+            'generatedAt' => Carbon::now()->format('d M Y, h:i A'),
+        ];
+
+        $pdf = PDF::setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'logOutputFile' => storage_path('logs/log.htm'),
+            'tempDir' => storage_path('logs/')
+        ])->loadView('pdf.completed_orders_history', $data)->setPaper('a4', 'landscape');
+
+        return $pdf->download('completed-orders-history-' . Carbon::now()->format('Y-m-d') . '.pdf');
     }
 
     public function bulkOrderProcessing(Request $request)

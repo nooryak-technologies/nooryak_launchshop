@@ -248,6 +248,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'userstatus', 'Demo',
         Route::post('/analytics/update', 'User\PluginController@updateGoogleAnalytics')->name('user.google.analytics.update')->middleware('limitCheck:items,update,without_ajax');
         Route::post('/recaptcha/update', 'User\PluginController@updateRecaptcha')->name('user.recaptcha.update')->middleware('limitCheck:items,update,without_ajax');
         Route::post('/pixel/update', 'User\PluginController@updatePixel')->name('user.pixel.update')->middleware('limitCheck:items,update,without_ajax');
+        Route::post('/ai/update', 'User\PluginController@updateAiSettings')->name('user.ai.update')->middleware('limitCheck:items,update,without_ajax');
 
         // maintenance-mode route
         Route::get('/maintenance-mode', 'User\BasicController@maintenance')->name('user.maintenance_mode');
@@ -323,7 +324,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'userstatus', 'Demo',
 
         // User Shipping Gateways Routes
         Route::get('/shipping-gateways', 'User\ShippingGatewayController@index')->name('user.shipping_gateway.index');
-        Route::middleware('limitCheck:items,update,without_ajax')->group(function () {
+        Route::group([], function () {
             Route::post('/shipping-gateways/aftership', 'User\ShippingGatewayController@aftershipUpdate')->name('user.shipping_gateway.aftership_update');
             Route::post('/shipping-gateways/shiprocket', 'User\ShippingGatewayController@shiprocketUpdate')->name('user.shipping_gateway.shiprocket_update');
             Route::post('/shipping-gateways/shippo', 'User\ShippingGatewayController@shippoUpdate')->name('user.shipping_gateway.shippo_update');
@@ -334,9 +335,9 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'userstatus', 'Demo',
         Route::post(
             '/offline/gateway/store',
             'User\GatewayController@store'
-        )->name('user.gateway.offline.store')->middleware('limitCheck:items,update');
-        Route::post('/offline/gateway/update', 'User\GatewayController@update')->name('user.gateway.offline.update')->middleware('limitCheck:items,update');
-        Route::post('/offline/status', 'User\GatewayController@status')->name('user.offline.status')->middleware('limitCheck:items,update,without_ajax');
+        )->name('user.gateway.offline.store');
+        Route::post('/offline/gateway/update', 'User\GatewayController@update')->name('user.gateway.offline.update');
+        Route::post('/offline/status', 'User\GatewayController@status')->name('user.offline.status');
         Route::post('/offline/gateway/delete', 'User\GatewayController@delete')->name('user.offline.gateway.delete');
 
 
@@ -344,7 +345,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'userstatus', 'Demo',
             // User Domains & URLs
             Route::group(['middleware' => 'checkUserPermission:Custom Domain'], function () {
                 Route::get('/domains', 'User\DomainController@domains')->name('user-domains');
-                Route::post('/request/domain', 'User\DomainController@domainrequest')->name('user-domain-request')->middleware('limitCheck:items,update,without_ajax');
+                Route::post('/request/domain', 'User\DomainController@domainrequest')->name('user-domain-request');
             });
             // User Subdomains & URLs
             Route::get('/subdomain', 'User\SubdomainController@subdomain')->name('user-subdomain');
@@ -355,11 +356,11 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'userstatus', 'Demo',
 
     //user contact page route
     Route::get('/contact-page', 'User\ContactController@index')->name('user.contact');
-    Route::post('/contact-page/update/{language}', 'User\ContactController@update')->name('user.contact.update')->middleware('limitCheck:items,update,without_ajax');
+    Route::post('/contact-page/update/{language}', 'User\ContactController@update')->name('user.contact.update');
 
     //user 404 page route
     Route::get('/404-page', 'User\BasicController@userNotFoundPage')->name('user.not_found_page');
-    Route::post('/404-page/update/{language}', 'User\BasicController@updateUserNotFoundPage')->name('user.not_found_page.update')->middleware('limitCheck:items,update');
+    Route::post('/404-page/update/{language}', 'User\BasicController@updateUserNotFoundPage')->name('user.not_found_page.update');
 
     // user preloader routes
     Route::get('/preloader', 'User\BasicController@preloader')->name('user.preloader');
@@ -393,7 +394,10 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'userstatus', 'Demo',
 
     // User Push Notification Routes (Premium only)
     Route::group(['middleware' => 'checkUserPermission:Push Notification'], function () {
-        Route::get('/pushnotification/settings', 'User\PushController@settings')->name('user.pushnotification.settings');
+            // User Recurring Warning Settings
+    Route::get('/recurring-warning', 'User\ItemController@recurringWarning')->name('user.recurring-warning.index');
+    Route::post('/recurring-warning', 'User\ItemController@updateRecurringWarning')->name('user.recurring-warning.update');
+    Route::get('/pushnotification/settings', 'User\PushController@settings')->name('user.pushnotification.settings');
         Route::post('/pushnotification/update/settings', 'User\PushController@updateSettings')->name('user.pushnotification.updateSettings');
         Route::get('/pushnotification/send', 'User\PushController@send')->name('user.pushnotification.send');
         Route::post('/push', 'User\PushController@push')->name('user.pushnotification.push');
@@ -573,6 +577,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'userstatus', 'Demo',
             Route::post('/order/bulk-processing', 'User\ItemOrderController@bulkOrderProcessing')->name('user.item.order.bulk.processing');
             Route::get('/orders/report', 'User\ItemOrderController@report')->name('user.orders.report');
             Route::get('/export/report', 'User\ItemOrderController@exportReport')->name('user.orders.export');
+            Route::get('/completed/orders/pdf', 'User\ItemOrderController@completedOrdersPdf')->name('user.completed.orders.pdf');
         });
 
         // Product Order end

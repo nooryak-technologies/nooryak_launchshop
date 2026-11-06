@@ -1,52 +1,63 @@
 @if (!empty($product))
   @php
     $placeholderImg = asset('assets/front/images/placeholder.png');
-    $thumb = $product->item->thumbnail ?? '';
-    if (str_starts_with($thumb, 'http')) {
-        $mainThumbSrc = $thumb;
-    } elseif (str_starts_with($thumb, 'assets/')) {
-        $mainThumbSrc = asset($thumb);
-    } elseif (!empty($thumb)) {
-        $mainThumbSrc = asset('assets/front/img/user/items/thumbnail/' . $thumb);
-    } else {
-        $mainThumbSrc = $placeholderImg;
-    }
+    $mainThumbSrc = user_item_image_url($product->item->thumbnail ?? '', 'slider');
 
     $slides = [];
-    if (!empty($product->item) && $product->item->sliders && count($product->item->sliders) > 0) {
+    if (!empty($product->item) && $product->item->sliders && count($product->item->sliders) > 1) {
         foreach ($product->item->sliders as $s) {
             $imgName = $s->image ?? '';
-            if (str_starts_with($imgName, 'http')) {
-                $slides[] = $imgName;
-            } elseif (str_starts_with($imgName, 'assets/')) {
-                $slides[] = asset($imgName);
-            } elseif (!empty($imgName)) {
-                $slides[] = asset('assets/front/img/user/items/slider-images/' . $imgName);
+            if (empty($imgName) || $imgName === 'noimage.jpg') {
+                continue;
+            }
+            $sSrc = user_item_image_url($imgName, 'slider');
+            if (!empty($sSrc) && !in_array($sSrc, $slides)) {
+                $slides[] = $sSrc;
+            }
+        }
+    }
+
+    // Auto-resolve multi-image gallery from master SQL / thumbnail matching if DB only has <= 1 image
+    if (count($slides) <= 1) {
+        $resolvedImgs = \App\Http\Helpers\ItemImageSqlHelper::resolveSliderImagesForItem($product->item ?? null);
+        if (!empty($resolvedImgs) && count($resolvedImgs) > 1) {
+            $slides = [];
+            foreach ($resolvedImgs as $imgName) {
+                $sSrc = user_item_image_url($imgName, 'slider');
+                if (!empty($sSrc) && !in_array($sSrc, $slides) && $sSrc !== $placeholderImg) {
+                    $slides[] = $sSrc;
+                }
             }
         }
     }
 
     if (empty($slides)) {
-        $slides[] = $mainThumbSrc;
+        if (!empty($mainThumbSrc) && $mainThumbSrc !== $placeholderImg) {
+            $slides[] = $mainThumbSrc;
+        } else {
+            $slides[] = $placeholderImg;
+        }
     }
   @endphp
 
   <div class="col-lg-6 product-single-default">
     <input type="hidden" id="item_id" value="{{ $item_id }}">
     <div class="product-single-gallery d-flex">
-      <div class="slider-thumbnails">
-        @foreach ($slides as $index => $src)
-          <div class="thumbnail-img {{ $loop->first ? 'slick-current slick-active active' : '' }}" data-slick-index="{{ $index }}">
-            <img src="{{ $src }}" onerror="this.onerror=null;this.src='{{ $placeholderImg }}';" alt="{{ $product->title }}" />
-          </div>
-        @endforeach
-      </div>
-      <div class="product-single-slider">
+      @if (count($slides) > 1)
+        <div class="slider-thumbnails">
+          @foreach ($slides as $index => $src)
+            <div class="thumbnail-img {{ $loop->first ? 'slick-current slick-active active' : '' }}" data-slick-index="{{ $index }}">
+              <img src="{{ $src }}" onerror="this.onerror=null;this.src='{{ $placeholderImg }}';" alt="{{ $product->title }}" />
+            </div>
+          @endforeach
+        </div>
+      @endif
+      <div class="product-single-slider" @if(count($slides) <= 1) style="width: 100%; max-width: 100%; margin-left: 0; padding-left: 0;" @endif>
         @foreach ($slides as $index => $src)
           <div class="product-single-single-item {{ $loop->first ? 'slick-current slick-active active' : '' }}" data-slick-index="{{ $index }}">
             <figure>
               <a href="{{ $src }}">
-                <img src="{{ $src }}" class="lazyloaded" onerror="this.onerror=null;this.src='{{ $placeholderImg }}';" alt="{{ $product->title }}" />
+                <img src="{{ $src }}" class="lazyloaded" data-zoom-image="{{ $src }}" onerror="this.onerror=null;this.src='{{ $placeholderImg }}';" alt="{{ $product->title }}" />
               </a>
             </figure>
           </div>
@@ -206,25 +217,38 @@
 
       <div class="product-action">
         @if (count($product_variations) > 0)
+          @php
+            $seen_qv_variations = [];
+          @endphp
           <ul class="product-list-group mb-20" id="variantListUL">
             @foreach ($product_variations as $product_variation)
               @php
-                $product_variation_contents = App\Models\User\ProductVariationContent::where([
+                $product_variation_content = App\Models\User\ProductVariationContent::where([
                     ['product_variation_id', $product_variation->id],
                     ['language_id', $uLang],
-                ])->get();
+                ])->first();
+
+                if (!$product_variation_content) {
+                    $product_variation_content = App\Models\User\ProductVariationContent::where('product_variation_id', $product_variation->id)->first();
+                }
+
+                $variant_content = null;
+                if ($product_variation_content) {
+                    $variant_content = App\Models\VariantContent::where('id', $product_variation_content->variation_name)->first();
+                }
+
+                $vName = $variant_content ? $variant_content->name : ('Option ' . $product_variation->id);
+                if (isset($seen_qv_variations[$vName])) {
+                    continue;
+                }
+                $seen_qv_variations[$vName] = true;
+
                 $variant_content_options = App\Models\User\ProductVariantOption::where([
                     ['product_variation_id', $product_variation->id],
                 ])->get();
               @endphp
 
-              @foreach ($product_variation_contents as $product_variation_content)
-                @php
-                  $variant_content = App\Models\VariantContent::where(
-                      'id',
-                      $product_variation_content->variation_name,
-                  )->first();
-                @endphp
+              @if ($product_variation_content && count($variant_content_options) > 0)
                 <li class="list-item" data-variant_name="{{ @$variant_content->name }}">
                   <h4 class="list-item-title color-primary mb-1">{{ @$variant_content->name }}:</h4>
                   <ul class="list-group custom-radio variantUL" id="variantUL">
@@ -251,7 +275,7 @@
 
                         $sup_option_content = make_input_name($opt_name);
                         $id_name = make_input_name($opt_name);
-                        $main_id = $sup_option_content . '_' . $id_name;
+                        $main_id = $sup_option_content . '_' . $id_name . '_' . $variant_content_option->id;
                       @endphp
                       <li>
                         <input id="radio_{{ $main_id }}" type="radio"
@@ -269,7 +293,7 @@
                     @endforeach
                   </ul>
                 </li>
-              @endforeach
+              @endif
             @endforeach
           </ul>
         @endif

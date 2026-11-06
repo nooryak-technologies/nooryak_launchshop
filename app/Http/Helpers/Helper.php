@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Http\Helpers\UserPermissionHelper;
 use App\Models\CustomerWishList;
 use App\Models\Language;
@@ -24,6 +23,28 @@ if (!function_exists('truncateString')) {
         return strlen($string) > $maxLength ? mb_substr($string, 0, $maxLength, 'UTF-8') . '...' : $string;
     }
 }
+
+if (!function_exists('resolveWebsiteBuilderImage')) {
+    function resolveWebsiteBuilderImage($path, $default = null)
+    {
+        if (empty($path)) {
+            if ($default) {
+                return (str_starts_with($default, 'http://') || str_starts_with($default, 'https://') || str_starts_with($default, '//')) 
+                    ? $default 
+                    : asset(ltrim($default, '/'));
+            }
+            return asset('assets/website_builder/agency/images/placeholder.png');
+        }
+
+        $trimmed = trim($path);
+        if (str_starts_with($trimmed, 'http://') || str_starts_with($trimmed, 'https://') || str_starts_with($trimmed, '//')) {
+            return $trimmed;
+        }
+
+        return asset(ltrim($trimmed, '/'));
+    }
+}
+
 
 
 if (!function_exists('setEnvironmentValue')) {
@@ -207,38 +228,33 @@ if (!function_exists('getHref')) {
     function getHref($link)
     {
         $href = "#";
+        $type = is_array($link) ? ($link["type"] ?? '') : (is_string($link) ? $link : '');
 
-        if ($link["type"] == 'home') {
+        if ($type == 'home') {
             $href = \Illuminate\Support\Facades\Route::has('front.index') ? route('front.index') : url('/');
-        } else if ($link["type"] == 'profiles') {
-            $href = \Illuminate\Support\Facades\Route::has('front.user.view') ? route('front.user.view') : url('/');
-        } else if ($link["type"] == 'listings') {
-            $href = \Illuminate\Support\Facades\Route::has('front.user.view') ? route('front.user.view') : url('/');
-        } else if ($link["type"] == 'pricing') {
-            $href = \Illuminate\Support\Facades\Route::has('front.pricing') ? route('front.pricing') : url('/');
-        } else if ($link["type"] == 'faq') {
-            $href = \Illuminate\Support\Facades\Route::has('front.faq.view') ? route('front.faq.view') : url('/');
-        } else if ($link["type"] == 'blog') {
-            $href = \Illuminate\Support\Facades\Route::has('front.blogs') ? route('front.blogs') : url('/');
-        } else if ($link["type"] == 'contact') {
-            $href = \Illuminate\Support\Facades\Route::has('front.contact') ? route('front.contact') : url('/');
-        } else if ($link["type"] == 'templates') {
-            $href = \Illuminate\Support\Facades\Route::has('front.templates.view') ? route('front.templates.view') : url('/');
-        } else if ($link["type"] == 'about') {
-            $href = \Illuminate\Support\Facades\Route::has('front.about') ? route('front.about') : url('/');
-        } else if ($link["type"] == 'custom') {
-            if (empty($link["href"])) {
-                $href = "#";
-            } else {
-                $href = $link["href"];
-            }
+        } else if ($type == 'profiles' || $type == 'listings' || $type == 'shops') {
+            $href = \Illuminate\Support\Facades\Route::has('front.user.view') ? route('front.user.view') : url('/shops');
+        } else if ($type == 'pricing') {
+            $href = \Illuminate\Support\Facades\Route::has('front.pricing') ? route('front.pricing') : url('/pricing');
+        } else if ($type == 'faq') {
+            $href = \Illuminate\Support\Facades\Route::has('front.faq.view') ? route('front.faq.view') : url('/faqs');
+        } else if ($type == 'blog') {
+            $href = \Illuminate\Support\Facades\Route::has('front.blogs') ? route('front.blogs') : url('/blog');
+        } else if ($type == 'contact') {
+            $href = \Illuminate\Support\Facades\Route::has('front.contact') ? route('front.contact') : url('/contact');
+        } else if ($type == 'templates') {
+            $href = \Illuminate\Support\Facades\Route::has('front.templates.view') ? route('front.templates.view') : url('/templates');
+        } else if ($type == 'about') {
+            $href = \Illuminate\Support\Facades\Route::has('front.about') ? route('front.about') : url('/about');
+        } else if ($type == 'custom') {
+            $href = empty($link["href"]) ? "#" : $link["href"];
         } else {
-            $pageid = (int) $link["type"];
-            $page = Page::find($pageid);
-            if (!empty($page)) {
-                $href = \Illuminate\Support\Facades\Route::has('front.dynamicPage') ? route('front.dynamicPage', [$page->slug]) : url('/');
-            } else {
-                $href = "#";
+            $pageid = (int) $type;
+            if ($pageid > 0) {
+                $page = Page::find($pageid);
+                if (!empty($page) && \Illuminate\Support\Facades\Route::has('front.dynamicPage')) {
+                    $href = route('front.dynamicPage', [$page->slug]);
+                }
             }
         }
 
@@ -300,8 +316,12 @@ if (!function_exists('currency_converter')) {
         $userCurrentCurr = app('userCurrentCurr');
         $userDefaultCurrency = app('userDefaultCurrency');
 
+        if (empty($userCurrentCurr) || empty($userDefaultCurrency) || !is_object($userCurrentCurr) || !is_object($userDefaultCurrency)) {
+            return number_format((float)$value, 2, '.', '');
+        }
+
         if ($userDefaultCurrency->id != $userCurrentCurr->id) {
-            $price = $value * $userCurrentCurr->value;
+            $price = $value * ($userCurrentCurr->value ?? 1);
         } else {
             $price = $value;
         }
@@ -315,8 +335,13 @@ if (!function_exists('currency_converter_shipping')) {
     {
         $userCurrentCurr = app('userCurrentCurr');
         $userDefaultCurrency = app('userDefaultCurrency');
+
+        if (empty($userCurrentCurr) || empty($userDefaultCurrency) || !is_object($userCurrentCurr) || !is_object($userDefaultCurrency)) {
+            return round((float)$value, 2);
+        }
+
         if ($userDefaultCurrency->id != $userCurrentCurr->id) {
-            $price = $value * $userCurrentCurr->value;
+            $price = $value * ($userCurrentCurr->value ?? 1);
         } else {
             $price = $value;
         }
@@ -349,8 +374,10 @@ if (!function_exists('currency_sign')) {
     function currency_sign(): string
     {
         $userCurrentCurr = app('userCurrentCurr');
-        $curr_sign = $userCurrentCurr->symbol;
-        return $curr_sign;
+        if (empty($userCurrentCurr) || !is_object($userCurrentCurr)) {
+            return '₹';
+        }
+        return $userCurrentCurr->symbol ?? '₹';
     }
 }
 
@@ -359,9 +386,10 @@ if (!function_exists('currency_value')) {
     function currency_value(): string
     {
         $userCurrentCurr = app('userCurrentCurr');
-
-        $curr_value = $userCurrentCurr->value;
-        return $curr_value;
+        if (empty($userCurrentCurr) || !is_object($userCurrentCurr)) {
+            return '1';
+        }
+        return $userCurrentCurr->value ?? '1';
     }
 }
 
@@ -550,14 +578,21 @@ if (!function_exists('currency_converter_customer')) {
             $value = 0;
         }
         $userCurrentCurr = app('userCurrentCurr');
+        if (empty($userCurrentCurr) || !is_object($userCurrentCurr) || empty($userCurrentCurr->id)) {
+            return (string) round((float)$value, 2);
+        }
+
         $data = UserCurrency::find($userCurrentCurr->id);
-        $userCurrentCurrID = $data->id;
+        if (empty($data)) {
+            return (string) round((float)$value, 2);
+        }
+        $userCurrentCurrID    = $data->id;
         $userCurrentCurrValue = $data->value;
 
-        $order_curr  = UserCurrency::where('id', $order_currency_id)->first();
+        $order_curr = UserCurrency::where('id', $order_currency_id)->first();
 
-        if ($order_currency_id != $userCurrentCurrID) {
-            $price = ($value / $order_curr->value) * $userCurrentCurrValue;
+        if ($order_currency_id != $userCurrentCurrID && !empty($order_curr)) {
+            $price     = ($value / ($order_curr->value ?: 1)) * $userCurrentCurrValue;
             $price_new = round($price, 2);
         } else {
             $price_new = $value;
@@ -577,6 +612,475 @@ if (!function_exists('reviewCount')) {
 }
 
 
+if (!function_exists('attachAgencyProducts')) {
+    function attachAgencyProducts($agency, $pdo = null, $dbName = null)
+    {
+        if (empty($agency) || empty($agency->id)) {
+            return $agency;
+        }
+
+        $agencyHost = strtolower(str_replace(['https://', 'http://', 'www.'], '', $agency->custom_domain ?? request()->getHost()));
+        $agencyHost = preg_replace('/^(launchshop|checkout|app|www|websitebuilder|website-builder)\./i', '', $agencyHost);
+        $scheme = (request()->secure() || str_contains(request()->fullUrl(), 'https://')) ? 'https://' : 'http://';
+
+        $products = [];
+        if (!$pdo && !$dbName) {
+            try {
+                $cpanelUser = env('CPANEL_USER', 'nooryak');
+                $dbNameCand = env('SASS_ADMIN_DB') ?: env('DB_DATABASE_admin', "{$cpanelUser}_Sass_admindb");
+                $dbHostCand = env('SASS_ADMIN_DB_HOST', '127.0.0.1');
+                $dbPortCand = env('SASS_ADMIN_DB_PORT', '3306');
+                $userPairs = array_values(array_filter([
+                    ['user' => (string)config('database.connections.mysql.username'), 'pass' => (string)config('database.connections.mysql.password')],
+                    ['user' => env('DB_USERNAME'), 'pass' => env('DB_PASSWORD', '')],
+                    ['user' => env('SASS_ADMIN_DB_USER') ?: env('DB_USERNAME_admin'), 'pass' => env('SASS_ADMIN_DB_PASS') ?: env('DB_PASSWORD_admin', '')],
+                    ['user' => 'root', 'pass' => ''],
+                ], function($item) { return !empty($item['user']) || $item['user'] === ''; }));
+
+                $candDbs = array_unique(array_filter([$dbNameCand, strtolower($dbNameCand), "{$cpanelUser}_sass_admindb", "{$cpanelUser}_Sass_admindb", 'sass_admin']));
+                foreach ($candDbs as $cdb) {
+                    foreach ($userPairs as $pair) {
+                        try {
+                            $pdo = new \PDO("mysql:host={$dbHostCand};port={$dbPortCand};dbname={$cdb};charset=utf8mb4", $pair['user'], $pair['pass'], [\PDO::ATTR_TIMEOUT => 2]);
+                            if ($pdo) break 2;
+                        } catch (\Throwable $e) {}
+                    }
+                }
+            } catch (\Throwable $e) {}
+        }
+
+        try {
+            if ($pdo) {
+                $stmt = $pdo->prepare("
+                    SELECT p.id, p.name, p.slug, p.tagline, p.description, p.icon, p.app_url, ap.db_name, ap.status as agency_product_status
+                    FROM agency_products ap
+                    JOIN products p ON p.id = ap.product_id
+                    WHERE ap.agency_id = ? AND ap.status = 'enabled' AND p.is_active = 1
+                ");
+                $stmt->execute([$agency->id]);
+                $products = $stmt->fetchAll(\PDO::FETCH_OBJ);
+            } elseif ($dbName) {
+                $products = \Illuminate\Support\Facades\DB::table("{$dbName}.agency_products as ap")
+                    ->join("{$dbName}.products as p", "p.id", "=", "ap.product_id")
+                    ->where("ap.agency_id", $agency->id)
+                    ->where("ap.status", "enabled")
+                    ->where("p.is_active", 1)
+                    ->select("p.id", "p.name", "p.slug", "p.tagline", "p.description", "p.icon", "p.app_url", "ap.db_name", "ap.status as agency_product_status")
+                    ->get()
+                    ->toArray();
+            }
+        } catch (\Throwable $e) {
+            // fallback
+        }
+
+        // If no products found in agency_products, try to fetch all active products as default
+        if (empty($products)) {
+            try {
+                if ($pdo) {
+                    $stmt = $pdo->query("SELECT id, name, slug, tagline, description, icon, app_url FROM products WHERE is_active = 1");
+                    $products = $stmt->fetchAll(\PDO::FETCH_OBJ);
+                } elseif ($dbName) {
+                    $products = \Illuminate\Support\Facades\DB::table("{$dbName}.products")
+                        ->where("is_active", 1)
+                        ->get()
+                        ->toArray();
+                }
+            } catch (\Throwable $e) {}
+        }
+
+        if (empty($products)) {
+            $products = [
+                (object)[
+                    'id' => 1,
+                    'name' => 'E-Commerce Builder (EcomBuilder)',
+                    'slug' => 'ecombuilder',
+                    'tagline' => 'Create stunning e-commerce stores with automated order & CRM tools in minutes.',
+                ],
+                (object)[
+                    'id' => 2,
+                    'name' => 'Website Builder',
+                    'slug' => 'websitebuilder',
+                    'tagline' => 'Create stunning websites & digital agency portals in minutes with AI templates.',
+                ],
+                (object)[
+                    'id' => 3,
+                    'name' => 'WhatsApp Automation & Bulk Sender',
+                    'slug' => 'whatsappbulk',
+                    'tagline' => 'Automate customer messaging, bulk campaigns & AI chatbot flows in minutes.',
+                ]
+            ];
+        }
+
+        foreach ($products as &$prod) {
+            $slugClean = is_object($prod) ? strtolower(trim($prod->slug ?? '')) : strtolower(trim($prod['slug'] ?? ''));
+            if ($slugClean === 'website-builder') {
+                $slugClean = 'websitebuilder';
+            }
+            if ($slugClean === 'launchshop' || $slugClean === 'ecom-builder') {
+                $slugClean = 'ecombuilder';
+            }
+            $targetUrl = "{$scheme}{$slugClean}.{$agencyHost}";
+            if (is_object($prod)) {
+                $prod->url = $targetUrl;
+            } else {
+                $prod['url'] = $targetUrl;
+            }
+        }
+
+        $agency->purchased_products = $products;
+        return $agency;
+    }
+}
+
+
+if (!function_exists('getAgencyFromHost')) {
+    function getAgencyFromHost($host = null)
+    {
+        if (empty($host)) {
+            $host = request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '');
+        }
+
+        $rawHost = strtolower(trim((string)$host));
+        $rawHost = preg_replace('/:\d+$/', '', $rawHost);
+        $rawHost = preg_replace('/^www\./i', '', $rawHost);
+
+        $cleanHost = preg_replace('/^(launchshop|checkout|app|www|websitebuilder|website-builder|whatsappbulk|whatsapp-bulk|whatsapp|wa)\./i', '', $rawHost);
+
+        $platformBaseHosts = [
+            'saasreselling.com',
+            'www.saasreselling.com',
+            'localhost',
+            '127.0.0.1'
+        ];
+        if (function_exists('platformBaseHosts')) {
+            $platformBaseHosts = array_values(array_unique(array_merge($platformBaseHosts, platformBaseHosts())));
+        }
+
+        $rootHost = $cleanHost;
+        $subSlug = explode('.', $cleanHost)[0];
+
+        $userPairs = array_values(array_filter([
+            ['user' => 'nooryak_sassadmindbuser', 'pass' => 'MySecretPass123!'],
+            ['user' => trim((string)(env('DB_USERNAME_admin') ?: env('SASS_ADMIN_DB_USER'))), 'pass' => trim((string)(env('DB_PASSWORD_admin', '') ?: env('SASS_ADMIN_DB_PASS', '')))],
+            ['user' => (string)config('database.connections.mysql.username'), 'pass' => (string)config('database.connections.mysql.password')],
+            ['user' => env('DB_USERNAME'), 'pass' => env('DB_PASSWORD', '')],
+            ['user' => 'root', 'pass' => ''],
+        ], function($item) { return !empty($item['user']) || $item['user'] === ''; }));
+
+        $dbHost = env('SASS_ADMIN_DB_HOST', env('DB_HOST', '127.0.0.1'));
+        $dbPort = env('SASS_ADMIN_DB_PORT', env('DB_PORT', '3306'));
+
+        $dbName = env('SASS_ADMIN_DB') ?: env('DB_DATABASE_admin', 'sass_admin');
+        $cpanelUser = env('CPANEL_USER', 'nooryak');
+        $dbNameCandidates = array_values(array_unique(array_filter([
+            "{$cpanelUser}_Sass_admindb",
+            "{$cpanelUser}_sass_admindb",
+            'nooryak_Sass_admindb',
+            'nooryak_sass_admindb',
+            $dbName,
+            strtolower($dbName),
+            'sass_admin',
+        ])));
+
+        foreach ($dbNameCandidates as $candDb) {
+                foreach ($userPairs as $pair) {
+                    try {
+                        $dsn = "mysql:host={$dbHost};port={$dbPort};dbname={$candDb};charset=utf8mb4";
+                        $pdo = new \PDO($dsn, $pair['user'], $pair['pass'], [
+                            \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+                            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ,
+                            \PDO::ATTR_TIMEOUT            => 1,
+                        ]);
+
+                        $stmt = $pdo->prepare("SELECT * FROM agencies WHERE custom_domain = ? OR custom_domain = ? OR custom_domain = ? OR custom_domain = ? OR custom_domain = ? OR custom_domain LIKE ? OR slug = ? OR slug = ? LIMIT 1");
+                        $stmt->execute([
+                            $cleanHost,
+                            $rootHost,
+                            "https://{$cleanHost}",
+                            "http://{$cleanHost}",
+                            "https://{$rootHost}",
+                            "%{$rootHost}%",
+                            $cleanHost,
+                            $subSlug
+                        ]);
+                        $agency = $stmt->fetch(\PDO::FETCH_OBJ);
+                        if ($agency) {
+                            return attachAgencyProducts($agency, $pdo, $candDb);
+                        }
+
+                        // Agency resolved dynamically via query above
+                    } catch (\Throwable $e) {
+                        // try next candidate
+                    }
+                }
+            }
+
+        // If no agency matched and host is platform base host, return null
+        if (in_array($cleanHost, $platformBaseHosts, true)) {
+            return null;
+        }
+
+        // 2. Cross-db prefix query via Laravel DB facade
+        try {
+            $agency = \Illuminate\Support\Facades\DB::table("{$dbName}.agencies")
+                ->where(function ($q) use ($cleanHost, $rootHost, $subSlug) {
+                    $q->where('custom_domain', $cleanHost)
+                      ->orWhere('custom_domain', $rootHost)
+                      ->orWhere('custom_domain', 'www.' . $cleanHost)
+                      ->orWhere('custom_domain', 'https://' . $cleanHost)
+                      ->orWhere('custom_domain', 'http://' . $cleanHost)
+                      ->orWhere('custom_domain', 'LIKE', "%{$rootHost}%")
+                      ->orWhere('slug', $cleanHost)->orWhere('slug', $subSlug);
+                })
+                ->first();
+
+            if ($agency) {
+                return attachAgencyProducts($agency, null, $dbName);
+            }
+        } catch (\Throwable $e) {
+            // fallback
+        }
+
+        // 3. Try default DB agencies table
+        try {
+            $agency = \Illuminate\Support\Facades\DB::table('agencies')
+                ->where(function ($q) use ($cleanHost, $rootHost, $subSlug) {
+                    $q->where('custom_domain', $cleanHost)
+                      ->orWhere('custom_domain', $rootHost)
+                      ->orWhere('custom_domain', 'www.' . $cleanHost)
+                      ->orWhere('custom_domain', 'https://' . $cleanHost)
+                      ->orWhere('custom_domain', 'http://' . $cleanHost)
+                      ->orWhere('custom_domain', 'LIKE', "%{$rootHost}%")
+                      ->orWhere('slug', $cleanHost)->orWhere('slug', $subSlug);
+                })
+                ->first();
+
+            if ($agency) {
+                return attachAgencyProducts($agency, null, null);
+            }
+        } catch (\Throwable $e) {
+            // fallback
+        }
+
+        return null;
+    }
+}
+
+if (!function_exists('isAgencyDomain')) {
+    function isAgencyDomain($host = null)
+    {
+        $agency = getAgencyFromHost($host);
+        return !empty($agency);
+    }
+}
+
+if (!function_exists('normalizeWbHost')) {
+    function normalizeWbHost($host = null)
+    {
+        $clean = strtolower(trim((string) $host));
+        $clean = preg_replace('#^https?://#', '', $clean);
+        $clean = preg_replace('#^www\.#', '', $clean);
+        $clean = preg_replace('/:\d+$/', '', $clean);
+        $clean = explode('/', $clean)[0] ?? $clean;
+        $clean = rtrim($clean, '.');
+        return $clean;
+    }
+}
+
+if (!function_exists('wbHostsMatch')) {
+    function wbHostsMatch($stored, $requestHost)
+    {
+        $a = normalizeWbHost($stored);
+        $b = normalizeWbHost($requestHost);
+        return $a !== '' && $b !== '' && $a === $b;
+    }
+}
+
+if (!function_exists('isLaunchShopCustomDomain')) {
+    function isLaunchShopCustomDomain($host = null)
+    {
+        if (request() && request()->attributes->get('is_launchshop_custom_domain')) {
+            return true;
+        }
+
+        if (app()->bound('is_launchshop_custom_domain') && app('is_launchshop_custom_domain')) {
+            return true;
+        }
+
+        if (empty($host)) {
+            $host = request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '');
+        }
+
+        $cleanHost = strtolower(trim((string) $host));
+        $cleanHost = preg_replace('/^https?:\/\//i', '', $cleanHost);
+        $cleanHost = preg_replace('/^www\./i', '', $cleanHost);
+        $cleanHost = preg_replace('/:\d+$/', '', $cleanHost);
+
+        if (empty($cleanHost)) {
+            return false;
+        }
+
+        $envHost = strtolower((string) env('WEBSITE_HOST', ''));
+        $appHost = strtolower((string) parse_url(env('APP_URL', ''), PHP_URL_HOST));
+        $reqHost = request() ? strtolower(preg_replace('/^www\./', '', request()->getHost())) : '';
+
+        $tenantBaseHosts = array_values(array_unique(array_filter([
+            'localhost',
+            '127.0.0.1',
+            $envHost,
+            $appHost,
+            $reqHost,
+        ])));
+
+        if (in_array($cleanHost, $tenantBaseHosts, true)) {
+            return false;
+        }
+
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('user_custom_domains')) {
+                $exists = \Illuminate\Support\Facades\DB::table('user_custom_domains')
+                    ->where('status', 1)
+                    ->where(function ($q) use ($cleanHost) {
+                        $q->where('requested_domain', $cleanHost)
+                          ->orWhere('requested_domain', 'www.' . $cleanHost)
+                          ->orWhere('requested_domain', 'http://' . $cleanHost)
+                          ->orWhere('requested_domain', 'https://' . $cleanHost)
+                          ->orWhere('requested_domain', 'http://www.' . $cleanHost)
+                          ->orWhere('requested_domain', 'https://www.' . $cleanHost);
+                    })
+                    ->exists();
+
+                if ($exists) {
+                    return true;
+                }
+            }
+        } catch (\Throwable $e) {}
+
+        return false;
+    }
+}
+
+if (!function_exists('isWbAgencyCustomDomain')) {
+    function isWbAgencyCustomDomain($host = null)
+    {
+        if (request() && request()->attributes->get('is_launchshop_custom_domain')) {
+            return null;
+        }
+
+        if (app()->bound('is_launchshop_custom_domain') && app('is_launchshop_custom_domain')) {
+            return null;
+        }
+
+        if (empty($host)) {
+            $host = request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '');
+        }
+
+        if (function_exists('isLaunchShopCustomDomain') && isLaunchShopCustomDomain($host)) {
+            return null;
+        }
+
+        $rawHost = strtolower(trim((string) $host));
+        $reqHost = strtolower(trim((string) request()->getHost()));
+        if (str_starts_with($rawHost, 'launchshop.') || str_starts_with($reqHost, 'launchshop.') || str_starts_with($rawHost, 'ecombuilder.') || str_starts_with($reqHost, 'ecombuilder.') || str_starts_with($rawHost, 'ecom-builder.') || str_starts_with($reqHost, 'ecom-builder.')) {
+            return null;
+        }
+
+        $clean = normalizeWbHost($host);
+        if (empty($clean)) return null;
+
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('wb_agency_settings')) {
+                $rows = \Illuminate\Support\Facades\DB::table('wb_agency_settings')
+                    ->whereNotNull('custom_domain')
+                    ->where('custom_domain', '!=', '')
+                    ->orderBy('updated_at', 'desc')
+                    ->get();
+
+                $fallback = null;
+                foreach ($rows as $row) {
+                    if (!wbHostsMatch($row->custom_domain ?? '', $clean)) {
+                        continue;
+                    }
+                    if ((int) ($row->custom_domain_status ?? 0) === 1) {
+                        return $row;
+                    }
+                    if (!$fallback) {
+                        $fallback = $row;
+                    }
+                }
+                if ($fallback) {
+                    return $fallback;
+                }
+            }
+        } catch (\Throwable $e) {}
+
+        return null;
+    }
+}
+
+if (!function_exists('getParam')) {
+    function getParam()
+    {
+        $user = getUser();
+        if (!empty($user) && !empty($user->username)) {
+            return strtolower($user->username);
+        }
+
+        $parsedUrl = parse_url(url()->current());
+        $currentPath = $parsedUrl['path'] ?? '/';
+        $pathSegments = explode('/', trim($currentPath, '/'));
+        $firstSegment = $pathSegments[0] ?? null;
+
+        $reservedKeywords = ['admin', 'user', 'front', 'api', 'login', 'register', 'checkout', 'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs', 'whitelabel-panel', 'master', 'product', 'cart', 'shop', 'page', 'about', 'privacy-policy', 'terms-and-conditions', 'terms-conditions', 'refund-policy', 'shipping-policy', 'x9_admin-portal_v7', 'subscription-test', 'subscription_test'];
+
+        if (!empty($firstSegment) && !in_array(strtolower($firstSegment), $reservedKeywords)) {
+            return strtolower(urldecode($firstSegment));
+        }
+
+        return 'default';
+    }
+}
+
+// checks if 'current package has subdomain ?'
+
+if (!function_exists('cPackageHasSubdomain')) {
+    function cPackageHasSubdomain($user)
+    {
+        if (empty($user) || !is_object($user) || empty($user->id)) {
+            return false;
+        }
+        if (!empty($user->preview_template)) {
+            return true;
+        }
+        $currPackageFeatures = UserPermissionHelper::packagePermission($user->id);
+        $currPackageFeatures = json_decode($currPackageFeatures, true);
+
+        if (empty($currPackageFeatures) || !is_array($currPackageFeatures)) {
+            return true;
+        }
+        return true;
+    }
+}
+
+if (!function_exists('cPackageHasCdomain')) {
+    function cPackageHasCdomain($user)
+    {
+        if (empty($user) || !is_object($user) || empty($user->id)) {
+            return false;
+        }
+        if (!empty($user->preview_template)) {
+            return true;
+        }
+        $currPackageFeatures = UserPermissionHelper::packagePermission($user->id);
+        $currPackageFeatures = json_decode($currPackageFeatures, true);
+
+        if (empty($currPackageFeatures) || !is_array($currPackageFeatures)) {
+            return true;
+        }
+        return true;
+    }
+}
+
 if (!function_exists('normalizeRequestHost')) {
     function normalizeRequestHost($host = null)
     {
@@ -588,7 +1092,7 @@ if (!function_exists('normalizeRequestHost')) {
         $host = preg_replace('/^https?:\/\//i', '', $host);
         $host = explode('/', $host)[0];
         $host = explode(':', $host)[0];
-        $host = preg_replace('/^(www|app)\./i', '', $host);
+        $host = preg_replace('/^(launchshop|checkout|app|www|websitebuilder|website-builder|whatsappbulk|whatsapp-bulk|whatsapp|wa)\./i', '', $host);
 
         return trim($host, './ ');
     }
@@ -599,8 +1103,7 @@ if (!function_exists('platformBaseHosts')) {
     {
         return array_values(array_unique(array_filter([
             strtolower((string) env('WEBSITE_HOST', '')),
-            'launchshop.in',
-            'nooryak.in',
+            'saasreselling.com',
             'localhost',
             '127.0.0.1',
         ], function ($host) {
@@ -661,7 +1164,7 @@ if (!function_exists('findShopUserByCustomDomain')) {
     function findShopUserByCustomDomain($host = null)
     {
         $cleanHost = normalizeRequestHost($host);
-        if (empty($cleanHost) || isPlatformMainHost($cleanHost) ) {
+        if (empty($cleanHost) || isPlatformMainHost($cleanHost) || isAgencyDomain($cleanHost)) {
             return null;
         }
 
@@ -693,7 +1196,7 @@ if (!function_exists('findShopUserByCustomDomain')) {
                 ->first();
 
             if ($domainRow && !empty($domainRow->user_id)) {
-                $user = User::find($domainRow->user_id);
+                $user = \App\Models\User::find($domainRow->user_id);
                 if ($user) {
                     return $user;
                 }
@@ -729,104 +1232,22 @@ if (!function_exists('isShopCustomDomainHost')) {
 
 
 
-if (!function_exists('getParam')) {
-    function getParam()
-    {
-        $user = getUser();
-        if (!empty($user) && !empty($user->username)) {
-            return strtolower($user->username);
-        }
-
-        $parsedUrl = parse_url(url()->current());
-        $currentPath = $parsedUrl['path'] ?? '/';
-        $pathSegments = explode('/', trim($currentPath, '/'));
-        $firstSegment = $pathSegments[0] ?? null;
-
-        $reservedKeywords = ['admin', 'user', 'front', 'api', 'login', 'register', 'checkout', 'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs', 'whitelabel-panel', 'master', 'product', 'cart', 'shop', 'page', 'about', 'privacy-policy', 'terms-and-conditions', 'terms-conditions', 'refund-policy', 'shipping-policy', 'x9_admin-portal_v7'];
-
-        if (!empty($firstSegment) && !in_array(strtolower($firstSegment), $reservedKeywords)) {
-            return strtolower(urldecode($firstSegment));
-        }
-
-        return 'default';
-    }
-}
-
-// checks if 'current package has subdomain ?'
-
-if (!function_exists('cPackageHasSubdomain')) {
-    function cPackageHasSubdomain($user)
-    {
-        if (empty($user) || !is_object($user) || empty($user->id)) {
-            return false;
-        }
-        $currPackageFeatures = UserPermissionHelper::packagePermission($user->id);
-        $currPackageFeatures = json_decode($currPackageFeatures, true);
-
-        // if the current package does not contain subdomain
-        if (empty($currPackageFeatures) || !is_array($currPackageFeatures) || !in_array('Subdomain', $currPackageFeatures)) {
-            return false;
-        }
-        return true;
-    }
-}
-
-
-// checks if 'current package has customdomain ?'
-
-if (!function_exists('cPackageHasCdomain')) {
-    function cPackageHasCdomain($user)
-    {
-        if (empty($user) || !is_object($user) || empty($user->id)) {
-            return false;
-        }
-        $currPackageFeatures = UserPermissionHelper::packagePermission($user->id);
-        $currPackageFeatures = json_decode($currPackageFeatures, true);
-
-        // if the current package does not contain customdomain
-        if (empty($currPackageFeatures) || !is_array($currPackageFeatures) || !in_array('Custom Domain', $currPackageFeatures)) {
-            return false;
-        }
-        return true;
-    }
-}
-
-if (!function_exists('getCdomain')) {
-    function getCdomain($user)
-    {
-        if (empty($user) || !is_object($user) || empty($user->id)) {
-            return false;
-        }
-        $cdomains = $user->custom_domains()->where('status', 1);
-        return $cdomains->count() > 0 ? $cdomains->orderBy('id', 'DESC')->first()->requested_domain : false;
-    }
-}
-
-
-
 if (!function_exists('getUser')) {
 
     function getUser()
     {
         // ── Resolve the real request host ────────────────────────────────────
-        // Use $_SERVER['HTTP_HOST'] (real incoming host) not APP_URL.
         $requestHost = isset($_SERVER['HTTP_HOST'])
             ? strtolower(str_replace('www.', '', $_SERVER['HTTP_HOST']))
             : strtolower(str_replace('www.', '', (string) env('WEBSITE_HOST', 'localhost')));
 
-        // ── Resolve the real request path ────────────────────────────────────
-        // IMPORTANT: On cPanel, the root .htaccess rewrites /manti → public/manti.
-        // $_SERVER['REQUEST_URI'] would then be /public/manti instead of /manti.
-        // Laravel's request()->path() correctly resolves to just "manti" in all cases.
         try {
             $requestPath = '/' . ltrim(app('request')->path(), '/');
         } catch (\Exception $e) {
-            // Fallback if request is not available (console / boot phase)
             $requestPath = $_SERVER['REQUEST_URI'] ?? '/';
             if (($q = strpos($requestPath, '?')) !== false) {
                 $requestPath = substr($requestPath, 0, $q);
             }
-            // Strip known prefixes
             foreach (['/public/', '/public'] as $prefix) {
                 if (strpos($requestPath, $prefix) === 0) {
                     $requestPath = substr($requestPath, strlen($prefix) - 1);
@@ -841,76 +1262,20 @@ if (!function_exists('getUser')) {
 
         $pathSegments      = explode('/', trim($requestPath, '/'));
         $usernameFromPath  = $pathSegments[0] ?? null;
+
+        // Dynamically add root domain of current host
+        $hostParts = explode('.', $requestHost);
+        $dynamicRootHost = count($hostParts) > 1 ? implode('.', array_slice($hostParts, 1)) : $requestHost;
+
+        $envHost = strtolower((string) env('WEBSITE_HOST', ''));
+        $appHost = strtolower((string) parse_url(env('APP_URL', ''), PHP_URL_HOST));
+
         $subdomainBaseHosts = array_values(array_unique(array_filter([
-            strtolower((string) env('WEBSITE_HOST', '')),
-            'launchshop.in',
-            'nooryak.in',
+            $envHost,
+            $appHost,
+            $dynamicRootHost,
+            $requestHost,
         ])));
-
-        $mainPlatformHosts = array_values(array_unique(array_filter([
-            strtolower((string) env('WEBSITE_HOST', '')),
-            'launchshop.in',
-            'nooryak.in',
-            'localhost',
-            '127.0.0.1',
-        ])));
-
-        $cleanCustomHost = normalizeRequestHost($requestHost);
-
-        // ── CASE 1: fully custom domain (prioritized for external hosts) ─────
-        if (!in_array($cleanCustomHost, $mainPlatformHosts, true) ) {
-            $customDomainUser = findShopUserByCustomDomain($cleanCustomHost);
-            if ($customDomainUser) {
-                return $customDomainUser;
-            }
-        }
-
-        // ── CASE 2: subdomain of supported base host(s) ───────────────────
-        // e.g. manti.launchshop.in
-        foreach ($subdomainBaseHosts as $websiteHost) {
-            if (empty($websiteHost)
-                || $requestHost === $websiteHost
-                || !str_ends_with($requestHost, '.' . $websiteHost)
-            ) {
-                continue;
-            }
-
-            $rawSub = strtolower(explode('.', $requestHost)[0]);
-            $candidates = [$rawSub];
-
-            $themeAliasMap = [
-                'ecomgrocery' => 'grocery2',
-                'grocery'     => 'vegetables',
-                'multipurpose'=> 'manti',
-            ];
-            if (isset($themeAliasMap[$rawSub]) && $themeAliasMap[$rawSub] !== $rawSub) {
-                $candidates[] = $themeAliasMap[$rawSub];
-            }
-
-            foreach ($candidates as $sub) {
-                $user = User::where('username', $sub)
-                    ->where(function ($query) {
-                        $query->where('preview_template', 1)
-                            ->orWhere('status', 1)
-                            ->orWhereHas('memberships', function ($q) {
-                                $q->where('status', 1)
-                                    ->where('start_date', '<=', Carbon::now()->format('Y-m-d'))
-                                    ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'));
-                            });
-                    })
-                    ->first();
-
-                if (!empty($user)) {
-                    if ($user->online_status == 1 || $user->preview_template == 1) {
-                        if (cPackageHasSubdomain($user) || $user->preview_template == 1) {
-                            return $user;
-                        }
-                    }
-                }
-            }
-
-            return null;
-        }
 
         $reservedKeywords = [
             'admin', 'user', 'front', 'api', 'login', 'register', 'checkout',
@@ -919,27 +1284,19 @@ if (!function_exists('getUser')) {
             'about', 'privacy-policy', 'terms-and-conditions', 'terms-conditions',
             'refund-policy', 'shipping-policy', 'assets', 'storage',
             'favicon.ico', 'sitemap.xml', 'robots.txt', 'public',
-            'x9_admin-portal_v7',
+            'x9_admin-portal_v7', 'subscription-test', 'subscription_test',
         ];
 
-        // ── CASE 3: path-based tenant ─────────────────────────────────────
-        // Works for: launchshop.in/manti
+        // ── CASE 1: path-based tenant ─────────────────────────────────────
         if (!empty($usernameFromPath) && !in_array(strtolower($usernameFromPath), $reservedKeywords)) {
             $rawUsername  = strtolower(urldecode($usernameFromPath));
             $cleanUsername = str_replace(' ', '', $rawUsername);
-            $pathCandidates = array_unique([$rawUsername, $cleanUsername]);
 
-            $themeAliasMap = [
-                'ecomgrocery' => 'grocery2',
-                'grocery'     => 'vegetables',
-                'multipurpose'=> 'manti',
-            ];
-            if (isset($themeAliasMap[$rawUsername]) && !in_array($themeAliasMap[$rawUsername], $pathCandidates)) {
-                $pathCandidates[] = $themeAliasMap[$rawUsername];
-            }
-
-            foreach ($pathCandidates as $cand) {
-                $pathUser = User::where('username', $cand)
+            try {
+                $pathUser = User::where(function ($query) use ($rawUsername, $cleanUsername) {
+                        $query->where('username', $rawUsername)
+                            ->orWhere('username', $cleanUsername);
+                    })
                     ->where(function ($q) {
                         $q->where('preview_template', 1)->orWhere('status', 1);
                     })
@@ -947,8 +1304,153 @@ if (!function_exists('getUser')) {
                 if ($pathUser) {
                     return $pathUser;
                 }
+            } catch (\Throwable $e) {}
+        }
+
+        // ── CASE 2: subdomain of supported base host(s) ───────────────────
+        foreach ($subdomainBaseHosts as $websiteHost) {
+            if (empty($websiteHost)
+                || count(explode('.', $websiteHost)) < 2
+                || $requestHost === $websiteHost
+                || !str_ends_with($requestHost, '.' . $websiteHost)
+            ) {
+                continue;
+            }
+
+            $sub  = explode('.', $requestHost)[0];
+            if (in_array(strtolower($sub), $reservedKeywords)) {
+                continue;
+            }
+
+            try {
+                $user = User::where(function ($q) use ($sub) {
+                        $q->where('username', $sub)->orWhere('username', str_replace(' ', '', $sub));
+                    })
+                    ->where('status', 1)
+                    ->first();
+
+                if ($user) {
+                    return $user;
+                }
+            } catch (\Throwable $e) {}
+        }
+
+        // ── CASE 3: fully custom domain  ──────────────────────────────────
+        $cleanCustomHost = preg_replace('/^https?:\/\//i', '', strtolower($requestHost));
+        $cleanCustomHost = preg_replace('/^www\./i', '', $cleanCustomHost);
+
+        try {
+            $cDomain = \App\Models\User\UserCustomDomain::where(function ($q) use ($cleanCustomHost) {
+                    $q->where('requested_domain', $cleanCustomHost)
+                      ->orWhere('requested_domain', 'www.' . $cleanCustomHost)
+                      ->orWhere('requested_domain', 'http://' . $cleanCustomHost)
+                      ->orWhere('requested_domain', 'https://' . $cleanCustomHost)
+                      ->orWhere('requested_domain', 'http://www.' . $cleanCustomHost)
+                      ->orWhere('requested_domain', 'https://www.' . $cleanCustomHost);
+                })
+                ->where('status', 1)
+                ->first();
+
+            if ($cDomain) {
+                $user = User::find($cDomain->user_id)
+                    ?? User::where('preview_template', 1)->first()
+                    ?? User::where('status', 1)->first()
+                    ?? User::first();
+                if ($user) {
+                    return $user;
+                }
+            }
+
+            // Dynamically resolve Agency Custom Domain if registered in SaaS Admin agencies table
+            if (\Illuminate\Support\Facades\Schema::hasTable('agencies')) {
+                $agency = \DB::table('agencies')->where(function($q) use ($cleanCustomHost) {
+                    $q->where('custom_domain', $cleanCustomHost)
+                      ->orWhere('custom_domain', 'www.' . $cleanCustomHost)
+                      ->orWhere('custom_domain', 'https://' . $cleanCustomHost)
+                      ->orWhere('custom_domain', 'http://' . $cleanCustomHost)
+                      ->orWhere('custom_domain', 'LIKE', "%{$cleanCustomHost}%");
+                })->first();
+
+                if ($agency) {
+                    $agencyUser = User::where('email', $agency->email)->first()
+                        ?? User::where('agency_id', $agency->id)->first()
+                        ?? User::where('status', 1)->first();
+                    if ($agencyUser) {
+                        return $agencyUser;
+                    }
+                }
+            }
+
+            // Dynamically resolve Agency Website Builder Custom Domain
+            if (\Illuminate\Support\Facades\Schema::hasTable('wb_agency_settings')) {
+                $rows = \DB::table('wb_agency_settings')
+                    ->whereNotNull('custom_domain')
+                    ->where('custom_domain', '!=', '')
+                    ->get();
+                foreach ($rows as $row) {
+                    if (function_exists('wbHostsMatch') && wbHostsMatch($row->custom_domain ?? '', $cleanCustomHost)) {
+                        if (!empty($row->customer_id) && \Illuminate\Support\Facades\Schema::hasTable('wb_customers')) {
+                            $cust = \DB::table('wb_customers')->where('id', $row->customer_id)->first();
+                            if ($cust) {
+                                return (object)[
+                                    'id'       => $cust->id,
+                                    'username' => $cust->subdomain ?? 'agency',
+                                    'email'    => $cust->email ?? '',
+                                ];
+                            }
+                        }
+                        return (object)[
+                            'id'       => $row->id ?? 1,
+                            'username' => $cleanCustomHost,
+                            'email'    => $row->email ?? 'agency@websitebuilder.com',
+                        ];
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            // ignore
+        }
+
+        // ── CASE 4: Active Tenant Database or Custom Domain Fallback ─────────────────────────
+        if (session('tenant_db')
+            || (request() && request()->attributes->get('is_launchshop_custom_domain'))
+            || (function_exists('isLaunchShopCustomDomain') && isLaunchShopCustomDomain($cleanCustomHost))
+            || (\Illuminate\Support\Facades\DB::connection()->getDatabaseName() !== env('DB_DATABASE', env('CPANEL_USER', 'nooryak') . '_launchshop'))
+        ) {
+            // First try to resolve from the URL path — this handles the case where
+            // the user just completed checkout and still has tenant_db in session.
+            // Without this, preview_template=1 (grocery template) would be returned
+            // instead of the newly-created user's store.
+            if (!empty($usernameFromPath) && !in_array(strtolower($usernameFromPath), $reservedKeywords)) {
+                $rawUsername   = strtolower(urldecode($usernameFromPath));
+                $cleanUsername = str_replace(' ', '', $rawUsername);
+                try {
+                    $pathUser = User::where(function ($query) use ($rawUsername, $cleanUsername) {
+                            $query->where('username', $rawUsername)
+                                ->orWhere('username', $cleanUsername);
+                        })
+                        ->where(function ($q) {
+                            $q->where('preview_template', 1)->orWhere('status', 1);
+                        })
+                        ->first();
+                    if ($pathUser) {
+                        return $pathUser;
+                    }
+                } catch (\Throwable $e) {}
+            }
+
+            try {
+                $tenantUser = User::where('preview_template', 1)->first()
+                    ?? User::where('status', 1)->first()
+                    ?? User::first();
+                if ($tenantUser) {
+                    return $tenantUser;
+                }
+            } catch (\Throwable $e) {
+                // ignore
             }
         }
+
 
         return null;
     }
@@ -966,17 +1468,16 @@ if (!function_exists('getUserNullCheck')) {
         try {
             $parsedUrl = parse_url(url()->current());
             $host = $parsedUrl['host'] ?? Request::getHost();
-            $cleanHost = preg_replace('/^www\./i', '', strtolower($host));
-            $cleanHost = trim(explode(':', $cleanHost)[0], '/ ');
+            $hostWithoutWww = str_replace('www.', '', $host);
+            $hostWithWww    = 'www.' . $hostWithoutWww;
 
-            return User::whereHas('user_custom_domains', function ($q) use ($cleanHost) {
-                    $q->where(function ($query) use ($cleanHost) {
-                            $query->where('requested_domain', $cleanHost)
-                                ->orWhere('requested_domain', 'www.' . $cleanHost)
-                                ->orWhere('requested_domain', 'LIKE', '%' . $cleanHost . '%')
-                                ->orWhere('current_domain', $cleanHost)
-                                ->orWhere('current_domain', 'www.' . $cleanHost)
-                                ->orWhere('current_domain', 'LIKE', '%' . $cleanHost . '%');
+            return User::where('online_status', 1)
+                ->where('status', 1)
+                ->whereHas('user_custom_domains', function ($q) use ($hostWithWww, $hostWithoutWww) {
+                    $q->where('status', 1)
+                        ->where(function ($query) use ($hostWithWww, $hostWithoutWww) {
+                            $query->where('requested_domain', $hostWithWww)
+                                ->orWhere('requested_domain', $hostWithoutWww);
                         });
                 })
                 ->first();
@@ -1077,13 +1578,23 @@ if (!function_exists('cartSubTotal')) {
 if (!function_exists('onlyDigitalItemsInCart')) {
     function onlyDigitalItemsInCart()
     {
-        $username = app('user')->username;
+        $userObj  = app()->bound('user') ? app('user') : null;
+        $username = ($userObj && is_object($userObj) && !empty($userObj->username) && $userObj->username !== 'guest') ? $userObj->username : '';
+        if (empty($username)) {
+            $u = getUser();
+            $username = ($u && is_object($u) && !empty($u->username)) ? $u->username : '';
+        }
+        if (empty($username)) {
+            return false;
+        }
         $cart = session()->get('cart_' . $username, []);
         if (!empty($cart)) {
             foreach ($cart as $key => $cartItem) {
-                $item = UserItem::findorFail($cartItem["id"]);
-                if ($item->type == 'digital') {
-                    return true;
+                if (isset($cartItem["id"])) {
+                    $item = UserItem::find($cartItem["id"]);
+                    if ($item && $item->type == 'digital') {
+                        return true;
+                    }
                 }
             }
         }
@@ -1161,6 +1672,23 @@ if (!function_exists('coupon')) {
 }
 
 
+if (!function_exists('getCdomain')) {
+    function getCdomain($user)
+    {
+        try {
+            if ($user && is_object($user) && isset($user->id)) {
+                $cdomain = \App\Models\User\UserCustomDomain::where('user_id', $user->id)
+                    ->where('status', 1)
+                    ->first();
+                if ($cdomain && !empty($cdomain->requested_domain)) {
+                    return $cdomain->requested_domain;
+                }
+            }
+        } catch (\Throwable $e) {}
+        return false;
+    }
+}
+
 if (!function_exists('detailsUrl')) {
 
     function detailsUrl($user)
@@ -1178,26 +1706,13 @@ if (!function_exists('detailsUrl')) {
         }
 
         $host = request()->getHost();
-        $cleanHost = preg_replace('/^(www|app)\./i', '', strtolower($host));
-        $mainHosts = array_filter([
-            env('WEBSITE_HOST'),
-            'launchshop.in',
-            'nooryak.in',
-            'localhost',
-            '127.0.0.1'
-        ]);
+        $scheme = request()->getScheme() ?: 'https';
 
-        $isMainSite = false;
-        foreach ($mainHosts as $mHost) {
-            if ($cleanHost === strtolower($mHost) || str_ends_with($cleanHost, '.' . strtolower($mHost))) {
-                $isMainSite = true;
-                break;
-            }
+        if (!empty($host)) {
+            return $scheme . '://' . $host . '/' . $username;
         }
 
-        
-
-        return '//' . $username . '.' . env('WEBSITE_HOST');
+        return url('/' . $username);
     }
 }
 
@@ -1272,8 +1787,22 @@ if (!function_exists('paytabInfo')) {
 
     function check_variation($item_id)
     {
-        $product_variations = ProductVariation::where('item_id', $item_id)->count();
-        return $product_variations;
+        $product_variations = \App\Models\User\ProductVariation::where('item_id', $item_id)->get();
+        if ($product_variations->isEmpty()) {
+            return 0;
+        }
+        $distinct_variations = [];
+        foreach ($product_variations as $pv) {
+            $pvc = \App\Models\User\ProductVariationContent::where('product_variation_id', $pv->id)->first();
+            if ($pvc) {
+                $vc = \App\Models\VariantContent::find($pvc->variation_name);
+                $key = $vc ? strtolower(trim($vc->name)) : ('variation_' . $pvc->variation_name);
+                $distinct_variations[$key] = true;
+            } else {
+                $distinct_variations['pv_' . $pv->id] = true;
+            }
+        }
+        return count($distinct_variations);
     }
 }
 
@@ -1370,15 +1899,22 @@ if (!function_exists('canonicalUrl')) {
     {
         $user = getUser();
 
-        if ($user->subdomain_status == 1) {
+        // Safely bail if user is null (e.g. on 404 pages, websitebuilder/checkout subdomains)
+        if (!$user) {
+            return request()->url();
+        }
+
+        if (!empty($user->subdomain_status) && $user->subdomain_status == 1) {
             $domain = getParam() . '.' . env('WEBSITE_HOST');
         } else {
             $domain = env('WEBSITE_HOST');
         }
 
         // check if the user has a custom domain
-        if (getCdomain($user) !== false) {
-            $domain = getCdomain($user);
+        $customDomain = null;
+        try { $customDomain = getCdomain($user); } catch (\Throwable $e) {}
+        if ($customDomain !== false && !empty($customDomain)) {
+            $domain = $customDomain;
         }
 
         if (!preg_match('/^https?:\/\//', $domain)) {
@@ -1390,7 +1926,7 @@ if (!function_exists('canonicalUrl')) {
         //current path and decode URL-encoded characters
         $path = urldecode(request()->path());
 
-        if ($user->subdomain_status == 1 || getCdomain($user) !== false) {
+        if ((!empty($user->subdomain_status) && $user->subdomain_status == 1) || (!empty($customDomain) && $customDomain !== false)) {
             $subdomain = getParam();
             $pathSegments = explode('/', $path);
             if ($pathSegments[0] === $subdomain) {
@@ -1466,9 +2002,107 @@ if (!function_exists('themeAsset')) {
         return asset("assets/user-front/themes/{$theme}/" . ltrim($path, '/'));
     }
 }
+
+
+/**
+ * Check if the application is currently using the agency database
+ *
+ * @return bool
+ */
+if (!function_exists('isUsingAgencyDb')) {
+    function isUsingAgencyDb(): bool
+    {
+        return session('using_agency_db', false) === true;
+    }
+}
+
+/**
+ * Get current custom domain information if active
+ *
+ * @return array|null
+ */
+if (!function_exists('getCustomDomainInfo')) {
+    function getCustomDomainInfo(): ?array
+    {
+        if (!session('custom_domain_active', false)) {
+            return null;
+        }
+
+        return [
+            'user_id' => session('custom_domain_user_id'),
+            'domain' => session('custom_domain_name'),
+            'using_agency_db' => session('using_agency_db', false),
+        ];
+    }
+}
+
+/**
+ * Get the current database name
+ *
+ * @return string
+ */
+if (!function_exists('getCurrentDatabaseName')) {
+    function getCurrentDatabaseName(): string
+    {
+        return config('database.connections.mysql.database', 'maindb');
+    }
+}
+
+/**
+ * Reliable check: is this request/session a Website Builder checkout?
+ *
+ * Priority order:
+ *  1. Explicit product_type flag  → "website_builder" = true, "launchshop" = false (no ambiguity)
+ *  2. is_website_builder = 1      → true (kept for backward compat)
+ *  3. Session wb_checkout_req     → check product_type stored when WB checkout began
+ *  4. Host-based detection        → websitebuilder.* subdomain = true
+ */
 if (!function_exists('isWebsiteBuilderCheckout')) {
     function isWebsiteBuilderCheckout($request = null): bool
     {
+        $req = $request ?: request();
+
+        // ── 1. Explicit product_type flag (most reliable) ──────────────────
+        $productType = is_array($req)
+            ? ($req['product_type'] ?? null)
+            : (method_exists($req, 'input') ? $req->input('product_type') : ($req->product_type ?? null));
+
+        if (!empty($productType)) {
+            return strtolower(trim($productType)) === 'website_builder';
+        }
+
+        // ── 2. Legacy is_website_builder flag ──────────────────────────────
+        $flag = is_array($req)
+            ? ($req['is_website_builder'] ?? null)
+            : (method_exists($req, 'input') ? $req->input('is_website_builder') : ($req->is_website_builder ?? null));
+
+        if ($flag === true || $flag === 1 || $flag === '1' || $flag === 'true') {
+            return true;
+        }
+
+        // ── 3. Session: check wb_checkout_req first (set by WB processCheckout) ─
+        $wbSess = session('wb_checkout_req');
+        if (is_array($wbSess)) {
+            $wbProdType = strtolower(trim($wbSess['product_type'] ?? ''));
+            if ($wbProdType === 'website_builder') return true;
+            if ($wbProdType === 'launchshop')      return false;
+            // Legacy flag inside wb_checkout_req
+            $wbFlag = $wbSess['is_website_builder'] ?? null;
+            if ($wbFlag === true || $wbFlag === 1 || $wbFlag === '1') return true;
+        }
+
+        // ── 4. Host-based detection (subdomain = websitebuilder.*) ─────────
+        $refererHost = strtolower(parse_url(request()->headers->get('referer') ?? '', PHP_URL_HOST) ?? '');
+        $currentHost = strtolower(request()->getHost() ?? '');
+        if (
+            str_starts_with($refererHost, 'websitebuilder.') ||
+            str_starts_with($refererHost, 'website-builder.') ||
+            str_starts_with($currentHost, 'websitebuilder.')  ||
+            str_starts_with($currentHost, 'website-builder.')
+        ) {
+            return true;
+        }
+
         return false;
     }
 }
@@ -1536,3 +2170,4 @@ if (!function_exists('user_item_image_url')) {
         return !empty($candidates) ? asset($candidates[0]) : $placeholder;
     }
 }
+

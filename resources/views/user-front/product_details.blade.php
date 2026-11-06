@@ -10,7 +10,7 @@
   <!--- For Social Media Share Thumbnail --->
   <meta property="og:title" content="{{ $product->title . ' | ' . $username }}">
   <meta property="og:description" content="{{ $product->summary }}">
-  <meta property="og:image" content="{{ asset('assets/front/img/user/items/thumbnail/' . $product->item->thumbnail) }}">
+  <meta property="og:image" content="{{ user_item_image_url($product->item->thumbnail ?? '', 'thumbnail') }}">
   <meta property="og:url" content="{{ url()->current() }}">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1024">
@@ -27,47 +27,71 @@
           <div class="col-lg-6">
             <input type="hidden" id="details_item_id" value="{{ $product->item->id }}">
             @php
-              $itemSliders = $product->item->sliders ?? collect();
-              $rawThumb = $product->item->thumbnail ?? '';
-              $thumbnailSrc = str_starts_with($rawThumb, 'http') ? $rawThumb : (str_starts_with($rawThumb, 'assets/') ? asset($rawThumb) : asset('assets/front/img/user/items/thumbnail/' . $rawThumb));
-              
+              $placeholderImg = asset('assets/front/images/placeholder.png');
+              $mainSliderSrc = user_item_image_url($product->item->thumbnail ?? '', 'slider');
+              $thumbnailSrc = user_item_image_url($product->item->thumbnail ?? '', 'thumbnail');
+
               $slidesList = [];
-              if ($itemSliders->count() > 0) {
+              $itemId = $product->item_id ?? ($product->item->id ?? null);
+              $itemSliders = $product->item->sliders ?? collect();
+
+              if (($itemSliders->isEmpty()) && !empty($itemId)) {
+                  $itemSliders = \App\Models\User\UserItemImage::where('item_id', $itemId)->get();
+              }
+
+              if ($itemSliders->count() > 1) {
                   foreach ($itemSliders as $s) {
-                      if (!empty($s->image)) {
-                          $slidesList[] = $s->image;
+                      $imgName = $s->image ?? '';
+                      if (!empty($imgName) && $imgName !== 'noimage.jpg') {
+                          $sSrc = user_item_image_url($imgName, 'slider');
+                          if (!empty($sSrc) && !in_array($sSrc, $slidesList)) {
+                              $slidesList[] = $sSrc;
+                          }
                       }
                   }
               }
+
+              // Auto-resolve multi-image gallery from master SQL / thumbnail matching if DB only has <= 1 image
+              if (count($slidesList) <= 1) {
+                  $resolvedImgs = \App\Http\Helpers\ItemImageSqlHelper::resolveSliderImagesForItem($product->item ?? null);
+                  if (!empty($resolvedImgs) && count($resolvedImgs) > 1) {
+                      $slidesList = [];
+                      foreach ($resolvedImgs as $imgName) {
+                          $sSrc = user_item_image_url($imgName, 'slider');
+                          if (!empty($sSrc) && !in_array($sSrc, $slidesList) && $sSrc !== $placeholderImg) {
+                              $slidesList[] = $sSrc;
+                          }
+                      }
+                  }
+              }
+
               if (empty($slidesList)) {
-                  $slidesList[] = $rawThumb;
+                  if (!empty($mainSliderSrc) && $mainSliderSrc !== $placeholderImg) {
+                      $slidesList[] = $mainSliderSrc;
+                  } else {
+                      $slidesList[] = $placeholderImg;
+                  }
               }
             @endphp
             <div class="product-single-gallery">
-              <div class="slider-thumbnails2">
-                @foreach ($slidesList as $slideImg)
-                  @php
-                    $slideSrc = str_starts_with($slideImg, 'http') ? $slideImg : (str_starts_with($slideImg, 'assets/') ? asset($slideImg) : asset('assets/front/img/user/items/slider-images/' . $slideImg));
-                  @endphp
-                  <div class="thumbnail-img radius-md lazy-container ratio ratio-1-1">
-                    <img class="lazyloaded" src="{{ $slideSrc }}"
-                      onerror="this.onerror=null;this.src='{{ $thumbnailSrc }}';"
-                      alt="{{ $product->title }}" />
-                  </div>
-                @endforeach
-              </div>
-              <div class="product-single-slider2">
-                @foreach ($slidesList as $slideImg)
-                  @php
-                    $slideSrc = str_starts_with($slideImg, 'http') ? $slideImg : (str_starts_with($slideImg, 'assets/') ? asset($slideImg) : asset('assets/front/img/user/items/slider-images/' . $slideImg));
-                  @endphp
+              @if (count($slidesList) > 1)
+                <div class="slider-thumbnails2">
+                  @foreach ($slidesList as $slideSrc)
+                    <div class="thumbnail-img radius-md lazy-container ratio ratio-1-1">
+                      <img class="lazyloaded" src="{{ $slideSrc }}"
+                        onerror="this.onerror=null;this.src='{{ $thumbnailSrc }}';"
+                        alt="{{ $product->title }}" />
+                    </div>
+                  @endforeach
+                </div>
+              @endif
+              <div class="product-single-slider2" @if(count($slidesList) <= 1) style="width: 100%; max-width: 100%; margin-left: 0; padding-left: 0;" @endif>
+                @foreach ($slidesList as $slideSrc)
                   <div class="product-single-single-item">
-                    <figure class="radius-lg lazy-container ratio ratio-1-1">
-                      <a href="{{ $slideSrc }}" target="_blank">
-                        <img class="lazyloaded" src="{{ $slideSrc }}"
-                          onerror="this.onerror=null;this.src='{{ $thumbnailSrc }}';"
-                          alt="{{ $product->title }}" />
-                      </a>
+                    <figure class="radius-lg lazy-container ratio ratio-1-1 product-zoom-figure">
+                      <img class="lazyloaded product-zoom-img" src="{{ $slideSrc }}" data-zoom-image="{{ $slideSrc }}"
+                        onerror="this.onerror=null;this.src='{{ $thumbnailSrc }}';"
+                        alt="{{ $product->title }}" />
                     </figure>
                   </div>
                 @endforeach
@@ -224,25 +248,38 @@
               @endif
               <div class="product-action">
                 @if (count($product_variations) > 0)
+                  @php
+                    $seen_detail_variations = [];
+                  @endphp
                   <ul class="product-list-group mb-20" id="variantListULDetails">
                     @foreach ($product_variations as $product_variation)
                       @php
-                        $product_variation_contents = App\Models\User\ProductVariationContent::where([
+                        $product_variation_content = App\Models\User\ProductVariationContent::where([
                             ['product_variation_id', $product_variation->id],
                             ['language_id', $uLang],
-                        ])->get();
+                        ])->first();
+
+                        if (!$product_variation_content) {
+                            $product_variation_content = App\Models\User\ProductVariationContent::where('product_variation_id', $product_variation->id)->first();
+                        }
+
+                        $variant_content = null;
+                        if ($product_variation_content) {
+                            $variant_content = App\Models\VariantContent::where('id', $product_variation_content->variation_name)->first();
+                        }
+                        
+                        $vName = $variant_content ? $variant_content->name : ('Option ' . $product_variation->id);
+                        if (isset($seen_detail_variations[$vName])) {
+                            continue;
+                        }
+                        $seen_detail_variations[$vName] = true;
+
                         $variant_content_options = App\Models\User\ProductVariantOption::where([
                             ['product_variation_id', $product_variation->id],
                         ])->get();
                       @endphp
 
-                      @foreach ($product_variation_contents as $product_variation_content)
-                        @php
-                          $variant_content = App\Models\VariantContent::where(
-                              'id',
-                              $product_variation_content->variation_name,
-                          )->first();
-                        @endphp
+                      @if ($product_variation_content && count($variant_content_options) > 0)
                         <li class="list-item" data-variant_name="{{ @$variant_content->name }}">
                           <h4 class="list-item-title color-primary mb-1">{{ @$variant_content->name }}:</h4>
                           <ul class="custom-radio variantUL" id="variantUL">
@@ -269,7 +306,7 @@
 
                                 $sup_option_content = make_input_name($opt_name);
                                 $id_name = make_input_name($opt_name);
-                                $main_id = 'detail_' . $sup_option_content . '_' . $id_name;
+                                $main_id = 'detail_' . $sup_option_content . '_' . $id_name . '_' . $variant_content_option->id;
                               @endphp
                               <li>
                                 <input id="radio_{{ $main_id }}" type="radio"
@@ -285,7 +322,7 @@
                             @endforeach
                           </ul>
                         </li>
-                      @endforeach
+                      @endif
                     @endforeach
                   </ul>
                 @endif
@@ -516,12 +553,12 @@
           <div class="col-12">
             @if (count($related_product) > 0)
               @php
-                $slidesToShowMobile = ($userBs->theme == 'clothing') ? 2 : 1;
+                $slidesToShowMobile = (!empty($userBs) && isset($userBs->theme) && $userBs->theme == 'clothing') ? 2 : 1;
               @endphp
               <div class="product-slider mb-30 pb-10" id="product-details-slider"
                 data-slick='{"dots": true, "slidesToShow": 4, "slidesToScroll": 1, "responsive": [{"breakpoint": 1200, "settings": {"slidesToShow": 3, "slidesToScroll": 1}}, {"breakpoint": 992, "settings": {"slidesToShow": 2, "slidesToScroll": 1}}, {"breakpoint": 575, "settings": {"slidesToShow": {{ $slidesToShowMobile }}, "slidesToScroll": 1}}]}'>
                 @foreach ($related_product as $item)
-                  @if ($userBs->theme == 'clothing')
+                  @if (!empty($userBs) && isset($userBs->theme) && $userBs->theme == 'clothing')
                     @php
                       $itemContent = $item;
                       $product = $item->item;
@@ -539,7 +576,7 @@
                         <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $itemContent->slug]) }}">
                           <img class="lazyload blur-up default-img"
                             src="{{ asset('assets/front/images/placeholder.png') }}"
-                            data-src="{{ asset('assets/front/img/user/items/thumbnail/' . $product->thumbnail) }}"
+                            data-src="{{ user_item_image_url($product->thumbnail ?? '', 'thumbnail') }}"
                             alt="{{ $itemContent->title }}">
                         </a>
                         <div class="product-badge">
@@ -583,10 +620,10 @@
                         <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $item->slug]) }}"
                           class="lazy-container ratio ratio-1-1">
                           <img class="lazyload default-img" src="{{ asset('assets/front/images/placeholder.png') }}"
-                            data-src="{{ asset('assets/front/img/user/items/thumbnail/' . $item->item->thumbnail) }}"
+                            data-src="{{ user_item_image_url($item->item->thumbnail ?? '', 'thumbnail') }}"
                             alt="Product">
                           <img class="lazyload hover-img" src="{{ asset('assets/front/images/placeholder.png') }}"
-                            data-src="{{ asset('assets/front/img/user/items/thumbnail/' . $item->item->thumbnail) }}"
+                            data-src="{{ user_item_image_url($item->item->thumbnail ?? '', 'thumbnail') }}"
                             alt="Product">
                         </a>
                       </figure>
@@ -715,7 +752,7 @@
 
   @if ($shop_settings->catalog_mode != 1)
     @php
-      $is_xl_breakpoint = in_array($userBs->theme, ['pet', 'skinflow', 'jewellery', 'clothing']);
+      $is_xl_breakpoint = in_array($userBs->theme ?? 'grocery', ['pet', 'skinflow', 'jewellery', 'clothing']);
       $breakpoint_class = $is_xl_breakpoint ? 'd-xl-none' : 'd-lg-none';
     @endphp
     <!-- Sticky Bottom Cart Bar on Mobile -->
@@ -1007,7 +1044,8 @@
         let $input = $(".item_quantity_details input");
         let qty = parseInt($input.val());
         let item_id = $('#details_item_id').val();
-        let url = mainurl + "/add-to-cart/" + item_id;
+        let cleanBase = (typeof mainurl !== 'undefined' ? mainurl : '').split('?')[0].replace(/\/+$/, '');
+        let url = cleanBase + "/add-to-cart/" + item_id;
         let final_price = totalPriceDetails2(qty);
 
         if (stErr > 0) {
