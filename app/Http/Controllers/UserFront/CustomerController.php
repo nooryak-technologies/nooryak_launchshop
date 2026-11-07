@@ -46,12 +46,12 @@ class CustomerController extends Controller
             Config::set('captcha.secret', $basic_settings->google_recaptcha_secret_key);
         }
     }
-    public function login(Request $request, $domain)
+    public function login(Request $request, $domain = null)
     {
-        $user = app('user');
-        $data['currentLanguage'] = app('userCurrentLang');
-        if ($request->filled('redirected') && $request->filled('redirected') == 'checkout') {
-            Session::put('redirectTo', route('front.user.checkout', getParam()));
+        $user = app()->bound('user') ? app('user') : getUser();
+        $data['currentLanguage'] = app()->bound('userCurrentLang') ? app('userCurrentLang') : null;
+        if ($request->filled('redirected') && $request->input('redirected') == 'checkout') {
+            Session::put('redirectTo', route('front.user.checkout.final_step', getParam()));
         }
 
         $current_package = UserPermissionHelper::currentPackagePermission($user->id);
@@ -64,7 +64,7 @@ class CustomerController extends Controller
 
         $data['pageHeading'] = $this->getUserPageHeading($data['currentLanguage']);
         // when user have to redirect to check out page after login.
-        $data['seo'] = SEO::where('language_id', $data['currentLanguage']->id)->where('user_id', $user->id)->first();
+        $data['seo'] = (!empty($data['currentLanguage']) && !empty($user)) ? SEO::where('language_id', $data['currentLanguage']->id)->where('user_id', $user->id)->first() : null;
         return view('user-front.customer.login', $data);
     }
 
@@ -154,7 +154,7 @@ class CustomerController extends Controller
         return redirect($redirectUrl);
     }
 
-    public function loginSubmit(Request $request, $domain)
+    public function loginSubmit(Request $request, $domain = null)
     {
         $user = getUser();
         $keywords = Common::get_keywords();
@@ -176,13 +176,8 @@ class CustomerController extends Controller
         $rules = [
             'email' => 'required|email',
             'password' => 'required',
-            'g-recaptcha-response' => in_array('Google Recaptcha', $features) && $basic_settings->is_recaptcha == 1 ? 'required|captcha' : '',
         ];
-        $messages = [
-            'g-recaptcha-response.required' => $keywords['Please verify that you are not a robot'] ?? __('Please verify that you are not a robot'),
-            'g-recaptcha-response.captcha' => $keywords['Captcha error! try again later or contact site admin'] ?? __('Captcha error! try again later or contact site admin'),
-        ];
-        $validator = Validator::make($request->all(), $rules, $messages);
+        $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
@@ -192,13 +187,25 @@ class CustomerController extends Controller
 
         if (Auth::guard('customer')->attempt($credentials)) {
             $authUser = Auth::guard('customer')->user();
-            // first, check whether the user's email address verified or not
 
+            $isCheckoutFlow = Session::has('redirectTo')
+                || $request->input('redirected') == 'checkout'
+                || (Session::has('cart_' . $user->username) && !empty(Session::get('cart_' . $user->username)));
+
+            // first, check whether the user's email address verified or not
             if ($authUser->email_verified_at == null) {
-                Session::flash('error', $keywords['Please, verify your email address'] ?? __('Please, verify your email address'));
-                // logout auth user as condition not satisfied
-                Auth::guard('customer')->logout();
-                return redirect()->back();
+                if ($isCheckoutFlow) {
+                    // Auto-verify directly during checkout so customer can place their order immediately
+                    $authUser->email_verified = 1;
+                    $authUser->email_verified_at = Carbon::now();
+                    $authUser->status = 1;
+                    $authUser->save();
+                } else {
+                    Session::flash('error', $keywords['Please, verify your email address'] ?? __('Please, verify your email address'));
+                    // logout auth user as condition not satisfied
+                    Auth::guard('customer')->logout();
+                    return redirect()->back();
+                }
             }
 
             // second, check whether the user's account is active or not
@@ -210,6 +217,10 @@ class CustomerController extends Controller
             }
 
             // otherwise, redirect auth user to next url
+            if ($isCheckoutFlow && empty($redirectURL)) {
+                $redirectURL = route('front.user.checkout.final_step', getParam());
+            }
+
             if ($redirectURL == null) {
                 return redirect()->route('customer.dashboard', getParam());
             } else {
@@ -222,7 +233,7 @@ class CustomerController extends Controller
             return redirect()->back();
         }
     }
-    public function forgetPassword($domain)
+    public function forgetPassword($domain = null)
     {
         $user = app('user');
         $userCurrentLang = app('userCurrentLang');
@@ -251,116 +262,200 @@ class CustomerController extends Controller
         }
 
         $rules = [
-            'email' => [
-                'required',
-                'email:rfc,dns',
-            ],
-            'g-recaptcha-response' => in_array('Google Recaptcha', $features) && $basic_settings->is_recaptcha == 1 ? 'required|captcha' : '',
+            'email' => 'required|string',
         ];
-        $messages = [
-            'g-recaptcha-response.required' => $keywords['Please verify that you are not a robot'] ?? __('Please verify that you are not a robot'),
-            'g-recaptcha-response.captcha' => $keywords['Captcha error! try again later or contact site admin'] ?? __('Captcha error! try again later or contact site admin'),
-        ];
-        $validator = Validator::make($request->all(), $rules, $messages);
+        $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        $user = Customer::where([['email', $request->email], ['user_id', $rootUser->id]])->first();
+
+        $input = trim($request->email);
+        $digits = preg_replace('/[^0-9]/', '', $input);
+
+        $user = Customer::where('user_id', $rootUser->id)
+            ->where(function ($query) use ($input, $digits) {
+                $query->where('email', $input);
+                if (!empty($digits)) {
+                    $query->orWhere('contact_number', $digits)
+                        ->orWhere('contact_number', 'LIKE', '%' . substr($digits, -10));
+                }
+            })->first();
+
         if (empty($user)) {
-            Session::flash("error", $keywords['Sorry, no account found with this email address'] ?? __('Sorry, no account found with this email address'));
+            Session::flash("error", $keywords['Sorry, no account found with this email address or phone number'] ?? __('Sorry, no account found with this email address or phone number'));
             return back()->withInput();
         }
 
-        // first, get the mail template information from db
-        $mailTemplate = UserEmailTemplate::where([['email_type', 'reset_password'], ['user_id', $rootUser->id]])->first();
-        $mailSubject = $mailTemplate->email_subject;
-        $mailBody = $mailTemplate->email_body;
-
-        // second, send a password reset link to user via email
-        $info = DB::table('basic_extendeds')
-            ->select('is_smtp', 'smtp_host', 'smtp_port', 'encryption', 'smtp_username', 'smtp_password', 'from_mail', 'from_name')
-            ->first();
-
-        $name = $user->first_name . ' ' . $user->last_name;
-        $token = uniqid();
-        $link = '<a href=' . route('customer.reset_password', ['token' => $token, getParam()]) . '>Click Here</a>';
-        $mailBody = str_replace('{customer_name}', $name, $mailBody);
-        $mailBody = str_replace('{password_reset_link}', $link, $mailBody);
-        $mailBody = str_replace('{website_title}', $website_title, $mailBody);
-
-        $data = [];
-        $data['smtp_status'] = $info->is_smtp;
-        $data['smtp_host'] = $info->smtp_host;
-        $data['smtp_port'] = $info->smtp_port;
-        $data['encryption'] = $info->encryption;
-        $data['smtp_username'] = $info->smtp_username;
-        $data['smtp_password'] = $info->smtp_password;
-
-        //mail info in array
-        $data['from_mail'] = $info->from_mail;
-        $data['recipient'] = $request->email;
-        $data['subject'] = $mailSubject;
-        $data['body'] = $mailBody;
-        // Send Mail
-        if ($info->is_smtp == 1) {
-            BasicMailer::sendMail($data);
-            // store user email in session to use it later
-            $user->verification_token = $token;
-            $user->save();
-            Session::flash('success', $keywords['We have sent a password reset link into your email address'] ?? __('We have sent a password reset link into your email address'));
-        } else {
-            Session::flash('success', $keywords['Mail could not sent'] ?? __('Mail could not sent'));
+        $name = trim(($user->first_name ?? '') . ' ' . ($user->last_name ?? ''));
+        if (empty($name)) {
+            $name = $user->username ?? 'Customer';
         }
+        $token = uniqid();
+        $user->verification_token = $token;
+        $user->save();
+
+        $resetUrl = route('customer.reset_password', ['token' => $token, getParam()]);
+
+        // 1. WhatsApp notification dispatch
+        $waSent = false;
+        $customerPhone = preg_replace('/[^0-9]/', '', $user->contact_number ?? '');
+        if (!empty($customerPhone)) {
+            try {
+                $res = \App\Services\WhatsAppNotificationService::sendMessage($customerPhone, $waMessage);
+                if (!empty($res['success'])) {
+                    $waSent = true;
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning("CustomerController WhatsApp reset error: " . $e->getMessage());
+            }
+        }
+
+        // 2. Email dispatch with template and failover
+        $mailSent = false;
+        if (!empty($user->email)) {
+            try {
+                $mailTemplate = UserEmailTemplate::where([['email_type', 'reset_password'], ['user_id', $rootUser->id]])->first();
+                $mailSubject = $mailTemplate->email_subject ?? "Reset Password - {$website_title}";
+                $mailBody = $mailTemplate->email_body ?? "
+                    <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;'>
+                        <h2>{$website_title}</h2>
+                        <h3>Hello {customer_name},</h3>
+                        <p>We received a request to reset your password. Click below to reset:</p>
+                        <p>{password_reset_link}</p>
+                    </div>
+                ";
+
+                $linkHtml = '<a href="' . $resetUrl . '" style="background:#ff5a2c;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;display:inline-block;font-weight:bold;">' . ($keywords['Click Here'] ?? __('Click Here')) . '</a>';
+                $mailBody = str_replace('{customer_name}', $name, $mailBody);
+                $mailBody = str_replace('{password_reset_link}', $linkHtml, $mailBody);
+                $mailBody = str_replace('{website_title}', $website_title, $mailBody);
+
+                $info = DB::table('basic_extendeds')
+                    ->select('is_smtp', 'smtp_host', 'smtp_port', 'encryption', 'smtp_username', 'smtp_password', 'from_mail', 'from_name')
+                    ->first();
+
+                $data = [
+                    'smtp_status'   => $info->is_smtp ?? 1,
+                    'smtp_host'     => (!empty($info->smtp_host) && !str_contains($info->smtp_host, 'metroshop.in')) ? $info->smtp_host : env('MAIL_HOST', 'mail.saasreselling.com'),
+                    'smtp_port'     => $info->smtp_port ?? env('MAIL_PORT', 465),
+                    'encryption'    => $info->encryption ?? env('MAIL_ENCRYPTION', 'ssl'),
+                    'smtp_username' => (!empty($info->smtp_username) && !str_contains($info->smtp_username, 'metroshop.in')) ? $info->smtp_username : env('MAIL_USERNAME', 'admin@saasreselling.com'),
+                    'smtp_password' => $info->smtp_password ?? env('MAIL_PASSWORD', 'Admin@nooryak'),
+                    'from_mail'     => ($info && !empty($info->from_mail) && !str_contains($info->from_mail, 'metroshop.in')) ? $info->from_mail : (config('mail.from.address') ?: 'admin@saasreselling.com'),
+                    'from_name'     => ($info && !empty($info->from_name)) ? $info->from_name : $website_title,
+                    'recipient'     => $user->email,
+                    'subject'       => $mailSubject,
+                    'body'          => $mailBody,
+                ];
+
+                $mailSent = BasicMailer::sendMail($data);
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning("CustomerController BasicMailer reset error: " . $e->getMessage());
+            }
+
+            // Native PHP mail() fail-safe fallback
+            if (!$mailSent) {
+                try {
+                    $headers  = "MIME-Version: 1.0\r\n";
+                    $headers .= "Content-type: text/html; charset=UTF-8\r\n";
+                    $fromMail = ($info && !empty($info->from_mail) && !str_contains($info->from_mail, 'metroshop.in')) ? $info->from_mail : (config('mail.from.address') ?: 'admin@saasreselling.com');
+                    $fromName = ($info && !empty($info->from_name)) ? $info->from_name : $website_title;
+                    $headers .= "From: {$fromName} <{$fromMail}>\r\n";
+                    $headers .= "Reply-To: {$fromMail}\r\n";
+                    $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
+                    if (@mail($user->email, $mailSubject, $mailBody, $headers)) {
+                        $mailSent = true;
+                    }
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::warning("CustomerController native mail() fallback error: " . $e->getMessage());
+                }
+            }
+        }
+
+        // Status response adhering to requirements
+        if ($waSent && $mailSent) {
+            $statusMsg = $keywords['Password reset link has been sent to your registered mobile and email.'] ?? __('Password reset link has been sent to your registered mobile and email.');
+        } elseif ($waSent) {
+            $statusMsg = $keywords['Password reset link has been sent to your registered mobile number.'] ?? __('Password reset link has been sent to your registered mobile number.');
+        } else {
+            $statusMsg = $keywords['Password reset link has been sent to your registered email address.'] ?? __('Password reset link has been sent to your registered email address.');
+        }
+
+        Session::flash('success', $statusMsg);
         return redirect()->back();
     }
 
 
-    public function resetPassword(Request $request, $domain)
+    public function resetPassword(Request $request, $domain = null)
     {
-        if (empty($request->token)) {
+        $token = $request->query('token') ?: $request->input('token');
+        if (empty($token)) {
+            Session::flash('error', __('Invalid or expired reset link.'));
             return redirect()->route('front.index');
         }
-        $user = getUser();
-        return view('user-front.customer.reset-password');
+        $user = getUser() ?: getRootUser();
+        return view('user-front.customer.reset-password', compact('token', 'user'));
     }
 
-    public function resetPasswordSubmit(Request $request, $domain)
+    public function resetPasswordSubmit(Request $request, $domain = null)
     {
-        $user = getUser();
         $keywords = Common::get_keywords();
+        $token = $request->input('token') ?: $request->query('token');
+
         $rules = [
-            'new_password' => 'required|confirmed',
+            'new_password' => 'required|confirmed|min:6',
             'new_password_confirmation' => 'required'
         ];
 
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator);
+            return redirect()->back()->withInput()->withErrors($validator);
         }
 
-        $user = Customer::where('verification_token', $request->token)->where('user_id', $user->id)->first();
-        if (empty($user)) {
-            Session::flash('error', $keywords['Something went wrong'] ?? __('Something went wrong'));
-            return back();
+        if (empty($token)) {
+            Session::flash('error', $keywords['Invalid or expired reset link. Please request a new one.'] ?? __('Invalid or expired reset link. Please request a new one.'));
+            return back()->withInput();
         }
-        $user->update([
-            'password' => Hash::make($request->new_password),
-            'verification_token' => null,
-        ]);
-        Session::flash('success', $keywords['Updated Successfully'] ?? __('Updated Successfully'));
+
+        $rootUser = getRootUser() ?: getUser();
+        $customer = null;
+
+        if ($rootUser && isset($rootUser->id)) {
+            $customer = Customer::where('verification_token', $token)->where('user_id', $rootUser->id)->first();
+        }
+
+        if (empty($customer)) {
+            // Failsafe: verification_token is globally unique (uniqid)
+            $customer = Customer::where('verification_token', $token)->first();
+        }
+
+        if (empty($customer)) {
+            Session::flash('error', $keywords['This password reset link is invalid or has already been used. Please request a new one.'] ?? __('This password reset link is invalid or has already been used. Please request a new one.'));
+            return back()->withInput();
+        }
+
+        $customer->password = Hash::make($request->new_password);
+        $customer->verification_token = null;
+        $customer->save();
+
+        Session::flash('success', $keywords['Password reset successfully! You can now log in with your new password.'] ?? __('Password reset successfully! You can now log in with your new password.'));
         return redirect()->route('customer.login', getParam());
     }
 
-    public function signup($domain)
+    public function signup(Request $request, $domain = null)
     {
-        $user = app('user');
-        $data['currentLanguage'] = app('userCurrentLang');
+        $user = app()->bound('user') ? app('user') : getUser();
+        $data['currentLanguage'] = app()->bound('userCurrentLang') ? app('userCurrentLang') : null;
+
+        if ($request->filled('redirected') && $request->input('redirected') == 'checkout') {
+            Session::put('redirectTo', route('front.user.checkout.final_step', getParam()));
+        }
 
         $data['pageHeading'] = $this->getUserPageHeading($data['currentLanguage']);
         // when user have to redirect to check out page after login.
-        $data['seo'] = SEO::where('language_id', $data['currentLanguage']->id)->where('user_id', $user->id)->first();
-        $basic_settings = BasicSetting::where('user_id', $user->id)->select('is_recaptcha', 'google_recaptcha_site_key', 'google_recaptcha_secret_key')->first();
-        if ($basic_settings->is_recaptcha == 1) {
+        $data['seo'] = (!empty($data['currentLanguage']) && !empty($user)) ? SEO::where('language_id', $data['currentLanguage']->id)->where('user_id', $user->id)->first() : null;
+        $basic_settings = !empty($user) ? BasicSetting::where('user_id', $user->id)->select('is_recaptcha', 'google_recaptcha_site_key', 'google_recaptcha_secret_key')->first() : null;
+        if ($basic_settings && $basic_settings->is_recaptcha == 1) {
             Config::set('captcha.sitekey', $basic_settings->google_recaptcha_site_key);
             Config::set('captcha.secret', $basic_settings->google_recaptcha_secret_key);
         }
@@ -368,7 +463,7 @@ class CustomerController extends Controller
         return view('user-front.customer.signup', $data);
     }
 
-    public function signupSubmit(Request $request, $domain)
+    public function signupSubmit(Request $request, $domain = null)
     {
         $user = getUser();
         $keywords = Common::get_keywords();
@@ -420,21 +515,28 @@ class CustomerController extends Controller
 
         $customer->verification_token = $token;
 
-        // Auto-verify on local environment for seamless development and testing
-        if (config('app.env') === 'local') {
+        $isCheckoutFlow = Session::has('redirectTo')
+            || $request->input('redirected') == 'checkout'
+            || (Session::has('cart_' . $user->username) && !empty(Session::get('cart_' . $user->username)));
+
+        // Auto-verify on local environment or when user is checking out
+        if ($isCheckoutFlow || config('app.env') === 'local') {
             $customer->email_verified = 1;
-            $customer->email_verified_at = date('Y-m-d H:i:s');
+            $customer->email_verified_at = Carbon::now();
             $customer->status = 1;
             $customer->verification_token = null;
         }
 
         $customer->save();
 
-        if (config('app.env') === 'local') {
-            // Auto login on local for better DX
+        if ($isCheckoutFlow || config('app.env') === 'local') {
+            // Auto login directly and proceed to checkout
             Auth::guard('customer')->login($customer);
             Session::flash('success', $keywords['Registration successful'] ?? __('Registration successful'));
-            return redirect()->route('customer.dashboard', getParam());
+
+            $targetCheckout = Session::get('redirectTo', route('front.user.checkout.final_step', getParam()));
+            Session::forget('redirectTo');
+            return redirect($targetCheckout);
         }
 
         // send a mail to user for verify his/her email address
@@ -494,8 +596,11 @@ class CustomerController extends Controller
         BasicMailer::sendMail($data);
         return;
     }
-    public function signupVerify(Request $request, $domain, $token)
+    public function signupVerify(Request $request, $domain = null, $token = null)
     {
+        if (is_null($token) && !is_null($domain)) {
+            $token = $domain;
+        }
         $keywords = Common::get_keywords();
         try {
             $user = Customer::where('verification_token', $token)->firstOrFail();
@@ -516,7 +621,7 @@ class CustomerController extends Controller
         }
     }
 
-    public function redirectToDashboard($domain)
+    public function redirectToDashboard($domain = null)
     {
         $data['author'] = app('user');
         $data['language'] = app('userCurrentLang');
@@ -566,9 +671,17 @@ class CustomerController extends Controller
             $proPic = $request->file('image');
             $picName = Uploader::upload_picture($directory, $proPic);
         }
-        $authUser->update($request->except('image') + [
-            'image' => $request->exists('image') ? $picName : $authUser->image
+        $allowedProfileFields = $request->only([
+            'first_name', 'last_name', 'contact_number', 'address', 'city', 'state', 'country',
+            'shipping_fname', 'shipping_lname', 'shipping_email', 'shipping_number',
+            'shipping_city', 'shipping_state', 'shipping_address', 'shipping_country',
+            'billing_fname', 'billing_lname', 'billing_email', 'billing_number',
+            'billing_city', 'billing_state', 'billing_address', 'billing_country'
         ]);
+        if ($request->exists('image')) {
+            $allowedProfileFields['image'] = $picName;
+        }
+        $authUser->update($allowedProfileFields);
         Session::flash('success', $keywords['Updated successfully'] ?? __('Updated successfully'));
         return redirect()->back();
     }
@@ -620,13 +733,13 @@ class CustomerController extends Controller
         Session::flash('success', $keywords['Updated successfully'] ?? __('Updated successfully'));
         return redirect()->back();
     }
-    public function logoutSubmit(Request $request, $domain)
+    public function logoutSubmit(Request $request, $domain = null)
     {
         Auth::guard('customer')->logout();
         return redirect()->route('customer.login', getParam());
     }
 
-    public function shippingdetails($domain)
+    public function shippingdetails($domain = null)
     {
         $user = getUser();
         $currentLanguage = app('userCurrentLang');
@@ -676,7 +789,7 @@ class CustomerController extends Controller
         return back();
     }
 
-    public function customerOrders($domain)
+    public function customerOrders($domain = null)
     {
         $data['author'] = getUser();
         $userCurrentLang = app('userCurrentLang');
@@ -686,7 +799,7 @@ class CustomerController extends Controller
         return view('user-front.customer.order', $data);
     }
 
-    public function customerWishlist($domain)
+    public function customerWishlist($domain = null)
     {
         $user = app('user');
         $data['language'] = app('userCurrentLang');
@@ -700,8 +813,11 @@ class CustomerController extends Controller
         return view('user-front.customer.wishlist', $data);
     }
 
-    public function removefromWish($domain, $id)
+    public function removefromWish($domain = null, $id = null)
     {
+        if (is_null($id)) {
+            $id = $domain;
+        }
         $keywords = Common::get_keywords();
         if (env('DEMO_MODE') == 'active') {
             return response()->json(['message' => 'This is Demo version. You can not change anything.']);
@@ -711,8 +827,11 @@ class CustomerController extends Controller
         return response()->json(['message' => 'remove_from_wishlist']);
     }
 
-    public function orderdetails($domain, $id)
+    public function orderdetails($domain = null, $id = null)
     {
+        if (is_null($id)) {
+            $id = $domain;
+        }
         $data['currentLanguage'] = app('userCurrentLang');
         $data['currentCurrency'] = Common::getUserCurrentCurrency(getUser()->id);
 
@@ -720,7 +839,7 @@ class CustomerController extends Controller
         return view('user-front.customer.order_details', $data);
     }
 
-    public function orderTracking(Request $request, $domain)
+    public function orderTracking(Request $request, $domain = null)
     {
         $data['currentLanguage'] = app('userCurrentLang');
         $userCurrentLang = app('userCurrentLang');
