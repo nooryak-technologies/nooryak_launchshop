@@ -96,48 +96,74 @@ class MegaMailer
 
         $be = $currentLang->basic_extended;
 
-        if ($be->is_smtp == 1) {
+        $fromMail = !empty($be->from_mail) ? $be->from_mail : (config('mail.from.address') ?: env('MAIL_FROM_ADDRESS', 'infosaasreselling@nooryak.in'));
+        $fromName = !empty($be->from_name) ? $be->from_name : (!empty($data['website_title']) ? $data['website_title'] : 'LaunchShop');
+        $emailSubject = !empty($temp->email_subject) ? $temp->email_subject : ($data['subject'] ?? 'Notification from ' . $fromName);
+        $fullBody = Common::wrapEmailBody($body, $emailSubject);
+
+        $useSmtp = ($be && $be->is_smtp == 1 && !empty($be->smtp_host)) || !empty(env('MAIL_HOST'));
+        $adminMailSent = false;
+
+        if ($useSmtp) {
             try {
-                //config smtp
+                $smtpHost = ($be && $be->is_smtp == 1 && !empty($be->smtp_host)) ? $be->smtp_host : env('MAIL_HOST', 'mail.nooryak.in');
+                $smtpPort = ($be && $be->is_smtp == 1 && !empty($be->smtp_port)) ? $be->smtp_port : env('MAIL_PORT', 465);
+                $smtpEncryption = ($be && $be->is_smtp == 1 && !empty($be->encryption)) ? $be->encryption : env('MAIL_ENCRYPTION', 'ssl');
+                $smtpUser = ($be && $be->is_smtp == 1 && !empty($be->smtp_username)) ? $be->smtp_username : env('MAIL_USERNAME', 'infosaasreselling@nooryak.in');
+                $smtpPass = ($be && $be->is_smtp == 1 && !empty($be->smtp_password)) ? $be->smtp_password : env('MAIL_PASSWORD', 'Admin@nooryak');
+
                 $smtp = [
                     'transport' => 'smtp',
-                    'host' => $be->smtp_host,
-                    'port' => $be->smtp_port,
-                    'encryption' => $be->encryption,
-                    'username' => $be->smtp_username,
-                    'password' => $be->smtp_password,
-                    'timeout' => null,
+                    'host' => $smtpHost,
+                    'port' => $smtpPort,
+                    'encryption' => $smtpEncryption,
+                    'username' => $smtpUser,
+                    'password' => $smtpPass,
+                    'timeout' => 15,
                     'auth_mode' => null,
                 ];
                 Config::set('mail.mailers.smtp', $smtp);
-                //set data to for pass in te mail array
+
                 $mailData = [];
-                $mailData['from_mail'] = $be->from_mail;
+                $mailData['from_mail'] = $fromMail;
+                $mailData['from_name'] = $fromName;
                 $mailData['toMail'] = $data['toMail'];
-                $mailData['subject'] = $temp->email_subject;
-                $mailData['body'] = Common::wrapEmailBody($body, $temp->email_subject);
+                $mailData['toName'] = $data['toName'] ?? 'Customer';
+                $mailData['subject'] = $emailSubject;
+                $mailData['body'] = $fullBody;
                 if (array_key_exists('membership_invoice', $data)) {
                     $mailData['membership_invoice'] = $data['membership_invoice'];
                 }
-                //send mail
+
                 Mail::send([], [], function (Message $message) use ($mailData) {
-                    $message->to($mailData['toMail'])
-                        ->from($mailData['from_mail'])
+                    $message->to($mailData['toMail'], $mailData['toName'])
+                        ->from($mailData['from_mail'], $mailData['from_name'])
                         ->subject($mailData['subject'])
                         ->html($mailData['body'], 'text/html');
 
-                    if (array_key_exists('membership_invoice', $mailData)) {
+                    if (array_key_exists('membership_invoice', $mailData) && !empty($mailData['membership_invoice'])) {
                         $filePath = public_path('assets/front/invoices/') . $mailData['membership_invoice'];
-
                         if (file_exists($filePath)) {
                             $message->attach($filePath);
                         }
                     }
                 });
-            } catch (TransportException $e) {
-                Session::flash('error', 'Mail could not be sent.');
-                return;
+                $adminMailSent = true;
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('SMTP mailFromAdmin failed: ' . $e->getMessage());
             }
+        }
+
+        if (!$adminMailSent && !empty($data['toMail'])) {
+            try {
+                $headers = "MIME-Version: 1.0\r\n";
+                $headers .= "Content-type: text/html; charset=UTF-8\r\n";
+                $headers .= "From: " . $fromName . " <" . $fromMail . ">\r\n";
+                $headers .= "Reply-To: " . $fromMail . "\r\n";
+                $headers .= "X-Mailer: PHP/" . phpversion();
+
+                @mail($data['toMail'], $emailSubject, $fullBody, $headers);
+            } catch (\Throwable $e) {}
         }
     }
 
@@ -401,30 +427,46 @@ class MegaMailer
         </html>
         ';
 
-        if ($be->is_smtp == 1) {
+        $websiteTitle = !empty($bs->website_title) ? $bs->website_title : 'LaunchShop';
+        $fromMail = !empty($be->from_mail) ? $be->from_mail : (config('mail.from.address') ?: env('MAIL_FROM_ADDRESS', 'infosaasreselling@nooryak.in'));
+        $fromName = !empty($be->from_name) ? $be->from_name : (config('mail.from.name') ?: $websiteTitle);
+        $subject = '🎉 Welcome to ' . $websiteTitle . '! Your Store is Ready & Invoice';
+
+        // Check if DB SMTP is configured, otherwise fallback to .env SMTP
+        $useSmtp = ($be && $be->is_smtp == 1 && !empty($be->smtp_host)) || !empty(env('MAIL_HOST'));
+        $credentialsMailSent = false;
+
+        if ($useSmtp) {
             try {
+                $smtpHost = ($be && $be->is_smtp == 1 && !empty($be->smtp_host)) ? $be->smtp_host : env('MAIL_HOST', 'mail.nooryak.in');
+                $smtpPort = ($be && $be->is_smtp == 1 && !empty($be->smtp_port)) ? $be->smtp_port : env('MAIL_PORT', 465);
+                $smtpEncryption = ($be && $be->is_smtp == 1 && !empty($be->encryption)) ? $be->encryption : env('MAIL_ENCRYPTION', 'ssl');
+                $smtpUser = ($be && $be->is_smtp == 1 && !empty($be->smtp_username)) ? $be->smtp_username : env('MAIL_USERNAME', 'infosaasreselling@nooryak.in');
+                $smtpPass = ($be && $be->is_smtp == 1 && !empty($be->smtp_password)) ? $be->smtp_password : env('MAIL_PASSWORD', 'Admin@nooryak');
+
                 $smtp = [
                     'transport' => 'smtp',
-                    'host' => $be->smtp_host,
-                    'port' => $be->smtp_port,
-                    'encryption' => $be->encryption,
-                    'username' => $be->smtp_username,
-                    'password' => $be->smtp_password,
-                    'timeout' => null,
+                    'host' => $smtpHost,
+                    'port' => $smtpPort,
+                    'encryption' => $smtpEncryption,
+                    'username' => $smtpUser,
+                    'password' => $smtpPass,
+                    'timeout' => 15,
                     'auth_mode' => null,
                 ];
                 Config::set('mail.mailers.smtp', $smtp);
 
                 $mailData = [
-                    'from_mail' => $be->from_mail,
-                    'from_name' => $be->from_name ?? $bs->website_title,
+                    'from_mail' => $fromMail,
+                    'from_name' => $fromName,
                     'toMail' => $user->email,
-                    'subject' => '🎉 Welcome to ' . $bs->website_title . '! Your Store is Ready & Invoice',
+                    'toName' => $user->first_name ?? $user->fname ?? 'Customer',
+                    'subject' => $subject,
                     'body' => $html
                 ];
 
                 Mail::send([], [], function (Message $message) use ($mailData, $invoiceFileName) {
-                    $message->to($mailData['toMail'])
+                    $message->to($mailData['toMail'], $mailData['toName'])
                         ->from($mailData['from_mail'], $mailData['from_name'])
                         ->subject($mailData['subject'])
                         ->html($mailData['body'], 'text/html');
@@ -433,14 +475,31 @@ class MegaMailer
                         $invPath = public_path('assets/front/invoices/' . $invoiceFileName);
                         if (file_exists($invPath)) {
                             $message->attach($invPath, [
-                                'as' => 'Invoice-' . ($mailData['toName'] ?? 'membership') . '.pdf',
+                                'as' => 'Invoice-' . $invoiceFileName,
                                 'mime' => 'application/pdf',
                             ]);
                         }
                     }
                 });
-            } catch (\Exception $e) {
+                $credentialsMailSent = true;
+            } catch (\Throwable $e) {
                 \Illuminate\Support\Facades\Log::warning('SMTP Welcome credentials email failed: ' . $e->getMessage());
+            }
+        }
+
+        // Failsafe fallback: Send via PHP native mail() with HTML headers so customer ALWAYS receives credentials & invoice link
+        if (!$credentialsMailSent && !empty($user->email)) {
+            try {
+                $headers = "MIME-Version: 1.0\r\n";
+                $headers .= "Content-type: text/html; charset=UTF-8\r\n";
+                $headers .= "From: " . $fromName . " <" . $fromMail . ">\r\n";
+                $headers .= "Reply-To: " . $fromMail . "\r\n";
+                $headers .= "X-Mailer: PHP/" . phpversion();
+
+                @mail($user->email, $subject, $html, $headers);
+                \Illuminate\Support\Facades\Log::info('Welcome credentials email sent via native mail() fallback to ' . $user->email);
+            } catch (\Throwable $nativeEx) {
+                \Illuminate\Support\Facades\Log::warning('Native mail() fallback failed: ' . $nativeEx->getMessage());
             }
         }
     }

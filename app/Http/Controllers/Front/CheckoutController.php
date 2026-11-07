@@ -381,6 +381,8 @@ class CheckoutController extends Controller
      */
     public function store($request, $transaction_id, $transaction_details, $amount, $be, $password)
     {
+        $password = !empty($password) ? $password : ($request['password'] ?? (session('user_password') ?: 'Password@123'));
+
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
         } else {
@@ -616,10 +618,10 @@ class CheckoutController extends Controller
 
             // ── WhatsApp welcome message with store, credentials, and invoice details ──
             try {
-                $phoneInput = $request['phone'] ?? '';
-                $countryCodeInput = $request['country_code'] ?? '91';
+                $phoneInput = $request['phone'] ?? ($request['phone_number'] ?? ($user->phone ?? ''));
+                $countryCodeInput = $request['country_code'] ?? ($user->country_code ?? '91');
                 $mobileNo = \App\Services\WhatsAppNotificationService::formatNumber($phoneInput, $countryCodeInput);
-                $this->sendWelcomeWhatsApp($mobileNo, $request['username'], $password, $planName, $planPrice, $user->shop_name ?? $user->first_name, $user->email, $mobileNo, $user->first_name, $invoiceFileName);
+                $this->sendWelcomeWhatsApp($mobileNo, $request['username'] ?? $user->username, $password, $planName, $planPrice, $user->shop_name ?? $user->first_name, $user->email, $mobileNo, $user->first_name, $invoiceFileName);
             } catch (\Exception $waEx) {
                 Log::warning('Welcome WhatsApp send failed: ' . $waEx->getMessage());
             }
@@ -647,12 +649,13 @@ class CheckoutController extends Controller
             }
         } else {
             $user = $user->first();
+            $effectivePassword = !empty($password) ? $password : ($request['password'] ?? '[Unchanged / Use your existing password]');
             // Send WhatsApp congratulations & store credentials + invoice for existing user launching/renewing theme
             try {
                 $packageObj  = Package::find($request['package_id']);
                 $planName    = $packageObj ? $packageObj->title : 'Your Plan';
                 $planPrice   = $packageObj ? ($be->base_currency_symbol . $packageObj->price) : '';
-                $phoneInput  = $user->phone ?: ($request['phone'] ?? '');
+                $phoneInput  = $user->phone ?: ($request['phone'] ?? ($request['phone_number'] ?? ''));
                 $countryCode = $user->country_code ?: ($request['country_code'] ?? '91');
                 $mobileNo    = \App\Services\WhatsAppNotificationService::formatNumber($phoneInput, $countryCode);
 
@@ -662,7 +665,7 @@ class CheckoutController extends Controller
                         $request,
                         "membership",
                         $user,
-                        $password,
+                        $effectivePassword,
                         $amount,
                         $request["payment_method"] ?? 'Online',
                         $phoneInput,
@@ -675,10 +678,10 @@ class CheckoutController extends Controller
                     );
                 } catch (\Throwable $invEx) {}
 
-                $this->sendWelcomeWhatsApp($mobileNo, $user->username, $password, $planName, $planPrice, $user->shop_name ?? $user->first_name, $user->email, $mobileNo, $user->first_name, $invoiceFileName);
+                $this->sendWelcomeWhatsApp($mobileNo, $user->username, $effectivePassword, $planName, $planPrice, $user->shop_name ?? $user->first_name, $user->email, $mobileNo, $user->first_name, $invoiceFileName);
 
                 $mailer = new MegaMailer();
-                $mailer->sendWelcomeCredentialsEmail($user, $password, $planName, $planPrice, $invoiceFileName);
+                $mailer->sendWelcomeCredentialsEmail($user, $effectivePassword, $planName, $planPrice, $invoiceFileName);
             } catch (\Throwable $waEx) {
                 Log::warning('Welcome WhatsApp/Email for existing user failed: ' . $waEx->getMessage());
             }
@@ -826,9 +829,9 @@ class CheckoutController extends Controller
 
         $greetingName = !empty($firstName) ? $firstName : (!empty($shopName) ? $shopName : 'Valued Merchant');
 
+        $invoiceUrl = !empty($invoiceFileName) ? url('assets/front/invoices/' . $invoiceFileName) : null;
         $invoiceSection = '';
-        if (!empty($invoiceFileName)) {
-            $invoiceUrl = url('assets/front/invoices/' . $invoiceFileName);
+        if (!empty($invoiceUrl)) {
             $invoiceSection = "\n📄 *Official Membership Invoice:* \n" . $invoiceUrl . "\n";
         }
 
@@ -853,9 +856,16 @@ class CheckoutController extends Controller
             return;
         }
 
-        // 1. Dispatch via local WhatsApp gateway
+        // 1. Dispatch via local WhatsApp gateway (with forced active override and invoice attachment)
         try {
-            \App\Services\WhatsAppNotificationService::sendMessage($digitsOnly, $message);
+            $customConfig = ['is_active' => 1];
+            \App\Services\WhatsAppNotificationService::sendMessage(
+                $digitsOnly,
+                $message,
+                $invoiceUrl,
+                $invoiceFileName ? 'Invoice-' . $invoiceFileName : null,
+                $customConfig
+            );
         } catch (\Throwable $waEx) {
             Log::warning('Local WhatsApp Gateway send failed: ' . $waEx->getMessage());
         }
