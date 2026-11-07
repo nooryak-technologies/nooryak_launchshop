@@ -525,8 +525,43 @@ class Common
 
     public static function get_keywords()
     {
-        $userCurrentLang = app('userCurrentLang');
-        return json_decode($userCurrentLang->keywords, true);
+        try {
+            if (app()->bound('userCurrentLang')) {
+                $userCurrentLang = app('userCurrentLang');
+                if ($userCurrentLang && !empty($userCurrentLang->keywords)) {
+                    $decoded = json_decode($userCurrentLang->keywords, true);
+                    if (is_array($decoded)) {
+                        return $decoded;
+                    }
+                }
+            }
+
+            // Fallback for merchant admin/dashboard PDF generation where userCurrentLang is not bound
+            $userId = \Illuminate\Support\Facades\Auth::guard('web')->id();
+            if ($userId) {
+                $userLang = \App\Models\User\Language::where('user_id', $userId)->where('is_default', 1)->first()
+                    ?: \App\Models\User\Language::where('user_id', $userId)->first();
+                if ($userLang && !empty($userLang->keywords)) {
+                    $decoded = json_decode($userLang->keywords, true);
+                    if (is_array($decoded)) {
+                        return $decoded;
+                    }
+                }
+            }
+
+            // Fallback: System default language
+            $defaultLang = \App\Models\Language::where('is_default', 1)->first();
+            if ($defaultLang && !empty($defaultLang->keywords)) {
+                $decoded = json_decode($defaultLang->keywords, true);
+                if (is_array($decoded)) {
+                    return $decoded;
+                }
+            }
+        } catch (\Throwable $e) {
+            // Silently fallback to empty array to never crash PDF generation
+        }
+
+        return [];
     }
 
     public static function wrapEmailBody($body, $subject, $user = null, $customLogoUrl = null, $customTitle = null)

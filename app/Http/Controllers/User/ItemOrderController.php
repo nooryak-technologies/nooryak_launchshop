@@ -262,7 +262,7 @@ class ItemOrderController extends Controller
         $userId = Auth::guard('web')->user()->id;
         $user = Auth::guard('web')->user();
         $userBs = BasicSetting::where('user_id', $userId)->first();
-        $keywords = Common::get_keywords();
+        $keywords = Common::get_keywords() ?: [];
 
         $query = UserOrder::with('orderitems')
             ->where('user_id', $userId)
