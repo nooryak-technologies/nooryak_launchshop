@@ -134,15 +134,7 @@ class MegaMailer
                         }
                     }
                 });
-                // Attachments
-                if (array_key_exists('membership_invoice', $mailData)) {
-                    @unlink(public_path('assets/front/invoices/') . $mailData['membership_invoice']);
-                }
             } catch (TransportException $e) {
-                // Attachments
-                if (array_key_exists('membership_invoice', $mailData)) {
-                    @unlink(public_path('assets/front/invoices/') . $mailData['membership_invoice']);
-                }
                 Session::flash('error', 'Mail could not be sent.');
                 return;
             }
@@ -299,7 +291,7 @@ class MegaMailer
     /**
      * Send a beautifully formatted welcome email containing credentials and plan details.
      */
-    public function sendWelcomeCredentialsEmail($user, $password, $planName, $planPrice)
+    public function sendWelcomeCredentialsEmail($user, $password, $planName, $planPrice, $invoiceFileName = null)
     {
         if (session()->has('lang')) {
             $currentLang = Language::where('code', session()->get('lang'))->first();
@@ -317,6 +309,20 @@ class MegaMailer
             $storeLiveLink = 'https://' . $user->username . '.' . $host;
         }
         $loginLink = route('user.login');
+
+        // Optional invoice card if generated
+        $invoiceCard = '';
+        if (!empty($invoiceFileName)) {
+            $invoiceUrl = url('assets/front/invoices/' . $invoiceFileName);
+            $invoiceCard = '
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 18px; margin-bottom: 24px;">
+                <div style="font-size: 14px; font-weight: 700; color: #166534; margin-bottom: 6px;">📄 Official Membership Invoice & Receipt Attached</div>
+                <div style="font-size: 13px; color: #15803d; margin-bottom: 12px;">Your paid subscription invoice has been generated and is attached to this email. You can also view or download it directly anytime:</div>
+                <div>
+                    <a href="' . $invoiceUrl . '" target="_blank" style="display: inline-block; padding: 8px 16px; background: #166534; color: #ffffff !important; border-radius: 6px; font-weight: 700; text-decoration: none; font-size: 13px;">📥 Download Invoice PDF</a>
+                </div>
+            </div>';
+        }
 
         // Build premium HTML email template inline
         $html = '
@@ -379,6 +385,8 @@ class MegaMailer
                         </div>
                     </div>
 
+                    ' . $invoiceCard . '
+
                     <div class="btn-group">
                         <a href="' . $storeLiveLink . '" target="_blank" class="btn btn-primary">🔗 Visit Live Store</a>
                         <a href="' . $loginLink . '" target="_blank" class="btn btn-secondary">🔗 Login Dashboard</a>
@@ -411,15 +419,25 @@ class MegaMailer
                     'from_mail' => $be->from_mail,
                     'from_name' => $be->from_name ?? $bs->website_title,
                     'toMail' => $user->email,
-                    'subject' => '🎉 Welcome to ' . $bs->website_title . '! Your Store is Ready',
+                    'subject' => '🎉 Welcome to ' . $bs->website_title . '! Your Store is Ready & Invoice',
                     'body' => $html
                 ];
 
-                Mail::send([], [], function (Message $message) use ($mailData) {
+                Mail::send([], [], function (Message $message) use ($mailData, $invoiceFileName) {
                     $message->to($mailData['toMail'])
                         ->from($mailData['from_mail'], $mailData['from_name'])
                         ->subject($mailData['subject'])
                         ->html($mailData['body'], 'text/html');
+
+                    if (!empty($invoiceFileName)) {
+                        $invPath = public_path('assets/front/invoices/' . $invoiceFileName);
+                        if (file_exists($invPath)) {
+                            $message->attach($invPath, [
+                                'as' => 'Invoice-' . ($mailData['toName'] ?? 'membership') . '.pdf',
+                                'mime' => 'application/pdf',
+                            ]);
+                        }
+                    }
                 });
             } catch (\Exception $e) {
                 \Illuminate\Support\Facades\Log::warning('SMTP Welcome credentials email failed: ' . $e->getMessage());

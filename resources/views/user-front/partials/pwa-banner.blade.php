@@ -1,12 +1,20 @@
-@if (empty($user->preview_template) || $user->preview_template != 1 || request()->getHost() != env('WEBSITE_HOST'))
+@if (empty($user) || empty($user->preview_template) || $user->preview_template != 1 || request()->getHost() != env('WEBSITE_HOST'))
+@php
+  $pwaTextIosTitle = $keywords['Install App'] ?? __('Install on iPhone/iPad');
+  $pwaTextIosMsg = $keywords['To install this app, tap the Share icon at the bottom of Safari, then select "Add to Home Screen".'] ?? __('To install this app, tap the Share icon at the bottom of Safari, then select "Add to Home Screen".');
+  $pwaTextInstalledTitle = $keywords['App Already Installed'] ?? __('App Already Installed');
+  $pwaTextInstalledMsg = $keywords['This app is already installed! You can launch it from your home screen or app launcher.'] ?? __('This app is already installed! You can launch it from your home screen or app launcher.');
+  $pwaTextDefaultTitle = $keywords['Install App'] ?? __('Install App');
+  $pwaTextDefaultMsg = $keywords['To install this app, tap your browser menu (⋮ or Share icon) and select "Add to Home Screen" or "Install App".'] ?? __('To install this app, tap your browser menu (⋮ or Share icon) and select "Add to Home Screen" or "Install App".');
+@endphp
 <!-- PWA Sticky Bottom Install Banner -->
 <div id="pwa-install-banner" class="pwa-install-banner-bar" style="display:none;">
   <div style="display:flex;align-items:center;gap:14px;">
-    <img src="{{ !empty($userBs->web_app_image) ? asset('assets/front/img/user/' . $userBs->web_app_image) : (!empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/673095353bc62.png')) }}"
+    <img src="{{ !empty($userBs) && !empty($userBs->web_app_image) ? asset('assets/front/img/user/' . $userBs->web_app_image) : (!empty($userBs) && !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/673095353bc62.png')) }}"
          style="width:44px;height:44px;object-fit:contain;border-radius:10px;border:1px solid #e2e8f0;padding:2px;background:#fff;" alt="">
     <div>
       <div style="font-size:13px;font-weight:700;color:#0f172a;line-height:1.3;">
-        Install Our {{ $userBs->website_title ?? ($user->shop_name ?? $user->username) }} App
+        Install Our {{ ($userBs->website_title ?? null) ?? (($user->shop_name ?? null) ?? ($user->username ?? 'Store')) }} App
       </div>
       <div style="font-size:11px;color:#64748b;margin-top:1px;">
         Install for a faster app-like experience
@@ -72,7 +80,7 @@
 </style>
 
 <script>
-  window.pwaInstallLabel = @json($keywords['Install App'] ?? __('Install App'));
+  window.pwaInstallLabel = {!! json_encode($pwaTextDefaultTitle) !!};
 
   function isPwaInstalled() {
     return window.matchMedia('(display-mode: standalone)').matches ||
@@ -118,30 +126,43 @@
   }
 
   function triggerPwaInstall() {
-    if (isPwaInstalled() || localStorage.getItem('pwa_installed') === '1') {
+    if (window.deferredPwaPrompt) {
+      try {
+        window.deferredPwaPrompt.prompt();
+        window.deferredPwaPrompt.userChoice.then(function(result) {
+          if (result && result.outcome === 'accepted') {
+            try { localStorage.setItem('pwa_installed', '1'); } catch(e) {}
+            dismissPwaBanner();
+            updatePwaInstallUi();
+          }
+          window.deferredPwaPrompt = null;
+        });
+        return;
+      } catch (err) {
+        console.warn('PWA prompt error:', err);
+      }
+    }
+
+    var isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIos) {
       showPwaFallback(
-        @json($keywords['App Already Installed'] ?? __('App Already Installed')),
-        @json($keywords['You have already installed this app. Please open it from your home screen or app menu.'] ?? __('You have already installed this app. Please open it from your home screen or app menu.'))
+        {!! json_encode($pwaTextIosTitle) !!},
+        {!! json_encode($pwaTextIosMsg) !!}
       );
       return;
     }
 
-    if (window.deferredPwaPrompt) {
-      window.deferredPwaPrompt.prompt();
-      window.deferredPwaPrompt.userChoice.then(function(result) {
-        if (result.outcome === 'accepted') {
-          try { localStorage.setItem('pwa_installed', '1'); } catch(e) {}
-          dismissPwaBanner();
-          updatePwaInstallUi();
-        }
-        window.deferredPwaPrompt = null;
-      });
+    if (isPwaInstalled()) {
+      showPwaFallback(
+        {!! json_encode($pwaTextInstalledTitle) !!},
+        {!! json_encode($pwaTextInstalledMsg) !!}
+      );
       return;
     }
 
     showPwaFallback(
-      @json($keywords['Install App'] ?? __('Install App')),
-      @json($keywords['To install this app, tap your browser menu (⋮ or Share icon) and select "Add to Home Screen" or "Install App".'] ?? __('To install this app, tap your browser menu (⋮ or Share icon) and select "Add to Home Screen" or "Install App".'))
+      {!! json_encode($pwaTextDefaultTitle) !!},
+      {!! json_encode($pwaTextDefaultMsg) !!}
     );
   }
 
@@ -162,7 +183,11 @@
     updatePwaInstallUi();
   });
 
-  window.addEventListener('beforeinstallprompt', function() {
+  window.addEventListener('beforeinstallprompt', function(e) {
+    if (e) {
+      e.preventDefault();
+      window.deferredPwaPrompt = e;
+    }
     injectPwaNavLinks();
     updatePwaInstallUi();
   });

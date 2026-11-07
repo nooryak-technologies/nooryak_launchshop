@@ -592,19 +592,41 @@ class CheckoutController extends Controller
             ];
             $mailer->mailFromAdmin($data);
 
-            // ── WhatsApp welcome message with store and plan details ──
+            // Generate official membership invoice PDF right now
+            $invoiceFileName = null;
+            try {
+                $invoiceFileName = Common::makeInvoice(
+                    $request,
+                    "membership",
+                    $user,
+                    $password,
+                    $amount,
+                    $request["payment_method"] ?? 'Online',
+                    $request['phone'] ?? $user->phone,
+                    $be->base_currency_symbol_position ?? 'left',
+                    $be->base_currency_symbol ?? '₹',
+                    $be->base_currency_text ?? 'INR',
+                    $transaction_id,
+                    $planName,
+                    $status
+                );
+            } catch (\Throwable $invEx) {
+                Log::warning('Membership invoice generation failed: ' . $invEx->getMessage());
+            }
+
+            // ── WhatsApp welcome message with store, credentials, and invoice details ──
             try {
                 $phoneInput = $request['phone'] ?? '';
                 $countryCodeInput = $request['country_code'] ?? '91';
                 $mobileNo = \App\Services\WhatsAppNotificationService::formatNumber($phoneInput, $countryCodeInput);
-                $this->sendWelcomeWhatsApp($mobileNo, $request['username'], $password, $planName, $planPrice, $user->shop_name ?? $user->first_name, $user->email, $mobileNo, $user->first_name);
+                $this->sendWelcomeWhatsApp($mobileNo, $request['username'], $password, $planName, $planPrice, $user->shop_name ?? $user->first_name, $user->email, $mobileNo, $user->first_name, $invoiceFileName);
             } catch (\Exception $waEx) {
                 Log::warning('Welcome WhatsApp send failed: ' . $waEx->getMessage());
             }
 
-            // ── Send separate beautifully formatted credentials email ──
+            // ── Send separate beautifully formatted credentials email with invoice attached ──
             try {
-                $mailer->sendWelcomeCredentialsEmail($user, $password, $planName, $planPrice);
+                $mailer->sendWelcomeCredentialsEmail($user, $password, $planName, $planPrice, $invoiceFileName);
             } catch (\Exception $emailEx) {
                 Log::warning('Welcome credentials email send failed: ' . $emailEx->getMessage());
             }
@@ -625,7 +647,7 @@ class CheckoutController extends Controller
             }
         } else {
             $user = $user->first();
-            // Send WhatsApp congratulations & store credentials for existing user launching/renewing theme
+            // Send WhatsApp congratulations & store credentials + invoice for existing user launching/renewing theme
             try {
                 $packageObj  = Package::find($request['package_id']);
                 $planName    = $packageObj ? $packageObj->title : 'Your Plan';
@@ -633,9 +655,32 @@ class CheckoutController extends Controller
                 $phoneInput  = $user->phone ?: ($request['phone'] ?? '');
                 $countryCode = $user->country_code ?: ($request['country_code'] ?? '91');
                 $mobileNo    = \App\Services\WhatsAppNotificationService::formatNumber($phoneInput, $countryCode);
-                $this->sendWelcomeWhatsApp($mobileNo, $user->username, $password, $planName, $planPrice, $user->shop_name ?? $user->first_name, $user->email, $mobileNo, $user->first_name);
+
+                $invoiceFileName = null;
+                try {
+                    $invoiceFileName = Common::makeInvoice(
+                        $request,
+                        "membership",
+                        $user,
+                        $password,
+                        $amount,
+                        $request["payment_method"] ?? 'Online',
+                        $phoneInput,
+                        $be->base_currency_symbol_position ?? 'left',
+                        $be->base_currency_symbol ?? '₹',
+                        $be->base_currency_text ?? 'INR',
+                        $transaction_id,
+                        $planName,
+                        $status
+                    );
+                } catch (\Throwable $invEx) {}
+
+                $this->sendWelcomeWhatsApp($mobileNo, $user->username, $password, $planName, $planPrice, $user->shop_name ?? $user->first_name, $user->email, $mobileNo, $user->first_name, $invoiceFileName);
+
+                $mailer = new MegaMailer();
+                $mailer->sendWelcomeCredentialsEmail($user, $password, $planName, $planPrice, $invoiceFileName);
             } catch (\Throwable $waEx) {
-                Log::warning('Welcome WhatsApp send for existing user failed: ' . $waEx->getMessage());
+                Log::warning('Welcome WhatsApp/Email for existing user failed: ' . $waEx->getMessage());
             }
         }
 
@@ -763,9 +808,9 @@ class CheckoutController extends Controller
     }
 
     /**
-     * Send a welcome WhatsApp message with account credentials and store details after registration.
+     * Send a welcome WhatsApp message with account credentials, store details, and invoice after registration.
      */
-    public function sendWelcomeWhatsApp(string $mobileNo, string $username, string $password, string $planName, string $planPrice, string $shopName, string $email, string $phone, ?string $firstName = null): void
+    public function sendWelcomeWhatsApp(string $mobileNo, string $username, string $password, string $planName, string $planPrice, string $shopName, string $email, string $phone, ?string $firstName = null, ?string $invoiceFileName = null): void
     {
         $host = request()->getHost();
         $mainDomains = ['launchshop.in', 'launchshop.top', 'www.launchshop.in', 'www.launchshop.top'];
@@ -781,6 +826,12 @@ class CheckoutController extends Controller
 
         $greetingName = !empty($firstName) ? $firstName : (!empty($shopName) ? $shopName : 'Valued Merchant');
 
+        $invoiceSection = '';
+        if (!empty($invoiceFileName)) {
+            $invoiceUrl = url('assets/front/invoices/' . $invoiceFileName);
+            $invoiceSection = "\n📄 *Official Membership Invoice:* \n" . $invoiceUrl . "\n";
+        }
+
         $message = "🎉 *Congratulations! Your LaunchShop Store is Live!* 🚀\n\n"
             . "Hello *" . $greetingName . "*,\n"
             . "Congratulations on launching your store *" . $shopName . "*! Your online storefront and management dashboard are now fully ready.\n\n"
@@ -790,7 +841,8 @@ class CheckoutController extends Controller
             . "📋 *Your Login Credentials:*\n"
             . "📧 *Username / Email:* " . $username . " (" . $email . ")\n"
             . "🔑 *Password:* " . $password . "\n"
-            . "📦 *Membership Plan:* " . $planName . ($planPrice ? " (" . $planPrice . ")" : "") . "\n\n"
+            . "📦 *Membership Plan:* " . $planName . ($planPrice ? " (" . $planPrice . ")" : "") . "\n"
+            . $invoiceSection . "\n"
             . "You can now add your products, customize your theme, and start accepting customer orders!\n\n"
             . "Need help? Reply to this message or chat with our support anytime.\n"
             . "– Team LaunchShop 🚀";

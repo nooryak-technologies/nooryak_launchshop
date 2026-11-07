@@ -5,8 +5,20 @@ use App\Models\User;
 $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? env('WEBSITE_HOST', 'localhost'))));
 $requestHost = preg_replace('/:\d+$/', '', $requestHost);
 
+// Permanently redirect launchshop subdomain to ecombuilder.* across whitelabels and SaaS admin (e.g. launchshop.saasreselling.in -> ecombuilder.saasreselling.in)
+// Main domain launchshop.in remains completely untouched
+if (str_starts_with($requestHost, 'launchshop.') && !in_array($requestHost, ['launchshop.in', 'launchshop.com', 'launchshop.top', 'launchshop.test', 'launchshop.local']) && !app()->runningInConsole()) {
+    $targetHost = preg_replace('/^launchshop\./i', 'ecombuilder.', $requestHost);
+    $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ? 'https' : 'http';
+    $targetUrl = $scheme . '://' . $targetHost . ($_SERVER['REQUEST_URI'] ?? '/');
+    header("Location: {$targetUrl}", true, 301);
+    exit();
+}
+
 $cleanRequestHost = preg_replace('/^(launchshop|checkout|www|app|websitebuilder|website-builder|whatsappbulk|whatsapp-bulk|whatsapp|wa|ecombuilder|ecom-builder)\./i', '', $requestHost);
-if ($cleanRequestHost === 'in' || $cleanRequestHost === 'com' || str_ends_with($requestHost, 'launchshop.in') || in_array($requestHost, ['launchshop.in', 'www.launchshop.in'])) { $cleanRequestHost = 'launchshop.in'; }
+if ($cleanRequestHost === 'in' || $cleanRequestHost === 'com' || str_ends_with($requestHost, 'launchshop.in') || in_array($requestHost, ['launchshop.in', 'www.launchshop.in'])) {
+    $cleanRequestHost = 'launchshop.in';
+}
 
 $envHost = strtolower((string) env('WEBSITE_HOST', ''));
 $appHost = strtolower((string) parse_url(env('APP_URL', ''), PHP_URL_HOST));
@@ -33,11 +45,11 @@ foreach ($tenantBaseHosts as $tenantBaseHost) {
 }
 
 $isLaunchShopCustomDomain = !empty(request()->attributes->get('is_launchshop_custom_domain')) || (function_exists('isLaunchShopCustomDomain') && isLaunchShopCustomDomain($cleanRequestHost));
-
-$isWbHost = (str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.') || str_contains($requestHost, 'websitebuilder.') || str_contains($requestHost, 'website-builder.') );
+$isWbAgencyDomain = (function_exists('isWbAgencyCustomDomain') && !empty(isWbAgencyCustomDomain($cleanRequestHost))) && !$isLaunchShopCustomDomain;
+$isWbHost = (str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.') || str_contains($requestHost, 'websitebuilder.') || str_contains($requestHost, 'website-builder.') || $isWbAgencyDomain);
 $isWaHost = (str_starts_with($requestHost, 'whatsappbulk.') || str_starts_with($requestHost, 'whatsapp-bulk.') || str_starts_with($requestHost, 'whatsapp.'));
 $isMainHost = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'checkout.') || str_starts_with($requestHost, 'ecombuilder.') || str_starts_with($requestHost, 'ecom-builder.') || str_starts_with($requestHost, 'www.') || str_starts_with($requestHost, 'app.') || in_array($cleanRequestHost, $tenantBaseHosts);
-$isCustomDomain = $isLaunchShopCustomDomain || (!$isWbHost && !$isWaHost && !$isMainHost && !$isTenantSubdomain);
+$isCustomDomain = $isLaunchShopCustomDomain || (!$isWbHost && !$isWaHost && !$isMainHost && !isAgencyDomain($cleanRequestHost) && !$isTenantSubdomain);
 
 Route::get('/midtrans/bank-notify', 'MidtransBankNotifyController@bank_notify')->name('midtrans.bank_notify');
 Route::get('/check-payment', 'CronJobController@check_payment')->name('cron.check_payment');
@@ -47,14 +59,46 @@ Route::get('myfatoorah/cancel', 'MyFatoorahController@cancel')->name('myfatoorah
 
 Route::get('/manifest.json', 'PwaController@manifest');
 Route::get('/pwa-icon/{size}', 'PwaController@icon')->where('size', '[0-9]+');
+Route::get('/sw.js', function () {
+    $swPath = public_path('sw.js');
+    if (!file_exists($swPath)) {
+        return response("self.addEventListener('fetch', function(e){});", 200, ['Content-Type' => 'application/javascript']);
+    }
+    return response()->file($swPath, [
+        'Content-Type' => 'application/javascript; charset=utf-8',
+        'Service-Worker-Allowed' => '/',
+        'Cache-Control' => 'no-cache, no-store, must-revalidate',
+    ]);
+});
 
 Route::get('/invoice', 'Front\FrontendController@invoice')->name('front.invoice');
 
 Route::get('/changelanguage/{lang}', 'Front\FrontendController@changeLanguage')->name('changeLanguage');
 
+// Subscription Expiry Testing & Simulator Hub (Global Aliases for Admin Testing)
+Route::group(['middleware' => ['web']], function () {
+    Route::get('/admin/subscription_test', 'Admin\SubscriptionTestController@index');
+    Route::post('/admin/subscription_test', 'Admin\SubscriptionTestController@execute');
+    Route::post('/admin/subscription_test/execute', 'Admin\SubscriptionTestController@execute');
+
+    Route::get('/admin/subscription-test', 'Admin\SubscriptionTestController@index');
+    Route::post('/admin/subscription-test', 'Admin\SubscriptionTestController@execute');
+    Route::post('/admin/subscription-test/execute', 'Admin\SubscriptionTestController@execute');
+
+    Route::get('/subscription_test', 'Admin\SubscriptionTestController@index');
+    Route::post('/subscription_test', 'Admin\SubscriptionTestController@execute');
+    Route::post('/subscription_test/execute', 'Admin\SubscriptionTestController@execute');
+
+    Route::get('/subscription-test', 'Admin\SubscriptionTestController@index');
+    Route::post('/subscription-test', 'Admin\SubscriptionTestController@execute');
+    Route::post('/subscription-test/execute', 'Admin\SubscriptionTestController@execute');
+});
 Route::get('/subcheck', 'CronJobController@expired')->name('cron.expired');
 Route::post('/push', 'Front\PushController@store')->name('push-notification.store_endpoint');
+Route::post('/checkout/client-sync', [\App\Http\Controllers\WebsiteBuilder\FrontendController::class, 'syncCustomerFromClient'])->name('checkout.client-sync.global');
 Route::post('/checkout/launchshop-client-sync', [\App\Http\Controllers\Front\CheckoutController::class, 'syncLaunchshopUserFromClient'])->name('checkout.launchshop-client-sync');
+Route::get('/checkout/whatsappbulk', [\App\Http\Controllers\Payment\RazorpayController::class, 'whatsappBulkCheckout'])->name('checkout.whatsappbulk');
+Route::post('/checkout/whatsappbulk/success', [\App\Http\Controllers\Payment\RazorpayController::class, 'whatsappBulkSuccess'])->name('checkout.whatsappbulk.success');
 
 /*=======================================================
 ******************** Admin Dashboard Routes **********************
@@ -69,8 +113,26 @@ Route::group(['prefix' => 'X9_AdMiN-Portal_V7', 'middleware' => 'guest:admin'], 
     Route::post('/sendmail', 'Admin\ForgetController@sendmail')->name('admin.forget.mail')->middleware('Demo');
 });
 
+Route::get('/sso-agency-login', 'User\Auth\LoginController@ssoAgencyLogin')->name('user.sso_login');
+Route::get('/agency-sso-login', 'User\Auth\LoginController@ssoAgencyLogin');
 
-
+// Whitelabel Agency Portal Redirects
+Route::get('/whitelabel/login', function () {
+    $host = env('MAIN_ADMIN_HOST', 'saasreselling.com');
+    return redirect()->away("https://{$host}/whitelabel-panel/login");
+});
+Route::get('/whitelabel-panel/login', function () {
+    $host = env('MAIN_ADMIN_HOST', 'saasreselling.com');
+    return redirect()->away("https://{$host}/whitelabel-panel/login");
+});
+Route::get('/whitelabel/dashboard', function () {
+    $host = env('MAIN_ADMIN_HOST', 'saasreselling.com');
+    return redirect()->away("https://{$host}/whitelabel/dashboard");
+});
+Route::get('/agency-portal/login', function () {
+    $host = env('MAIN_ADMIN_HOST', 'saasreselling.com');
+    return redirect()->away("https://{$host}/agency-portal/login");
+});
 
 // Always ensure front.index and user.login routes exist globally to prevent RouteNotFoundException in admin/subdomain views
 if ($isWbHost || $isTenantSubdomain || $isCustomDomain) {

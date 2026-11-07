@@ -5,17 +5,31 @@ use Illuminate\Support\Facades\Route;
 // Register supported base hosts for tenant subdomain routing.
 $tenantBaseHosts = array_values(array_unique(array_filter([
     strtolower((string) env('WEBSITE_HOST', '')),
-    'launchshop.in',
+    'saasreselling.com',
+    'saasreselling.in',
     'localhost',
     '127.0.0.1',
 ])));
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────
 // Shared tenant route definitions (inline closure)
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────
 $tenantRoutes = function () {
     Route::get('/', 'UserFront\HomeController@userDetailView')
         ->name('front.user.detail.view');
+    Route::get('/manifest.json', 'PwaController@manifest');
+    Route::get('/pwa-icon/{size}', 'PwaController@icon')->where('size', '[0-9]+');
+    Route::get('/sw.js', function () {
+        $swPath = public_path('sw.js');
+        if (!file_exists($swPath)) {
+            return response("self.addEventListener('fetch', function(e){});", 200, ['Content-Type' => 'application/javascript']);
+        }
+        return response()->file($swPath, [
+            'Content-Type' => 'application/javascript; charset=utf-8',
+            'Service-Worker-Allowed' => '/',
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+        ]);
+    });
     Route::get('/invoice', 'UserFront\HomeController@invoice')
         ->name('front.user.detail.invoice');
 
@@ -24,11 +38,18 @@ $tenantRoutes = function () {
     Route::get('apply/{token}', 'UserFront\HomeController@removeMaintenance')->name('front.user.remove')->withoutMiddleware('userMaintenance');
 
     Route::get('/about', 'UserFront\HomeController@userAbout')->name('front.user.about');
+    Route::get('/about-us', 'UserFront\HomeController@userAbout');
+    Route::get('/about_us', 'UserFront\HomeController@userAbout');
     Route::get('/privacy-policy', 'UserFront\HomeController@tenantPrivacyPolicy')->name('front.user.privacy_policy');
+    Route::get('/privacy_policy', 'UserFront\HomeController@tenantPrivacyPolicy');
     Route::get('/terms-and-conditions', 'UserFront\HomeController@tenantTermsConditions')->name('front.user.terms_conditions');
     Route::get('/terms-conditions', 'UserFront\HomeController@tenantTermsConditions');
+    Route::get('/terms_conditions', 'UserFront\HomeController@tenantTermsConditions');
+    Route::get('/terms_and_conditions', 'UserFront\HomeController@tenantTermsConditions');
     Route::get('/refund-policy', 'UserFront\HomeController@tenantRefundPolicy')->name('front.user.refund_policy');
+    Route::get('/refund_policy', 'UserFront\HomeController@tenantRefundPolicy');
     Route::get('/shipping-policy', 'UserFront\HomeController@tenantShippingPolicy')->name('front.user.shipping_policy');
+    Route::get('/shipping_policy', 'UserFront\HomeController@tenantShippingPolicy');
 
     Route::get('/page/{slug}', 'Front\FrontendController@customPage')->name('front.user.custom.page');
     Route::post('/subscribe', 'User\SubscriberController@Usersubscribe')->name('front.user.subscribe');
@@ -58,9 +79,13 @@ $tenantRoutes = function () {
     Route::post('/coupon', 'UserFront\ItemController@coupon')->name('front.coupon');
 
     Route::get('/contact', 'UserFront\HomeController@contactView')->name('front.user.contact');
+    Route::get('/contact-us', 'UserFront\HomeController@contactView');
+    Route::get('/contact_us', 'UserFront\HomeController@contactView');
     Route::post('/contact-message', 'UserFront\HomeController@contactMessage')->name('front.user.contact.send_message')->middleware('Demo');
     Route::get('/faqs', 'UserFront\HomeController@faqs')->name('front.user.faq');
+    Route::get('/faq', 'UserFront\HomeController@faqs');
 
+    Route::get('/blogs', 'UserFront\HomeController@userBlogs');
     Route::prefix('blog')->group(function () {
         Route::get('/', 'UserFront\HomeController@userBlogs')->name('front.user.blogs');
         Route::get('/{slug}', 'UserFront\HomeController@userBlogDetail')->name('user-front.blog_details');
@@ -146,15 +171,27 @@ $tenantRoutes = function () {
     });
 };
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────
 // Context Detection & Execution
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────
 $requestHost = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? env('WEBSITE_HOST', 'localhost'))));
 $requestHost = preg_replace('/:\d+$/', '', $requestHost);
 
+// Permanently redirect launchshop subdomain to ecombuilder.* across whitelabels and SaaS admin (e.g. launchshop.saasreselling.in -> ecombuilder.saasreselling.in)
+// Main domain launchshop.in remains completely untouched
+if (str_starts_with($requestHost, 'launchshop.') && !in_array($requestHost, ['launchshop.in', 'launchshop.com', 'launchshop.top', 'launchshop.test', 'launchshop.local']) && !app()->runningInConsole()) {
+    $targetHost = preg_replace('/^launchshop\./i', 'ecombuilder.', $requestHost);
+    $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ? 'https' : 'http';
+    $targetUrl = $scheme . '://' . $targetHost . ($_SERVER['REQUEST_URI'] ?? '/');
+    header("Location: {$targetUrl}", true, 301);
+    exit();
+}
+
 
 $cleanRequestHost = preg_replace('/^(launchshop|checkout|www|app|websitebuilder|website-builder|whatsappbulk|whatsapp-bulk|whatsapp|wa|ecombuilder|ecom-builder)\./i', '', $requestHost);
-if ($cleanRequestHost === 'in' || $cleanRequestHost === 'com' || str_ends_with($requestHost, 'launchshop.in') || in_array($requestHost, ['launchshop.in', 'www.launchshop.in'])) { $cleanRequestHost = 'launchshop.in'; }
+if ($cleanRequestHost === 'in' || $cleanRequestHost === 'com' || str_ends_with($requestHost, 'launchshop.in') || in_array($requestHost, ['launchshop.in', 'www.launchshop.in'])) {
+    $cleanRequestHost = 'launchshop.in';
+}
 
 $isTenantSubdomain = false;
 $tenantSubdomainName = null;
@@ -172,14 +209,14 @@ foreach ($tenantBaseHosts as $tenantBaseHost) {
 }
 
 $isLaunchShopCustomDomain = !empty(request()->attributes->get('is_launchshop_custom_domain')) || (function_exists('isLaunchShopCustomDomain') && isLaunchShopCustomDomain($cleanRequestHost));
-
-$isWbHost = (str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.') || str_contains($requestHost, 'websitebuilder.') || str_contains($requestHost, 'website-builder.') );
+$isWbAgencyDomain = (function_exists('isWbAgencyCustomDomain') && !empty(isWbAgencyCustomDomain($cleanRequestHost))) && !$isLaunchShopCustomDomain;
+$isWbHost = (str_starts_with($requestHost, 'websitebuilder.') || str_starts_with($requestHost, 'website-builder.') || str_contains($requestHost, 'websitebuilder.') || str_contains($requestHost, 'website-builder.') || $isWbAgencyDomain);
 $isMainHost = str_starts_with($requestHost, 'launchshop.') || str_starts_with($requestHost, 'checkout.') || str_starts_with($requestHost, 'ecombuilder.') || str_starts_with($requestHost, 'ecom-builder.') || str_starts_with($requestHost, 'www.') || str_starts_with($requestHost, 'app.') || in_array($cleanRequestHost, array_merge(['localhost', '127.0.0.1'], $tenantBaseHosts));
-$isCustomDomain = $isLaunchShopCustomDomain || (!$isWbHost && !$isMainHost && !$isTenantSubdomain);
+$isCustomDomain = $isLaunchShopCustomDomain || (!$isWbHost && !$isMainHost && !isAgencyDomain($cleanRequestHost) && !$isTenantSubdomain);
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────
 // Auto 301 Redirect: ecomgrocery.saasreselling.com/ecomgrocery/shop -> ecomgrocery.saasreselling.com/shop
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────
 if ($isTenantSubdomain && !empty($tenantSubdomainName) && !app()->runningInConsole()) {
     try {
         $requestPath = ltrim(app('request')->path(), '/');
@@ -200,9 +237,9 @@ if ($isTenantSubdomain && !empty($tenantSubdomainName) && !app()->runningInConso
     }
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────
 // ROUTE REGISTRATION BASED ON CONTEXT
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────
 if (!$isWbHost) {
     if ($isTenantSubdomain) {
         // Subdomain Context: ecomgrocery.saasreselling.com
@@ -217,11 +254,12 @@ if (!$isWbHost) {
         }
     } elseif ($isCustomDomain) {
         // Custom Domain Context: e.g. womenart.in
+        request()->attributes->set('is_launchshop_custom_domain', true);
         Route::group([
             'middleware' => ['userVisibilityCheck', 'userLanguage', 'userMaintenance'],
         ], $tenantRoutes);
     } else {
-        // Main Host Path-based Context: saasreselling.com/ecomgrocery
+        // Main Host / Agency Path-based Context: saasreselling.com/ecomgrocery
         Route::group([
             'prefix'     => '/{username}',
             'where'      => ['username' => '^(?!(registration|membership|checkout|login|register|password|about|pricing|blog|blogs|success|otp|p|terms-conditions|privacy-policy|cookie-policy|refund-policy|shipping-policy)$)[^/]+'],
@@ -230,9 +268,9 @@ if (!$isWbHost) {
     }
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────
 // Fallback 404
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────
 Route::fallback(function () {
     return view('errors.404');
 })->middleware('setlang');
