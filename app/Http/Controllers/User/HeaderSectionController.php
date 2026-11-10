@@ -14,15 +14,20 @@ class HeaderSectionController extends Controller
 {
     public function index(Request $request)
     {
-        $lang = Language::where('code', $request->language)->where('user_id', Auth::guard('web')->user()->id)->firstOrFail();
-        $data['lang_id'] = $lang->id;
-        $header = UserHeader::where('language_id', $lang->id)->where('user_id', Auth::guard('web')->user()->id)->first();
-
-        if ($header) {
-            $data['header'] = $header;
-        } else {
-            $data['header'] = NULL;
+        $userId = Auth::guard('web')->user()->id;
+        $lang = null;
+        if (!empty($request->language)) {
+            $lang = Language::where('code', $request->language)->where('user_id', $userId)->first();
         }
+        if (empty($lang)) {
+            $lang = Language::where('is_default', 1)->where('user_id', $userId)->first()
+                ?? Language::where('user_id', $userId)->first();
+        }
+        if (!$lang) {
+            abort(404);
+        }
+        $data['lang_id'] = $lang->id;
+        $data['header'] = UserHeader::where('language_id', $lang->id)->where('user_id', $userId)->first();
 
         return view('user.header.index', $data);
     }

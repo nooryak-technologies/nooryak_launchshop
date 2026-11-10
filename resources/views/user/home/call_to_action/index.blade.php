@@ -81,6 +81,11 @@
                         <img
                           src="{{ !is_null(@$data->background_image) ? asset('assets/front/img/cta/' . @$data->background_image) : asset('assets/admin/img/noimage.jpg') }}"
                           alt="..." class="img-thumbnail">
+                        @if (!is_null(@$data->background_image))
+                          <x-remove-button
+                            url="{{ route('user.cta_section.remove_image', ['language_id' => $language_id]) }}"
+                            name="background_image" type="image" />
+                        @endif
                       </div>
                       <div role="button" class="btn btn-primary btn-sm upload-btn" id="image">
                         {{ __('Choose Image') }}
@@ -103,6 +108,11 @@
                           <img
                             src="{{ !is_null(@$data->side_image) ? asset('assets/front/img/cta/' . @$data->side_image) : asset('assets/admin/img/noimage.jpg') }}"
                             alt="..." class="img-thumbnail">
+                          @if (!is_null(@$data->side_image))
+                            <x-remove-button
+                              url="{{ route('user.cta_section.remove_image', ['language_id' => $language_id]) }}"
+                              name="side_image" type="image" />
+                          @endif
                         </div>
 
                         <div role="button" class="btn btn-primary btn-sm upload-btn" id="image2">

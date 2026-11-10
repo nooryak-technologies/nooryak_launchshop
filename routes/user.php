@@ -68,6 +68,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'userstatus', 'Demo',
 
             Route::get('/cta-section', 'User\CtaSectionController@index')->name('user.cta_section.index');
             Route::post('/cta-section/update', 'User\CtaSectionController@update')->name('user.cta_section.update');
+            Route::get('/cta-section/remove-image/{language_id}', 'User\CtaSectionController@removeImage')->name('user.cta_section.remove_image');
 
             // home page banner-section route start
             Route::prefix('banner_section')->group(function () {

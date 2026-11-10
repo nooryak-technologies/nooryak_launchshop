@@ -46,4 +46,29 @@ class CtaSectionController extends Controller
         Session::flash('success', __('Updated Successfully'));
         return back();
     }
+
+    public function removeImage($language_id, Request $request)
+    {
+        $data = CallToAction::where('user_id', Auth::guard('web')->user()->id)
+            ->where('language_id', $language_id)
+            ->first();
+
+        if (empty($data)) {
+            return response()->json(['status' => 'error', 'message' => 'Record not found'], 404);
+        }
+
+        $type = $request->name;
+        if (!in_array($type, ['background_image', 'side_image'])) {
+            return response()->json(['status' => 'error', 'message' => 'Invalid image field'], 400);
+        }
+
+        $filePath = public_path('assets/front/img/cta/') . $data->$type;
+        if (!empty($data->$type) && file_exists($filePath)) {
+            @unlink($filePath);
+        }
+
+        $data->update([$type => null]);
+        session()->flash('success', __('Image removed successfully'));
+        return response()->json(['status' => 'success']);
+    }
 }

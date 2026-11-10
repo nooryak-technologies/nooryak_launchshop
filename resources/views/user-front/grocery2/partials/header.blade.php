@@ -5,18 +5,18 @@
     <div class="grocery2-header-container">
       <div class="grocery2-topbar-wrapper">
         @php
-          $headerText = !empty(@$userBs->header_text) ? @$userBs->header_text : (!empty(@$userHeader->header_text) ? @$userHeader->header_text : '');
+          $headerText = !empty(@$header->header_text) ? @$header->header_text : (!empty(@$userBs->header_text) ? @$userBs->header_text : (!empty(@$userHeader->header_text) ? @$userHeader->header_text : ''));
         @endphp
         @if (!empty($headerText))
           @php
-            $notices = explode('|', $headerText);
+            $notices = array_values(array_filter(array_map('trim', explode('|', $headerText))));
+            $repeatCount = count($notices) > 0 ? max(2, (int) ceil(6 / count($notices))) : 2;
           @endphp
-          @foreach ($notices as $not)
-            <div class="topbar-item">{{ trim($not) }}</div>
-          @endforeach
-          @foreach ($notices as $not)
-            <div class="topbar-item">{{ trim($not) }}</div>
-          @endforeach
+          @for ($r = 0; $r < $repeatCount; $r++)
+            @foreach ($notices as $not)
+              <div class="topbar-item">{{ $not }}</div>
+            @endforeach
+          @endfor
         @else
           <div class="topbar-item">🌾 {{ __('Vegetables 20% OFF Today') }}</div>
           <div class="topbar-item">🍎 {{ __('Buy 2 Get 1 Free on Fruits') }}</div>

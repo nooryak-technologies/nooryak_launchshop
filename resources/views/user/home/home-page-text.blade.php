@@ -314,7 +314,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div
-                                        class="{{ $setting->theme == 'fashion' || $setting->theme == 'vegetables' || $setting->theme == 'electronics' || $setting->theme == 'manti' ? 'col-lg-6' : '' }}">
+                                        class="{{ in_array($setting->theme, ['fashion', 'vegetables', 'electronics', 'manti', 'grocery2', 'grocery']) ? 'col-lg-6' : 'col-12' }}">
                                         <div class="form-group">
                                             <label for="image"><strong>
                                                     {{ __('Background Image') }}</strong></label>
@@ -352,11 +352,7 @@
                                             <p id="erraction_section_background_image" class="mb-0 text-danger em"></p>
                                         </div>
                                     </div>
-                                    @if (
-                                        $setting->theme == 'fashion' ||
-                                            $setting->theme == 'vegetables' ||
-                                            $setting->theme == 'electronics' ||
-                                            $setting->theme == 'manti')
+                                    @if (in_array($setting->theme, ['fashion', 'vegetables', 'electronics', 'manti', 'grocery2', 'grocery']))
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="image"><strong>

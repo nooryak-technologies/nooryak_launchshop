@@ -371,14 +371,23 @@
     $ctaTitle = !empty($userSec->call_to_action_section_title) ? $userSec->call_to_action_section_title : (!empty($callToAction->title) ? $callToAction->title : 'Stay home & get your daily needs from our shop');
     $ctaSubtitle = !empty($userSec->call_to_action_section_text) ? $userSec->call_to_action_section_text : (!empty($callToAction->text) ? $callToAction->text : 'Start Your Daily Shopping with Ecom Mart');
     $ctaBtnText = !empty($userSec->call_to_action_section_button_text) ? $userSec->call_to_action_section_button_text : (!empty($callToAction->button_text) ? $callToAction->button_text : 'Sign up');
-    $ctaSideImg = !empty($userSec->action_section_side_image) ? asset('assets/front/img/cta/' . $userSec->action_section_side_image) : (!empty($callToAction->side_image) ? asset('assets/front/img/cta/' . $callToAction->side_image) : asset('assets/front/img/user/banners/redesign_ecom_grocery_banner_clean.png'));
-    $ctaBgImg = !empty($userSec->action_section_background_image) ? asset('assets/front/img/cta/' . $userSec->action_section_background_image) : (!empty($callToAction->background_image) ? asset('assets/front/img/cta/' . $callToAction->background_image) : null);
+
+    $rawSideImg = !empty($userSec->action_section_side_image) ? $userSec->action_section_side_image : (!empty($callToAction->side_image) ? $callToAction->side_image : null);
+    $rawBgImg = !empty($userSec->action_section_background_image) ? $userSec->action_section_background_image : (!empty($callToAction->background_image) ? $callToAction->background_image : null);
+
+    $ctaSideImg = !empty($rawSideImg) ? asset('assets/front/img/cta/' . $rawSideImg) : null;
+    $ctaBgImg = !empty($rawBgImg) ? asset('assets/front/img/cta/' . $rawBgImg) : null;
+
+    // Only if neither background nor custom side image is set, use the default grocery graphic
+    if (empty($ctaBgImg) && empty($ctaSideImg)) {
+        $ctaSideImg = asset('assets/front/img/user/banners/redesign_ecom_grocery_banner_clean.png');
+    }
   @endphp
   <section class="g2-newsletter-section py-4">
     <div class="container">
       <div class="g2-newsletter-card" @if($ctaBgImg) style="background-image: url('{{ $ctaBgImg }}'); background-size: cover; background-position: center;" @endif>
         <div class="row align-items-center g-0">
-          <div class="col-lg-6 col-md-12 g2-news-left-content">
+          <div class="{{ !empty($ctaSideImg) ? 'col-lg-6 col-md-12' : 'col-lg-8 col-md-12' }} g2-news-left-content">
             <h2 class="g2-news-title">{{ $ctaTitle }}</h2>
             <p class="g2-news-subtitle">{{ $ctaSubtitle }}</p>
             <form action="{{ route('front.user.subscribe', getParam()) }}" method="POST" class="g2-news-form">
@@ -387,9 +396,11 @@
               <button type="submit" class="btn g2-news-btn">{{ $ctaBtnText }}</button>
             </form>
           </div>
-          <div class="col-lg-6 col-md-12 d-none d-lg-block g2-news-right-col">
-            <img src="{{ $ctaSideImg }}" alt="Grocery Shopping" class="g2-news-banner-img">
-          </div>
+          @if(!empty($ctaSideImg))
+            <div class="col-lg-6 col-md-12 d-none d-lg-block g2-news-right-col">
+              <img src="{{ $ctaSideImg }}" alt="Newsletter Banner" class="g2-news-banner-img">
+            </div>
+          @endif
         </div>
       </div>
     </div>

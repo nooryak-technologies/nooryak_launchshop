@@ -712,6 +712,12 @@
                       id="homepage">
                       <ul class="nav nav-collapse subnav">
 
+                        <li class="@if (request()->routeIs('user.header.index')) active @endif">
+                          <a href="{{ route('user.header.index') . '?language=' . $defaultLang }}">
+                            <span class="sub-item">{{ __('Top Header / Ticker') }}</span>
+                          </a>
+                        </li>
+
                         <li class="
                             @if (request()->routeIs('user.image_text_content.section')) active @endif">
                           <a href="{{ route('user.image_text_content.section', ['language' => $defaultLang]) }}">
