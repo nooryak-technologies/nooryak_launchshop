@@ -229,7 +229,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="col-12 mb-2 pl-0">
-                                            <label for="image"><strong>{{ __('Category Background Image') }} <span
+                                            <label for="bg_image"><strong>{{ __('Category Background Image') }} <span
                                                         class="text-danger">**</span></strong></label>
                                         </div>
                                         <div class="col-md-12 showImage mb-3 pl-0 pr-0">
@@ -237,14 +237,15 @@
                                                 class="img-thumbnail bg-preview-img">
                                         </div>
 
-
                                         <div class="d-inline-flex align-items-center flex-wrap">
                                             <!-- Choose Image -->
-                                            <div role="button" class="btn btn-primary btn-sm upload-btn mr-2"
-                                                id="image2">
-                                                {{ __('Choose Image') }}
-                                                <input type="file" class="img-input" name="image">
-                                            </div>
+                                            <label role="button" class="btn btn-primary btn-sm upload-btn mr-2"
+                                                style="position: relative; overflow: hidden; cursor: pointer;">
+                                                <i class="fas fa-upload mr-1"></i> {{ __('Choose Image') }}
+                                                <input type="file" class="img-input" name="background_image" id="category_bg_create"
+                                                    accept="image/*" style="position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer;"
+                                                    onchange="previewAddCatBgImg(this)">
+                                            </label>
 
                                             <!-- AI Generate Image -->
                                             <button type="button" class="btn btn-info btn-sm" data-ai-image-open
@@ -266,11 +267,11 @@
                                             </p>
                                         @endif
 
-                                        <p id="errimage" class="mb-0 text-danger em"></p>
+                                        <p id="errbackground_image" class="mb-0 text-danger em"></p>
                                     </div>
                                 </div>
                             @endif
-                            <div class="col-md-6">
+                            <div class="{{ in_array($userBs->theme, $allow_background_image_theme) ? 'col-md-6' : 'col-md-12' }}">
                                 <div class="form-group">
                                     <div class="col-12 mb-2 pl-0">
                                         <label for="image"><strong>{{ __('Category Image') }} <span
@@ -283,11 +284,13 @@
 
                                     <div class="d-inline-flex align-items-center flex-wrap">
                                         <!-- Choose Image -->
-                                        <div role="button" class="btn btn-primary btn-sm upload-btn mr-2"
-                                            id="image2">
-                                            {{ __('Choose Image') }}
-                                            <input type="file" class="img-input" name="image">
-                                        </div>
+                                        <label role="button" class="btn btn-primary btn-sm upload-btn mr-2"
+                                            style="position: relative; overflow: hidden; cursor: pointer;">
+                                            <i class="fas fa-upload mr-1"></i> {{ __('Choose Image') }}
+                                            <input type="file" class="img-input" name="image" id="category_image_create"
+                                                accept="image/*" style="position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer;"
+                                                onchange="previewAddCatImg(this)">
+                                        </label>
 
                                         <!-- AI Generate Image -->
 
@@ -427,5 +430,25 @@
                 mode: 'category'
             }
         });
+
+        function previewAddCatImg(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('.showImage2 img').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function previewAddCatBgImg(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('.showImage img').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
     </script>
 @endsection

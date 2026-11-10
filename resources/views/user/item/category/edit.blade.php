@@ -59,7 +59,7 @@
         <div class="card-body px-4 pt-4 pb-5">
           <div class="row">
             <div class="col-lg-10 mx-auto">
-              <form id="ajaxForm" action="{{ route('user.itemcategory.update') }}" method="POST">
+              <form id="ajaxForm" action="{{ route('user.itemcategory.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 {{-- Image Part --}}
                 <div class="row">
@@ -69,16 +69,25 @@
                   @if (in_array($userBs->theme, $allow_background_image_theme))
                     <div class="col-md-6 mb-4">
                       <div class="form-group p-0">
-                        <label class="font-weight-bold mb-2 d-block" for="image" style="font-size: 14px;">{{ __('Category Background Image') }} <span class="text-danger">*</span></label>
+                        <label class="font-weight-bold mb-2 d-block" style="font-size: 14px;">{{ __('Category Background Image') }} <span class="text-danger">*</span></label>
                         <div class="p-3 text-center d-inline-block" style="border: 1px dashed rgba(13, 110, 253, 0.3); border-radius: 12px; background: rgba(13, 110, 253, 0.02); position: relative;">
                           <div class="showImage2 mb-2">
                             <img src="{{ $data->category_background_image ? asset('assets/front/img/user/items/category_background/' . $data->category_background_image) : asset('assets/admin/img/noimage.jpg') }}"
-                              alt="..." class="img-thumbnail border-0" style="max-height: 120px; border-radius: 8px;">
+                              alt="..." class="img-thumbnail border-0 bg-preview-img" style="max-height: 120px; border-radius: 8px;">
                           </div>
-                          <div role="button" class="btn btn-outline-primary btn-sm upload-btn font-weight-bold mt-1" id="image2" style="border-radius: 8px; padding: 6px 16px; background: rgba(13, 110, 253, 0.05);">
-                            <i class="fas fa-upload mr-1"></i> {{ __('Choose Image') }}
-                            <input type="file" class="img-input" name="background_image">
+                          <div class="d-inline-flex align-items-center flex-wrap justify-content-center mt-1" style="gap: 8px;">
+                            <label role="button" class="btn btn-outline-primary btn-sm upload-btn font-weight-bold mb-0" style="border-radius: 8px; padding: 6px 16px; background: rgba(13, 110, 253, 0.05); position: relative; overflow: hidden; cursor: pointer;">
+                              <i class="fas fa-upload mr-1"></i> {{ __('Choose Image') }}
+                              <input type="file" class="img-input" name="background_image" id="category_bg_file" accept="image/*" style="position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer;" onchange="previewCategoryBgImg(this)">
+                            </label>
+                            <button type="button" class="btn btn-info btn-sm font-weight-bold" data-ai-image-open
+                                data-endpoint="{{ route('user.ai.generate.category.image') }}"
+                                data-target=".showImage2 .bg-preview-img" data-hidden="#ai_generated_bg_image"
+                                data-confirm-text="{{ __('Generate Background Image') }}" style="border-radius: 8px; padding: 6px 16px;">
+                                <i class="fas fa-magic mr-1"></i> {{ __('AI Generate') }}
+                            </button>
                           </div>
+                          <input type="hidden" name="ai_generated_bg_image" id="ai_generated_bg_image" value="">
                         </div>
                         @if ($userBs->theme == 'pet')
                           <p class="text-muted mt-2 mb-0" style="font-size: 13px;">{{ __('Recommended Image size : 120X190') }}</p>
@@ -93,18 +102,27 @@
                   @endif
                   <div class="{{ in_array($userBs->theme, $allow_background_image_theme) ? 'col-md-6' : 'col-md-12' }} mb-4">
                     <div class="form-group p-0">
-                      <label class="font-weight-bold mb-2 d-block" for="image" style="font-size: 14px;">{{ __('Category Image') }} <span class="text-danger">*</span></label>
+                      <label class="font-weight-bold mb-2 d-block" style="font-size: 14px;">{{ __('Category Image') }} <span class="text-danger">*</span></label>
                       <div class="p-3 text-center d-inline-block" style="border: 1px dashed rgba(13, 110, 253, 0.3); border-radius: 12px; background: rgba(13, 110, 253, 0.02); position: relative;">
                         <div class="showImage mb-2">
                           <img src="{{ $data->image ? asset('assets/front/img/user/items/categories/' . $data->image) : asset('assets/admin/img/noimage.jpg') }}"
-                            alt="..." class="img-thumbnail border-0" style="max-height: 120px; border-radius: 8px;">
+                            alt="..." class="img-thumbnail border-0 main-preview-img" style="max-height: 120px; border-radius: 8px;">
                         </div>
-                        <div role="button" class="btn btn-outline-primary btn-sm upload-btn font-weight-bold mt-1" id="image" style="border-radius: 8px; padding: 6px 16px; background: rgba(13, 110, 253, 0.05);">
-                          <i class="fas fa-upload mr-1"></i> {{ __('Choose Image') }}
-                          <input type="file" class="img-input" name="image">
+                        <div class="d-inline-flex align-items-center flex-wrap justify-content-center mt-1" style="gap: 8px;">
+                          <label role="button" class="btn btn-outline-primary btn-sm upload-btn font-weight-bold mb-0" style="border-radius: 8px; padding: 6px 16px; background: rgba(13, 110, 253, 0.05); position: relative; overflow: hidden; cursor: pointer;">
+                            <i class="fas fa-upload mr-1"></i> {{ __('Choose Image') }}
+                            <input type="file" class="img-input" name="image" id="category_image_file" accept="image/*" style="position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer;" onchange="previewCategoryImg(this)">
+                          </label>
+                          <button type="button" class="btn btn-info btn-sm font-weight-bold" data-ai-image-open
+                              data-endpoint="{{ route('user.ai.generate.category.image') }}"
+                              data-target=".showImage .main-preview-img" data-hidden="#ai_generated_image"
+                              data-confirm-text="{{ __('Generate Image') }}" style="border-radius: 8px; padding: 6px 16px;">
+                              <i class="fas fa-magic mr-1"></i> {{ __('AI Generate') }}
+                          </button>
                         </div>
+                        <input type="hidden" name="ai_generated_image" id="ai_generated_image" value="">
                       </div>
-                      <p class="text-muted mt-2 mb-0" style="font-size: 13px;">{{ __('Recommended Image size : 100X100. Max size 2MB.') }}</p>
+                      <p class="text-muted mt-2 mb-0" style="font-size: 13px;">{{ __('Recommended Image size : 100X100. Max size 5MB.') }}</p>
                       <p id="errimage" class="mb-0 text-danger em"></p>
                     </div>
                   </div>
@@ -112,13 +130,19 @@
                   @foreach ($languages as $language)
                     <div class="col-md-6 mb-3">
                       @php
-                        $category = App\Models\User\UserItemCategory::where([
-                            ['language_id', $language->id],
-                            ['unique_id', $data->unique_id],
-                            ['user_id', Auth::guard('web')->user()->id],
-                        ])->first();
+                        $category = null;
+                        if (!empty($data->unique_id)) {
+                            $category = App\Models\User\UserItemCategory::where([
+                                ['language_id', $language->id],
+                                ['unique_id', $data->unique_id],
+                                ['user_id', Auth::guard('web')->user()->id],
+                            ])->first();
+                        }
+                        if (empty($category) && $language->id == $data->language_id) {
+                            $category = $data;
+                        }
                       @endphp
-                      <input type="hidden" name="{{ $language->code }}_id" value="{{ @$category->id }}">
+                      <input type="hidden" name="{{ $language->code }}_id" value="{{ @$category->id ?? ($language->id == $data->language_id ? $data->id : '') }}">
                       <div class="form-group p-0">
                         <label class="font-weight-bold mb-2" style="font-size: 14px;">{{ __('Name') }} ({{ $language->name }}) <span class="text-danger">*</span></label>
                         <input type="text"
@@ -174,7 +198,7 @@
         <div class="card-footer border-0 pt-0 pb-4 px-4 bg-transparent">
           <div class="row">
             <div class="col-12 text-center d-flex justify-content-center gap-2">
-              <button type="submit" id="submitBtn" class="btn btn-success font-weight-bold d-inline-flex align-items-center mr-2" style="border-radius: 8px; padding: 10px 24px; background: #28a745; border-color: #28a745;">
+              <button type="submit" id="submitBtn" form="ajaxForm" class="btn btn-success font-weight-bold d-inline-flex align-items-center mr-2" style="border-radius: 8px; padding: 10px 24px; background: #28a745; border-color: #28a745;">
                 <i class="fas fa-check mr-2"></i> {{ __('Update Category') }}
               </button>
               <button type="button" class="btn btn-outline-secondary font-weight-bold d-inline-flex align-items-center" style="border-radius: 8px; padding: 10px 24px; background: #fff; border: 1px solid rgba(0,0,0,0.15); color: #495057;" onclick="window.location.reload();">
@@ -186,4 +210,29 @@
       </div>
     </div>
   </div>
+@endsection
+
+@section('scripts')
+  <script src="{{ asset('assets/user/js/ai-image-modal.js') }}"></script>
+  <script>
+    "use strict";
+    function previewCategoryImg(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          $('.showImage img').attr('src', e.target.result);
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+    function previewCategoryBgImg(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          $('.showImage2 img').attr('src', e.target.result);
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+  </script>
 @endsection

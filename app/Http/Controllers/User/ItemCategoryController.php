@@ -74,12 +74,19 @@ class ItemCategoryController extends Controller
         //     $messages['image.mimes'] = __('Only jpeg,png,svg,jpg files are allowed');
         // }
 
-        //  If file exists validate mime
+        // If file exists validate mime
         if ($request->hasFile('image')) {
-            $rules['image'] = 'mimes:jpeg,png,svg,jpg,webp';
-            $messages['image.mimes'] = __('Only jpeg,png,svg,jpg files are allowed');
+            $rules['image'] = 'mimes:jpeg,png,svg,jpg,webp,gif|max:5120';
+            $messages['image.mimes'] = __('Only jpeg, png, svg, jpg, webp files are allowed');
+            $messages['image.max'] = __('Image size cannot exceed 5MB');
         } else {
             $rules['image'] = 'nullable';
+        }
+
+        if ($request->hasFile('background_image')) {
+            $rules['background_image'] = 'mimes:jpeg,png,svg,jpg,webp,gif|max:5120';
+            $messages['background_image.mimes'] = __('Only jpeg, png, svg, jpg, webp files are allowed');
+            $messages['background_image.max'] = __('Image size cannot exceed 5MB');
         }
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -123,10 +130,10 @@ class ItemCategoryController extends Controller
             $image_name = Uploader::upload_picture($directory, $file);
         } elseif (!empty($request->ai_generated_image)) {
             // AI generated url/path -> copy to categories folder and return filename
-            $image_name = moveAiStorageImageToPublicAssets(
-                $request->ai_generated_image,
-                public_path('assets/front/img/user/items/categories/')
-            );
+            $directory = public_path('assets/front/img/user/items/categories/');
+            $image_name = function_exists('moveAiStorageImageToPublicAssets')
+                ? moveAiStorageImageToPublicAssets($request->ai_generated_image, $directory)
+                : basename($request->ai_generated_image);
         }
 
         // =========================
@@ -139,10 +146,10 @@ class ItemCategoryController extends Controller
             $directory2 = public_path('assets/front/img/user/items/category_background/');
             $background_image_name = Uploader::upload_picture($directory2, $background_image);
         } elseif (!empty($request->ai_generated_bg_image)) {
-            $background_image_name = moveAiStorageImageToPublicAssets(
-                $request->ai_generated_bg_image,
-                public_path('assets/front/img/user/items/category_background/')
-            );
+            $directory2 = public_path('assets/front/img/user/items/category_background/');
+            $background_image_name = function_exists('moveAiStorageImageToPublicAssets')
+                ? moveAiStorageImageToPublicAssets($request->ai_generated_bg_image, $directory2)
+                : basename($request->ai_generated_bg_image);
         }
 
         foreach ($languages as $language) {
@@ -199,17 +206,15 @@ class ItemCategoryController extends Controller
         $messages[$defaulLang->code . '_name.required'] = __('The category name field is required for') . ' ' . $defaulLang->name . ' ' . __('language');
 
         if ($request->hasFile('image')) {
-            $rules['image'] = 'mimes:jpeg,png,svg,jpg';
-            $messages = [
-                'image.mimes' => __('Only jpeg,png,svg,jpg files are allowed')
-            ];
+            $rules['image'] = 'mimes:jpeg,png,svg,jpg,webp,gif|max:5120';
+            $messages['image.mimes'] = __('Only jpeg, png, svg, jpg, webp files are allowed');
+            $messages['image.max'] = __('Image size cannot exceed 5MB');
         }
 
-        if ($request->hasFile('image')) {
-            $rules['image'] = 'mimes:jpeg,png,svg,jpg';
-            $messages = [
-                'image.mimes' => __('Only jpeg,png,svg,jpg files are allowed')
-            ];
+        if ($request->hasFile('background_image')) {
+            $rules['background_image'] = 'mimes:jpeg,png,svg,jpg,webp,gif|max:5120';
+            $messages['background_image.mimes'] = __('Only jpeg, png, svg, jpg, webp files are allowed');
+            $messages['background_image.max'] = __('Image size cannot exceed 5MB');
         }
         $validator = Validator::make($request->all(), $rules, $messages);
         if ($validator->fails()) {
@@ -224,8 +229,14 @@ class ItemCategoryController extends Controller
             @unlink($directory . $data->image);
             $file = $request->file('image');
             $image_name = Uploader::upload_picture($directory, $file);
+        } elseif (!empty($request->ai_generated_image)) {
+            $directory = public_path('assets/front/img/user/items/categories/');
+            @unlink($directory . $data->image);
+            $image_name = function_exists('moveAiStorageImageToPublicAssets')
+                ? moveAiStorageImageToPublicAssets($request->ai_generated_image, $directory)
+                : basename($request->ai_generated_image);
         } else {
-            $image_name =  $data->image;
+            $image_name = $data->image;
         }
 
         if ($request->hasFile('background_image')) {
@@ -233,24 +244,62 @@ class ItemCategoryController extends Controller
             $directory2 = public_path('assets/front/img/user/items/category_background/');
             @unlink($directory2 . $data->category_background_image);
             $background_image_name = Uploader::upload_picture($directory2, $background_image);
+        } elseif (!empty($request->ai_generated_bg_image)) {
+            $directory2 = public_path('assets/front/img/user/items/category_background/');
+            @unlink($directory2 . $data->category_background_image);
+            $background_image_name = function_exists('moveAiStorageImageToPublicAssets')
+                ? moveAiStorageImageToPublicAssets($request->ai_generated_bg_image, $directory2)
+                : basename($request->ai_generated_bg_image);
         } else {
             $background_image_name = $data->category_background_image;
         }
 
-        $unique_id = is_null($data->unique_id) ? uniqid() : $data->unique_id;
+        $unique_id = !empty($data->unique_id) ? $data->unique_id : uniqid();
+        $data->unique_id = $unique_id;
+        $data->image = $image_name;
+        $data->category_background_image = $background_image_name;
+        $data->status = $request->status;
+        $data->serial_number = $request->serial_number;
+        if ($request->filled('color')) {
+            $data->color = $request->color;
+        }
+        $data->save();
+
+        // Also update all sibling categories with the same unique_id for this user
+        UserItemCategory::where('unique_id', $unique_id)
+            ->where('user_id', $user_id)
+            ->update([
+                'image' => $image_name,
+                'category_background_image' => $background_image_name,
+                'status' => $request->status,
+                'serial_number' => $request->serial_number,
+            ]);
+
         foreach ($languages as $language) {
             if ($request->filled($language->code . '_name')) {
-                $category = UserItemCategory::where('id', $request[$language->code . '_id'])->first();
-
+                $category = null;
+                if (!empty($request[$language->code . '_id'])) {
+                    $category = UserItemCategory::where('id', $request[$language->code . '_id'])->first();
+                }
                 if (empty($category)) {
-                    $category = new UserItemCategory();
+                    $category = UserItemCategory::where('unique_id', $unique_id)
+                        ->where('language_id', $language->id)
+                        ->where('user_id', $user_id)
+                        ->first();
+                }
+                if (empty($category)) {
+                    if ($language->id == $data->language_id) {
+                        $category = $data;
+                    } else {
+                        $category = new UserItemCategory();
+                    }
                 }
                 $category->unique_id = $unique_id;
                 $category->user_id = $user_id;
                 $category->language_id = $language->id;
                 $category->name = $request[$language->code . '_name'];
                 $category->slug = make_slug($request[$language->code . '_name']);
-                $category->color = $request->color;
+                $category->color = $request->color ?? $data->color;
                 $category->image = $image_name;
                 $category->category_background_image = $background_image_name;
                 $category->status = $request->status;
