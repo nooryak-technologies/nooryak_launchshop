@@ -338,8 +338,7 @@
                                 <div class="variation-item">
                                   <span class="text-dark fw-medium">{{ $variation_name }} :</span>
                                   <span class="cart_variants_price"> {{ $vOptionName }}
-                                    (<i
-                                      class="fas fa-plus"></i>{{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, $variation['price']) }})
+                                    ({{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, $variation['price']) }})
                                   </span>
                                 </div>
                               @endforeach

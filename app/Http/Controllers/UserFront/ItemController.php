@@ -112,7 +112,9 @@ class ItemController extends Controller
                     $variantPrice += (float) ($vant['price'] ?? 0);
                 }
             }
-            $total = ($unitPrice + $variantPrice) * $qty;
+            // Variant price IS the final unit price (not additive on top of base)
+            $effectiveUnitPrice = (!empty($variant) && $variantPrice > 0) ? $variantPrice : $unitPrice;
+            $total = $effectiveUnitPrice * $qty;
         }
         //check product flash amount end
         // if cart is empty then this the first product
@@ -323,8 +325,12 @@ class ItemController extends Controller
 
             if ($stErr == 0) {
 
-                $total += (float)$cartItem["product_price"];
-                $total = $total * $qtys[$i];
+                // Variant price IS the unit price (not additive on top of base)
+                if (!empty($vars)) {
+                    $total = $total * $qtys[$i]; // $total already accumulated variant prices above
+                } else {
+                    $total = (float)$cartItem["product_price"] * $qtys[$i];
+                }
                 $cart[$cartKey]["qty"] = (int)$qtys[$i];
                 // save total in the cart item
                 $cart[$cartKey]["total"] = $total;

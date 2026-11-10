@@ -100,11 +100,19 @@
                 <div class="form-group">
                   @if ($userBs->theme == 'skinflow')
                     <label for="">{{ __('Header left side text') }}</label>
+                  @elseif ($userBs->theme == 'grocery2')
+                    <label for="">{{ __('Running Notice Bar Text') }}</label>
                   @else
                     <label for="">{{ __('Support Text') }}</label>
                   @endif
-                  <input type="text" class="form-control" name="header_text"
-                    value="{{ $header != null ? $header->header_text : '' }}">
+                  @if ($userBs->theme == 'grocery2')
+                    <textarea class="form-control" name="header_text" rows="4"
+                      placeholder="{{ __('Separate multiple notices with | e.g. Buy 2 Get 1 Free|Dairy Starting at ₹99') }}">{{ $header != null ? $header->header_text : '' }}</textarea>
+                    <small class="text-muted">{{ __('Use | (pipe symbol) to separate multiple running notices in the top bar.') }}</small>
+                  @else
+                    <input type="text" class="form-control" name="header_text"
+                      value="{{ $header != null ? $header->header_text : '' }}">
+                  @endif
                   <p id="errheader_text" class="em text-danger mb-0"></p>
                 </div>
 

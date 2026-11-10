@@ -161,8 +161,7 @@
                                         </td>
                                         <td class="p-0 cart_variants_price"><span class="mx-1">{{ $vOptionName }}
                                             -</span>
-                                          (<i
-                                            class="fas fa-plus"></i>{{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, $itm['price']) }})
+                                          ({{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, $itm['price']) }})
                                         </td>
                                       </tr>
                                     </table>

@@ -30,7 +30,7 @@ class HeaderSectionController extends Controller
     public function update(Request $request, $langid)
     {
         $rules = [
-            'header_text' => 'nullable|max:255',
+            'header_text' => 'nullable|max:1000',
             'header_middle_text' => 'nullable|max:255',
             'icon' => 'nullable',
         ];
@@ -45,7 +45,7 @@ class HeaderSectionController extends Controller
             $bs = new UserHeader();
             $bs->language_id = $langid;
             $bs->user_id = Auth::guard('web')->user()->id;
-            $bs = $bs->save();
+            $bs->save();
         }
         $bs->header_text = $request->header_text;
         $bs->header_middle_text = $request->header_middle_text;

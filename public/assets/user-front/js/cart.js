@@ -22,7 +22,7 @@ function totalPrice(qty) {
     }
 
     let baseP = (typeof pprice !== 'undefined' && !isNaN(parseFloat(pprice))) ? parseFloat(pprice) : 0;
-    let total = (baseP + vprice) * qty;
+    let total = (vprice > 0 ? vprice : baseP) * qty;
     if (isNaN(total) || total < 0) {
         total = 0;
     }
@@ -608,9 +608,9 @@ $('body').on('click', '.product-variant', function () {
             if (parseFloat(values[2]) < quantity) {
                 return false;
             } else {
-                price = price + parseFloat(values[1]);
+                price = parseFloat(values[1]);
                 if ($('#details_old-price').length > 0) {
-                    old_price = parseFloat(old_price) + parseFloat(values[1]);
+                    old_price = parseFloat(values[1]);
                 }
             }
         });
@@ -678,12 +678,14 @@ function totalPriceDetails(qty) {
         variant_flag++;
     });
 
-    var total = new_price;
+    var total = variant_price.length > 0 ? 0 : new_price;
+    var old_total_base = variant_price.length > 0 ? 0 : (($('#old-price').length > 0) ? old_price : 0);
     for (var i = 0; i < variant_price.length; i++) {
         total += variant_price[i];
-        if ($('#old-price').length > 0) {
-            old_price += variant_price[i];
-        }
+        old_total_base += variant_price[i];
+    }
+    if ($('#old-price').length > 0) {
+        old_price = old_total_base;
     }
     total = total.toFixed(2) * parseInt(qty);
     total = total.toFixed(2);
@@ -859,8 +861,8 @@ function totalPriceDetails2(qty) {
         variant_flag++;
     });
 
-    var total = detail_new_price;
-    var old_total = detail_old_price;
+    var total = variant_price.length > 0 ? 0 : detail_new_price;
+    var old_total = variant_price.length > 0 ? 0 : detail_old_price;
     for (var i = 0; i < variant_price.length; i++) {
         total += variant_price[i];
         old_total += variant_price[i];

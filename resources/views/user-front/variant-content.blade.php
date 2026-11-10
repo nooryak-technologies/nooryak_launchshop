@@ -71,8 +71,7 @@
               {{ $opt_name }}</label>
           </div>
 
-          <span class="variants_price">(<i
-              class="fas fa-plus"></i>{{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, currency_converter($variant_content_option->price)) }})</span>
+          <span class="variants_price">({{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, currency_converter($variant_content_option->price)) }})</span>
         </div>
       @endforeach
     </div>

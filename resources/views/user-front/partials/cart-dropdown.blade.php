@@ -97,8 +97,7 @@
                     </td>
                     <td class="cart_variants_price">
                       <small>{{ $vOptionName }}</small>
-                      -(<i
-                        class="fas fa-plus"></i>{{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, $itm['price']) }})
+                      -({{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, $itm['price']) }})
                     </td>
                   </tr>
                 </table>
