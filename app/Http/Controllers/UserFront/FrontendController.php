@@ -332,8 +332,14 @@ class FrontendController extends Controller
         ]);
     }
 
-    public function contactMessage($domain, Request $request)
+    public function contactMessage($domain = null, ?Request $request = null)
     {
+        if ($domain instanceof Request && is_null($request)) {
+            $request = $domain;
+            $domain = null;
+        } elseif (is_null($request)) {
+            $request = request();
+        }
         $user_id = getUser()->id;
         $keywords = Common::get_keywords($user_id);
         $rules = [
@@ -411,9 +417,9 @@ class FrontendController extends Controller
         app()->setLocale($lang);
         return redirect()->route('front.index');
     }
-    public function changeUserLanguage(Request $request, $domain)
+    public function changeUserLanguage(Request $request, $domain = null)
     {
         session()->put('user_lang', $request->code);
-        return redirect()->route('front.user.detail.view', $domain);
+        return redirect()->route('front.user.detail.view', getParam());
     }
 }

@@ -1021,6 +1021,21 @@ if (!function_exists('isWbAgencyCustomDomain')) {
 if (!function_exists('getParam')) {
     function getParam()
     {
+        $cleanHost = preg_replace('/:\d+$/', '', preg_replace('/^www\./i', '', strtolower(request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? ''))));
+        $tenantBaseHosts = ['saasreselling.com', 'saasreselling.in', 'launchshop.in', 'launchshop.top', 'localhost', '127.0.0.1'];
+        $isCustomDomain = !empty(request()->attributes->get('is_launchshop_custom_domain'))
+            || (function_exists('isLaunchShopCustomDomain') && isLaunchShopCustomDomain($cleanHost))
+            || (!empty($cleanHost)
+                && !in_array($cleanHost, $tenantBaseHosts)
+                && !str_ends_with($cleanHost, '.saasreselling.com')
+                && !str_ends_with($cleanHost, '.saasreselling.in')
+                && !str_ends_with($cleanHost, '.launchshop.in')
+                && !str_ends_with($cleanHost, '.launchshop.top'));
+
+        if ($isCustomDomain) {
+            return null;
+        }
+
         $user = getUser();
         if (!empty($user) && !empty($user->username)) {
             return strtolower($user->username);

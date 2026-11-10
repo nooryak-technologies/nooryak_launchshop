@@ -686,7 +686,7 @@ class CustomerController extends Controller
         return redirect()->back();
     }
 
-    public function slider($domain, Request $request)
+    public function slider($domain = null, ?Request $request = null)
     {
         $filename = null;
         $request->validate([

@@ -36,8 +36,14 @@ use Illuminate\Support\Facades\Session;
 
 class UsercheckoutController extends Controller
 {
-    public function checkout($domain, Request $request)
+    public function checkout($domain = null, ?Request $request = null)
     {
+        if ($domain instanceof Request && is_null($request)) {
+            $request = $domain;
+            $domain = null;
+        } elseif (is_null($request)) {
+            $request = request();
+        }
         $prevUrl = session()->get('prevUrl', []);
         if (!empty($prevUrl) && is_string($prevUrl)) {
             if (onlyDigitalItemsInCart() && !Auth::check()) {
