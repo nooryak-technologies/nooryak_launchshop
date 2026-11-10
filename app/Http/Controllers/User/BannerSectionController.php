@@ -74,7 +74,7 @@ class BannerSectionController extends Controller
         $request->validate(
             [
                 'user_language_id' => 'required',
-                'banner_img' => 'required_without:ai_generated_banner_img|mimes:jpeg,jpg,png|max:10240',
+                'banner_img' => 'required_without:ai_generated_banner_img|mimes:jpeg,jpg,png,webp,gif|max:10240',
                 'ai_generated_banner_img' => 'nullable|string',
                 'banner_url' => 'required',
                 'serial_number' => 'required'
@@ -99,10 +99,10 @@ class BannerSectionController extends Controller
             'language_id' => $request->user_language_id,
             'banner_img' => $request->image_name,
             'banner_url' => $request->banner_url,
-            'title' => $request->itle,
+            'title' => $request->title ?? $request->itle,
             'subtitle' => $request->subtitle,
             'text' => $request->text,
-            'button_text' => $request->btn_text,
+            'button_text' => $request->button_text ?? $request->btn_text,
             'position' => $request->position,
             'serial_number' => $request->serial_number,
         ]);

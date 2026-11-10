@@ -8,6 +8,7 @@ use App\Http\Helpers\Common;
 use App\Http\Helpers\UserPermissionHelper;
 use App\Models\User\Banner;
 use App\Models\User\BasicSetting;
+use App\Models\User\CallToAction;
 use App\Models\User\Blog as UserBlog;
 use App\Models\User\BlogCategory as UserBlogCategory;
 use App\Models\User\BlogContent as UserBlogContent;
@@ -320,6 +321,7 @@ class HomeController extends Controller
 
         $data['user'] = $user;
         $data['userSec'] = UserSection::where('user_id',  $user->id)->where('language_id', $userCurrentLang->id)->first();
+        $data['callToAction'] = CallToAction::where('user_id', $user->id)->where('language_id', $userCurrentLang->id)->first();
 
         $data['seo'] = SEO::where('language_id', $uLang)->where('user_id', $user->id)
             ->select('home_meta_description', 'home_meta_keywords')

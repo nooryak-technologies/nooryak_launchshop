@@ -51,7 +51,7 @@ class HeroSliderController extends Controller
                 'btn_name' => 'nullable|max:255',
                 'btn_url' => 'nullable|max:255',
                 'serial_number' => 'required',
-                'slider_img' => $userBs->theme == 'vegetables' || $userBs->theme == 'electronics' || $userBs->theme == 'clothing' || $userBs->theme == 'grocery2' ? 'required|mimes:jpeg,jpg,png|max:10240' : '',
+                'slider_img' => in_array($userBs->theme, ['vegetables', 'electronics', 'clothing', 'grocery2']) ? 'required_without:ai_generated_slider_img|mimes:jpeg,jpg,png,webp,gif|max:10240' : 'nullable|mimes:jpeg,jpg,png,webp,gif|max:10240',
                 'ai_generated_slider_img' => 'nullable|string',
                 'user_language_id' => 'required',
             ]
@@ -141,7 +141,7 @@ class HeroSliderController extends Controller
             empty($data->slider_img) &&
             !$request->hasFile('slider_img')
         ) {
-            $rules['slider_img'] = 'required|mimes:jpeg,jpg,png';
+            $rules['slider_img'] = 'required|mimes:jpeg,jpg,png,webp,gif|max:10240';
         }
         $messages = [
             'slider_img.required' => __('The image field is required')
@@ -212,7 +212,7 @@ class HeroSliderController extends Controller
             !$request->hasFile('hero_section_background_image') &&
             empty($request->ai_generated_hero_section_background_image)
         ) {
-            $rules['hero_section_background_image'] = 'required|mimes:jpeg,jpg,png';
+            $rules['hero_section_background_image'] = 'required|mimes:jpeg,jpg,png,webp,gif|max:10240';
         }
 
         $messages = [

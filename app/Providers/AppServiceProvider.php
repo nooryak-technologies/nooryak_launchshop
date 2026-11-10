@@ -15,6 +15,8 @@ use App\Models\User\UserUlink;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Pagination\Paginator;
+use Symfony\Component\Mime\MimeTypes;
+use App\Http\Helpers\ExtensionMimeTypeGuesser;
 use App\Models\Social;
 use App\Models\Language;
 use App\Models\User\Language as UserLanguage;
@@ -41,6 +43,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // Register fallback MIME guesser as early as possible so that any
+        // request handling / error reporting / validation has guesser support.
+        try {
+            MimeTypes::getDefault()->registerGuesser(new ExtensionMimeTypeGuesser());
+        } catch (\Throwable $e) {
+        }
+
         $this->app->bind(\SimpleSoftwareIO\QrCode\Generator::class, function () {
             return new \App\Libraries\QrCodeGenerator();
         });
@@ -374,6 +383,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Register extension-based MIME guesser as fallback
+        // when php_fileinfo extension is not enabled on the server.
+        try {
+            MimeTypes::getDefault()->registerGuesser(new ExtensionMimeTypeGuesser());
+        } catch (\Throwable $e) {
+            // Silently ignore — worst case upload still works via client extension
+        }
+
         try {
             $be = BasicExtended::first();
             $tz = (!empty($be) && !empty($be->timezone)) ? $be->timezone : 'Asia/Kolkata';

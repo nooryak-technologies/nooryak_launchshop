@@ -23,10 +23,10 @@
                     <option value='right'>{{ __('Top Right') }} </option>
                   @endif
                   @php
-                    $allow_right = ['kids', 'pet', 'skinflow', 'jewellery', 'manti'];
+                    $allow_right = ['kids', 'pet', 'skinflow', 'jewellery', 'manti', 'grocery2'];
                   @endphp
                   @if (in_array($userBs->theme, $allow_right))
-                    <option value='right'>{{ __('Right') }} </option>
+                    <option value='right'>{{ $userBs->theme == 'grocery2' ? __('Top Right (Side Promo)') : __('Right') }} </option>
                   @endif
                   @if ($userBs->theme == 'electronics')
                     <option value='top_right'>{{ __('Top Right') }} </option>
@@ -38,12 +38,12 @@
                     <option value='middle_right'>{{ __('Middle Right') }} </option>
                   @endif
                   @php
-                    $allow_left = ['kids', 'electronics', 'pet', 'skinflow', 'jewellery'];
+                    $allow_left = ['kids', 'electronics', 'pet', 'skinflow', 'jewellery', 'grocery2'];
                   @endphp
                   @if (in_array($userBs->theme, $allow_left))
-                    <option value='left'> {{ __('Left') }} </option>
+                    <option value='left'>{{ $userBs->theme == 'grocery2' ? __('Left / Vertical Promo') : __('Left') }} </option>
                   @endif
-                  <option value='middle'>{{ __('Middle') }}
+                  <option value='middle'>{{ $userBs->theme == 'grocery2' ? __('Middle (4 Column Cards)') : __('Middle') }}
                   </option>
                   @if ($userBs->theme === 'electronics' || $userBs->theme === 'vegetables' || $userBs->theme === 'vegetables')
                     <option value='bottom_left'>{{ __('Bottom Left') }}</option>

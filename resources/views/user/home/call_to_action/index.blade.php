@@ -124,14 +124,12 @@
                   <p id="errtitle" class="mb-0 text-danger em"></p>
                 </div>
 
-                @if ($userBs->theme == 'electronics')
-                  <div class="form-group">
-                    <label for="">{{ __('Text') }}</label>
-                    <input class="form-control" name="text" placeholder="{{ __('Enter text') }}"
-                      value="{{ @$data->text }}">
-                    <p id="errtext" class="mb-0 text-danger em"></p>
-                  </div>
-                @endif
+                <div class="form-group">
+                  <label for="">{{ __('Text / Subtitle') }}</label>
+                  <input class="form-control" name="text" placeholder="{{ __('Enter subtitle / text') }}"
+                    value="{{ @$data->text }}">
+                  <p id="errtext" class="mb-0 text-danger em"></p>
+                </div>
 
                 <div class="form-group">
                   <label for="">{{ __('Button Text') }}</label>

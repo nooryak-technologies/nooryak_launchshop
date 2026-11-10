@@ -55,14 +55,20 @@
         </div>
 
         <!-- Right Side Promo Stack -->
-        @if(isset($banners) && count($banners) > 0)
+        @php
+          $topBanners = isset($banners) ? $banners->whereIn('position', ['right', 'top_right']) : collect();
+          if ($topBanners->isEmpty() && isset($banners)) {
+              $topBanners = $banners->take(2);
+          }
+        @endphp
+        @if(isset($topBanners) && count($topBanners) > 0)
           <div class="col-xl-4 col-lg-12 mb-4">
             <div class="g2-promo-stack" id="g2-promo-stack-slider">
-              @foreach($banners->take(2) as $b)
+              @foreach($topBanners->take(2) as $b)
                 <div class="g2-side-promo" style="background-image: url('{{ asset('assets/front/img/user/banners/' . $b->banner_img) }}');">
                   <div class="g2-side-promo-content">
                     @if(!empty($b->title)) <h3>{{ $b->title }}</h3> @endif
-                    <a href="{{ $b->banner_url ?? $b->url ?? route('front.user.shop', getParam()) }}" class="g2-link-btn">{{ __('Shop Now') }} <i class="far fa-long-arrow-right"></i></a>
+                    <a href="{{ $b->banner_url ?? $b->url ?? route('front.user.shop', getParam()) }}" class="g2-link-btn">{{ !empty($b->button_text) ? $b->button_text : __('Shop Now') }} <i class="far fa-long-arrow-right"></i></a>
                   </div>
                 </div>
               @endforeach
@@ -193,12 +199,17 @@
   </section>
 
   <!-- ==================== MIDDLE PROMO CARDS (4 Column Grid) ==================== -->
-  @if(isset($banners) && count($banners) >= 6)
+  @php
+    $midBanners = isset($banners) ? $banners->where('position', 'middle') : collect();
+    if ($midBanners->isEmpty() && isset($banners) && count($banners) >= 3) {
+        $midBanners = $banners->slice(2, 4);
+    }
+  @endphp
+  @if(count($midBanners) > 0)
     <section class="g2-middle-banners py-4">
       <div class="container">
         <div class="row g-3">
           @php
-            $midBanners = $banners->slice(2, 4);
             $bgClasses = ['bg-cream-light', 'bg-blue-light', 'bg-green-light', 'bg-pink-light'];
             $i = 0;
           @endphp
@@ -210,7 +221,7 @@
                 </div>
                 <div class="g2-mid-card-text">
                   <h3>{{ $b->title }}</h3>
-                  <a href="{{ $b->banner_url ?? $b->url ?? route('front.user.shop', getParam()) }}" class="g2-supplier-link">Go To Supplier <i class="fas fa-caret-right"></i></a>
+                  <a href="{{ $b->banner_url ?? $b->url ?? route('front.user.shop', getParam()) }}" class="g2-supplier-link">{{ !empty($b->button_text) ? $b->button_text : __('Go To Supplier') }} <i class="fas fa-caret-right"></i></a>
                 </div>
               </div>
             </div>
@@ -226,13 +237,16 @@
     <div class="container">
       <div class="row">
         <!-- Left vertical banner (Loaded dynamically from $banners) -->
-        @if(isset($banners) && count($banners) >= 7)
-          @php $vertBanner = $banners->get(6) ?? $banners->last(); @endphp
+        @php
+          $vertBanner = isset($banners) ? ($banners->whereIn('position', ['vertical', 'left', 'bottom_left'])->first()
+            ?? ($banners->count() >= 7 ? $banners->get(6) : ($banners->count() >= 3 ? $banners->last() : null))) : null;
+        @endphp
+        @if($vertBanner)
           <div class="col-xl-3 col-lg-4 mb-4">
             <div class="g2-vertical-juice-card">
               <div class="g2-vert-content">
                 <h3>{{ $vertBanner->title }}</h3>
-                <a href="{{ $vertBanner->banner_url ?? $vertBanner->url ?? route('front.user.shop', getParam()) }}" class="btn g2-btn-orange">Shop Now <i class="fas fa-caret-right"></i></a>
+                <a href="{{ $vertBanner->banner_url ?? $vertBanner->url ?? route('front.user.shop', getParam()) }}" class="btn g2-btn-orange">{{ !empty($vertBanner->button_text) ? $vertBanner->button_text : __('Shop Now') }} <i class="fas fa-caret-right"></i></a>
               </div>
               <div class="g2-vert-img">
                 <img src="{{ asset('assets/front/img/user/banners/' . $vertBanner->banner_img) }}" alt="Vertical Promo">
@@ -353,21 +367,28 @@
     </div>
   </div>
   <!-- ==================== NEWSLETTER BANNER SECTION ==================== -->
+  @php
+    $ctaTitle = !empty($userSec->call_to_action_section_title) ? $userSec->call_to_action_section_title : (!empty($callToAction->title) ? $callToAction->title : 'Stay home & get your daily needs from our shop');
+    $ctaSubtitle = !empty($userSec->call_to_action_section_text) ? $userSec->call_to_action_section_text : (!empty($callToAction->text) ? $callToAction->text : 'Start Your Daily Shopping with Ecom Mart');
+    $ctaBtnText = !empty($userSec->call_to_action_section_button_text) ? $userSec->call_to_action_section_button_text : (!empty($callToAction->button_text) ? $callToAction->button_text : 'Sign up');
+    $ctaSideImg = !empty($userSec->action_section_side_image) ? asset('assets/front/img/cta/' . $userSec->action_section_side_image) : (!empty($callToAction->side_image) ? asset('assets/front/img/cta/' . $callToAction->side_image) : asset('assets/front/img/user/banners/redesign_ecom_grocery_banner_clean.png'));
+    $ctaBgImg = !empty($userSec->action_section_background_image) ? asset('assets/front/img/cta/' . $userSec->action_section_background_image) : (!empty($callToAction->background_image) ? asset('assets/front/img/cta/' . $callToAction->background_image) : null);
+  @endphp
   <section class="g2-newsletter-section py-4">
     <div class="container">
-      <div class="g2-newsletter-card">
+      <div class="g2-newsletter-card" @if($ctaBgImg) style="background-image: url('{{ $ctaBgImg }}'); background-size: cover; background-position: center;" @endif>
         <div class="row align-items-center g-0">
           <div class="col-lg-6 col-md-12 g2-news-left-content">
-            <h2 class="g2-news-title">Stay home & get your daily needs from our shop</h2>
-            <p class="g2-news-subtitle">Start Your Daily Shopping with Ecom Mart</p>
+            <h2 class="g2-news-title">{{ $ctaTitle }}</h2>
+            <p class="g2-news-subtitle">{{ $ctaSubtitle }}</p>
             <form action="{{ route('front.user.subscribe', getParam()) }}" method="POST" class="g2-news-form">
               @csrf
               <input type="email" name="email" class="g2-news-input" placeholder="Your email address" required>
-              <button type="submit" class="btn g2-news-btn">Sign up</button>
+              <button type="submit" class="btn g2-news-btn">{{ $ctaBtnText }}</button>
             </form>
           </div>
           <div class="col-lg-6 col-md-12 d-none d-lg-block g2-news-right-col">
-            <img src="{{ asset('assets/front/img/user/banners/redesign_ecom_grocery_banner_clean.png') }}" alt="Grocery Shopping" class="g2-news-banner-img">
+            <img src="{{ $ctaSideImg }}" alt="Grocery Shopping" class="g2-news-banner-img">
           </div>
         </div>
       </div>

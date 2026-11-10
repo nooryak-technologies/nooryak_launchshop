@@ -824,6 +824,12 @@
                           </a>
                         </li>
 
+                        <li class="@if (request()->routeIs('user.cta_section.index')) active @endif">
+                          <a href="{{ route('user.cta_section.index', ['language' => $defaultLang]) }}">
+                            <span class="sub-item">{{ __('Call to Action') }}</span>
+                          </a>
+                        </li>
+
                         <li
                           class="
                           @if (request()->routeIs('user.tab.index')) active

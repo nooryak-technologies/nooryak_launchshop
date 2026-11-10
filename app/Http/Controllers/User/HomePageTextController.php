@@ -49,60 +49,10 @@ class HomePageTextController extends Controller
             'flash_section_background_image' => 'ai_generated_flash_section_background_image',
         ];
 
-        // Video Section Image
-        if (
-            in_array($theme, ['fashion', 'furniture', 'kids'])
-            && empty($userSec->video_background_image)
-            && !$request->hasFile('video_background_image')
-            && empty($request->input($aiFieldMap['video_background_image']))
-        ) {
-            $validations['video_background_image'] = new ImageMimeTypeRule();
-        }
-
-        // Featured Section Image
-        if (
-            $theme === 'vegetables'
-            && empty($userSec->featured_img)
-            && !$request->hasFile('featured_img')
-            && empty($request->input($aiFieldMap['featured_img']))
-        ) {
-            $validations['featured_img'] = new ImageMimeTypeRule();
-        }
-
-        // Action Section Images
-        if ($theme !== 'fashion') {
-            if ($theme !== 'kids') {
-                if (
-                    empty($userSec->action_section_background_image)
-                    && !$request->hasFile('action_section_background_image')
-                    && empty($request->input($aiFieldMap['action_section_background_image']))
-                ) {
-                    $validations['action_section_background_image'] = new ImageMimeTypeRule();
-                }
-                if (
-                    empty($userSec->action_section_side_image)
-                    && !$request->hasFile('action_section_side_image')
-                    && empty($request->input($aiFieldMap['action_section_side_image']))
-                ) {
-                    $validations['action_section_side_image'] = new ImageMimeTypeRule();
-                }
-            }
-        }
-        // Action Section Images
-        if ($theme === 'pet') {
-            if (
-                empty($userSec->flash_section_background_image)
-                && !$request->hasFile('flash_section_background_image')
-                && empty($request->input($aiFieldMap['flash_section_background_image']))
-            ) {
-                $validations['flash_section_background_image'] = new ImageMimeTypeRule();
-            }
-            if (
-                empty($userSec->featured_background_img)
-                && !$request->hasFile('featured_background_img')
-                && empty($request->input($aiFieldMap['featured_background_img']))
-            ) {
-                $validations['featured_background_img'] = new ImageMimeTypeRule();
+        // Only validate images if files are uploaded
+        foreach (array_keys($aiFieldMap) as $imgField) {
+            if ($request->hasFile($imgField)) {
+                $validations[$imgField] = new ImageMimeTypeRule();
             }
         }
 
@@ -248,19 +198,19 @@ class HomePageTextController extends Controller
         $type = $request->name;
 
         switch ($type) {
-            case 'video_background_image';
+            case 'video_background_image':
                 $filePath = public_path('assets/front/img/hero_slider/') . $ubs->video_background_image;
                 break;
-            case 'featured_img';
+            case 'featured_img':
                 $filePath = public_path('assets/front/img/user/feature/') . $ubs->featured_img;
                 break;
-            case 'action_section_side_image';
-                $filePath = public_path('assets/front/img/user/feature/') . $ubs->action_section_side_image;
+            case 'action_section_side_image':
+                $filePath = public_path('assets/front/img/cta/') . $ubs->action_section_side_image;
                 break;
-            case 'action_section_background_image';
-                $filePath = public_path('assets/front/img/user/feature/') . $ubs->action_section_background_image;
+            case 'action_section_background_image':
+                $filePath = public_path('assets/front/img/cta/') . $ubs->action_section_background_image;
                 break;
-            case 'flash_section_background_image';
+            case 'flash_section_background_image':
                 $filePath = public_path('assets/front/img/user/flash_section/') . $ubs->flash_section_background_image;
                 break;
             default:
