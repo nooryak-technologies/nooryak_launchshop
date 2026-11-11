@@ -1513,7 +1513,7 @@ body.show-mobile-menu .grocery2-header {
 
 /* Footer Main Widgets */
 .grocery2-footer-widgets {
-    padding: 50px 0;
+    padding: 30px 0;
 }
 
 .grocery2-footer-widget .widget-title {
@@ -1594,7 +1594,7 @@ body.show-mobile-menu .grocery2-header {
 /* Copyright Bar */
 .grocery2-copyright-bar {
     border-top: 1px solid var(--g2-border);
-    padding: 25px 0;
+    padding: 15px 0;
     background-color: var(--g2-bg-light);
 }
 
@@ -1616,11 +1616,13 @@ body.show-mobile-menu .grocery2-header {
     padding: 0;
     margin: 0;
     gap: 20px;
+    flex-wrap: nowrap;
 }
 
 .copyright-links li a {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--g2-text) !important;
+    white-space: nowrap;
 }
 
 .copyright-links li a:hover {
@@ -1657,10 +1659,26 @@ body.show-mobile-menu .grocery2-header {
 
     .copyright-links {
         justify-content: center;
+        gap: 10px;
+        flex-wrap: nowrap;
+    }
+
+    .copyright-links li a {
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .copyright-links li.list-inline-item.text-muted {
+        flex-shrink: 0;
     }
 
     .social-links {
         justify-content: center;
+    }
+
+    /* Reduce footer widget top/bottom padding on mobile */
+    .grocery2-footer-widgets {
+        padding: 20px 0;
     }
 }
 

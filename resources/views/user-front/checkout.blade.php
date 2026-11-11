@@ -293,8 +293,18 @@
                           </h5>
 
                           <div class="product-price">
+                            @php
+                              // If item has variations, show the total variant price instead of base price
+                              $displayItemPrice = $item['product_price'];
+                              if (!empty($item['variations'])) {
+                                  $varTotal = collect($item['variations'])->sum('price');
+                                  if ($varTotal > 0) {
+                                      $displayItemPrice = $varTotal;
+                                  }
+                              }
+                            @endphp
                             <span class="text-dark fw-medium">{{ $keywords['Item Price'] ?? __('Item Price') }} :</span>
-                            <span>{{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, $item['product_price']) }}</span>
+                            <span>{{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, $displayItemPrice) }}</span>
                           </div>
 
                           @if ($item['variations'])

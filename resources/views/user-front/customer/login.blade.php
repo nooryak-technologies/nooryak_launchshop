@@ -17,7 +17,7 @@
 
           @if (!onlyDigitalItemsInCart() && $input == 'checkout')
             <!-- Instant Order (Guest Checkout) Card -->
-            <div class="instant-order-box mb-4">
+            <div class="instant-order-box mb-4 mt-4">
               <a href="{{ route('front.user.checkout', [getParam(), 'type' => 'guest']) }}" class="btn-instant-order-cta">
                 <div class="instant-order-badge">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
@@ -25,7 +25,7 @@
                   </svg>
                 </div>
                 <div class="instant-order-info">
-                  <span class="instant-order-headline">{{ $keywords['Instant Order'] ?? __('Instant Order') }}</span>
+                  <span class="instant-order-headline">{{ $keywords['Proceed with Instant Order'] ?? __('Proceed with Instant Order') }}</span>
                   <span class="instant-order-tagline">{{ $keywords['Fast Checkout without Login'] ?? __('Fast Checkout — No Account or Password Needed') }}</span>
                 </div>
                 <div class="instant-order-chevron">

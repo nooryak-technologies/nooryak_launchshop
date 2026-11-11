@@ -836,6 +836,15 @@ footer {
     padding-bottom: 23px !important;
   }
 }
+
+@if ($userBs->theme == 'grocery2')
+/* Grocery2 uses a sticky (not fixed-height-offset) header — no extra top padding needed on mobile */
+@media only screen and (max-width: 991.98px) {
+  .page-title-area {
+    padding-top: 0px !important;
+    padding-bottom: 10px !important;
+  }
+}
 @endif
 
 /* Reduce page title font size on desktop only */

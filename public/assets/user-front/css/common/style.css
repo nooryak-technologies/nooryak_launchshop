@@ -7025,10 +7025,16 @@ figure.product-img.skeleton.skeleton-big-img {
 }
 
 .shop-category-pills .pill-name {
-    font-size: 13.5px;
+    font-size: 12px;
     font-weight: 600;
     color: #475569;
     transition: all 0.3s ease;
+    white-space: normal;
+    word-break: break-word;
+    text-align: center;
+    max-width: 76px;
+    line-height: 1.3;
+    display: block;
 }
 
 /* Hover and Active States */
