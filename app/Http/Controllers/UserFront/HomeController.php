@@ -201,6 +201,17 @@ class HomeController extends Controller
                 ->get();
         }
 
+        if ($data['flash_items']->isEmpty()) {
+            $data['flash_items'] = DB::table('user_items')->where('user_items.user_id', $user->id)
+                ->where('user_items.status', 1)
+                ->join('user_item_contents', 'user_items.id', '=', 'user_item_contents.item_id')
+                ->leftJoin('user_item_categories', 'user_item_contents.category_id', '=', 'user_item_categories.id')
+                ->select('user_items.*', 'user_items.id AS item_id', 'user_item_contents.*', 'user_item_categories.name AS category', 'user_item_categories.slug AS category_slug')
+                ->orderBy('user_items.id', 'DESC')
+                ->take(3)
+                ->get();
+        }
+
 
         $data['keywords'] = json_decode($userCurrentLang->keywords, true);
 
@@ -224,6 +235,12 @@ class HomeController extends Controller
             ->where([['user_id', $user->id], ['status', 1]])
             ->orderBy('serial_number', 'ASC')
             ->get();
+
+        if ($data['tabs']->isEmpty()) {
+            $data['tabs'] = Tab::where([['user_id', $user->id], ['status', 1]])
+                ->orderBy('serial_number', 'ASC')
+                ->get();
+        }
 
         $data['item_categories'] = UserItemCategory::where('language_id', $userCurrentLang->id)
             ->where([['user_id', $user->id], ['status', 1]])
@@ -252,34 +269,45 @@ class HomeController extends Controller
 
         if (in_array($data['ubs']->theme, ['manti', 'vegetables', 'grocery', 'grocery2', 'furniture', 'pet', 'skinflow', 'clothing'])) {
             $data['top_rated'] = UserItem::join('user_item_contents', 'user_items.id', '=', 'user_item_contents.item_id')
-                ->join('user_item_categories', 'user_item_categories.id', '=', 'user_item_contents.category_id')
+                ->leftJoin('user_item_categories', 'user_item_categories.id', '=', 'user_item_contents.category_id')
                 ->where('user_items.status', 1)
                 ->where('user_items.user_id', $user->id)
-                ->where('user_item_categories.status', 1)
+                ->where(function ($q) {
+                    $q->where('user_item_categories.status', 1)->orWhereNull('user_item_categories.status');
+                })
                 ->with(['itemContents' => function ($q) use ($uLang) {
                     $q->where('language_id', '=', $uLang);
                 }])
                 ->where('user_items.rating', '>', 0)
                 ->orderBy('user_items.rating', 'desc')
-                ->take($shop_settings->top_rated_count)
+                ->take($shop_settings->top_rated_count ?? 6)
                 ->distinct()
                 ->select('user_items.*')
                 ->get();
 
             if ($data['top_rated']->isEmpty()) {
                 $data['top_rated'] = UserItem::join('user_item_contents', 'user_items.id', '=', 'user_item_contents.item_id')
-                    ->join('user_item_categories', 'user_item_categories.id', '=', 'user_item_contents.category_id')
+                    ->leftJoin('user_item_categories', 'user_item_categories.id', '=', 'user_item_contents.category_id')
                     ->where('user_items.status', 1)
                     ->where('user_items.user_id', $user->id)
-                    ->where('user_item_categories.status', 1)
-                    ->with(['itemContents' => function ($q) use ($uLang) {
-                        $q->where('language_id', '=', $uLang);
-                    }])
+                    ->where(function ($q) {
+                        $q->where('user_item_categories.status', 1)->orWhereNull('user_item_categories.status');
+                    })
+                    ->with(['itemContents'])
                     ->orderBy('user_items.id', 'desc')
                     ->take($shop_settings->top_rated_count ?? 6)
                     ->distinct()
                     ->select('user_items.*')
                     ->get();
+            }
+
+            foreach ($data['top_rated'] as $tr) {
+                if (empty($tr->itemContents) || (is_object($tr->itemContents) && method_exists($tr->itemContents, 'isEmpty') && $tr->itemContents->isEmpty()) || (is_array($tr->itemContents) && count($tr->itemContents) == 0)) {
+                    $fallbackContents = \App\Models\User\UserItemContent::where('item_id', $tr->id)->get();
+                    if ($fallbackContents->isNotEmpty()) {
+                        $tr->setRelation('itemContents', $fallbackContents);
+                    }
+                }
             }
         } else {
             $data['top_rated'] = collect();
@@ -291,12 +319,20 @@ class HomeController extends Controller
             }])
                 ->where('user_id', $user->id)
                 ->groupBy(DB::raw('item_id'))
-                ->take($shop_settings->top_selling_count)
+                ->take($shop_settings->top_selling_count ?? 6)
                 ->select(DB::raw('item_id, sum(qty) as quantity'))
                 ->orderBy('quantity', 'desc')
-                ->get();
+                ->get()
+                ->filter(function ($entry) {
+                    return !empty($entry->item) && (int) $entry->item->status === 1;
+                })
+                ->values();
             if ($data['top_selling']->isEmpty()) {
-                $fallbackItems = UserItem::where('user_id', $user->id)->where('status', 1)->take($shop_settings->top_selling_count ?? 6)->get();
+                $fallbackItems = UserItem::where('user_id', $user->id)
+                    ->where('status', 1)
+                    ->orderBy('id', 'DESC')
+                    ->take($shop_settings->top_selling_count ?? 6)
+                    ->get();
                 $data['top_selling'] = $fallbackItems->map(function ($it) {
                     $obj = new \stdClass();
                     $obj->item = $it;

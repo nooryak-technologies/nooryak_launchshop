@@ -4,7 +4,7 @@
     $it = $entry->item ?? ($entry instanceof \App\Models\User\UserItem ? $entry : null);
     if (empty($it)) return null;
     if (empty($it->itemContents) || count($it->itemContents) == 0) {
-      $fallback = \App\Models\User\ItemContent::where('item_id', $it->id)->get();
+      $fallback = \App\Models\User\UserItemContent::where('item_id', $it->id)->get();
       if ($fallback->isNotEmpty()) {
         $it->setRelation('itemContents', $fallback);
       }
