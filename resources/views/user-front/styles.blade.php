@@ -823,6 +823,19 @@ footer {
     padding-bottom: 25px !important;
   }
 }
+@elseif ($userBs->theme == 'grocery2')
+/* Grocery2 uses a sticky header — no extra top padding needed on mobile */
+.page-title-area {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+@media only screen and (max-width: 991.98px) {
+  .page-title-area {
+    padding-top: 0px !important;
+    padding-bottom: 10px !important;
+  }
+}
 @else
 /* For other templates, use the compact spacing */
 .page-title-area {
@@ -834,15 +847,6 @@ footer {
   .page-title-area {
     padding-top: 15px !important;
     padding-bottom: 23px !important;
-  }
-}
-
-@if ($userBs->theme == 'grocery2')
-/* Grocery2 uses a sticky (not fixed-height-offset) header — no extra top padding needed on mobile */
-@media only screen and (max-width: 991.98px) {
-  .page-title-area {
-    padding-top: 0px !important;
-    padding-bottom: 10px !important;
   }
 }
 @endif
