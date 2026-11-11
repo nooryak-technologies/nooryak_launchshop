@@ -87,7 +87,7 @@
     <div class="container">
       <div class="row g-4">
         <!-- Widget 1: About -->
-        <div class="col-lg-3 col-md-6">
+        <div class="col-lg-3 col-md-6 col-12">
           <div class="grocery2-footer-widget about-widget">
             @php
               $phone = !empty(@$userBs->contact_number) ? @$userBs->contact_number : (!empty(@$user->phone) ? @$user->phone : (!empty(@$userFooter->phone) ? @$userFooter->phone : '+1800900122'));
@@ -147,7 +147,7 @@
         </div>
 
         <!-- Widget 2: Company / Useful Links -->
-        <div class="col-lg-2 col-md-6">
+        <div class="col-lg-2 col-md-6 col-6">
           <div class="grocery2-footer-widget link-widget">
             <h3 class="widget-title mb-4">{{ $footer->useful_links_title ?? ($keywords['Useful Links'] ?? __('Useful Links')) }}</h3>
             <ul class="widget-links list-unstyled m-0 p-0" style="font-size: 14px; line-height: 2;">
@@ -166,7 +166,7 @@
         </div>
 
         <!-- Widget 3: Pages / Corporate -->
-        <div class="col-lg-2 col-md-6">
+        <div class="col-lg-2 col-md-6 col-6">
           <div class="grocery2-footer-widget link-widget">
             <h3 class="widget-title mb-4">{{ $keywords['Pages'] ?? __('Pages') }}</h3>
             <ul class="widget-links list-unstyled m-0 p-0" style="font-size: 14px; line-height: 2;">
@@ -183,7 +183,7 @@
         </div>
 
         <!-- Widget 4: Categories / Popular -->
-        <div class="col-lg-2 col-md-6">
+        <div class="col-lg-2 col-md-6 col-6">
           <div class="grocery2-footer-widget link-widget">
             <h3 class="widget-title mb-4">{{ $keywords['Categories'] ?? __('Categories') }}</h3>
             <ul class="widget-links list-unstyled m-0 p-0" style="font-size: 14px; line-height: 2;">
@@ -195,7 +195,7 @@
         </div>
 
         <!-- Widget 5: Install App -->
-        <div class="col-lg-3 col-md-6">
+        <div class="col-lg-3 col-md-6 col-6">
           <div class="grocery2-footer-widget app-widget">
             <h3 class="widget-title mb-4">{{ $footer->subscriber_title ?? ($keywords['Install App'] ?? __('Install App')) }}</h3>
             

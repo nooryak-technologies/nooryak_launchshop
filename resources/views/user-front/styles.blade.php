@@ -1371,6 +1371,31 @@ footer {
   }
 }
 
+@media only screen and (max-width: 767.98px) {
+  .footer-area .footer-widget {
+    margin-bottom: 22px;
+  }
+  .footer-area .footer-widget h3 {
+    font-size: 16px;
+    margin-bottom: 14px;
+  }
+  .footer-area .footer-widget .footer-links li {
+    font-size: 13px;
+    line-height: 1.45;
+    margin-bottom: 10px;
+  }
+  .footer-area .footer-widget .footer-links li,
+  .footer-area .footer-widget .footer-links li a,
+  .footer-area .footer-widget .footer-links li span,
+  .footer-area .footer-widget-email,
+  .footer-area .footer-widget-number,
+  .footer-area .footer-widget-address {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
+
 /* =========================================================
    UNIVERSAL PIXEL-PERFECT QUICK VIEW MODAL (ALL THEMES)
    ========================================================= */

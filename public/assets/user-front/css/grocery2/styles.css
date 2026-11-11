@@ -1676,9 +1676,44 @@ body.show-mobile-menu .grocery2-header {
         justify-content: center;
     }
 
-    /* Reduce footer widget top/bottom padding on mobile */
+    /* Reduce footer widget top/bottom padding on mobile & tighten 2-col layout */
     .grocery2-footer-widgets {
-        padding: 20px 0;
+        padding: 20px 0 !important;
+    }
+
+    .grocery2-footer-widget .widget-title {
+        font-size: 16px;
+        margin-bottom: 14px !important;
+        padding-bottom: 8px;
+    }
+
+    .grocery2-footer-widget .widget-links {
+        font-size: 13px !important;
+        line-height: 1.7 !important;
+    }
+
+    .grocery2-footer-widget .widget-links li {
+        margin-bottom: 6px;
+        word-break: break-word;
+    }
+
+    .grocery2-footer-widget .btn-install-our-app {
+        padding: 7px 10px !important;
+        max-width: 100%;
+    }
+
+    .grocery2-footer-widget .btn-install-our-app svg {
+        width: 18px;
+        height: 18px;
+        margin-right: 7px !important;
+    }
+
+    .grocery2-footer-widget .btn-install-our-app > div > div:first-child {
+        font-size: 7px !important;
+    }
+
+    .grocery2-footer-widget .btn-install-our-app > div > div:last-child {
+        font-size: 11px !important;
     }
 }
 

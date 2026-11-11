@@ -7,7 +7,7 @@
   <div class="footer-top pt-100 pb-70">
     <div class="container">
       <div class="row gx-xl-5">
-        <div class="col-lg-4 col-md-12">
+        <div class="col-lg-4 col-md-12 col-12">
           <div class="footer-widget">
             <div class="navbar-brand">
               <a href="{{ route('front.user.detail.view', getParam()) }}">
@@ -37,7 +37,7 @@
 
           </div>
         </div>
-        <div class="col-xl-2 col-md-6">
+        <div class="col-xl-2 col-md-6 col-6">
           <div class="footer-widget">
             <h3>{{ $footer->useful_links_title ?? __('Useful Links') }}</h3>
             @if (count($ulinks) == 0)
@@ -62,7 +62,7 @@
             @endif
           </div>
         </div>
-        <div class="col-xl-2 col-md-6">
+        <div class="col-xl-2 col-md-6 col-6">
           <div class="footer-widget">
             <h3>{{ $keywords['Contact Us'] ?? __('Contact Us') }}</h3>
             @php
@@ -105,7 +105,7 @@
             </ul>
           </div>
         </div>
-        <div class="col-xl-4 col-lg-6 col-md-6">
+        <div class="col-xl-4 col-lg-6 col-md-6 col-12">
           <div class="footer-widget">
             <h3>{{ @$footer->subscriber_title ?? ($keywords['Subscribe'] ?? __('Subscribe')) }}</h3>
             <p>{{ @$footer->subscriber_text }}</p>
