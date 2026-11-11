@@ -278,6 +278,18 @@
       color: #ffffff;
       transform: translateX(4px);
     }
+    @media only screen and (max-width: 767.98px) {
+      .btn-instant-order-cta {
+        padding: 14px 16px;
+        gap: 12px;
+      }
+      .instant-order-headline {
+        font-size: 13.5px;
+      }
+      .instant-order-tagline {
+        font-size: 11px;
+      }
+    }
 
     /* ========== Clean Divider ========== */
     .auth-divider-clean {
