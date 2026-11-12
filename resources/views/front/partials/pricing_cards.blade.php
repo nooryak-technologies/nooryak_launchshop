@@ -441,11 +441,25 @@
                     @endforeach
                   </ul>
                 </div>
+                @php
+                  $modalTone = $isRecommended
+                      ? 'recommended'
+                      : ($isBestValue
+                          ? 'best-value'
+                          : (($isBasic || $index === 0) ? 'basic' : 'enterprise'));
+                  $modalBadge = $modalTone === 'basic'
+                      ? 'STARTER PLAN'
+                      : ($modalTone === 'recommended'
+                          ? 'RECOMMENDED'
+                          : ($modalTone === 'best-value' ? 'BEST VALUE' : ''));
+                @endphp
                 <button type="button" class="plan-v2-see-more"
                         data-plan-title="Ecom {{ __($package->title) }}"
                         data-plan-price="{{ $package->price == 0 ? __('Free') : $be->base_currency_symbol . number_format($package->price, 0) . ' / ' . $periodLabel }}"
                         data-plan-href="{{ $ctaHref }}"
                         data-plan-cta="Select Ecom {{ __($package->title) }}"
+                        data-plan-tone="{{ $modalTone }}"
+                        data-plan-badge="{{ $modalBadge }}"
                         onclick="togglePlanFeatures('{{ strtolower($term) }}-{{ $package->id }}', this)">
                   <span class="see-more-txt d-none d-md-inline">See More Features</span>
                   <span class="see-more-mobile-label d-inline-flex d-md-none align-items-center gap-1">
@@ -566,23 +580,33 @@
 
       const boxEl = overlay.querySelector('.plan-feats-mobile-box');
       const badgeEl = document.getElementById('planFeatsModalBadge');
-      const cardEl = btn ? btn.closest('.plan-v2-card') : null;
+      const cardEl = btn ? btn.closest('.pricing-card-v2') : null;
+      const planTone = (btn && btn.getAttribute('data-plan-tone'))
+        || (cardEl && cardEl.classList.contains('card-recommended') ? 'recommended'
+          : (cardEl && cardEl.classList.contains('card-best-value') ? 'best-value'
+            : (cardEl && cardEl.classList.contains('card-basic') ? 'basic' : 'enterprise')));
+      const planBadgeAttr = btn ? btn.getAttribute('data-plan-badge') : null;
+      const cardBadge = cardEl ? cardEl.querySelector('.plan-top-badge') : null;
+      const badgeText = planBadgeAttr !== null
+        ? planBadgeAttr.trim()
+        : (planTone === 'recommended'
+            ? (cardBadge ? cardBadge.textContent.trim() : 'RECOMMENDED')
+            : (planTone === 'best-value'
+                ? (cardBadge ? cardBadge.textContent.trim() : 'BEST VALUE')
+                : (planTone === 'basic' ? 'STARTER PLAN' : '')));
+
       if (boxEl && badgeEl) {
-        boxEl.classList.remove('tone-recommended', 'tone-best-value', 'tone-basic');
+        boxEl.classList.remove('tone-recommended', 'tone-best-value', 'tone-basic', 'tone-enterprise');
         badgeEl.classList.remove('badge-recommended', 'badge-best-value', 'badge-basic');
-        const cardBadge = cardEl ? cardEl.querySelector('.plan-top-badge') : null;
-        if (cardEl && cardEl.classList.contains('card-recommended')) {
-          boxEl.classList.add('tone-recommended');
-          badgeEl.classList.add('badge-recommended');
-          badgeEl.textContent = cardBadge ? cardBadge.textContent.trim() : 'RECOMMENDED';
-        } else if (cardEl && cardEl.classList.contains('card-best-value')) {
-          boxEl.classList.add('tone-best-value');
-          badgeEl.classList.add('badge-best-value');
-          badgeEl.textContent = cardBadge ? cardBadge.textContent.trim() : 'BEST VALUE';
+        boxEl.classList.add('tone-' + planTone);
+
+        if (badgeText) {
+          badgeEl.style.display = 'inline-flex';
+          badgeEl.classList.add('badge-' + planTone);
+          badgeEl.textContent = badgeText;
         } else {
-          boxEl.classList.add('tone-basic');
-          badgeEl.classList.add('badge-basic');
-          badgeEl.textContent = cardBadge ? cardBadge.textContent.trim() : 'STARTER PLAN';
+          badgeEl.style.display = 'none';
+          badgeEl.textContent = '';
         }
       }
 
@@ -602,7 +626,7 @@
       } else {
         priceEl.textContent = rawPrice;
       }
-      ctaEl.className = 'plan-v2-btn plan-feats-mobile-cta ' + (cardEl && cardEl.classList.contains('card-best-value') ? 'btn-gold' : (cardEl && cardEl.classList.contains('card-recommended') ? 'btn-orange' : 'btn-outline-orange'));
+      ctaEl.className = 'plan-v2-btn plan-feats-mobile-cta' + ((planTone === 'basic' || planTone === 'enterprise') ? ' btn-v2-outline' : '');
       ctaEl.textContent   = btn.getAttribute('data-plan-cta') || 'Select Plan';
       ctaEl.setAttribute('href', btn.getAttribute('data-plan-href') || '#');
 

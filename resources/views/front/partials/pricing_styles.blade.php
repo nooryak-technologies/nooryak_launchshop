@@ -984,7 +984,8 @@
     flex-direction: column;
   }
 
-  .plan-feats-mobile-box.tone-basic {
+  .plan-feats-mobile-box.tone-basic,
+  .plan-feats-mobile-box.tone-enterprise {
     border-color: #0f172a;
     box-shadow: 0 22px 50px rgba(15, 23, 42, 0.30), 0 0 0 4px rgba(15, 23, 42, 0.12);
   }
@@ -999,11 +1000,20 @@
     box-shadow: 0 22px 50px rgba(245, 158, 11, 0.30), 0 0 0 4px rgba(245, 158, 11, 0.18);
   }
 
+  .plan-feats-mobile-box.tone-best-value .plan-feats-mobile-cta {
+    background: linear-gradient(135deg, #f59e0b, #ea580c);
+    border-color: transparent;
+    color: #ffffff;
+  }
+
   .plan-feats-mobile-badge {
     position: absolute;
     top: -13px;
     left: 50%;
     transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 4px 16px;
     border-radius: 999px;
     font-size: 11px;
@@ -1025,7 +1035,7 @@
   }
 
   .plan-feats-mobile-badge.badge-best-value {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
+    background: linear-gradient(135deg, #fbbf24, #f97316);
   }
 
   .plan-feats-mobile-close {
