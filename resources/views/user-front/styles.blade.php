@@ -1193,11 +1193,15 @@ footer {
 #cart-dropdown-mobile {
   position: fixed !important;
   top: 0 !important;
+  bottom: 0 !important;
   right: -420px !important;
   left: auto !important;
   width: 420px !important;
   max-width: 100% !important;
-  height: 100vh !important;
+  height: auto !important;
+  max-height: 100vh !important;
+  max-height: 100dvh !important;
+  overflow: hidden !important;
   background: #ffffff !important;
   border-left: 1px solid #e5e1db !important;
   border-right: none !important;
@@ -1205,7 +1209,7 @@ footer {
   margin-top: 0 !important;
   z-index: 1000000 !important;
   border-radius: 0 !important;
-  padding: 30px 24px !important;
+  padding: 18px 20px calc(20px + env(safe-area-inset-bottom, 0px)) 20px !important;
   opacity: 1 !important;
   visibility: visible !important;
   transform: none !important;
@@ -1222,12 +1226,23 @@ footer {
 /* Close button and list item styling overrides for sidebar drawer */
 .cart-dropdown .cart-header {
   display: flex !important;
+  flex-shrink: 0 !important;
 }
 
 #cart-dropdown-mobile .cart-dropdown-list {
-  flex: 1 !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
   overflow-y: auto !important;
-  margin-bottom: 20px !important;
+  -webkit-overflow-scrolling: touch !important;
+  margin-bottom: 12px !important;
+}
+
+#cart-dropdown-mobile .cart-footer {
+  flex-shrink: 0 !important;
+  margin-top: auto !important;
+  padding-top: 12px !important;
+  background: #ffffff !important;
 }
 
 
@@ -2149,6 +2164,43 @@ html[dir="rtl"] .header-top .header-right,
 html[dir="rtl"] .header-middle .header-right {
     margin-left: 0 !important;
     margin-right: auto !important;
+}
+
+/* Mobile Menu Drawer Search Input & Icon Contrast (Dark Drawer) */
+.mobile-menu:not(.mobile-menu-v10) .header-search-form .search-input input,
+.mobile-menu:not(.mobile-menu-v10) .header-search-form input[type="text"],
+.mobile-menu:not(.mobile-menu-v10) .header-search-form input[type="search"] {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    caret-color: #ffffff !important;
+    background: transparent !important;
+}
+
+.mobile-menu:not(.mobile-menu-v10) .header-search-form .search-input input::placeholder,
+.mobile-menu:not(.mobile-menu-v10) .header-search-form input::placeholder {
+    color: rgba(255, 255, 255, 0.65) !important;
+    opacity: 1 !important;
+}
+
+.mobile-menu:not(.mobile-menu-v10) .header-search-form .btn,
+.mobile-menu:not(.mobile-menu-v10) .header-search-form .btn-icon,
+.mobile-menu:not(.mobile-menu-v10) .header-search-form button,
+.mobile-menu:not(.mobile-menu-v10) .header-search-form .btn i,
+.mobile-menu:not(.mobile-menu-v10) .header-search-form .btn-icon i,
+.mobile-menu:not(.mobile-menu-v10) .header-search-form button i {
+    color: #ffffff !important;
+}
+
+/* Variation Modal Single-Column Layout */
+#variationModal #variants {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+#variationModal #variants .variation-group-col {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
 }
 </style>
 

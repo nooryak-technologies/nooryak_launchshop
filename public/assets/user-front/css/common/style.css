@@ -2393,12 +2393,30 @@ input[type="radio"]:checked+.form-check-label::after {
     flex: auto;
 }
 
-.mobile-menu .header-search-form .search-input input {
+.mobile-menu:not(.mobile-menu-v10) .header-search-form .search-input input {
     padding: 10px 15px;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    caret-color: #ffffff !important;
+    background: transparent !important;
 }
 
-.mobile-menu .header-search-form .btn {
+.mobile-menu:not(.mobile-menu-v10) .header-search-form .search-input input::placeholder {
+    color: rgba(255, 255, 255, 0.65) !important;
+    opacity: 1 !important;
+}
+
+.mobile-menu:not(.mobile-menu-v10) .header-search-form .btn,
+.mobile-menu:not(.mobile-menu-v10) .header-search-form .btn-icon,
+.mobile-menu:not(.mobile-menu-v10) .header-search-form button {
     right: 10px;
+    color: #ffffff !important;
+}
+
+.mobile-menu:not(.mobile-menu-v10) .header-search-form .btn i,
+.mobile-menu:not(.mobile-menu-v10) .header-search-form .btn-icon i,
+.mobile-menu:not(.mobile-menu-v10) .header-search-form button i {
+    color: #ffffff !important;
 }
 
 .mobile-menu ul li {

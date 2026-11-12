@@ -30,7 +30,7 @@
     ])->get();
   @endphp
   @if ($product_variation_content && count($variant_content_options) > 0)
-    <div class="col-lg-6 mb-20">
+    <div class="col-12 mb-3 variation-group-col">
       <h4 class="mb-1 color-primary">{{ @$variant_content->name }}</h4>
       @foreach ($variant_content_options as $variant_content_option)
         <div class="d-flex justify-content-left gap-10 py-1">

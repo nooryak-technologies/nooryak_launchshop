@@ -953,6 +953,55 @@
       }
     </style>
   @endif
+
+  @if (!empty($userBs) && isset($userBs->theme) && $userBs->theme == 'manti')
+    <style>
+      /* Manti-only mobile horizontal scroll fix for Related Products */
+      @media only screen and (max-width: 767.98px) {
+        .theme-manti .product-details-related-products #product-details-slider {
+          display: flex !important;
+          flex-direction: row !important;
+          flex-wrap: nowrap !important;
+          align-items: stretch !important;
+          overflow-x: auto !important;
+          overflow-y: hidden !important;
+          -webkit-overflow-scrolling: touch !important;
+          scroll-snap-type: x proximity;
+          gap: 12px !important;
+          width: 100% !important;
+          margin: 0 0 24px 0 !important;
+          padding: 4px 2px 12px 2px !important;
+          touch-action: pan-x pan-y !important;
+          cursor: grab;
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+
+        .theme-manti .product-details-related-products #product-details-slider::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+        }
+
+        .theme-manti .product-details-related-products #product-details-slider.is-dragging {
+          cursor: grabbing;
+          scroll-snap-type: none;
+          user-select: none;
+        }
+
+        .theme-manti .product-details-related-products #product-details-slider > .product-default {
+          flex: 0 0 56% !important;
+          width: 56% !important;
+          min-width: 168px !important;
+          max-width: 210px !important;
+          margin: 0 !important;
+          position: relative !important;
+          scroll-snap-align: start;
+          box-sizing: border-box !important;
+        }
+      }
+    </style>
+  @endif
 @endsection
 
 @section('scripts')
@@ -1072,6 +1121,94 @@
           });
         }
       }
+    </script>
+  @endif
+
+  @if (!empty($userBs) && isset($userBs->theme) && $userBs->theme == 'manti')
+    <script>
+      (function() {
+        var isDragging = false;
+        var startX = 0;
+        var scrollStart = 0;
+        var didDrag = false;
+
+        function syncMantiRelatedSlider() {
+          var $slider = $('#product-details-slider');
+          if (!$slider.length) return;
+
+          if (window.innerWidth <= 767.98) {
+            if ($slider.hasClass('slick-initialized')) {
+              try {
+                $slider.slick('unslick');
+              } catch (e) {}
+            }
+            $slider.find('.lazyload').each(function() {
+              var src = $(this).attr('data-src');
+              if (src && !$(this).hasClass('lazyloaded')) {
+                $(this).attr('src', src).addClass('lazyloaded');
+              }
+            });
+          } else if (!$slider.hasClass('slick-initialized') && typeof $.fn.slick === 'function') {
+            $slider.slick({
+              speed: 600,
+              arrows: true,
+              dots: true,
+              autoplay: false,
+              slidesToShow: 4,
+              slidesToScroll: 1,
+              infinite: false,
+              rtl: $('html').attr('dir') === 'rtl',
+              responsive: [
+                { breakpoint: 1200, settings: { slidesToShow: 3, slidesToScroll: 1 } },
+                { breakpoint: 992, settings: { slidesToShow: 2, slidesToScroll: 1 } }
+              ],
+              prevArrow: '<button type="button" class="btn-icon slider-btn slider-prev"><i class="fal fa-angle-left"></i></button>',
+              nextArrow: '<button type="button" class="btn-icon slider-btn slider-next"><i class="fal fa-angle-right"></i></button>'
+            });
+          }
+        }
+
+        $(document).ready(function() {
+          syncMantiRelatedSlider();
+          setTimeout(syncMantiRelatedSlider, 100);
+          $(window).on('load resize', syncMantiRelatedSlider);
+
+          var el = document.getElementById('product-details-slider');
+          if (el) {
+            el.addEventListener('mousedown', function(e) {
+              if (window.innerWidth > 767.98 || e.button !== 0) return;
+              isDragging = true;
+              didDrag = false;
+              startX = e.pageX;
+              scrollStart = el.scrollLeft;
+              el.classList.add('is-dragging');
+            });
+
+            window.addEventListener('mousemove', function(e) {
+              if (!isDragging) return;
+              var dx = e.pageX - startX;
+              if (Math.abs(dx) > 6) {
+                didDrag = true;
+                el.scrollLeft = scrollStart - dx;
+              }
+            });
+
+            window.addEventListener('mouseup', function() {
+              if (!isDragging) return;
+              isDragging = false;
+              el.classList.remove('is-dragging');
+              setTimeout(function() { didDrag = false; }, 50);
+            });
+
+            el.addEventListener('click', function(e) {
+              if (didDrag) {
+                e.preventDefault();
+                e.stopPropagation();
+              }
+            }, true);
+          }
+        });
+      })();
     </script>
   @endif
 @endsection

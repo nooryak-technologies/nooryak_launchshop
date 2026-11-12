@@ -238,7 +238,7 @@ $('body').on('click', '.btn-wishlist', function (e) {
     $(document).on('click', '.modal-cart-link', function () {
         let totalVariations = parseInt($(this).attr('data-total_variations')) || parseInt($(this).data('total_variations')) || parseInt($(this).data('totalvari'));
         if (isNaN(totalVariations) || totalVariations <= 0) {
-            totalVariations = $("#variants .col-lg-6").length || 1;
+            totalVariations = $("#variants .variation-group-col, #variants .col-lg-6").length || 1;
         }
         let $voptions = $("input.voptions:checked");
         let variant = {};

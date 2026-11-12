@@ -1066,8 +1066,8 @@ i[id$="EyeIcon"]:hover {
 }
 
 .footer-area .footer-logo-img {
-    max-height: 52px;
-    max-width: 190px;
+    max-height: 64px;
+    max-width: 230px;
     width: auto;
     height: auto;
     object-fit: contain;
@@ -1076,8 +1076,8 @@ i[id$="EyeIcon"]:hover {
 
 @media (max-width: 767.98px) {
     .footer-area .footer-logo-img {
-        max-height: 42px;
-        max-width: 155px;
+        max-height: 54px;
+        max-width: 200px;
     }
 }
 
