@@ -1353,20 +1353,27 @@
 <script>
   // ── New V2: See More Features toggle per card ──
   function togglePlanFeatures(pkgId, btn) {
+    if (window.innerWidth <= 767 && typeof openMobilePlanFeaturesModal === 'function') {
+      if (openMobilePlanFeaturesModal(pkgId, btn)) return;
+    }
     var $extra = document.getElementById('extra-' + pkgId);
     var $txt   = btn.querySelector('.see-more-txt');
     var $icon  = btn.querySelector('.see-more-icon');
     if (!$extra) return;
     if ($extra.classList.contains('open')) {
       $extra.classList.remove('open');
-      $txt.textContent  = 'See More Features';
-      $icon.className   = 'fas fa-arrow-right see-more-icon';
-      $icon.style.fontSize = '11px';
+      if ($txt) $txt.textContent = 'See More Features';
+      if ($icon) {
+        $icon.className = 'fas fa-arrow-right see-more-icon d-none d-md-inline-block';
+        $icon.style.fontSize = '11px';
+      }
     } else {
       $extra.classList.add('open');
-      $txt.textContent  = 'See Less Features';
-      $icon.className   = 'fas fa-arrow-up see-more-icon';
-      $icon.style.fontSize = '11px';
+      if ($txt) $txt.textContent = 'See Less Features';
+      if ($icon) {
+        $icon.className = 'fas fa-arrow-up see-more-icon d-none d-md-inline-block';
+        $icon.style.fontSize = '11px';
+      }
     }
   }
 
@@ -1725,20 +1732,27 @@
 
   // ── New V2: See More Features toggle per card ──
   function togglePlanFeatures(pkgId, btn) {
+    if (window.innerWidth <= 767 && typeof openMobilePlanFeaturesModal === 'function') {
+      if (openMobilePlanFeaturesModal(pkgId, btn)) return;
+    }
     var $extra = document.getElementById('extra-' + pkgId);
     var $txt   = btn.querySelector('.see-more-txt');
     var $icon  = btn.querySelector('.see-more-icon');
     if (!$extra) return;
     if ($extra.classList.contains('open')) {
       $extra.classList.remove('open');
-      $txt.textContent  = 'See More Features';
-      $icon.className   = 'fas fa-arrow-right see-more-icon';
-      $icon.style.fontSize = '11px';
+      if ($txt) $txt.textContent = 'See More Features';
+      if ($icon) {
+        $icon.className = 'fas fa-arrow-right see-more-icon d-none d-md-inline-block';
+        $icon.style.fontSize = '11px';
+      }
     } else {
       $extra.classList.add('open');
-      $txt.textContent  = 'See Less Features';
-      $icon.className   = 'fas fa-arrow-up see-more-icon';
-      $icon.style.fontSize = '11px';
+      if ($txt) $txt.textContent = 'See Less Features';
+      if ($icon) {
+        $icon.className = 'fas fa-arrow-up see-more-icon d-none d-md-inline-block';
+        $icon.style.fontSize = '11px';
+      }
     }
   }
 </script>

@@ -442,9 +442,17 @@
                   </ul>
                 </div>
                 <button type="button" class="plan-v2-see-more"
+                        data-plan-title="Ecom {{ __($package->title) }}"
+                        data-plan-price="{{ $package->price == 0 ? __('Free') : $be->base_currency_symbol . number_format($package->price, 0) . ' / ' . $periodLabel }}"
+                        data-plan-href="{{ $ctaHref }}"
+                        data-plan-cta="Select Ecom {{ __($package->title) }}"
                         onclick="togglePlanFeatures('{{ strtolower($term) }}-{{ $package->id }}', this)">
-                  <span class="see-more-txt">See More Features</span>
-                  <i class="fas fa-arrow-right see-more-icon" style="font-size:11px;"></i>
+                  <span class="see-more-txt d-none d-md-inline">See More Features</span>
+                  <span class="see-more-mobile-label d-inline-flex d-md-none align-items-center gap-1">
+                    <span>{{ $isBestValue ? 'Advanced Features' : 'More Features' }}</span>
+                    <span class="plan-v2-plus-circle"><i class="fas fa-plus"></i></span>
+                  </span>
+                  <i class="fas fa-arrow-right see-more-icon d-none d-md-inline-block" style="font-size:11px;"></i>
                 </button>
               @endif
 
@@ -526,3 +534,61 @@
   </div>
 
 </div>
+
+@once
+  <div class="plan-feats-mobile-overlay" id="planFeatsMobileOverlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="planFeatsModalTitle">
+    <div class="plan-feats-mobile-backdrop" onclick="closeMobilePlanFeaturesModal()"></div>
+    <div class="plan-feats-mobile-box">
+      <button type="button" class="plan-feats-mobile-close" onclick="closeMobilePlanFeaturesModal()" aria-label="Close features popup">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="plan-feats-mobile-header">
+        <h4 id="planFeatsModalTitle" class="plan-feats-mobile-title"></h4>
+        <span id="planFeatsModalPrice" class="plan-feats-mobile-price"></span>
+      </div>
+      <div class="plan-feats-mobile-subtitle">More Features Included</div>
+      <ul id="planFeatsModalList" class="plan-v2-features plan-feats-mobile-list"></ul>
+      <a href="#" id="planFeatsModalCta" class="plan-v2-btn plan-feats-mobile-cta"></a>
+    </div>
+  </div>
+
+  <script>
+    function openMobilePlanFeaturesModal(pkgId, btn) {
+      var overlay = document.getElementById('planFeatsMobileOverlay');
+      var extraWrap = document.getElementById('extra-' + pkgId);
+      if (!overlay || !extraWrap) return false;
+
+      var titleEl = document.getElementById('planFeatsModalTitle');
+      var priceEl = document.getElementById('planFeatsModalPrice');
+      var listEl  = document.getElementById('planFeatsModalList');
+      var ctaEl   = document.getElementById('planFeatsModalCta');
+
+      titleEl.textContent = btn.getAttribute('data-plan-title') || '';
+      priceEl.textContent = btn.getAttribute('data-plan-price') || '';
+      ctaEl.textContent   = btn.getAttribute('data-plan-cta') || 'Select Plan';
+      ctaEl.setAttribute('href', btn.getAttribute('data-plan-href') || '#');
+
+      var extraUl = extraWrap.querySelector('ul.plan-v2-features');
+      listEl.innerHTML = extraUl ? extraUl.innerHTML : '';
+
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      return true;
+    }
+
+    function closeMobilePlanFeaturesModal() {
+      var overlay = document.getElementById('planFeatsMobileOverlay');
+      if (!overlay) return;
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeMobilePlanFeaturesModal();
+      }
+    });
+  </script>
+@endonce

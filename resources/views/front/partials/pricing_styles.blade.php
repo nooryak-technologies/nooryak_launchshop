@@ -774,6 +774,280 @@
     }
   }
 
+  /* ── Mobile View Only: 2-Column Compact Pricing Cards + Features Popup ── */
+  @media (max-width: 767.98px) {
+    .pricing-v2-section .pricing-cards-row {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 10px !important;
+      align-items: stretch !important;
+      justify-items: stretch !important;
+      flex-direction: initial !important;
+      width: 100% !important;
+    }
+
+    .pricing-card-v2 .mobile-most-popular-callout,
+    .pricing-card-v2 .mobile-most-people-choose-callout,
+    .pricing-card-v2 .mobile-monthly-billing-callout {
+      display: none !important;
+    }
+
+    .pricing-card-v2 {
+      flex: none !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      height: 100% !important;
+      margin-bottom: 6px !important;
+      padding: 16px 10px 12px !important;
+      border-radius: 14px !important;
+      box-sizing: border-box !important;
+    }
+
+    .pricing-card-v2.card-recommended {
+      transform: none !important;
+    }
+
+    .plan-top-badge {
+      font-size: 9px !important;
+      padding: 3px 10px !important;
+      top: -11px !important;
+      letter-spacing: 0.5px !important;
+    }
+
+    .plan-v2-title {
+      font-size: 15px !important;
+      margin: 2px 0 3px !important;
+      line-height: 1.2 !important;
+    }
+
+    .plan-v2-subtitle {
+      font-size: 10.5px !important;
+      line-height: 1.3 !important;
+      margin-bottom: 8px !important;
+    }
+
+    .plan-v2-price-block {
+      margin-bottom: 2px !important;
+    }
+
+    .plan-v2-currency {
+      font-size: 13px !important;
+      margin-top: 3px !important;
+    }
+
+    .plan-v2-amount {
+      font-size: 24px !important;
+    }
+
+    .card-enterprise .plan-v2-amount {
+      font-size: 22px !important;
+    }
+
+    .plan-v2-period {
+      font-size: 11px !important;
+    }
+
+    .plan-v2-billing-note {
+      font-size: 10px !important;
+      margin-bottom: 8px !important;
+      padding: 0 !important;
+    }
+
+    .plan-monthly-badge {
+      font-size: 9.5px !important;
+      padding: 2px 8px !important;
+      margin-bottom: 6px !important;
+    }
+
+    .plan-v2-divider {
+      margin: 0 0 8px !important;
+    }
+
+    .pricing-card-v2 .plan-v2-features {
+      margin: 0 0 6px !important;
+    }
+
+    .pricing-card-v2 .plan-v2-features li {
+      justify-content: flex-start !important;
+      text-align: left !important;
+      align-items: flex-start !important;
+      gap: 5px !important;
+      font-size: 11px !important;
+      line-height: 1.3 !important;
+      padding: 3px 0 !important;
+      word-break: break-word !important;
+    }
+
+    .pricing-card-v2 .plan-v2-features li .fi-check,
+    .pricing-card-v2 .plan-v2-features li .fi-times,
+    .pricing-card-v2 .plan-v2-features li .fi-globe-premium {
+      font-size: 11px !important;
+      margin-top: 2px !important;
+    }
+
+    .pricing-card-v2 .plan-v2-features li.feat-free-domain-premium {
+      background: #E8F5E9 !important;
+      border-radius: 6px !important;
+      padding: 3px 5px !important;
+    }
+
+    .plan-v2-extra-features,
+    .plan-v2-extra-features.open {
+      display: none !important;
+    }
+
+    .plan-v2-see-more {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      width: 100% !important;
+      padding: 4px 0 6px !important;
+      margin-bottom: 8px !important;
+      color: #16A34A !important;
+      font-size: 11px !important;
+      font-weight: 700 !important;
+      text-align: left !important;
+    }
+
+    .plan-v2-plus-circle {
+      width: 14px;
+      height: 14px;
+      background: #16A34A;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 7px;
+      flex-shrink: 0;
+      margin-left: 3px;
+    }
+
+    .plan-v2-btn {
+      padding: 9px 6px !important;
+      font-size: 11.5px !important;
+      border-radius: 8px !important;
+      line-height: 1.2 !important;
+      white-space: nowrap !important;
+    }
+
+    .plan-v2-wa-btn {
+      width: 36px !important;
+      height: 36px !important;
+      font-size: 16px !important;
+      border-radius: 8px !important;
+    }
+  }
+
+  /* ── Mobile Plan Features Popup Modal ── */
+  .plan-feats-mobile-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000010;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+  }
+
+  .plan-feats-mobile-overlay.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .plan-feats-mobile-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+  }
+
+  .plan-feats-mobile-box {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 360px;
+    max-height: 82vh;
+    overflow-y: auto;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 18px 16px 16px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    border: 1.5px solid #ffd5c8;
+  }
+
+  .plan-feats-mobile-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: #ff5a2c;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .plan-feats-mobile-header {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding-right: 32px;
+    margin-bottom: 4px;
+  }
+
+  .plan-feats-mobile-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: #0f172a;
+  }
+
+  .plan-feats-mobile-price {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ff5a2c;
+  }
+
+  .plan-feats-mobile-subtitle {
+    font-size: 12px;
+    font-weight: 700;
+    color: #16a34a;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .plan-feats-mobile-list {
+    margin: 0 0 14px !important;
+  }
+
+  .plan-feats-mobile-list li {
+    justify-content: flex-start !important;
+    text-align: left !important;
+    font-size: 13px !important;
+    padding: 4px 0 !important;
+  }
+
+  .plan-feats-mobile-cta {
+    background: #ff5a2c !important;
+    color: #ffffff !important;
+    border-color: #ff5a2c !important;
+    padding: 10px 14px !important;
+    font-size: 13.5px !important;
+  }
+
   /* Change orange checkmark circles to green, keeping cancel marks red */
   .feat-check-circle:not(.times):not(.muted):not(.detail) {
     background: #10b981 !important;

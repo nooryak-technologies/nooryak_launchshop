@@ -1512,11 +1512,47 @@ footer {
     border-radius: 10px !important;
 }
 
+@media (min-width: 768px) {
+    #quickViewModal .qv-cart-action-row .qv-add-to-cart-wrap,
+    .quick-view-modal .qv-cart-action-row .qv-add-to-cart-wrap {
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        margin-top: 8px !important;
+    }
+}
+
 /* Mobile View Quick View Responsive Layout (< 768px) */
 @media (max-width: 767.98px) {
+    #quickViewModal .modal-dialog,
+    .quick-view-modal .modal-dialog {
+        width: calc(100% - 16px) !important;
+        max-width: calc(100% - 16px) !important;
+        margin: 12px auto !important;
+    }
+
     #quickViewModal .modal-content,
     .quick-view-modal .modal-content {
-        padding: 20px 16px !important;
+        padding: 16px 14px !important;
+    }
+
+    #quickViewModal .modal-body,
+    .quick-view-modal .modal-body {
+        padding: 0 !important;
+    }
+
+    #quickViewModal #quickViewModalContent,
+    #quickViewModal .modal-body > .row,
+    .quick-view-modal .modal-body > .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        --bs-gutter-x: 0 !important;
+    }
+
+    #quickViewModal #quickViewModalContent > [class*="col-"],
+    .quick-view-modal .modal-body > .row > [class*="col-"] {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        width: 100% !important;
     }
 
     #quickViewModal .product-single-default,
@@ -1524,6 +1560,8 @@ footer {
         margin-bottom: 12px !important;
         display: block !important;
         width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
     }
 
     #quickViewModal .product-single-gallery,
@@ -1544,10 +1582,17 @@ footer {
         margin-bottom: 0 !important;
     }
 
+    #quickViewModal .product-single-slider .slick-slide figure,
+    .quick-view-modal .product-single-slider .slick-slide figure {
+        margin: 0 !important;
+        width: 100% !important;
+    }
+
     #quickViewModal .product-single-slider img,
     .quick-view-modal .product-single-slider img {
         max-height: 260px !important;
         width: auto !important;
+        max-width: 100% !important;
         height: auto !important;
         object-fit: contain !important;
         display: block !important;
@@ -1617,11 +1662,203 @@ footer {
         margin-top: 12px !important;
         padding-top: 0 !important;
         padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: 0 !important;
         position: relative !important;
         z-index: 1 !important;
         clear: both !important;
         display: block !important;
         width: 100% !important;
+        text-align: left !important;
+    }
+
+    #quickViewModal .product-single-details > ul,
+    .quick-view-modal .product-single-details > ul {
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+        margin-bottom: 0 !important;
+        list-style: none !important;
+    }
+
+    /* SKU + Flash Countdown Timer on a single row on mobile only */
+    #quickViewModal .qv-sku-timer-row.has-timer,
+    .quick-view-modal .qv-sku-timer-row.has-timer {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        flex-wrap: nowrap !important;
+        gap: 8px !important;
+        width: 100% !important;
+        margin-bottom: 12px !important;
+    }
+
+    #quickViewModal .qv-sku-timer-row.has-timer .sku-code,
+    .quick-view-modal .qv-sku-timer-row.has-timer .sku-code {
+        margin: 0 !important;
+        font-size: 12px !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+
+    #quickViewModal .qv-sku-timer-row .product-countdown,
+    .quick-view-modal .qv-sku-timer-row .product-countdown {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        flex-wrap: nowrap !important;
+        gap: 4px !important;
+        margin: 0 !important;
+        min-width: 0 !important;
+    }
+
+    #quickViewModal .qv-sku-timer-row .product-countdown .count,
+    .quick-view-modal .qv-sku-timer-row .product-countdown .count {
+        width: 34px !important;
+        min-width: 34px !important;
+        height: 34px !important;
+        margin: 0 !important;
+        padding: 2px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        line-height: 1.05 !important;
+    }
+
+    #quickViewModal .qv-sku-timer-row .product-countdown .count span:first-child,
+    .quick-view-modal .qv-sku-timer-row .product-countdown .count span:first-child {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        margin-bottom: 1px !important;
+    }
+
+    #quickViewModal .qv-sku-timer-row .product-countdown .count .count-period,
+    .quick-view-modal .qv-sku-timer-row .product-countdown .count .count-period {
+        font-size: 8.5px !important;
+    }
+
+    #quickViewModal .qv-sku-timer-row .product-countdown .details-label-discount-percentage,
+    .quick-view-modal .qv-sku-timer-row .product-countdown .details-label-discount-percentage {
+        --size: 28px !important;
+        width: 28px !important;
+        height: 28px !important;
+        line-height: 28px !important;
+        margin-inline-start: 4px !important;
+        top: 0 !important;
+    }
+
+    #quickViewModal .qv-sku-timer-row .product-countdown .details-label-discount-percentage .percentage-text,
+    .quick-view-modal .qv-sku-timer-row .product-countdown .details-label-discount-percentage .percentage-text {
+        width: 100% !important;
+        height: 100% !important;
+        left: 0 !important;
+        top: 0 !important;
+        font-size: 8.5px !important;
+    }
+
+    #quickViewModal .qv-sku-timer-row .product-countdown .details-label-discount-percentage .percentage-text svg,
+    .quick-view-modal .qv-sku-timer-row .product-countdown .details-label-discount-percentage .percentage-text svg {
+        width: 11px !important;
+        height: 11px !important;
+    }
+
+    /* Quantity + Compare/Wishlist Icons + Add To Cart in a single row on mobile */
+    #quickViewModal .qv-cart-action-row,
+    .quick-view-modal .qv-cart-action-row {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 6px !important;
+        width: 100% !important;
+        margin-bottom: 16px !important;
+    }
+
+    #quickViewModal .qv-cart-action-row .item_quantity,
+    .quick-view-modal .qv-cart-action-row .item_quantity {
+        flex: 0 0 auto !important;
+        height: 38px !important;
+        margin: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+
+    #quickViewModal .qv-cart-action-row .item_quantity .quantity-btn,
+    .quick-view-modal .qv-cart-action-row .item_quantity .quantity-btn {
+        width: 28px !important;
+        height: 38px !important;
+        padding: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 11px !important;
+    }
+
+    #quickViewModal .qv-cart-action-row .item_quantity .quantity_field,
+    .quick-view-modal .qv-cart-action-row .item_quantity .quantity_field {
+        width: 30px !important;
+        min-width: 30px !important;
+        height: 38px !important;
+        padding: 0 !important;
+        text-align: center !important;
+        font-size: 13px !important;
+    }
+
+    #quickViewModal .qv-cart-action-row .btn-icon-group,
+    .quick-view-modal .qv-cart-action-row .btn-icon-group {
+        width: auto !important;
+        flex: 0 0 auto !important;
+        display: inline-flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 5px !important;
+        margin: 0 !important;
+    }
+
+    #quickViewModal .qv-cart-action-row .btn-icon-group .btn.btn-icon,
+    .quick-view-modal .qv-cart-action-row .btn-icon-group .btn.btn-icon {
+        --size: 34px !important;
+        width: 34px !important;
+        min-width: 34px !important;
+        max-width: 34px !important;
+        height: 34px !important;
+        line-height: 34px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 13px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    #quickViewModal .qv-cart-action-row .btn-icon-group .btn.btn-icon i,
+    .quick-view-modal .qv-cart-action-row .btn-icon-group .btn.btn-icon i {
+        font-size: 13px !important;
+    }
+
+    #quickViewModal .qv-cart-action-row .qv-add-to-cart-wrap,
+    .quick-view-modal .qv-cart-action-row .qv-add-to-cart-wrap {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+    }
+
+    #quickViewModal .qv-cart-action-row .qv-add-to-cart-btn,
+    .quick-view-modal .qv-cart-action-row .qv-add-to-cart-btn {
+        width: 100% !important;
+        height: 38px !important;
+        padding: 0 10px !important;
+        font-size: 12.5px !important;
+        white-space: nowrap !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 5px !important;
+        border-radius: 8px !important;
     }
 }
 

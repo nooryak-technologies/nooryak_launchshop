@@ -176,44 +176,46 @@
       <p class="product-text mb-3 lc-3">{{ $product->summary }}
       </p>
 
-      <div class="sku-code mb-10">
-        <span class="text-dark fw-semibold">{{ $keywords['SKU'] ?? __('SKU') }}:</span>
-        <span class="text-dark">{{ $product->item->sku }}</span>
-      </div>
+      <div class="qv-sku-timer-row{{ $flash_status == true ? ' has-timer' : '' }}">
+        <div class="sku-code mb-10">
+          <span class="text-dark fw-semibold">{{ $keywords['SKU'] ?? __('SKU') }}:</span>
+          <span class="text-dark">{{ $product->item->sku }}</span>
+        </div>
 
-      @if ($flash_status == true)
-        <div class="product-countdown mt-3" data-start_date="{{ $product->item->start_date }}"
-          data-end_time="{{ $product->item->end_time }}" data-end_date="{{ $product->item->end_date }}"
-          data-is_demo="{{ (!empty($user->preview_template) && $user->preview_template == 1) || (@$user->email == 'sathikaqiq121@gmail.com') ? 1 : 0 }}"
-          data-item_id="{{ $item_id }}">
-          <div class="count radius-sm days">
-            <span class="count-value_{{ $item_id }}"></span>
-            <span class="count-period">{{ $keywords['Days'] ?? __('Days') }} </span>
-          </div>
-          <div class="count radius-sm hours">
-            <span class="count-value_{{ $item_id }}"></span>
-            <span class="count-period">{{ $keywords['Hours'] ?? __('Hours') }}</span>
-          </div>
-          <div class="count radius-sm minutes">
-            <span class="count-value_{{ $item_id }}"></span>
-            <span class="count-period">{{ $keywords['Mins'] ?? __('Mins') }}</span>
-          </div>
-          <div class="count radius-sm seconds">
-            <span class="count-value_{{ $item_id }}"></span>
-            <span class="count-period">{{ $keywords['Sec'] ?? __('Sec') }}</span>
-          </div>
+        @if ($flash_status == true)
+          <div class="product-countdown mt-3" data-start_date="{{ $product->item->start_date }}"
+            data-end_time="{{ $product->item->end_time }}" data-end_date="{{ $product->item->end_date }}"
+            data-is_demo="{{ (!empty($user->preview_template) && $user->preview_template == 1) || (@$user->email == 'sathikaqiq121@gmail.com') ? 1 : 0 }}"
+            data-item_id="{{ $item_id }}">
+            <div class="count radius-sm days">
+              <span class="count-value_{{ $item_id }}"></span>
+              <span class="count-period">{{ $keywords['Days'] ?? __('Days') }} </span>
+            </div>
+            <div class="count radius-sm hours">
+              <span class="count-value_{{ $item_id }}"></span>
+              <span class="count-period">{{ $keywords['Hours'] ?? __('Hours') }}</span>
+            </div>
+            <div class="count radius-sm minutes">
+              <span class="count-value_{{ $item_id }}"></span>
+              <span class="count-period">{{ $keywords['Mins'] ?? __('Mins') }}</span>
+            </div>
+            <div class="count radius-sm seconds">
+              <span class="count-value_{{ $item_id }}"></span>
+              <span class="count-period">{{ $keywords['Sec'] ?? __('Sec') }}</span>
+            </div>
 
-          <div data-bs-toggle="tooltip" data-bs-placement="top"
-            title="{{ $keywords['flash_sale'] ?? __('Flash sale') }}">
-            <div class="details-label-discount-percentage">
-              <div class="percentage-text">
-                <x-flash-icon></x-flash-icon> <span>{{ $product->item->flash_amount }}%</span>
+            <div data-bs-toggle="tooltip" data-bs-placement="top"
+              title="{{ $keywords['flash_sale'] ?? __('Flash sale') }}">
+              <div class="details-label-discount-percentage">
+                <div class="percentage-text">
+                  <x-flash-icon></x-flash-icon> <span>{{ $product->item->flash_amount }}%</span>
+                </div>
               </div>
             </div>
-          </div>
 
-        </div>
-      @endif
+          </div>
+        @endif
+      </div>
 
       <div class="product-action">
         @if (count($product_variations) > 0)
@@ -304,7 +306,9 @@
           </ul>
         @endif
         @if ($shop_settings->catalog_mode != 1)
-          <div class="d-flex flex-wrap align-items-center gap-10 mb-20">
+          <input type="hidden" name="final-price" id="final-price" class="form-control final-price">
+
+          <div class="qv-cart-action-row d-flex flex-wrap align-items-center gap-10 mb-20">
             <div class="quantity-input d-flex item_quantity">
               <div class="quantity-down quantity-btn minus" data-item_id="{{ $product->id }}">
                 <i class="fal fa-minus"></i>
@@ -335,15 +339,14 @@
               </a>
             </div>
 
+            <div class="qv-add-to-cart-wrap">
+              <button class="btn btn-md btn-primary radius-md qv-add-to-cart-btn" type="button" aria-label="Add to cart"
+                data-bs-toggle="tooltip" data-bs-placement="top"
+                title="{{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}" onclick="addToCartDetails()"> <i
+                  class="fas fa-cart-plus"></i><span>{{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }} </span>
+              </button>
+            </div>
           </div>
-
-          <input type="hidden" name="final-price" id="final-price" class="form-control final-price">
-
-          <button class="btn btn-md btn-primary radius-md" type="button" aria-label="Add to cart"
-            data-bs-toggle="tooltip" data-bs-placement="top"
-            title="{{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}" onclick="addToCartDetails()"> <i
-              class="fas fa-cart-plus"></i><span>{{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }} </span>
-          </button>
 
           <div class="d-flex align-items-center flex-wrap gap-10 mt-20">
             <span class="text-dark fw-semibold">{{ $keywords['Share Now'] ?? __('Share Now') }} :</span>
