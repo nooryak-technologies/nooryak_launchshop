@@ -1065,6 +1065,22 @@ i[id$="EyeIcon"]:hover {
     line-height: 1.6;
 }
 
+.footer-area .footer-logo-img {
+    max-height: 52px;
+    max-width: 190px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+@media (max-width: 767.98px) {
+    .footer-area .footer-logo-img {
+        max-height: 42px;
+        max-width: 155px;
+    }
+}
+
 .footer-widget h3 {
     font-size: 16px;
     font-weight: 700;
