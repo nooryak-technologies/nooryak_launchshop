@@ -513,7 +513,7 @@
       if ($(window).width() < 992) {
         if ($('#g2-promo-stack-slider').length > 0 && !$('#g2-promo-stack-slider').hasClass('slick-initialized')) {
           $('#g2-promo-stack-slider').slick({
-            dots: true,
+            dots: false,
             arrows: false,
             autoplay: true,
             autoplaySpeed: 3000,

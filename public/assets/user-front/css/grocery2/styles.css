@@ -1708,11 +1708,11 @@ body.show-mobile-menu .grocery2-header {
         margin-right: 7px !important;
     }
 
-    .grocery2-footer-widget .btn-install-our-app > div > div:first-child {
+    .grocery2-footer-widget .btn-install-our-app>div>div:first-child {
         font-size: 7px !important;
     }
 
-    .grocery2-footer-widget .btn-install-our-app > div > div:last-child {
+    .grocery2-footer-widget .btn-install-our-app>div>div:last-child {
         font-size: 11px !important;
     }
 }
@@ -2090,6 +2090,7 @@ body.show-mobile-menu .grocery2-header {
 
 /* Grocery2 uses a sticky in-flow header, so override common/style.css mobile header-next offset */
 @media only screen and (max-width: 991.98px) {
+
     .theme-grocery2 .page-title-area,
     .theme-grocery2 .page-title-area.header-next,
     .theme-grocery2 .header-next {
@@ -2332,37 +2333,7 @@ body.show-mobile-menu .grocery2-header {
     }
 
     .g2-promo-stack.slick-initialized .slick-dots {
-        position: relative !important;
-        bottom: 0 !important;
-        margin-top: 6px !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        gap: 6px !important;
-        list-style: none !important;
-        padding: 0 !important;
-    }
-
-    .g2-promo-stack.slick-initialized .slick-dots li {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    .g2-promo-stack.slick-initialized .slick-dots li button {
-        font-size: 0 !important;
-        width: 8px !important;
-        height: 8px !important;
-        border-radius: 50% !important;
-        background: #cbd5e1 !important;
-        border: none !important;
-        padding: 0 !important;
-        transition: all 0.3s ease !important;
-    }
-
-    .g2-promo-stack.slick-initialized .slick-dots li.slick-active button {
-        background: #3bb77e !important;
-        width: 22px !important;
-        border-radius: 4px !important;
+        display: none !important;
     }
 
     .g2-side-promo {

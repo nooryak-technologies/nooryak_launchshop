@@ -1387,7 +1387,9 @@ if (!function_exists('getUser')) {
                 $user = User::where(function ($q) use ($sub) {
                         $q->where('username', $sub)->orWhere('username', str_replace(' ', '', $sub));
                     })
-                    ->where('status', 1)
+                    ->where(function ($q) {
+                        $q->where('preview_template', 1)->orWhere('status', 1);
+                    })
                     ->first();
 
                 if ($user) {
@@ -1755,10 +1757,11 @@ if (!function_exists('detailsUrl')) {
 
     function detailsUrl($user)
     {
-        $username = is_object($user) ? strtolower($user->username) : strtolower((string)$user);
+        $username = is_object($user) ? strtolower(trim((string) $user->username)) : strtolower(trim((string) $user));
+        $username = str_replace(' ', '', $username);
 
         if (is_object($user) && method_exists($user, 'custom_domains')) {
-            // Skip custom domain check for templates so they always preview on the platform subdomain/path
+            // Skip custom domain check for templates so they always preview on the platform subdomain
             if (empty($user->preview_template)) {
                 $customDomain = getCdomain($user);
                 if ($customDomain !== false) {
@@ -1767,11 +1770,54 @@ if (!function_exists('detailsUrl')) {
             }
         }
 
-        $host = request()->getHost();
-        $scheme = request()->getScheme() ?: 'https';
+        $scheme = (request()->isSecure() || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https'))
+            ? 'https'
+            : (request()->getScheme() ?: 'https');
 
-        if (!empty($host)) {
-            return $scheme . '://' . $host . '/' . $username;
+        $httpHost = strtolower(trim((string) (request()->getHttpHost() ?: ($_SERVER['HTTP_HOST'] ?? env('WEBSITE_HOST', 'launchshop.in')))));
+        $reqHost = preg_replace('/:\d+$/', '', $httpHost);
+        $cleanHost = preg_replace('/^(launchshop|checkout|www|app|websitebuilder|website-builder|whatsappbulk|whatsapp-bulk|whatsapp|wa|ecombuilder|ecom-builder)\./i', '', $reqHost);
+
+        $envHost = preg_replace('/:\d+$/', '', strtolower(trim((string) env('WEBSITE_HOST', ''))));
+        $appHost = preg_replace('/:\d+$/', '', strtolower((string) parse_url(env('APP_URL', ''), PHP_URL_HOST)));
+        $baseCandidates = array_values(array_unique(array_filter([
+            $envHost,
+            $appHost,
+            'launchshop.in',
+            'launchshop.top',
+            'saasreselling.com',
+            'saasreselling.in',
+        ], function ($h) {
+            return !empty($h) && !in_array($h, ['localhost', '127.0.0.1'], true);
+        })));
+
+        $baseHost = '';
+        foreach ($baseCandidates as $candidate) {
+            if ($cleanHost === $candidate || $reqHost === $candidate || str_ends_with($reqHost, '.' . $candidate)) {
+                $baseHost = $candidate;
+                break;
+            }
+        }
+
+        if (empty($baseHost) && !empty($cleanHost) && !in_array($cleanHost, ['localhost', '127.0.0.1'], true) && !filter_var($cleanHost, FILTER_VALIDATE_IP) && str_contains($cleanHost, '.')) {
+            $baseHost = $cleanHost;
+        }
+
+        $reservedSubdomains = ['launchshop', 'checkout', 'www', 'app', 'admin', 'websitebuilder', 'website-builder', 'whatsappbulk', 'whatsapp', 'ecombuilder', 'ecom-builder'];
+
+        if (!empty($baseHost) && !empty($username) && !in_array($username, $reservedSubdomains, true)) {
+            $port = '';
+            if (str_contains($httpHost, ':')) {
+                $parts = explode(':', $httpHost, 2);
+                if (!empty($parts[1]) && !in_array($parts[1], ['80', '443'], true)) {
+                    $port = ':' . $parts[1];
+                }
+            }
+            return $scheme . '://' . $username . '.' . $baseHost . $port;
+        }
+
+        if (!empty($httpHost)) {
+            return $scheme . '://' . $httpHost . '/' . $username;
         }
 
         return url('/' . $username);

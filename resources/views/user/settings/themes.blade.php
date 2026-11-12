@@ -172,7 +172,11 @@
                       </label>
                       <h5 class="text-center">{{ __('Ecom Grocery') }} </h5>
                       <div class="text-center">
-                        <a href="{{ route('front.user.detail.view', [Auth::user('web')->username, 'preview_theme' => 'grocery2']) }}" target="_blank" class="btn btn-primary btn-sm mt-1 py-1 px-2" style="font-size: 11px;">
+                        @php
+                          $grocery2PreviewUrl = detailsUrl(Auth::user('web'));
+                          $grocery2PreviewUrl .= (str_contains($grocery2PreviewUrl, '?') ? '&' : '?') . 'preview_theme=grocery2';
+                        @endphp
+                        <a href="{{ $grocery2PreviewUrl }}" target="_blank" class="btn btn-primary btn-sm mt-1 py-1 px-2" style="font-size: 11px;">
                           <i class="fas fa-eye mr-1"></i>{{ __('Preview') }}
                         </a>
                       </div>
