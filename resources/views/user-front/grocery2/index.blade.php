@@ -27,8 +27,8 @@
                 <div class="g2-slider-item" style="background-image: url('{{ asset('assets/front/img/hero_slider/' . $slider->img) }}');">
                   <div class="g2-slider-content">
                     <span class="g2-badge">TRENDING NOW</span>
-                    <h1 class="g2-title">{{ $slider->title ?? $slider->subtitle }}</h1>
-                    <p class="g2-text">{{ $slider->text }}</p>
+                    <h1 class="g2-title">{{ html_entity_decode($slider->title ?? $slider->subtitle ?? '', ENT_QUOTES, 'UTF-8') }}</h1>
+                    <p class="g2-text">{{ html_entity_decode($slider->text ?? '', ENT_QUOTES, 'UTF-8') }}</p>
                     <div class="g2-slider-btns">
                       @if ($slider->btn_url && $slider->btn_name)
                         <a href="{{ $slider->btn_url }}" class="btn g2-btn-primary">{{ $slider->btn_name }}</a>
@@ -375,12 +375,26 @@
     $rawSideImg = !empty($userSec->action_section_side_image) ? $userSec->action_section_side_image : (!empty($callToAction->side_image) ? $callToAction->side_image : null);
     $rawBgImg = !empty($userSec->action_section_background_image) ? $userSec->action_section_background_image : (!empty($callToAction->background_image) ? $callToAction->background_image : null);
 
-    $ctaSideImg = !empty($rawSideImg) ? asset('assets/front/img/cta/' . $rawSideImg) : null;
-    $ctaBgImg = !empty($rawBgImg) ? asset('assets/front/img/cta/' . $rawBgImg) : null;
+    $defaultCtaSideImg = asset('assets/front/img/user/banners/redesign_ecom_grocery_banner_clean.png');
 
-    // Only if neither background nor custom side image is set, use the default grocery graphic
+    $resolveCtaAsset = function ($filename) {
+      if (empty($filename)) {
+        return null;
+      }
+      foreach (['assets/front/img/cta/', 'assets/front/img/user/cta/', 'assets/front/img/user/banners/'] as $dir) {
+        if (file_exists(public_path($dir . $filename))) {
+          return asset($dir . $filename);
+        }
+      }
+      return null;
+    };
+
+    $ctaSideImg = $resolveCtaAsset($rawSideImg);
+    $ctaBgImg = $resolveCtaAsset($rawBgImg);
+
+    // Fallback to the bundled grocery banner image whenever no valid side or background image exists on disk
     if (empty($ctaBgImg) && empty($ctaSideImg)) {
-        $ctaSideImg = asset('assets/front/img/user/banners/redesign_ecom_grocery_banner_clean.png');
+        $ctaSideImg = $defaultCtaSideImg;
     }
   @endphp
   <section class="g2-newsletter-section py-4">
@@ -388,17 +402,17 @@
       <div class="g2-newsletter-card" @if($ctaBgImg) style="background-image: url('{{ $ctaBgImg }}'); background-size: cover; background-position: center;" @endif>
         <div class="row align-items-center g-0">
           <div class="{{ !empty($ctaSideImg) ? 'col-lg-6 col-md-12' : 'col-lg-8 col-md-12' }} g2-news-left-content">
-            <h2 class="g2-news-title">{{ $ctaTitle }}</h2>
-            <p class="g2-news-subtitle">{{ $ctaSubtitle }}</p>
+            <h2 class="g2-news-title">{{ html_entity_decode($ctaTitle, ENT_QUOTES, 'UTF-8') }}</h2>
+            <p class="g2-news-subtitle">{{ html_entity_decode($ctaSubtitle, ENT_QUOTES, 'UTF-8') }}</p>
             <form action="{{ route('front.user.subscribe', getParam()) }}" method="POST" class="g2-news-form">
               @csrf
-              <input type="email" name="email" class="g2-news-input" placeholder="Your email address" required>
+              <input type="email" name="email" class="g2-news-input" placeholder="{{ __('Your email address') }}" required>
               <button type="submit" class="btn g2-news-btn">{{ $ctaBtnText }}</button>
             </form>
           </div>
           @if(!empty($ctaSideImg))
             <div class="col-lg-6 col-md-12 d-none d-lg-block g2-news-right-col">
-              <img src="{{ $ctaSideImg }}" alt="Newsletter Banner" class="g2-news-banner-img">
+              <img src="{{ $ctaSideImg }}" onerror="this.onerror=null;this.src='{{ $defaultCtaSideImg }}';" alt="Newsletter Banner" class="g2-news-banner-img">
             </div>
           @endif
         </div>

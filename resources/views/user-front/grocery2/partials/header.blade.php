@@ -6,26 +6,29 @@
       <div class="grocery2-topbar-wrapper">
         @php
           $headerText = !empty(@$header->header_text) ? @$header->header_text : (!empty(@$userBs->header_text) ? @$userBs->header_text : (!empty(@$userHeader->header_text) ? @$userHeader->header_text : ''));
+          $notices = !empty($headerText) ? array_values(array_filter(array_map('trim', explode('|', $headerText)))) : [];
+          $isDemoTheme = !empty($user->preview_template) && $user->preview_template == 1;
+          // On the demo theme, avoid repeating a single generic support string across the promo bar
+          $useDemoPromoNotices = $isDemoTheme && count($notices) <= 1;
         @endphp
-        @if (!empty($headerText))
+        @if (!$useDemoPromoNotices && count($notices) > 0)
           @php
-            $notices = array_values(array_filter(array_map('trim', explode('|', $headerText))));
-            $repeatCount = count($notices) > 0 ? max(2, (int) ceil(6 / count($notices))) : 2;
+            $repeatCount = max(2, (int) ceil(6 / count($notices)));
           @endphp
           @for ($r = 0; $r < $repeatCount; $r++)
             @foreach ($notices as $not)
-              <div class="topbar-item">{{ $not }}</div>
+              <div class="topbar-item">{{ html_entity_decode($not, ENT_QUOTES, 'UTF-8') }}</div>
             @endforeach
           @endfor
         @else
           <div class="topbar-item">🌾 {{ __('Vegetables 20% OFF Today') }}</div>
           <div class="topbar-item">🍎 {{ __('Buy 2 Get 1 Free on Fruits') }}</div>
-          <div class="topbar-item">🥛 {{ __('Dairy Products Starting at $1.99') }}</div>
+          <div class="topbar-item">🥛 {{ __('Dairy Products Starting at') }} {{ $userCurrentCurr->symbol ?? '$' }}1.99</div>
           <div class="topbar-item">🍞 {{ __('Fresh Bakery Items Daily') }}</div>
           <div class="topbar-item">🎉 {{ __('Weekend Special: Extra 15% OFF on All Items') }}</div>
           <div class="topbar-item">🌾 {{ __('Vegetables 20% OFF Today') }}</div>
           <div class="topbar-item">🍎 {{ __('Buy 2 Get 1 Free on Fruits') }}</div>
-          <div class="topbar-item">🥛 {{ __('Dairy Products Starting at $1.99') }}</div>
+          <div class="topbar-item">🥛 {{ __('Dairy Products Starting at') }} {{ $userCurrentCurr->symbol ?? '$' }}1.99</div>
           <div class="topbar-item">🍞 {{ __('Fresh Bakery Items Daily') }}</div>
           <div class="topbar-item">🎉 {{ __('Weekend Special: Extra 15% OFF on All Items') }}</div>
         @endif
