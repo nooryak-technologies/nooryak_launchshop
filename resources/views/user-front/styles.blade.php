@@ -1514,9 +1514,14 @@ footer {
 
 /* Mobile View Quick View Responsive Layout (< 768px) */
 @media (max-width: 767.98px) {
+    #quickViewModal .modal-content,
+    .quick-view-modal .modal-content {
+        padding: 20px 16px !important;
+    }
+
     #quickViewModal .product-single-default,
     .quick-view-modal .product-single-default {
-        margin-bottom: 25px !important;
+        margin-bottom: 12px !important;
         display: block !important;
         width: 100% !important;
     }
@@ -1526,16 +1531,17 @@ footer {
         flex-direction: column !important;
         align-items: center !important;
         width: 100% !important;
-        gap: 15px !important;
-        margin-bottom: 20px !important;
+        gap: 10px !important;
+        margin-bottom: 0 !important;
     }
 
     #quickViewModal .product-single-slider,
     .quick-view-modal .product-single-slider {
+        order: 1 !important;
         width: 100% !important;
         max-width: 100% !important;
         flex: none !important;
-        margin-bottom: 10px !important;
+        margin-bottom: 0 !important;
     }
 
     #quickViewModal .product-single-slider img,
@@ -1550,19 +1556,50 @@ footer {
 
     #quickViewModal .slider-thumbnails,
     .quick-view-modal .slider-thumbnails {
+        order: 2 !important;
         width: 100% !important;
         min-width: 100% !important;
         max-width: 100% !important;
+        height: auto !important;
         display: flex !important;
         flex-direction: row !important;
         justify-content: center !important;
         align-items: center !important;
         flex-wrap: wrap !important;
         gap: 8px !important;
-        margin-top: 10px !important;
-        margin-bottom: 20px !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
         position: relative !important;
         z-index: 10 !important;
+    }
+
+    #quickViewModal .slider-thumbnails .slick-list,
+    .quick-view-modal .slider-thumbnails .slick-list {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    #quickViewModal .slider-thumbnails .slick-track,
+    .quick-view-modal .slider-thumbnails .slick-track {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+        width: 100% !important;
+        height: auto !important;
+        transform: none !important;
+    }
+
+    #quickViewModal .slider-thumbnails .slick-slide,
+    .quick-view-modal .slider-thumbnails .slick-slide {
+        width: 55px !important;
+        height: 55px !important;
+        margin: 0 !important;
+        border: none !important;
     }
 
     #quickViewModal .slider-thumbnails .thumbnail-img,
@@ -1571,13 +1608,15 @@ footer {
         height: 55px !important;
         min-width: 55px !important;
         max-width: 55px !important;
+        margin: 0 !important;
         margin-bottom: 0 !important;
     }
 
     #quickViewModal .product-single-details,
     .quick-view-modal .product-single-details {
-        margin-top: 20px !important;
-        padding-top: 10px !important;
+        margin-top: 12px !important;
+        padding-top: 0 !important;
+        padding-left: 0 !important;
         position: relative !important;
         z-index: 1 !important;
         clear: both !important;

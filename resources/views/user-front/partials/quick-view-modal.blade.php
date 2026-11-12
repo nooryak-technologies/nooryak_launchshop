@@ -237,7 +237,12 @@
                     $variant_content = App\Models\VariantContent::where('id', $product_variation_content->variation_name)->first();
                 }
 
-                $vName = $variant_content ? $variant_content->name : ('Option ' . $product_variation->id);
+                $variantLabel = $variant_content ? trim((string) $variant_content->name) : '';
+                if ($variantLabel === '' && $product_variation_content && !empty($product_variation_content->variation_name) && !is_numeric($product_variation_content->variation_name)) {
+                    $variantLabel = trim((string) $product_variation_content->variation_name);
+                }
+
+                $vName = $variantLabel !== '' ? $variantLabel : ('Option ' . $product_variation->id);
                 if (isset($seen_qv_variations[$vName])) {
                     continue;
                 }
@@ -249,8 +254,10 @@
               @endphp
 
               @if ($product_variation_content && count($variant_content_options) > 0)
-                <li class="list-item" data-variant_name="{{ @$variant_content->name }}">
-                  <h4 class="list-item-title color-primary mb-1">{{ @$variant_content->name }}:</h4>
+                <li class="list-item" data-variant_name="{{ $variantLabel }}">
+                  @if ($variantLabel !== '')
+                    <h4 class="list-item-title color-primary mb-1">{{ $variantLabel }}:</h4>
+                  @endif
                   <ul class="list-group custom-radio variantUL" id="variantUL">
                     @foreach ($variant_content_options as $variant_content_option)
                       @php
@@ -279,7 +286,7 @@
                       @endphp
                       <li>
                         <input id="radio_{{ $main_id }}" type="radio"
-                          name="{{ make_input_name(@$variant_content->name) }}[]"
+                          name="{{ make_input_name($variantLabel !== '' ? $variantLabel : ('option_' . $product_variation->id)) }}[]"
                           class="{{ $main_id }} product-variant"
                           value="{{ $opt_name }}:{{ currency_converter($variant_content_option->price) }}:{{ $variant_content_option->stock }}:{{ $variant_content_option->id }}:{{ $product_variation->id }}">
                         <label class="" for="radio_{{ $main_id }}">

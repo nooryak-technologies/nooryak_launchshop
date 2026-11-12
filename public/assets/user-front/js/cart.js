@@ -453,7 +453,19 @@ var optionsThumb = {
     focusOnSelect: false,
     prevArrow: '<button type="button" class="btn-icon slider-btn slider-prev"><i class="fal fa-angle-left"></i></button>',
     nextArrow: '<button type="button" class="btn-icon slider-btn slider-next"><i class="fal fa-angle-left"></i></button>',
-    infinite: false
+    infinite: false,
+    responsive: [
+        {
+            breakpoint: 768,
+            settings: {
+                vertical: false,
+                verticalSwiping: false,
+                slidesToShow: 4,
+                slidesToScroll: 1,
+                arrows: false
+            }
+        }
+    ]
 }
 
 $("body").on('click', '.quick-view-link', function (e) {

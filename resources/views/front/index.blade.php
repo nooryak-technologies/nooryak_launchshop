@@ -493,12 +493,25 @@
           <!-- Divider -->
           <div class="hiw-stat-divider"></div>
           <!-- Stat 3 -->
+          @php
+            $rawStat3 = !empty($homeSec->hero_stat3_value) ? trim($homeSec->hero_stat3_value) : '99.99%';
+            if (preg_match('/^([0-9]+)(.*)$/', $rawStat3, $stat3Match)) {
+                $stat3Count = $stat3Match[1];
+                $stat3Suffix = $stat3Match[2] !== '' ? $stat3Match[2] : '.99%';
+                if (strpos($stat3Suffix, '%') === false) {
+                    $stat3Suffix .= '%';
+                }
+            } else {
+                $stat3Count = 99;
+                $stat3Suffix = '.99%';
+            }
+          @endphp
           <div class="hiw-stat-card">
             <div class="hiw-stat-icon hiw-icon-green">
               <i class="{{ !empty($homeSec->hero_stat3_icon) ? $homeSec->hero_stat3_icon : 'fas fa-shield-alt' }}"></i>
             </div>
             <div class="hiw-stat-info">
-              <div class="hiw-stat-value"><span class="odometer" data-count="{{ !empty($homeSec->hero_stat3_value) ? preg_replace('/[^0-9]/', '', $homeSec->hero_stat3_value) : 99 }}">0</span>.99%</div>
+              <div class="hiw-stat-value"><span class="odometer" data-count="{{ $stat3Count }}">0</span>{{ $stat3Suffix }}</div>
               <div class="hiw-stat-label">{{ !empty($homeSec->hero_stat3_label) ? $homeSec->hero_stat3_label : __('Uptime Guarantee') }}</div>
             </div>
           </div>
