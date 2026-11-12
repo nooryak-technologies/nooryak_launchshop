@@ -451,8 +451,19 @@
     <section class="newsletter pb-100">
       <div class="container">
         <div class="image-inner rounded-pill">
+          @php
+            $elecCtaBgFallback = asset('assets/user-front/images/electri/electi_call_to_action.jpg');
+            $elecCtaBgSrc = !empty(@$userSec->action_section_background_image) && file_exists(public_path('assets/front/img/cta/' . $userSec->action_section_background_image))
+                ? asset('assets/front/img/cta/' . $userSec->action_section_background_image)
+                : $elecCtaBgFallback;
+            $elecCtaSideFallback = asset('assets/user-front/images/electri/call_side_default.png');
+            $elecCtaSideSrc = !empty(@$userSec->action_section_side_image) && file_exists(public_path('assets/front/img/cta/' . $userSec->action_section_side_image))
+                ? asset('assets/front/img/cta/' . $userSec->action_section_side_image)
+                : $elecCtaSideFallback;
+          @endphp
           <img class="bg-img" src="{{ asset('assets/front/images/placeholder.png') }}"
-            data-src="{{ @$userSec->action_section_background_image ? asset('assets/front/img/cta/' . @$userSec->action_section_background_image) : asset('assets/user-front/images/electri/electi_call_to_action.jpg') }}"
+            data-src="{{ $elecCtaBgSrc }}"
+            onerror="this.onerror=null;this.src='{{ $elecCtaBgFallback }}';"
             alt="">
           <!-- Background Image -->
           <div class="row justify-content-center">
@@ -472,7 +483,8 @@
                 <div class="col-lg-6">
                   <div class="image mt-n-30">
                     <img class="lazyload blur-up" src="{{ asset('assets/front/images/placeholder.png') }}"
-                      data-src="{{ @$userSec->action_section_side_image ? asset('assets/front/img/cta/' . @$userSec->action_section_side_image) : asset('assets/user-front/images/electri/call_side_default.png') }}"
+                      data-src="{{ $elecCtaSideSrc }}"
+                      onerror="this.onerror=null;this.src='{{ $elecCtaSideFallback }}';"
                       alt="Image">
                   </div>
                 </div>

@@ -973,13 +973,59 @@
     z-index: 2;
     width: 100%;
     max-width: 360px;
-    max-height: 82vh;
-    overflow-y: auto;
+    max-height: 86vh;
+    overflow: visible;
     background: #ffffff;
-    border-radius: 16px;
-    padding: 18px 16px 16px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
-    border: 1.5px solid #ffd5c8;
+    border-radius: 18px;
+    padding: 24px 16px 16px;
+    box-shadow: 0 22px 50px rgba(0, 0, 0, 0.28);
+    border: 2.5px solid #ff5a2c;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .plan-feats-mobile-box.tone-basic {
+    border-color: #0f172a;
+    box-shadow: 0 22px 50px rgba(15, 23, 42, 0.30), 0 0 0 4px rgba(15, 23, 42, 0.12);
+  }
+
+  .plan-feats-mobile-box.tone-recommended {
+    border-color: #ff5a2c;
+    box-shadow: 0 22px 50px rgba(255, 90, 44, 0.30), 0 0 0 4px rgba(255, 90, 44, 0.16);
+  }
+
+  .plan-feats-mobile-box.tone-best-value {
+    border-color: #f59e0b;
+    box-shadow: 0 22px 50px rgba(245, 158, 11, 0.30), 0 0 0 4px rgba(245, 158, 11, 0.18);
+  }
+
+  .plan-feats-mobile-badge {
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 16px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    color: #ffffff;
+    white-space: nowrap;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+    background: linear-gradient(135deg, #ff6b35, #ff3b1f);
+  }
+
+  .plan-feats-mobile-badge.badge-basic {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+  }
+
+  .plan-feats-mobile-badge.badge-recommended {
+    background: linear-gradient(135deg, #ff6b35, #ff3b1f);
+  }
+
+  .plan-feats-mobile-badge.badge-best-value {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
   }
 
   .plan-feats-mobile-close {
@@ -1001,23 +1047,43 @@
 
   .plan-feats-mobile-header {
     display: flex;
-    align-items: baseline;
-    gap: 8px;
-    padding-right: 32px;
-    margin-bottom: 4px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    padding-top: 6px;
+    margin-bottom: 10px;
   }
 
   .plan-feats-mobile-title {
     margin: 0;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 800;
     color: #0f172a;
   }
 
   .plan-feats-mobile-price {
-    font-size: 13px;
-    font-weight: 700;
-    color: #ff5a2c;
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px;
+    font-size: 30px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.1;
+  }
+
+  .plan-feats-mobile-amount {
+    font-size: 30px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+  }
+
+  .plan-feats-mobile-period {
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
   }
 
   .plan-feats-mobile-subtitle {
@@ -1031,6 +1097,9 @@
 
   .plan-feats-mobile-list {
     margin: 0 0 14px !important;
+    max-height: 46vh;
+    overflow-y: auto;
+    padding-right: 4px;
   }
 
   .plan-feats-mobile-list li {

@@ -288,9 +288,15 @@
 
               <div class="col-xl-6 col-sm-12 order-xl-2 order-3" data-aos="zoom-in" data-aos-delay="100">
                 <div class="image">
-                  @if (@$userSec->featured_img != null)
-                    <img src="{{ asset('assets/front/img/user/feature/' . $userSec->featured_img) }}" alt="Icon">
-                  @endif
+                  @php
+                    $petFeaturedFallback = asset('assets/user-front/images/pet/flash-img.png');
+                    $petFeaturedSrc = !empty(@$userSec->featured_img) && file_exists(public_path('assets/front/img/user/feature/' . $userSec->featured_img))
+                        ? asset('assets/front/img/user/feature/' . $userSec->featured_img)
+                        : $petFeaturedFallback;
+                  @endphp
+                  <img src="{{ $petFeaturedSrc }}"
+                    onerror="this.onerror=null;this.src='{{ $petFeaturedFallback }}';"
+                    alt="Icon">
                 </div>
               </div>
 

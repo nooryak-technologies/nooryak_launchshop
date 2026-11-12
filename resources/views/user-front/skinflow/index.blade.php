@@ -190,8 +190,15 @@
             <div class="products-showcase">
               <h1 class="bg-title lc-2">{{ @$userSec->call_to_action_section_title ?? __('Section Title') }}</h1>
               <div class="image">
-                <img class="lazyload blur-up default-img" src="assets/images/placeholder.png"
-                  data-src="{{ @$userSec->action_section_background_image ? asset('assets/front/img/cta/' . @$userSec->action_section_background_image) : asset('assets/user-front/images/skinflow/showcase-1.png') }}"
+                @php
+                  $skinflowCtaFallback = asset('assets/user-front/images/skinflow/showcase-1.png');
+                  $skinflowCtaSrc = !empty(@$userSec->action_section_background_image) && file_exists(public_path('assets/front/img/cta/' . $userSec->action_section_background_image))
+                      ? asset('assets/front/img/cta/' . $userSec->action_section_background_image)
+                      : $skinflowCtaFallback;
+                @endphp
+                <img class="lazyload blur-up default-img" src="{{ asset('assets/front/images/placeholder.png') }}"
+                  data-src="{{ $skinflowCtaSrc }}"
+                  onerror="this.onerror=null;this.src='{{ $skinflowCtaFallback }}';"
                   alt="Product">
               </div>
 

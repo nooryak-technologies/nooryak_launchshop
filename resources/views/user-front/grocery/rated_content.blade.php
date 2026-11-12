@@ -11,9 +11,9 @@
         </h5>
       @else
         <div class="product-list-slider" id="product-list-slider-1">
-          @for ($k = 0; $k < count($top_rated); $k += 4)
+          @for ($k = 0; $k < count($top_rated); $k += 3)
             <div>
-              @for ($slot = 0; $slot < 4; $slot++)
+              @for ($slot = 0; $slot < 3; $slot++)
                 @php
                   $ratedItem = $top_rated[$k + $slot] ?? null;
                   $ratedContent = (!empty($ratedItem) && !empty($ratedItem->itemContents) && count($ratedItem->itemContents) > 0)

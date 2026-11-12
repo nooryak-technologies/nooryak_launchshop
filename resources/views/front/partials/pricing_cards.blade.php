@@ -539,12 +539,13 @@
   <div class="plan-feats-mobile-overlay" id="planFeatsMobileOverlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="planFeatsModalTitle">
     <div class="plan-feats-mobile-backdrop" onclick="closeMobilePlanFeaturesModal()"></div>
     <div class="plan-feats-mobile-box">
+      <span id="planFeatsModalBadge" class="plan-feats-mobile-badge"></span>
       <button type="button" class="plan-feats-mobile-close" onclick="closeMobilePlanFeaturesModal()" aria-label="Close features popup">
         <i class="fas fa-times"></i>
       </button>
       <div class="plan-feats-mobile-header">
         <h4 id="planFeatsModalTitle" class="plan-feats-mobile-title"></h4>
-        <span id="planFeatsModalPrice" class="plan-feats-mobile-price"></span>
+        <div id="planFeatsModalPrice" class="plan-feats-mobile-price"></div>
       </div>
       <div class="plan-feats-mobile-subtitle">More Features Included</div>
       <ul id="planFeatsModalList" class="plan-v2-features plan-feats-mobile-list"></ul>
@@ -563,8 +564,45 @@
       var listEl  = document.getElementById('planFeatsModalList');
       var ctaEl   = document.getElementById('planFeatsModalCta');
 
+      const boxEl = overlay.querySelector('.plan-feats-mobile-box');
+      const badgeEl = document.getElementById('planFeatsModalBadge');
+      const cardEl = btn ? btn.closest('.plan-v2-card') : null;
+      if (boxEl && badgeEl) {
+        boxEl.classList.remove('tone-recommended', 'tone-best-value', 'tone-basic');
+        badgeEl.classList.remove('badge-recommended', 'badge-best-value', 'badge-basic');
+        const cardBadge = cardEl ? cardEl.querySelector('.plan-top-badge') : null;
+        if (cardEl && cardEl.classList.contains('card-recommended')) {
+          boxEl.classList.add('tone-recommended');
+          badgeEl.classList.add('badge-recommended');
+          badgeEl.textContent = cardBadge ? cardBadge.textContent.trim() : 'RECOMMENDED';
+        } else if (cardEl && cardEl.classList.contains('card-best-value')) {
+          boxEl.classList.add('tone-best-value');
+          badgeEl.classList.add('badge-best-value');
+          badgeEl.textContent = cardBadge ? cardBadge.textContent.trim() : 'BEST VALUE';
+        } else {
+          boxEl.classList.add('tone-basic');
+          badgeEl.classList.add('badge-basic');
+          badgeEl.textContent = cardBadge ? cardBadge.textContent.trim() : 'STARTER PLAN';
+        }
+      }
+
       titleEl.textContent = btn.getAttribute('data-plan-title') || '';
-      priceEl.textContent = btn.getAttribute('data-plan-price') || '';
+      const rawPrice = (btn.getAttribute('data-plan-price') || '').trim();
+      const priceParts = rawPrice.split(/\s*\/\s*/);
+      if (priceParts.length >= 2) {
+        priceEl.innerHTML = '';
+        const amtSpan = document.createElement('span');
+        amtSpan.className = 'plan-feats-mobile-amount';
+        amtSpan.textContent = priceParts[0];
+        const perSpan = document.createElement('span');
+        perSpan.className = 'plan-feats-mobile-period';
+        perSpan.textContent = '/ ' + priceParts.slice(1).join(' / ');
+        priceEl.appendChild(amtSpan);
+        priceEl.appendChild(perSpan);
+      } else {
+        priceEl.textContent = rawPrice;
+      }
+      ctaEl.className = 'plan-v2-btn plan-feats-mobile-cta ' + (cardEl && cardEl.classList.contains('card-best-value') ? 'btn-gold' : (cardEl && cardEl.classList.contains('card-recommended') ? 'btn-orange' : 'btn-outline-orange'));
       ctaEl.textContent   = btn.getAttribute('data-plan-cta') || 'Select Plan';
       ctaEl.setAttribute('href', btn.getAttribute('data-plan-href') || '#');
 

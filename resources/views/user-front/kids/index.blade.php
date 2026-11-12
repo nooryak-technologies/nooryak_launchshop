@@ -473,8 +473,15 @@
       <div class="container">
         <div class="image-inner ptb-40 rounded-pill">
           <!-- Background Image -->
+          @php
+            $kidsCtaBgFallback = asset('assets/front/img/subscriber/kids_call_default.jpg');
+            $kidsCtaBgSrc = !empty(@$userSec->action_section_background_image) && file_exists(public_path('assets/front/img/cta/' . $userSec->action_section_background_image))
+                ? asset('assets/front/img/cta/' . $userSec->action_section_background_image)
+                : $kidsCtaBgFallback;
+          @endphp
           <img class="bg-img" src="{{ asset('assets/front/images/placeholder.png') }}"
-            data-src="{{ @$userSec->action_section_background_image ? asset('assets/front/img/cta/' . @$userSec->action_section_background_image) : asset('assets/front/img/subscriber/kids_call_default.jpg') }}"
+            data-src="{{ $kidsCtaBgSrc }}"
+            onerror="this.onerror=null;this.src='{{ $kidsCtaBgFallback }}';"
             alt="Bg-img">
           <div class="row align-items-center justify-content-center text-center">
             <div class="col-lg-6">

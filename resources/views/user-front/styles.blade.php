@@ -1776,13 +1776,45 @@ footer {
         margin-bottom: 16px !important;
     }
 
+    #quickViewModal .modal-content,
+    .quick-view-modal .modal-content {
+        overflow-x: hidden !important;
+    }
+
+    #quickViewModal .qv-cart-action-row,
+    .quick-view-modal .qv-cart-action-row {
+        gap: 6px !important;
+        max-width: 100% !important;
+        flex-wrap: nowrap !important;
+    }
+
     #quickViewModal .qv-cart-action-row .item_quantity,
-    .quick-view-modal .qv-cart-action-row .item_quantity {
+    #quickViewModal .qv-cart-action-row .quantity-input,
+    .quick-view-modal .qv-cart-action-row .item_quantity,
+    .quick-view-modal .qv-cart-action-row .quantity-input {
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: fit-content !important;
         flex: 0 0 auto !important;
         height: 38px !important;
         margin: 0 !important;
         display: inline-flex !important;
         align-items: center !important;
+    }
+
+    #quickViewModal .qv-cart-action-row .qv-add-to-cart-wrap,
+    .quick-view-modal .qv-cart-action-row .qv-add-to-cart-wrap {
+        flex: 1 1 0% !important;
+        min-width: 0 !important;
+    }
+
+    #quickViewModal .qv-cart-action-row .qv-add-to-cart-btn,
+    .quick-view-modal .qv-cart-action-row .qv-add-to-cart-btn {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        padding: 0 8px !important;
+        white-space: nowrap !important;
     }
 
     #quickViewModal .qv-cart-action-row .item_quantity .quantity-btn,
@@ -1797,9 +1829,14 @@ footer {
     }
 
     #quickViewModal .qv-cart-action-row .item_quantity .quantity_field,
-    .quick-view-modal .qv-cart-action-row .item_quantity .quantity_field {
+    #quickViewModal .qv-cart-action-row .quantity-input .quantity_field,
+    .quick-view-modal .qv-cart-action-row .item_quantity .quantity_field,
+    .quick-view-modal .qv-cart-action-row .quantity-input .quantity_field {
         width: 30px !important;
         min-width: 30px !important;
+        max-width: 30px !important;
+        flex: 0 0 30px !important;
+        box-sizing: border-box !important;
         height: 38px !important;
         padding: 0 !important;
         text-align: center !important;

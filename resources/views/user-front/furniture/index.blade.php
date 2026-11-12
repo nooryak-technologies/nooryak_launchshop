@@ -385,8 +385,15 @@
       <div class="container">
         <div class="image-inner ptb-100">
           <!-- Background Image -->
+          @php
+            $furnCtaBgFallback = asset('assets/front/img/subscriber/default_bg.jpg');
+            $furnCtaBgSrc = !empty(@$userSec->action_section_background_image) && file_exists(public_path('assets/front/img/cta/' . $userSec->action_section_background_image))
+                ? asset('assets/front/img/cta/' . $userSec->action_section_background_image)
+                : $furnCtaBgFallback;
+          @endphp
           <img class="bg-img" src="{{ asset('assets/front/images/placeholder.png') }}"
-            data-src="{{ @$userSec->action_section_background_image ? asset('assets/front/img/cta/' . @$userSec->action_section_background_image) : asset('assets/front/img/subscriber/default_bg.jpg') }}"
+            data-src="{{ $furnCtaBgSrc }}"
+            onerror="this.onerror=null;this.src='{{ $furnCtaBgFallback }}';"
             alt="Bg-img">
           <!-- Background Image -->
           <div class="row">

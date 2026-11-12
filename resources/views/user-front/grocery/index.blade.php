@@ -344,10 +344,16 @@
 
           <div class="col-lg-6 col-md-6">
             <div class="image mb-30">
-              @if (@$userSec->featured_img != null)
-                <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
-                  data-src="{{ asset('assets/front/img/user/feature/' . $userSec->featured_img) }}" alt="Icon">
-              @endif
+              @php
+                $groceryFeaturedFallback = asset('assets/user-front/images/grocery/video_side.png');
+                $groceryFeaturedSrc = !empty(@$userSec->featured_img) && file_exists(public_path('assets/front/img/user/feature/' . $userSec->featured_img))
+                    ? asset('assets/front/img/user/feature/' . $userSec->featured_img)
+                    : $groceryFeaturedFallback;
+              @endphp
+              <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
+                data-src="{{ $groceryFeaturedSrc }}"
+                onerror="this.onerror=null;this.src='{{ $groceryFeaturedFallback }}';"
+                alt="Icon">
             </div>
           </div>
 
@@ -427,9 +433,16 @@
     <!-- Newsletter Start -->
     <section class="newsletter">
       <!-- Background Image -->
+      @php
+        $groceryCtaBgFallback = asset('assets/user-front/images/grocery/video_bg.jpg');
+        $groceryCtaBgSrc = !empty(@$userSec->action_section_background_image) && file_exists(public_path('assets/front/img/cta/' . $userSec->action_section_background_image))
+            ? asset('assets/front/img/cta/' . $userSec->action_section_background_image)
+            : $groceryCtaBgFallback;
+      @endphp
       <div class="bg-overlay">
-        <img class=" bg-img"
-          data-src="{{ @$userSec->action_section_background_image ? asset('assets/front/img/cta/' . @$userSec->action_section_background_image) : asset('assets/user-front/images/grocery/video_bg.jpg') }}"
+        <img class=" bg-img" src="{{ asset('assets/front/images/placeholder.png') }}"
+          data-src="{{ $groceryCtaBgSrc }}"
+          onerror="this.onerror=null;this.src='{{ $groceryCtaBgFallback }}';"
           alt="Bg-img">
       </div>
       <div class="container">
@@ -450,14 +463,16 @@
           </div>
           <div class="col-lg-6">
             <div class="image mb-30">
-              @if (@$userSec->action_section_side_image)
-                <img class="lazyload blur-up" src="{{ asset('assets/front/images/placeholder.png') }}"
-                  data-src="{{ $userSec ? asset('assets/front/img/cta/' . $userSec->action_section_side_image) : '' }}"
-                  alt="Image">
-              @else
-                <img class="lazyload blur-up" src="{{ asset('assets/front/images/placeholder.png') }}"
-                  data-src="{{ asset('assets/user-front/images/grocery/video_side.png') }}" alt="Image">
-              @endif
+              @php
+                $groceryCtaSideFallback = asset('assets/user-front/images/grocery/video_side.png');
+                $groceryCtaSideSrc = !empty(@$userSec->action_section_side_image) && file_exists(public_path('assets/front/img/cta/' . $userSec->action_section_side_image))
+                    ? asset('assets/front/img/cta/' . $userSec->action_section_side_image)
+                    : $groceryCtaSideFallback;
+              @endphp
+              <img class="lazyload blur-up" src="{{ asset('assets/front/images/placeholder.png') }}"
+                data-src="{{ $groceryCtaSideSrc }}"
+                onerror="this.onerror=null;this.src='{{ $groceryCtaSideFallback }}';"
+                alt="Image">
 
             </div>
           </div>

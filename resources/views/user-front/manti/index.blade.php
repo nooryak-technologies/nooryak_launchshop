@@ -358,9 +358,19 @@
     <section class="newsletter py-0">
       <div class="container">
         <div class="image-inner radius-md pt-4 pb-1 px-4">
+          @php
+            $mantiCtaFallback = asset('assets/user-front/images/manti/newsl-bg-5.jpg');
+            $mantiCtaBgSrc = !empty(@$userSec->action_section_background_image) && file_exists(public_path('assets/front/img/cta/' . $userSec->action_section_background_image))
+                ? asset('assets/front/img/cta/' . $userSec->action_section_background_image)
+                : $mantiCtaFallback;
+            $mantiCtaSideSrc = !empty(@$userSec->action_section_side_image) && file_exists(public_path('assets/front/img/cta/' . $userSec->action_section_side_image))
+                ? asset('assets/front/img/cta/' . $userSec->action_section_side_image)
+                : $mantiCtaFallback;
+          @endphp
           <!-- Background Image -->
           <img class="blur-up bg-img" src="{{ asset('assets/front/images/placeholder.png') }}"
-            data-src="{{ @$userSec->action_section_background_image ? asset('assets/front/img/cta/' . @$userSec->action_section_background_image) : asset('assets/user-front/images/manti/newsl-bg-5.jpg') }}"
+            data-src="{{ $mantiCtaBgSrc }}"
+            onerror="this.onerror=null;this.src='{{ $mantiCtaFallback }}';"
             alt="Bg-img">
           <div class="row align-items-center">
             <div class="col-lg-6">
@@ -379,7 +389,8 @@
             <div class="col-lg-6">
               <div class="image mb-3">
                 <img class="blur-up lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
-                  data-src="{{ @$userSec->action_section_side_image ? asset('assets/front/img/cta/' . @$userSec->action_section_side_image) : asset('assets/user-front/images/manti/newsl-bg-5.jpg') }}"
+                  data-src="{{ $mantiCtaSideSrc }}"
+                  onerror="this.onerror=null;this.src='{{ $mantiCtaFallback }}';"
                   alt="Image">
               </div>
             </div>
