@@ -693,6 +693,26 @@
       }
     }
     @media (max-width: 767.98px) {
+      /* Task 1: Remove container padding for hero banner only on mobile view */
+      .theme-grocery2 .g2-hero-section {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+      .theme-grocery2 .g2-hero-section > .container,
+      .theme-grocery2 .g2-hero-section .container {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+      .theme-grocery2 .g2-hero-section .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+      .theme-grocery2 .g2-hero-section .row > [class*="col-"] {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
       .theme-grocery2 .g2-hero-slider .g2-slider-item,
       .theme-grocery2 .g2-hero-slider .slick-slide.g2-slider-item {
         padding: 10px !important;
@@ -715,26 +735,45 @@
       .theme-grocery2 .g2-hero-slider .g2-slider-btns {
         display: flex !important;
         flex-direction: row !important;
-        flex-wrap: nowrap !important;
         align-items: center !important;
         gap: 8px !important;
         width: 100% !important;
       }
       .theme-grocery2 .g2-hero-slider .g2-slider-btns .btn,
-      .theme-grocery2 .g2-hero-slider .g2-slider-btns .g2-btn-primary,
-      .theme-grocery2 .g2-hero-slider .g2-slider-btns .g2-btn-secondary {
-        flex: 1 1 0 !important;
+      .theme-grocery2 .g2-hero-slider .g2-slider-btns .g2-btn-primary {
+        flex: 0 0 auto !important;
+        width: auto !important;
         white-space: nowrap !important;
         text-align: center !important;
-        padding: 9px 12px !important;
+        padding: 10px 24px !important;
         font-size: 13px !important;
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
         min-width: 0 !important;
       }
+      .theme-grocery2 .g2-hero-slider .g2-slider-btns .g2-btn-secondary {
+        display: none !important;
+      }
       .theme-grocery2 .g2-side-promo {
         padding: 24px 20px 24px 24px !important;
+      }
+    }
+    @media (max-width: 991.98px) {
+      /* Task 3: Arrow buttons beside Featured Categories on mobile view */
+      .theme-grocery2 .g2-categories-section .g2-section-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        flex-direction: row !important;
+      }
+      .theme-grocery2 .g2-categories-section .g2-arrow-nav {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+      }
+      .theme-grocery2 .g2-category-bottom-arrows {
+        display: none !important;
       }
     }
   </style>
@@ -796,14 +835,40 @@ footer {
   max-width: 100% !important;
 }
 
-.shop-category-pills {
+/* --- Global: Hide horizontal scrolling bar/indicator across all themes while preserving scrolling --- */
+.shop-category-pills,
+.g2-product-filters,
+.g2-product-filters ul,
+.g2-product-filters .nav,
+.nav-tabs,
+.nav-pills,
+.category-filter-tabs,
+.product-filters,
+.filter-tabs,
+.horizontal-scroll,
+.tabs-navigation,
+[class*="filter-tabs"],
+[class*="-pills"],
+[class*="product-filters"] {
   overflow-x: auto !important;
-  overflow-y: hidden !important;
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
 }
 
-.shop-category-pills::-webkit-scrollbar {
+.shop-category-pills::-webkit-scrollbar,
+.g2-product-filters::-webkit-scrollbar,
+.g2-product-filters ul::-webkit-scrollbar,
+.g2-product-filters .nav::-webkit-scrollbar,
+.nav-tabs::-webkit-scrollbar,
+.nav-pills::-webkit-scrollbar,
+.category-filter-tabs::-webkit-scrollbar,
+.product-filters::-webkit-scrollbar,
+.filter-tabs::-webkit-scrollbar,
+.horizontal-scroll::-webkit-scrollbar,
+.tabs-navigation::-webkit-scrollbar,
+[class*="filter-tabs"]::-webkit-scrollbar,
+[class*="-pills"]::-webkit-scrollbar,
+[class*="product-filters"]::-webkit-scrollbar {
   display: none !important;
   width: 0 !important;
   height: 0 !important;

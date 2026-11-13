@@ -35,7 +35,6 @@
                       @else
                         <a href="{{ route('front.user.shop', getParam()) }}" class="btn g2-btn-primary">{{ __('Order Now') }}</a>
                       @endif
-                      <a href="{{ route('front.user.shop', getParam()) }}" class="btn g2-btn-secondary">{{ __('Learn More') }}</a>
                     </div>
                   </div>
                   <div class="g2-slider-mobile-img d-block d-lg-none">
@@ -90,10 +89,10 @@
   @if ($ubs->category_section == 1)
     <section class="g2-categories-section py-4">
       <div class="container">
-        <!-- Laptop View Header (Single Row on Laptop View Only) -->
+        <!-- Header (Featured Categories Title + Left/Right Arrow Nav beside it on all views) -->
         <div class="g2-section-header d-flex justify-content-between align-items-center mb-4">
           <h2 class="g2-section-title mb-0">Featured Categories</h2>
-          <div class="g2-arrow-nav d-none d-lg-flex gap-2">
+          <div class="g2-arrow-nav d-flex gap-2">
             <button class="g2-arrow-btn cat-prev"><i class="fal fa-chevron-left"></i></button>
             <button class="g2-arrow-btn cat-next"><i class="fal fa-chevron-right"></i></button>
           </div>
@@ -126,8 +125,8 @@
           @endif
         </div>
 
-        <!-- Mobile View Navigation Arrows (Below Category Slider on Mobile View Only) -->
-        <div class="g2-category-bottom-arrows d-flex d-lg-none justify-content-center gap-2 mt-3">
+        <!-- Mobile View Navigation Arrows (Hidden: now beside Featured Categories title) -->
+        <div class="g2-category-bottom-arrows d-none justify-content-center gap-2 mt-3">
           <button class="g2-arrow-btn cat-prev"><i class="fal fa-chevron-left"></i></button>
           <button class="g2-arrow-btn cat-next"><i class="fal fa-chevron-right"></i></button>
         </div>

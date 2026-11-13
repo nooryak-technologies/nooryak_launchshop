@@ -2358,12 +2358,12 @@ body.show-mobile-menu .grocery2-header {
 
 @media (max-width: 767px) {
 
-    /* Task 1: Hero & promo sliders — 10px horizontal gap so content & banner have maximum width */
+    /* Task 1: Remove container padding for hero banner only on mobile view */
     .g2-hero-section {
         padding-top: 10px !important;
         padding-bottom: 15px !important;
-        padding-left: 10px !important;
-        padding-right: 10px !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
         overflow: hidden !important;
         width: 100% !important;
         max-width: 100% !important;
@@ -2578,8 +2578,8 @@ body.show-mobile-menu .grocery2-header {
     .g2-hero-section {
         padding-top: 10px !important;
         padding-bottom: 0 !important;
-        padding-left: 10px !important;
-        padding-right: 10px !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
         overflow: hidden !important;
     }
 
@@ -2759,10 +2759,26 @@ body.show-mobile-menu .grocery2-header {
         white-space: nowrap;
         padding-bottom: 8px;
         width: 100%;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+
+    .g2-product-filters::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
     }
 
     .g2-product-filters .nav {
         flex-wrap: nowrap;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+
+    .g2-product-filters .nav::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
     }
 }
 
@@ -2870,8 +2886,24 @@ body.show-mobile-menu .grocery2-header {
         padding-right: 6px !important;
     }
 
-    /* Requirement 4: Bottom Arrows centered BELOW Featured Categories and Popular Items on Mobile View Only */
-    .g2-category-bottom-arrows,
+    /* Task 3: Arrow buttons beside Featured Categories on mobile view */
+    .g2-category-bottom-arrows {
+        display: none !important;
+    }
+
+    .g2-categories-section .g2-section-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        flex-direction: row !important;
+    }
+
+    .g2-categories-section .g2-arrow-nav {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+
     .g2-popular-bottom-arrows {
         display: flex !important;
         justify-content: center !important;
@@ -2880,7 +2912,6 @@ body.show-mobile-menu .grocery2-header {
         margin-top: 18px !important;
     }
 
-    .g2-category-bottom-arrows .g2-arrow-btn,
     .g2-popular-bottom-arrows .g2-arrow-btn {
         width: 38px !important;
         height: 38px !important;
