@@ -33,12 +33,13 @@
                       @if ($slider->btn_url && $slider->btn_name)
                         <a href="{{ $slider->btn_url }}" class="btn g2-btn-primary">{{ $slider->btn_name }}</a>
                       @else
-                        <a href="{{ route('front.user.shop', getParam()) }}" class="btn g2-btn-primary">{{ __('Shop Now') }}</a>
+                        <a href="{{ route('front.user.shop', getParam()) }}" class="btn g2-btn-primary">{{ __('Order Now') }}</a>
                       @endif
+                      <a href="{{ route('front.user.shop', getParam()) }}" class="btn g2-btn-secondary">{{ __('Learn More') }}</a>
                     </div>
                   </div>
                   <div class="g2-slider-mobile-img d-block d-lg-none">
-                    <img src="{{ asset('assets/front/img/hero_slider/' . $slider->img) }}" alt="{{ $slider->title ?? 'Hero Banner' }}" onerror="this.onerror=null;this.src='{{ asset('assets/front/img/hero_slider/ecom_grocery_banner_clean.png') }}';">
+                    <img src="{{ asset('assets/front/img/hero_slider/' . $slider->img) }}" alt="{{ $slider->title ?? 'Hero Banner' }}">
                   </div>
                 </div>
               @endforeach
@@ -464,7 +465,7 @@
       $('.preloader').addClass('hidden').fadeOut(300);
     }, 1200);
 
-    // Main Hero Slider Carousel (Normal horizontal slide on all devices)
+    // Main Hero Slider Carousel
     if ($('#g2-main-slider').length > 0) {
       $('#g2-main-slider').slick({
         dots: true,
@@ -473,36 +474,16 @@
         nextArrow: '<button type="button" class="slick-next g2-slider-arrow"><i class="fal fa-chevron-right"></i></button>',
         autoplay: true,
         autoplaySpeed: 3500,
-        speed: 600,
+        speed: 700,
         slidesToShow: 1,
         slidesToScroll: 1,
         infinite: true,
         pauseOnHover: false,
-        fade: false,
-        cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)',
-        rtl: $('html').attr('dir') === 'rtl',
-        responsive: [
-          {
-            breakpoint: 768,
-            settings: {
-              arrows: false,
-              dots: true,
-              fade: false
-            }
-          }
-        ]
+        fade: true,
+        adaptiveHeight: true,
+        cssEase: 'ease-in-out',
+        rtl: $('html').attr('dir') === 'rtl'
       });
-
-      function fixSliderPosition() {
-        if ($('#g2-main-slider').hasClass('slick-initialized')) {
-          $('#g2-main-slider').slick('setPosition');
-        }
-      }
-
-      $(window).on('resize orientationchange load', fixSliderPosition);
-      setTimeout(fixSliderPosition, 100);
-      setTimeout(fixSliderPosition, 400);
-      setTimeout(fixSliderPosition, 1000);
     }
 
     // Categories Carousel (Auto Smooth Scroll)
@@ -574,7 +555,7 @@
           $items.hide();
           var start = (page - 1) * pageSize;
           var end = start + pageSize;
-          $items.slice(start, end).fadeIn(150);
+          $items.slice(start, end).show();
 
           var html = '<ul class="pagination g2-pagination mb-0">';
           
@@ -585,7 +566,7 @@
 
           // Format: 1 2 3 ... 5 6 with ellipses so it never overflows mobile screens
           function getPageNumbers(current, total) {
-            if (total <= 7) {
+            if (total <= 5) {
               var pages = [];
               for (var i = 1; i <= total; i++) pages.push(i);
               return pages;
