@@ -1,3 +1,8 @@
+/* Prevent horizontal page blowout */
+body {
+    overflow-x: hidden;
+}
+
 /* ==========================================
    PRELOADER HIDE STYLES
    ========================================== */
@@ -784,12 +789,69 @@ body.show-mobile-menu .grocery2-header {
     }
 }
 
-/* Popular Items Grid (replaces Slick for always-visible tab) */
+/* Popular Items Single-Row Pagination */
 .g2-pop-grid {
     width: 100%;
 }
 .g2-pop-grid > .col {
     min-width: 0;
+}
+
+.g2-pagination-nav {
+    margin-top: 24px !important;
+}
+
+.g2-pagination {
+    display: inline-flex !important;
+    gap: 8px !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+
+.g2-pagination .page-item {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.g2-pagination .page-item .page-link {
+    min-width: 38px;
+    height: 38px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px !important;
+    font-size: 14px;
+    font-weight: 700;
+    color: #2b4d75;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.g2-pagination .page-item .page-link:hover {
+    background-color: #e2e8f0;
+    color: #0f5132;
+    border-color: #cbd5e1;
+}
+
+.g2-pagination .page-item.active .page-link {
+    background-color: #0f5132 !important;
+    color: #ffffff !important;
+    border-color: #0f5132 !important;
+    box-shadow: 0 4px 10px rgba(15, 81, 50, 0.25) !important;
+}
+
+.g2-pagination .page-item.disabled .page-link {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: #f1f5f9;
+    border-color: #e2e8f0;
+    color: #94a3b8;
 }
 
 /* Right Side Promo Stack */
@@ -2291,6 +2353,10 @@ body.show-mobile-menu .grocery2-header {
         padding-bottom: 15px !important;
         padding-left: 10px !important;
         padding-right: 10px !important;
+        overflow: hidden !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
     }
 
     .g2-hero-section>.container {
@@ -2310,18 +2376,26 @@ body.show-mobile-menu .grocery2-header {
         padding-right: 0 !important;
     }
 
-    .g2-hero-slider,
-    .g2-hero-slider .slick-list,
+    .g2-hero-slider {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        overflow: hidden !important;
+    }
+
+    .g2-hero-slider .slick-list {
+        width: 100% !important;
+        height: auto !important;
+        overflow: hidden !important;
+    }
+
     .g2-hero-slider .slick-track {
         height: auto !important;
-        min-height: 10px !important;
-        width: 100% !important;
-        overflow: visible !important;
     }
 
     .g2-hero-slider .slick-slide {
         height: auto !important;
-        min-height: 10px !important;
+        outline: none !important;
     }
 
     .g2-hero-slider .g2-slider-item {
@@ -2516,6 +2590,9 @@ body.show-mobile-menu .grocery2-header {
     .g2-hero-section {
         padding-top: 10px !important;
         padding-bottom: 0 !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        overflow: hidden !important;
     }
 
     .g2-hero-section .mb-4,

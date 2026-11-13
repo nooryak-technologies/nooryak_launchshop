@@ -38,7 +38,7 @@
                     </div>
                   </div>
                   <div class="g2-slider-mobile-img d-block d-lg-none">
-                    <img src="{{ asset('assets/front/img/hero_slider/' . $slider->img) }}" alt="{{ $slider->title ?? 'Hero Banner' }}">
+                    <img src="{{ asset('assets/front/img/hero_slider/' . $slider->img) }}" alt="{{ $slider->title ?? 'Hero Banner' }}" onerror="this.onerror=null;this.src='{{ asset('assets/front/img/hero_slider/ecom_grocery_banner_clean.png') }}';">
                   </div>
                 </div>
               @endforeach
@@ -301,7 +301,7 @@
           </div>
 
           <div class="tab-content" id="g2PopularItemTabsContent">
-            <!-- ALL TAB — uses CSS grid (always visible, no Slick width=0 issue) -->
+            <!-- ALL TAB — Single row with pagination -->
             <div class="tab-pane fade show active" id="pop-tab-all" role="tabpanel">
               @if(count($all_items) > 0)
                 <div class="g2-pop-grid row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
@@ -309,6 +309,7 @@
                     @include('user-front.grocery2.partials.product-card', ['item' => $item])
                   @endforeach
                 </div>
+                <div class="g2-pagination-nav d-flex justify-content-center align-items-center mt-4"></div>
               @else
                 <div class="col-12 text-center py-4">
                   <p class="text-muted">{{ __('No products found') }}</p>
@@ -316,7 +317,7 @@
               @endif
             </div>
 
-            <!-- CATEGORIES TABS — also CSS grid to avoid Slick hidden-tab issue -->
+            <!-- CATEGORIES TABS — Single row with pagination -->
             @foreach($categories->take(5) as $cat)
               <div class="tab-pane fade" id="pop-tab-cat-{{ $cat->id }}" role="tabpanel">
                 @php
@@ -348,6 +349,7 @@
                       @include('user-front.grocery2.partials.product-card', ['item' => $item])
                     @endforeach
                   </div>
+                  <div class="g2-pagination-nav d-flex justify-content-center align-items-center mt-4"></div>
                 @else
                   <div class="col-12 text-center py-4">
                     <p class="text-muted">{{ __('No products found in this category') }}</p>
@@ -463,23 +465,24 @@
     }, 1200);
 
     // Main Hero Slider Carousel
-    // On mobile (<768px): use slide mode (no fade) so height auto works correctly with stacked layout
+    // On mobile (<768px): use slide mode (no fade) + adaptiveHeight so height auto works correctly with stacked layout
     // On desktop: use fade mode for smooth transitions
     if ($('#g2-main-slider').length > 0) {
       var isMobile = $(window).width() < 768;
       $('#g2-main-slider').slick({
         dots: true,
-        arrows: true,
+        arrows: !isMobile,
         prevArrow: '<button type="button" class="slick-prev g2-slider-arrow"><i class="fal fa-chevron-left"></i></button>',
         nextArrow: '<button type="button" class="slick-next g2-slider-arrow"><i class="fal fa-chevron-right"></i></button>',
         autoplay: true,
         autoplaySpeed: 3500,
-        speed: 700,
+        speed: 600,
         slidesToShow: 1,
         slidesToScroll: 1,
         infinite: true,
         pauseOnHover: false,
         fade: !isMobile,
+        adaptiveHeight: isMobile,
         cssEase: 'ease-in-out',
         rtl: $('html').attr('dir') === 'rtl'
       });
@@ -514,17 +517,163 @@
       });
     }
 
-    // Popular Items — arrows scroll the grid horizontally on mobile, nothing needed on desktop
-    // (Grid uses CSS flex-wrap so no Slick needed)
+    // Popular Items Single-Row Pagination (4 items on desktop, 2 on mobile -> exactly 1 single row)
+    function initPopularPagination() {
+      var pageSize = $(window).width() < 768 ? 2 : 4;
 
-    // Grid-prev / grid-next: scroll active tab's grid left/right on mobile
-    $('.grid-prev').on('click', function() {
-      var $grid = $('.tab-pane.active .g2-pop-grid');
-      if ($grid.length) { $grid.animate({ scrollLeft: $grid.scrollLeft() - 240 }, 300); }
+      $('#g2PopularItemTabsContent .tab-pane').each(function() {
+        var $pane = $(this);
+        var $grid = $pane.find('.g2-pop-grid');
+        if ($grid.length === 0) return;
+
+        var $items = $grid.children('.col');
+        var totalItems = $items.length;
+
+        var $nav = $pane.find('.g2-pagination-nav');
+        if ($nav.length === 0) {
+          $nav = $('<div class="g2-pagination-nav d-flex justify-content-center align-items-center mt-4"></div>');
+          $grid.after($nav);
+        }
+
+        if (totalItems <= pageSize) {
+          $items.show();
+          $nav.empty();
+          $pane.data('currentPage', 1);
+          $pane.data('totalPages', 1);
+          updateHeaderArrows();
+          return;
+        }
+
+        var totalPages = Math.ceil(totalItems / pageSize);
+        var currentPage = $pane.data('currentPage') || 1;
+        if (currentPage > totalPages) currentPage = 1;
+
+        function renderPage(page) {
+          currentPage = page;
+          $pane.data('currentPage', currentPage);
+          $pane.data('totalPages', totalPages);
+
+          $items.hide();
+          var start = (page - 1) * pageSize;
+          var end = start + pageSize;
+          $items.slice(start, end).fadeIn(150);
+
+          var html = '<ul class="pagination g2-pagination mb-0">';
+          
+          // Prev button
+          html += '<li class="page-item ' + (currentPage === 1 ? 'disabled' : '') + '">';
+          html += '<a class="page-link g2-page-prev" href="javascript:void(0)" aria-label="Previous"><i class="fal fa-chevron-left"></i></a>';
+          html += '</li>';
+
+          for (var p = 1; p <= totalPages; p++) {
+            html += '<li class="page-item ' + (p === currentPage ? 'active' : '') + '">';
+            html += '<a class="page-link g2-page-num" href="javascript:void(0)" data-page="' + p + '">' + p + '</a>';
+            html += '</li>';
+          }
+
+          // Next button
+          html += '<li class="page-item ' + (currentPage === totalPages ? 'disabled' : '') + '">';
+          html += '<a class="page-link g2-page-next" href="javascript:void(0)" aria-label="Next"><i class="fal fa-chevron-right"></i></a>';
+          html += '</li>';
+
+          html += '</ul>';
+          $nav.html(html);
+
+          updateHeaderArrows();
+        }
+
+        renderPage(currentPage);
+        $pane.data('renderPage', renderPage);
+      });
+    }
+
+    function updateHeaderArrows() {
+      var $activePane = $('#g2PopularItemTabsContent .tab-pane.active');
+      var cur = $activePane.data('currentPage') || 1;
+      var total = $activePane.data('totalPages') || 1;
+
+      if (total <= 1) {
+        $('.grid-prev, .grid-next').prop('disabled', true).css('opacity', '0.4');
+      } else {
+        $('.grid-prev').prop('disabled', cur === 1).css('opacity', cur === 1 ? '0.4' : '1');
+        $('.grid-next').prop('disabled', cur === total).css('opacity', cur === total ? '0.4' : '1');
+      }
+    }
+
+    $(document).on('click', '.g2-page-num', function(e) {
+      e.preventDefault();
+      var page = parseInt($(this).data('page'));
+      var $pane = $(this).closest('.tab-pane');
+      var renderPage = $pane.data('renderPage');
+      if (typeof renderPage === 'function') {
+        renderPage(page);
+      }
     });
-    $('.grid-next').on('click', function() {
-      var $grid = $('.tab-pane.active .g2-pop-grid');
-      if ($grid.length) { $grid.animate({ scrollLeft: $grid.scrollLeft() + 240 }, 300); }
+
+    $(document).on('click', '.g2-page-prev', function(e) {
+      e.preventDefault();
+      var $pane = $(this).closest('.tab-pane');
+      var cur = $pane.data('currentPage') || 1;
+      var renderPage = $pane.data('renderPage');
+      if (cur > 1 && typeof renderPage === 'function') {
+        renderPage(cur - 1);
+      }
+    });
+
+    $(document).on('click', '.g2-page-next', function(e) {
+      e.preventDefault();
+      var $pane = $(this).closest('.tab-pane');
+      var cur = $pane.data('currentPage') || 1;
+      var total = $pane.data('totalPages') || 1;
+      var renderPage = $pane.data('renderPage');
+      if (cur < total && typeof renderPage === 'function') {
+        renderPage(cur + 1);
+      }
+    });
+
+    $(document).on('click', '.grid-prev', function(e) {
+      e.preventDefault();
+      var $activePane = $('#g2PopularItemTabsContent .tab-pane.active');
+      var cur = $activePane.data('currentPage') || 1;
+      var renderPage = $activePane.data('renderPage');
+      if (cur > 1 && typeof renderPage === 'function') {
+        renderPage(cur - 1);
+      }
+    });
+
+    $(document).on('click', '.grid-next', function(e) {
+      e.preventDefault();
+      var $activePane = $('#g2PopularItemTabsContent .tab-pane.active');
+      var cur = $activePane.data('currentPage') || 1;
+      var total = $activePane.data('totalPages') || 1;
+      var renderPage = $activePane.data('renderPage');
+      if (cur < total && typeof renderPage === 'function') {
+        renderPage(cur + 1);
+      }
+    });
+
+    $('#g2PopularItemTabs [data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
+      var target = $(this).attr('data-bs-target') || $(this).attr('href');
+      if (target) {
+        var $pane = $(target);
+        var renderPage = $pane.data('renderPage');
+        if (typeof renderPage === 'function') {
+          renderPage(1);
+        } else {
+          initPopularPagination();
+        }
+      }
+      updateHeaderArrows();
+    });
+
+    initPopularPagination();
+
+    var resizeTimer;
+    $(window).on('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        initPopularPagination();
+      }, 250);
     });
 
     // Promo Stack Mobile Slider Only (< 992px)
