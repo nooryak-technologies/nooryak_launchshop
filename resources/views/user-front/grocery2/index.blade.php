@@ -301,14 +301,12 @@
           </div>
 
           <div class="tab-content" id="g2PopularItemTabsContent">
-            <!-- ALL TAB -->
+            <!-- ALL TAB — uses CSS grid (always visible, no Slick width=0 issue) -->
             <div class="tab-pane fade show active" id="pop-tab-all" role="tabpanel">
               @if(count($all_items) > 0)
-                <div class="g2-popular-slider">
+                <div class="g2-pop-grid row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
                   @foreach($all_items as $item)
-                    <div class="px-2">
-                      @include('user-front.grocery2.partials.product-card', ['item' => $item])
-                    </div>
+                    @include('user-front.grocery2.partials.product-card', ['item' => $item])
                   @endforeach
                 </div>
               @else
@@ -318,7 +316,7 @@
               @endif
             </div>
 
-            <!-- CATEGORIES TABS -->
+            <!-- CATEGORIES TABS — also CSS grid to avoid Slick hidden-tab issue -->
             @foreach($categories->take(5) as $cat)
               <div class="tab-pane fade" id="pop-tab-cat-{{ $cat->id }}" role="tabpanel">
                 @php
@@ -345,11 +343,9 @@
                   }
                 @endphp
                 @if(count($cat_items2) > 0)
-                  <div class="g2-popular-slider">
+                  <div class="g2-pop-grid row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
                     @foreach($cat_items2 as $item)
-                      <div class="px-2">
-                        @include('user-front.grocery2.partials.product-card', ['item' => $item])
-                      </div>
+                      @include('user-front.grocery2.partials.product-card', ['item' => $item])
                     @endforeach
                   </div>
                 @else
@@ -467,7 +463,10 @@
     }, 1200);
 
     // Main Hero Slider Carousel
+    // On mobile (<768px): use slide mode (no fade) so height auto works correctly with stacked layout
+    // On desktop: use fade mode for smooth transitions
     if ($('#g2-main-slider').length > 0) {
+      var isMobile = $(window).width() < 768;
       $('#g2-main-slider').slick({
         dots: true,
         arrows: true,
@@ -480,8 +479,7 @@
         slidesToScroll: 1,
         infinite: true,
         pauseOnHover: false,
-        fade: true,
-        adaptiveHeight: true,
+        fade: !isMobile,
         cssEase: 'ease-in-out',
         rtl: $('html').attr('dir') === 'rtl'
       });
@@ -516,67 +514,17 @@
       });
     }
 
-    // Popular Items Carousel (Auto & Manual Slide + Tab Switching Refresh)
-    function initPopularSlider($slider) {
-      if (!$slider || $slider.length === 0 || $slider.hasClass('slick-initialized')) return;
-      var slideCount = $slider.children('.px-2').length;
-      if (slideCount === 0) return;
+    // Popular Items — arrows scroll the grid horizontally on mobile, nothing needed on desktop
+    // (Grid uses CSS flex-wrap so no Slick needed)
 
-      $slider.slick({
-        dots: false,
-        arrows: false,
-        autoplay: slideCount > 4,
-        autoplaySpeed: 3000,
-        speed: 600,
-        slidesToShow: 4,
-        slidesToScroll: 1,
-        infinite: slideCount > 4,
-        responsive: [
-          { breakpoint: 1200, settings: { slidesToShow: 3, infinite: slideCount > 3, autoplay: slideCount > 3 } },
-          { breakpoint: 992, settings: { slidesToShow: 2, infinite: slideCount > 2, autoplay: slideCount > 2 } },
-          { breakpoint: 768, settings: { slidesToShow: 2, infinite: slideCount > 2, autoplay: slideCount > 2 } },
-          { breakpoint: 576, settings: { slidesToShow: 2, infinite: slideCount > 2, autoplay: slideCount > 2 } }
-        ],
-        rtl: $('html').attr('dir') === 'rtl'
-      });
-    }
-
-    // Initialize all existing popular sliders on load
-    $('.g2-popular-slider').each(function() {
-      initPopularSlider($(this));
-    });
-
-    // Fix tab switching for Bootstrap 5: refresh or initialize slider when tab becomes visible
-    $('#g2PopularItemTabs [data-bs-toggle="tab"]').on('shown.bs.tab click', function (e) {
-      var target = $(this).attr('data-bs-target') || $(this).attr('href');
-      var refreshTabSlider = function() {
-        if (target) {
-          var $targetSlider = $(target).find('.g2-popular-slider');
-          if ($targetSlider.length > 0) {
-            if (!$targetSlider.hasClass('slick-initialized')) {
-              initPopularSlider($targetSlider);
-            } else {
-              $targetSlider.slick('setPosition');
-            }
-          }
-        }
-      };
-      refreshTabSlider();
-      setTimeout(refreshTabSlider, 50);
-      setTimeout(refreshTabSlider, 200);
-    });
-
+    // Grid-prev / grid-next: scroll active tab's grid left/right on mobile
     $('.grid-prev').on('click', function() {
-      var $activeSlider = $('.tab-pane.active .g2-popular-slider');
-      if ($activeSlider.hasClass('slick-initialized')) {
-        $activeSlider.slick('slickPrev');
-      }
+      var $grid = $('.tab-pane.active .g2-pop-grid');
+      if ($grid.length) { $grid.animate({ scrollLeft: $grid.scrollLeft() - 240 }, 300); }
     });
     $('.grid-next').on('click', function() {
-      var $activeSlider = $('.tab-pane.active .g2-popular-slider');
-      if ($activeSlider.hasClass('slick-initialized')) {
-        $activeSlider.slick('slickNext');
-      }
+      var $grid = $('.tab-pane.active .g2-pop-grid');
+      if ($grid.length) { $grid.animate({ scrollLeft: $grid.scrollLeft() + 240 }, 300); }
     });
 
     // Promo Stack Mobile Slider Only (< 992px)

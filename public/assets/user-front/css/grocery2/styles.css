@@ -784,6 +784,14 @@ body.show-mobile-menu .grocery2-header {
     }
 }
 
+/* Popular Items Grid (replaces Slick for always-visible tab) */
+.g2-pop-grid {
+    width: 100%;
+}
+.g2-pop-grid > .col {
+    min-width: 0;
+}
+
 /* Right Side Promo Stack */
 .g2-promo-stack {
     display: flex;
@@ -1962,13 +1970,14 @@ body.show-mobile-menu .grocery2-header {
 
 .g2-vert-img {
     width: 100%;
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     margin-top: 0;
     border-radius: 12px;
     overflow: hidden;
     display: flex;
     justify-content: center;
-    align-items: stretch;
+    align-items: center;
+    max-height: 380px;
 }
 
 .g2-vert-img img {
@@ -2305,8 +2314,14 @@ body.show-mobile-menu .grocery2-header {
     .g2-hero-slider .slick-list,
     .g2-hero-slider .slick-track {
         height: auto !important;
-        min-height: 0 !important;
+        min-height: 10px !important;
         width: 100% !important;
+        overflow: visible !important;
+    }
+
+    .g2-hero-slider .slick-slide {
+        height: auto !important;
+        min-height: 10px !important;
     }
 
     .g2-hero-slider .g2-slider-item {

@@ -82,8 +82,8 @@
 
           <!-- Quick view -->
           <a href="javascript:void(0)" class="g2-action-btn quick-view-link"
-             data-slug="{{ $item->itemContents[0]->slug }}"
-             data-url="{{ route('front.user.productDetails.quickview', ['slug' => $item->itemContents[0]->slug, getParam()]) }}"
+             data-slug="{{ $prodSlug }}"
+             data-url="{{ route('front.user.productDetails.quickview', ['slug' => $prodSlug, getParam()]) }}"
              title="Quick View">
             <i class="fal fa-eye"></i>
           </a>
@@ -97,7 +97,7 @@
 
       <!-- Card Content -->
       <div class="g2-product-info">
-        <span class="g2-prod-category">{{ @$item->itemContents[0]->category->name ?? @$item->category->name ?? '' }}</span>
+        <span class="g2-prod-category">{{ @$item->itemContents[0]->category->name ?? @$item->itemContents->first()?->category?->name ?? @$item->category->name ?? '' }}</span>
         <h3 class="g2-prod-title">
           <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $prodSlug]) }}">
             {{ $prodTitle }}
@@ -153,7 +153,7 @@
             </div>
             
             <button class="btn g2-add-to-cart-btn cart-link"
-                    data-title="{{ $item->itemContents[0]->title }}"
+                    data-title="{{ $prodTitle }}"
                     data-current_price="{{ currency_converter($product_current_price) }}"
                     data-item_id="{{ $item->id }}" 
                     data-language_id="{{ $uLang }}"
