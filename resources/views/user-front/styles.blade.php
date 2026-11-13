@@ -660,28 +660,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/grocery2/styles.css?v=' . time()) }}">
   <style>
-    /* Grocery2 only: restore banner inner padding (slick-slide must not zero it) */
-    .theme-grocery2 .g2-hero-slider.slick-slider .slick-list {
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-      padding-top: 0 !important;
-      padding-bottom: 0 !important;
-    }
-    .theme-grocery2 .g2-hero-slider .g2-slider-item,
-    .theme-grocery2 .g2-hero-slider .slick-slide.g2-slider-item {
-      padding: 48px 48px 48px 56px !important;
-    }
-    .theme-grocery2 .g2-slider-content {
-      text-align: left !important;
-      padding-left: 4px;
-    }
-    .theme-grocery2 .g2-side-promo {
-      padding: 28px 24px 28px 40px !important;
-    }
-    .theme-grocery2 .g2-side-promo-content {
-      text-align: left;
-      padding-left: 4px;
-    }
     .theme-grocery2 .container {
       max-width: 1450px !important;
       padding-left: 25px !important;
@@ -690,51 +668,6 @@
     @media (min-width: 1200px) {
       .g2-hero-slider {
         max-width: 940px !important;
-      }
-    }
-    @media (max-width: 767.98px) {
-      .theme-grocery2 .g2-hero-slider .g2-slider-item,
-      .theme-grocery2 .g2-hero-slider .slick-slide.g2-slider-item {
-        padding: 10px !important;
-      }
-      .theme-grocery2 .g2-hero-slider .g2-slider-content {
-        background: rgba(255, 255, 255, 0.20) !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-        padding: 16px 12px !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        margin: 0 !important;
-        border-radius: 14px !important;
-        border: 1px solid rgba(255, 255, 255, 0.35) !important;
-        box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.06) !important;
-      }
-      .theme-grocery2 .g2-hero-slider .g2-title {
-        text-shadow: 0 1px 2px rgba(255, 255, 255, 0.7) !important;
-      }
-      .theme-grocery2 .g2-hero-slider .g2-slider-btns {
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
-        align-items: center !important;
-        gap: 8px !important;
-        width: 100% !important;
-      }
-      .theme-grocery2 .g2-hero-slider .g2-slider-btns .btn,
-      .theme-grocery2 .g2-hero-slider .g2-slider-btns .g2-btn-primary,
-      .theme-grocery2 .g2-hero-slider .g2-slider-btns .g2-btn-secondary {
-        flex: 1 1 0 !important;
-        white-space: nowrap !important;
-        text-align: center !important;
-        padding: 9px 12px !important;
-        font-size: 13px !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        min-width: 0 !important;
-      }
-      .theme-grocery2 .g2-side-promo {
-        padding: 24px 20px 24px 24px !important;
       }
     }
   </style>

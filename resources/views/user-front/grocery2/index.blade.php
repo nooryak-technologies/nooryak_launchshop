@@ -493,16 +493,16 @@
         ]
       });
 
-      $(window).on('resize orientationchange load', function() {
+      function fixSliderPosition() {
         if ($('#g2-main-slider').hasClass('slick-initialized')) {
           $('#g2-main-slider').slick('setPosition');
         }
-      });
-      setTimeout(function() {
-        if ($('#g2-main-slider').hasClass('slick-initialized')) {
-          $('#g2-main-slider').slick('setPosition');
-        }
-      }, 400);
+      }
+
+      $(window).on('resize orientationchange load', fixSliderPosition);
+      setTimeout(fixSliderPosition, 100);
+      setTimeout(fixSliderPosition, 400);
+      setTimeout(fixSliderPosition, 1000);
     }
 
     // Categories Carousel (Auto Smooth Scroll)
@@ -534,9 +534,9 @@
       });
     }
 
-    // Popular Items Single-Row Pagination (4 items on desktop, 2 on mobile -> exactly 1 single row)
+    // Popular Items Pagination (4 items single-row on desktop, 6 items / 3 rows on mobile)
     function initPopularPagination() {
-      var pageSize = $(window).width() < 768 ? 2 : 4;
+      var pageSize = $(window).width() < 768 ? 6 : 4;
 
       $('#g2PopularItemTabsContent .tab-pane').each(function() {
         var $pane = $(this);
@@ -557,6 +557,7 @@
           $nav.empty();
           $pane.data('currentPage', 1);
           $pane.data('totalPages', 1);
+          $pane.data('renderPage', function() { $items.show(); });
           updateHeaderArrows();
           return;
         }
@@ -582,10 +583,32 @@
           html += '<a class="page-link g2-page-prev" href="javascript:void(0)" aria-label="Previous"><i class="fal fa-chevron-left"></i></a>';
           html += '</li>';
 
-          for (var p = 1; p <= totalPages; p++) {
-            html += '<li class="page-item ' + (p === currentPage ? 'active' : '') + '">';
-            html += '<a class="page-link g2-page-num" href="javascript:void(0)" data-page="' + p + '">' + p + '</a>';
-            html += '</li>';
+          // Format: 1 2 3 ... 5 6 with ellipses so it never overflows mobile screens
+          function getPageNumbers(current, total) {
+            if (total <= 7) {
+              var pages = [];
+              for (var i = 1; i <= total; i++) pages.push(i);
+              return pages;
+            }
+            if (current <= 3) {
+              return [1, 2, 3, '...', total - 1, total];
+            } else if (current >= total - 2) {
+              return [1, 2, '...', total - 2, total - 1, total];
+            } else {
+              return [1, '...', current - 1, current, current + 1, '...', total];
+            }
+          }
+
+          var pageList = getPageNumbers(currentPage, totalPages);
+          for (var i = 0; i < pageList.length; i++) {
+            var p = pageList[i];
+            if (p === '...') {
+              html += '<li class="page-item disabled"><span class="page-link g2-page-dots">...</span></li>';
+            } else {
+              html += '<li class="page-item ' + (p === currentPage ? 'active' : '') + '">';
+              html += '<a class="page-link g2-page-num" href="javascript:void(0)" data-page="' + p + '">' + p + '</a>';
+              html += '</li>';
+            }
           }
 
           // Next button

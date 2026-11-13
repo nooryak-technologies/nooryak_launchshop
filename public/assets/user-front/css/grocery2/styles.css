@@ -854,6 +854,17 @@ body.show-mobile-menu .grocery2-header {
     color: #94a3b8;
 }
 
+.g2-pagination .page-item .page-link.g2-page-dots {
+    min-width: 28px !important;
+    background: transparent !important;
+    border: none !important;
+    color: #64748b !important;
+    cursor: default !important;
+    font-weight: 700 !important;
+    padding: 0 4px !important;
+    opacity: 1 !important;
+}
+
 /* Right Side Promo Stack */
 .g2-promo-stack {
     display: flex;
@@ -2382,6 +2393,7 @@ body.show-mobile-menu .grocery2-header {
         overflow: hidden !important;
         position: relative !important;
         margin: 0 !important;
+        height: auto !important;
     }
 
     .g2-hero-slider .slick-list {
@@ -2395,20 +2407,17 @@ body.show-mobile-menu .grocery2-header {
     }
 
     .g2-hero-slider .slick-track {
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
-        align-items: stretch !important;
+        display: block !important;
         height: auto !important;
+        position: relative !important;
     }
 
     .g2-hero-slider .slick-slide {
         display: block !important;
-        flex: 0 0 auto !important;
+        float: left !important;
         height: auto !important;
         outline: none !important;
         padding: 0 !important;
-        float: none !important;
     }
 
     .g2-hero-slider .g2-slider-item {
@@ -2427,6 +2436,7 @@ body.show-mobile-menu .grocery2-header {
         box-sizing: border-box !important;
     }
 
+    .theme-grocery2 .g2-hero-slider .g2-slider-content,
     .g2-hero-slider .g2-slider-content {
         background: transparent !important;
         backdrop-filter: none !important;
@@ -2442,8 +2452,10 @@ body.show-mobile-menu .grocery2-header {
         box-sizing: border-box !important;
         text-align: left !important;
         flex: 0 0 auto !important;
+        display: block !important;
     }
 
+    .theme-grocery2 .g2-hero-slider .g2-badge,
     .g2-hero-slider .g2-badge {
         color: #0f5132 !important;
         background: transparent !important;
@@ -2457,6 +2469,7 @@ body.show-mobile-menu .grocery2-header {
         line-height: 1.3 !important;
     }
 
+    .theme-grocery2 .g2-hero-slider .g2-title,
     .g2-hero-slider .g2-title {
         font-size: 18px !important;
         font-weight: 700 !important;
@@ -2464,8 +2477,10 @@ body.show-mobile-menu .grocery2-header {
         margin-bottom: 6px !important;
         color: #1e293b !important;
         text-shadow: none !important;
+        display: block !important;
     }
 
+    .theme-grocery2 .g2-hero-slider .g2-text,
     .g2-hero-slider .g2-text {
         font-size: 12px !important;
         line-height: 1.4 !important;
@@ -2478,6 +2493,7 @@ body.show-mobile-menu .grocery2-header {
         overflow: hidden !important;
     }
 
+    .theme-grocery2 .g2-hero-slider .g2-slider-btns,
     .g2-hero-slider .g2-slider-btns {
         display: flex !important;
         flex-direction: row !important;
@@ -2488,6 +2504,8 @@ body.show-mobile-menu .grocery2-header {
         margin-bottom: 0 !important;
     }
 
+    .theme-grocery2 .g2-hero-slider .g2-slider-btns .btn,
+    .theme-grocery2 .g2-hero-slider .g2-slider-btns .g2-btn-primary,
     .g2-hero-slider .g2-slider-btns .btn,
     .g2-hero-slider .g2-slider-btns .g2-btn-primary {
         background-color: #0f5132 !important;
@@ -2506,12 +2524,15 @@ body.show-mobile-menu .grocery2-header {
         box-shadow: 0 4px 12px rgba(15, 81, 50, 0.2) !important;
     }
 
+    .theme-grocery2 .g2-hero-slider .g2-slider-btns .btn:hover,
+    .theme-grocery2 .g2-hero-slider .g2-slider-btns .g2-btn-primary:hover,
     .g2-hero-slider .g2-slider-btns .btn:hover,
     .g2-hero-slider .g2-slider-btns .g2-btn-primary:hover {
         background-color: #15803d !important;
         color: #ffffff !important;
     }
 
+    .theme-grocery2 .g2-hero-slider .g2-slider-btns .g2-btn-secondary,
     .g2-hero-slider .g2-slider-btns .g2-btn-secondary {
         display: none !important;
     }
@@ -2529,7 +2550,7 @@ body.show-mobile-menu .grocery2-header {
         width: 100% !important;
         height: 195px !important;
         object-fit: cover !important;
-        object-position: center !important;
+        object-position: 85% center !important;
         border-radius: 14px !important;
         display: block !important;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
@@ -2636,6 +2657,20 @@ body.show-mobile-menu .grocery2-header {
     .g2-section-header {
         margin-bottom: 10px !important;
         padding-bottom: 6px !important;
+    }
+
+    .g2-pagination {
+        gap: 5px !important;
+        justify-content: center !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .g2-pagination .page-item .page-link {
+        min-width: 32px !important;
+        height: 32px !important;
+        padding: 0 6px !important;
+        font-size: 13px !important;
+        border-radius: 6px !important;
     }
 
     .g2-promo-stack {
