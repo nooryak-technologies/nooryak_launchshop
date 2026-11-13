@@ -26,28 +26,35 @@
               @foreach ($sliders as $slider)
                 <div class="g2-slider-item" style="background-image: url('{{ asset('assets/front/img/hero_slider/' . $slider->img) }}');">
                   <div class="g2-slider-content">
-                    <span class="g2-badge">TRENDING NOW</span>
+                    <span class="g2-badge">{{ !empty($slider->subtitle) ? html_entity_decode($slider->subtitle, ENT_QUOTES, 'UTF-8') : __('Organic fruits provider') }}</span>
                     <h1 class="g2-title">{{ html_entity_decode($slider->title ?? $slider->subtitle ?? '', ENT_QUOTES, 'UTF-8') }}</h1>
                     <p class="g2-text">{{ html_entity_decode($slider->text ?? '', ENT_QUOTES, 'UTF-8') }}</p>
                     <div class="g2-slider-btns">
                       @if ($slider->btn_url && $slider->btn_name)
                         <a href="{{ $slider->btn_url }}" class="btn g2-btn-primary">{{ $slider->btn_name }}</a>
                       @else
-                        <a href="{{ route('front.user.shop', getParam()) }}" class="btn g2-btn-primary">Buy Now</a>
+                        <a href="{{ route('front.user.shop', getParam()) }}" class="btn g2-btn-primary">{{ __('Order Now') }}</a>
                       @endif
-                      <a href="{{ route('front.user.shop', getParam()) }}" class="btn g2-btn-secondary">Learn More</a>
+                      <a href="{{ route('front.user.shop', getParam()) }}" class="btn g2-btn-secondary">{{ __('Learn More') }}</a>
                     </div>
+                  </div>
+                  <div class="g2-slider-mobile-img d-block d-lg-none">
+                    <img src="{{ asset('assets/front/img/hero_slider/' . $slider->img) }}" alt="{{ $slider->title ?? 'Hero Banner' }}">
                   </div>
                 </div>
               @endforeach
             @else
               <div class="g2-slider-item" style="background-image: url('{{ asset('assets/front/img/hero_slider/ecom_grocery_banner_clean.png') }}');">
                 <div class="g2-slider-content">
+                  <span class="g2-badge">{{ __('Organic fruits provider') }}</span>
                   <h1 class="g2-title">{{ $user->shop_name ?? 'Welcome to Our Store' }}</h1>
                   <p class="g2-text">{{ __('Shop the latest deals and products') }}</p>
                   <div class="g2-slider-btns">
-                    <a href="{{ route('front.user.shop', getParam()) }}" class="btn g2-btn-primary">{{ __('Shop Now') }}</a>
+                    <a href="{{ route('front.user.shop', getParam()) }}" class="btn g2-btn-primary">{{ __('Order Now') }}</a>
                   </div>
+                </div>
+                <div class="g2-slider-mobile-img d-block d-lg-none">
+                  <img src="{{ asset('assets/front/img/hero_slider/ecom_grocery_banner_clean.png') }}" alt="Hero Banner">
                 </div>
               </div>
             @endif
@@ -297,45 +304,45 @@
           <div class="tab-content" id="g2PopularItemTabsContent">
             <!-- ALL TAB -->
             <div class="tab-pane fade show active" id="pop-tab-all" role="tabpanel">
-              <div class="g2-popular-slider">
-                @if(count($all_items) > 0)
+              @if(count($all_items) > 0)
+                <div class="g2-popular-slider">
                   @foreach($all_items as $item)
                     <div class="px-2">
                       @include('user-front.grocery2.partials.product-card', ['item' => $item])
                     </div>
                   @endforeach
-                @else
-                  <div class="col-12 text-center py-4">
-                    <p class="text-muted">{{ __('No products found') }}</p>
-                  </div>
-                @endif
-              </div>
+                </div>
+              @else
+                <div class="col-12 text-center py-4">
+                  <p class="text-muted">{{ __('No products found') }}</p>
+                </div>
+              @endif
             </div>
 
             <!-- CATEGORIES TABS -->
             @foreach($categories->take(5) as $cat)
               <div class="tab-pane fade" id="pop-tab-cat-{{ $cat->id }}" role="tabpanel">
-                <div class="g2-popular-slider">
-                  @php
-                    $cat_items2 = App\Models\User\UserItem::join('user_item_contents', 'user_items.id', '=', 'user_item_contents.item_id')
-                      ->where('user_items.user_id', $user->id)
-                      ->where('user_item_contents.language_id', $uLang)
-                      ->where('user_item_contents.category_id', $cat->id)
-                      ->select('user_items.*')
-                      ->get();
-                  @endphp
-                  @if(count($cat_items2) > 0)
+                @php
+                  $cat_items2 = App\Models\User\UserItem::join('user_item_contents', 'user_items.id', '=', 'user_item_contents.item_id')
+                    ->where('user_items.user_id', $user->id)
+                    ->where('user_item_contents.language_id', $uLang)
+                    ->where('user_item_contents.category_id', $cat->id)
+                    ->select('user_items.*')
+                    ->get();
+                @endphp
+                @if(count($cat_items2) > 0)
+                  <div class="g2-popular-slider">
                     @foreach($cat_items2 as $item)
                       <div class="px-2">
                         @include('user-front.grocery2.partials.product-card', ['item' => $item])
                       </div>
                     @endforeach
-                  @else
-                    <div class="col-12 text-center py-4">
-                      <p class="text-muted">{{ __('No products found in this category') }}</p>
-                    </div>
-                  @endif
-                </div>
+                  </div>
+                @else
+                  <div class="col-12 text-center py-4">
+                    <p class="text-muted">{{ __('No products found in this category') }}</p>
+                  </div>
+                @endif
               </div>
             @endforeach
           </div>
@@ -460,6 +467,7 @@
         infinite: true,
         pauseOnHover: false,
         fade: true,
+        adaptiveHeight: true,
         cssEase: 'ease-in-out',
         rtl: $('html').attr('dir') === 'rtl'
       });
@@ -494,33 +502,68 @@
       });
     }
 
-    // Popular Items Carousel (Auto & Manual Slide)
-    if ($('.g2-popular-slider').length > 0) {
-      $('.g2-popular-slider').slick({
+    // Popular Items Carousel (Auto & Manual Slide + Tab Switching Refresh)
+    function initPopularSlider($slider) {
+      if (!$slider || $slider.length === 0 || $slider.hasClass('slick-initialized')) return;
+      var slideCount = $slider.children('.px-2').length;
+      if (slideCount === 0) return;
+
+      $slider.slick({
         dots: false,
         arrows: false,
-        autoplay: true,
+        autoplay: slideCount > 4,
         autoplaySpeed: 3000,
         speed: 600,
-        slidesToShow: 4,
+        slidesToShow: Math.min(4, Math.max(1, slideCount)),
         slidesToScroll: 1,
-        infinite: true,
+        infinite: slideCount > 4,
         responsive: [
-          { breakpoint: 1200, settings: { slidesToShow: 3 } },
-          { breakpoint: 992, settings: { slidesToShow: 2 } },
-          { breakpoint: 768, settings: { slidesToShow: 2 } },
-          { breakpoint: 576, settings: { slidesToShow: 2 } }
+          { breakpoint: 1200, settings: { slidesToShow: Math.min(3, Math.max(1, slideCount)), infinite: slideCount > 3, autoplay: slideCount > 3 } },
+          { breakpoint: 992, settings: { slidesToShow: Math.min(2, Math.max(1, slideCount)), infinite: slideCount > 2, autoplay: slideCount > 2 } },
+          { breakpoint: 768, settings: { slidesToShow: Math.min(2, Math.max(1, slideCount)), infinite: slideCount > 2, autoplay: slideCount > 2 } },
+          { breakpoint: 576, settings: { slidesToShow: Math.min(2, Math.max(1, slideCount)), infinite: slideCount > 2, autoplay: slideCount > 2 } }
         ],
         rtl: $('html').attr('dir') === 'rtl'
       });
-
-      $('.grid-prev').on('click', function() {
-        $('.tab-pane.active .g2-popular-slider').slick('slickPrev');
-      });
-      $('.grid-next').on('click', function() {
-        $('.tab-pane.active .g2-popular-slider').slick('slickNext');
-      });
     }
+
+    // Initialize all existing popular sliders on load
+    $('.g2-popular-slider').each(function() {
+      initPopularSlider($(this));
+    });
+
+    // Fix tab switching for Bootstrap 5: refresh or initialize slider when tab becomes visible
+    $('#g2PopularItemTabs [data-bs-toggle="tab"]').on('shown.bs.tab click', function (e) {
+      var target = $(this).attr('data-bs-target') || $(this).attr('href');
+      var refreshTabSlider = function() {
+        if (target) {
+          var $targetSlider = $(target).find('.g2-popular-slider');
+          if ($targetSlider.length > 0) {
+            if (!$targetSlider.hasClass('slick-initialized')) {
+              initPopularSlider($targetSlider);
+            } else {
+              $targetSlider.slick('setPosition');
+            }
+          }
+        }
+      };
+      refreshTabSlider();
+      setTimeout(refreshTabSlider, 50);
+      setTimeout(refreshTabSlider, 200);
+    });
+
+    $('.grid-prev').on('click', function() {
+      var $activeSlider = $('.tab-pane.active .g2-popular-slider');
+      if ($activeSlider.hasClass('slick-initialized')) {
+        $activeSlider.slick('slickPrev');
+      }
+    });
+    $('.grid-next').on('click', function() {
+      var $activeSlider = $('.tab-pane.active .g2-popular-slider');
+      if ($activeSlider.hasClass('slick-initialized')) {
+        $activeSlider.slick('slickNext');
+      }
+    });
 
     // Promo Stack Mobile Slider Only (< 992px)
     function initPromoMobileSlider() {
