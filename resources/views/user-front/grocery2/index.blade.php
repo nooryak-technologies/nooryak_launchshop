@@ -33,9 +33,8 @@
                       @if ($slider->btn_url && $slider->btn_name)
                         <a href="{{ $slider->btn_url }}" class="btn g2-btn-primary">{{ $slider->btn_name }}</a>
                       @else
-                        <a href="{{ route('front.user.shop', getParam()) }}" class="btn g2-btn-primary">{{ __('Order Now') }}</a>
+                        <a href="{{ route('front.user.shop', getParam()) }}" class="btn g2-btn-primary">{{ __('Shop Now') }}</a>
                       @endif
-                      <a href="{{ route('front.user.shop', getParam()) }}" class="btn g2-btn-secondary">{{ __('Learn More') }}</a>
                     </div>
                   </div>
                   <div class="g2-slider-mobile-img d-block d-lg-none">
@@ -323,12 +322,27 @@
             @foreach($categories->take(5) as $cat)
               <div class="tab-pane fade" id="pop-tab-cat-{{ $cat->id }}" role="tabpanel">
                 @php
-                  $cat_items2 = App\Models\User\UserItem::join('user_item_contents', 'user_items.id', '=', 'user_item_contents.item_id')
-                    ->where('user_items.user_id', $user->id)
-                    ->where('user_item_contents.language_id', $uLang)
-                    ->where('user_item_contents.category_id', $cat->id)
-                    ->select('user_items.*')
+                  $cat_items2 = App\Models\User\UserItem::where('user_items.user_id', $user->id)
+                    ->where('user_items.status', 1)
+                    ->whereHas('itemContents', function ($q) use ($cat, $uLang) {
+                        $q->where('category_id', $cat->id)->where('language_id', $uLang);
+                    })
+                    ->with(['itemContents' => function ($q) use ($uLang) {
+                        $q->where('language_id', $uLang);
+                    }, 'sliders'])
+                    ->orderBy('id', 'desc')
                     ->get();
+
+                  if ($cat_items2->isEmpty()) {
+                    $cat_items2 = App\Models\User\UserItem::where('user_items.user_id', $user->id)
+                      ->where('user_items.status', 1)
+                      ->whereHas('itemContents', function ($q) use ($cat) {
+                          $q->where('category_id', $cat->id);
+                      })
+                      ->with(['itemContents', 'sliders'])
+                      ->orderBy('id', 'desc')
+                      ->get();
+                  }
                 @endphp
                 @if(count($cat_items2) > 0)
                   <div class="g2-popular-slider">
@@ -514,14 +528,14 @@
         autoplay: slideCount > 4,
         autoplaySpeed: 3000,
         speed: 600,
-        slidesToShow: Math.min(4, Math.max(1, slideCount)),
+        slidesToShow: 4,
         slidesToScroll: 1,
         infinite: slideCount > 4,
         responsive: [
-          { breakpoint: 1200, settings: { slidesToShow: Math.min(3, Math.max(1, slideCount)), infinite: slideCount > 3, autoplay: slideCount > 3 } },
-          { breakpoint: 992, settings: { slidesToShow: Math.min(2, Math.max(1, slideCount)), infinite: slideCount > 2, autoplay: slideCount > 2 } },
-          { breakpoint: 768, settings: { slidesToShow: Math.min(2, Math.max(1, slideCount)), infinite: slideCount > 2, autoplay: slideCount > 2 } },
-          { breakpoint: 576, settings: { slidesToShow: Math.min(2, Math.max(1, slideCount)), infinite: slideCount > 2, autoplay: slideCount > 2 } }
+          { breakpoint: 1200, settings: { slidesToShow: 3, infinite: slideCount > 3, autoplay: slideCount > 3 } },
+          { breakpoint: 992, settings: { slidesToShow: 2, infinite: slideCount > 2, autoplay: slideCount > 2 } },
+          { breakpoint: 768, settings: { slidesToShow: 2, infinite: slideCount > 2, autoplay: slideCount > 2 } },
+          { breakpoint: 576, settings: { slidesToShow: 2, infinite: slideCount > 2, autoplay: slideCount > 2 } }
         ],
         rtl: $('html').attr('dir') === 'rtl'
       });

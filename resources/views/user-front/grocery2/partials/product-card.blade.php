@@ -8,9 +8,12 @@
   $flash_info = flashAmountStatus($item->id, $item->current_price);
   $product_current_price = $flash_info['amount'];
   $flash_status = $flash_info['status'];
+
+  $prodSlug = @$item->itemContents[0]->slug ?? @$item->itemContents->first()->slug ?? @$item->slug;
+  $prodTitle = @$item->itemContents[0]->title ?? @$item->itemContents->first()->title ?? @$item->title;
 @endphp
 
-@if (!is_null(@$item->itemContents[0]->slug))
+@if (!is_null($prodSlug))
   <div class="col">
     <div class="g2-product-card">
       <!-- Badges -->
@@ -47,10 +50,10 @@
               $imgSrc2 = null;
           }
         @endphp
-        <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $item->itemContents[0]->slug]) }}" class="g2-img-link">
-          <img src="{{ $imgSrc1 }}" alt="{{ $item->itemContents[0]->title }}" class="primary-img">
+        <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $prodSlug]) }}" class="g2-img-link">
+          <img src="{{ $imgSrc1 }}" alt="{{ $prodTitle }}" class="primary-img">
           @if (!empty($imgSrc2))
-            <img src="{{ $imgSrc2 }}" alt="{{ $item->itemContents[0]->title }}" class="secondary-img" onerror="this.onerror=null;this.src='{{ asset('assets/front/img/user/items/thumbnail/' . $secondImg) }}';">
+            <img src="{{ $imgSrc2 }}" alt="{{ $prodTitle }}" class="secondary-img" onerror="this.onerror=null;this.src='{{ asset('assets/front/img/user/items/thumbnail/' . $secondImg) }}';">
           @endif
         </a>
         
@@ -94,10 +97,10 @@
 
       <!-- Card Content -->
       <div class="g2-product-info">
-        <span class="g2-prod-category">{{ @$item->itemContents[0]->category->name }}</span>
+        <span class="g2-prod-category">{{ @$item->itemContents[0]->category->name ?? @$item->category->name ?? '' }}</span>
         <h3 class="g2-prod-title">
-          <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $item->itemContents[0]->slug]) }}">
-            {{ $item->itemContents[0]->title }}
+          <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $prodSlug]) }}">
+            {{ $prodTitle }}
           </a>
         </h3>
 
