@@ -464,27 +464,33 @@
       $('.preloader').addClass('hidden').fadeOut(300);
     }, 1200);
 
-    // Main Hero Slider Carousel
-    // On mobile (<768px): use slide mode (no fade) + adaptiveHeight so height auto works correctly with stacked layout
-    // On desktop: use fade mode for smooth transitions
+    // Main Hero Slider Carousel (Fade transition on all screens for smooth layout)
     if ($('#g2-main-slider').length > 0) {
-      var isMobile = $(window).width() < 768;
       $('#g2-main-slider').slick({
         dots: true,
-        arrows: !isMobile,
+        arrows: true,
         prevArrow: '<button type="button" class="slick-prev g2-slider-arrow"><i class="fal fa-chevron-left"></i></button>',
         nextArrow: '<button type="button" class="slick-next g2-slider-arrow"><i class="fal fa-chevron-right"></i></button>',
         autoplay: true,
-        autoplaySpeed: 3500,
+        autoplaySpeed: 4000,
         speed: 600,
         slidesToShow: 1,
         slidesToScroll: 1,
         infinite: true,
         pauseOnHover: false,
-        fade: !isMobile,
-        adaptiveHeight: isMobile,
+        fade: true,
         cssEase: 'ease-in-out',
-        rtl: $('html').attr('dir') === 'rtl'
+        rtl: $('html').attr('dir') === 'rtl',
+        responsive: [
+          {
+            breakpoint: 768,
+            settings: {
+              arrows: false,
+              dots: true,
+              fade: true
+            }
+          }
+        ]
       });
     }
 
