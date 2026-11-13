@@ -2376,21 +2376,39 @@ body.show-mobile-menu .grocery2-header {
         padding-right: 0 !important;
     }
 
-    .g2-hero-slider,
-    .g2-hero-slider .slick-list,
-    .g2-hero-slider .slick-track {
+    .g2-hero-slider {
         width: 100% !important;
         max-width: 100% !important;
-        height: 380px !important;
-        min-height: 380px !important;
-        max-height: 380px !important;
         overflow: hidden !important;
         position: relative !important;
+        margin: 0 !important;
+    }
+
+    .g2-hero-slider .slick-list {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        position: relative !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: auto !important;
+    }
+
+    .g2-hero-slider .slick-track {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: stretch !important;
+        height: auto !important;
     }
 
     .g2-hero-slider .slick-slide {
-        height: 380px !important;
+        display: block !important;
+        flex: 0 0 auto !important;
+        height: auto !important;
         outline: none !important;
+        padding: 0 !important;
+        float: none !important;
     }
 
     .g2-hero-slider .g2-slider-item {
@@ -2398,9 +2416,8 @@ body.show-mobile-menu .grocery2-header {
         background-color: #ffffff !important;
         border-radius: 0 !important;
         padding: 0 !important;
-        height: 380px !important;
-        min-height: 380px !important;
-        max-height: 380px !important;
+        height: auto !important;
+        min-height: 0 !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: flex-start !important;
@@ -2408,7 +2425,6 @@ body.show-mobile-menu .grocery2-header {
         margin: 0 !important;
         width: 100% !important;
         box-sizing: border-box !important;
-        overflow: hidden !important;
     }
 
     .g2-hero-slider .g2-slider-content {

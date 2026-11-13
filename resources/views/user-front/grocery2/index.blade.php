@@ -464,7 +464,7 @@
       $('.preloader').addClass('hidden').fadeOut(300);
     }, 1200);
 
-    // Main Hero Slider Carousel (Fade transition on all screens for smooth layout)
+    // Main Hero Slider Carousel (Normal horizontal slide on all devices)
     if ($('#g2-main-slider').length > 0) {
       $('#g2-main-slider').slick({
         dots: true,
@@ -472,14 +472,14 @@
         prevArrow: '<button type="button" class="slick-prev g2-slider-arrow"><i class="fal fa-chevron-left"></i></button>',
         nextArrow: '<button type="button" class="slick-next g2-slider-arrow"><i class="fal fa-chevron-right"></i></button>',
         autoplay: true,
-        autoplaySpeed: 4000,
+        autoplaySpeed: 3500,
         speed: 600,
         slidesToShow: 1,
         slidesToScroll: 1,
         infinite: true,
         pauseOnHover: false,
-        fade: true,
-        cssEase: 'ease-in-out',
+        fade: false,
+        cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)',
         rtl: $('html').attr('dir') === 'rtl',
         responsive: [
           {
@@ -487,11 +487,22 @@
             settings: {
               arrows: false,
               dots: true,
-              fade: true
+              fade: false
             }
           }
         ]
       });
+
+      $(window).on('resize orientationchange load', function() {
+        if ($('#g2-main-slider').hasClass('slick-initialized')) {
+          $('#g2-main-slider').slick('setPosition');
+        }
+      });
+      setTimeout(function() {
+        if ($('#g2-main-slider').hasClass('slick-initialized')) {
+          $('#g2-main-slider').slick('setPosition');
+        }
+      }, 400);
     }
 
     // Categories Carousel (Auto Smooth Scroll)
