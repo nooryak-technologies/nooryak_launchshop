@@ -701,7 +701,7 @@
       .theme-grocery2 .g2-hero-section > .container,
       .theme-grocery2 .g2-hero-section .container {
         padding-left: 0 !important;
-        padding-right: 0 !important;
+        padding-right: 16px !important;
         max-width: 100% !important;
         width: 100% !important;
       }
