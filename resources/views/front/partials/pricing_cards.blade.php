@@ -17,7 +17,7 @@
     <div class="pricing-toggle-wrap">
       @if(in_array('yearly', array_map('strtolower', (array)$terms)) && in_array('monthly', array_map('strtolower', (array)$terms)) && empty($hidePill))
         <div class="pricing-save-pill">
-          🏷️ Save up to 60% with yearly billing!
+          🏷️ Save up to 20% with yearly billing!
         </div>
       @endif
       <ul class="pricing-pill-tabs nav" id="pricing-tabs" role="tablist">
