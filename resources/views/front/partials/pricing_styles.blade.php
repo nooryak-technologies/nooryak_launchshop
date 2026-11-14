@@ -427,22 +427,49 @@
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    margin-bottom: 14px;
+    margin-top: 2px;
+    margin-bottom: 10px;
   }
   .plan-terms-badge-group .plan-monthly-badge {
     margin-bottom: 0 !important;
+    margin-top: 0 !important;
   }
-  /* Monthly billing badge on basic */
+  .plan-terms-badge-group .plan-counterpart-badge {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+  }
+  .plan-terms-badge-group .plan-yearly-free-badge {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+  }
+  /* Monthly / Yearly billing badge */
   .plan-monthly-badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0fdf4;
+    color: #16a34a;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2.5px 11px;
+    border-radius: 20px;
+    border: 1px solid #bbf7d0;
+    line-height: 1.4;
+  }
+  /* Counterpart yearly price badge on monthly cards */
+  .plan-counterpart-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: #fff3f0;
     color: #ff5a2c;
     font-size: 11px;
     font-weight: 700;
-    padding: 2px 10px;
+    padding: 2.5px 11px;
     border-radius: 20px;
     border: 1px solid #ffd5c8;
-    margin-bottom: 12px;
+    line-height: 1.4;
+    letter-spacing: 0.2px;
   }
   /* Attractive Free 2 Months for Yearly Plan Badge */
   .plan-yearly-free-badge {
@@ -455,9 +482,10 @@
     border: 1px solid #fde68a;
     font-size: 11px;
     font-weight: 700;
-    padding: 3px 10px;
+    padding: 2.5px 11px;
     border-radius: 20px;
     letter-spacing: 0.2px;
+    line-height: 1.4;
     box-shadow: 0 2px 6px rgba(245, 158, 11, 0.12);
     transition: all 0.2s ease;
   }
@@ -887,7 +915,8 @@
     }
 
     .plan-terms-badge-group {
-      margin-bottom: 8px !important;
+      margin-top: 2px !important;
+      margin-bottom: 6px !important;
       gap: 3px !important;
     }
 
@@ -897,9 +926,16 @@
       margin-bottom: 0 !important;
     }
 
+    .plan-counterpart-badge {
+      font-size: 9.5px !important;
+      padding: 2px 8px !important;
+      margin-bottom: 0 !important;
+    }
+
     .plan-yearly-free-badge {
       font-size: 9.5px !important;
       padding: 2px 8px !important;
+      margin-bottom: 0 !important;
     }
 
     .plan-v2-divider {

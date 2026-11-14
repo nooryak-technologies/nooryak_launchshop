@@ -384,14 +384,13 @@
                       <i class="fas fa-gift mr-1 text-warning"></i> {{ __('Free 2 Months for Yearly Plan') }}
                     </span>
                   @elseif(strtolower($package->term) == 'monthly')
-                    <span class="plan-monthly-badge" style="background:#fef3c7; color:#d97706; border-color:#fde68a; font-weight:700;">
-                      <i class="fas fa-calendar-alt mr-1"></i> {{ __('Monthly Plan') }}
+                    <span class="plan-monthly-badge" style="background:#f0fdf4; color:#16a34a; border-color:#bbf7d0;">
+                      <i class="fas fa-check-circle mr-1"></i> {{ __('Billed Monthly') }}
+                    </span>
+                    <span class="plan-yearly-free-badge">
+                      <i class="fas fa-gift mr-1 text-warning"></i> {{ __('Free 2 Months for Yearly Plan') }}
                     </span>
                   @endif
-                @elseif(strtolower($package->term) == 'monthly' && !empty($package->counterpart))
-                  <span class="plan-monthly-badge">
-                    Just {{ $be->base_currency_symbol }}{{ number_format($package->counterpart->price, 0) }}/Yearly
-                  </span>
                 @elseif(strtolower($package->term) == 'yearly')
                   <span class="plan-monthly-badge" style="background:#f0fdf4; color:#16a34a; border-color:#bbf7d0;">
                     <i class="fas fa-check-circle mr-1"></i> {{ __('Billed Yearly') }}
@@ -400,17 +399,23 @@
                     <i class="fas fa-gift mr-1 text-warning"></i> {{ __('Free 2 Months for Yearly Plan') }}
                   </span>
                 @elseif(strtolower($package->term) == 'monthly')
-                  <span class="plan-monthly-badge">
-                    {{ __('Billed Monthly') }}
+                  <span class="plan-monthly-badge" style="background:#f0fdf4; color:#16a34a; border-color:#bbf7d0;">
+                    <i class="fas fa-check-circle mr-1"></i> {{ __('Billed Monthly') }}
+                  </span>
+                  @if(!empty($package->counterpart))
+                    <span class="plan-counterpart-badge">
+                      {{ $be->base_currency_symbol }}{{ number_format($package->counterpart->price, 0) }}/Yearly
+                    </span>
+                  @endif
+                  <span class="plan-yearly-free-badge">
+                    <i class="fas fa-gift mr-1 text-warning"></i> {{ __('Free 2 Months for Yearly Plan') }}
                   </span>
                 @endif
               </div>
 
-              @if(strtolower($package->term) != 'yearly')
+              @if(strtolower($package->term) != 'yearly' && strtolower($package->term) != 'monthly')
                 <p class="plan-v2-billing-note">
-                  @if(strtolower($package->term) == 'monthly')
-                    Billed monthly
-                  @elseif(strtolower($package->term) == 'lifetime')
+                  @if(strtolower($package->term) == 'lifetime')
                     Lifetime access
                   @else
                     One-time access fee
