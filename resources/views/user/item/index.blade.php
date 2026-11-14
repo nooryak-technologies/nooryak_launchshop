@@ -406,7 +406,8 @@
             <div class="form-group border rounded p-4 text-center bg-light" style="border: 2px dashed #ff9f43 !important; border-radius: 10px; cursor: pointer;" onclick="document.getElementById('bulkImageInput').click();">
               <i class="fas fa-cloud-upload-alt text-warning mb-2" style="font-size: 42px;"></i>
               <h6 class="font-weight-bold text-dark mb-1">{{ __('Click or Drag & Drop Images Here') }}</h6>
-              <p class="text-muted mb-2" style="font-size: 12px;">{{ __('Select multiple image files (JPG, PNG, WEBP, SVG max 10MB per file)') }}</p>
+              <p class="text-muted mb-1" style="font-size: 12px;">{{ __('Select multiple image files (JPG, PNG, WEBP, SVG max 10MB per file)') }}</p>
+              <div class="mb-2"><span class="badge badge-success px-2 py-1" style="font-size: 11px; background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9;"><i class="fas fa-magic mr-1"></i>{{ __('PNG & JPG are automatically converted to lightweight WebP') }}</span></div>
               <input type="file" id="bulkImageInput" name="images[]" multiple accept="image/*" class="d-none" onchange="handleBulkFilesSelected(this)">
               <div id="selectedFilesBadge" class="mt-2 text-info font-weight-bold" style="font-size: 13px;"></div>
             </div>

@@ -28,3 +28,4 @@ Allow: /refund-policy
 Allow: /shipping-policy
 
 Sitemap: https://launchshop.in/sitemap.xml
+

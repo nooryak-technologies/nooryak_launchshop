@@ -2,6 +2,8 @@
 
 namespace App\Http\Helpers;
 
+require_once __DIR__ . '/finfo_polyfill.php';
+
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**

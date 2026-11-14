@@ -225,7 +225,7 @@ class ItemOrderController extends Controller
             })->when($orderStatus, function ($query, $orderStatus) {
                 return $query->where('order_status', $orderStatus);
             })->where('user_id', Auth::guard('web')->user()->id)
-                ->select('order_number', 'billing_fname', 'billing_email', 'billing_number', 'billing_city', 'billing_country', 'shipping_fname', 'shipping_email', 'shipping_number', 'shipping_city', 'shipping_country', 'method', 'shipping_method', 'cart_total', 'discount', 'tax', 'shipping_charge', 'total', 'created_at', 'payment_status', 'order_status')
+                ->select('id', 'order_number', 'billing_fname', 'billing_email', 'billing_number', 'billing_city', 'billing_country', 'shipping_fname', 'shipping_email', 'shipping_number', 'shipping_city', 'shipping_country', 'method', 'shipping_method', 'cart_total', 'discount', 'tax', 'shipping_charge', 'total', 'created_at', 'payment_status', 'order_status')
                 ->orderBy('id', 'DESC');
 
             Session::put('item_orders_report', $orders->get());

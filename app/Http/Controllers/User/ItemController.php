@@ -285,24 +285,7 @@ class ItemController extends Controller
             $thumbnail = $request->file('thumbnail');
             if ($request->hasFile('thumbnail')) {
                 $dir = public_path('assets/front/img/user/items/thumbnail/');
-                @mkdir($dir, 0775, true);
-
-                $processed = false;
-                if (extension_loaded('fileinfo')) {
-                    try {
-                        $thumbnail_name = uniqid() . '.webp';
-                        $image = Image::make($thumbnail->getRealPath());
-                        $image->resize(255, 255);
-                        $image->save($dir . $thumbnail_name);
-                        $processed = true;
-                    } catch (\Throwable $imgEx) {
-                        $processed = false;
-                    }
-                }
-
-                if (!$processed) {
-                    $thumbnail_name = Uploader::upload_picture($dir, $thumbnail);
-                }
+                $thumbnail_name = Uploader::upload_webp($dir, $thumbnail, uniqid(), 600, 600, 82);
             } elseif (!empty($request->ai_generated_image)) {
                 $thumbnail_name = moveAiStorageImageToPublicAssets(
                     $request->ai_generated_image,
@@ -575,29 +558,11 @@ class ItemController extends Controller
 
         $thumbnail = $request->file('thumbnail');
         if ($request->hasFile('thumbnail')) {
-
             $dir = public_path('assets/front/img/user/items/thumbnail/');
             if (!empty($item->thumbnail) && file_exists($dir . $item->thumbnail)) {
                 @unlink($dir . $item->thumbnail);
             }
-            @mkdir($dir, 0775, true);
-
-            $processed = false;
-            if (extension_loaded('fileinfo')) {
-                try {
-                    $thumbnail_name = uniqid() . '.webp';
-                    $image = Image::make($thumbnail->getRealPath());
-                    $image->resize(255, 255);
-                    $image->save($dir . $thumbnail_name);
-                    $processed = true;
-                } catch (\Throwable $imgEx) {
-                    $processed = false;
-                }
-            }
-
-            if (!$processed) {
-                $thumbnail_name = Uploader::upload_picture($dir, $thumbnail);
-            }
+            $thumbnail_name = Uploader::upload_webp($dir, $thumbnail, uniqid(), 600, 600, 82);
         }
 
         $item->stock = $request->stock;
@@ -1231,7 +1196,7 @@ class ItemController extends Controller
 
         //  Normal Dropzone upload
         if ($request->hasFile('file')) {
-            $filename = Uploader::upload_picture($dir, $request->file('file'));
+            $filename = Uploader::upload_webp($dir, $request->file('file'), uniqid(), null, null, 82);
 
             return response()->json([
                 'status' => 'success',
@@ -1262,26 +1227,42 @@ class ItemController extends Controller
             ], 422);
         }
 
-        // detect extension (png/jpg)
+        // detect extension (png/jpg/webp)
         $ext = 'jpg';
         try {
-            $finfo = new \finfo(FILEINFO_MIME_TYPE);
-            $mime = $finfo->buffer($imgData);
+            $mime = null;
+            if (class_exists('\finfo')) {
+                $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                $mime = $finfo->buffer($imgData);
+            }
+            if (!$mime && function_exists('getimagesizefromstring')) {
+                $sz = @getimagesizefromstring($imgData);
+                $mime = $sz['mime'] ?? null;
+            }
             if ($mime === 'image/png') $ext = 'png';
             elseif ($mime === 'image/jpeg') $ext = 'jpg';
-            else {
+            elseif ($mime === 'image/webp') $ext = 'webp';
+            elseif (!empty($mime) && !in_array($mime, ['image/png', 'image/jpeg', 'image/webp'])) {
                 return response()->json([
                     'status' => 'error',
-                    'errors' => ['image_url' => [__('Only jpg/jpeg/png images are allowed.')]]
+                    'errors' => ['image_url' => [__('Only jpg/jpeg/png/webp images are allowed.')]]
                 ], 422);
             }
         } catch (\Throwable $e) {
-            // fallback ext
             $ext = 'jpg';
         }
 
-        $filename = uniqid() . '.' . $ext;
-        file_put_contents($dir . '/' . $filename, $imgData);
+        $destWebp = $dir . '/' . uniqid() . '.webp';
+        $tempSource = tempnam(sys_get_temp_dir(), 'slider_');
+        file_put_contents($tempSource, $imgData);
+        if (Uploader::convertToWebp($tempSource, $destWebp, null, null, 82)) {
+            $filename = basename($destWebp);
+            @unlink($tempSource);
+        } else {
+            @unlink($tempSource);
+            $filename = uniqid() . '.' . $ext;
+            file_put_contents($dir . '/' . $filename, $imgData);
+        }
 
         return response()->json([
             'status' => 'success',
@@ -2182,10 +2163,20 @@ class ItemController extends Controller
 
             if ($httpCode == 200 && !empty($imgData)) {
                 $parsed = parse_url($url, PHP_URL_PATH);
-                $ext = pathinfo($parsed, PATHINFO_EXTENSION);
+                $ext = strtolower(pathinfo($parsed, PATHINFO_EXTENSION));
                 if (empty($ext) || strlen($ext) > 4) {
                     $ext = $defaultExt;
                 }
+
+                $destWebp = $destinationDir . uniqid() . '.webp';
+                $tempSource = tempnam(sys_get_temp_dir(), 'dl_');
+                file_put_contents($tempSource, $imgData);
+                if (Uploader::convertToWebp($tempSource, $destWebp, null, null, 82)) {
+                    @unlink($tempSource);
+                    return basename($destWebp);
+                }
+                @unlink($tempSource);
+
                 $filename = uniqid() . '.' . $ext;
                 file_put_contents($destinationDir . $filename, $imgData);
                 return $filename;
@@ -2266,15 +2257,32 @@ class ItemController extends Controller
         ]);
 
         $thumbDir = public_path('assets/front/img/user/items/thumbnail/');
+        $sliderDir = public_path('assets/front/img/user/items/slider-images/');
         @mkdir($thumbDir, 0775, true);
+        @mkdir($sliderDir, 0775, true);
 
         $uploaded = [];
 
         foreach ($request->file('images') as $file) {
             $originalClientName = $file->getClientOriginalName();
-            $cleanName = strtolower(preg_replace('/[^a-zA-Z0-9_\-\.]/', '_', $originalClientName));
+            $rawBase = pathinfo($originalClientName, PATHINFO_FILENAME);
+            $cleanBase = strtolower(preg_replace('/[^a-zA-Z0-9_\-]/', '_', $rawBase));
+            if (empty($cleanBase)) {
+                $cleanBase = 'item_' . uniqid();
+            }
 
-            $file->move($thumbDir, $cleanName);
+            $ext = strtolower($file->getClientOriginalExtension());
+            if (in_array($ext, ['svg', 'gif'])) {
+                $cleanName = $cleanBase . '.' . $ext;
+                $file->move($thumbDir, $cleanName);
+            } else {
+                $cleanName = Uploader::upload_webp($thumbDir, $file, $cleanBase, null, null, 82);
+            }
+
+            // Sync with slider-images so the uploaded image is available for both thumbnail and slider galleries
+            if (file_exists($thumbDir . $cleanName)) {
+                @copy($thumbDir . $cleanName, $sliderDir . $cleanName);
+            }
 
             $url = asset('assets/front/img/user/items/thumbnail/' . $cleanName);
 

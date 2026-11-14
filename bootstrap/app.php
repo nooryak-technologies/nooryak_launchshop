@@ -15,6 +15,9 @@ $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
 
+// Polyfill finfo class/functions if php_fileinfo extension is disabled on host server
+require_once __DIR__ . '/../app/Http/Helpers/finfo_polyfill.php';
+
 /*
 |--------------------------------------------------------------------------
 | Bind Important Interfaces

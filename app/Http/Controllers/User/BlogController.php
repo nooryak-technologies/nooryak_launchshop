@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\Uploader;
 use App\Http\Helpers\UserPermissionHelper;
 use App\Models\User\Blog;
 use App\Models\User\BlogCategory;
@@ -195,22 +196,7 @@ class BlogController extends Controller
         $thumbnail_name = null;
         if ($request->hasFile('thumbnail')) {
             $dir = public_path('assets/front/img/user/blogs/');
-            @mkdir($dir, 0775, true);
-
-            //cover image saved start
-            $imageData = file_get_contents($thumbnail->getRealPath());
-            $thumbnail_name = uniqid() . '.png';
-            $directory = 'public/images/';
-
-            // Save the image to storage
-            Storage::put($directory . $thumbnail_name, $imageData);
-            // Resize the image (optional)
-            $image1 = Image::make(Storage::path($directory . $thumbnail_name));
-
-            $image1->resize(900, 600);
-            $image1->save();
-
-            File::move(Storage::path($directory . $thumbnail_name), $dir . $thumbnail_name);
+            $thumbnail_name = Uploader::upload_webp($dir, $thumbnail, uniqid(), 900, 600, 82);
             $input['image'] = $thumbnail_name;
         } elseif (!empty($request->ai_generated_image)) {
             $dir = public_path('assets/front/img/user/blogs/');
@@ -287,6 +273,11 @@ class BlogController extends Controller
 
         if (!is_dir($destDir)) {
             @mkdir($destDir, 0775, true);
+        }
+
+        $destWebp = rtrim($destDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . time() . '_' . uniqid() . '.webp';
+        if (Uploader::convertToWebp($source, $destWebp, $width, $height, 82)) {
+            return basename($destWebp);
         }
 
         $ext = pathinfo($source, PATHINFO_EXTENSION) ?: 'png';
@@ -433,22 +424,10 @@ class BlogController extends Controller
         if ($request->hasFile('thumbnail')) {
             $dir = public_path('assets/front/img/user/blogs/');
             @mkdir($dir, 0775, true);
-            @unlink($dir . $blog->image);
-
-            //cover image saved start
-            $imageData = file_get_contents($thumbnail->getRealPath());
-            $thumbnail_name = uniqid() . '.png';
-            $directory = 'public/images/';
-
-            // Save the image to storage
-            Storage::put($directory . $thumbnail_name, $imageData);
-            // Resize the image (optional)
-            $image1 = Image::make(Storage::path($directory . $thumbnail_name));
-
-            $image1->resize(900, 600);
-            $image1->save();
-
-            File::move(Storage::path($directory . $thumbnail_name), $dir . $thumbnail_name);
+            if (!empty($blog->image) && file_exists($dir . $blog->image)) {
+                @unlink($dir . $blog->image);
+            }
+            $thumbnail_name = Uploader::upload_webp($dir, $thumbnail, uniqid(), 900, 600, 82);
             $input['image'] = $thumbnail_name;
         }
 
