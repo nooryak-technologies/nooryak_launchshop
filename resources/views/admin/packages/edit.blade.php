@@ -318,12 +318,25 @@
                                         <div class="form-group">
                                             <label for="language_limit">{{ __('Additional Language Limit') }} <span
                                                     class="text-danger">**</span>
-                                                {{ $package->post_limit == 999999 ? __('(Unlimited)') : '' }}</label>
+                                                {{ $package->language_limit == 999999 ? __('(Unlimited)') : '' }}</label>
                                             <input id="language_limit" type="number" class="form-control"
                                                 name="language_limit"
                                                 placeholder="{{ __('Enter Additional Language Limit') }}"
                                                 value="{{ $package->language_limit }}">
                                             <p id="errlanguage_limit" class="mb-0 text-danger em"></p>
+                                            <p class="text-warning">{{ __('999999 count as Unlimited') }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" id="coupon_limit" style="display: {{ $d_block }}">
+                                        <div class="form-group">
+                                            <label for="coupon_limit">{{ __('Coupon Limit') }} <span
+                                                    class="text-danger">**</span>
+                                                {{ $package->coupon_limit == 999999 ? __('(Unlimited)') : '' }}</label>
+                                            <input id="coupon_limit" type="number" class="form-control"
+                                                name="coupon_limit"
+                                                placeholder="{{ __('Enter Coupon Limit') }}"
+                                                value="{{ $package->coupon_limit ?? 0 }}">
+                                            <p id="errcoupon_limit" class="mb-0 text-danger em"></p>
                                             <p class="text-warning">{{ __('999999 count as Unlimited') }}</p>
                                         </div>
                                     </div>

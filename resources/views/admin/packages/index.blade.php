@@ -404,6 +404,16 @@
                                     <p class="text-warning">{{ __('999999 count as Unlimited') }}</p>
                                 </div>
                             </div>
+                            <div class="col-md-6" id="coupon_limit" style="display: {{ $d_block }}">
+                                <div class="form-group">
+                                    <label for="coupon_limit">{{ __('Coupon Limit') }} <span
+                                            class="text-danger">**</span></label>
+                                    <input id="coupon_limit" type="number" class="form-control" name="coupon_limit"
+                                        placeholder="{{ __('Enter Coupon Limit') }}" value="0">
+                                    <p id="errcoupon_limit" class="mb-0 text-danger em"></p>
+                                    <p class="text-warning">{{ __('999999 count as Unlimited') }}</p>
+                                </div>
+                            </div>
                             <div class="col-md-6 ai-feature-box d-none">
                                 <div class="form-group">
                                     <label for="ai_engine">{{ __('AI Engine') }} <span

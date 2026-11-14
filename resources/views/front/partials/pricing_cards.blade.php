@@ -2,8 +2,8 @@
 @php
   $selectedTemplate = request()->query('template');
   if (\Schema::hasTable('package_features')) {
-      $allFeatures = \App\Models\PackageFeature::whereNotIn('name', ['Disqus', 'Bank Transfer Integrations'])
-          ->whereNotIn('keyword', ['Disqus', 'Bank Transfer Integrations'])
+      $allFeatures = \App\Models\PackageFeature::whereNotIn('name', ['Disqus', 'Bank Transfer Integrations', 'Tawk.to Chat Bot', 'Tawk to', 'Tawk.to'])
+          ->whereNotIn('keyword', ['Disqus', 'Bank Transfer Integrations', 'Tawk.to Chat Bot', 'Tawk to', 'Tawk.to'])
           ->orderBy('serial_number', 'asc')
           ->get();
   } else {
@@ -50,10 +50,62 @@
   <div class="tab-content" id="pricing-tabs-content">
     @foreach ($terms as $term)
       @php
-        $packages = \App\Models\Package::where('status', '1')
-            ->where('term', strtolower($term))
-            ->orderBy('price', 'asc')
-            ->get();
+        $currentTerm = strtolower($term);
+        $otherTerm   = ($currentTerm == 'monthly') ? 'yearly' : 'monthly';
+
+        // Order of preferred standard tiers
+        $standardOrder = ['basic', 'standard', 'premium'];
+
+        // Get all active packages
+        $allActivePkgs = \App\Models\Package::where('status', '1')->get();
+
+        // Get unique active package titles
+        $uniqueTitles = $allActivePkgs->pluck('title')->unique(function ($t) {
+            return strtolower($t);
+        })->values();
+
+        // Sort titles so basic, standard, premium appear first, followed by any other tiers
+        $sortedTitles = $uniqueTitles->sortBy(function($t) use ($standardOrder) {
+            $idx = array_search(strtolower($t), $standardOrder);
+            return $idx !== false ? $idx : 999;
+        })->values();
+
+        $packages = collect();
+        foreach ($sortedTitles as $pkgTitle) {
+            // 1. Try to find active package with the current tab term
+            $matchedPkg = $allActivePkgs->first(function($p) use ($pkgTitle, $currentTerm) {
+                return strcasecmp($p->title, $pkgTitle) === 0 && strtolower($p->term) === $currentTerm;
+            });
+
+            $isFallback = false;
+            if (!$matchedPkg) {
+                // 2. Fallback to other term (yearly if on monthly, monthly if on yearly)
+                $matchedPkg = $allActivePkgs->first(function($p) use ($pkgTitle, $otherTerm) {
+                    return strcasecmp($p->title, $pkgTitle) === 0 && strtolower($p->term) === $otherTerm;
+                });
+                if ($matchedPkg) {
+                    $isFallback = true;
+                }
+            }
+
+            if ($matchedPkg) {
+                $pkgClone = clone $matchedPkg;
+                $pkgClone->is_fallback_term = $isFallback;
+                // Find counterpart if available
+                $pkgClone->counterpart = $allActivePkgs->first(function($p) use ($pkgTitle, $otherTerm) {
+                    return strcasecmp($p->title, $pkgTitle) === 0 && strtolower($p->term) === $otherTerm;
+                });
+                $packages->push($pkgClone);
+            }
+        }
+
+        // If none collected via titles, fallback to direct term packages
+        if ($packages->isEmpty()) {
+            $packages = \App\Models\Package::where('status', '1')
+                ->where('term', $currentTerm)
+                ->orderBy('price', 'asc')
+                ->get();
+        }
       @endphp
       <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}"
            id="tab-{{ strtolower($term) }}"
@@ -109,6 +161,10 @@
                   if ($limitVal > 0 || $limitVal == 999999) {
                       $packageFormattedFeatures[] = ['text' => 'Custom Pages : '.($limitVal==999999?'Unlimited':$limitVal), 'has' => true];
                   }
+                  $limitVal = $package->coupon_limit ?? 0;
+                  if ($limitVal > 0 || $limitVal == 999999) {
+                      $packageFormattedFeatures[] = ['text' => ($limitVal==999999?'Unlimited':$limitVal).' Coupons limit', 'has' => true];
+                  }
                   
                   $fallbackPills = [
                       'Custom Domain' => 'Custom Domain',
@@ -120,11 +176,10 @@
                       'Google Analytics' => 'Google Analytics',
                       'Google Recaptcha' => 'Google Recaptcha',
                       'WhatsApp Chat Button' => 'WhatsApp Chat Button',
-                      'Tawk to' => 'Tawk to',
                       'AI Content & Image Generator' => 'AI Content & Image Generator'
                   ];
                   foreach ($fallbackPills as $k => $name) {
-                      if ($k === 'AI Content & Image Generator') {
+                      if ($k === 'AI Content & Image Generator' || stripos($name, 'tawk') !== false) {
                           continue;
                       }
                       if ($k !== 'Blog' && $k !== 'Custom Page') {
@@ -135,7 +190,10 @@
                   }
               } else {
                   foreach ($allFeatures as $feature) {
-                      if ($feature->keyword === 'AI Content & Image Generator' || $feature->name === 'AI Content & Image Generator') {
+                      if ($feature->keyword === 'AI Content & Image Generator' 
+                          || $feature->name === 'AI Content & Image Generator'
+                          || stripos($feature->name, 'tawk') !== false 
+                          || stripos($feature->keyword, 'tawk') !== false) {
                           continue;
                       }
                       $has = false;
@@ -152,14 +210,13 @@
                           $has = ($limitVal > 0 || $limitVal == 999999);
                       } elseif ($feature->type === 'standard') {
                           $has = in_array($feature->keyword, $pFeatures);
-                          if ($has && !empty($feature->limit_key)) {
+                          if (!empty($feature->limit_key)) {
                               $limitVal = $package->{$feature->limit_key} ?? 0;
                               $formattedVal = ($limitVal == 999999) ? __('Unlimited') : $limitVal;
                               $text = str_replace('{limit}', $formattedVal, $text);
-                          } elseif (!empty($feature->limit_key)) {
-                              $limitVal = $package->{$feature->limit_key} ?? 0;
-                              $formattedVal = ($limitVal == 999999) ? __('Unlimited') : $limitVal;
-                              $text = str_replace('{limit}', $formattedVal, $text);
+                              if ($has && $limitVal == 0 && $limitVal != 999999) {
+                                  $has = false;
+                              }
                           }
                       } elseif ($feature->type === 'custom') {
                           if (stripos($text, 'Free .com Domain') !== false || stripos($text, 'Free .in Domain') !== false) {
@@ -176,6 +233,11 @@
                       $packageFormattedFeatures[] = ['text' => $text, 'has' => $has];
                   }
               }
+
+              // Filter out any Tawk.to features completely from frontend display
+              $packageFormattedFeatures = array_values(array_filter($packageFormattedFeatures, function($feat) {
+                  return stripos($feat['text'] ?? '', 'tawk') === false;
+              }));
  
               // Post-process features to customize "Additional Languages" dynamically based on plan title key
               // Basic: strikeout, Standard: 1 Additional Language, Premium: 3 Additional Languages
@@ -310,6 +372,34 @@
                   <span class="plan-v2-period"> / {{ $periodLabel }}</span>
                 @endif
               </div>
+
+              {{-- Term / Savings Badge --}}
+              <div class="text-center mb-2">
+                @if(!empty($package->is_fallback_term))
+                  @if(strtolower($package->term) == 'yearly')
+                    <span class="plan-monthly-badge" style="background:#e0f2fe; color:#0284c7; border-color:#bae6fd; font-weight:700;">
+                      <i class="fas fa-calendar-check mr-1"></i> {{ __('Yearly Plan') }}
+                    </span>
+                  @elseif(strtolower($package->term) == 'monthly')
+                    <span class="plan-monthly-badge" style="background:#fef3c7; color:#d97706; border-color:#fde68a; font-weight:700;">
+                      <i class="fas fa-calendar-alt mr-1"></i> {{ __('Monthly Plan') }}
+                    </span>
+                  @endif
+                @elseif(strtolower($package->term) == 'monthly' && !empty($package->counterpart))
+                  <span class="plan-monthly-badge">
+                    Just {{ $be->base_currency_symbol }}{{ number_format($package->counterpart->price, 0) }}/Yearly
+                  </span>
+                @elseif(strtolower($package->term) == 'yearly')
+                  <span class="plan-monthly-badge" style="background:#f0fdf4; color:#16a34a; border-color:#bbf7d0;">
+                    <i class="fas fa-check-circle mr-1"></i> {{ __('Billed Yearly') }}
+                  </span>
+                @elseif(strtolower($package->term) == 'monthly')
+                  <span class="plan-monthly-badge">
+                    {{ __('Billed Monthly') }}
+                  </span>
+                @endif
+              </div>
+
               <p class="plan-v2-billing-note">
                 @if(strtolower($package->term) == 'yearly')
                   Billed yearly

@@ -23,6 +23,7 @@ class Package extends Model
         'categories_limit',
         'subcategories_limit',
         'order_limit',
+        'coupon_limit',
         'language_limit',
         'number_of_custom_page',
         'status',
@@ -138,6 +139,33 @@ class Package extends Model
                     'features' => json_encode($premiumMonthlyFeatures),
                 ]);
             }
+
+            // 4. Ensure package_features for Coupon limit has limit_key = 'coupon_limit'
+            if (\Illuminate\Support\Facades\Schema::hasTable('package_features')) {
+                \Illuminate\Support\Facades\DB::table('package_features')
+                    ->where(function ($q) {
+                        $q->where('keyword', 'Coupon code')
+                          ->orWhere('name', 'like', '%Coupon%');
+                    })
+                    ->update([
+                        'limit_key' => 'coupon_limit',
+                        'type' => 'standard',
+                        'updated_at' => now(),
+                    ]);
+            }
+
+            // 5. Ensure packages have reasonable default coupon_limits if null or 0
+            self::where('title', 'Basic')->where(function ($q) {
+                $q->whereNull('coupon_limit')->orWhere('coupon_limit', 0);
+            })->update(['coupon_limit' => 10]);
+
+            self::where('title', 'Standard')->where(function ($q) {
+                $q->whereNull('coupon_limit')->orWhere('coupon_limit', 0);
+            })->update(['coupon_limit' => 50]);
+
+            self::where('title', 'Premium')->where(function ($q) {
+                $q->whereNull('coupon_limit')->orWhere('coupon_limit', 0);
+            })->update(['coupon_limit' => 150]);
         } catch (\Throwable $e) {
             // Non-blocking
         }

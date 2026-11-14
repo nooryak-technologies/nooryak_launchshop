@@ -184,6 +184,7 @@
                                 <option value="categories_limit">{{ __('categories_limit') }}</option>
                                 <option value="subcategories_limit">{{ __('subcategories_limit') }}</option>
                                 <option value="order_limit">{{ __('order_limit') }}</option>
+                                <option value="coupon_limit">{{ __('coupon_limit') }}</option>
                                 <option value="language_limit">{{ __('language_limit') }}</option>
                                 <option value="post_limit">{{ __('post_limit') }}</option>
                                 <option value="number_of_custom_page">{{ __('number_of_custom_page') }}</option>
@@ -240,6 +241,7 @@
                                 <option value="categories_limit">{{ __('categories_limit') }}</option>
                                 <option value="subcategories_limit">{{ __('subcategories_limit') }}</option>
                                 <option value="order_limit">{{ __('order_limit') }}</option>
+                                <option value="coupon_limit">{{ __('coupon_limit') }}</option>
                                 <option value="language_limit">{{ __('language_limit') }}</option>
                                 <option value="post_limit">{{ __('post_limit') }}</option>
                                 <option value="number_of_custom_page">{{ __('number_of_custom_page') }}</option>

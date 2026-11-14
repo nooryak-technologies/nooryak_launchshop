@@ -16,8 +16,8 @@
 @php
   $selectedTemplate = request()->query('template');
   if (\Schema::hasTable('package_features')) {
-      $allFeatures = \App\Models\PackageFeature::whereNotIn('name', ['Disqus', 'Bank Transfer Integrations'])
-          ->whereNotIn('keyword', ['Disqus', 'Bank Transfer Integrations'])
+      $allFeatures = \App\Models\PackageFeature::whereNotIn('name', ['Disqus', 'Bank Transfer Integrations', 'Tawk.to Chat Bot', 'Tawk to', 'Tawk.to'])
+          ->whereNotIn('keyword', ['Disqus', 'Bank Transfer Integrations', 'Tawk.to Chat Bot', 'Tawk to', 'Tawk.to'])
           ->orderBy('serial_number', 'asc')
           ->get();
   } else {
@@ -105,8 +105,14 @@
                 'key' => 'number_of_custom_page',
                 'ent_val' => 'Unlimited'
             ];
+            $compareRows[] = [
+                'type' => 'limit',
+                'label' => 'Coupons Limit',
+                'key' => 'coupon_limit',
+                'ent_val' => 'Unlimited'
+            ];
             foreach ($allPfeatures as $f) {
-                if ($f !== 'Posts Limit') {
+                if ($f !== 'Posts Limit' && stripos($f, 'tawk') === false) {
                     $compareRows[] = [
                         'type' => 'flag',
                         'label' => $f,
@@ -117,6 +123,9 @@
             }
         } else {
             foreach ($allFeatures as $feature) {
+                if (stripos($feature->name, 'tawk') !== false || stripos($feature->keyword, 'tawk') !== false) {
+                    continue;
+                }
                 if ($feature->type === 'limit') {
                     $compareRows[] = [
                         'type' => 'limit',

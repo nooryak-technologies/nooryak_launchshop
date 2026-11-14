@@ -31,6 +31,7 @@ class PackageUpdateRequest extends FormRequest
             'categories_limit' => 'required',
             'subcategories_limit' => 'required',
             'order_limit' => 'required',
+            'coupon_limit' => 'nullable|numeric',
             'language_limit' => 'required',
             'trial_days' => $this->is_trial == "1" ? 'required' : '',
         ];

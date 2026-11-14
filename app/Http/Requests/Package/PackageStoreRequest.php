@@ -32,6 +32,7 @@ class PackageStoreRequest extends FormRequest
             'categories_limit' => 'required',
             'subcategories_limit' => 'required',
             'order_limit' => 'required',
+            'coupon_limit' => 'nullable|numeric',
             'language_limit' => 'required',
             'trial_days' => 'required_if:is_trial,1'
         ];
