@@ -96,25 +96,43 @@
                   <div class="tab-pane fade show {{ $i == 0 ? 'active' : '' }}" id="{{ $tabs[$i]->slug }}">
                     <div class="row justify-content-center">
                       @php
-                        $products = json_decode($tabs[$i]->products, true);
+                        $product_ids = json_decode($tabs[$i]->products, true) ?? [];
+                        $valid_products = [];
+                        if (!empty($product_ids) && is_array($product_ids)) {
+                            $valid_products = \App\Models\User\UserItem::whereIn('id', $product_ids)
+                                ->where('status', 1)
+                                ->pluck('id')
+                                ->toArray();
+                        }
+                        if (empty($valid_products)) {
+                            $valid_products = \App\Models\User\UserItem::where('user_id', $user->id)
+                                ->where('status', 1)
+                                ->orderBy('id', 'DESC')
+                                ->take(8)
+                                ->pluck('id')
+                                ->toArray();
+                        }
                       @endphp
-                      @if (!is_null($products))
-                        @for ($j = 0; $j < count($products); $j++)
-                          <div class="col-lg-3 col-md-6 col-sm-6 col-6">
-                            @php
-                              $product_details = \App\Models\User\UserItem::where('id', $products[$j])
-                                  ->with([
-                                      'itemContents' => function ($q) use ($uLang) {
-                                          $q->where('language_id', '=', $uLang);
-                                      },
-                                      'sliders',
-                                  ])
-                                  ->first();
-                            @endphp
-                            @if (!is_null(@$product_details->itemContents[0]->slug))
+                      @if (!empty($valid_products))
+                        @for ($j = 0; $j < count($valid_products); $j++)
+                          @if ($j < 8)
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
+                              @php
+                                $product_details = \App\Models\User\UserItem::where('id', $valid_products[$j])
+                                    ->with([
+                                        'itemContents' => function ($q) use ($uLang) {
+                                            $q->where('language_id', '=', $uLang);
+                                        },
+                                        'sliders',
+                                    ])
+                                    ->first();
+                                if (is_null($product_details)) { continue; }
+                                $itemContent = $product_details->itemContents->first() ?: \App\Models\User\UserItemContent::where('item_id', $product_details->id)->first();
+                                if (!$itemContent || empty($itemContent->slug)) { continue; }
+                              @endphp
                               <div class="product-default product-default-2 radius-md mb-30">
                                 <figure class="product-img">
-                                  <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $product_details->itemContents[0]->slug]) }}"
+                                  <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $itemContent->slug]) }}"
                                     class="lazy-container ratio ratio-1-1">
                                     <img class="lazyload default-img"
                                       src="{{ asset('assets/front/images/placeholder.png') }}"
@@ -140,7 +158,7 @@
 
                                     @if ($shop_settings->catalog_mode != 1)
                                       <a class="btn btn-icon rounded-pill cart-link cursor-pointer"
-                                        data-title="{{ $product_details->itemContents[0]->title }}"
+                                        data-title="{{ $itemContent->title }}"
                                         data-current_price="{{ currency_converter($product_current_price) }}"
                                         data-item_id="{{ $product_details->id }}"
                                         data-language_id="{{ $uLang }}"
@@ -153,8 +171,8 @@
                                     @endif
 
                                     <a class="btn btn-icon rounded-pill quick-view-link" data-bs-toggle="tooltip"
-                                      data-bs-placement="top" data-slug="{{ $product_details->itemContents[0]->slug }}"
-                                      data-url="{{ route('front.user.productDetails.quickview', ['slug' => $product_details->itemContents[0]->slug, getParam()]) }}"
+                                      data-bs-placement="top" data-slug="{{ $itemContent->slug }}"
+                                      data-url="{{ route('front.user.productDetails.quickview', ['slug' => $itemContent->slug, getParam()]) }}"
                                       title="{{ $keywords['Quick View'] ?? __('Quick View') }}"><i
                                         class="fal fa-eye"></i></a>
 
@@ -182,14 +200,16 @@
 
 
                                   </div>
-                                  <span class="product-category text-sm">
-                                    <a
-                                      href="{{ route('front.user.shop', ['category' => $product_details->itemContents[0]->category->slug, getParam()]) }}">{{ $product_details->itemContents[0]->category->name }}</a>
+                                  @if (@$itemContent->category)
+                                    <span class="product-category text-sm">
+                                      <a
+                                        href="{{ route('front.user.shop', ['category' => $itemContent->category->slug, getParam()]) }}">{{ $itemContent->category->name }}</a>
 
-                                  </span>
+                                    </span>
+                                  @endif
                                   <h3 class="product-title lc-2">
                                     <a
-                                      href="{{ route('front.user.productDetails', [getParam(), 'slug' => $product_details->itemContents[0]->slug]) }}">{{ $product_details->itemContents[0]->title }}</a>
+                                      href="{{ route('front.user.productDetails', [getParam(), 'slug' => $itemContent->slug]) }}">{{ $itemContent->title }}</a>
                                   </h3>
 
                                   @if ($shop_settings->item_rating_system == 1)
@@ -221,7 +241,7 @@
                                 </div>
                                 @php
                                   $item_label = DB::table('labels')
-                                      ->where('id', @$product_details->itemContents[0]->label_id)
+                                      ->where('id', @$itemContent->label_id)
                                       ->first();
                                   $label = $item_label->name ?? null;
                                   $color = $item_label->color ?? null;

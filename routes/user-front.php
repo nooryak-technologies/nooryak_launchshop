@@ -56,6 +56,7 @@ $tenantRoutes = function () {
     Route::get('/shipping_policy', 'UserFront\HomeController@tenantShippingPolicy');
 
     Route::get('/page/{slug}', 'Front\FrontendController@customPage')->name('front.user.custom.page');
+    Route::get('/p/{slug}', 'Front\FrontendController@customPage')->name('front.dynamicPage');
     Route::post('/subscribe', 'User\SubscriberController@Usersubscribe')->name('front.user.subscribe');
 
     Route::get('/shop', 'UserFront\ShopController@Shop')->name('front.user.shop');

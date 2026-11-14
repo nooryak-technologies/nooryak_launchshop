@@ -172,7 +172,7 @@
             <ul class="widget-links list-unstyled m-0 p-0" style="font-size: 14px; line-height: 2;">
               @if(count($userPages) > 0)
                 @foreach($userPages->take(5) as $upage)
-                  <li><a href="{{ route('front.dynamicPage', [getParam(), 'slug' => $upage->slug]) }}" class="text-decoration-none text-dark">{{ $upage->title }}</a></li>
+                  <li><a href="{{ Route::has('front.user.custom.page') ? route('front.user.custom.page', [getParam(), 'slug' => $upage->slug]) : (Route::has('front.dynamicPage') ? route('front.dynamicPage', [getParam(), 'slug' => $upage->slug]) : '#') }}" class="text-decoration-none text-dark">{{ $upage->title }}</a></li>
                 @endforeach
               @else
                 <li><a href="{{ route('front.user.privacy_policy', getParam()) }}" class="text-decoration-none text-dark">Privacy Policy</a></li>

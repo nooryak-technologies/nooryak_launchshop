@@ -1,4 +1,4 @@
-j<section class="section pb-100 lazy">
+<section class="section pb-100 lazy">
   <div class="container">
     <div class="row justify-content-center ">
       <div class="col-lg-6">
