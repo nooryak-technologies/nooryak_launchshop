@@ -17,7 +17,7 @@
     <div class="pricing-toggle-wrap">
       @if(in_array('yearly', array_map('strtolower', (array)$terms)) && in_array('monthly', array_map('strtolower', (array)$terms)) && empty($hidePill))
         <div class="pricing-save-pill">
-          🏷️ Save up to 20% with yearly billing!
+          ⚡ Free 2 Months for Yearly Plan
         </div>
       @endif
       <ul class="pricing-pill-tabs nav" id="pricing-tabs" role="tablist">
@@ -374,11 +374,14 @@
               </div>
 
               {{-- Term / Savings Badge --}}
-              <div class="text-center mb-2">
+              <div class="plan-terms-badge-group text-center">
                 @if(!empty($package->is_fallback_term))
                   @if(strtolower($package->term) == 'yearly')
                     <span class="plan-monthly-badge" style="background:#e0f2fe; color:#0284c7; border-color:#bae6fd; font-weight:700;">
                       <i class="fas fa-calendar-check mr-1"></i> {{ __('Yearly Plan') }}
+                    </span>
+                    <span class="plan-yearly-free-badge">
+                      <i class="fas fa-gift mr-1 text-warning"></i> {{ __('Free 2 Months for Yearly Plan') }}
                     </span>
                   @elseif(strtolower($package->term) == 'monthly')
                     <span class="plan-monthly-badge" style="background:#fef3c7; color:#d97706; border-color:#fde68a; font-weight:700;">
@@ -393,6 +396,9 @@
                   <span class="plan-monthly-badge" style="background:#f0fdf4; color:#16a34a; border-color:#bbf7d0;">
                     <i class="fas fa-check-circle mr-1"></i> {{ __('Billed Yearly') }}
                   </span>
+                  <span class="plan-yearly-free-badge">
+                    <i class="fas fa-gift mr-1 text-warning"></i> {{ __('Free 2 Months for Yearly Plan') }}
+                  </span>
                 @elseif(strtolower($package->term) == 'monthly')
                   <span class="plan-monthly-badge">
                     {{ __('Billed Monthly') }}
@@ -400,17 +406,17 @@
                 @endif
               </div>
 
-              <p class="plan-v2-billing-note">
-                @if(strtolower($package->term) == 'yearly')
-                  Billed yearly
-                @elseif(strtolower($package->term) == 'monthly')
-                  Billed monthly
-                @elseif(strtolower($package->term) == 'lifetime')
-                  Lifetime access
-                @else
-                  One-time access fee
-                @endif
-              </p>
+              @if(strtolower($package->term) != 'yearly')
+                <p class="plan-v2-billing-note">
+                  @if(strtolower($package->term) == 'monthly')
+                    Billed monthly
+                  @elseif(strtolower($package->term) == 'lifetime')
+                    Lifetime access
+                  @else
+                    One-time access fee
+                  @endif
+                </p>
+              @endif
 
               <hr class="plan-v2-divider">
 
@@ -526,13 +532,21 @@
               <p class="plan-v2-billing-note">Tailored to your needs</p>
               <hr class="plan-v2-divider">
               <ul class="plan-v2-features">
-                <li><i class="fas fa-globe fi-check" style="color: #10b981;"></i><span style="color: #10b981; font-weight: 700;">Free .com Domain Every Year</span></li>
-                <li><i class="fas fa-check fi-check"></i><span>Everything in Premium</span></li>
-                <li><i class="fas fa-check fi-check"></i><span>Unlimited Staff Accounts</span></li>
-                <li><i class="fas fa-check fi-check"></i><span>Dedicated Account Manager</span></li>
-                <li><i class="fas fa-check fi-check"></i><span>Custom Integrations</span></li>
-                <li><i class="fas fa-check fi-check"></i><span>SLA &amp; Uptime Guarantee</span></li>
-                <li><i class="fas fa-check fi-check"></i><span>Priority 24/7 Support</span></li>
+                @php
+                  $entRaw = !empty($customSetting->enterprise_features) ? $customSetting->enterprise_features : "Free Domain\nEverything in Premium\nUnlimited Staff Accounts\nDedicated Account Manager\nCustom Integrations\nSLA & Uptime Guarantee\nPriority 24/7 Support";
+                  $entLines = array_values(array_filter(array_map('trim', explode("\n", $entRaw))));
+                @endphp
+                @foreach($entLines as $idx => $line)
+                  @php
+                    $isDomainLine = (stripos($line, 'domain') !== false);
+                    $lineClean = str_ireplace(['Free .com Domain Every Year', 'Free .in Domain Every Year', 'Free .com Domain', 'Free .in Domain'], 'Free Domain', $line);
+                  @endphp
+                  @if($isDomainLine)
+                    <li><i class="fas fa-globe fi-check" style="color: #10b981;"></i><span style="color: #10b981; font-weight: 700;">{{ $lineClean }}</span></li>
+                  @else
+                    <li><i class="fas fa-check fi-check"></i><span>{{ $lineClean }}</span></li>
+                  @endif
+                @endforeach
               </ul>
               <div style="display:flex;gap:8px;margin-top:auto;width:100%;">
                 <a href="{{ Route::has('front.contact') ? route('front.contact') : url('/') }}" class="plan-v2-btn" style="flex:1;margin-top:0;">Talk to Sales</a>

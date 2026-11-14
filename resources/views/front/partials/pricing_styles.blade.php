@@ -421,6 +421,17 @@
     padding: 3px 10px;
     border-radius: 20px;
   }
+  /* Terms badge group */
+  .plan-terms-badge-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 14px;
+  }
+  .plan-terms-badge-group .plan-monthly-badge {
+    margin-bottom: 0 !important;
+  }
   /* Monthly billing badge on basic */
   .plan-monthly-badge {
     display: inline-block;
@@ -432,6 +443,27 @@
     border-radius: 20px;
     border: 1px solid #ffd5c8;
     margin-bottom: 12px;
+  }
+  /* Attractive Free 2 Months for Yearly Plan Badge */
+  .plan-yearly-free-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    color: #b45309;
+    border: 1px solid #fde68a;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.2px;
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.12);
+    transition: all 0.2s ease;
+  }
+  .plan-yearly-free-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(245, 158, 11, 0.18);
   }
 
   /* Feature list */
@@ -854,10 +886,20 @@
       padding: 0 !important;
     }
 
+    .plan-terms-badge-group {
+      margin-bottom: 8px !important;
+      gap: 3px !important;
+    }
+
     .plan-monthly-badge {
       font-size: 9.5px !important;
       padding: 2px 8px !important;
-      margin-bottom: 6px !important;
+      margin-bottom: 0 !important;
+    }
+
+    .plan-yearly-free-badge {
+      font-size: 9.5px !important;
+      padding: 2px 8px !important;
     }
 
     .plan-v2-divider {

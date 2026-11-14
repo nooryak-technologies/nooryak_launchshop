@@ -79,7 +79,7 @@
               <div class="col-lg-12">
                 <div class="form-group">
                   <label class="font-weight-bold">{{ __('Enterprise Features Checklist (One per line)') }}</label>
-                  <textarea name="enterprise_features" rows="7" class="form-control" placeholder="Enter one feature per line...">{{ $customPackage->enterprise_features ?? "Free .com Domain Every Year\nEverything in Premium\nUnlimited Staff Accounts\nDedicated Account Manager\nCustom Integrations\nSLA & Uptime Guarantee\nPriority 24/7 Support" }}</textarea>
+                  <textarea name="enterprise_features" rows="7" class="form-control" placeholder="Enter one feature per line...">{{ !empty($customPackage->enterprise_features) ? str_ireplace(['Free .com Domain Every Year', 'Free .in Domain Every Year'], 'Free Domain', $customPackage->enterprise_features) : "Free Domain\nEverything in Premium\nUnlimited Staff Accounts\nDedicated Account Manager\nCustom Integrations\nSLA & Uptime Guarantee\nPriority 24/7 Support" }}</textarea>
                   <small class="text-info font-weight-bold">
                     <i class="fas fa-info-circle mr-1"></i> {{ __('Tip: Features mentioning "Domain" or "Free" will automatically be rendered with a green globe icon.') }}
                   </small>

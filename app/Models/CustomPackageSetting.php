@@ -57,7 +57,7 @@ class CustomPackageSetting extends Model
             'enterprise_subtitle' => 'Kickstart Your E-commerce Business.',
             'enterprise_price' => 'Custom',
             'enterprise_billing_note' => 'Tailored to your needs',
-            'enterprise_features' => "Free .com Domain Every Year\nEverything in Premium\nUnlimited Staff Accounts\nDedicated Account Manager\nCustom Integrations\nSLA & Uptime Guarantee\nPriority 24/7 Support",
+            'enterprise_features' => "Free Domain\nEverything in Premium\nUnlimited Staff Accounts\nDedicated Account Manager\nCustom Integrations\nSLA & Uptime Guarantee\nPriority 24/7 Support",
             'enterprise_button_text' => 'Talk to Sales',
             'enterprise_button_url' => '/contact',
             'enterprise_whatsapp_number' => '917200770351',
