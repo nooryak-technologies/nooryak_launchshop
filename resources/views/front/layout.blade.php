@@ -34,7 +34,15 @@
   @endif
 
   <!-- Title -->
-  <title>@hasSection('custom_title')@yield('custom_title')@elseif(trim($__env->yieldContent('pagename'))){{ trim($__env->yieldContent('pagename'), " -\t\n\r\0\x0B") }} | Launchshop@else Launchshop | Launch Ecommerce Site in 2 minutes@endif</title>
+  @php
+    $pageTitle = trim($__env->yieldContent('custom_title'));
+    if (empty($pageTitle)) {
+        $rawPagename = trim($__env->yieldContent('pagename'));
+        $cleanedPagename = trim($rawPagename, " -\t\n\r\0\x0B");
+        $pageTitle = !empty($cleanedPagename) ? ($cleanedPagename . ' | Launchshop') : 'Launchshop | Launch Ecommerce Site in 2 minutes';
+    }
+  @endphp
+  <title>{{ $pageTitle }}</title>
 
   <!-- JSON-LD Structured Data for Google Search & Sitelinks -->
   <script type="application/ld+json">
