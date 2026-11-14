@@ -23,6 +23,39 @@
           <ul id="mainMenu" class="navbar-nav mx-auto">
             @php
               $links = json_decode($menus, true);
+              if (is_array($links)) {
+                  foreach ($links as &$item) {
+                      $type = strtolower($item['type'] ?? '');
+                      $text = strtolower(trim($item['text'] ?? ''));
+
+                      if ($type === 'home' || $text === 'home') {
+                          $item['text'] = 'Home';
+                          $item['_sort'] = 0;
+                      } elseif ($type === 'pricing' || str_contains($text, 'pricing')) {
+                          $item['text'] = 'Pricing Plans';
+                          $item['_sort'] = 1;
+                      } elseif ($type === 'templates' || str_contains($text, 'theme') || str_contains($text, 'template') || str_contains($text, 'design')) {
+                          $item['text'] = 'Select Theme';
+                          $item['_sort'] = 2;
+                      } elseif ($type === 'shops' || $type === 'profiles' || $type === 'listings' || str_contains($text, 'store') || str_contains($text, 'shop')) {
+                          $item['text'] = 'Stores Launched';
+                          $item['_sort'] = 3;
+                      } elseif ($type === 'about' || str_contains($text, 'about')) {
+                          $item['text'] = 'About Us';
+                          $item['_sort'] = 4;
+                      } elseif ($type === 'contact' || str_contains($text, 'contact')) {
+                          $item['text'] = 'Contact Us';
+                          $item['_sort'] = 5;
+                      } else {
+                          $item['_sort'] = 10;
+                      }
+                  }
+                  unset($item);
+
+                  usort($links, function($a, $b) {
+                      return ($a['_sort'] ?? 10) <=> ($b['_sort'] ?? 10);
+                  });
+              }
             @endphp
             @foreach ($links as $link)
               @php
@@ -30,11 +63,11 @@
               @endphp
               @if (!array_key_exists('children', $link))
                 <li class="nav-item">
-                  <a class="nav-link " target="{{ $link['target'] }}" href="{{ $href }}">{{ str_replace('Store Designs', 'Store Themes', $link['text']) }}</a>
+                  <a class="nav-link " target="{{ $link['target'] }}" href="{{ $href }}">{{ $link['text'] }}</a>
                 </li>
               @else
                 <li class="nav-item has-submenu">
-                  <a class="nav-link " target="{{ $link['target'] }}" href="{{ $href }}">{{ str_replace('Store Designs', 'Store Themes', $link['text']) }} <i class="fal fa-plus"></i></a>
+                  <a class="nav-link " target="{{ $link['target'] }}" href="{{ $href }}">{{ $link['text'] }} <i class="fal fa-plus"></i></a>
                   <ul class="menu-dropdown">
                     @foreach ($link['children'] as $level2)
                       @php
@@ -42,7 +75,7 @@
                       @endphp
                       <li class="nav-item">
                         <a class="nav-link" href="{{ $l2Href }}"
-                          target="{{ $level2['target'] }}">{{ str_replace('Store Designs', 'Store Themes', $level2['text']) }}</a>
+                          target="{{ $level2['target'] }}">{{ $level2['text'] }}</a>
                       </li>
                     @endforeach
                   </ul>

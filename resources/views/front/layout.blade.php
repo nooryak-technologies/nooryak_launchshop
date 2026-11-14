@@ -6,29 +6,113 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <meta name="description" content="@yield('meta-description', 'Your Professional Ecommerce Store in 2 Minutes.')">
-  <meta name="keywords" content="@yield('meta-keywords')">
+  <meta name="description" content="@yield('meta-description', 'Build Your Ecommerce Store In Just 2 minutes with Launchshop.in | Advanced Store themes, No coding, 0% transaction fees, plans from ₹199/month. A simple Shopify alternative for Indian Sellers. Manage products, payments, and sales effortlessly.')">
+  <meta name="keywords" content="@yield('meta-keywords', 'launchshop, launch ecommerce site in 2 minutes, create online store, shopify alternative india, ecommerce store builder, sell products online india')">
+  <link rel="canonical" href="{{ url()->current() }}">
+
+  @hasSection('meta-robots')
+    <meta name="robots" content="@yield('meta-robots')">
+  @else
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  @endif
 
   <!-- Open Graph / Sharing Meta Tags -->
   @hasSection('og-meta')
     @yield('og-meta')
   @else
-    <meta property="og:title" content="Launch Your Shop.">
-    <meta property="og:description" content="Your Professional Ecommerce Store in 2 Minutes.">
+    <meta property="og:title" content="@yield('custom_title', 'Launchshop | Launch Ecommerce Site in 2 minutes')">
+    <meta property="og:description" content="@yield('meta-description', 'Build Your Ecommerce Store In Just 2 minutes with Launchshop.in | Advanced Store themes, No coding, 0% transaction fees, plans from ₹199/month. A simple Shopify alternative for Indian Sellers. Manage products, payments, and sales effortlessly.')">
     <meta property="og:image" content="{{ asset('images/meta_icon.jpeg') }}">
     <meta property="og:image:secure_url" content="{{ asset('images/meta_icon.jpeg') }}">
-    <meta property="og:image:type" content="image/jpeg">
-    <meta property="og:type" content="website">
+    <meta property="og:image:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Launch Your Shop.">
-    <meta name="twitter:description" content="Your Professional Ecommerce Store in 2 Minutes.">
+    <meta name="twitter:title" content="@yield('custom_title', 'Launchshop | Launch Ecommerce Site in 2 minutes')">
+    <meta name="twitter:description" content="@yield('meta-description', 'Build Your Ecommerce Store In Just 2 minutes with Launchshop.in | Advanced Store themes, No coding, 0% transaction fees, plans from ₹199/month. A simple Shopify alternative for Indian Sellers. Manage products, payments, and sales effortlessly.')">
     <meta name="twitter:image" content="{{ asset('images/meta_icon.jpeg') }}">
     <link rel="image_src" href="{{ asset('images/meta_icon.jpeg') }}">
   @endif
 
   <!-- Title -->
-  <title>@hasSection('custom_title')@yield('custom_title')@else Launch Your Shop. @yield('pagename')@endif</title>
+  <title>@hasSection('custom_title')@yield('custom_title')@elseif(trim($__env->yieldContent('pagename'))){{ trim($__env->yieldContent('pagename'), " -\t\n\r\0\x0B") }} | Launchshop@else Launchshop | Launch Ecommerce Site in 2 minutes@endif</title>
+
+  <!-- JSON-LD Structured Data for Google Search & Sitelinks -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://launchshop.in/#website",
+        "url": "https://launchshop.in/",
+        "name": "Launchshop",
+        "description": "Build Your Ecommerce Store In Just 2 minutes with Launchshop.in | Advanced Store themes, No coding, 0% transaction fees, plans from ₹199/month. A simple Shopify alternative for Indian Sellers. Manage products, payments, and sales effortlessly.",
+        "publisher": {
+          "@id": "https://launchshop.in/#organization"
+        },
+        "inLanguage": "en"
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://launchshop.in/#organization",
+        "name": "Launchshop",
+        "url": "https://launchshop.in/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "{{ asset('images/logo.png') }}"
+        },
+        "sameAs": [
+          "https://www.instagram.com/launchshop.in/",
+          "https://www.facebook.com/",
+          "https://www.linkedin.com/",
+          "https://twitter.com/"
+        ]
+      },
+      {
+        "@type": "ItemList",
+        "@id": "https://launchshop.in/#sitelinks",
+        "name": "Launchshop Main Navigation",
+        "itemListElement": [
+          {
+            "@type": "SiteNavigationElement",
+            "position": 1,
+            "name": "Pricing Plans",
+            "description": "Affordable ecommerce plans starting at ₹199/month. Transparent pricing, no hidden costs, 0% transaction fees, and free domain with yearly plans on Launchshop.",
+            "url": "{{ Route::has('front.pricing') ? route('front.pricing') : url('/pricing') }}"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 2,
+            "name": "Select Theme",
+            "description": "Explore responsive, high-converting ecommerce store themes for fashion, grocery, beauty, electronics, and jewellery. One-click preview and instant install on Launchshop.",
+            "url": "{{ Route::has('front.templates.view') ? route('front.templates.view') : url('/templates') }}"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 3,
+            "name": "Stores Launched",
+            "description": "Discover successful online stores built with Launchshop. Real merchants, real success stories across fashion, grocery, beauty, and retail.",
+            "url": "{{ Route::has('front.user.view') ? route('front.user.view') : url('/shops') }}"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 4,
+            "name": "About Us",
+            "description": "Learn about Launchshop.in - empowering Indian entrepreneurs, creators, and small businesses to build and grow independent online stores effortlessly.",
+            "url": "{{ Route::has('front.about') ? route('front.about') : url('/about') }}"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 5,
+            "name": "Contact Us",
+            "description": "Get in touch with Launchshop support and sales team. We are here to help you launch, manage, and scale your online store 24/7.",
+            "url": "{{ Route::has('front.contact') ? route('front.contact') : url('/contact') }}"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
   <!-- Favicon -->
   <link rel="shortcut icon" href="{{ asset('assets/front/img/' . $bs->favicon) }}" type="image/x-icon">
 

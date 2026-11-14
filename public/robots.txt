@@ -1,0 +1,30 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /X9_AdMiN-Portal_V7/
+Disallow: /user/
+Disallow: /registration/
+Disallow: /register
+Disallow: /login
+Disallow: /checkout
+Disallow: /checkout/
+Disallow: /subscription_test
+Disallow: /pwa-icon/
+Disallow: /manifest.json
+Disallow: /site.webmanifest
+Disallow: /sw.js
+
+# Allow public landing and core SEO pages
+Allow: /
+Allow: /pricing
+Allow: /templates
+Allow: /shops
+Allow: /about
+Allow: /contact
+Allow: /faqs
+Allow: /blog
+Allow: /privacy-policy
+Allow: /terms-conditions
+Allow: /refund-policy
+Allow: /shipping-policy
+
+Sitemap: https://launchshop.in/sitemap.xml

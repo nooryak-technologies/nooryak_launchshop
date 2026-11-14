@@ -1,13 +1,12 @@
 @extends('front.layout')
 
-@section('pagename')
-  - {{ str_replace('Store Designs', 'Store Themes', $pageHeading ?? __('Templates')) }}
-@endsection
+@section('custom_title', 'Select Theme | Launchshop')
+@section('pagename', 'Select Theme')
 @php
   $additional_section_status = json_decode($bs->additional_section_status, true);
 @endphp
-@section('meta-description', !empty($seo) ? $seo->home_meta_description : '')
-@section('meta-keywords', !empty($seo) ? $seo->home_meta_keywords : '')
+@section('meta-description', 'Explore responsive, high-converting ecommerce store themes for fashion, grocery, beauty, electronics, and jewellery. One-click preview and instant install on Launchshop.')
+@section('meta-keywords', 'select theme, ecommerce store themes, online store templates, website designs india, responsive ecommerce templates')
 
 @section('styles')
 <style>

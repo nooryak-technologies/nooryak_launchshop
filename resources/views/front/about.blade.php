@@ -1,18 +1,17 @@
 @extends('front.layout')
 
-@section('meta-keywords', !empty($seo) ? $seo->about_meta_keywords : '')
-@section('meta-description', !empty($seo) ? $seo->about_meta_description : '')
+@section('custom_title', 'About Us | Launchshop')
+@section('pagename', 'About Us')
+@section('meta-description', 'Learn about Launchshop.in - empowering Indian entrepreneurs, creators, and small businesses to build and grow independent online stores effortlessly.')
+@section('meta-keywords', 'about launchshop, ecommerce platform india, online store builder company, about us launchshop')
 @php
   $additional_section_status = json_decode($bs->about_additional_section_status, true);
 @endphp
-@section('pagename')
-  - {{ __('About') }}
-@endsection
 @section('breadcrumb-title')
-  {{ __('About') }}
+  {{ __('About Us') }}
 @endsection
 @section('breadcrumb-link')
-  {{ __('About') }}
+  {{ __('About Us') }}
 @endsection
 
 @section('styles')

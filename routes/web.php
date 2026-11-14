@@ -173,6 +173,14 @@ if (!$isWbHost && !$isWaHost && !$isTenantSubdomain && !$isCustomDomain) {
         Route::get('/cookie-policy', 'Front\FrontendController@cookiePolicy')->name('front.cookie-policy');
         Route::get('/refund-policy', 'Front\FrontendController@refundPolicy')->name('front.refund-policy');
         Route::get('/shipping-policy', 'Front\FrontendController@shippingPolicy')->name('front.shipping-policy');
+
+        // Canonical SEO 301 redirects for vanity / legacy aliases
+        Route::get('/pricing-plans', function () { return redirect('/pricing', 301); });
+        Route::get('/select-theme', function () { return redirect('/templates', 301); });
+        Route::get('/store-themes', function () { return redirect('/templates', 301); });
+        Route::get('/stores-launched', function () { return redirect('/shops', 301); });
+        Route::get('/about-us', function () { return redirect('/about', 301); });
+        Route::get('/contact-us', function () { return redirect('/contact', 301); });
     });
 
     Route::group(['middleware' => ['web', 'guest', 'setlang']], function () {

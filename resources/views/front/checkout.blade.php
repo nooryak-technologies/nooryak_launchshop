@@ -1,5 +1,7 @@
 @extends('front.layout')
 
+@section('meta-robots', 'noindex, nofollow')
+
 @section('styles')
   <link rel="stylesheet" href="{{ asset('assets/front/css/checkout.css') }}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">

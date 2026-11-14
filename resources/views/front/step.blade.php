@@ -1,5 +1,7 @@
 @extends('front.layout')
 
+@section('meta-robots', 'noindex, nofollow')
+
 @section('pagename')
   - {{ __($package->title) }}
 @endsection

@@ -1,11 +1,10 @@
 @extends('front.layout')
 
-@section('pagename')
-  - {{ $pageHeading ?? __('Shops') }}
-@endsection
+@section('custom_title', 'Stores Launched | Launchshop')
+@section('pagename', 'Stores Launched')
 
-@section('meta-description', !empty($seo) ? $seo->listing_page_meta_description : '')
-@section('meta-keywords', !empty($seo) ? $seo->listing_page_meta_keyword : '')
+@section('meta-description', 'Discover successful online stores built with Launchshop. Real merchants, real success stories across fashion, grocery, beauty, and retail.')
+@section('meta-keywords', 'stores launched, ecommerce stores india, launchshop stores, live ecommerce shops, client stores')
 
 @section('styles')
 <style>

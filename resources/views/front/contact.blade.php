@@ -1,11 +1,10 @@
 @extends('front.layout')
 
-@section('pagename')
-  - {{ $pageHeading ?? __('Contact') }}
-@endsection
+@section('custom_title', 'Contact Us | Launchshop')
+@section('pagename', 'Contact Us')
 
-@section('meta-description', !empty($seo) ? $seo->contact_meta_description : '')
-@section('meta-keywords', !empty($seo) ? $seo->contact_meta_keywords : '')
+@section('meta-description', 'Get in touch with Launchshop support and sales team. We are here to help you launch, manage, and scale your online store 24/7.')
+@section('meta-keywords', 'contact launchshop, ecommerce support india, launchshop help, contact us')
 
 @section('styles')
 <style>

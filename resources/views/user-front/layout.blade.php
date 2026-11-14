@@ -18,6 +18,9 @@
 
   <meta name="description" content="@yield('meta-description')">
   <meta name="keywords" content="@yield('meta-keywords')">
+  @if (!empty($user->preview_template) && $user->preview_template == 1)
+    <meta name="robots" content="noindex, nofollow">
+  @endif
   <link rel="canonical" href="{{ canonicalUrl() }}">
   @php
     $pwaIconVer = !empty($userBs->web_app_image) ? md5($userBs->web_app_image) : (!empty($userBs->logo) ? md5($userBs->logo) : '1');

@@ -1,14 +1,15 @@
 @extends('front.layout')
 
-@section('pagename')
-  - {{ __('Choose a Template') }}
-@endsection
+@section('custom_title', 'Select Theme | Launchshop')
+@section('pagename', 'Select Theme')
+@section('meta-description', 'Explore responsive, high-converting ecommerce store themes for fashion, grocery, beauty, electronics, and jewellery. One-click preview and instant install on Launchshop.')
+@section('meta-keywords', 'select theme, ecommerce store themes, online store templates, website designs india, responsive ecommerce templates')
 
 @section('breadcrumb-title')
-  {{ __('Choose a Template') }}
+  {{ __('Select Theme') }}
 @endsection
 @section('breadcrumb-link')
-  {{ __('Choose a Template') }}
+  {{ __('Select Theme') }}
 @endsection
 
 @section('styles')

@@ -1,5 +1,8 @@
 @extends('front.layout')
 
+@section('custom_title', 'Launchshop | Launch Ecommerce Site in 2 minutes')
+@section('meta-description', 'Build Your Ecommerce Store In Just 2 minutes with Launchshop.in | Advanced Store themes, No coding, 0% transaction fees, plans from ₹199/month. A simple Shopify alternative for Indian Sellers. Manage products, payments, and sales effortlessly.')
+@section('meta-keywords', 'launchshop, launch ecommerce site in 2 minutes, create online store, shopify alternative india, ecommerce store builder, sell products online india')
 @section('pagename', '')
 
 @section('styles')

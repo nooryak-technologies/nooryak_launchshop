@@ -1,11 +1,10 @@
 @extends('front.layout')
 
-@section('pagename')
-  - {{ $pageHeading ?? __('Pricing') }}
-@endsection
+@section('custom_title', 'Pricing Plans | Launchshop')
+@section('pagename', 'Pricing Plans')
 
-@section('meta-description', !empty($seo) ? $seo->pricing_meta_description : '')
-@section('meta-keywords', !empty($seo) ? $seo->pricing_meta_keywords : '')
+@section('meta-description', 'Affordable ecommerce plans starting at ₹199/month. Transparent pricing, no hidden costs, 0% transaction fees, and free domain with yearly plans on Launchshop.')
+@section('meta-keywords', 'launchshop pricing, pricing plans, ecommerce pricing, shopify alternative india, online store plans')
 
 @section('styles')
   @include('front.partials.pricing_styles')

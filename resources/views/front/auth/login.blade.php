@@ -1,5 +1,7 @@
 @extends('front.layout')
 
+@section('meta-robots', 'noindex, nofollow')
+
 @section('meta-description', !empty($seo) ? $seo->login_meta_description : '')
 @section('meta-keywords', !empty($seo) ? $seo->login_meta_keywords : '')
 
