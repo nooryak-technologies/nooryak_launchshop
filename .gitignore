@@ -21,3 +21,6 @@ test-user-cats.php
 /public/*.zip
 *.sql
 *.log
+.user.ini
+*.user.ini
+
