@@ -40,11 +40,29 @@
       </div>
     </div>
 
-    @php $products = json_decode($tabs[$i]->products, true); @endphp
+    @php
+      $product_ids = json_decode(@$tabs[$i]->products, true) ?? [];
+      $valid_products = [];
+      if (!empty($product_ids) && is_array($product_ids)) {
+          $valid_products = \App\Models\User\UserItem::whereIn('id', $product_ids)
+              ->where('user_id', $user->id)
+              ->where('status', 1)
+              ->pluck('id')
+              ->toArray();
+      }
+      if (empty($valid_products)) {
+          $valid_products = \App\Models\User\UserItem::where('user_id', $user->id)
+              ->where('status', 1)
+              ->orderBy('id', 'DESC')
+              ->take(8)
+              ->pluck('id')
+              ->toArray();
+      }
+    @endphp
 
-    @if(!is_null($products) && count($products) > 0)
+    @if(!empty($valid_products))
       <div class="products-row-clothing" data-aos="fade-up" data-aos-delay="100">
-        @foreach($products as $prod_id)
+        @foreach($valid_products as $prod_id)
           @php
             $product = \App\Models\User\UserItem::where('id', $prod_id)
               ->with([
@@ -54,11 +72,13 @@
                 'sliders',
               ])
               ->first();
+            if (!$product) continue;
+            $pContent = $product->itemContents->first() ?: \App\Models\User\UserItemContent::where('item_id', $product->id)->first();
+            if (!$pContent || empty($pContent->slug)) continue;
           @endphp
 
-          @if(!is_null($product) && count($product->itemContents) > 0)
+          @if(!is_null($product) && !empty($pContent))
             @php
-              $pContent  = $product->itemContents->first();
               $flash_i   = flashAmountStatus($product->id, $product->current_price);
               $flash_s   = $flash_i['status'];
               if($flash_s) {

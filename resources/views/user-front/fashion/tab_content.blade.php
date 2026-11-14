@@ -88,7 +88,7 @@
         @else
           <div class="tab-content">
             @for ($i = 0; $i < count($tabs); $i++)
-              <div class="tab-pane {{ $i == 0 ? 'active' : '' }}" id="{{ $tabs[$i]->slug }}">
+              <div class="tab-pane fade {{ $i == 0 ? 'show active' : '' }}" id="{{ $tabs[$i]->slug }}">
                 <div class="row">
                   @php
                     $product_ids = json_decode($tabs[$i]->products, true) ?? [];
@@ -100,8 +100,19 @@
                             ->toArray();
                     }
                     if (empty($valid_products)) {
+                        $tabHint = strtolower(($tabs[$i]->slug ?? '') . ' ' . ($tabs[$i]->name ?? ''));
+                        $fallbackQ = \App\Models\User\UserItem::where('user_id', $user->id)->where('status', 1);
+                        if (str_contains($tabHint, 'low') || str_contains($tabHint, 'price')) {
+                            $fallbackQ->orderBy('current_price', 'ASC')->orderBy('id', 'DESC');
+                        } elseif (str_contains($tabHint, 'popular') || str_contains($tabHint, 'best') || str_contains($tabHint, 'rate')) {
+                            $fallbackQ->orderBy('rating', 'DESC')->orderBy('id', 'DESC');
+                        } else {
+                            $fallbackQ->orderBy('id', 'DESC');
+                        }
+                        $valid_products = $fallbackQ->take(8)->pluck('id')->toArray();
+                    }
+                    if (empty($valid_products)) {
                         $valid_products = \App\Models\User\UserItem::where('user_id', $user->id)
-                            ->where('status', 1)
                             ->orderBy('id', 'DESC')
                             ->take(8)
                             ->pluck('id')

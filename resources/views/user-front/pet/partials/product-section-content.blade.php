@@ -83,13 +83,39 @@
       </div>
       <div class="col-xl-8" data-aos="fade-up" data-aos-delay="100">
         @php
-          $products = json_decode($tabs[$i]->products, true);
+          $product_ids = json_decode($tabs[$i]->products, true) ?? [];
+          $valid_products = [];
+          if (!empty($product_ids) && is_array($product_ids)) {
+              $valid_products = \App\Models\User\UserItem::whereIn('id', $product_ids)
+                  ->where('status', 1)
+                  ->pluck('id')
+                  ->toArray();
+          }
+          if (empty($valid_products)) {
+              $tabHint = strtolower(($tabs[$i]->slug ?? '') . ' ' . ($tabs[$i]->name ?? ''));
+              $fallbackQ = \App\Models\User\UserItem::where('user_id', $user->id)->where('status', 1);
+              if (str_contains($tabHint, 'popular') || str_contains($tabHint, 'best') || str_contains($tabHint, 'top') || str_contains($tabHint, 'rate')) {
+                  $fallbackQ->orderBy('rating', 'DESC')->orderBy('id', 'DESC');
+              } elseif (str_contains($tabHint, 'new') || str_contains($tabHint, 'latest')) {
+                  $fallbackQ->orderBy('id', 'DESC');
+              } else {
+                  $fallbackQ->orderBy('id', 'DESC');
+              }
+              $valid_products = $fallbackQ->take(4)->pluck('id')->toArray();
+          }
+          if (empty($valid_products)) {
+              $valid_products = \App\Models\User\UserItem::where('user_id', $user->id)
+                  ->orderBy('id', 'DESC')
+                  ->take(4)
+                  ->pluck('id')
+                  ->toArray();
+          }
         @endphp
-        @if (!is_null($products))
+        @if (!empty($valid_products))
           <div class="row">
-            @for ($j = 0; $j < count($products); $j++)
+            @for ($j = 0; $j < count($valid_products); $j++)
               @php
-                $product_details = \App\Models\User\UserItem::where('id', $products[$j])
+                $product_details = \App\Models\User\UserItem::where('id', $valid_products[$j])
                     ->with([
                         'itemContents' => function ($q) use ($uLang) {
                             $q->where('language_id', '=', $uLang);
@@ -98,128 +124,128 @@
                     ])
                     ->first();
                 if (is_null($product_details)) { continue; }
+                $itemContent = $product_details->itemContents->first() ?: \App\Models\User\UserItemContent::where('item_id', $product_details->id)->first();
+                if (!$itemContent || empty($itemContent->slug)) { continue; }
+                $flash_info = flashAmountStatus($product_details->id, $product_details->current_price);
+                $product_current_price = $flash_info['amount'];
+                $flash_status = $flash_info['status'];
               @endphp
-              @if (!is_null(@$product_details->itemContents[0]->slug))
-                @php
-                  $flash_info = flashAmountStatus($product_details->id, $product_details->current_price);
-                  $product_current_price = $flash_info['amount'];
-                  $flash_status = $flash_info['status'];
-                @endphp
-                <div class="col-6">
-                  <!-- product-inline -->
-                  <div class="product-default-7-inline mb-30 radius-sm"
-                    style="background:#{{ $product_details->background_color }}">
-                    <figure class="product-img">
-                      <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $product_details->itemContents[0]->slug]) }}"
-                        class="ratio ratio-1-1 radius-md">
-                        <img class="lazyload blur-up default-img"
-                          src="{{ asset('assets/front/images/placeholder.png') }}"
-                          data-src="{{ asset('assets/front/img/user/items/thumbnail/' . $product_details->thumbnail) }}"
-                          alt="Product">
-                        <img class="lazyload blur-up hover-img"
-                          src="{{ asset('assets/front/images/placeholder.png') }}"
-                          data-src="{{ asset('assets/front/img/user/items/thumbnail/' . $product_details->thumbnail) }}"
-                          alt="Product">
-                      </a>
-                    </figure>
-                    <div class="product-details">
+              <div class="col-6">
+                <!-- product-inline -->
+                <div class="product-default-7-inline mb-30 radius-sm"
+                  style="background:#{{ $product_details->background_color }}">
+                  <figure class="product-img">
+                    <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $itemContent->slug]) }}"
+                      class="ratio ratio-1-1 radius-md">
+                      <img class="lazyload blur-up default-img"
+                        src="{{ asset('assets/front/images/placeholder.png') }}"
+                        data-src="{{ asset('assets/front/img/user/items/thumbnail/' . $product_details->thumbnail) }}"
+                        alt="Product">
+                      <img class="lazyload blur-up hover-img"
+                        src="{{ asset('assets/front/images/placeholder.png') }}"
+                        data-src="{{ asset('assets/front/img/user/items/thumbnail/' . $product_details->thumbnail) }}"
+                        alt="Product">
+                    </a>
+                  </figure>
+                  <div class="product-details">
+                    @if (@$itemContent->category)
                       <a class="product-category"
-                        href="{{ route('front.user.shop', ['category' => $product_details->itemContents[0]->category->slug, getParam()]) }}">{{ $product_details->itemContents[0]->category->name }}</a>
-                      <h5 class="product-title lc-2 mb-2">
-                        <a
-                          href="{{ route('front.user.productDetails', [getParam(), 'slug' => $product_details->itemContents[0]->slug]) }}">
-                          {{ $product_details->itemContents[0]->title }}
-                        </a>
-                      </h5>
-                      <!-- Rateing -->
-                      @if ($shop_settings->item_rating_system == 1)
-                        <div class="d-flex justify-content-start align-items-center mb-10">
-                          <div class="product-ratings rate text-xsm">
-                            <div class="rating" style="width:{{ $product_details->rating * 20 }}%"></div>
-                          </div>
-                          <span class="ratings-total">({{ reviewCount($product_details->id) }})</span>
+                        href="{{ route('front.user.shop', ['category' => $itemContent->category->slug, getParam()]) }}">{{ $itemContent->category->name }}</a>
+                    @endif
+                    <h5 class="product-title lc-2 mb-2">
+                      <a
+                        href="{{ route('front.user.productDetails', [getParam(), 'slug' => $itemContent->slug]) }}">
+                        {{ $itemContent->title }}
+                      </a>
+                    </h5>
+                    <!-- Rateing -->
+                    @if ($shop_settings->item_rating_system == 1)
+                      <div class="d-flex justify-content-start align-items-center mb-10">
+                        <div class="product-ratings rate text-xsm">
+                          <div class="rating" style="width:{{ $product_details->rating * 20 }}%"></div>
                         </div>
+                        <span class="ratings-total">({{ reviewCount($product_details->id) }})</span>
+                      </div>
+                    @endif
+                    <!-- product-price -->
+
+                    <div class="product-price mb-10">
+                      @if ($flash_status == true)
+                        <span
+                          class="new-price fw-semibold">{{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, currency_converter($product_current_price)) }}</span>
+                        <span class="old-price fw-medium text-decoration-line-through">
+                          {{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, currency_converter($product_details->current_price)) }}
+                        </span>
+                      @else
+                        <span class="new-price fw-semibold">
+                          {{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, currency_converter($product_details->current_price)) }}
+                        </span>
+                        <span class="old-price fw-medium text-decoration-line-through">
+                          {{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, currency_converter($product_details->previous_price)) }}
+                        </span>
                       @endif
-                      <!-- product-price -->
-
-                      <div class="product-price mb-10">
-                        @if ($flash_status == true)
-                          <span
-                            class="new-price fw-semibold">{{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, currency_converter($product_current_price)) }}</span>
-                          <span class="old-price fw-medium text-decoration-line-through">
-                            {{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, currency_converter($product_details->current_price)) }}
-                          </span>
-                        @else
-                          <span class="new-price fw-semibold">
-                            {{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, currency_converter($product_details->current_price)) }}
-                          </span>
-                          <span class="old-price fw-medium text-decoration-line-through">
-                            {{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, currency_converter($product_details->previous_price)) }}
-                          </span>
-                        @endif
-                      </div>
-
-                      <!-- btn-icon-group -->
-                      <div class="btn-icon-group btn-inline">
-                        <a href="javascript:void(0)" class="btn btn-icon" data-bs-toggle="tooltip"
-                          data-bs-placement="top"
-                          onclick="addToCompare('{{ route('front.user.add.compare', ['id' => $product_details->id, getParam()]) }}')"
-                          title="{{ $keywords['Compare'] ?? __('Compare') }}"><i class="fal fa-random"></i>
-                        </a>
-                        <button type="button" class="btn btn-icon quick-view-link" data-bs-toggle="tooltip"
-                          data-bs-placement="top" data-slug="{{ $product_details->itemContents[0]->slug }}"
-                          data-url="{{ route('front.user.productDetails.quickview', ['slug' => $product_details->itemContents[0]->slug, getParam()]) }}"
-                          title="{{ $keywords['Quick View'] ?? __('Quick View') }}">
-                          <i class="fal fa-eye"></i>
-                        </button>
-                        @php
-                          $customer_id = Auth::guard('customer')->check() ? Auth::guard('customer')->user()->id : null;
-                          $checkWishList = $customer_id ? checkWishList($product_details->id, $customer_id) : false;
-                        @endphp
-                        <a href="javascript:void(0)"
-                          class="btn btn-icon btn-wish {{ $checkWishList ? 'remove-wish active' : 'add-to-wish' }}"
-                          data-bs-toggle="tooltip" data-bs-placement="top"
-                          data-url="{{ route('front.user.add.wishlist', ['id' => $product_details->id, getParam()]) }}"
-                          data-removeurl="{{ route('front.user.remove.wishlist', ['id' => $product_details->id, getParam()]) }}"
-                          title="{{ $keywords['Add to wishlist'] ?? __('Add to wishlist') }}"><i
-                            class="fal fa-heart"></i>
-                        </a>
-                        @if ($shop_settings->catalog_mode != 1)
-                          <a href="#" class="btn btn-icon cart-link"
-                            data-title="{{ $product_details->itemContents[0]->title }}"
-                            data-current_price="{{ currency_converter($product_current_price) }}"
-                            data-item_id="{{ $product_details->id }}" data-language_id="{{ $uLang }}"
-                            data-totalVari="{{ check_variation($product_details->id) }}"
-                            data-variations="{{ check_variation($product_details->id) > 0 ? 'yes' : null }}"
-                            data-href="{{ route('front.user.add.cart', ['id' => $product_details->id, getParam()]) }}"
-                            data-bs-toggle="tooltip" data-bs-placement="top"
-                            title="{{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}"><i
-                              class="fal fa-shopping-bag"></i>
-                          </a>
-                        @endif
-                      </div>
                     </div>
 
-                    @php
-                      $item_label = DB::table('labels')
-                          ->where('id', $product_details->itemContents[0]->label_id)
-                          ->first();
-                      $label = $item_label->name ?? null;
-                      $color = $item_label->color ?? null;
-                    @endphp
-                    @if ($item_label)
-                      <span class="label label-2"
-                        style="background-color: #{{ $color }}">{{ $label }}</span>
-                    @endif
-
-                    @if ($flash_status == true)
-                      <span class="label-discount-percentage">
-                        <x-flash-icon></x-flash-icon>{{ $product_details->flash_amount }}%
-                      </span>
-                    @endif
+                    <!-- btn-icon-group -->
+                    <div class="btn-icon-group btn-inline">
+                      <a href="javascript:void(0)" class="btn btn-icon" data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        onclick="addToCompare('{{ route('front.user.add.compare', ['id' => $product_details->id, getParam()]) }}')"
+                        title="{{ $keywords['Compare'] ?? __('Compare') }}"><i class="fal fa-random"></i>
+                      </a>
+                      <button type="button" class="btn btn-icon quick-view-link" data-bs-toggle="tooltip"
+                        data-bs-placement="top" data-slug="{{ $itemContent->slug }}"
+                        data-url="{{ route('front.user.productDetails.quickview', ['slug' => $itemContent->slug, getParam()]) }}"
+                        title="{{ $keywords['Quick View'] ?? __('Quick View') }}">
+                        <i class="fal fa-eye"></i>
+                      </button>
+                      @php
+                        $customer_id = Auth::guard('customer')->check() ? Auth::guard('customer')->user()->id : null;
+                        $checkWishList = $customer_id ? checkWishList($product_details->id, $customer_id) : false;
+                      @endphp
+                      <a href="javascript:void(0)"
+                        class="btn btn-icon btn-wish {{ $checkWishList ? 'remove-wish active' : 'add-to-wish' }}"
+                        data-bs-toggle="tooltip" data-bs-placement="top"
+                        data-url="{{ route('front.user.add.wishlist', ['id' => $product_details->id, getParam()]) }}"
+                        data-removeurl="{{ route('front.user.remove.wishlist', ['id' => $product_details->id, getParam()]) }}"
+                        title="{{ $keywords['Add to wishlist'] ?? __('Add to wishlist') }}"><i
+                          class="fal fa-heart"></i>
+                      </a>
+                      @if ($shop_settings->catalog_mode != 1)
+                        <a href="#" class="btn btn-icon cart-link"
+                          data-title="{{ $itemContent->title }}"
+                          data-current_price="{{ currency_converter($product_current_price) }}"
+                          data-item_id="{{ $product_details->id }}" data-language_id="{{ $uLang }}"
+                          data-totalVari="{{ check_variation($product_details->id) }}"
+                          data-variations="{{ check_variation($product_details->id) > 0 ? 'yes' : null }}"
+                          data-href="{{ route('front.user.add.cart', ['id' => $product_details->id, getParam()]) }}"
+                          data-bs-toggle="tooltip" data-bs-placement="top"
+                          title="{{ $keywords['Add_to_Cart'] ?? __('Add to Cart') }}"><i
+                            class="fal fa-shopping-bag"></i>
+                        </a>
+                      @endif
+                    </div>
                   </div>
+
+                  @php
+                    $item_label = DB::table('labels')
+                        ->where('id', @$itemContent->label_id)
+                        ->first();
+                    $label = $item_label->name ?? null;
+                    $color = $item_label->color ?? null;
+                  @endphp
+                  @if ($item_label)
+                    <span class="label label-2"
+                      style="background-color: #{{ $color }}">{{ $label }}</span>
+                  @endif
+
+                  @if ($flash_status == true)
+                    <span class="label-discount-percentage">
+                      <x-flash-icon></x-flash-icon>{{ $product_details->flash_amount }}%
+                    </span>
+                  @endif
                 </div>
-              @endif
+              </div>
             @endfor
           </div>
         @endif

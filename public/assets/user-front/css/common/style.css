@@ -7002,7 +7002,7 @@ figure.product-img.skeleton.skeleton-big-img {
 .shop-category-pills .pills-wrapper {
     display: flex;
     gap: 20px;
-    align-items: center;
+    align-items: flex-start !important;
     width: max-content;
     padding: 10px 5px;
 }
@@ -7011,9 +7011,13 @@ figure.product-img.skeleton.skeleton-big-img {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start !important;
     text-decoration: none !important;
     cursor: pointer;
     transition: all 0.3s ease;
+    width: 78px;
+    min-width: 78px;
+    text-align: center;
 }
 
 .shop-category-pills .pill-img-wrap {

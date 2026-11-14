@@ -88,10 +88,26 @@
       </div>
       <div class="col-xl-8">
         @php
-          $products = json_decode($tabs[$i]->products, true);
+          $product_ids = json_decode($tabs[$i]->products, true) ?? [];
+          $valid_products = [];
+          if (!empty($product_ids) && is_array($product_ids)) {
+              $valid_products = \App\Models\User\UserItem::whereIn('id', $product_ids)
+                  ->where('user_id', $user->id)
+                  ->where('status', 1)
+                  ->pluck('id')
+                  ->toArray();
+          }
+          if (empty($valid_products)) {
+              $valid_products = \App\Models\User\UserItem::where('user_id', $user->id)
+                  ->where('status', 1)
+                  ->orderBy('id', 'DESC')
+                  ->take(8)
+                  ->pluck('id')
+                  ->toArray();
+          }
         @endphp
-        @if (!is_null($products))
-          @foreach (array_chunk($products, 2) as $chunk)
+        @if (!empty($valid_products))
+          @foreach (array_chunk($valid_products, 2) as $chunk)
             @php
               $product_details1 = \App\Models\User\UserItem::where('id', $chunk[0])
                   ->with([

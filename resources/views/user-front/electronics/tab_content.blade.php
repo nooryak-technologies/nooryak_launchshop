@@ -130,10 +130,13 @@
                                         ->first();
                                   @endphp
 
-                                  @if (!is_null(@$product_details->itemContents[0]->slug))
+                                  @php
+                                    $itemContent = !empty($product_details) ? ($product_details->itemContents->first() ?: \App\Models\User\UserItemContent::where('item_id', $product_details->id)->first()) : null;
+                                  @endphp
+                                  @if (!empty($itemContent) && !empty($itemContent->slug))
                                     <div class="product-default product-default-2 radius-md mb-30">
                                       <figure class="product-img">
-                                        <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $product_details->itemContents[0]->slug]) }}"
+                                        <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $itemContent->slug]) }}"
                                           class="lazy-container ratio ratio-1-1">
                                           <img class="lazyload default-img"
                                             src="{{ asset('assets/front/images/placeholder.png') }}"
@@ -165,7 +168,7 @@
                                           <div class="hover-show">
                                             @if ($shop_settings->catalog_mode != 1)
                                               <a class="btn btn-icon rounded-pill cart-link cursor-pointer"
-                                                data-title="{{ $product_details->itemContents[0]->title }}"
+                                                data-title="{{ $itemContent->title }}"
                                                 data-current_price="{{ currency_converter($product_current_price) }}"
                                                 data-item_id="{{ $product_details->id }}"
                                                 data-variations="{{ check_variation($product_details->id) > 0 ? 'yes' : null }}"
@@ -179,8 +182,8 @@
 
                                             <a class="btn btn-icon rounded-pill quick-view-link"
                                               data-bs-toggle="tooltip" data-bs-placement="top"
-                                              data-slug="{{ $product_details->itemContents[0]->slug }}"
-                                              data-url="{{ route('front.user.productDetails.quickview', ['slug' => $product_details->itemContents[0]->slug, getParam()]) }}"
+                                              data-slug="{{ $itemContent->slug }}"
+                                              data-url="{{ route('front.user.productDetails.quickview', ['slug' => $itemContent->slug, getParam()]) }}"
                                               title="{{ $keywords['Quick View'] ?? __('Quick View') }}"><i
                                                 class="fal fa-eye"></i></a>
 
@@ -213,13 +216,13 @@
 
 
                                         <a
-                                          href="{{ route('front.user.shop', ['category' => $product_details->itemContents[0]->category->slug, getParam()]) }}">
+                                          @if(!empty($itemContent->category)) href="{{ route('front.user.shop', ['category' => $itemContent->category->slug, getParam()]) }}" @else href="#" @endif>
                                           <span
-                                            class="product-category text-sm">{{ $product_details->itemContents[0]->category->name }}</span>
+                                            class="product-category text-sm">{{ $itemContent->category->name ?? '' }}</span>
                                         </a>
                                         <h3 class="product-title lc-2">
                                           <a
-                                            href="{{ route('front.user.productDetails', [getParam(), 'slug' => $product_details->itemContents[0]->slug]) }}">{{ $product_details->itemContents[0]->title }}</a>
+                                            href="{{ route('front.user.productDetails', [getParam(), 'slug' => $itemContent->slug]) }}">{{ $itemContent->title }}</a>
                                         </h3>
                                         <div class="product-price mb-0">
                                           @if ($flash_status == true)
@@ -244,7 +247,7 @@
                                       </div>
                                       @php
                                         $item_label = DB::table('labels')
-                                            ->where('id', $product_details->itemContents[0]->label_id)
+                                            ->where('id', $itemContent->label_id)
                                             ->first();
                                         $label = $item_label->name ?? null;
                                         $color = $item_label->color ?? null;

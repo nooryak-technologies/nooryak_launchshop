@@ -13,8 +13,8 @@
 
         @foreach($top_rated as $item)
           @php
-            $itemContent = $item->itemContents->first();
-            if(is_null($itemContent)) continue;
+            $itemContent = $item->itemContents->first() ?: \App\Models\User\UserItemContent::where('item_id', $item->id)->first();
+            if(empty($itemContent) || empty($itemContent->slug)) continue;
 
             $fi = flashAmountStatus($item->id, $item->current_price);
             $fs = $fi['status'];

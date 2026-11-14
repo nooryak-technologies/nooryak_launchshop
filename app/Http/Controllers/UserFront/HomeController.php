@@ -135,6 +135,16 @@ class HomeController extends Controller
                 ->where('user_item_contents.language_id', '=', $userCurrentLang->id)
                 ->get();
 
+            if ($data['hero_product_sliders']->isEmpty()) {
+                $data['hero_product_sliders'] = DB::table('user_items')->where('user_items.user_id', $user->id)
+                    ->where('user_items.status', '=', 1)
+                    ->join('user_item_contents', 'user_items.id', '=', 'user_item_contents.item_id')
+                    ->select('user_items.*', 'user_items.id AS item_id', 'user_item_contents.title', 'user_item_contents.slug', 'user_item_contents.summary')
+                    ->orderBy('user_items.id', 'DESC')
+                    ->take(5)
+                    ->get();
+            }
+
 
             $data['banners'] = Banner::where('language_id', $userCurrentLang->id)
                 ->where([['user_id', $user->id], ['position', 'middle']])
@@ -184,7 +194,7 @@ class HomeController extends Controller
             ->orderBy('user_items.id', 'DESC')
             ->where('user_item_contents.language_id', '=', $userCurrentLang->id);
 
-        $data['flash_items'] = (clone $flash_query)->get();
+        $data['flash_items'] = (clone $flash_query)->take(8)->get();
 
         if ($data['flash_items']->isEmpty()) {
             $data['flash_items'] = DB::table('user_items')->where('user_items.user_id', $user->id)
@@ -197,7 +207,7 @@ class HomeController extends Controller
                 ->select('user_items.*', 'user_items.id AS item_id', 'user_item_contents.*', 'user_item_categories.name AS category', 'user_item_categories.slug AS category_slug')
                 ->orderBy('user_items.id', 'DESC')
                 ->where('user_item_contents.language_id', '=', $userCurrentLang->id)
-                ->take(3)
+                ->take(8)
                 ->get();
         }
 
@@ -208,8 +218,37 @@ class HomeController extends Controller
                 ->leftJoin('user_item_categories', 'user_item_contents.category_id', '=', 'user_item_categories.id')
                 ->select('user_items.*', 'user_items.id AS item_id', 'user_item_contents.*', 'user_item_categories.name AS category', 'user_item_categories.slug AS category_slug')
                 ->orderBy('user_items.id', 'DESC')
-                ->take(3)
+                ->take(8)
                 ->get();
+        }
+
+        if ($data['flash_items']->isEmpty()) {
+            $fallbackUserItems = UserItem::where('user_id', $user->id)
+                ->where('status', 1)
+                ->with(['itemContents.category'])
+                ->orderBy('id', 'DESC')
+                ->take(8)
+                ->get();
+
+            $data['flash_items'] = $fallbackUserItems->map(function ($ui) {
+                $content = $ui->itemContents->first();
+                $obj = new \stdClass();
+                foreach ($ui->getAttributes() as $k => $v) {
+                    $obj->$k = $v;
+                }
+                $obj->item_id = $ui->id;
+                $obj->title = $content ? $content->title : 'Product #' . $ui->id;
+                $obj->slug = $content ? $content->slug : 'product-' . $ui->id;
+                $obj->summary = $content ? $content->summary : '';
+                $obj->category = ($content && $content->category) ? $content->category->name : '';
+                $obj->category_slug = ($content && $content->category) ? $content->category->slug : '';
+                $obj->flash = 1;
+                $obj->flash_amount = $ui->flash_amount ?: 20;
+                $obj->start_date = $ui->start_date ?: date('Y-m-d');
+                $obj->end_date = $ui->end_date ?: date('Y-m-d', strtotime('+30 days'));
+                $obj->end_time = $ui->end_time ?: '23:59';
+                return $obj;
+            });
         }
 
 

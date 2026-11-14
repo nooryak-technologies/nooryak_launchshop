@@ -48,12 +48,14 @@
     @else
       <div class="product-slider-md" id="product-slider-md-pet" data-slick='{"dots": true, "slidesToShow": 2}'>
         @for ($k = 0; $k < count($top_rated); $k++)
-          @if ($top_rated[$k]->itemContents != '[]')
-            @if (isset($top_rated[$k]))
+                    @php
+            $itemContent = !empty($top_rated[$k]) ? ($top_rated[$k]->itemContents->first() ?: \App\Models\User\UserItemContent::where('item_id', $top_rated[$k]->id)->first()) : null;
+          @endphp
+          @if (!empty($top_rated[$k]) && !empty($itemContent) && !empty($itemContent->slug))
               <!-- product-default -->
               <div class="product-default-7-v2 radius-lg mb-30">
                 <figure class="product-img">
-                  <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $top_rated[$k]->itemContents[0]->slug]) }}"
+                  <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $itemContent->slug]) }}"
                     class="lazy-container ratio ratio-4-3 radius-md">
                     <img class="lazyload blur-up default-img" src="{{ asset('assets/front/images/placeholder.png') }}"
                       data-src="{{ asset('assets/front/img/user/items/thumbnail/' . @$top_rated[$k]->thumbnail) }}"
@@ -77,8 +79,8 @@
                       <i class="fal fa-random"></i>
                     </a>
                     <button type="button" class="btn btn-icon quick-view-link" data-bs-toggle="tooltip"
-                      data-bs-placement="top" data-slug="{{ $top_rated[$k]->itemContents[0]->slug }}"
-                      data-url="{{ route('front.user.productDetails.quickview', ['slug' => $top_rated[$k]->itemContents[0]->slug, getParam()]) }}"
+                      data-bs-placement="top" data-slug="{{ $itemContent->slug }}"
+                      data-url="{{ route('front.user.productDetails.quickview', ['slug' => $itemContent->slug, getParam()]) }}"
                       title="{{ $keywords['Quick View'] ?? __('Quick View') }}">
                       <i class="fal fa-eye"></i>
                     </button>
@@ -97,7 +99,7 @@
                     </a>
                     @if ($shop_settings->catalog_mode != 1)
                       <a href="javascript:void(0)" class="btn btn-icon cart-link"
-                        data-title="{{ $top_rated[$k]->itemContents[0]->title }}"
+                        data-title="{{ $itemContent->title }}"
                         data-current_price="{{ currency_converter($product_current_price) }}"
                         data-item_id="{{ $top_rated[$k]->id }}" data-language_id="{{ $uLang }}"
                         data-totalVari="{{ check_variation($top_rated[$k]->id) }}"
@@ -120,8 +122,8 @@
                   @endif
                   <h5 class="product-title fw-medium lc-2 mb-2">
                     <a
-                      href="{{ route('front.user.productDetails', [getParam(), 'slug' => $top_rated[$k]->itemContents[0]->slug]) }}">
-                      {{ $top_rated[$k]->itemContents[0]->title }}
+                      href="{{ route('front.user.productDetails', [getParam(), 'slug' => $itemContent->slug]) }}">
+                      {{ $itemContent->title }}
                     </a>
                   </h5>
 

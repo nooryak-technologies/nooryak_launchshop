@@ -142,22 +142,35 @@
                 }'>
 
 
-                  @foreach ($cat->items as $single_item)
+                  @php
+                    $cat_item_ids = $cat->items->pluck('item_id')->toArray();
+                    $valid_cat_items = [];
+                    if (!empty($cat_item_ids)) {
+                        $valid_cat_items = \App\Models\User\UserItem::whereIn('id', $cat_item_ids)->where('status', 1)->pluck('id')->toArray();
+                    }
+                    if (empty($valid_cat_items)) {
+                        $valid_cat_items = \App\Models\User\UserItem::where('user_id', $user->id)->where('status', 1)->orderBy('id', 'DESC')->take(8)->pluck('id')->toArray();
+                    }
+                  @endphp
+                  @foreach ($valid_cat_items as $prod_id)
                     @php
-                      $product_details = \App\Models\User\UserItem::where('id', $single_item->item_id)
+                      $product_details = \App\Models\User\UserItem::where('id', $prod_id)
                           ->with([
                               'itemContents' => function ($q) use ($uLang) {
                                   $q->where('language_id', '=', $uLang);
                               },
                               'sliders',
                           ])
-                          ->where([['status', 1], ['is_feature', 1]])
+                          ->where('status', 1)
                           ->first();
+                      if (!$product_details) { continue; }
+                      $itemContent = $product_details->itemContents->first() ?: \App\Models\User\UserItemContent::where('item_id', $product_details->id)->first();
+                      if (!$itemContent || empty($itemContent->slug)) { continue; }
                     @endphp
-                    @if (!is_null(@$product_details->itemContents[0]->slug))
+                    @if (!empty($itemContent->slug))
                       <div class="product-default product-default-2 radius-md mb-30">
                         <figure class="product-img">
-                          <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $product_details->itemContents[0]->slug]) }}"
+                          <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $itemContent->slug]) }}"
                             class="lazy-container ratio ratio-1-1">
                             <img class="lazyload default-img" src="{{ asset('assets/front/images/placeholder.png') }}"
                               data-src="{{ asset('assets/front/img/user/items/thumbnail/' . $product_details->thumbnail) }}"
@@ -186,7 +199,7 @@
 
                             <a class="btn btn-icon mb-10 rounded-pill quick-view-link" data-bs-toggle="tooltip"
                               data-bs-placement="top" data-item_id="{{ $product_details->id }}"
-                              data-url="{{ route('front.user.productDetails.quickview', ['slug' => $product_details->itemContents[0]->slug, getParam()]) }}"
+                              data-url="{{ route('front.user.productDetails.quickview', ['slug' => $itemContent->slug, getParam()]) }}"
                               title="{{ $keywords['Quick View'] ?? __('Quick View') }}"><i class="fal fa-eye"></i></a>
 
                             @php
@@ -205,7 +218,7 @@
                                 class="fal fa-heart"></i></a>
                             @if ($shop_settings->catalog_mode != 1)
                               <a class="btn btn-icon rounded-pill mb-10 cart-link cursor-pointer"
-                                data-title="{{ $product_details->itemContents[0]->title }}"
+                                data-title="{{ $itemContent->title }}"
                                 data-current_price="{{ currency_converter($product_current_price) }}"
                                 data-item_id="{{ $product_details->id }}" data-language_id="{{ $uLang }}"
                                 data-totalVari="{{ check_variation($product_details->id) }}"
@@ -218,10 +231,10 @@
 
                           </div>
                           <span class="product-category text-sm"><a
-                              href="{{ route('front.user.shop', ['category' => $product_details->itemContents[0]->category->slug, getParam()]) }}">{{ $product_details->itemContents[0]->category->name }}</a></span>
+                              href="@if(!empty($itemContent->category)) {{ route('front.user.shop', ['category' => $itemContent->category->slug, getParam()]) }} @else # @endif">{{ $itemContent->category->name ?? '' }}</a></span>
                           <h3 class="product-title lc-2">
                             <a
-                              href="{{ route('front.user.productDetails', [getParam(), 'slug' => $product_details->itemContents[0]->slug]) }}">{{ $product_details->itemContents[0]->title }}</a>
+                              href="{{ route('front.user.productDetails', [getParam(), 'slug' => $itemContent->slug]) }}">{{ $itemContent->title }}</a>
                           </h3>
 
                           @if ($shop_settings->item_rating_system == 1)
@@ -252,10 +265,10 @@
                           </div>
                         </div>
 
-                        @if (!is_null(@$product_details->itemContents[0]->label_id))
+                        @if (!is_null(@$itemContent->label_id))
                           @php
                             $item_label = DB::table('labels')
-                                ->where('id', @$product_details->itemContents[0]->label_id)
+                                ->where('id', @$itemContent->label_id)
                                 ->first();
                             $label = $item_label->name ?? null;
                             $color = $item_label->color ?? null;

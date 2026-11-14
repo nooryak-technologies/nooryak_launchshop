@@ -1,7 +1,10 @@
-<!-- product-inline -->
+@php
+  $itemContent = !empty($product) ? ($product->itemContents->first() ?: \App\Models\User\UserItemContent::where('item_id', $product->id)->first()) : null;
+@endphp
+@if (!empty($product) && !empty($itemContent) && !empty($itemContent->slug))
   <div class="product-default-8-inline">
     <figure class="product-img">
-      <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => @$product->itemContents[0]->slug]) }}"
+      <a href="{{ route('front.user.productDetails', [getParam(), 'slug' => $itemContent->slug]) }}"
         class="ratio ratio-1-1">
         <img class="lazyload blur-up default-img" src="{{ asset('assets/front/images/placeholder.png') }}"
           data-src="{{ asset('assets/front/img/user/items/thumbnail/' . $product->thumbnail) }}" alt="Product">
@@ -13,12 +16,12 @@
     <div class="product-details">
       <span class="product-category">
         <a
-          href="{{ route('front.user.shop', ['category' => @$product->itemContents[0]->category->slug, getParam()]) }}">{{ @$product->itemContents[0]->category->name }}</a>
+          href="@if(!empty($itemContent->category)) {{ route('front.user.shop', ['category' => $itemContent->category->slug, getParam()]) }} @else # @endif">{{ $itemContent->category->name ?? '' }}</a>
       </span>
       @if (count($product->itemContents) > 0)
         <h5 class="product-title lc-2 fw-medium mb-2">
           <a
-            href="{{ route('front.user.productDetails', [getParam(), 'slug' => $product->itemContents[0]->slug]) }}">{{ $product->itemContents[0]->title }}</a>
+            href="{{ route('front.user.productDetails', [getParam(), 'slug' => $itemContent->slug]) }}">{{ $itemContent->title }}</a>
         </h5>
       @endif
       @if ($shop_settings->item_rating_system == 1)
@@ -63,8 +66,8 @@
         </a>
 
         <button type="button" class="btn btn-icon quick-view-link" data-bs-toggle="tooltip" data-bs-placement="top"
-          data-slug="{{ $product->itemContents[0]->slug }}"
-          data-url="{{ route('front.user.productDetails.quickview', ['slug' => $product->itemContents[0]->slug, getParam()]) }}"
+          data-slug="{{ $itemContent->slug }}"
+          data-url="{{ route('front.user.productDetails.quickview', ['slug' => $itemContent->slug, getParam()]) }}"
           title="{{ $keywords['Quick View'] ?? __('Quick View') }}">
           <i class="fal fa-eye"></i>
         </button>
@@ -83,7 +86,7 @@
         </a>
         @if ($shop_settings->catalog_mode != 1)
           <a href="javascript:void(0)" class="btn btn-icon cart-link"
-            data-title="{{ $product->itemContents[0]->title }}"
+            data-title="{{ $itemContent->title }}"
             data-current_price="{{ currency_converter($product_current_price) }}"
             data-item_id="{{ $product->id }}" data-language_id="{{ $uLang }}"
             data-totalVari="{{ check_variation($product->id) }}"
@@ -96,3 +99,5 @@
       </div>
     </div>
   </div>
+
+@endif

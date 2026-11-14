@@ -104,9 +104,6 @@
             $products = json_decode($tabs[$i]->products, true);
             $active_p_ids = \App\Models\User\UserItem::where('user_id', $user->id)
                 ->where('status', 1)
-                ->whereHas('itemContents', function ($q) use ($uLang) {
-                    $q->where('language_id', '=', $uLang);
-                })
                 ->pluck('id')
                 ->toArray();
             

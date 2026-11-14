@@ -53,14 +53,14 @@
            <div class="slider-arrow style-2 mt-40" id="pro-slider-fashion-arrows"></div>
          </div>
        </div>
-       <div class="col-lg-auto">
+       <div class="col-lg-8">
          @if (count($flash_items) == 0)
            <h5 class="title mb-20">
              {{ $userSec->category_section_title ?? ($keywords['NO PRODUCTS FOUND'] ?? __('NO PRODUCTS FOUND')) }}
            </h5>
          @else
            <div class="product-slider" id="pro-slider-fashion"
-             data-slick='{"arrows": true, "infinite": true, "slidesToShow": 4}'>
+             data-slick='{"arrows": true, "infinite": false, "slidesToShow": 4, "responsive": [{"breakpoint": 1200, "settings": {"slidesToShow": 3}}, {"breakpoint": 992, "settings": {"slidesToShow": 2}}, {"breakpoint": 576, "settings": {"slidesToShow": 2}}]}'>
              @foreach ($flash_items as $item)
                <div class="product-default product-default-3 radius-md border-0 mb-30">
                  <figure class="product-img">

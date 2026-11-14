@@ -2270,3 +2270,38 @@ html[dir="rtl"] .header-middle .header-right {
 </style>
 
 @yield('styles')
+
+<style>
+
+/* --- Shop Category Pills Horizontal Alignment Fix --- */
+.shop-category-pills .pills-wrapper {
+  display: flex !important;
+  align-items: flex-start !important;
+}
+.shop-category-pills .pill-item {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  width: 78px !important;
+  min-width: 78px !important;
+  text-align: center !important;
+}
+.shop-category-pills .pill-img-wrap {
+  width: 75px !important;
+  height: 75px !important;
+  flex-shrink: 0 !important;
+  margin-bottom: 8px !important;
+}
+.shop-category-pills .pill-name {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  text-align: center !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  max-width: 76px !important;
+  display: block !important;
+}
+
+</style>
