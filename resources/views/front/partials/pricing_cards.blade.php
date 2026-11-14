@@ -536,15 +536,20 @@
               </div>
               <p class="plan-v2-billing-note">Tailored to your needs</p>
               <hr class="plan-v2-divider">
+              @php
+                $entRaw = !empty($customSetting->enterprise_features) ? $customSetting->enterprise_features : "Free Domain\nEverything in Premium\nUnlimited Staff Accounts\nDedicated Account Manager\nCustom Integrations\nSLA & Uptime Guarantee\nPriority 24/7 Support";
+                $entLines = array_values(array_filter(array_map('trim', explode("\n", $entRaw))));
+                $entVisibleCount = 7;
+                $entVisible = array_slice($entLines, 0, $entVisibleCount);
+                $entExtra = array_slice($entLines, $entVisibleCount);
+                $hasEntExtra = count($entExtra) > 0;
+              @endphp
               <ul class="plan-v2-features">
-                @php
-                  $entRaw = !empty($customSetting->enterprise_features) ? $customSetting->enterprise_features : "Free Domain\nEverything in Premium\nUnlimited Staff Accounts\nDedicated Account Manager\nCustom Integrations\nSLA & Uptime Guarantee\nPriority 24/7 Support";
-                  $entLines = array_values(array_filter(array_map('trim', explode("\n", $entRaw))));
-                @endphp
-                @foreach($entLines as $idx => $line)
+                @foreach($entVisible as $idx => $line)
                   @php
                     $isDomainLine = (stripos($line, 'domain') !== false);
                     $lineClean = str_ireplace(['Free .com Domain Every Year', 'Free .in Domain Every Year', 'Free .com Domain', 'Free .in Domain'], 'Free Domain', $line);
+                    $lineClean = str_ireplace('Unlimiters Products', 'Unlimited Products', $lineClean);
                   @endphp
                   @if($isDomainLine)
                     <li><i class="fas fa-globe fi-check" style="color: #10b981;"></i><span style="color: #10b981; font-weight: 700;">{{ $lineClean }}</span></li>
@@ -553,6 +558,41 @@
                   @endif
                 @endforeach
               </ul>
+
+              @if($hasEntExtra)
+                <div class="plan-v2-extra-features" id="extra-{{ strtolower($term) }}-enterprise">
+                  <ul class="plan-v2-features" style="margin-bottom:8px;">
+                    @foreach($entExtra as $idx => $line)
+                      @php
+                        $isDomainLine = (stripos($line, 'domain') !== false);
+                        $lineClean = str_ireplace(['Free .com Domain Every Year', 'Free .in Domain Every Year', 'Free .com Domain', 'Free .in Domain'], 'Free Domain', $line);
+                        $lineClean = str_ireplace('Unlimiters Products', 'Unlimited Products', $lineClean);
+                      @endphp
+                      @if($isDomainLine)
+                        <li><i class="fas fa-globe fi-check" style="color: #10b981;"></i><span style="color: #10b981; font-weight: 700;">{{ $lineClean }}</span></li>
+                      @else
+                        <li><i class="fas fa-check fi-check"></i><span>{{ $lineClean }}</span></li>
+                      @endif
+                    @endforeach
+                  </ul>
+                </div>
+
+                <button type="button" class="plan-v2-see-more"
+                        data-plan-title="Enterprise Custom Plan"
+                        data-plan-price="Custom"
+                        data-plan-href="{{ Route::has('front.contact') ? route('front.contact') : url('/') }}"
+                        data-plan-cta="Talk to Sales"
+                        data-plan-tone="enterprise"
+                        data-plan-badge="CUSTOM PLAN"
+                        onclick="togglePlanFeatures('{{ strtolower($term) }}-enterprise', this)">
+                  <span class="see-more-txt d-none d-md-inline">See More Features</span>
+                  <span class="see-more-mobile-label d-inline-flex d-md-none align-items-center gap-1">
+                    <span>More Features</span>
+                    <span class="plan-v2-plus-circle"><i class="fas fa-plus"></i></span>
+                  </span>
+                  <i class="fas fa-arrow-right see-more-icon d-none d-md-inline-block" style="font-size:11px;"></i>
+                </button>
+              @endif
               <div style="display:flex;gap:8px;margin-top:auto;width:100%;">
                 <a href="{{ Route::has('front.contact') ? route('front.contact') : url('/') }}" class="plan-v2-btn" style="flex:1;margin-top:0;">Talk to Sales</a>
                 <a href="https://wa.me/917200770351?text=Hi%2C%20I%20want%20to%20enquire%20about%20the%20Enterprise%20Plan%20for%20LaunchShop." target="_blank" class="plan-v2-wa-btn">
@@ -634,7 +674,7 @@
 
       if (boxEl && badgeEl) {
         boxEl.classList.remove('tone-recommended', 'tone-best-value', 'tone-basic', 'tone-enterprise');
-        badgeEl.classList.remove('badge-recommended', 'badge-best-value', 'badge-basic');
+        badgeEl.classList.remove('badge-recommended', 'badge-best-value', 'badge-basic', 'badge-enterprise');
         boxEl.classList.add('tone-' + planTone);
 
         if (badgeText) {

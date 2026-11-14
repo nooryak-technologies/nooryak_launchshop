@@ -1104,7 +1104,8 @@
     background: linear-gradient(135deg, #ff6b35, #ff3b1f);
   }
 
-  .plan-feats-mobile-badge.badge-basic {
+  .plan-feats-mobile-badge.badge-basic,
+  .plan-feats-mobile-badge.badge-enterprise {
     background: linear-gradient(135deg, #1e293b, #0f172a);
   }
 
