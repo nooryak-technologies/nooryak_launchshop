@@ -406,7 +406,7 @@
             <div class="form-group border rounded p-4 text-center bg-light" style="border: 2px dashed #ff9f43 !important; border-radius: 10px; cursor: pointer;" onclick="document.getElementById('bulkImageInput').click();">
               <i class="fas fa-cloud-upload-alt text-warning mb-2" style="font-size: 42px;"></i>
               <h6 class="font-weight-bold text-dark mb-1">{{ __('Click or Drag & Drop Images Here') }}</h6>
-              <p class="text-muted mb-1" style="font-size: 12px;">{{ __('Select multiple image files (JPG, PNG, WEBP, SVG max 10MB per file)') }}</p>
+              <p class="text-muted mb-1" style="font-size: 12px;">{{ __('Select multiple image files (JPG, PNG, WEBP, SVG — total upload batch must be under 10MB)') }}</p>
               <div class="mb-2"><span class="badge badge-success px-2 py-1" style="font-size: 11px; background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9;"><i class="fas fa-magic mr-1"></i>{{ __('PNG & JPG are automatically converted to lightweight WebP') }}</span></div>
               <input type="file" id="bulkImageInput" name="images[]" multiple accept="image/*" class="d-none" onchange="handleBulkFilesSelected(this)">
               <div id="selectedFilesBadge" class="mt-2 text-info font-weight-bold" style="font-size: 13px;"></div>
@@ -461,8 +461,20 @@
       var badge = document.getElementById('selectedFilesBadge');
       var btn = document.getElementById('uploadImagesSubmitBtn');
       if (files && files.length > 0) {
-        badge.innerHTML = '<i class="fas fa-check-circle text-success mr-1"></i> ' + files.length + ' {{ __("files selected") }}';
-        btn.removeAttribute('disabled');
+        var totalBytes = 0;
+        for (var i = 0; i < files.length; i++) {
+          totalBytes += files[i].size;
+        }
+        var totalMb = (totalBytes / (1024 * 1024)).toFixed(2);
+        var maxBytes = 10 * 1024 * 1024; // 10MB limit
+
+        if (totalBytes > maxBytes) {
+          badge.innerHTML = '<span class="text-danger font-weight-bold"><i class="fas fa-exclamation-triangle mr-1"></i> ' + files.length + ' {{ __("files selected") }} (' + totalMb + ' MB) — {{ __("Total batch exceeds 10MB! Please select fewer or smaller files.") }}</span>';
+          btn.setAttribute('disabled', 'disabled');
+        } else {
+          badge.innerHTML = '<span class="text-success font-weight-bold"><i class="fas fa-check-circle mr-1"></i> ' + files.length + ' {{ __("files selected") }} (' + totalMb + ' MB total)</span>';
+          btn.removeAttribute('disabled');
+        }
       } else {
         badge.innerHTML = '';
         btn.setAttribute('disabled', 'disabled');
@@ -527,6 +539,17 @@
 
     document.getElementById('bulkImagesForm')?.addEventListener('submit', function(e) {
       e.preventDefault();
+      var input = document.getElementById('bulkImageInput');
+      if (input && input.files && input.files.length > 0) {
+        var totalBytes = 0;
+        for (var i = 0; i < input.files.length; i++) {
+          totalBytes += input.files[i].size;
+        }
+        if (totalBytes > 10 * 1024 * 1024) {
+          alert('{{ __("Total upload batch size cannot exceed 10MB. Please select fewer or smaller images.") }}');
+          return;
+        }
+      }
       var formData = new FormData(this);
       var btn = document.getElementById('uploadImagesSubmitBtn');
       btn.setAttribute('disabled', 'disabled');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\Uploader;
 use App\Models\User\UserRole;
 use App\Models\User\UserStaff;
 use Illuminate\Http\Request;
@@ -61,9 +62,8 @@ class StaffController extends Controller
         $staff->status = 1;
 
         if ($request->hasFile('image')) {
-            $imageName = time() . '_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move(public_path('assets/front/img/user/'), $imageName);
-            $staff->image = $imageName;
+            $dir = public_path('assets/front/img/user/');
+            $staff->image = Uploader::upload_picture($dir, $request->file('image'));
         }
 
         $staff->save();
@@ -150,10 +150,8 @@ class StaffController extends Controller
         }
 
         if ($request->hasFile('image')) {
-            @unlink(public_path('assets/front/img/user/' . $staff->image));
-            $imageName = time() . '_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move(public_path('assets/front/img/user/'), $imageName);
-            $staff->image = $imageName;
+            $dir = public_path('assets/front/img/user/');
+            $staff->image = Uploader::update_picture($dir, $request->file('image'), $staff->image);
         }
 
         $staff->save();

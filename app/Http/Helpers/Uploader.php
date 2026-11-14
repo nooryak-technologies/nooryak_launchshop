@@ -4,31 +4,32 @@ namespace App\Http\Helpers;
 
 class Uploader
 {
-    public static function upload_picture($directory, $img): string
+    /**
+     * Upload an image and convert it automatically to .webp (quality 82, preserving transparency).
+     * Preserves SVG, GIF, and ICO in their native format.
+     */
+    public static function upload_picture($directory, $img, $desiredBaseName = null, $maxWidth = null, $maxHeight = null, $quality = 82): string
     {
-        $file_name = sha1(time() . rand());
-        @mkdir($directory, 0777, true);
-        $ext = $img->getClientOriginalExtension();
-        $newFileName = $file_name . "." . $ext;
-        $img->move($directory, $newFileName);
-        return $newFileName;
+        return self::upload_webp($directory, $img, $desiredBaseName, $maxWidth, $maxHeight, $quality);
     }
 
-    public static function update_picture($directory, $img, $old_img): string
+    /**
+     * Update an image: deletes the previous image and converts new upload automatically to .webp.
+     */
+    public static function update_picture($directory, $img, $old_img = null, $desiredBaseName = null, $maxWidth = null, $maxHeight = null, $quality = 82): string
     {
-        $file_name = sha1(time() . rand());
-        @mkdir($directory, 0777, true);
-        $ext = $img->getClientOriginalExtension();
-        $newFileName = $file_name . "." . $ext;
-        $oldImgPath = $directory . '/' . $old_img;
-        if (file_exists($oldImgPath)) @unlink($oldImgPath);
-        $img->move($directory, $newFileName);
-        return $newFileName;
+        if (!empty($old_img)) {
+            $oldImgPath = rtrim($directory, '/\\') . DIRECTORY_SEPARATOR . $old_img;
+            if (file_exists($oldImgPath)) {
+                @unlink($oldImgPath);
+            }
+        }
+        return self::upload_webp($directory, $img, $desiredBaseName, $maxWidth, $maxHeight, $quality);
     }
 
     /**
      * Converts an uploaded image to .webp (quality 82, preserving PNG transparency)
-     * If image is SVG or GIF, or if WebP is unsupported, saves with original extension.
+     * If image is SVG, GIF, or ICO, or if WebP is unsupported, saves with original extension.
      */
     public static function upload_webp($directory, $img, $desiredBaseName = null, $maxWidth = null, $maxHeight = null, $quality = 82): string
     {
@@ -36,8 +37,8 @@ class Uploader
         $ext = strtolower($img->getClientOriginalExtension());
         $base = $desiredBaseName ?: sha1(time() . rand());
 
-        // SVG and GIF are preserved as original vector / animated formats
-        if (in_array($ext, ['svg', 'gif']) || !function_exists('imagewebp')) {
+        // SVG, GIF, and ICO are preserved as original vector / animated / icon formats
+        if (in_array($ext, ['svg', 'gif', 'ico']) || !function_exists('imagewebp')) {
             $newFileName = $base . '.' . $ext;
             $img->move($directory, $newFileName);
             return $newFileName;

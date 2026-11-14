@@ -2243,7 +2243,6 @@ class ItemController extends Controller
             'images.*' => [
                 'required',
                 'file',
-                'max:10240',
                 function ($attribute, $value, $fail) {
                     $allowedExts = ['jpeg', 'jpg', 'png', 'webp', 'gif', 'svg'];
                     $ext = strtolower($value->getClientOriginalExtension());
@@ -2255,6 +2254,21 @@ class ItemController extends Controller
         ], [
             'images.required' => __('Please select at least one image file to upload.')
         ]);
+
+        // Validate total combined batch upload size <= 10MB (10240 KB)
+        $files = $request->file('images');
+        $totalBytes = 0;
+        foreach ($files as $file) {
+            $totalBytes += $file->getSize();
+        }
+        $maxBatchBytes = 10 * 1024 * 1024; // 10MB total
+        if ($totalBytes > $maxBatchBytes) {
+            $totalMb = round($totalBytes / (1024 * 1024), 2);
+            return response()->json([
+                'status' => 'error',
+                'message' => __('Total batch upload size cannot exceed 10MB. Selected total size: :size MB. Please select fewer or smaller images.', ['size' => $totalMb])
+            ], 422);
+        }
 
         $thumbDir = public_path('assets/front/img/user/items/thumbnail/');
         $sliderDir = public_path('assets/front/img/user/items/slider-images/');

@@ -101,3 +101,4 @@ if (!function_exists('finfo_close')) {
         return true;
     }
 }
+

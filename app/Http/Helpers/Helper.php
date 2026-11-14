@@ -138,7 +138,14 @@ if (!function_exists('moveAiStorageImageToPublicAssets')) {
             @mkdir($destDir, 0775, true);
         }
 
-        $ext = pathinfo($source, PATHINFO_EXTENSION) ?: 'png';
+        $ext = strtolower(pathinfo($source, PATHINFO_EXTENSION) ?: 'png');
+        if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp']) && function_exists('imagewebp') && class_exists(\App\Http\Helpers\Uploader::class)) {
+            $destWebp = rtrim($destDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . time() . '_' . uniqid() . '.webp';
+            if (\App\Http\Helpers\Uploader::convertToWebp($source, $destWebp, null, null, 82)) {
+                return basename($destWebp);
+            }
+        }
+
         $filename = time() . '_' . uniqid() . '.' . $ext;
 
         $dest = rtrim($destDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
