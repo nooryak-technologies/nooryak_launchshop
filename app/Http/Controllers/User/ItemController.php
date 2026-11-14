@@ -2239,6 +2239,18 @@ class ItemController extends Controller
         }
 
         if (!$request->hasFile('images')) {
+            // Check if PHP discarded uploaded files because upload_max_filesize was exceeded
+            if (!empty($_FILES['images']['error'])) {
+                $err = is_array($_FILES['images']['error']) ? $_FILES['images']['error'][0] : $_FILES['images']['error'];
+                if ($err === UPLOAD_ERR_INI_SIZE || $err === UPLOAD_ERR_FORM_SIZE) {
+                    $serverMax = ini_get('upload_max_filesize');
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => __('Uploaded image exceeds server PHP limit (:max). Please upload a smaller image or increase upload_max_filesize in cPanel MultiPHP INI Editor.', ['max' => $serverMax])
+                    ], 422);
+                }
+            }
+
             return response()->json([
                 'status' => 'error',
                 'message' => __('No image files received. Please select images under 15MB.')

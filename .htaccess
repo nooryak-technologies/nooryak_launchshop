@@ -9,3 +9,20 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
+
+<IfModule mod_php7.c>
+  php_value upload_max_filesize 32M
+  php_value post_max_size 40M
+  php_value memory_limit 256M
+</IfModule>
+<IfModule mod_php.c>
+  php_value upload_max_filesize 32M
+  php_value post_max_size 40M
+  php_value memory_limit 256M
+</IfModule>
+<IfModule lsapi_module>
+  php_value upload_max_filesize 32M
+  php_value post_max_size 40M
+  php_value memory_limit 256M
+</IfModule>
+

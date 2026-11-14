@@ -481,54 +481,111 @@
       }
     }
 
-    // Client-side helper to ensure images are converted to WebP format
+    // Client-side helper to ensure images are converted to WebP format before network transmission
     function convertFileToWebp(file) {
       return new Promise(function(resolve) {
         var ext = file.name.split('.').pop().toLowerCase();
         if (ext === 'svg' || ext === 'gif') {
-          return resolve(file);
+          return resolve({ blob: file, name: file.name });
         }
 
-        var img = new Image();
-        var url = URL.createObjectURL(file);
-        img.onload = function() {
-          URL.revokeObjectURL(url);
-          var canvas = document.createElement('canvas');
-          var maxDim = 2000;
-          var w = img.width;
-          var h = img.height;
-          if (w > maxDim || h > maxDim) {
-            if (w > h) {
-              h = Math.round((h * maxDim) / w);
-              w = maxDim;
-            } else {
-              w = Math.round((w * maxDim) / h);
-              h = maxDim;
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          var img = new Image();
+          img.onload = function() {
+            var canvas = document.createElement('canvas');
+            var maxDim = 1600;
+            var w = img.width;
+            var h = img.height;
+            if (w > maxDim || h > maxDim) {
+              if (w > h) {
+                h = Math.round((h * maxDim) / w);
+                w = maxDim;
+              } else {
+                w = Math.round((w * maxDim) / h);
+                h = maxDim;
+              }
             }
-          }
-          canvas.width = w;
-          canvas.height = h;
-          var ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, w, h);
-          canvas.toBlob(function(blob) {
-            if (blob) {
+            canvas.width = w;
+            canvas.height = h;
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, w, h);
+
+            canvas.toBlob(function(blob) {
               var baseName = file.name.replace(/\.[^/.]+$/, "");
-              var newFile = new File([blob], baseName + '.webp', {
-                type: 'image/webp',
-                lastModified: Date.now()
-              });
-              resolve(newFile);
-            } else {
-              resolve(file);
-            }
-          }, 'image/webp', 0.88);
+              if (blob && blob.size > 0) {
+                resolve({ blob: blob, name: baseName + '.webp' });
+              } else {
+                resolve({ blob: file, name: file.name });
+              }
+            }, 'image/webp', 0.82);
+          };
+          img.onerror = function() {
+            resolve({ blob: file, name: file.name });
+          };
+          img.src = e.target.result;
         };
-        img.onerror = function() {
-          URL.revokeObjectURL(url);
-          resolve(file);
+        reader.onerror = function() {
+          resolve({ blob: file, name: file.name });
         };
-        img.src = url;
+        reader.readAsDataURL(file);
       });
+    }
+
+    function loadBulkImagesGallery() {
+      var gallery = document.getElementById('bulkImagesGallery');
+      if (!gallery) return;
+      gallery.innerHTML = '<div class="col-12 text-center py-4 text-muted"><i class="fas fa-spinner fa-spin mr-1"></i> {{ __("Loading gallery...") }}</div>';
+
+      fetch('{{ route("user.item.get_bulk_images") }}')
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'success' && data.images && data.images.length > 0) {
+            var html = '';
+            data.images.forEach(function(img) {
+              html += '<div class="col-6 col-sm-4 col-md-3 mb-3" id="imgcard-' + encodeURIComponent(img.filename) + '">';
+              html += '  <div class="card h-100 border shadow-sm p-2 text-center" style="border-radius: 10px;">';
+              html += '    <img src="' + img.url + '" onerror="this.onerror=null;this.src=\'{{ asset("assets/admin/img/noimage.jpg") }}\';" style="height: 80px; object-fit: cover; border-radius: 6px;" class="w-100 mb-2">';
+              html += '    <small class="text-truncate d-block font-weight-bold text-dark mb-1" style="font-size: 11px;" title="' + img.filename + '">' + img.filename + '</small>';
+              html += '    <div class="d-flex justify-content-between mt-1">';
+              html += '      <button type="button" class="btn btn-outline-info btn-xs font-weight-bold flex-grow-1 mr-1" onclick="copyImageFilename(\'' + img.filename + '\', this)" style="font-size: 10px; border-radius: 4px; padding: 2px 4px;">';
+              html += '        <i class="fas fa-copy mr-1"></i>{{ __("Copy") }}';
+              html += '      </button>';
+              html += '      <button type="button" class="btn btn-outline-danger btn-xs font-weight-bold" onclick="deleteBulkImage(\'' + img.filename + '\', this)" style="font-size: 10px; border-radius: 4px; padding: 2px 6px;" title="{{ __("Delete Image") }}">';
+              html += '        <i class="fas fa-trash-alt"></i>';
+              html += '      </button>';
+              html += '    </div>';
+              html += '  </div>';
+              html += '</div>';
+            });
+            gallery.innerHTML = html;
+          } else {
+            gallery.innerHTML = '<div class="col-12 text-center py-4 text-muted" style="font-size: 13px;">{{ __("No uploaded images found yet.") }}</div>';
+          }
+        })
+        .catch(err => {
+          gallery.innerHTML = '<div class="col-12 text-center py-4 text-danger">{{ __("Failed to load images.") }}</div>';
+        });
+    }
+
+    function copyImageFilename(filename, btn) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(filename).then(function() {
+          var oldText = btn.innerHTML;
+          btn.innerHTML = '<i class="fas fa-check text-success"></i> {{ __("Copied!") }}';
+          setTimeout(function() { btn.innerHTML = oldText; }, 2000);
+        });
+      } else {
+        var tempInput = document.createElement('input');
+        tempInput.value = filename;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        var oldText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check text-success"></i> {{ __("Copied!") }}';
+        setTimeout(function() { btn.innerHTML = oldText; }, 2000);
+      }
     }
 
     document.getElementById('bulkImagesForm')?.addEventListener('submit', async function(e) {
@@ -555,8 +612,8 @@
       var formData = new FormData();
       try {
         for (var i = 0; i < input.files.length; i++) {
-          var processedFile = await convertFileToWebp(input.files[i]);
-          formData.append('images[]', processedFile);
+          var item = await convertFileToWebp(input.files[i]);
+          formData.append('images[]', item.blob, item.name);
         }
       } catch (err) {
         for (var i = 0; i < input.files.length; i++) {
