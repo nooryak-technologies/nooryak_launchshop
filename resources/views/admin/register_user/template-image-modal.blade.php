@@ -17,7 +17,7 @@
           <div class="form-group">
             <label for="">{{ __('Preview Image') }} <span class="text-danger">**</span></label>
             <div class="col-md-12 showImage mb-3 pl-0 pr-0">
-              <img src="{{ asset('assets/front/img/template-previews/' . $user->template_img) }}" alt="..."
+              <img src="{{ templatePreviewUrl($user->template_img) }}" alt="..."
                 class="img-thumbnail w-100">
             </div>
             <input type="file" name="preview_image" class="image w-100" class="form-control image">

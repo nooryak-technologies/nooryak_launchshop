@@ -1073,12 +1073,20 @@ class RegisterUserController extends Controller
         $dir = public_path('assets/front/img/template-previews/');
         if ($request->template == 1) {
             if ($request->hasFile('preview_image')) {
-                @unlink($dir . $user->template_img);
+                if (!empty($user->template_img)) {
+                    @unlink($dir . $user->template_img);
+                    $webp = preg_replace('/\.(png|jpe?g)$/i', '.webp', $user->template_img);
+                    if ($webp !== $user->template_img) @unlink($dir . $webp);
+                }
                 $user->template_img = Uploader::upload_picture($dir, $request->file('preview_image'));
             }
             $user->template_serial_number = $request->serial_number;
         } else {
-            @unlink($dir . $user->template_img);
+            if (!empty($user->template_img)) {
+                @unlink($dir . $user->template_img);
+                $webp = preg_replace('/\.(png|jpe?g)$/i', '.webp', $user->template_img);
+                if ($webp !== $user->template_img) @unlink($dir . $webp);
+            }
             $user->template_img = NULL;
             $user->template_serial_number = 0;
         }
@@ -1100,16 +1108,16 @@ class RegisterUserController extends Controller
     public function userUpdateTemplate(Request $request)
     {
         $prevImg = $request->file('preview_image');
-        $allowedExts = array('jpg', 'png', 'jpeg');
+        $allowedExts = array('jpg', 'png', 'jpeg', 'webp');
 
         $rules = [
             'serial_number' => 'required|integer',
             'preview_image' => [
                 function ($attribute, $value, $fail) use ($prevImg, $allowedExts) {
                     if (!empty($prevImg)) {
-                        $ext = $prevImg->getClientOriginalExtension();
+                        $ext = strtolower($prevImg->getClientOriginalExtension());
                         if (!in_array($ext, $allowedExts)) {
-                            return $fail(__('Only png, jpg, jpeg image is allowed'));
+                            return $fail(__('Only webp, png, jpg, jpeg image is allowed'));
                         }
                     }
                 },
@@ -1125,7 +1133,11 @@ class RegisterUserController extends Controller
         $user = User::where('id', $request->user_id)->first();
         if ($request->hasFile('preview_image')) {
             $dir = public_path('assets/front/img/template-previews/');
-            @unlink($dir . $user->template_img);
+            if (!empty($user->template_img)) {
+                @unlink($dir . $user->template_img);
+                $webp = preg_replace('/\.(png|jpe?g)$/i', '.webp', $user->template_img);
+                if ($webp !== $user->template_img) @unlink($dir . $webp);
+            }
             $user->template_img = Uploader::upload_picture($dir, $request->file('preview_image'));
         }
         $user->template_serial_number = $request->serial_number;

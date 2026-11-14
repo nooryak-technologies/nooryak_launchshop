@@ -46,14 +46,14 @@
                   <label for="">{{ __('Custom Shop Card Thumbnail') }}</label>
                   <div class="col-md-12 mb-3">
                     @if (!empty($shop->template_img))
-                      <img class="img-thumbnail" src="{{ asset('assets/front/img/template-previews/' . $shop->template_img) }}" 
+                      <img class="img-thumbnail" src="{{ templatePreviewUrl($shop->template_img) }}" 
                         alt="Current Thumbnail" style="max-width: 250px; display: block; margin-bottom: 10px;">
                     @else
                       <span class="badge badge-warning mb-2 d-inline-block">{{ __('Theme Default Screenshot') }}</span>
                     @endif
                   </div>
                   <input type="file" class="form-control" name="preview_image">
-                  <p class="text-warning mb-0">{{ __('Only png, jpg, jpeg images under 2MB are allowed.') }}</p>
+                  <p class="text-warning mb-0">{{ __('Only webp, png, jpg, jpeg images under 2MB are allowed.') }}</p>
                   @error('preview_image')
                     <p class="text-danger mb-0">{{ $message }}</p>
                   @enderror

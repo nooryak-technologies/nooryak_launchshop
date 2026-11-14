@@ -721,15 +721,9 @@
                   <div class="card-image-wrap" style="height: 280px !important; overflow: hidden; position: relative;">
                     <span class="category-badge {{ $badgeClass }}">{{ $displayName }}</span>
                     <a href="{{ $previewUrl }}" target="_blank" class="image-viewport" style="display: block; height: 100%; overflow: hidden;">
-                      @if (!empty($template->template_img))
-                        <img class="lazyload scrolling-img" src="{{ asset('assets/front/images/placeholder.png') }}"
-                          data-src="{{ asset('assets/front/img/template-previews/' . $template->template_img) }}"
-                          alt="{{ $displayName }} Theme" style="width: 100%; transition: transform 2.5s ease-in-out;" />
-                      @else
-                        <img class="lazyload scrolling-img" src="{{ asset('assets/front/images/placeholder.png') }}"
-                          data-src="{{ asset('assets/front/img/template-previews/placeholder.png') }}"
-                          alt="Placeholder Theme" style="width: 100%; transition: transform 2.5s ease-in-out;" />
-                      @endif
+                      <img class="lazyload scrolling-img" src="{{ asset('assets/front/images/placeholder.png') }}"
+                        data-src="{{ templatePreviewUrl($template->template_img) }}"
+                        alt="{{ $displayName }} Theme" style="width: 100%; transition: transform 2.5s ease-in-out;" />
                     </a>
                   </div>
                   

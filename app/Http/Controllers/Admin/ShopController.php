@@ -74,8 +74,8 @@ class ShopController extends Controller
             'landing_rating' => 'required|numeric|min:0|max:5',
             'landing_order' => 'required|integer',
             'category' => 'nullable',
-            'logo' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
-            'preview_image' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:2048',
+            'preview_image' => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:2048',
         ];
 
         $request->validate($rules);
@@ -99,6 +99,10 @@ class ShopController extends Controller
             $dir = public_path('assets/front/img/template-previews/');
             if (!empty($shop->template_img) && file_exists($dir . $shop->template_img)) {
                 @unlink($dir . $shop->template_img);
+                $webp = preg_replace('/\.(png|jpe?g)$/i', '.webp', $shop->template_img);
+                if ($webp !== $shop->template_img && file_exists($dir . $webp)) {
+                    @unlink($dir . $webp);
+                }
             }
             $shop->template_img = Uploader::upload_picture($dir, $request->file('preview_image'));
         }

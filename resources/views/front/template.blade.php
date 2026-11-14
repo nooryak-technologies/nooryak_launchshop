@@ -396,15 +396,9 @@
                 <div class="card-image-wrap">
                   <span class="category-badge {{ $badgeClass }}">{{ $displayName }}</span>
                   <a href="{{ $previewUrl }}" target="_blank" class="image-viewport">
-                    @if (!empty($template->template_img))
-                      <img class="lazyload scrolling-img" src="{{ asset('assets/front/images/placeholder.png') }}"
-                        data-src="{{ asset('assets/front/img/template-previews/' . $template->template_img) }}"
-                        alt="{{ $displayName }} Theme" />
-                    @else
-                      <img class="lazyload scrolling-img" src="{{ asset('assets/front/images/placeholder.png') }}"
-                        data-src="{{ asset('assets/front/img/template-previews/placeholder.png') }}"
-                        alt="Placeholder Theme" />
-                    @endif
+                    <img class="lazyload scrolling-img" src="{{ asset('assets/front/images/placeholder.png') }}"
+                      data-src="{{ templatePreviewUrl($template->template_img) }}"
+                      alt="{{ $displayName }} Theme" />
                   </a>
                 </div>
                 

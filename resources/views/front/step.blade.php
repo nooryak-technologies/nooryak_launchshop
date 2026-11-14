@@ -661,7 +661,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                       <div class="d-flex align-items-center" style="gap: 12px;">
                         <!-- Image Thumbnail wrapper -->
-                        <img src="{{ !empty($selectedTemplateImg) ? asset('assets/front/img/template-previews/' . $selectedTemplateImg) : '' }}" 
+                        <img src="{{ !empty($selectedTemplateImg) ? templatePreviewUrl($selectedTemplateImg) : '' }}" 
                              alt="{{ $selectedTemplateName }}" 
                              class="selected-template-thumb"
                              id="display-template-img"
@@ -692,7 +692,7 @@
                           <div class="plan-option-item template-option-item {{ $tpl->username == $selected_template ? 'active' : '' }}" 
                                data-username="{{ $tpl->username }}"
                                data-name="{{ $tpl->display_name }}"
-                               data-img="{{ !empty($tpl->template_img) ? asset('assets/front/img/template-previews/' . $tpl->template_img) : '' }}">
+                               data-img="{{ !empty($tpl->template_img) ? templatePreviewUrl($tpl->template_img) : '' }}">
                             <div class="plan-option-header d-flex justify-content-between align-items-center">
                               <span class="plan-opt-name">{{ $tpl->display_name }}</span>
                             </div>

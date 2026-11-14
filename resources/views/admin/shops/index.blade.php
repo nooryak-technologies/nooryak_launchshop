@@ -77,7 +77,7 @@
                           </td>
                           <td>
                             @if (!empty($shop->template_img))
-                              <img src="{{ asset('assets/front/img/template-previews/' . $shop->template_img) }}" 
+                              <img src="{{ templatePreviewUrl($shop->template_img) }}" 
                                 alt="{{ $shop->shop_name }}" style="width: 90px; height: 55px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;">
                             @else
                               <span class="badge badge-warning">{{ __('Theme Default') }}</span>

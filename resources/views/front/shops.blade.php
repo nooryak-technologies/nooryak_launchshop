@@ -115,16 +115,16 @@
           <!-- Overlapping Mockup collage representation using CSS floating frames -->
           <div class="shops-hero-mockup-wrapper" data-aos="fade-left">
             <div class="shops-mockup-frame frame-1">
-              <img src="{{ asset('assets/front/img/template-previews/06d9b674bc8dc704f0a8e376252279a5081e05f8.png') }}" alt="Jewellery theme">
+              <img src="{{ templatePreviewUrl('06d9b674bc8dc704f0a8e376252279a5081e05f8') }}" alt="Jewellery theme">
             </div>
             <div class="shops-mockup-frame frame-2">
-              <img src="{{ asset('assets/front/img/template-previews/5087ef599467c13d3ce13bed1636a9813bc48117.png') }}" alt="Skinflow theme">
+              <img src="{{ templatePreviewUrl('5087ef599467c13d3ce13bed1636a9813bc48117') }}" alt="Skinflow theme">
             </div>
             <div class="shops-mockup-frame frame-3">
-              <img src="{{ asset('assets/front/img/template-previews/9ddfc4ab6f359c15bda0ee04b184ae092e5e3fbf.png') }}" alt="Grocery theme">
+              <img src="{{ templatePreviewUrl('9ddfc4ab6f359c15bda0ee04b184ae092e5e3fbf') }}" alt="Grocery theme">
             </div>
             <div class="shops-mockup-frame frame-4">
-              <img src="{{ asset('assets/front/img/template-previews/964fb0768f8e185c53dc1ea1058a3ad8dbadaacf.png') }}" alt="Fashion theme">
+              <img src="{{ templatePreviewUrl('964fb0768f8e185c53dc1ea1058a3ad8dbadaacf') }}" alt="Fashion theme">
             </div>
           </div>
         </div>
@@ -297,7 +297,7 @@
                 }
 
                 $bannerImg = !empty($bannerFile) 
-                    ? asset('assets/front/img/template-previews/' . $bannerFile) 
+                    ? templatePreviewUrl($bannerFile) 
                     : asset('assets/front/images/placeholder.png');
                 
                 $logoImg = !empty(optional($user->basic_setting)->logo) 

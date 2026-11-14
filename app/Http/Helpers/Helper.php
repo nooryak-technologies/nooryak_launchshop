@@ -2279,3 +2279,85 @@ if (!function_exists('user_item_image_url')) {
     }
 }
 
+if (!function_exists('templatePreviewUrl')) {
+    /**
+     * Resolves template preview image URL preferring modern .webp format,
+     * falling back to .png / original file / placeholder.
+     *
+     * @param string|null $filename
+     * @return string
+     */
+    function templatePreviewUrl(?string $filename): string
+    {
+        $dir = 'assets/front/img/template-previews/';
+        $placeholder = function_exists('asset') ? asset('assets/front/images/placeholder.png') : '/assets/front/images/placeholder.png';
+
+        if (empty($filename)) {
+            return $placeholder;
+        }
+
+        $clean = basename(trim($filename));
+        $nameWithoutExt = pathinfo($clean, PATHINFO_FILENAME);
+
+        // Preference order:
+        // 1. .webp file
+        // 2. Exact requested file
+        // 3. .png file
+        // 4. .jpg / .jpeg file
+        $candidates = [
+            $nameWithoutExt . '.webp',
+            $clean,
+            $nameWithoutExt . '.png',
+            $nameWithoutExt . '.jpg',
+            $nameWithoutExt . '.jpeg',
+        ];
+
+        foreach (array_unique($candidates) as $candidate) {
+            $rel = $dir . $candidate;
+            $fullPath = function_exists('public_path') ? public_path($rel) : (__DIR__ . '/../../../public/' . $rel);
+            if (file_exists($fullPath)) {
+                return function_exists('asset') ? asset($rel) : ('/' . $rel);
+            }
+        }
+
+        // Fallback: prefer .webp path
+        $preferred = preg_replace('/\.(png|jpe?g)$/i', '.webp', $clean);
+        return function_exists('asset') ? asset($dir . $preferred) : ('/' . $dir . $preferred);
+    }
+}
+
+if (!function_exists('templatePreviewFilename')) {
+    /**
+     * Resolves the best existing filename for a template preview.
+     *
+     * @param string|null $filename
+     * @return string
+     */
+    function templatePreviewFilename(?string $filename): string
+    {
+        if (empty($filename)) {
+            return '';
+        }
+
+        $dir = 'assets/front/img/template-previews/';
+        $clean = basename(trim($filename));
+        $nameWithoutExt = pathinfo($clean, PATHINFO_FILENAME);
+
+        $candidates = [
+            $nameWithoutExt . '.webp',
+            $clean,
+            $nameWithoutExt . '.png',
+        ];
+
+        foreach (array_unique($candidates) as $candidate) {
+            $fullPath = function_exists('public_path') ? public_path($dir . $candidate) : (__DIR__ . '/../../../public/' . $dir . $candidate);
+            if (file_exists($fullPath)) {
+                return $candidate;
+            }
+        }
+
+        return preg_replace('/\.(png|jpe?g)$/i', '.webp', $clean);
+    }
+}
+
+
