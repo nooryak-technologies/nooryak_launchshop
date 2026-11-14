@@ -148,7 +148,7 @@
 
                 @php
                   $item_label = DB::table('labels')
-                      ->where('id', $top_rated[$k]->itemContents[0]->label_id)
+                      ->where('id', $itemContent->label_id)
                       ->first();
                   $label = $item_label->name ?? null;
                   $color = $item_label->color ?? null;
@@ -166,7 +166,6 @@
 
               </div>
             @endif
-          @endif
         @endfor
       </div>
     @endif
