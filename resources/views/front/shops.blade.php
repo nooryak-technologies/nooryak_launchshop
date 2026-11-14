@@ -605,34 +605,63 @@
   </section>
   <!--====== End Why Choose Section ======-->
 
+  @php
+    $shopsCta = class_exists('\App\Models\PageCta') ? \App\Models\PageCta::where('page', 'shops')->first() : null;
+    $shopsCtaStatus = @$shopsCta->status ?? '1';
+    $shopsCtaTitle = !empty(@$shopsCta->title) ? $shopsCta->title : __('Ready to Launch Your Own Store?');
+    $shopsCtaDesc = !empty(@$shopsCta->subtitle) ? $shopsCta->subtitle : __('Join thousands of successful merchants and start your online journey today.');
+    $shopsCtaBtnUrl = !empty(@$shopsCta->btn_url) ? $shopsCta->btn_url : (Route::has('front.templates.view') ? route('front.templates.view') : url('/'));
+    $shopsCtaBtnText = !empty(@$shopsCta->btn_text) ? $shopsCta->btn_text : __('Explore Themes');
+    $sFeat1 = !empty(@$shopsCta->feat1) ? $shopsCta->feat1 : '10-Days Money Back Guarantee';
+    $sFeat2 = !empty(@$shopsCta->feat2) ? $shopsCta->feat2 : 'No credit card required';
+    $sFeat3 = !empty(@$shopsCta->feat3) ? $shopsCta->feat3 : 'Cancel anytime';
+
+    $customShopsImg = @$shopsCta->image;
+    $shopsImgSrc = null;
+    if (!empty($customShopsImg)) {
+        if (file_exists(public_path('assets/front/img/' . $customShopsImg))) {
+            $shopsImgSrc = asset('assets/front/img/' . $customShopsImg);
+        } elseif (file_exists(public_path('images/' . $customShopsImg))) {
+            $shopsImgSrc = asset('images/' . $customShopsImg);
+        } else {
+            $shopsImgSrc = asset('assets/front/img/' . $customShopsImg);
+        }
+    }
+    if (empty($shopsImgSrc)) {
+        $shopsImgSrc = asset('assets/front/images/banner.png');
+    }
+  @endphp
+
+  @if($shopsCtaStatus == '1')
   <!--====== Start Footer CTA Block ======-->
   <div class="container">
     <div class="shops-footer-cta-block" data-aos="zoom-in">
       <div class="row align-items-center">
         <div class="col-lg-7">
-          <h2 class="shops-footer-cta-title">{{ __('Ready to Launch Your Own Store?') }}</h2>
-          <p class="shops-footer-cta-desc">{{ __('Join thousands of successful merchants and start your online journey today.') }}</p>
+          <h2 class="shops-footer-cta-title">{{ $shopsCtaTitle }}</h2>
+          <p class="shops-footer-cta-desc">{{ $shopsCtaDesc }}</p>
           
           <div class="shops-hero-btns">
-            <a href="{{ Route::has('front.templates.view') ? route('front.templates.view') : url('/') }}" class="btn-shops-outline">
-              {{ __('Explore Themes') }}
+            <a href="{{ $shopsCtaBtnUrl }}" class="btn-shops-outline">
+              {{ $shopsCtaBtnText }}
             </a>
           </div>
 
           <div class="shops-footer-cta-features">
-            <span><i class="fas fa-check-circle"></i> 10-Days Money Back Guarantee</span>
-            <span><i class="fas fa-check-circle"></i> No credit card required</span>
-            <span><i class="fas fa-check-circle"></i> Cancel anytime</span>
+            <span><i class="fas fa-check-circle"></i> {{ __($sFeat1) }}</span>
+            <span><i class="fas fa-check-circle"></i> {{ __($sFeat2) }}</span>
+            <span><i class="fas fa-check-circle"></i> {{ __($sFeat3) }}</span>
           </div>
         </div>
       </div>
       <!-- Storefront Mockup Image on CTA footer background -->
       <div class="shops-footer-cta-graphic">
-        <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ asset('assets/front/images/banner.png') }}" alt="Storefront">
+        <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}" data-src="{{ $shopsImgSrc }}" alt="Storefront">
       </div>
     </div>
   </div>
   <!--====== End Footer CTA Block ======-->
+  @endif
 
 @endsection
 

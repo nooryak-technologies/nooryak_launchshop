@@ -1063,6 +1063,18 @@ class FrontendController extends Controller
 
         $data['homeSec'] = ImageText::where('language_id', $currentLang->id)->first() ?? ImageText::first();
 
+        try {
+            if (class_exists('\App\Models\PageCta')) {
+                \App\Models\PageCta::ensureTableExists();
+                $data['pricingCta'] = \App\Models\PageCta::where('language_id', $currentLang->id)->where('page', 'pricing')->first()
+                    ?? \App\Models\PageCta::where('page', 'pricing')->first();
+            } else {
+                $data['pricingCta'] = null;
+            }
+        } catch (\Throwable $e) {
+            $data['pricingCta'] = null;
+        }
+
         return view('front.pricing', $data);
     }
 

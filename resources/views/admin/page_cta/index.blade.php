@@ -237,14 +237,39 @@
                     <div class="col-md-4 col-sm-6 mb-3">
                       <div class="preview-box">
                         @php
-                          $hasImg = !empty(@$item->image) && file_exists(public_path('assets/front/img/' . @$item->image));
+                          $hasImg = !empty(@$item->image) && (
+                              file_exists(public_path('assets/front/img/' . @$item->image)) ||
+                              file_exists(public_path('images/' . @$item->image)) ||
+                              file_exists(public_path('images/' . @$item->image . '.png')) ||
+                              file_exists(public_path('images/' . @$item->image . '.webp'))
+                          );
+                          $previewSrc = null;
+                          if ($hasImg) {
+                              if (file_exists(public_path('assets/front/img/' . @$item->image))) {
+                                  $previewSrc = asset('assets/front/img/' . @$item->image);
+                              } elseif (file_exists(public_path('images/' . @$item->image))) {
+                                  $previewSrc = asset('images/' . @$item->image);
+                              } elseif (file_exists(public_path('images/' . @$item->image . '.png'))) {
+                                  $previewSrc = asset('images/' . @$item->image . '.png');
+                              } elseif (file_exists(public_path('images/' . @$item->image . '.webp'))) {
+                                  $previewSrc = asset('images/' . @$item->image . '.webp');
+                              } else {
+                                  $previewSrc = asset('assets/front/img/' . @$item->image);
+                              }
+                          }
+                          if (empty($previewSrc)) {
+                              $defaultImgName = ($key == 'pricing') ? 'footer_right_price' : 'footer_right';
+                              if (file_exists(public_path('images/' . $defaultImgName . '.png'))) {
+                                  $previewSrc = asset('images/' . $defaultImgName . '.png');
+                              } elseif (file_exists(public_path('images/' . $defaultImgName . '.webp'))) {
+                                  $previewSrc = asset('images/' . $defaultImgName . '.webp');
+                              } else {
+                                  $previewSrc = asset('images/' . $defaultImgName . '.png');
+                              }
+                          }
                         @endphp
                         <div class="showImage mb-2">
-                          @if ($hasImg)
-                            <img src="{{ asset('assets/front/img/' . @$item->image) }}" alt="CTA Graphic">
-                          @else
-                            <img src="{{ asset('images/footer_right.png') }}" alt="Default Graphic">
-                          @endif
+                          <img src="{{ $previewSrc }}" alt="CTA Graphic">
                         </div>
                         <div class="d-flex align-items-center justify-content-center gap-2">
                           <label class="btn btn-primary btn-sm upload-btn mb-0 px-3">

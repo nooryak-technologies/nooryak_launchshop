@@ -46,6 +46,9 @@ class PageCtaController extends Controller
 
         $pages = ['home', 'pricing', 'templates', 'shops', 'about', 'contact'];
         $dir = public_path('assets/front/img/');
+        if (!file_exists($dir)) {
+            @mkdir($dir, 0775, true);
+        }
 
         foreach ($pages as $p) {
             $existing = PageCta::where('language_id', $langid)->where('page', $p)->first();

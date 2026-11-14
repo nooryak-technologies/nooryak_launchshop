@@ -307,6 +307,48 @@
         </div>
       @endif
 
+      @php
+        if (!isset($pricingCta)) {
+            $pricingCta = \App\Models\PageCta::where('page', 'pricing')->first();
+        }
+        $pricingCtaStatus = @$pricingCta->status ?? '1';
+        $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
+        $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
+        $ctaBtnUrl = !empty(@$pricingCta->btn_url) 
+            ? $pricingCta->btn_url 
+            : (Route::has('front.register.view') ? route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) : url('/'));
+        $ctaBtnText = !empty(@$pricingCta->btn_text) ? $pricingCta->btn_text : __('Launch Your Store');
+        $ctaTitle = !empty(@$pricingCta->title) ? $pricingCta->title : __('Ready to Launch Your Dream Store?');
+        $ctaSubtitle = !empty(@$pricingCta->subtitle) ? $pricingCta->subtitle : __('Join thousands of successful merchants and start your online journey today.');
+
+        // Image resolution: custom uploaded or fallback to footer_right_price
+        $customCtaImg = @$pricingCta->image;
+        $ctaImgSrc = null;
+        if (!empty($customCtaImg)) {
+            if (file_exists(public_path('assets/front/img/' . $customCtaImg))) {
+                $ctaImgSrc = asset('assets/front/img/' . $customCtaImg);
+            } elseif (file_exists(public_path('images/' . $customCtaImg))) {
+                $ctaImgSrc = asset('images/' . $customCtaImg);
+            } elseif (file_exists(public_path('images/' . $customCtaImg . '.png'))) {
+                $ctaImgSrc = asset('images/' . $customCtaImg . '.png');
+            } elseif (file_exists(public_path('images/' . $customCtaImg . '.webp'))) {
+                $ctaImgSrc = asset('images/' . $customCtaImg . '.webp');
+            } else {
+                $ctaImgSrc = asset('assets/front/img/' . $customCtaImg);
+            }
+        }
+        if (empty($ctaImgSrc)) {
+            if (file_exists(public_path('images/footer_right_price.png'))) {
+                $ctaImgSrc = asset('images/footer_right_price.png');
+            } elseif (file_exists(public_path('images/footer_right_price.webp'))) {
+                $ctaImgSrc = asset('images/footer_right_price.webp');
+            } else {
+                $ctaImgSrc = asset('images/footer_right_price.png');
+            }
+        }
+      @endphp
+
+      @if($pricingCtaStatus == '1')
       <!-- Bottom CTA Section -->
       <div class="position-relative mt-5">
         <!-- Dot grid decorators -->
@@ -319,29 +361,25 @@
             
             <!-- Left Column (Text & Buttons) -->
             <div class="col-lg-6 col-md-12 p-4 p-sm-5 text-center text-lg-start">
-              <h2 class="cta-revamp-title mb-3">{{ __('Ready to Launch Your Dream Store?') }}</h2>
-              <p class="cta-revamp-desc mb-4">{{ __('Join thousands of entrepreneurs and start selling online with Launchshop in just minutes.') }}</p>
+              <h2 class="cta-revamp-title mb-3">{{ $ctaTitle }}</h2>
+              <p class="cta-revamp-desc mb-4">{{ $ctaSubtitle }}</p>
               
               <!-- Desktop Button (Laptop / Desktop only) -->
               <div class="cta-revamp-btns d-none d-lg-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
-                @php
-                  $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
-                  $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
-                @endphp
-                <a href="{{ Route::has('front.register.view') ? route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) : url('/') }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
-                  {{ __('Launch Your Store') }} <i class="fas fa-hand-pointer animated-click-hand"></i>
+                <a href="{{ $ctaBtnUrl }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
+                  {{ $ctaBtnText }} <i class="fas fa-hand-pointer animated-click-hand"></i>
                 </a>
               </div>
             </div>
 
             <!-- Right Column (Footer Right Image + Mobile Button below image) -->
             <div class="col-lg-6 col-md-12 text-center d-flex flex-column align-items-center justify-content-end h-100 position-relative cta-right-col">
-              <img src="{{ asset('images/footer_right_price.png') }}" class="img-fluid cta-right-img" alt="Ready to Launch">
+              <img src="{{ $ctaImgSrc }}" class="img-fluid cta-right-img" alt="Ready to Launch">
               
               <!-- Mobile Button (Renders ONLY below the image on mobile screens) -->
               <div class="cta-revamp-btns d-lg-none d-flex justify-content-center text-center mt-3 pb-4 px-3 w-100">
-                <a href="{{ Route::has('front.register.view') ? route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) : url('/') }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
-                  {{ __('Launch Your Store') }} <i class="fas fa-hand-pointer animated-click-hand"></i>
+                <a href="{{ $ctaBtnUrl }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
+                  {{ $ctaBtnText }} <i class="fas fa-hand-pointer animated-click-hand"></i>
                 </a>
               </div>
             </div>
@@ -352,35 +390,31 @@
         <!-- Trust Badges Banner -->
         <div class="cta-trust-banner py-4 px-3" data-aos="fade-up">
           <div class="d-flex flex-wrap align-items-center justify-content-around gap-4 text-center">
+            @php
+              $feat1 = !empty(@$pricingCta->feat1) ? $pricingCta->feat1 : '10-Days Money Back Guarantee';
+              $feat2 = !empty(@$pricingCta->feat2) ? $pricingCta->feat2 : 'No credit card required';
+              $feat3 = !empty(@$pricingCta->feat3) ? $pricingCta->feat3 : 'Cancel anytime';
+            @endphp
             
             <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
-              <span class="trust-icon"><i class="fas fa-crown"></i></span>
-              <span class="trust-txt">{{ __('Premium Stores') }}</span>
-            </div>
-
-            <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
-              <span class="trust-icon"><i class="fas fa-rocket"></i></span>
-              <span class="trust-txt">{{ __('Launch Instantly') }}</span>
-            </div>
-
-            <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
               <span class="trust-icon"><i class="fas fa-shield-alt"></i></span>
-              <span class="trust-txt">{{ __('10-Days Money Back Guarantee') }}</span>
+              <span class="trust-txt">{{ __($feat1) }}</span>
             </div>
 
             <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
-              <span class="trust-icon"><i class="fas fa-chart-line"></i></span>
-              <span class="trust-txt">{{ __('Get High Conversions') }}</span>
+              <span class="trust-icon"><i class="fas fa-credit-card"></i></span>
+              <span class="trust-txt">{{ __($feat2) }}</span>
             </div>
 
             <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
-              <span class="trust-icon"><i class="fas fa-headset"></i></span>
-              <span class="trust-txt">{{ __('24/7 Expert Support') }}</span>
+              <span class="trust-icon"><i class="fas fa-clock"></i></span>
+              <span class="trust-txt">{{ __($feat3) }}</span>
             </div>
 
           </div>
         </div>
       </div>
+      @endif
 
     </div>
   </div>

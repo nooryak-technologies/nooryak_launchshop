@@ -1269,6 +1269,48 @@
   {{-- brands-banner section removed --}}
 
 
+  @php
+    if (!isset($homeCta)) {
+        $homeCta = \App\Models\PageCta::where('page', 'home')->first();
+    }
+    $homeCtaStatus = @$homeCta->status ?? '1';
+    $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
+    $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
+    $homeCtaBtnUrl = !empty(@$homeCta->btn_url) 
+        ? $homeCta->btn_url 
+        : (Route::has('front.register.view') ? route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) : url('/'));
+    $homeCtaBtnText = !empty(@$homeCta->btn_text) ? $homeCta->btn_text : __('Launch Your Store');
+    $homeCtaTitle = !empty($homeCta->title) ? $homeCta->title : (!empty($homeSec->featured_shop_section_title) ? $homeSec->featured_shop_section_title : __('Ready to Launch Your Dream Store?'));
+    $homeCtaSubtitle = !empty($homeCta->subtitle) ? $homeCta->subtitle : (!empty($homeSec->featured_shop_section_subtitle) ? $homeSec->featured_shop_section_subtitle : __('Join thousands of entrepreneurs and start selling online with Launchshop in just minutes.'));
+
+    // Image resolution: custom uploaded or fallback to footer_right
+    $customHomeImg = @$homeCta->image;
+    $homeImgSrc = null;
+    if (!empty($customHomeImg)) {
+        if (file_exists(public_path('assets/front/img/' . $customHomeImg))) {
+            $homeImgSrc = asset('assets/front/img/' . $customHomeImg);
+        } elseif (file_exists(public_path('images/' . $customHomeImg))) {
+            $homeImgSrc = asset('images/' . $customHomeImg);
+        } elseif (file_exists(public_path('images/' . $customHomeImg . '.png'))) {
+            $homeImgSrc = asset('images/' . $customHomeImg . '.png');
+        } elseif (file_exists(public_path('images/' . $customHomeImg . '.webp'))) {
+            $homeImgSrc = asset('images/' . $customHomeImg . '.webp');
+        } else {
+            $homeImgSrc = asset('assets/front/img/' . $customHomeImg);
+        }
+    }
+    if (empty($homeImgSrc)) {
+        if (file_exists(public_path('images/footer_right.png'))) {
+            $homeImgSrc = asset('images/footer_right.png');
+        } elseif (file_exists(public_path('images/footer_right.webp'))) {
+            $homeImgSrc = asset('images/footer_right.webp');
+        } else {
+            $homeImgSrc = asset('images/footer_right.png');
+        }
+    }
+  @endphp
+
+  @if($homeCtaStatus == '1')
   <!-- Bottom CTA Start -->
   <section class="bottom-cta-revamp py-80">
     <div class="container position-relative">
@@ -1283,29 +1325,25 @@
           
           <!-- Left Column (Text & Buttons) -->
           <div class="col-lg-6 col-md-12 p-4 p-sm-5 text-center text-lg-start">
-            <h2 class="cta-revamp-title mb-3">{{ !empty($homeCta->title) ? $homeCta->title : (!empty($homeSec->featured_shop_section_title) ? $homeSec->featured_shop_section_title : __('Ready to Launch Your Dream Store?')) }}</h2>
-            <p class="cta-revamp-desc mb-4">{{ !empty($homeCta->subtitle) ? $homeCta->subtitle : (!empty($homeSec->featured_shop_section_subtitle) ? $homeSec->featured_shop_section_subtitle : __('Join thousands of entrepreneurs and start selling online with Launchshop in just minutes.')) }}</p>
+            <h2 class="cta-revamp-title mb-3">{{ $homeCtaTitle }}</h2>
+            <p class="cta-revamp-desc mb-4">{{ $homeCtaSubtitle }}</p>
             
             <!-- Desktop Button (Laptop / Desktop only) -->
             <div class="cta-revamp-btns d-none d-lg-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
-              @php
-                $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
-                $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
-              @endphp
-              <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
-                {{ __('Launch Your Store') }} <i class="fas fa-hand-pointer animated-click-hand"></i>
+              <a href="{{ $homeCtaBtnUrl }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
+                {{ $homeCtaBtnText }} <i class="fas fa-hand-pointer animated-click-hand"></i>
               </a>
             </div>
           </div>
 
           <!-- Right Column (Footer Right Image + Mobile Button below image) -->
           <div class="col-lg-6 col-md-12 text-center d-flex flex-column align-items-center justify-content-end h-100 position-relative cta-right-col">
-            <img src="{{ asset('images/footer_right.png') }}" class="img-fluid cta-right-img" alt="Ready to Launch">
+            <img src="{{ $homeImgSrc }}" class="img-fluid cta-right-img" alt="Ready to Launch">
             
             <!-- Mobile Button (Renders ONLY below the image on mobile screens) -->
             <div class="cta-revamp-btns d-lg-none d-flex justify-content-center text-center mt-3 pb-4 px-3 w-100">
-              <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
-                {{ __('Launch Your Store') }} <i class="fas fa-hand-pointer animated-click-hand"></i>
+              <a href="{{ $homeCtaBtnUrl }}" class="btn-cta-launch px-4 py-3 d-inline-flex align-items-center gap-2">
+                {{ $homeCtaBtnText }} <i class="fas fa-hand-pointer animated-click-hand"></i>
               </a>
             </div>
           </div>
@@ -1316,6 +1354,11 @@
       <!-- Trust Badges Banner -->
       <div class="cta-trust-banner py-4 px-3" data-aos="fade-up">
         <div class="d-flex flex-wrap align-items-center justify-content-around gap-4 text-center">
+          @php
+            $hFeat1 = !empty(@$homeCta->feat1) ? $homeCta->feat1 : '10-Days Money Back Guarantee';
+            $hFeat2 = !empty(@$homeCta->feat2) ? $homeCta->feat2 : 'No credit card required';
+            $hFeat3 = !empty(@$homeCta->feat3) ? $homeCta->feat3 : 'Cancel anytime';
+          @endphp
           
           <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
             <span class="trust-icon"><i class="fas fa-crown"></i></span>
@@ -1329,17 +1372,17 @@
 
           <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
             <span class="trust-icon"><i class="fas fa-shield-alt"></i></span>
-            <span class="trust-txt">{{ __('10-Days Money Back Guarantee') }}</span>
+            <span class="trust-txt">{{ __($hFeat1) }}</span>
           </div>
 
           <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
-            <span class="trust-icon"><i class="fas fa-chart-line"></i></span>
-            <span class="trust-txt">{{ __('Get High Conversions') }}</span>
+            <span class="trust-icon"><i class="fas fa-credit-card"></i></span>
+            <span class="trust-txt">{{ __($hFeat2) }}</span>
           </div>
 
           <div class="trust-badge-item d-flex align-items-center justify-content-center gap-2">
-            <span class="trust-icon"><i class="fas fa-headset"></i></span>
-            <span class="trust-txt">{{ __('24/7 Expert Support') }}</span>
+            <span class="trust-icon"><i class="fas fa-clock"></i></span>
+            <span class="trust-txt">{{ __($hFeat3) }}</span>
           </div>
 
         </div>
@@ -1348,6 +1391,7 @@
     </div>
   </section>
   <!-- Bottom CTA End -->
+  @endif
 
 @section('scripts')
 <script>
