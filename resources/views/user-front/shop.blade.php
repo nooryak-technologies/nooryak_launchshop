@@ -17,7 +17,7 @@
   <!-- Horizontal Scrollable Category Pills -->
   @if(count($categories) > 0)
     <div class="shop-category-pills">
-      <div class="pills-wrapper justify-content-lg-end justify-content-start">
+      <div class="pills-wrapper justify-content-start">
         <a href="#" class="category pill-item {{ Route::current()->getName() == 'front.user.shop' && empty(request()->input('category')) ? 'active' : '' }}" data-category-slug-="all">
           <div class="pill-img-wrap">
             <div class="pill-icon"><i class="fal fa-th-large"></i></div>

@@ -2273,10 +2273,29 @@ html[dir="rtl"] .header-middle .header-right {
 
 <style>
 
-/* --- Shop Category Pills Horizontal Alignment Fix --- */
+/* --- Shop Category Pills Horizontal Alignment Fix for Laptop & Mobile --- */
+.shop-category-pills {
+  width: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-behavior: smooth !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+.shop-category-pills::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
 .shop-category-pills .pills-wrapper {
   display: flex !important;
+  gap: 16px !important;
   align-items: flex-start !important;
+  justify-content: flex-start !important;
+  width: max-content !important;
+  padding: 8px 4px !important;
+  margin: 0 !important;
 }
 .shop-category-pills .pill-item {
   display: flex !important;
@@ -2285,23 +2304,205 @@ html[dir="rtl"] .header-middle .header-right {
   justify-content: flex-start !important;
   width: 78px !important;
   min-width: 78px !important;
+  flex-shrink: 0 !important;
   text-align: center !important;
+  text-decoration: none !important;
 }
 .shop-category-pills .pill-img-wrap {
-  width: 75px !important;
-  height: 75px !important;
+  width: 72px !important;
+  height: 72px !important;
+  border-radius: 50% !important;
   flex-shrink: 0 !important;
   margin-bottom: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+.shop-category-pills .pill-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+.shop-category-pills .pill-icon {
+  font-size: 24px !important;
 }
 .shop-category-pills .pill-name {
   font-size: 12px !important;
   font-weight: 600 !important;
-  line-height: 1.3 !important;
+  line-height: 1.25 !important;
   text-align: center !important;
   white-space: normal !important;
   word-break: break-word !important;
   max-width: 76px !important;
-  display: block !important;
+  min-height: 32px !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+/* --- Mobile View Adjustments for Category Pills (< 992px) --- */
+@media (max-width: 991px) {
+  .page-title-area .row {
+    flex-direction: column !important;
+    text-align: center !important;
+  }
+  .page-title-area .content {
+    text-align: center !important;
+    margin-bottom: 12px !important;
+  }
+  .page-title-area .breadcrumb {
+    justify-content: center !important;
+  }
+  .shop-category-pills {
+    padding-bottom: 6px !important;
+  }
+  .shop-category-pills .pills-wrapper {
+    gap: 12px !important;
+    padding: 4px 2px !important;
+  }
+  .shop-category-pills .pill-item {
+    width: 68px !important;
+    min-width: 68px !important;
+  }
+  .shop-category-pills .pill-img-wrap {
+    width: 60px !important;
+    height: 60px !important;
+    margin-bottom: 6px !important;
+  }
+  .shop-category-pills .pill-icon {
+    font-size: 20px !important;
+  }
+  .shop-category-pills .pill-name {
+    font-size: 11px !important;
+    max-width: 68px !important;
+    min-height: 28px !important;
+    line-height: 1.2 !important;
+  }
+}
+
+/* --- Theme-Specific Shop Category Pills Active & Hover States --- */
+/* Pet theme */
+.theme-pet .shop-category-pills .pill-item.active .pill-img-wrap,
+.theme-pet .shop-category-pills .pill-item:hover .pill-img-wrap {
+  border-color: #ff5a5f !important;
+  box-shadow: 0 4px 12px rgba(255, 90, 95, 0.25) !important;
+  background: #fff !important;
+}
+.theme-pet .shop-category-pills .pill-item.active .pill-name,
+.theme-pet .shop-category-pills .pill-item.active .pill-icon,
+.theme-pet .shop-category-pills .pill-item:hover .pill-name {
+  color: #ff5a5f !important;
+}
+
+/* Furniture theme */
+.theme-furniture .shop-category-pills .pill-item.active .pill-img-wrap,
+.theme-furniture .shop-category-pills .pill-item:hover .pill-img-wrap {
+  border-color: #e88d43 !important;
+  box-shadow: 0 4px 12px rgba(232, 141, 67, 0.25) !important;
+  background: #fff !important;
+}
+.theme-furniture .shop-category-pills .pill-item.active .pill-name,
+.theme-furniture .shop-category-pills .pill-item.active .pill-icon,
+.theme-furniture .shop-category-pills .pill-item:hover .pill-name {
+  color: #e88d43 !important;
+}
+
+/* Fashion theme */
+.theme-fashion .shop-category-pills .pill-item.active .pill-img-wrap,
+.theme-fashion .shop-category-pills .pill-item:hover .pill-img-wrap {
+  border-color: #c19a6b !important;
+  box-shadow: 0 4px 12px rgba(193, 154, 107, 0.25) !important;
+  background: #fff !important;
+}
+.theme-fashion .shop-category-pills .pill-item.active .pill-name,
+.theme-fashion .shop-category-pills .pill-item.active .pill-icon,
+.theme-fashion .shop-category-pills .pill-item:hover .pill-name {
+  color: #c19a6b !important;
+}
+
+/* Clothing (Urban) theme */
+.theme-clothing .shop-category-pills .pill-item.active .pill-img-wrap,
+.theme-clothing .shop-category-pills .pill-item:hover .pill-img-wrap {
+  border-color: #1a1a1a !important;
+  box-shadow: 0 4px 12px rgba(26, 26, 26, 0.25) !important;
+  background: #fff !important;
+}
+.theme-clothing .shop-category-pills .pill-item.active .pill-name,
+.theme-clothing .shop-category-pills .pill-item.active .pill-icon,
+.theme-clothing .shop-category-pills .pill-item:hover .pill-name {
+  color: #1a1a1a !important;
+}
+
+/* Grocery & Vegetables */
+.theme-grocery .shop-category-pills .pill-item.active .pill-img-wrap,
+.theme-grocery .shop-category-pills .pill-item:hover .pill-img-wrap,
+.theme-vegetables .shop-category-pills .pill-item.active .pill-img-wrap,
+.theme-vegetables .shop-category-pills .pill-item:hover .pill-img-wrap {
+  border-color: #10b981 !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25) !important;
+  background: #fff !important;
+}
+.theme-grocery .shop-category-pills .pill-item.active .pill-name,
+.theme-grocery .shop-category-pills .pill-item.active .pill-icon,
+.theme-grocery .shop-category-pills .pill-item:hover .pill-name {
+  color: #10b981 !important;
+}
+
+/* Grocery2 theme */
+.theme-grocery2 .shop-category-pills .pill-item.active .pill-img-wrap,
+.theme-grocery2 .shop-category-pills .pill-item:hover .pill-img-wrap {
+  border-color: #3bb77e !important;
+  box-shadow: 0 4px 12px rgba(59, 183, 126, 0.25) !important;
+  background: #fff !important;
+}
+.theme-grocery2 .shop-category-pills .pill-item.active .pill-name,
+.theme-grocery2 .shop-category-pills .pill-item.active .pill-icon,
+.theme-grocery2 .shop-category-pills .pill-item:hover .pill-name {
+  color: #3bb77e !important;
+}
+
+/* Electronics theme */
+.theme-electronics .shop-category-pills .pill-item.active .pill-img-wrap,
+.theme-electronics .shop-category-pills .pill-item:hover .pill-img-wrap {
+  border-color: #2264d1 !important;
+  box-shadow: 0 4px 12px rgba(34, 100, 209, 0.25) !important;
+  background: #fff !important;
+}
+.theme-electronics .shop-category-pills .pill-item.active .pill-name,
+.theme-electronics .shop-category-pills .pill-item.active .pill-icon,
+.theme-electronics .shop-category-pills .pill-item:hover .pill-name {
+  color: #2264d1 !important;
+}
+
+/* Manti theme */
+.theme-manti .shop-category-pills .pill-item.active .pill-img-wrap,
+.theme-manti .shop-category-pills .pill-item:hover .pill-img-wrap {
+  border-color: #2c742f !important;
+  box-shadow: 0 4px 12px rgba(44, 116, 47, 0.25) !important;
+  background: #fff !important;
+}
+.theme-manti .shop-category-pills .pill-item.active .pill-name,
+.theme-manti .shop-category-pills .pill-item.active .pill-icon,
+.theme-manti .shop-category-pills .pill-item:hover .pill-name {
+  color: #2c742f !important;
+}
+
+/* Jewellery & Skinflow themes */
+.theme-jewellery .shop-category-pills .pill-item.active .pill-img-wrap,
+.theme-jewellery .shop-category-pills .pill-item:hover .pill-img-wrap,
+.theme-skinflow .shop-category-pills .pill-item.active .pill-img-wrap,
+.theme-skinflow .shop-category-pills .pill-item:hover .pill-img-wrap {
+  border-color: #c5a982 !important;
+  box-shadow: 0 4px 12px rgba(197, 169, 130, 0.25) !important;
+  background: #fff !important;
+}
+.theme-jewellery .shop-category-pills .pill-item.active .pill-name,
+.theme-jewellery .shop-category-pills .pill-item.active .pill-icon,
+.theme-skinflow .shop-category-pills .pill-item.active .pill-name,
+.theme-skinflow .shop-category-pills .pill-item.active .pill-icon {
+  color: #c5a982 !important;
 }
 
 </style>

@@ -87,7 +87,11 @@
 
 </head>
 
-<body @if (request()->cookie('user-theme') == 'dark') data-background-color="dark" @endif>
+@php
+  $activeTheme = $userBs->theme ?? 'grocery';
+@endphp
+
+<body class="theme-{{ $activeTheme }}" @if (request()->cookie('user-theme') == 'dark') data-background-color="dark" @endif>
   {{-- Loader --}}
   <div class="request-loader">
     <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"

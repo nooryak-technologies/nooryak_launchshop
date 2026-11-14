@@ -3,14 +3,7 @@
   $isFashionTheme = (!empty($userBs) && $userBs->theme == 'fashion');
   $isSkinflowTheme = (!empty($userBs) && $userBs->theme == 'skinflow');
   $isJewelleryTheme = (!empty($userBs) && $userBs->theme == 'jewellery');
-
-  $breadcrumbPaddingStyle = '';
-  if ($isFashionTheme) {
-    // Fashion theme has a fixed multi-tier header (~135px tall on desktop), so provide proper clearance
-    $breadcrumbPaddingStyle = 'padding-top: 175px !important; padding-bottom: 60px !important;';
-  } elseif ($isJewelleryTheme) {
-    $breadcrumbPaddingStyle = 'padding-top: 70px !important; padding-bottom: 50px !important;';
-  }
+  $isPetTheme = (!empty($userBs) && $userBs->theme == 'pet');
 
   if ($isUrbanTheme) {
     $breadcrumbBgImg = asset('assets/front/img/shop_banner_bg.png');
@@ -22,17 +15,78 @@
       : asset('assets/front/img/default_shop_banner.png');
   }
 @endphp
-@if($isFashionTheme)
-  <style>
-    @media (max-width: 991px) {
-      .page-title-area.header-next {
-        padding-top: 110px !important;
-        padding-bottom: 45px !important;
-      }
+
+<style>
+  /* Theme-specific Breadcrumb Top Clearance for Laptop / Desktop (min-width: 992px) */
+  @media (min-width: 992px) {
+    .theme-pet .page-title-area.header-next {
+      padding-top: 175px !important;
+      padding-bottom: 50px !important;
     }
-  </style>
-@endif
-<div class="page-title-area header-next" style="background-image: url('{{ $breadcrumbBgImg }}'); background-size: cover; background-position: center center; position: relative; {{ $breadcrumbPaddingStyle }}">
+    .theme-fashion .page-title-area.header-next {
+      padding-top: 175px !important;
+      padding-bottom: 55px !important;
+    }
+    .theme-furniture .page-title-area.header-next {
+      padding-top: 145px !important;
+      padding-bottom: 45px !important;
+    }
+    .theme-clothing .page-title-area.header-next {
+      padding-top: 145px !important;
+      padding-bottom: 45px !important;
+    }
+    .theme-jewellery .page-title-area.header-next,
+    .theme-skinflow .page-title-area.header-next {
+      padding-top: 135px !important;
+      padding-bottom: 45px !important;
+    }
+    .theme-grocery .page-title-area.header-next,
+    .theme-grocery2 .page-title-area.header-next,
+    .theme-vegetables .page-title-area.header-next,
+    .theme-manti .page-title-area.header-next,
+    .theme-electronics .page-title-area.header-next,
+    .theme-kids .page-title-area.header-next {
+      padding-top: 50px !important;
+      padding-bottom: 40px !important;
+    }
+  }
+
+  /* Theme-specific Breadcrumb Top Clearance for Mobile & Tablet (max-width: 991px) */
+  @media (max-width: 991px) {
+    .theme-pet .page-title-area.header-next {
+      padding-top: 115px !important;
+      padding-bottom: 25px !important;
+    }
+    .theme-fashion .page-title-area.header-next {
+      padding-top: 115px !important;
+      padding-bottom: 25px !important;
+    }
+    .theme-furniture .page-title-area.header-next {
+      padding-top: 105px !important;
+      padding-bottom: 25px !important;
+    }
+    .theme-clothing .page-title-area.header-next {
+      padding-top: 105px !important;
+      padding-bottom: 25px !important;
+    }
+    .theme-jewellery .page-title-area.header-next,
+    .theme-skinflow .page-title-area.header-next {
+      padding-top: 100px !important;
+      padding-bottom: 25px !important;
+    }
+    .theme-grocery .page-title-area.header-next,
+    .theme-grocery2 .page-title-area.header-next,
+    .theme-vegetables .page-title-area.header-next,
+    .theme-manti .page-title-area.header-next,
+    .theme-electronics .page-title-area.header-next,
+    .theme-kids .page-title-area.header-next {
+      padding-top: 30px !important;
+      padding-bottom: 25px !important;
+    }
+  }
+</style>
+
+<div class="page-title-area header-next" style="background-image: url('{{ $breadcrumbBgImg }}'); background-size: cover; background-position: center center; position: relative;">
   @if($isUrbanTheme)
     <div class="page-title-overlay" style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(248, 245, 240, 0.65) 100%); pointer-events: none;"></div>
   @elseif($isFashionTheme)
@@ -41,7 +95,7 @@
   <img class="bg-img" src="{{ $breadcrumbBgImg }}" data-src="{{ $breadcrumbBgImg }}" alt="Banner" style="display:none;">
   <div class="container position-relative" style="z-index: 2;">
     <div class="row align-items-center justify-content-between">
-      <div class="col-lg-4 col-md-5 col-sm-12">
+      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12">
         <div class="content text-start">
           <h2 style="{{ $isUrbanTheme || $isFashionTheme ? 'font-weight: 600; color: #1a1a1a; letter-spacing: -0.3px;' : '' }}">@yield('breadcrumb_title')</h2>
           <nav aria-label="breadcrumb">
@@ -63,7 +117,7 @@
           </nav>
         </div>
       </div>
-      <div class="col-lg-8 col-md-7 col-sm-12">
+      <div class="col-xl-9 col-lg-9 col-md-8 col-sm-12">
         @yield('breadcrumb_right')
       </div>
     </div>
