@@ -364,7 +364,7 @@
               <div class="col-md-3">
                 <div class="form-group mb-3">
                   <label class="font-weight-bold">{{ __('Free Domain Highlight Text') }}</label>
-                  <input type="text" name="popup_pre_free_domain" class="form-control" value="{{ @$customPopup->popup_pre_free_domain ?? 'Free .in Domain' }}" placeholder="Free .in Domain">
+                  <input type="text" name="popup_pre_free_domain" class="form-control" value="{{ @$customPopup->popup_pre_free_domain ?? 'Free .com Domain' }}" placeholder="Free .com Domain">
                 </div>
               </div>
 

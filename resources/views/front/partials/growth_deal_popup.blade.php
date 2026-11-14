@@ -156,7 +156,7 @@
                         <div class="gd-price-big">₹8,999<span class="gd-per">/year</span></div>
                         <p class="gd-billed">Billed annually</p>
                         <ul class="gd-feats">
-                            <li class="gd-feat-green-highlight"><span class="gd-check-circle gd-check-green"><i class="fas fa-check"></i></span>Free .in Domain</li>
+                            <li class="gd-feat-green-highlight"><span class="gd-check-circle gd-check-green"><i class="fas fa-check"></i></span>Free .com Domain</li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>All Standard Features</li>
 
                             

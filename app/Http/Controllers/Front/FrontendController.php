@@ -195,14 +195,16 @@ class FrontendController extends Controller
 
         $data['seo'] = \Illuminate\Support\Facades\Schema::hasTable('seos') ? Seo::where('language_id', $lang_id)->first() : null;
 
+        Package::ensureMonthlyPremiumExists();
+
         $terms = [];
-        if (Package::query()->where('status', '1')->where('featured', '1')->where('term', 'monthly')->count() > 0) {
+        if (Package::query()->where('status', '1')->where('term', 'monthly')->count() > 0) {
             $terms[] = 'Monthly';
         }
-        if (Package::query()->where('status', '1')->where('featured', '1')->where('term', 'yearly')->count() > 0) {
+        if (Package::query()->where('status', '1')->where('term', 'yearly')->count() > 0) {
             $terms[] = 'Yearly';
         }
-        if (Package::query()->where('status', '1')->where('featured', '1')->where('term', 'lifetime')->count() > 0) {
+        if (Package::query()->where('status', '1')->where('term', 'lifetime')->count() > 0) {
             $terms[] = 'Lifetime';
         }
         $data['terms'] = $terms;
@@ -1036,6 +1038,8 @@ class FrontendController extends Controller
 
         $data['bex'] = BE::first();
         $data['abs'] = BS::first();
+
+        Package::ensureMonthlyPremiumExists();
 
         $terms = [];
         if (Package::query()->where('status', '1')->where('term', 'monthly')->count() > 0) {

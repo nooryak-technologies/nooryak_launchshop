@@ -44,45 +44,10 @@
   <div class="tab-content" id="pricing-tabs-content">
     @foreach ($terms as $term)
       @php
-        $packages = \App\Models\Package::where('status', '1')->where('term', strtolower($term))->orderBy('price', 'asc')->get();
-        if (strtolower($term) == 'monthly') {
-            $newPackages = collect();
-            
-            // 1. Basic (monthly)
-            $basicMonthly = $packages->first(function($p) {
-                return strtolower($p->title) == 'basic';
-            });
-            if ($basicMonthly) {
-                $newPackages->push($basicMonthly);
-            } else {
-                $anyBasic = \App\Models\Package::where('status', '1')->where('title', 'Basic')->first();
-                if ($anyBasic) $newPackages->push($anyBasic);
-            }
-            
-            // 2. Standard (yearly)
-            $stdYearly = \App\Models\Package::where('status', '1')->where('term', 'yearly')->where('title', 'Standard')->first();
-            if ($stdYearly) {
-                $newPackages->push($stdYearly);
-            } else {
-                $stdMonthly = $packages->first(function($p) {
-                    return strtolower($p->title) == 'standard';
-                });
-                if ($stdMonthly) $newPackages->push($stdMonthly);
-            }
-            
-            // 3. Premium (yearly)
-            $premYearly = \App\Models\Package::where('status', '1')->where('term', 'yearly')->where('title', 'Premium')->first();
-            if ($premYearly) {
-                $newPackages->push($premYearly);
-            } else {
-                $premMonthly = $packages->first(function($p) {
-                    return strtolower($p->title) == 'premium';
-                });
-                if ($premMonthly) $newPackages->push($premMonthly);
-            }
-            
-            $packages = $newPackages;
-        }
+        $packages = \App\Models\Package::where('status', '1')
+            ->where('term', strtolower($term))
+            ->orderBy('price', 'asc')
+            ->get();
       @endphp
       <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}"
            id="tab-{{ strtolower($term) }}"
@@ -168,7 +133,8 @@
                           continue;
                       }
                       $has = false;
-                      $text = $feature->name;
+                      $rawName = $feature->name;
+                      $text = str_replace(['Free .in Domain', '.in Domain'], ['Free .com Domain', '.com Domain'], $rawName);
                       
                       if ($feature->type === 'limit') {
                           $limitVal = $package->{$feature->limit_key} ?? 0;
@@ -190,7 +156,15 @@
                               $text = str_replace('{limit}', $formattedVal, $text);
                           }
                       } elseif ($feature->type === 'custom') {
-                          $has = in_array($feature->name, $pFeatures);
+                          if (stripos($text, 'Free .com Domain') !== false || stripos($text, 'Free .in Domain') !== false) {
+                              if (strtolower($package->term) == 'monthly') {
+                                  $has = false;
+                              } else {
+                                  $has = in_array('Free .com Domain', $pFeatures) || in_array('Free .in Domain', $pFeatures) || in_array($feature->name, $pFeatures);
+                              }
+                          } else {
+                              $has = in_array($feature->name, $pFeatures);
+                          }
                       }
                       
                       $packageFormattedFeatures[] = ['text' => $text, 'has' => $has];
@@ -281,62 +255,8 @@
               @endif
 
               @if($titleKey == 'basic')
-                @if(strtolower($term) == 'monthly')
-                  <!-- Mobile Monthly Billing Callout Box -->
-                  <div class="mobile-monthly-billing-callout d-lg-none">
-                    <div class="d-flex align-items-start gap-2">
-                      <div class="callout-icon-wrap">
-                        <i class="far fa-calendar-alt"></i>
-                      </div>
-                      <div class="callout-text">
-                        <h5 class="callout-title">Monthly Billing</h5>
-                        <p class="callout-desc">Only Basic plan is available with <strong>monthly billing</strong>.</p>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Desktop Monthly Billing Callout Box -->
-                  <div class="monthly-billing-callout d-none d-lg-block">
-                    <div class="d-flex align-items-start gap-2">
-                      <div class="callout-icon-wrap">
-                        <i class="far fa-calendar-alt"></i>
-                      </div>
-                      <div class="callout-text">
-                        <h5 class="callout-title">Monthly Billing</h5>
-                        <p class="callout-desc">Only Basic plan is available with <strong>monthly billing</strong>.</p>
-                      </div>
-                    </div>
-                    <div class="callout-arrow">
-                      <svg width="220" height="50" viewBox="0 0 220 50" fill="none">
-                        <path d="M10,0 C10,35 150,45 205,45" stroke="#ff5a2c" stroke-dasharray="4,4" stroke-width="1.5" stroke-linecap="round" />
-                        <path d="M197,39 L207,45 L197,51" stroke="#ff5a2c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-                      </svg>
-                    </div>
-                  </div>
-                @else
-                  <!-- Basic Most Popular Callout Box (Top of Basic card on Yearly tab) -->
-                  <div class="basic-most-popular-callout d-none d-lg-block">
-                    <div class="d-flex align-items-start gap-2">
-                      <div class="callout-icon-wrap rocket" style="background:#ff5a2c; color:#fff;">
-                        <i class="fas fa-rocket"></i>
-                      </div>
-                      <div class="callout-text">
-                        <h5 class="callout-title">Most Popular</h5>
-                        <p class="callout-desc">Ideal balance for growing businesses with all essential tools.</p>
-                      </div>
-                    </div>
-                    <div class="callout-arrow-to-standard">
-                      <svg width="180" height="45" viewBox="0 0 180 45" fill="none">
-                        <path d="M10,0 C10,30 120,40 165,40" stroke="#ff5a2c" stroke-dasharray="4,4" stroke-width="1.8" stroke-linecap="round" />
-                        <path d="M157,34 L167,40 L157,46" stroke="#ff5a2c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-                      </svg>
-                    </div>
-                  </div>
-                @endif
-              @endif
-
-              @if($titleKey == 'standard' && strtolower($term) == 'monthly')
-                <!-- Standard Most Popular Callout Box (Positioned on Right side of Standard card on Monthly tab) -->
-                <div class="standard-most-popular-callout d-none d-lg-block">
+                <!-- Basic Most Popular Callout Box (Top of Basic card, points to Standard) -->
+                <div class="basic-most-popular-callout d-none d-lg-block">
                   <div class="d-flex align-items-start gap-2">
                     <div class="callout-icon-wrap rocket" style="background:#ff5a2c; color:#fff;">
                       <i class="fas fa-rocket"></i>
@@ -346,10 +266,10 @@
                       <p class="callout-desc">Ideal balance for growing businesses with all essential tools.</p>
                     </div>
                   </div>
-                  <div class="callout-arrow-left">
-                    <svg width="220" height="50" viewBox="0 0 220 50" fill="none">
-                      <path d="M210,0 C210,35 70,45 15,45" stroke="#ff5a2c" stroke-dasharray="4,4" stroke-width="1.5" stroke-linecap="round" />
-                      <path d="M23,39 L13,45 L23,51" stroke="#ff5a2c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                  <div class="callout-arrow-to-standard">
+                    <svg width="180" height="45" viewBox="0 0 180 45" fill="none">
+                      <path d="M10,0 C10,30 120,40 165,40" stroke="#ff5a2c" stroke-dasharray="4,4" stroke-width="1.8" stroke-linecap="round" />
+                      <path d="M157,34 L167,40 L157,46" stroke="#ff5a2c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
                     </svg>
                   </div>
                 </div>
@@ -384,19 +304,17 @@
                   <span class="plan-v2-period"> / {{ $periodLabel }}</span>
                 @endif
               </div>
-              @if(strtolower($package->term)=='monthly' && $titleKey == 'basic')
-                <div class="text-center mb-2">
-                  <span class="plan-monthly-badge">Just ₹1999/Yearly</span>
-                </div>
-              @else
-                <p class="plan-v2-billing-note">
-                  @if(strtolower($package->term)=='yearly' || $titleKey == 'standard' || $titleKey == 'premium')
-                    Billed yearly
-                  @else
-                    One-time access fee
-                  @endif
-                </p>
-              @endif
+              <p class="plan-v2-billing-note">
+                @if(strtolower($package->term) == 'yearly')
+                  Billed yearly
+                @elseif(strtolower($package->term) == 'monthly')
+                  Billed monthly
+                @elseif(strtolower($package->term) == 'lifetime')
+                  Lifetime access
+                @else
+                  One-time access fee
+                @endif
+              </p>
 
               <hr class="plan-v2-divider">
 
@@ -404,7 +322,7 @@
               <ul class="plan-v2-features">
                 @foreach($visibleFeats as $feat)
                   @php
-                    $isPremiumFreeDomain = ($titleKey == 'premium' && (stripos($feat['text'], 'Free .in Domain') !== false || stripos($feat['text'], 'Free Domain') !== false));
+                    $isPremiumFreeDomain = ($titleKey == 'premium' && $feat['has'] && (stripos($feat['text'], 'Free .com Domain') !== false || stripos($feat['text'], 'Free .in Domain') !== false || stripos($feat['text'], 'Free Domain') !== false));
                   @endphp
                   <li class="{{ !$feat['has'] ? 'feat-disabled' : '' }} {{ $isPremiumFreeDomain ? 'feat-free-domain-premium' : '' }}">
                     @if($isPremiumFreeDomain)
@@ -414,7 +332,7 @@
                     @else
                       <i class="fas fa-times fi-times"></i>
                     @endif
-                    <span>{{ __($feat['text']) }}</span>
+                    <span>{{ __(str_replace(['Free .in Domain', '.in Domain'], ['Free .com Domain', '.com Domain'], $feat['text'])) }}</span>
                   </li>
                 @endforeach
               </ul>
@@ -426,7 +344,7 @@
                   <ul class="plan-v2-features" style="margin-bottom:8px;">
                     @foreach($extraFeats as $ef)
                       @php
-                        $isPremiumFreeDomainExtra = ($titleKey == 'premium' && (stripos($ef['text'], 'Free .in Domain') !== false || stripos($ef['text'], 'Free Domain') !== false));
+                        $isPremiumFreeDomainExtra = ($titleKey == 'premium' && $ef['has'] && (stripos($ef['text'], 'Free .com Domain') !== false || stripos($ef['text'], 'Free .in Domain') !== false || stripos($ef['text'], 'Free Domain') !== false));
                       @endphp
                       <li class="{{ !$ef['has'] ? 'feat-disabled' : '' }} {{ $isPremiumFreeDomainExtra ? 'feat-free-domain-premium' : '' }}">
                         @if($isPremiumFreeDomainExtra)
@@ -436,7 +354,7 @@
                         @else
                           <i class="fas fa-times fi-times"></i>
                         @endif
-                        <span>{{ __($ef['text']) }}</span>
+                        <span>{{ __(str_replace(['Free .in Domain', '.in Domain'], ['Free .com Domain', '.com Domain'], $ef['text'])) }}</span>
                       </li>
                     @endforeach
                   </ul>
@@ -478,8 +396,12 @@
             </div><!-- /.pricing-card-v2 -->
           @endforeach
 
-          @if(strtolower($term) != 'monthly')
-          {{-- Enterprise card always shown --}}
+          @php
+            $customSetting = \App\Models\CustomPackageSetting::getSettings();
+            $showEnterprise = ($customSetting->enterprise_status ?? 1) == 1;
+          @endphp
+          @if($showEnterprise)
+          {{-- Enterprise card --}}
             <div class="pricing-card-v2 card-enterprise package-enterprise">
               <!-- Enterprise Callout Box (Most Chosen) -->
               <div class="enterprise-callout-box d-none d-lg-block">
