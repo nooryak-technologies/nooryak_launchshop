@@ -2238,6 +2238,13 @@ class ItemController extends Controller
             ], 403);
         }
 
+        if (!$request->hasFile('images')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => __('No image files received. Please select images under 15MB.')
+            ], 422);
+        }
+
         $request->validate([
             'images' => 'required|array|min:1',
             'images.*' => [
@@ -2255,18 +2262,20 @@ class ItemController extends Controller
             'images.required' => __('Please select at least one image file to upload.')
         ]);
 
-        // Validate total combined batch upload size <= 10MB (10240 KB)
+        // Validate total combined batch upload size <= 15MB (15360 KB)
         $files = $request->file('images');
         $totalBytes = 0;
         foreach ($files as $file) {
-            $totalBytes += $file->getSize();
+            if ($file && $file->isValid()) {
+                $totalBytes += $file->getSize();
+            }
         }
-        $maxBatchBytes = 10 * 1024 * 1024; // 10MB total
+        $maxBatchBytes = 15 * 1024 * 1024; // 15MB total
         if ($totalBytes > $maxBatchBytes) {
             $totalMb = round($totalBytes / (1024 * 1024), 2);
             return response()->json([
                 'status' => 'error',
-                'message' => __('Total batch upload size cannot exceed 10MB. Selected total size: :size MB. Please select fewer or smaller images.', ['size' => $totalMb])
+                'message' => __('Total batch upload size cannot exceed 15MB. Selected total size: :size MB. Unable to upload. Please upload a bunch of images less than 15MB.', ['size' => $totalMb])
             ], 422);
         }
 

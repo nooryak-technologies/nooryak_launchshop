@@ -406,7 +406,7 @@
             <div class="form-group border rounded p-4 text-center bg-light" style="border: 2px dashed #ff9f43 !important; border-radius: 10px; cursor: pointer;" onclick="document.getElementById('bulkImageInput').click();">
               <i class="fas fa-cloud-upload-alt text-warning mb-2" style="font-size: 42px;"></i>
               <h6 class="font-weight-bold text-dark mb-1">{{ __('Click or Drag & Drop Images Here') }}</h6>
-              <p class="text-muted mb-1" style="font-size: 12px;">{{ __('Select multiple image files (JPG, PNG, WEBP, SVG — total upload batch must be under 10MB)') }}</p>
+              <p class="text-muted mb-1" style="font-size: 12px;">{{ __('Select multiple image files (JPG, PNG, WEBP, SVG — total upload batch must be under 15MB)') }}</p>
               <div class="mb-2"><span class="badge badge-success px-2 py-1" style="font-size: 11px; background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9;"><i class="fas fa-magic mr-1"></i>{{ __('PNG & JPG are automatically converted to lightweight WebP') }}</span></div>
               <input type="file" id="bulkImageInput" name="images[]" multiple accept="image/*" class="d-none" onchange="handleBulkFilesSelected(this)">
               <div id="selectedFilesBadge" class="mt-2 text-info font-weight-bold" style="font-size: 13px;"></div>
@@ -466,10 +466,10 @@
           totalBytes += files[i].size;
         }
         var totalMb = (totalBytes / (1024 * 1024)).toFixed(2);
-        var maxBytes = 10 * 1024 * 1024; // 10MB limit
+        var maxBytes = 15 * 1024 * 1024; // 15MB limit
 
         if (totalBytes > maxBytes) {
-          badge.innerHTML = '<span class="text-danger font-weight-bold"><i class="fas fa-exclamation-triangle mr-1"></i> ' + files.length + ' {{ __("files selected") }} (' + totalMb + ' MB) — {{ __("Total batch exceeds 10MB! Please select fewer or smaller files.") }}</span>';
+          badge.innerHTML = '<span class="text-danger font-weight-bold"><i class="fas fa-exclamation-triangle mr-1"></i> ' + files.length + ' {{ __("files selected") }} (' + totalMb + ' MB) — {{ __("Total batch exceeds 15MB! Unable to upload. Please upload a bunch of images less than 15MB.") }}</span>';
           btn.setAttribute('disabled', 'disabled');
         } else {
           badge.innerHTML = '<span class="text-success font-weight-bold"><i class="fas fa-check-circle mr-1"></i> ' + files.length + ' {{ __("files selected") }} (' + totalMb + ' MB total)</span>';
@@ -481,79 +481,88 @@
       }
     }
 
-    function loadBulkImagesGallery() {
-      var gallery = document.getElementById('bulkImagesGallery');
-      if (!gallery) return;
-      gallery.innerHTML = '<div class="col-12 text-center py-4 text-muted"><i class="fas fa-spinner fa-spin mr-1"></i> {{ __("Loading gallery...") }}</div>';
+    // Client-side helper to ensure images are converted to WebP format
+    function convertFileToWebp(file) {
+      return new Promise(function(resolve) {
+        var ext = file.name.split('.').pop().toLowerCase();
+        if (ext === 'svg' || ext === 'gif') {
+          return resolve(file);
+        }
 
-      fetch('{{ route("user.item.get_bulk_images") }}')
-        .then(response => response.json())
-        .then(data => {
-          if (data.status === 'success' && data.images.length > 0) {
-            var html = '';
-            data.images.forEach(function(img) {
-              html += '<div class="col-6 col-sm-4 col-md-3 mb-3" id="imgcard-' + encodeURIComponent(img.filename) + '">';
-              html += '  <div class="card h-100 border shadow-sm p-2 text-center" style="border-radius: 10px;">';
-              html += '    <img src="' + img.url + '" onerror="this.onerror=null;this.src=\'{{ asset("assets/admin/img/noimage.jpg") }}\';" style="height: 80px; object-fit: cover; border-radius: 6px;" class="w-100 mb-2">';
-              html += '    <small class="text-truncate d-block font-weight-bold text-dark mb-1" style="font-size: 11px;" title="' + img.filename + '">' + img.filename + '</small>';
-              html += '    <div class="d-flex justify-content-between mt-1">';
-              html += '      <button type="button" class="btn btn-outline-info btn-xs font-weight-bold flex-grow-1 mr-1" onclick="copyImageFilename(\'' + img.filename + '\', this)" style="font-size: 10px; border-radius: 4px; padding: 2px 4px;">';
-              html += '        <i class="fas fa-copy mr-1"></i>{{ __("Copy") }}';
-              html += '      </button>';
-              html += '      <button type="button" class="btn btn-outline-danger btn-xs font-weight-bold" onclick="deleteBulkImage(\'' + img.filename + '\', this)" style="font-size: 10px; border-radius: 4px; padding: 2px 6px;" title="{{ __("Delete Image") }}">';
-              html += '        <i class="fas fa-trash-alt"></i>';
-              html += '      </button>';
-              html += '    </div>';
-              html += '  </div>';
-              html += '</div>';
-            });
-            gallery.innerHTML = html;
-          } else {
-            gallery.innerHTML = '<div class="col-12 text-center py-4 text-muted" style="font-size: 13px;">{{ __("No uploaded images found yet.") }}</div>';
+        var img = new Image();
+        var url = URL.createObjectURL(file);
+        img.onload = function() {
+          URL.revokeObjectURL(url);
+          var canvas = document.createElement('canvas');
+          var maxDim = 2000;
+          var w = img.width;
+          var h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
           }
-        })
-        .catch(err => {
-          gallery.innerHTML = '<div class="col-12 text-center py-4 text-danger">{{ __("Failed to load images.") }}</div>';
-        });
+          canvas.width = w;
+          canvas.height = h;
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          canvas.toBlob(function(blob) {
+            if (blob) {
+              var baseName = file.name.replace(/\.[^/.]+$/, "");
+              var newFile = new File([blob], baseName + '.webp', {
+                type: 'image/webp',
+                lastModified: Date.now()
+              });
+              resolve(newFile);
+            } else {
+              resolve(file);
+            }
+          }, 'image/webp', 0.88);
+        };
+        img.onerror = function() {
+          URL.revokeObjectURL(url);
+          resolve(file);
+        };
+        img.src = url;
+      });
     }
 
-    function copyImageFilename(filename, btn) {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(filename).then(function() {
-          var oldText = btn.innerHTML;
-          btn.innerHTML = '<i class="fas fa-check text-success"></i> {{ __("Copied!") }}';
-          setTimeout(function() { btn.innerHTML = oldText; }, 2000);
-        });
-      } else {
-        var tempInput = document.createElement('input');
-        tempInput.value = filename;
-        document.body.appendChild(tempInput);
-        tempInput.select();
-        document.execCommand('copy');
-        document.body.removeChild(tempInput);
-        var oldText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check text-success"></i> {{ __("Copied!") }}';
-        setTimeout(function() { btn.innerHTML = oldText; }, 2000);
-      }
-    }
-
-    document.getElementById('bulkImagesForm')?.addEventListener('submit', function(e) {
+    document.getElementById('bulkImagesForm')?.addEventListener('submit', async function(e) {
       e.preventDefault();
       var input = document.getElementById('bulkImageInput');
-      if (input && input.files && input.files.length > 0) {
-        var totalBytes = 0;
-        for (var i = 0; i < input.files.length; i++) {
-          totalBytes += input.files[i].size;
-        }
-        if (totalBytes > 10 * 1024 * 1024) {
-          alert('{{ __("Total upload batch size cannot exceed 10MB. Please select fewer or smaller images.") }}');
-          return;
-        }
+      if (!input || !input.files || input.files.length === 0) {
+        alert('{{ __("Please select at least one image file to upload.") }}');
+        return;
       }
-      var formData = new FormData(this);
+
+      var totalBytes = 0;
+      for (var i = 0; i < input.files.length; i++) {
+        totalBytes += input.files[i].size;
+      }
+      if (totalBytes > 15 * 1024 * 1024) {
+        alert('{{ __("Total batch upload size cannot exceed 15MB. Unable to upload. Please upload a bunch of images less than 15MB.") }}');
+        return;
+      }
+
       var btn = document.getElementById('uploadImagesSubmitBtn');
       btn.setAttribute('disabled', 'disabled');
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> {{ __("Uploading...") }}';
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> {{ __("Converting & Uploading to WebP...") }}';
+
+      var formData = new FormData();
+      try {
+        for (var i = 0; i < input.files.length; i++) {
+          var processedFile = await convertFileToWebp(input.files[i]);
+          formData.append('images[]', processedFile);
+        }
+      } catch (err) {
+        for (var i = 0; i < input.files.length; i++) {
+          formData.append('images[]', input.files[i]);
+        }
+      }
 
       fetch('{{ route("user.item.upload_bulk_images") }}', {
         method: 'POST',
@@ -562,20 +571,30 @@
           'X-CSRF-TOKEN': '{{ csrf_token() }}'
         }
       })
-      .then(response => response.json())
-      .then(data => {
+      .then(async response => {
+        var data = {};
+        try {
+          data = await response.json();
+        } catch(e) {
+          data = { status: 'error', message: '{{ __("Upload failed. Please upload a bunch of images less than 15MB.") }}' };
+        }
+        return { ok: response.ok, data: data };
+      })
+      .then(res => {
         btn.innerHTML = '<i class="fas fa-upload mr-1"></i> {{ __("Upload All Selected Images") }}';
-        if (data.status === 'success') {
+        if (res.ok && res.data.status === 'success') {
           document.getElementById('bulkImageInput').value = '';
-          document.getElementById('selectedFilesBadge').innerHTML = '<span class="text-success">' + data.message + '</span>';
+          document.getElementById('selectedFilesBadge').innerHTML = '<span class="text-success font-weight-bold"><i class="fas fa-check-circle mr-1"></i> ' + res.data.message + '</span>';
           loadBulkImagesGallery();
         } else {
-          alert(data.message || '{{ __("Upload failed.") }}');
+          btn.removeAttribute('disabled');
+          alert(res.data.message || '{{ __("Upload failed. Please upload a bunch of images less than 15MB.") }}');
         }
       })
       .catch(err => {
+        btn.removeAttribute('disabled');
         btn.innerHTML = '<i class="fas fa-upload mr-1"></i> {{ __("Upload All Selected Images") }}';
-        alert('{{ __("Upload failed. Check image file sizes.") }}');
+        alert('{{ __("Upload failed. Please ensure total batch size is less than 15MB.") }}');
       });
     });
 
