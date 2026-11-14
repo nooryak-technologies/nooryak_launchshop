@@ -13,31 +13,37 @@
 <div class="pricing-v2-section" data-aos="fade-up">
 
   <!-- Toggle -->
-  <div class="pricing-toggle-wrap">
-    @if(in_array('yearly', array_map('strtolower', (array)$terms)) && empty($hidePill))
-      <div class="pricing-save-pill">
-        🏷️ Save up to 60% with yearly billing!
-      </div>
-    @endif
-    <ul class="pricing-pill-tabs nav" id="pricing-tabs" role="tablist">
-      @foreach ($terms as $term)
-        <li class="nav-item" role="presentation">
-          <button class="nav-link {{ $loop->first ? 'active' : '' }}"
-                  id="{{ strtolower($term) }}-tab"
-                  data-bs-toggle="pill"
-                  data-bs-target="#tab-{{ strtolower($term) }}"
-                  type="button"
-                  role="tab"
-                  aria-selected="{{ $loop->first ? 'true' : 'false' }}">
-            {{ __(ucfirst(strtolower($term))) }}
-          </button>
-        </li>
-      @endforeach
-    </ul>
-    @if(in_array('yearly', array_map('strtolower', (array)$terms)))
-      <p class="yearly-free-domain-note mt-3">🎁 Premium & Enterprise Plans include Free Domains For Every Year.</p>
-    @endif
-  </div>
+  @if(count($terms) > 1)
+    <div class="pricing-toggle-wrap">
+      @if(in_array('yearly', array_map('strtolower', (array)$terms)) && in_array('monthly', array_map('strtolower', (array)$terms)) && empty($hidePill))
+        <div class="pricing-save-pill">
+          🏷️ Save up to 60% with yearly billing!
+        </div>
+      @endif
+      <ul class="pricing-pill-tabs nav" id="pricing-tabs" role="tablist">
+        @foreach ($terms as $term)
+          <li class="nav-item" role="presentation">
+            <button class="nav-link {{ $loop->first ? 'active' : '' }}"
+                    id="{{ strtolower($term) }}-tab"
+                    data-bs-toggle="pill"
+                    data-bs-target="#tab-{{ strtolower($term) }}"
+                    type="button"
+                    role="tab"
+                    aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+              {{ __(ucfirst(strtolower($term))) }}
+            </button>
+          </li>
+        @endforeach
+      </ul>
+      @if(in_array('yearly', array_map('strtolower', (array)$terms)))
+        <p class="yearly-free-domain-note mt-3">🎁 Premium & Enterprise Plans include Free Domains For Every Year.</p>
+      @endif
+    </div>
+  @elseif(count($terms) == 1 && in_array('yearly', array_map('strtolower', (array)$terms)))
+    <div class="pricing-toggle-wrap">
+      <p class="yearly-free-domain-note mt-2">🎁 Premium & Enterprise Plans include Free Domains For Every Year.</p>
+    </div>
+  @endif
 
 
   <!-- Cards -->
