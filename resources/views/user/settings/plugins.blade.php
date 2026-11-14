@@ -462,6 +462,76 @@
           </div>
         @endif
 
+        @php
+          $currentPackage = \App\Http\Helpers\UserPermissionHelper::currentPackagePermission(Auth::guard('web')->user()->id);
+          $pkgName = $currentPackage ? strtolower($currentPackage->title) : '';
+          $hasRazorpayPlugin = in_array('Razor Pay Payment Integration', (array)$features)
+              || in_array('Razorpay', (array)$features)
+              || str_contains($pkgName, 'standard')
+              || str_contains($pkgName, 'premium')
+              || str_contains($pkgName, 'enterprise');
+        @endphp
+        @if ($hasRazorpayPlugin)
+          {{-- Razorpay Plugin --}}
+          <div class="col-lg-4">
+            <div class="card">
+              <div class="card-header">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="card-title">{{ __('Razorpay') }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                @php
+                  $razorpayData = \App\Models\User\UserPaymentGeteway::where([
+                      ['user_id', Auth::guard('web')->user()->id],
+                      ['keyword', 'razorpay']
+                  ])->first();
+                  $razorpayInfo = ($razorpayData && !is_null($razorpayData->information))
+                      ? json_decode($razorpayData->information, true)
+                      : [];
+                @endphp
+                <form action="{{ route('user.razorpay.update') }}" method="POST" id="razorpayPluginForm">
+                  @csrf
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="form-group">
+                        <label>{{ __('Razorpay Status') }}</label>
+                        <div class="selectgroup w-100">
+                          <label class="selectgroup-item">
+                            <input type="radio" name="status" value="1" class="selectgroup-input"
+                              {{ $razorpayData && $razorpayData->status == 1 ? 'checked' : '' }}>
+                            <span class="selectgroup-button">{{ __('Active') }}</span>
+                          </label>
+                          <label class="selectgroup-item">
+                            <input type="radio" name="status" value="0" class="selectgroup-input"
+                              {{ !$razorpayData || $razorpayData->status == 0 ? 'checked' : '' }}>
+                            <span class="selectgroup-button">{{ __('Deactive') }}</span>
+                          </label>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label>{{ __('Razorpay Key') }}</label>
+                        <input class="form-control" name="key" value="{{ @$razorpayInfo['key'] ?? '' }}" placeholder="{{ __('Enter Razorpay Key') }}">
+                      </div>
+
+                      <div class="form-group">
+                        <label>{{ __('Razorpay Secret') }}</label>
+                        <input class="form-control" name="secret" value="{{ @$razorpayInfo['secret'] ?? '' }}" placeholder="{{ __('Enter Razorpay Secret') }}">
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="card-footer text-center">
+                <button type="submit" class="btn btn-success" form="razorpayPluginForm">{{ __('Update') }}</button>
+              </div>
+            </div>
+          </div>
+        @endif
+
       </div>
     </div>
   </div>

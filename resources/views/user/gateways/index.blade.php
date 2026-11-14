@@ -17,6 +17,17 @@
   $user = Auth::guard('web')->user();
   $activePackage = \App\Http\Helpers\UserPermissionHelper::currentPackagePermission($user->id);
   $packageName = $activePackage ? strtolower($activePackage->title) : '';
+  $packageFeatures = ($activePackage && !empty($activePackage->features)) ? json_decode($activePackage->features, true) : [];
+  $hasRazorpay = in_array('Razor Pay Payment Integration', (array)$packageFeatures)
+      || in_array('Razorpay', (array)$packageFeatures)
+      || str_contains($packageName, 'standard')
+      || str_contains($packageName, 'premium')
+      || str_contains($packageName, 'enterprise');
+  $hasPhonepe = in_array('Phonepe Payment Options', (array)$packageFeatures)
+      || in_array('PhonePe', (array)$packageFeatures)
+      || str_contains($packageName, 'standard')
+      || str_contains($packageName, 'premium')
+      || str_contains($packageName, 'enterprise');
 @endphp
 @if (!empty($selLang) && $selLang->rtl == 1)
   @section('styles')
@@ -552,7 +563,7 @@
       </div>
     </div>
 
-    @if ($packageName === 'premium')
+    @if ($hasRazorpay)
     {{-- Razorpay --}}
     <div class="col-lg-4">
       <div class="card">
@@ -1261,7 +1272,7 @@
       </div>
     </div>
 
-    @if ($packageName === 'premium')
+    @if ($hasPhonepe)
     {{-- Phonepe --}}
     <div class="col-lg-4">
       <div class="card">

@@ -220,8 +220,14 @@ class GatewayController extends Controller
         $user_id = Auth::guard('web')->user()->id;
         $current_package = \App\Http\Helpers\UserPermissionHelper::currentPackagePermission($user_id);
         $packageName = $current_package ? strtolower($current_package->title) : '';
-        if ($packageName !== 'premium') {
-            Session::flash('warning', __('This payment gateway is only available for Premium plan.'));
+        $packageFeatures = ($current_package && !empty($current_package->features)) ? json_decode($current_package->features, true) : [];
+        $hasAccess = in_array('Razor Pay Payment Integration', (array)$packageFeatures)
+            || in_array('Razorpay', (array)$packageFeatures)
+            || str_contains($packageName, 'standard')
+            || str_contains($packageName, 'premium')
+            || str_contains($packageName, 'enterprise');
+        if (!$hasAccess) {
+            Session::flash('warning', __('This payment gateway is not included in your plan.'));
             return back();
         }
         $razorpay = UserPaymentGeteway::where([['user_id', Auth::guard('web')->user()->id], ['keyword', 'razorpay']])->first();
@@ -472,8 +478,14 @@ class GatewayController extends Controller
         $user_id = Auth::guard('web')->user()->id;
         $current_package = \App\Http\Helpers\UserPermissionHelper::currentPackagePermission($user_id);
         $packageName = $current_package ? strtolower($current_package->title) : '';
-        if ($packageName !== 'premium') {
-            Session::flash('warning', __('This payment gateway is only available for Premium plan.'));
+        $packageFeatures = ($current_package && !empty($current_package->features)) ? json_decode($current_package->features, true) : [];
+        $hasAccess = in_array('Phonepe Payment Options', (array)$packageFeatures)
+            || in_array('PhonePe', (array)$packageFeatures)
+            || str_contains($packageName, 'standard')
+            || str_contains($packageName, 'premium')
+            || str_contains($packageName, 'enterprise');
+        if (!$hasAccess) {
+            Session::flash('warning', __('This payment gateway is not included in your plan.'));
             return back();
         }
         $phonepe = UserPaymentGeteway::where([['user_id', Auth::guard('web')->user()->id], ['keyword', 'phonepe']])->first();

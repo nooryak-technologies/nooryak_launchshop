@@ -341,8 +341,15 @@ $(function ($) {
                     $('.modal').modal('hide');
                     bootnotify(data.message, 'Warning', 'warning');
                 }
-                if (data == "success") {
-                    location.reload();
+                if (data == "success" || (data && data.status == "success")) {
+                    $('.modal').modal('hide');
+                    if (data && data.redirect) {
+                        window.location.href = data.redirect;
+                    } else if (data && data.url) {
+                        window.location.href = data.url;
+                    } else {
+                        location.reload();
+                    }
                 }
 
                 if (data == "downgrade") {
@@ -425,8 +432,15 @@ $(function ($) {
                     $(this).html('');
                 })
 
-                if (data == "success") {
-                    location.reload();
+                if (data == "success" || (data && data.status == "success")) {
+                    $('.modal').modal('hide');
+                    if (data && data.redirect) {
+                        window.location.href = data.redirect;
+                    } else if (data && data.url) {
+                        window.location.href = data.url;
+                    } else {
+                        location.reload();
+                    }
                 }
 
                 // if error occurs
@@ -475,8 +489,15 @@ $(function ($) {
                     $(this).html('');
                 });
 
-                if (data === "success") {
-                    location.reload();
+                if (data === "success" || (data && data.status === "success")) {
+                    $('.modal').modal('hide');
+                    if (data && data.redirect) {
+                        window.location.href = data.redirect;
+                    } else if (data && data.url) {
+                        window.location.href = data.url;
+                    } else {
+                        location.reload();
+                    }
                 } else if (typeof data === 'object' && data.error) {
                     // Handle the case where `data` contains error information
                     for (var key in data.error) {
@@ -740,8 +761,15 @@ $(function ($) {
                     $(this).html('');
                 })
 
-                if (data == "success") {
-                    location.reload();
+                if (data == "success" || (data && data.status == "success")) {
+                    $('.modal').modal('hide');
+                    if (data && data.redirect) {
+                        window.location.href = data.redirect;
+                    } else if (data && data.url) {
+                        window.location.href = data.url;
+                    } else {
+                        location.reload();
+                    }
                 }
 
                 // if error occurs

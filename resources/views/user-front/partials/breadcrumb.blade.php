@@ -4,7 +4,13 @@
   $isSkinflowTheme = (!empty($userBs) && $userBs->theme == 'skinflow');
   $isJewelleryTheme = (!empty($userBs) && $userBs->theme == 'jewellery');
 
-  $reduceTitlePadding = ($isFashionTheme || $isJewelleryTheme);
+  $breadcrumbPaddingStyle = '';
+  if ($isFashionTheme) {
+    // Fashion theme has a fixed multi-tier header (~135px tall on desktop), so provide proper clearance
+    $breadcrumbPaddingStyle = 'padding-top: 175px !important; padding-bottom: 60px !important;';
+  } elseif ($isJewelleryTheme) {
+    $breadcrumbPaddingStyle = 'padding-top: 70px !important; padding-bottom: 50px !important;';
+  }
 
   if ($isUrbanTheme) {
     $breadcrumbBgImg = asset('assets/front/img/shop_banner_bg.png');
@@ -16,7 +22,17 @@
       : asset('assets/front/img/default_shop_banner.png');
   }
 @endphp
-<div class="page-title-area header-next" style="background-image: url('{{ $breadcrumbBgImg }}'); background-size: cover; background-position: center center; position: relative; {{ $reduceTitlePadding ? 'padding-top: 70px !important; padding-bottom: 50px !important;' : '' }}">
+@if($isFashionTheme)
+  <style>
+    @media (max-width: 991px) {
+      .page-title-area.header-next {
+        padding-top: 110px !important;
+        padding-bottom: 45px !important;
+      }
+    }
+  </style>
+@endif
+<div class="page-title-area header-next" style="background-image: url('{{ $breadcrumbBgImg }}'); background-size: cover; background-position: center center; position: relative; {{ $breadcrumbPaddingStyle }}">
   @if($isUrbanTheme)
     <div class="page-title-overlay" style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(248, 245, 240, 0.65) 100%); pointer-events: none;"></div>
   @elseif($isFashionTheme)

@@ -41,8 +41,14 @@ class RoleController extends Controller
         $role->permissions = json_encode($request->permissions);
         $role->save();
 
-        Session::flash('success', __('Staff Role Added Successfully'));
-        return response()->json(['status' => 'success'], 200);
+        Session::flash('success', __('Staff role created successfully!'));
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'status' => 'success',
+                'redirect' => route('user.role.index')
+            ], 200);
+        }
+        return redirect()->route('user.role.index');
     }
 
     public function edit($id)
@@ -74,8 +80,14 @@ class RoleController extends Controller
         $role->permissions = json_encode($request->permissions);
         $role->save();
 
-        Session::flash('success', __('Staff Role Updated Successfully'));
-        return response()->json(['status' => 'success'], 200);
+        Session::flash('success', __('Staff role updated successfully!'));
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'status' => 'success',
+                'redirect' => route('user.role.index')
+            ], 200);
+        }
+        return redirect()->route('user.role.index');
     }
 
     public function delete(Request $request)

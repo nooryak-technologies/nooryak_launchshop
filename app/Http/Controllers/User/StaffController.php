@@ -95,8 +95,14 @@ class StaffController extends Controller
             // Continue execution if mailer encounters an issue
         }
 
-        Session::flash('success', __('Staff Member Created Successfully. Credentials sent via Email.'));
-        return response()->json(['status' => 'success'], 200);
+        Session::flash('success', __('Your staff member has been created successfully! Login credentials have been sent via email.'));
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'status' => 'success',
+                'redirect' => route('user.staff.index')
+            ], 200);
+        }
+        return redirect()->route('user.staff.index');
     }
 
     public function edit($id)
@@ -153,7 +159,13 @@ class StaffController extends Controller
         $staff->save();
 
         Session::flash('success', __('Staff Member Updated Successfully'));
-        return response()->json(['status' => 'success'], 200);
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'status' => 'success',
+                'redirect' => route('user.staff.index')
+            ], 200);
+        }
+        return redirect()->route('user.staff.index');
     }
 
     public function status(Request $request)
