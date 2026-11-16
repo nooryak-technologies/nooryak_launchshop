@@ -2402,9 +2402,8 @@ body.show-mobile-menu .grocery2-header {
         padding: 8px 12px 4px 12px !important;
         height: auto !important;
         min-height: 0 !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: flex-start !important;
+        display: block !important;
+        float: left !important;
         margin: 0 !important;
     }
 

@@ -777,8 +777,11 @@
       }
       .theme-grocery2 .g2-hero-slider .g2-slider-item,
       .theme-grocery2 .g2-hero-slider .slick-slide.g2-slider-item {
+        display: block !important;
+        float: left !important;
         padding: 8px 12px 4px 12px !important;
         box-sizing: border-box !important;
+        height: auto !important;
       }
       .theme-grocery2 .g2-hero-slider .g2-slider-content {
         background: rgba(255, 255, 255, 0.20) !important;
@@ -900,8 +903,11 @@
       }
       .theme-grocery2 .g2-hero-slider .g2-slider-item,
       .theme-grocery2 .g2-hero-slider .slick-slide.g2-slider-item {
+        display: block !important;
+        float: left !important;
         padding: 8px 12px 4px 12px !important;
         box-sizing: border-box !important;
+        height: auto !important;
       }
 
       /* Task 3: Arrow buttons beside Featured Categories on mobile view */

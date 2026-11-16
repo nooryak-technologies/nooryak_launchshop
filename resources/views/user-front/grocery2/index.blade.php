@@ -466,9 +466,10 @@
 
     // Main Hero Slider Carousel
     if ($('#g2-main-slider').length > 0) {
+      var isMobileHero = $(window).width() < 992;
       $('#g2-main-slider').slick({
         dots: true,
-        arrows: true,
+        arrows: !isMobileHero,
         prevArrow: '<button type="button" class="slick-prev g2-slider-arrow"><i class="fal fa-chevron-left"></i></button>',
         nextArrow: '<button type="button" class="slick-next g2-slider-arrow"><i class="fal fa-chevron-right"></i></button>',
         autoplay: true,
@@ -478,10 +479,21 @@
         slidesToScroll: 1,
         infinite: true,
         pauseOnHover: false,
-        fade: true,
-        adaptiveHeight: true,
-        cssEase: 'ease-in-out',
-        rtl: $('html').attr('dir') === 'rtl'
+        fade: !isMobileHero,
+        adaptiveHeight: false,
+        cssEase: isMobileHero ? 'cubic-bezier(0.25, 0.1, 0.25, 1)' : 'ease-in-out',
+        rtl: $('html').attr('dir') === 'rtl',
+        responsive: [
+          {
+            breakpoint: 992,
+            settings: {
+              fade: false,
+              arrows: false,
+              dots: true,
+              adaptiveHeight: false
+            }
+          }
+        ]
       });
     }
 
