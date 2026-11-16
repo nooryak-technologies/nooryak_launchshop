@@ -7,20 +7,29 @@
   @php
     $font_family = 'DejaVu Sans, sans-serif';
     $primary_color = !empty($userBs->base_color) ? ('#' . str_replace('#', '', $userBs->base_color)) : '#1e3a8a';
-    $currSymbol = '₹';
-    $currPos = 'left';
+    $currSymbol = !empty($userCurrency->symbol) ? $userCurrency->symbol : '₹';
+    if ($currSymbol == '$') {
+        $currSymbol = '₹';
+    }
+    $currPos = !empty($userCurrency->text_position) ? $userCurrency->text_position : 'left';
     
     function fmtPrice($amt, $sym = '₹', $pos = 'left') {
         $val = number_format((float)$amt, 2, '.', ',');
-        return '₹ ' . $val;
+        if ($sym == '$') {
+            $sym = '₹';
+        }
+        return ($pos == 'right') ? ($val . ' ' . $sym) : ($sym . ' ' . $val);
     }
   @endphp
   <style>
     @page {
       margin: 18mm 12mm;
     }
+    * {
+      font-family: DejaVu Sans, sans-serif !important;
+    }
     body {
-      font-family: {{ $font_family }} !important;
+      font-family: DejaVu Sans, sans-serif !important;
       font-size: 11px;
       color: #1e293b;
       line-height: 1.5;
@@ -30,10 +39,12 @@
     table {
       width: 100%;
       border-collapse: collapse;
+      font-family: DejaVu Sans, sans-serif !important;
     }
     th, td {
       vertical-align: middle;
       padding: 7px 8px;
+      font-family: DejaVu Sans, sans-serif !important;
     }
     .text-right { text-align: right; }
     .text-center { text-align: center; }
@@ -47,10 +58,11 @@
     }
     .report-title {
       font-size: 20px;
-      font-weight: 800;
+      font-weight: bold;
       color: {{ $primary_color }};
       letter-spacing: -0.3px;
       margin: 0 0 4px 0;
+      font-family: DejaVu Sans, sans-serif !important;
     }
     .report-subtitle {
       font-size: 11px;
@@ -68,37 +80,42 @@
       border-radius: 6px;
       padding: 10px 14px;
       text-align: center;
+      font-family: DejaVu Sans, sans-serif !important;
     }
     .kpi-label {
       font-size: 9px;
-      font-weight: 700;
+      font-weight: bold;
       text-transform: uppercase;
       color: #64748b;
       margin-bottom: 3px;
     }
     .kpi-value {
       font-size: 15px;
-      font-weight: 800;
+      font-weight: bold;
       color: #0f172a;
+      font-family: DejaVu Sans, sans-serif !important;
     }
 
     /* Orders Table */
     .orders-table {
       margin-top: 10px;
       border: 1px solid #cbd5e1;
+      font-family: DejaVu Sans, sans-serif !important;
     }
     .orders-table th {
       background-color: #0f172a;
       color: #ffffff;
       font-size: 10px;
-      font-weight: 700;
+      font-weight: bold;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       border: 1px solid #0f172a;
+      font-family: DejaVu Sans, sans-serif !important;
     }
     .orders-table td {
       border: 1px solid #e2e8f0;
       font-size: 10px;
+      font-family: DejaVu Sans, sans-serif !important;
     }
     .orders-table tr:nth-child(even) {
       background-color: #f8fafc;
@@ -107,7 +124,7 @@
       display: inline-block;
       padding: 2px 7px;
       font-size: 9px;
-      font-weight: 700;
+      font-weight: bold;
       border-radius: 4px;
     }
     .badge-success {

@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 use App\Models\User\BasicSetting;
+use App\Models\User\UserCurrency;
 
 class ItemOrderController extends Controller
 {
@@ -316,10 +317,16 @@ class ItemOrderController extends Controller
         $totalShipping = $orders->sum('shipping_charge');
         $totalDiscount = $orders->sum('discount');
 
+        $userCurrency = UserCurrency::where('is_default', 1)->where('user_id', $userId)->first();
+        if (!$userCurrency) {
+            $userCurrency = UserCurrency::where('user_id', $userId)->first();
+        }
+
         $data = [
             'orders' => $orders,
             'user' => $user,
             'userBs' => $userBs,
+            'userCurrency' => $userCurrency,
             'keywords' => $keywords,
             'rangeLabel' => $rangeLabel,
             'totalRevenue' => $totalRevenue,
@@ -332,6 +339,8 @@ class ItemOrderController extends Controller
         $pdf = PDF::setOptions([
             'isHtml5ParserEnabled' => true,
             'isRemoteEnabled' => true,
+            'defaultFont' => 'DejaVu Sans',
+            'isFontSubsettingEnabled' => true,
             'logOutputFile' => storage_path('logs/log.htm'),
             'tempDir' => storage_path('logs/')
         ])->loadView('pdf.completed_orders_history', $data)->setPaper('a4', 'landscape');
