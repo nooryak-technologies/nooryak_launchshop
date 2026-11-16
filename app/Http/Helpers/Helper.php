@@ -1025,39 +1025,134 @@ if (!function_exists('isWbAgencyCustomDomain')) {
     }
 }
 
+if (!function_exists('isTenantCustomDomainRequest')) {
+    function isTenantCustomDomainRequest(): bool
+    {
+        if (!empty(request()->attributes->get('is_launchshop_custom_domain'))) {
+            return true;
+        }
+
+        $host = strtolower(str_replace('www.', '', request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '')));
+        $host = preg_replace('/:\d+$/', '', $host);
+        if (empty($host) || in_array($host, ['localhost', '127.0.0.1'])) {
+            return false;
+        }
+
+        $baseHosts = array_values(array_unique(array_filter([
+            strtolower((string) env('WEBSITE_HOST', '')),
+            'launchshop.in',
+            'launchshop.top',
+            'saasreselling.com',
+            'saasreselling.in',
+        ])));
+
+        foreach ($baseHosts as $base) {
+            if ($host === $base || str_ends_with($host, '.' . $base)) {
+                return false;
+            }
+        }
+
+        if (str_starts_with($host, 'websitebuilder.') || str_starts_with($host, 'website-builder.')) {
+            return false;
+        }
+
+        try {
+            if (function_exists('isAgencyDomain') && isAgencyDomain($host)) {
+                return false;
+            }
+        } catch (\Throwable $e) {}
+
+        try {
+            if (function_exists('isLaunchShopCustomDomain') && isLaunchShopCustomDomain($host)) {
+                return true;
+            }
+        } catch (\Throwable $e) {}
+
+        return true;
+    }
+}
+
 if (!function_exists('getParam')) {
     function getParam()
     {
-        $cleanHost = preg_replace('/:\d+$/', '', preg_replace('/^www\./i', '', strtolower(request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? ''))));
-        $tenantBaseHosts = ['saasreselling.com', 'saasreselling.in', 'launchshop.in', 'launchshop.top', 'localhost', '127.0.0.1'];
-        $isCustomDomain = !empty(request()->attributes->get('is_launchshop_custom_domain'))
-            || (function_exists('isLaunchShopCustomDomain') && isLaunchShopCustomDomain($cleanHost))
-            || (!empty($cleanHost)
-                && !in_array($cleanHost, $tenantBaseHosts)
-                && !str_ends_with($cleanHost, '.saasreselling.com')
-                && !str_ends_with($cleanHost, '.saasreselling.in')
-                && !str_ends_with($cleanHost, '.launchshop.in')
-                && !str_ends_with($cleanHost, '.launchshop.top'));
-
-        if ($isCustomDomain) {
+        // Custom domains have no {username} route segment; return null so Laravel omits trailing ?username
+        if (function_exists('isTenantCustomDomainRequest') && isTenantCustomDomainRequest()) {
             return null;
         }
 
+        // 1. Container bound user instance
+        if (function_exists('app') && app()->bound('user')) {
+            $boundUser = app('user');
+            if (!empty($boundUser) && is_object($boundUser) && !empty($boundUser->username)) {
+                return strtolower($boundUser->username);
+            }
+        }
+
+        // 2. Active route parameter 'username'
+        if (function_exists('request')) {
+            try {
+                $routeUsername = request()->route('username');
+                if (!empty($routeUsername)) {
+                    return strtolower($routeUsername);
+                }
+            } catch (\Throwable $e) {}
+        }
+
+        // 3. Subdomain extracted directly from request host
+        try {
+            $rawHost = request()->getHost() ?: ($_SERVER['HTTP_HOST'] ?? '');
+            $host = strtolower(str_replace('www.', '', $rawHost));
+            $host = preg_replace('/:\d+$/', '', $host);
+            $baseHosts = array_values(array_unique(array_filter([
+                strtolower((string) env('WEBSITE_HOST', '')),
+                'launchshop.in',
+                'launchshop.top',
+                'saasreselling.com',
+                'saasreselling.in',
+                'localhost',
+                '127.0.0.1',
+            ])));
+            $reservedSubdomains = [
+                'launchshop', 'checkout', 'www', 'app', 'admin', 'websitebuilder',
+                'website-builder', 'whatsappbulk', 'whatsapp', 'ecombuilder', 'ecom-builder',
+                'default', 'mail', 'cpanel', 'webmail', 'ns1', 'ns2'
+            ];
+            foreach ($baseHosts as $base) {
+                if (!empty($base) && $host !== $base && str_ends_with($host, '.' . $base)) {
+                    $sub = explode('.', $host)[0] ?? null;
+                    if (!empty($sub) && !in_array(strtolower($sub), $reservedSubdomains)) {
+                        return strtolower($sub);
+                    }
+                }
+            }
+        } catch (\Throwable $e) {}
+
+        // 4. Resolve via getUser()
         $user = getUser();
         if (!empty($user) && !empty($user->username)) {
             return strtolower($user->username);
         }
 
-        $parsedUrl = parse_url(url()->current());
-        $currentPath = $parsedUrl['path'] ?? '/';
-        $pathSegments = explode('/', trim($currentPath, '/'));
-        $firstSegment = $pathSegments[0] ?? null;
+        // 5. First path segment if not a reserved keyword
+        try {
+            $parsedUrl = parse_url(url()->current());
+            $currentPath = $parsedUrl['path'] ?? '/';
+            $pathSegments = explode('/', trim($currentPath, '/'));
+            $firstSegment = $pathSegments[0] ?? null;
 
-        $reservedKeywords = ['admin', 'user', 'front', 'api', 'login', 'register', 'checkout', 'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs', 'whitelabel-panel', 'master', 'product', 'cart', 'shop', 'page', 'about', 'privacy-policy', 'terms-and-conditions', 'terms-conditions', 'refund-policy', 'shipping-policy', 'x9_admin-portal_v7', 'subscription-test', 'subscription_test'];
+            $reservedKeywords = [
+                'admin', 'user', 'front', 'api', 'login', 'register', 'checkout',
+                'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs',
+                'whitelabel-panel', 'master', 'product', 'cart', 'shop', 'page',
+                'about', 'privacy-policy', 'terms-and-conditions', 'terms-conditions',
+                'refund-policy', 'shipping-policy', 'x9_admin-portal_v7',
+                'subscription-test', 'subscription_test', 'changelanguage', 'changecurrency'
+            ];
 
-        if (!empty($firstSegment) && !in_array(strtolower($firstSegment), $reservedKeywords)) {
-            return strtolower(urldecode($firstSegment));
-        }
+            if (!empty($firstSegment) && !in_array(strtolower($firstSegment), $reservedKeywords)) {
+                return strtolower(urldecode($firstSegment));
+            }
+        } catch (\Throwable $e) {}
 
         return 'default';
     }
@@ -1304,6 +1399,14 @@ if (!function_exists('getUser')) {
 
     function getUser()
     {
+        // ── Container bound user instance ────────────────────────────────────
+        if (function_exists('app') && app()->bound('user')) {
+            $boundUser = app('user');
+            if (!empty($boundUser) && is_object($boundUser) && isset($boundUser->id)) {
+                return $boundUser;
+            }
+        }
+
         // ── Resolve the real request host ────────────────────────────────────
         $requestHost = isset($_SERVER['HTTP_HOST'])
             ? strtolower(str_replace('www.', '', $_SERVER['HTTP_HOST']))
@@ -1395,7 +1498,7 @@ if (!function_exists('getUser')) {
                         $q->where('username', $sub)->orWhere('username', str_replace(' ', '', $sub));
                     })
                     ->where(function ($q) {
-                        $q->where('preview_template', 1)->orWhere('status', 1);
+                        $q->where('status', 1)->orWhere('preview_template', 1)->orWhere('online_status', 1);
                     })
                     ->first();
 

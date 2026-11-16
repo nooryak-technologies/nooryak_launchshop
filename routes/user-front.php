@@ -200,7 +200,7 @@ if ($cleanRequestHost === 'in' || $cleanRequestHost === 'com' || in_array($reque
 
 $isTenantSubdomain = false;
 $tenantSubdomainName = null;
-$reservedSubdomains = ['launchshop', 'checkout', 'www', 'app', 'admin', 'websitebuilder', 'website-builder', 'whatsappbulk', 'whatsapp', 'ecombuilder', 'ecom-builder'];
+$reservedSubdomains = ['launchshop', 'checkout', 'www', 'app', 'admin', 'websitebuilder', 'website-builder', 'whatsappbulk', 'whatsapp', 'ecombuilder', 'ecom-builder', 'default'];
 
 foreach ($tenantBaseHosts as $tenantBaseHost) {
     if (!empty($tenantBaseHost) && $cleanRequestHost !== $tenantBaseHost && str_ends_with($cleanRequestHost, '.' . $tenantBaseHost)) {
