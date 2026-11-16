@@ -2399,7 +2399,7 @@ body.show-mobile-menu .grocery2-header {
         background-image: none !important;
         background-color: #ffffff !important;
         border-radius: 0 !important;
-        padding: 8px 6px 4px 6px !important;
+        padding: 8px 12px 4px 12px !important;
         height: auto !important;
         min-height: 0 !important;
         display: flex !important;
@@ -2556,13 +2556,16 @@ body.show-mobile-menu .grocery2-header {
     }
 
     .g2-promo-stack {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
     }
 
     .g2-side-promo {
-        margin-left: 2px !important;
-        margin-right: 2px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        border-radius: 16px !important;
     }
 
     .btn-install-our-app {

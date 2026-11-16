@@ -74,7 +74,7 @@
        HERO SECTION
   ═══════════════════════════════════════════ --}}
   @if($ubs->hero_section == 1)
-  <section class="header-next" style="padding: 0; margin-bottom: 40px; margin-top: 140px;">
+  <section class="header-next" style="padding: 0; margin-bottom: 15px; margin-top: 140px;">
     <div class="container">
       @php
         $heroSlides = collect();
@@ -179,7 +179,7 @@
   {{-- ═══════════════════════════════════════════
        CATEGORIES SECTION
   ═══════════════════════════════════════════ --}}
-  <section class="cl-section">
+  <section class="cl-section" style="padding-top: 15px;">
     <div class="container">
       <div class="cl-heading" data-aos="fade-up">
         <h2>{{ $keywords['Categories'] ?? 'CATEGORIES' }}</h2>

@@ -1043,6 +1043,28 @@ if (!function_exists('getParam')) {
             return null;
         }
 
+        if (app()->bound('user') && !empty(app('user')->username)) {
+            return strtolower(app('user')->username);
+        }
+
+        try {
+            $routeUsername = request()->route ? request()->route('username') : null;
+            if (!empty($routeUsername)) {
+                return strtolower($routeUsername);
+            }
+        } catch (\Throwable $e) {}
+
+        $reservedKeywords = ['admin', 'user', 'front', 'api', 'login', 'register', 'checkout', 'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs', 'whitelabel-panel', 'master', 'product', 'cart', 'shop', 'page', 'about', 'privacy-policy', 'terms-and-conditions', 'terms-conditions', 'refund-policy', 'shipping-policy', 'x9_admin-portal_v7', 'subscription-test', 'subscription_test', 'www', 'app', 'ecombuilder', 'ecom-builder', 'websitebuilder', 'website-builder', 'whatsapp', 'whatsappbulk', 'mail'];
+
+        foreach ($tenantBaseHosts as $baseHost) {
+            if (!empty($baseHost) && str_ends_with($cleanHost, '.' . $baseHost) && $cleanHost !== $baseHost) {
+                $sub = explode('.', $cleanHost)[0] ?? null;
+                if (!empty($sub) && !in_array(strtolower($sub), $reservedKeywords)) {
+                    return strtolower($sub);
+                }
+            }
+        }
+
         $user = getUser();
         if (!empty($user) && !empty($user->username)) {
             return strtolower($user->username);
@@ -1052,8 +1074,6 @@ if (!function_exists('getParam')) {
         $currentPath = $parsedUrl['path'] ?? '/';
         $pathSegments = explode('/', trim($currentPath, '/'));
         $firstSegment = $pathSegments[0] ?? null;
-
-        $reservedKeywords = ['admin', 'user', 'front', 'api', 'login', 'register', 'checkout', 'templates', 'shops', 'pricing', 'blogs', 'contact', 'faqs', 'whitelabel-panel', 'master', 'product', 'cart', 'shop', 'page', 'about', 'privacy-policy', 'terms-and-conditions', 'terms-conditions', 'refund-policy', 'shipping-policy', 'x9_admin-portal_v7', 'subscription-test', 'subscription_test'];
 
         if (!empty($firstSegment) && !in_array(strtolower($firstSegment), $reservedKeywords)) {
             return strtolower(urldecode($firstSegment));
@@ -1366,7 +1386,7 @@ if (!function_exists('getUser')) {
                             ->orWhere('username', $cleanUsername);
                     })
                     ->where(function ($q) {
-                        $q->where('preview_template', 1)->orWhere('status', 1);
+                        $q->where('preview_template', 1)->orWhere('status', 1)->orWhere('online_status', 1);
                     })
                     ->first();
                 if ($pathUser) {
@@ -1395,7 +1415,7 @@ if (!function_exists('getUser')) {
                         $q->where('username', $sub)->orWhere('username', str_replace(' ', '', $sub));
                     })
                     ->where(function ($q) {
-                        $q->where('preview_template', 1)->orWhere('status', 1);
+                        $q->where('preview_template', 1)->orWhere('status', 1)->orWhere('online_status', 1);
                     })
                     ->first();
 

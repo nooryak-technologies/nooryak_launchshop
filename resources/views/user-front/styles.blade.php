@@ -770,10 +770,15 @@
         min-height: 200px !important;
         border-radius: 16px !important;
         box-sizing: border-box !important;
+        overflow: hidden !important;
+      }
+      .theme-grocery2 .g2-promo-stack.slick-initialized .slick-dots {
+        display: none !important;
       }
       .theme-grocery2 .g2-hero-slider .g2-slider-item,
       .theme-grocery2 .g2-hero-slider .slick-slide.g2-slider-item {
-        padding: 10px 12px !important;
+        padding: 8px 12px 4px 12px !important;
+        box-sizing: border-box !important;
       }
       .theme-grocery2 .g2-hero-slider .g2-slider-content {
         background: rgba(255, 255, 255, 0.20) !important;
@@ -887,6 +892,15 @@
         height: 200px !important;
         min-height: 200px !important;
         border-radius: 16px !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+      }
+      .theme-grocery2 .g2-promo-stack.slick-initialized .slick-dots {
+        display: none !important;
+      }
+      .theme-grocery2 .g2-hero-slider .g2-slider-item,
+      .theme-grocery2 .g2-hero-slider .slick-slide.g2-slider-item {
+        padding: 8px 12px 4px 12px !important;
         box-sizing: border-box !important;
       }
 

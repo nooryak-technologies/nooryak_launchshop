@@ -1,3 +1,4 @@
+@if(!empty(trim($data->section_name ?? '')) || !empty(trim(strip_tags($data->content ?? ''))))
 <section class="custom-section pb-70 {{ $possition }}">
   <div class="container">
     <div class="row">
@@ -13,3 +14,4 @@
     </div>
   </div>
 </section>
+@endif
