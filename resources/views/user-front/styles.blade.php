@@ -693,15 +693,14 @@
       }
     }
     @media (max-width: 767.98px) {
-      /* Hero banner spacing fixes: uniform left and right gaps */
+      /* Hero banner spacing fixes: eliminate unwanted top clearance and gaps */
       .theme-grocery2 .g2-hero-section,
       .theme-grocery2 .g2-hero-section.pt-3,
       .theme-grocery2 .g2-hero-section.pt-lg-3 {
-        padding-top: 10px !important;
+        padding-top: 0 !important;
         margin-top: 0 !important;
-        padding-bottom: 0 !important;
-        padding-left: 12px !important;
-        padding-right: 12px !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
       }
       .theme-grocery2 .g2-hero-section > .container,
       .theme-grocery2 .g2-hero-section .container {
@@ -725,7 +724,7 @@
       }
       .theme-grocery2 .g2-hero-section .col-xl-8.col-lg-12.mb-4,
       .theme-grocery2 .g2-hero-section .col-xl-8.col-lg-12.mb-lg-4 {
-        margin-bottom: 8px !important;
+        margin-bottom: 6px !important;
       }
       .theme-grocery2 .g2-hero-section .col-xl-4.col-lg-12.mb-4,
       .theme-grocery2 .g2-hero-section .col-xl-4.col-lg-12.mb-lg-4 {
@@ -733,33 +732,22 @@
         padding-top: 0 !important;
         margin-bottom: 12px !important;
       }
-      .theme-grocery2 .g2-hero-slider,
-      .theme-grocery2 .g2-hero-slider .slick-list,
-      .theme-grocery2 .g2-hero-slider .slick-track {
-        height: auto !important;
-      }
-      .theme-grocery2 .g2-hero-slider .g2-slider-item,
-      .theme-grocery2 .g2-hero-slider .slick-slide.g2-slider-item {
-        border-radius: 16px !important;
-        overflow: hidden !important;
-        margin: 0 !important;
-      }
       .theme-grocery2 #g2-main-slider .slick-dots {
         margin-top: 8px !important;
-        margin-bottom: 6px !important;
+        margin-bottom: 4px !important;
       }
       .theme-grocery2 .g2-slider-mobile-img {
         margin-top: 8px !important;
       }
 
-      /* Promo Stack: matching 12px gap and matching card radius */
+      /* Promo Stack: balanced left & right space and zero top space */
       .theme-grocery2 .g2-promo-stack,
       .theme-grocery2 .g2-promo-stack.slick-initialized,
       .theme-grocery2 .g2-promo-stack.slick-initialized.slick-slider {
         margin-top: 0 !important;
         padding-top: 0 !important;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
         margin-left: 0 !important;
         margin-right: 0 !important;
         box-sizing: border-box !important;
@@ -830,15 +818,14 @@
       }
     }
     @media (max-width: 991.98px) {
-      /* Hero banner spacing fixes: uniform left and right gaps (< 992px) */
+      /* Hero banner spacing fixes: eliminate unwanted top clearance and gaps (< 992px) */
       .theme-grocery2 .g2-hero-section,
       .theme-grocery2 .g2-hero-section.pt-3,
       .theme-grocery2 .g2-hero-section.pt-lg-3 {
-        padding-top: 10px !important;
+        padding-top: 0 !important;
         margin-top: 0 !important;
-        padding-bottom: 0 !important;
-        padding-left: 12px !important;
-        padding-right: 12px !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
       }
       .theme-grocery2 .g2-hero-section > .container,
       .theme-grocery2 .g2-hero-section .container {
@@ -862,7 +849,7 @@
       }
       .theme-grocery2 .g2-hero-section .col-xl-8.col-lg-12.mb-4,
       .theme-grocery2 .g2-hero-section .col-xl-8.col-lg-12.mb-lg-4 {
-        margin-bottom: 8px !important;
+        margin-bottom: 6px !important;
       }
       .theme-grocery2 .g2-hero-section .col-xl-4.col-lg-12.mb-4,
       .theme-grocery2 .g2-hero-section .col-xl-4.col-lg-12.mb-lg-4 {
@@ -870,36 +857,15 @@
         padding-top: 0 !important;
         margin-bottom: 12px !important;
       }
-      .theme-grocery2 .g2-hero-slider,
-      .theme-grocery2 .g2-hero-slider .slick-list,
-      .theme-grocery2 .g2-hero-slider .slick-track {
-        height: auto !important;
-      }
-      .theme-grocery2 .g2-hero-slider .g2-slider-item,
-      .theme-grocery2 .g2-hero-slider .slick-slide.g2-slider-item {
-        border-radius: 16px !important;
-        overflow: hidden !important;
-        margin: 0 !important;
-      }
-      .theme-grocery2 #g2-main-slider .slick-dots {
-        margin-top: 8px !important;
-        margin-bottom: 6px !important;
-      }
 
-      /* Promo Stack: matching 12px gap and matching card radius (< 992px) */
+      /* Promo Stack: balanced left & right space and zero top space (< 992px) */
       .theme-grocery2 .g2-promo-stack,
       .theme-grocery2 .g2-promo-stack.slick-initialized,
       .theme-grocery2 .g2-promo-stack.slick-initialized.slick-slider {
         margin-top: 0 !important;
         padding-top: 0 !important;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-        box-sizing: border-box !important;
-        width: 100% !important;
-        max-width: 100% !important;
-      }
+        padding-left: 12px !important;
+        padding-right: 12px !important;
         margin-left: 0 !important;
         margin-right: 0 !important;
         box-sizing: border-box !important;
