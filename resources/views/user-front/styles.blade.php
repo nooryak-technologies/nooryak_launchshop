@@ -732,15 +732,85 @@
         padding-top: 0 !important;
         margin-bottom: 12px !important;
       }
-      .theme-grocery2 #g2-main-slider .slick-dots {
-        margin-top: 8px !important;
-        margin-bottom: 4px !important;
+      /* FOUC prevention before slick initializes */
+      .theme-grocery2 #g2-main-slider:not(.slick-initialized) .g2-slider-item:not(:first-child),
+      .theme-grocery2 #g2-promo-stack-slider:not(.slick-initialized) .g2-side-promo:not(:first-child) {
+        display: none !important;
+      }
+
+      /* Slick track position reset (undo plugin.css left: 7px) */
+      .theme-grocery2 .g2-hero-slider .slick-track,
+      .theme-grocery2 .g2-promo-stack .slick-track,
+      .theme-grocery2 #g2-main-slider .slick-track,
+      .theme-grocery2 #g2-promo-stack-slider .slick-track {
+        left: 0 !important;
+      }
+
+      /* Hero Slider: balanced left & right gap */
+      .theme-grocery2 #g2-main-slider,
+      .theme-grocery2 .g2-hero-slider {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      .theme-grocery2 #g2-main-slider.slick-slider .slick-list,
+      .theme-grocery2 #g2-main-slider .slick-list,
+      .theme-grocery2 .g2-hero-slider.slick-slider .slick-list,
+      .theme-grocery2 .g2-hero-slider .slick-list {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        border-radius: 16px !important;
+        overflow: hidden !important;
+      }
+      .theme-grocery2 #g2-main-slider .g2-slider-item,
+      .theme-grocery2 #g2-main-slider .slick-slide.g2-slider-item,
+      .theme-grocery2 .g2-hero-slider .g2-slider-item,
+      .theme-grocery2 .g2-hero-slider .slick-slide.g2-slider-item {
+        display: block !important;
+        float: left !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        height: auto !important;
       }
       .theme-grocery2 .g2-slider-mobile-img {
+        width: 100% !important;
+        margin-top: 10px !important;
+        border-radius: 16px !important;
+        overflow: hidden !important;
+        display: block !important;
+        box-sizing: border-box !important;
+      }
+      .theme-grocery2 .g2-slider-mobile-img img {
+        width: 100% !important;
+        height: 220px !important;
+        object-fit: cover !important;
+        border-radius: 16px !important;
+        display: block !important;
+        box-sizing: border-box !important;
+      }
+      .theme-grocery2 #g2-main-slider .slick-dots {
+        position: static !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 6px !important;
         margin-top: 8px !important;
+        margin-bottom: 8px !important;
+        padding: 0 !important;
+        list-style: none !important;
+        width: 100% !important;
       }
 
       /* Promo Stack: balanced left & right space and zero top space */
+      .theme-grocery2 #g2-promo-stack-slider,
       .theme-grocery2 .g2-promo-stack,
       .theme-grocery2 .g2-promo-stack.slick-initialized,
       .theme-grocery2 .g2-promo-stack.slick-initialized.slick-slider {
@@ -754,17 +824,26 @@
         width: 100% !important;
         max-width: 100% !important;
       }
-      .theme-grocery2 .g2-promo-stack.slick-initialized .slick-list {
+      .theme-grocery2 #g2-promo-stack-slider.slick-slider .slick-list,
+      .theme-grocery2 #g2-promo-stack-slider .slick-list,
+      .theme-grocery2 .g2-promo-stack.slick-slider .slick-list,
+      .theme-grocery2 .g2-promo-stack.slick-initialized .slick-list,
+      .theme-grocery2 .g2-promo-stack .slick-list {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 0 !important;
         border-radius: 16px !important;
         overflow: hidden !important;
         width: 100% !important;
+        box-sizing: border-box !important;
       }
-      .theme-grocery2 .g2-promo-stack.slick-initialized .slick-track {
-        display: flex !important;
-      }
-      .theme-grocery2 .g2-promo-stack.slick-initialized .g2-side-promo,
-      .theme-grocery2 .g2-promo-stack .g2-side-promo {
+      .theme-grocery2 #g2-promo-stack-slider .g2-side-promo,
+      .theme-grocery2 #g2-promo-stack-slider .slick-slide.g2-side-promo,
+      .theme-grocery2 .g2-promo-stack .g2-side-promo,
+      .theme-grocery2 .g2-promo-stack.slick-initialized .g2-side-promo {
         margin: 0 !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
         width: 100% !important;
         height: 200px !important;
         min-height: 200px !important;
@@ -866,7 +945,85 @@
         margin-bottom: 12px !important;
       }
 
+      /* FOUC prevention before slick initializes (< 992px) */
+      .theme-grocery2 #g2-main-slider:not(.slick-initialized) .g2-slider-item:not(:first-child),
+      .theme-grocery2 #g2-promo-stack-slider:not(.slick-initialized) .g2-side-promo:not(:first-child) {
+        display: none !important;
+      }
+
+      /* Slick track position reset (undo plugin.css left: 7px) */
+      .theme-grocery2 .g2-hero-slider .slick-track,
+      .theme-grocery2 .g2-promo-stack .slick-track,
+      .theme-grocery2 #g2-main-slider .slick-track,
+      .theme-grocery2 #g2-promo-stack-slider .slick-track {
+        left: 0 !important;
+      }
+
+      /* Hero Slider: balanced left & right gap (< 992px) */
+      .theme-grocery2 #g2-main-slider,
+      .theme-grocery2 .g2-hero-slider {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      .theme-grocery2 #g2-main-slider.slick-slider .slick-list,
+      .theme-grocery2 #g2-main-slider .slick-list,
+      .theme-grocery2 .g2-hero-slider.slick-slider .slick-list,
+      .theme-grocery2 .g2-hero-slider .slick-list {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        border-radius: 16px !important;
+        overflow: hidden !important;
+      }
+      .theme-grocery2 #g2-main-slider .g2-slider-item,
+      .theme-grocery2 #g2-main-slider .slick-slide.g2-slider-item,
+      .theme-grocery2 .g2-hero-slider .g2-slider-item,
+      .theme-grocery2 .g2-hero-slider .slick-slide.g2-slider-item {
+        display: block !important;
+        float: left !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        height: auto !important;
+      }
+      .theme-grocery2 .g2-slider-mobile-img {
+        width: 100% !important;
+        margin-top: 10px !important;
+        border-radius: 16px !important;
+        overflow: hidden !important;
+        display: block !important;
+        box-sizing: border-box !important;
+      }
+      .theme-grocery2 .g2-slider-mobile-img img {
+        width: 100% !important;
+        height: 220px !important;
+        object-fit: cover !important;
+        border-radius: 16px !important;
+        display: block !important;
+        box-sizing: border-box !important;
+      }
+      .theme-grocery2 #g2-main-slider .slick-dots {
+        position: static !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 6px !important;
+        margin-top: 8px !important;
+        margin-bottom: 8px !important;
+        padding: 0 !important;
+        list-style: none !important;
+        width: 100% !important;
+      }
+
       /* Promo Stack: balanced left & right space and zero top space (< 992px) */
+      .theme-grocery2 #g2-promo-stack-slider,
       .theme-grocery2 .g2-promo-stack,
       .theme-grocery2 .g2-promo-stack.slick-initialized,
       .theme-grocery2 .g2-promo-stack.slick-initialized.slick-slider {
@@ -880,17 +1037,26 @@
         width: 100% !important;
         max-width: 100% !important;
       }
-      .theme-grocery2 .g2-promo-stack.slick-initialized .slick-list {
+      .theme-grocery2 #g2-promo-stack-slider.slick-slider .slick-list,
+      .theme-grocery2 #g2-promo-stack-slider .slick-list,
+      .theme-grocery2 .g2-promo-stack.slick-slider .slick-list,
+      .theme-grocery2 .g2-promo-stack.slick-initialized .slick-list,
+      .theme-grocery2 .g2-promo-stack .slick-list {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 0 !important;
         border-radius: 16px !important;
         overflow: hidden !important;
         width: 100% !important;
+        box-sizing: border-box !important;
       }
-      .theme-grocery2 .g2-promo-stack.slick-initialized .slick-track {
-        display: flex !important;
-      }
-      .theme-grocery2 .g2-promo-stack.slick-initialized .g2-side-promo,
-      .theme-grocery2 .g2-promo-stack .g2-side-promo {
+      .theme-grocery2 #g2-promo-stack-slider .g2-side-promo,
+      .theme-grocery2 #g2-promo-stack-slider .slick-slide.g2-side-promo,
+      .theme-grocery2 .g2-promo-stack .g2-side-promo,
+      .theme-grocery2 .g2-promo-stack.slick-initialized .g2-side-promo {
         margin: 0 !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
         width: 100% !important;
         height: 200px !important;
         min-height: 200px !important;
@@ -900,14 +1066,6 @@
       }
       .theme-grocery2 .g2-promo-stack.slick-initialized .slick-dots {
         display: none !important;
-      }
-      .theme-grocery2 .g2-hero-slider .g2-slider-item,
-      .theme-grocery2 .g2-hero-slider .slick-slide.g2-slider-item {
-        display: block !important;
-        float: left !important;
-        padding: 8px 12px 4px 12px !important;
-        box-sizing: border-box !important;
-        height: auto !important;
       }
 
       /* Task 3: Arrow buttons beside Featured Categories on mobile view */
