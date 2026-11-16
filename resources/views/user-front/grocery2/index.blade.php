@@ -16,11 +16,11 @@
 
 @section('content')
   <!-- ==================== HERO SLIDER AREA ==================== -->
-  <section class="g2-hero-section pt-3">
+  <section class="g2-hero-section pt-lg-3 pt-0">
     <div class="container">
-      <div class="row g-4">
+      <div class="row g-lg-4 g-2">
         <!-- Main Hero Slider -->
-        <div class="col-xl-8 col-lg-12 mb-4">
+        <div class="col-xl-8 col-lg-12 mb-lg-4 mb-2">
           <div class="g2-hero-slider" id="g2-main-slider">
             @if (count($sliders) > 0)
               @foreach ($sliders as $slider)
@@ -68,7 +68,7 @@
           }
         @endphp
         @if(isset($topBanners) && count($topBanners) > 0)
-          <div class="col-xl-4 col-lg-12 mb-4">
+          <div class="col-xl-4 col-lg-12 mb-lg-4 mb-2">
             <div class="g2-promo-stack" id="g2-promo-stack-slider">
               @foreach($topBanners->take(2) as $b)
                 <div class="g2-side-promo" style="background-image: url('{{ asset('assets/front/img/user/banners/' . $b->banner_img) }}');">

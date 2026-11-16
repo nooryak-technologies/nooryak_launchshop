@@ -693,15 +693,19 @@
       }
     }
     @media (max-width: 767.98px) {
-      /* Task 1: Remove container padding for hero banner only on mobile view */
-      .theme-grocery2 .g2-hero-section {
+      /* Hero banner spacing fixes: eliminate unwanted top clearance and gaps */
+      .theme-grocery2 .g2-hero-section,
+      .theme-grocery2 .g2-hero-section.pt-3,
+      .theme-grocery2 .g2-hero-section.pt-lg-3 {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
         padding-left: 0 !important;
         padding-right: 0 !important;
       }
       .theme-grocery2 .g2-hero-section > .container,
       .theme-grocery2 .g2-hero-section .container {
         padding-left: 0 !important;
-        padding-right: 16px !important;
+        padding-right: 0 !important;
         max-width: 100% !important;
         width: 100% !important;
       }
@@ -709,13 +713,67 @@
         margin-left: 0 !important;
         margin-right: 0 !important;
       }
+      .theme-grocery2 .g2-hero-section .row.g-4,
+      .theme-grocery2 .g2-hero-section .row.g-lg-4 {
+        --bs-gutter-y: 0 !important;
+        row-gap: 0 !important;
+      }
       .theme-grocery2 .g2-hero-section .row > [class*="col-"] {
         padding-left: 0 !important;
         padding-right: 0 !important;
       }
+      .theme-grocery2 .g2-hero-section .col-xl-8.col-lg-12.mb-4,
+      .theme-grocery2 .g2-hero-section .col-xl-8.col-lg-12.mb-lg-4 {
+        margin-bottom: 6px !important;
+      }
+      .theme-grocery2 .g2-hero-section .col-xl-4.col-lg-12.mb-4,
+      .theme-grocery2 .g2-hero-section .col-xl-4.col-lg-12.mb-lg-4 {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        margin-bottom: 12px !important;
+      }
+      .theme-grocery2 #g2-main-slider .slick-dots {
+        margin-top: 8px !important;
+        margin-bottom: 4px !important;
+      }
+      .theme-grocery2 .g2-slider-mobile-img {
+        margin-top: 8px !important;
+      }
+
+      /* Promo Stack: balanced left & right space and zero top space */
+      .theme-grocery2 .g2-promo-stack,
+      .theme-grocery2 .g2-promo-stack.slick-initialized,
+      .theme-grocery2 .g2-promo-stack.slick-initialized.slick-slider {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+      .theme-grocery2 .g2-promo-stack.slick-initialized .slick-list {
+        border-radius: 16px !important;
+        overflow: hidden !important;
+        width: 100% !important;
+      }
+      .theme-grocery2 .g2-promo-stack.slick-initialized .slick-track {
+        display: flex !important;
+      }
+      .theme-grocery2 .g2-promo-stack.slick-initialized .g2-side-promo,
+      .theme-grocery2 .g2-promo-stack .g2-side-promo {
+        margin: 0 !important;
+        width: 100% !important;
+        height: 200px !important;
+        min-height: 200px !important;
+        border-radius: 16px !important;
+        box-sizing: border-box !important;
+      }
       .theme-grocery2 .g2-hero-slider .g2-slider-item,
       .theme-grocery2 .g2-hero-slider .slick-slide.g2-slider-item {
-        padding: 10px !important;
+        padding: 10px 12px !important;
       }
       .theme-grocery2 .g2-hero-slider .g2-slider-content {
         background: rgba(255, 255, 255, 0.20) !important;
@@ -760,6 +818,78 @@
       }
     }
     @media (max-width: 991.98px) {
+      /* Hero banner spacing fixes: eliminate unwanted top clearance and gaps (< 992px) */
+      .theme-grocery2 .g2-hero-section,
+      .theme-grocery2 .g2-hero-section.pt-3,
+      .theme-grocery2 .g2-hero-section.pt-lg-3 {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+      .theme-grocery2 .g2-hero-section > .container,
+      .theme-grocery2 .g2-hero-section .container {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+      .theme-grocery2 .g2-hero-section .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+      .theme-grocery2 .g2-hero-section .row.g-4,
+      .theme-grocery2 .g2-hero-section .row.g-lg-4 {
+        --bs-gutter-y: 0 !important;
+        row-gap: 0 !important;
+      }
+      .theme-grocery2 .g2-hero-section .row > [class*="col-"] {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+      .theme-grocery2 .g2-hero-section .col-xl-8.col-lg-12.mb-4,
+      .theme-grocery2 .g2-hero-section .col-xl-8.col-lg-12.mb-lg-4 {
+        margin-bottom: 6px !important;
+      }
+      .theme-grocery2 .g2-hero-section .col-xl-4.col-lg-12.mb-4,
+      .theme-grocery2 .g2-hero-section .col-xl-4.col-lg-12.mb-lg-4 {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        margin-bottom: 12px !important;
+      }
+
+      /* Promo Stack: balanced left & right space and zero top space (< 992px) */
+      .theme-grocery2 .g2-promo-stack,
+      .theme-grocery2 .g2-promo-stack.slick-initialized,
+      .theme-grocery2 .g2-promo-stack.slick-initialized.slick-slider {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+      .theme-grocery2 .g2-promo-stack.slick-initialized .slick-list {
+        border-radius: 16px !important;
+        overflow: hidden !important;
+        width: 100% !important;
+      }
+      .theme-grocery2 .g2-promo-stack.slick-initialized .slick-track {
+        display: flex !important;
+      }
+      .theme-grocery2 .g2-promo-stack.slick-initialized .g2-side-promo,
+      .theme-grocery2 .g2-promo-stack .g2-side-promo {
+        margin: 0 !important;
+        width: 100% !important;
+        height: 200px !important;
+        min-height: 200px !important;
+        border-radius: 16px !important;
+        box-sizing: border-box !important;
+      }
+
       /* Task 3: Arrow buttons beside Featured Categories on mobile view */
       .theme-grocery2 .g2-categories-section .g2-section-header {
         display: flex !important;
