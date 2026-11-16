@@ -88,7 +88,7 @@
                                 </div>
 
                                 <p class="text-warning">
-                                    <strong>{{ __('Recommended Image size : 800x800') }}</strong>
+                                    <strong>{{ __('Recommended Image Size : 500 x 500') }}</strong>
                                 </p>
                                 <p class="em text-danger mb-0" id="err_slider_images"></p>
                             </div>
@@ -516,7 +516,7 @@
                     <div class="form-group">
                         <label class="mb-1">{{ __('Prompt') }} <span class="text-danger">*</span></label>
                         <textarea id="ai_slider_prompt" class="form-control" rows="5"
-                            placeholder="{{ __('Example') . ': ' . __('800x800 product photo, premium studio lighting, clean background, ecommerce style...') }}"></textarea>
+                            placeholder="{{ __('Example') . ': ' . __('500x500 product photo, premium studio lighting, clean background, ecommerce style...') }}"></textarea>
                     </div>
 
                     <div class="form-group mb-0">

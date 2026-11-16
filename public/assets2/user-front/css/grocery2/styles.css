@@ -2345,8 +2345,55 @@ body.show-mobile-menu .grocery2-header {
         --bs-gutter-y: 8px;
     }
 
+    .g2-product-card,
     .g2-popular-products .g2-product-card {
         padding: 8px !important;
+    }
+
+    .g2-product-image,
+    .g2-popular-products .g2-product-image {
+        width: 100% !important;
+        height: 145px !important;
+        margin-bottom: 6px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+        border-radius: 8px !important;
+        background: #fbfbfb !important;
+    }
+
+    .g2-img-link,
+    .g2-popular-products .g2-img-link {
+        width: 100% !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .g2-product-image img,
+    .g2-img-link .primary-img,
+    .g2-img-link .secondary-img,
+    .g2-popular-products .g2-product-image img {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        object-fit: cover !important;
+        object-position: center !important;
+        display: block !important;
+        border-radius: 8px !important;
+    }
+
+    .g2-badge-tag {
+        top: 6px !important;
+        left: 6px !important;
+        font-size: 10px !important;
+        padding: 3px 8px !important;
+        border-radius: 4px !important;
+        white-space: nowrap !important;
+        z-index: 6 !important;
     }
 
     .g2-popular-products .g2-product-image {

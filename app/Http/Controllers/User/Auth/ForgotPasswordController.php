@@ -122,7 +122,7 @@ class ForgotPasswordController extends Controller
         $mailData['from_mail'] = $info->from_mail;
         $mailData['from_name'] = $info->from_name;
 
-        if ($info->is_smtp == 1) {
+        if ($info->is_smtp == 1 || !empty(env('MAIL_HOST'))) {
             BasicMailer::sendMail($mailData);
             Session::flash('success', 'A mail has been sent to your email address');
         } else {

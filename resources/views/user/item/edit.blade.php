@@ -103,7 +103,7 @@
                   </div>
                 </form>
                 <p class="text-warning">
-                  <strong>{{ __('Recommended Image Size : 800 x 800') }}</strong>
+                  <strong>{{ __('Recommended Image Size : 500 x 500') }}</strong>
                 </p>
                 @if ($errors->has('image'))
                   <p class="mt-2 mb-0 text-danger">{{ $errors->first('image') }}</p>

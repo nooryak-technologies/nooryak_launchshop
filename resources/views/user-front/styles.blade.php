@@ -775,6 +775,82 @@
       .theme-grocery2 .g2-category-bottom-arrows {
         display: none !important;
       }
+
+      /* Mobile View: Full-width product card images without left/right gaps */
+      .theme-grocery2 .g2-product-card {
+        padding: 8px !important;
+      }
+      .theme-grocery2 .g2-product-image {
+        width: 100% !important;
+        height: 145px !important;
+        margin-bottom: 6px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+        border-radius: 8px !important;
+        background: #fbfbfb !important;
+      }
+      .theme-grocery2 .g2-img-link {
+        width: 100% !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+      .theme-grocery2 .g2-product-image img,
+      .theme-grocery2 .g2-img-link .primary-img,
+      .theme-grocery2 .g2-img-link .secondary-img {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        object-fit: cover !important;
+        object-position: center !important;
+        display: block !important;
+        border-radius: 8px !important;
+      }
+      .theme-grocery2 .g2-badge-tag {
+        top: 6px !important;
+        left: 6px !important;
+        font-size: 10px !important;
+        padding: 3px 8px !important;
+        border-radius: 4px !important;
+        white-space: nowrap !important;
+        z-index: 6 !important;
+      }
+    }
+
+    /* Mobile View: Newsletter input & button stacking to prevent button text cut off */
+    @media (max-width: 575.98px) {
+      .theme-grocery2 .g2-news-form {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        background: transparent !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        gap: 10px !important;
+        width: 100% !important;
+      }
+      .theme-grocery2 .g2-news-input {
+        background: #ffffff !important;
+        border-radius: 8px !important;
+        padding: 12px 16px !important;
+        width: 100% !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+        font-size: 14px !important;
+      }
+      .theme-grocery2 .g2-news-btn {
+        width: 100% !important;
+        padding: 12px 20px !important;
+        border-radius: 8px !important;
+        text-align: center !important;
+        white-space: normal !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        box-shadow: 0 4px 12px rgba(71, 102, 145, 0.3) !important;
+      }
     }
   </style>
 @endif

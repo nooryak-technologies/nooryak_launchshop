@@ -285,7 +285,7 @@ class ItemController extends Controller
             $thumbnail = $request->file('thumbnail');
             if ($request->hasFile('thumbnail')) {
                 $dir = public_path('assets/front/img/user/items/thumbnail/');
-                $thumbnail_name = Uploader::upload_webp($dir, $thumbnail, uniqid(), 600, 600, 82);
+                $thumbnail_name = Uploader::upload_webp($dir, $thumbnail, uniqid(), 500, 500, 82);
             } elseif (!empty($request->ai_generated_image)) {
                 $thumbnail_name = moveAiStorageImageToPublicAssets(
                     $request->ai_generated_image,
@@ -562,7 +562,7 @@ class ItemController extends Controller
             if (!empty($item->thumbnail) && file_exists($dir . $item->thumbnail)) {
                 @unlink($dir . $item->thumbnail);
             }
-            $thumbnail_name = Uploader::upload_webp($dir, $thumbnail, uniqid(), 600, 600, 82);
+            $thumbnail_name = Uploader::upload_webp($dir, $thumbnail, uniqid(), 500, 500, 82);
         }
 
         $item->stock = $request->stock;

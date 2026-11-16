@@ -4,6 +4,7 @@ namespace App\Http\Helpers;
 
 use Config;
 use Illuminate\Mail\Message;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -14,74 +15,80 @@ class BasicMailer
   public static function sendMail($data)
   {
     $sent = false;
-    if (isset($data['smtp_status']) && $data['smtp_status'] == 1) {
-      $host = (!empty($data['smtp_host']) && !str_contains($data['smtp_host'], 'metroshop.in') && !str_contains($data['smtp_host'], 'nooryak.in'))
-          ? $data['smtp_host']
-          : env('MAIL_HOST', 'mail.saasreselling.com');
-      $port = !empty($data['smtp_port']) ? (int)$data['smtp_port'] : (int)env('MAIL_PORT', 465);
-      $encryption = !empty($data['encryption']) ? $data['encryption'] : env('MAIL_ENCRYPTION', 'ssl');
-      $username = (!empty($data['smtp_username']) && !str_contains($data['smtp_username'], 'metroshop.in') && !str_contains($data['smtp_username'], 'nooryak.in'))
-          ? $data['smtp_username']
-          : env('MAIL_USERNAME', 'admin@saasreselling.com');
-      $password = !empty($data['smtp_password']) ? $data['smtp_password'] : env('MAIL_PASSWORD', 'Admin@nooryak');
 
-      $smtp = [
-        'transport' => 'smtp',
-        'host' => $host,
-        'port' => $port,
-        'encryption' => $encryption,
-        'username' => $username,
-        'password' => $password,
-        'timeout' => 8,
-        'auth_mode' => null,
-      ];
-      Config::set('mail.mailers.smtp', $smtp);
-      Config::set('mail.default', 'smtp');
-      Mail::purge('smtp');
+    // Fetch DB basic_extendeds settings as fallback if needed
+    $be = null;
+    try {
+      $be = DB::table('basic_extendeds')->first();
+    } catch (\Throwable $e) {}
 
-      // add other informations and send the mail
+    $smtpStatus = isset($data['smtp_status']) ? (int)$data['smtp_status'] : ($be->is_smtp ?? 1);
+    $smtpHost = !empty($data['smtp_host']) ? $data['smtp_host'] : (!empty($be->smtp_host) ? $be->smtp_host : env('MAIL_HOST', 'mail.nooryak.in'));
+    $smtpPort = !empty($data['smtp_port']) ? (int)$data['smtp_port'] : (!empty($be->smtp_port) ? (int)$be->smtp_port : (int)env('MAIL_PORT', 465));
+    $smtpEncryption = !empty($data['encryption']) ? $data['encryption'] : (!empty($be->encryption) ? $be->encryption : env('MAIL_ENCRYPTION', 'ssl'));
+    $smtpUsername = !empty($data['smtp_username']) ? $data['smtp_username'] : (!empty($be->smtp_username) ? $be->smtp_username : env('MAIL_USERNAME', 'infosaasreselling@nooryak.in'));
+    $smtpPassword = !empty($data['smtp_password']) ? $data['smtp_password'] : (!empty($be->smtp_password) ? $be->smtp_password : env('MAIL_PASSWORD', 'Admin@nooryak'));
+
+    $fromMail = !empty($data['from_mail']) ? $data['from_mail'] : (!empty($be->from_mail) ? $be->from_mail : (env('MAIL_FROM_ADDRESS') ?: 'infosaasreselling@nooryak.in'));
+    $fromName = !empty($data['from_name']) ? $data['from_name'] : (!empty($be->from_name) ? $be->from_name : (env('MAIL_FROM_NAME') ?: 'LaunchShop'));
+
+    $recipient = $data['recipient'] ?? ($data['to'] ?? ($data['toMail'] ?? null));
+    if (empty($recipient)) {
+      Log::warning('BasicMailer: No recipient specified.');
+      return false;
+    }
+
+    $subject = $data['subject'] ?? 'Notification';
+    $rawBody = $data['body'] ?? '';
+    $body = Common::wrapEmailBody($rawBody, $subject, null, null, $fromName);
+
+    // Try SMTP if host is present
+    if (!empty($smtpHost) && ($smtpStatus == 1 || !empty(env('MAIL_HOST')))) {
       try {
-        Mail::send([], [], function (Message $message) use ($data, $username) {
-          $fromMail = (!empty($data['from_mail']) && !str_contains($data['from_mail'], 'metroshop.in') && !str_contains($data['from_mail'], 'nooryak.in'))
-              ? $data['from_mail']
-              : (!empty($username) ? $username : env('MAIL_FROM_ADDRESS', 'admin@saasreselling.com'));
-          $fromName = !empty($data['from_name'])
-              ? $data['from_name']
-              : env('MAIL_FROM_NAME', 'LaunchShop');
-          $subject = $data['subject'] ?? 'Notification';
-          $body = Common::wrapEmailBody($data['body'] ?? '', $subject, null, null, $fromName);
-          $message->to($data['recipient'])
+        $smtp = [
+          'transport' => 'smtp',
+          'host' => $smtpHost,
+          'port' => $smtpPort,
+          'encryption' => $smtpEncryption,
+          'username' => $smtpUsername,
+          'password' => $smtpPassword,
+          'timeout' => 15,
+          'auth_mode' => null,
+        ];
+        Config::set('mail.mailers.smtp', $smtp);
+        Config::set('mail.default', 'smtp');
+        Mail::purge('smtp');
+
+        Mail::send([], [], function (Message $message) use ($recipient, $fromMail, $fromName, $subject, $body, $data) {
+          $message->to($recipient)
             ->from($fromMail, $fromName)
             ->replyTo($fromMail, $fromName)
             ->subject($subject)
             ->html($body, 'text/html');
 
-          if (array_key_exists('invoice', $data)) {
+          if (array_key_exists('invoice', $data) && !empty($data['invoice']) && file_exists($data['invoice'])) {
             $message->attach($data['invoice']);
           }
         });
         $sent = true;
-      } catch (\Exception $e) {
-        Log::warning('BasicMailer SMTP failed: ' . $e->getMessage());
+      } catch (\Throwable $e) {
+        Log::warning('BasicMailer SMTP failed to ' . $recipient . ': ' . $e->getMessage());
       }
     }
 
     // Fail-safe: Always fallback to PHP native mail() if SMTP was not sent or failed
-    if (!$sent && !empty($data['recipient'])) {
+    if (!$sent) {
       try {
-        $fromMail = (!empty($data['from_mail']) && !str_contains($data['from_mail'], 'metroshop.in') && !str_contains($data['from_mail'], 'nooryak.in'))
-            ? $data['from_mail']
-            : config('mail.from.address', 'admin@saasreselling.com');
-        $fromName = $data['from_name'] ?? config('mail.from.name', 'LaunchShop');
-        $subject  = $data['subject'] ?? 'Notification';
-        $body     = Common::wrapEmailBody($data['body'] ?? '', $subject, null, null, $fromName);
         $headers  = "MIME-Version: 1.0\r\n";
         $headers .= "Content-type: text/html; charset=UTF-8\r\n";
         $headers .= "From: {$fromName} <{$fromMail}>\r\n";
-        $headers .= "Reply-To: {$fromName} <{$fromMail}>\r\n";
+        $headers .= "Reply-To: {$fromMail}\r\n";
         $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
-        if (@mail($data['recipient'], $subject, $body, $headers)) {
+        if (@mail($recipient, $subject, $body, $headers)) {
           $sent = true;
+          Log::info('BasicMailer: Sent mail via native mail() fallback to ' . $recipient);
+        } else {
+          Log::warning('BasicMailer: Native mail() failed for ' . $recipient);
         }
       } catch (\Throwable $e) {
         Log::warning('BasicMailer native mail fallback error: ' . $e->getMessage());
