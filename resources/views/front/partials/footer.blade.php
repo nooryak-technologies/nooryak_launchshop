@@ -84,17 +84,11 @@
               @endphp
               <li>
                 <i class="fal fa-phone" style="transform: scaleX(-1); display: inline-block;"></i>
-                {!! implode(
-                    '<br>',
-                    array_map(fn($num) => '<a href="tel:' . str_replace(' ', '', trim($num)) . '" class="me-1">' . trim($num) . '</a>', $numbers),
-                ) !!}
+                <a href="tel:7200770351">72007 70351</a>, <a href="tel:6374913298">63749 13298</a>
               </li>
               <li>
                 <i class="fal fa-envelope"></i>
-                {!! implode(
-                    '<br>',
-                    array_map(fn($mail) => '<a href="mailto:' . trim($mail) . '" class="me-1">' . trim($mail) . '</a>', $emails),
-                ) !!}
+                <a href="mailto:contact@launchshop.in">contact@launchshop.in</a>
               </li>
 
             </ul>

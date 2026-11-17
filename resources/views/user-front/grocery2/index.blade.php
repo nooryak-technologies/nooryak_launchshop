@@ -204,39 +204,7 @@
     </div>
   </section>
 
-  <!-- ==================== MIDDLE PROMO CARDS (4 Column Grid) ==================== -->
-  @php
-    $midBanners = isset($banners) ? $banners->where('position', 'middle') : collect();
-    if ($midBanners->isEmpty() && isset($banners) && count($banners) >= 3) {
-        $midBanners = $banners->slice(2, 4);
-    }
-  @endphp
-  @if(count($midBanners) > 0)
-    <section class="g2-middle-banners py-4">
-      <div class="container">
-        <div class="row g-3">
-          @php
-            $bgClasses = ['bg-cream-light', 'bg-blue-light', 'bg-green-light', 'bg-pink-light'];
-            $i = 0;
-          @endphp
-          @foreach($midBanners as $b)
-            <div class="col-xl-3 col-lg-6 col-md-6">
-              <div class="g2-mid-card {{ $bgClasses[$i % 4] }}">
-                <div class="g2-mid-card-img">
-                  <img src="{{ asset('assets/front/img/user/banners/' . $b->banner_img) }}" alt="Banner">
-                </div>
-                <div class="g2-mid-card-text">
-                  <h3>{{ $b->title }}</h3>
-                  <a href="{{ $b->banner_url ?? $b->url ?? route('front.user.shop', getParam()) }}" class="g2-supplier-link">{{ !empty($b->button_text) ? $b->button_text : __('Go To Supplier') }} <i class="fas fa-caret-right"></i></a>
-                </div>
-              </div>
-            </div>
-            @php $i++; @endphp
-          @endforeach
-        </div>
-      </div>
-    </section>
-  @endif
+
 
   <!-- ==================== SIDEBAR BANNER + POPULAR ITEMS GRID SECTION ==================== -->
   <section class="g2-sidebar-grid py-4">

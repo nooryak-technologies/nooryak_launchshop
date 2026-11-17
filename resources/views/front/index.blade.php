@@ -1149,7 +1149,7 @@
 
   <!-- Claim Subdomain Banner -->
   <section class="subdomain-banner">
-    <div class="container">
+    <div class="container" style="max-width: 1400px; width: 95%;">
       <div class="row">
         <div class="col-12">
           <div class="subdomain-inner flex-column flex-lg-row text-center text-lg-start" data-aos="fade-up">

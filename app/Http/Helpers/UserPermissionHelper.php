@@ -37,6 +37,16 @@ class UserPermissionHelper
             ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'))
             ->first();
 
+        if (!$currentPackage) {
+            $currentPackage = Membership::query()
+                ->with('package')
+                ->where('user_id', $userId)
+                ->where('status', 0)
+                ->whereYear('start_date', '<>', '9999')
+                ->orderBy('id', 'DESC')
+                ->first();
+        }
+
         return $currentPackage && $currentPackage->package
             ? $currentPackage->package->features
             : collect([]);
@@ -77,6 +87,13 @@ class UserPermissionHelper
             ['start_date', '<=', Carbon::now()->format('Y-m-d')],
             ['expire_date', '>=', Carbon::now()->format('Y-m-d')]
         ])->first();
+
+        if (!$currentPackage) {
+            $currentPackage = Membership::query()->where([
+                ['user_id', '=', $userId],
+                ['status', '=', 0]
+            ])->whereYear('start_date', '<>', '9999')->orderBy('id', 'DESC')->first();
+        }
         $package = isset($currentPackage) ? Package::query()->findOrFail($currentPackage->package_id) : null;
         if ($package && self::isSathika($userId)) {
             $package->product_limit = 600;
