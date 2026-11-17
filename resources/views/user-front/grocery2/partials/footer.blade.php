@@ -109,6 +109,12 @@
                   <img src="{{ asset('assets/front/img/footer/' . @$footer->footer_logo) }}" alt="Logo" style="max-height: 42px; width: auto; object-fit: contain;">
                 </a>
               </div>
+            @elseif(!empty(@$userBs->dark_logo))
+              <div class="footer-logo mb-3">
+                <a href="{{ route('front.user.detail.view', getParam()) }}">
+                  <img src="{{ asset('assets/front/img/user/' . @$userBs->dark_logo) }}" alt="Logo" style="max-height: 42px; width: auto; object-fit: contain;">
+                </a>
+              </div>
             @elseif(!empty(@$userBs->logo))
               <div class="footer-logo mb-3">
                 <a href="{{ route('front.user.detail.view', getParam()) }}">
@@ -225,7 +231,7 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col-md-4 text-center text-md-start mb-2 mb-md-0">
-          <span class="text-muted" style="font-size: 13px;">{!! replaceBaseUrl($copyright_text) !!} <span class="powered-by-link"> | Powered by <a href="https://launchshop.in/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; font-weight: 600;">launchshop.in</a> | <a href="javascript:void(0)" class="launchshop-disclaimer-trigger" style="color: inherit; text-decoration: underline; font-weight: 600;">Disclaimer</a></span></span>
+          <span class="text-muted" style="font-size: 13px;">{!! replaceBaseUrl($copyright_text) !!} <span class="powered-by-link"> | Powered by <a href="https://launchshop.in/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; font-weight: 600;">launchshop.in</a> | <a href="javascript:void(0)" class="launchshop-disclaimer-trigger" style="color: inherit; text-decoration: underline; font-weight: 600; font-size: 13.5px;"><i class="fal fa-shield-alt mr-1"></i> Disclaimer</a></span></span>
         </div>
         <div class="col-md-4 text-center mb-2 mb-md-0">
           <ul class="copyright-links list-inline m-0 p-0" style="font-size: 13px;">

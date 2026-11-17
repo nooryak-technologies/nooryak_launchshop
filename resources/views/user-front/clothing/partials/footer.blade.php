@@ -28,6 +28,8 @@
               <a href="{{ route('front.user.detail.view', getParam()) }}">
                 @if(!empty(@$footer->footer_logo))
                   <img src="{{ asset('assets/front/img/footer/' . @$footer->footer_logo) }}" alt="Logo" style="max-height: 60px; max-width: 220px; object-fit: contain;">
+                @elseif(!empty(@$userBs->dark_logo))
+                  <img src="{{ asset('assets/front/img/user/' . @$userBs->dark_logo) }}" alt="Logo" style="max-height: 60px; max-width: 220px; object-fit: contain;">
                 @elseif(!empty(@$userBs->logo))
                   <img src="{{ asset('assets/front/img/user/' . @$userBs->logo) }}" alt="Logo" style="max-height: 60px; max-width: 220px; object-fit: contain;">
                 @else
@@ -134,7 +136,7 @@
     <div class="container">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
         <p>{!! replaceBaseUrl($footer->copyright_text ?? null) ?: ('Copyright &copy; ' . date('Y') . ' ' . ($userBs->website_title ?? 'Metroshop') . '. All Rights Reserved.') !!}
-              <span class="powered-by-link"> | Powered by <a href="https://launchshop.in/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; font-weight: 600;">launchshop.in</a> | <a href="javascript:void(0)" class="launchshop-disclaimer-trigger" style="color: inherit; text-decoration: underline; font-weight: 600;">Disclaimer</a></span> </p>
+              <span class="powered-by-link"> | Powered by <a href="https://launchshop.in/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; font-weight: 600;">launchshop.in</a> | <a href="javascript:void(0)" class="launchshop-disclaimer-trigger" style="color: inherit; text-decoration: underline; font-weight: 600; font-size: 13.5px;"><i class="fal fa-shield-alt mr-1"></i> Disclaimer</a></span> </p>
         <p style="font-size:12px;color:rgba(0,0,0,0.4);">
           <i class="fal fa-shield-alt" style="margin-right:6px;"></i>{{ $keywords['Secure Payments'] ?? __('Secure Payments') }}
         </p>

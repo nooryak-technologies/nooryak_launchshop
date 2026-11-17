@@ -1153,33 +1153,35 @@
       <div class="row">
         <div class="col-12">
           <div class="subdomain-inner flex-column flex-lg-row text-center text-lg-start" data-aos="fade-up">
-            <div class="d-flex align-items-center mb-4 mb-lg-0">
+            <div class="d-flex align-items-center mb-4 mb-lg-0" style="flex-shrink: 0;">
               <div class="subdomain-title-icon" style="width: 50px; height: 50px; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
                 <i class="fas fa-globe" style="font-size: 24px; color: #ff5a2c;"></i>
               </div>
               <div>
-                <h3 class="subdomain-title">Claim Your Branded Subdomain</h3>
-                <p class="text-white-50 mb-0">Get a professional identity for your store in seconds.</p>
+                <h3 class="subdomain-title" style="white-space: nowrap; margin-bottom: 4px;">Claim Your Branded Subdomain</h3>
+                <p class="text-white-50 mb-0" style="white-space: nowrap;">Get a professional identity for your store in seconds.</p>
               </div>
             </div>
-            <div class="subdomain-check-container mt-3 mt-lg-0" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-              <div class="subdomain-input-group" style="max-width: 100%; flex-grow: 1;">
-                <span class="domain-prefix">https://</span>
-                <input type="text" id="subdomain-input" placeholder="mystore" value="mystore">
-                <span class="domain-ext">.launchshop.in</span>
-                <button type="button" id="btn-check-availability">
-                  <span class="d-none d-md-inline">Check Availability</span>
-                  <span class="d-inline d-md-none">Check</span>
-                </button>
+            <div class="subdomain-check-container mt-3 mt-lg-0" style="display: flex; align-items: flex-start; gap: 12px; flex-grow: 1; justify-content: flex-end; flex-wrap: wrap;">
+              <div class="subdomain-input-wrapper" style="display: flex; flex-direction: column; flex-grow: 1; max-width: 580px; width: 100%;">
+                <div class="subdomain-input-group" style="width: 100%; max-width: 100%;">
+                  <span class="domain-prefix">https://</span>
+                  <input type="text" id="subdomain-input" placeholder="mystore" value="mystore">
+                  <span class="domain-ext">.launchshop.in</span>
+                  <button type="button" id="btn-check-availability">
+                    <span class="d-none d-md-inline">Check Availability</span>
+                    <span class="d-inline d-md-none">Check</span>
+                  </button>
+                </div>
+                <div id="subdomain-status" class="subdomain-status-msg text-start mt-2" style="display: none; width: 100%; font-size: 13.5px; font-weight: 600;"></div>
               </div>
               @php
                 $defaultPackage = \App\Models\Package::where('status', '1')->where('featured', '1')->first();
                 $defaultPackageId = $defaultPackage ? $defaultPackage->id : 1;
               @endphp
-              <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-subdomain-launch-now" style="background: #ffffff; color: #ff5a2c; border: 1.5px solid #ffffff; border-radius: 8px; padding: 12px 24px; font-size: 14px; font-weight: 700; text-decoration: none; white-space: nowrap; height: 50px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='#ff5a2c';this.style.color='#ffffff';this.style.borderColor='#ff5a2c';" onmouseout="this.style.background='#ffffff';this.style.color='#ff5a2c';this.style.borderColor='#ffffff';">
+              <a href="{{ route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) }}" class="btn-subdomain-launch-now" style="background: #ffffff; color: #ff5a2c; border: 1.5px solid #ffffff; border-radius: 8px; padding: 12px 24px; font-size: 14px; font-weight: 700; text-decoration: none; white-space: nowrap; height: 50px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease; flex-shrink: 0;" onmouseover="this.style.background='#ff5a2c';this.style.color='#ffffff';this.style.borderColor='#ff5a2c';" onmouseout="this.style.background='#ffffff';this.style.color='#ff5a2c';this.style.borderColor='#ffffff';">
                 {{ __('Launch Now') }}
               </a>
-              <div id="subdomain-status" class="subdomain-status-msg text-start mt-2" style="display: none; width: 100%;"></div>
             </div>
           </div>
         </div>

@@ -12,7 +12,7 @@
             <div class="navbar-brand">
               <a href="{{ route('front.user.detail.view', getParam()) }}">
                 <img
-                  src="{{ !is_null(@$footer->footer_logo) ? asset('assets/front/img/footer/' . @$footer->footer_logo) : asset('assets/front/img/logo.png') }}"
+                  src="{{ !empty($footer->footer_logo) ? asset('assets/front/img/footer/' . $footer->footer_logo) : (!empty($userBs->dark_logo) ? asset('assets/front/img/user/' . $userBs->dark_logo) : (!empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png'))) }}"
                   alt="Logo">
               </a>
             </div>
@@ -129,7 +129,7 @@
       <div class="copy-right-content">
         <span>
           {!! replaceBaseUrl(@$footer->copyright_text ?? null) ?: ('Copyright &copy; ' . date('Y') . ' ' . ($userBs->website_title ?? 'Metroshop') . '. All Rights Reserved.') !!}
-              <span class="powered-by-link"> | Powered by <a href="https://launchshop.in/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; font-weight: 600;">launchshop.in</a> | <a href="javascript:void(0)" class="launchshop-disclaimer-trigger" style="color: inherit; text-decoration: underline; font-weight: 600;">Disclaimer</a></span>
+              <span class="powered-by-link"> | Powered by <a href="https://launchshop.in/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; font-weight: 600;">launchshop.in</a> | <a href="javascript:void(0)" class="launchshop-disclaimer-trigger" style="color: inherit; text-decoration: underline; font-weight: 600; font-size: 13.5px;"><i class="fal fa-shield-alt mr-1"></i> Disclaimer</a></span>
           
         </span>
       </div>

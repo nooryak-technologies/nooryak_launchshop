@@ -79,6 +79,7 @@
   .navbar-header {
     padding: 0 15px !important;
   }
+  .main-header .navbar-header .navbar-nav.topbar-nav-left,
   .navbar-nav.topbar-nav-left {
     display: flex !important;
     flex-direction: row !important;
@@ -86,19 +87,25 @@
     justify-content: flex-start !important;
     gap: 12px !important;
     margin-right: auto !important;
+    margin-left: 0 !important;
     padding: 0 !important;
+    padding-left: 0 !important;
     margin-bottom: 0 !important;
     list-style: none !important;
+    width: auto !important;
   }
+  .main-header .navbar-header .navbar-nav.topbar-nav-right,
   .navbar-nav.topbar-nav-right {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
     justify-content: flex-end !important;
     margin-left: auto !important;
+    margin-right: 0 !important;
     padding: 0 !important;
     margin-bottom: 0 !important;
     list-style: none !important;
+    width: auto !important;
   }
   .navbar-nav.topbar-nav-left .nav-item,
   .navbar-nav.topbar-nav-right .nav-item {
@@ -146,9 +153,8 @@
   <!-- Logo Header -->
   <div class="logo-header" data-background-color="dark2">
     @php
-      $isDarkTheme = request()->cookie('user-theme') == 'dark';
       $dashLogo = null;
-      if ($isDarkTheme && !empty($userBs->dark_logo) && file_exists(public_path('assets/front/img/user/' . $userBs->dark_logo))) {
+      if (!empty($userBs->dark_logo) && file_exists(public_path('assets/front/img/user/' . $userBs->dark_logo))) {
           $dashLogo = asset('assets/front/img/user/' . $userBs->dark_logo);
       } elseif (!empty($userBs->logo) && file_exists(public_path('assets/front/img/user/' . $userBs->logo))) {
           $dashLogo = asset('assets/front/img/user/' . $userBs->logo);

@@ -791,6 +791,7 @@ i[id$="EyeIcon"]:hover {
     color: var(--ls-white);
     font-size: 24px;
     margin-bottom: 5px;
+    white-space: nowrap;
 }
 
 .subdomain-title-icon {
@@ -2410,6 +2411,7 @@ i[id$="EyeIcon"]:hover {
     .subdomain-inner .subdomain-title {
         font-size: 20px !important;
         margin-bottom: 8px !important;
+        white-space: normal !important;
     }
 
     .theme-filters {

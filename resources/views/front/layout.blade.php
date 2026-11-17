@@ -368,13 +368,13 @@
         <!-- Quick Action Buttons -->
         <div class="wa-quick-actions">
           <a href="{{ Route::has('front.register.view') ? route('front.register.view', ['status' => 'regular', 'id' => $defaultPackageId]) : url('/') }}" class="wa-action-btn">
-            Start My Online Store
-          </a>
-          <a href="https://api.whatsapp.com/send?phone={{ preg_replace('/[^0-9]/', '', $phoneNum) }}&text=Hi%2C%20I%20want%20to%20talk%20to%20an%20expert%20to%20help%20me%20get%20started." target="_blank" class="wa-action-btn wa-talk-expert">
-            Talk to Expert
+            Create eCom account
           </a>
           <a href="{{ Route::has('front.pricing') ? route('front.pricing') : url('/') }}" class="wa-action-btn">
-            Pricing & Plans
+            Pricing plan
+          </a>
+          <a href="https://api.whatsapp.com/send?phone={{ preg_replace('/[^0-9]/', '', $phoneNum) }}&text=Hi%2C%20I%20want%20to%20talk%20to%20the%20sales%20team%20about%20LaunchShop." target="_blank" class="wa-action-btn wa-talk-expert" style="border-color: #0d8c72; color: #0d8c72 !important;">
+            talk to sales team
           </a>
         </div>
       </div>

@@ -49,11 +49,11 @@
               <div class="row align-items-center">
                 <div class="col-sm-auto mb-3 mb-sm-0">
                   <div class="dark-border d-inline-block" style="padding: 15px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.08); background: rgba(0,0,0,0.01); position: relative;">
-                    <div class="showImage d-flex align-items-center justify-content-center" style="width: 130px; height: 130px; border-radius: 50%; background: rgba(13, 110, 253, 0.08); overflow: hidden; margin: 0 auto;">
+                    <div id="profile_img_container" class="showImage d-flex align-items-center justify-content-center" style="width: 130px; height: 130px; border-radius: 50%; background: rgba(13, 110, 253, 0.08); overflow: hidden; margin: 0 auto;">
                       @if ($user->photo)
-                        <img src="{{ asset('assets/front/img/user/' . $user->photo) }}" alt="..." style="width: 100%; height: 100%; object-fit: cover;">
+                        <img id="profile_img_preview" src="{{ asset('assets/front/img/user/' . $user->photo) }}" alt="..." style="width: 100%; height: 100%; object-fit: cover;">
                       @else
-                        <i class="fas fa-store" style="font-size: 52px; color: #0d6efd;"></i>
+                        <i id="profile_placeholder_icon" class="fas fa-store" style="font-size: 52px; color: #0d6efd;"></i>
                       @endif
                     </div>
                     <div style="position: absolute; top: 15px; right: 15px; width: 32px; height: 32px; border-radius: 50%; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="$('#photo_input').click();">
@@ -62,17 +62,17 @@
                   </div>
                 </div>
                 <div class="col-sm-auto mb-3 mb-sm-0">
-                  <div style="border: 2px dashed rgba(13, 110, 253, 0.3); border-radius: 12px; padding: 25px 35px; text-align: center; background: rgba(13, 110, 253, 0.02); min-width: 240px; position: relative;">
+                  <div id="profile_drop_zone" style="border: 2px dashed rgba(13, 110, 253, 0.3); border-radius: 12px; padding: 25px 35px; text-align: center; background: rgba(13, 110, 253, 0.02); min-width: 240px; position: relative; transition: all 0.2s ease;">
                     <i class="fas fa-cloud-upload-alt mb-2 text-muted" style="font-size: 28px;"></i>
-                    <p class="text-muted mb-2 dark-text" style="font-size: 13px; line-height: 1.4;">{{ __('Drag & drop an image here') }}<br>{{ __('or') }}</p>
+                    <p class="text-muted mb-2 dark-text" id="drop_zone_text" style="font-size: 13px; line-height: 1.4;">{{ __('Drag & drop an image here') }}<br>{{ __('or') }}</p>
                     <div role="button" class="btn btn-primary btn-sm rounded-pill upload-btn" id="image" style="padding: 6px 20px; font-weight: 600; position: relative; overflow: hidden;">
                       {{ __('Choose Image') }}
-                      <input type="file" class="img-input" id="photo_input" name="photo" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
+                      <input type="file" class="img-input" id="photo_input" name="photo" accept="image/*" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
                     </div>
                   </div>
                 </div>
               </div>
-              <p class="text-muted mt-2 mb-0 dark-text" style="font-size: 12px;">{{ __('Image Size: 100 x 100 px') }} &bull; {{ __('JPG, PNG or WEBP') }}</p>
+              <p class="text-muted mt-2 mb-0 dark-text" style="font-size: 12px;">{{ __('Recommended: Square image') }} &bull; {{ __('JPG, PNG, JPEG or WEBP (Max 5MB)') }}</p>
               <p id="errphoto" class="mb-0 text-danger em"></p>
             </div>
 
@@ -191,11 +191,65 @@
           </form>
         </div>
         <div class="card-footer dark-border" style="background: transparent; border-top: 1px solid rgba(0,0,0,0.05); padding: 25px; text-align: center;">
-          <button type="button" onclick="$('#ajaxForm').submit();" id="submitBtn" class="btn btn-success" style="border-radius: 8px; padding: 10px 32px; font-weight: 600; font-size: 15px;">
+          <button type="button" id="submitBtn" class="btn btn-success" style="border-radius: 8px; padding: 10px 32px; font-weight: 600; font-size: 15px;">
             <i class="fas fa-save mr-2"></i> {{ __('Update Profile') }}
           </button>
         </div>
       </div>
     </div>
   </div>
+@endsection
+
+@section('scripts')
+<script>
+  $(document).ready(function() {
+    function handleImagePreview(file) {
+      if (!file || !file.type.match(/^image\//)) return;
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var $container = $('#profile_img_container');
+        $container.html('<img id="profile_img_preview" src="' + e.target.result + '" style="width: 100%; height: 100%; object-fit: cover;">');
+        $('#drop_zone_text').html('<span class="text-success font-weight-bold"><i class="fas fa-check-circle mr-1"></i> ' + file.name + '</span>');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    $('#photo_input').on('change', function(e) {
+      if (this.files && this.files[0]) {
+        handleImagePreview(this.files[0]);
+      }
+    });
+
+    var dropZone = document.getElementById('profile_drop_zone');
+    if (dropZone) {
+      ['dragenter', 'dragover'].forEach(function(eventName) {
+        dropZone.addEventListener(eventName, function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          dropZone.style.borderColor = '#0d6efd';
+          dropZone.style.background = 'rgba(13, 110, 253, 0.08)';
+        }, false);
+      });
+
+      ['dragleave', 'drop'].forEach(function(eventName) {
+        dropZone.addEventListener(eventName, function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          dropZone.style.borderColor = 'rgba(13, 110, 253, 0.3)';
+          dropZone.style.background = 'rgba(13, 110, 253, 0.02)';
+        }, false);
+      });
+
+      dropZone.addEventListener('drop', function(e) {
+        var dt = e.dataTransfer;
+        var files = dt.files;
+        if (files && files.length > 0) {
+          var fileInput = document.getElementById('photo_input');
+          fileInput.files = files;
+          handleImagePreview(files[0]);
+        }
+      }, false);
+    }
+  });
+</script>
 @endsection

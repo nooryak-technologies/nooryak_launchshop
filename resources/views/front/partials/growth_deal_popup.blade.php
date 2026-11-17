@@ -176,7 +176,7 @@
                         <div class="gd-price-big">{{ $stdPriceDisplay }}<span class="gd-per">/year</span></div>
                         <p class="gd-billed">Billed annually</p>
                         <ul class="gd-feats">
-                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Custom Domain </li>
+                            <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Custom Domain Mapping </li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Unlimited Orders</li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Custom Pages</li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Inventory Management </li>
@@ -940,6 +940,69 @@
     .gd-timer-section { margin-bottom: 6px; padding: 4px 10px; }
     .gd-tnum { font-size: 20px; }
     .gd-feats li { font-size: 10.5px; margin-bottom: 2px; }
+}
+
+
+/* BIGGER COUNTDOWN TIMER */
+.gd-timer-section {
+    max-width: 380px !important;
+    padding: 12px 22px !important;
+    margin: 8px auto 14px !important;
+    border-radius: 16px !important;
+}
+
+.gd-timer-row {
+    gap: 18px !important;
+}
+
+.gd-tblock {
+    min-width: 65px !important;
+}
+
+.gd-tnum {
+    font-size: 34px !important;
+    font-weight: 900 !important;
+}
+
+.gd-tunit {
+    font-size: 9px !important;
+    margin-top: 5px !important;
+}
+
+.gd-tsep {
+    font-size: 28px !important;
+}
+
+
+
+/* BIGGER PREMIUM CLICK HAND */
+.gd-click-hand {
+    font-size: 34px !important;
+    right: -10px !important;
+    bottom: -18px !important;
+    animation: gdBigHandBounce 1s ease-in-out infinite !important;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+@keyframes gdBigHandBounce {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    40% {
+        transform: translateY(-10px) scale(1.2);
+    }
+    70% {
+        transform: translateY(-3px) scale(1.1);
+    }
+}
+
+/* Make Premium button more noticeable */
+.gd-select-premium-wrap .gd-btn-fill {
+    padding: 11px 10px !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    border: 2px solid #FF9A70 !important;
+    box-shadow: 0 5px 18px rgba(255, 90, 44, 0.4);
 }
 </style>
 

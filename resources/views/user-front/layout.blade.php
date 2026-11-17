@@ -229,8 +229,8 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body p-4" style="font-size: 13.5px; line-height: 1.65; color: #475569; background: #ffffff;">
-          <p class="mb-0">
+        <div class="modal-body p-4" style="font-size: 15.5px; line-height: 1.7; color: #000000; font-weight: 500; background: #ffffff;">
+          <p class="mb-0" style="color: #000000 !important; font-size: 15.5px !important; font-weight: 500 !important; line-height: 1.7 !important;">
             launchshop.in, a brand of Nooryak Technologies, is not liable for the sale of products or materials. We provide complete DIY platform which is used to connect Merchant &amp; buyers, but any transactions or purchases made through our platform are the sole responsibility of the respective sellers and buyers. Please exercise caution and conduct due when engaging in any transactions on our website.
           </p>
         </div>
@@ -245,6 +245,17 @@
   @yield('scripts')
   @includeIf('user-front.partials.plugins')
   @includeIf('user-front.partials.pwa-banner')
+
+  <style>
+    .launchshop-disclaimer-trigger {
+      font-size: 13.5px !important;
+      font-weight: 600 !important;
+    }
+    .footer_description, .footer-desc {
+      font-size: 14px !important;
+      line-height: 1.65 !important;
+    }
+  </style>
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
