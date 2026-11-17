@@ -1,4 +1,72 @@
 
+@php
+    $currencySymbol = !empty($be->base_currency_symbol) ? $be->base_currency_symbol : '₹';
+
+    // Retrieve active yearly Standard and Premium packages dynamically from DB
+    $gdStdPkg = null;
+    $gdPremPkg = null;
+    try {
+        if (class_exists('\App\Models\Package')) {
+            $gdStdPkg = \App\Models\Package::where('status', '1')
+                ->where('term', 'yearly')
+                ->where(function($q) {
+                    $q->where('title', 'like', '%Standard%')
+                      ->orWhere('title', 'like', '%standard%');
+                })
+                ->first();
+
+            $gdPremPkg = \App\Models\Package::where('status', '1')
+                ->where('term', 'yearly')
+                ->where(function($q) {
+                    $q->where('title', 'like', '%Premium%')
+                      ->orWhere('title', 'like', '%premium%');
+                })
+                ->first();
+        }
+    } catch (\Throwable $e) {
+        $gdStdPkg = null;
+        $gdPremPkg = null;
+    }
+
+    $customPop = $customPopup ?? $homeSec ?? null;
+
+    // Standard Price:
+    $stdPriceVal = ($gdStdPkg && is_numeric($gdStdPkg->price) && $gdStdPkg->price > 0) ? (float)$gdStdPkg->price : 3999;
+    $adminStdPrice = $customPop && !empty($customPop->popup_std_price) ? trim($customPop->popup_std_price) : '';
+    $stdPriceClean = !empty($adminStdPrice) ? $adminStdPrice : ($currencySymbol . number_format($stdPriceVal, 0));
+    $stdPriceDisplay = preg_replace('/(\/year|\/mo|\/month)/i', '', $stdPriceClean);
+
+    $stdOrigPrice = $customPop && !empty($customPop->popup_std_orig_price) ? $customPop->popup_std_orig_price : '₹14,283/year';
+    $stdSaveTag = $customPop && !empty($customPop->popup_std_save_tag) ? $customPop->popup_std_save_tag : 'Save ₹9,284';
+
+    // Premium Price:
+    $premPriceVal = ($gdPremPkg && is_numeric($gdPremPkg->price) && $gdPremPkg->price > 0) ? (float)$gdPremPkg->price : 7999;
+    $adminPremPrice = $customPop && !empty($customPop->popup_pre_price) ? trim($customPop->popup_pre_price) : '';
+    if (empty($adminPremPrice) || $adminPremPrice === '₹8,999' || $adminPremPrice === '8999') {
+        $premPriceClean = $currencySymbol . number_format($premPriceVal, 0);
+    } else {
+        $premPriceClean = $adminPremPrice;
+    }
+    $premPriceDisplay = preg_replace('/(\/year|\/mo|\/month)/i', '', $premPriceClean);
+
+    $premOrigPrice = $customPop && !empty($customPop->popup_pre_orig_price) ? $customPop->popup_pre_orig_price : '₹28,569/year';
+    
+    $adminPremSave = $customPop && !empty($customPop->popup_pre_save_tag) ? trim($customPop->popup_pre_save_tag) : '';
+    if (empty($adminPremSave) || $adminPremSave === 'Save ₹18,570') {
+        $premSaveTag = 'Save ' . $currencySymbol . '20,570';
+    } else {
+        $premSaveTag = $adminPremSave;
+    }
+
+    // Free Domain Highlight Text:
+    $adminFreeDomain = $customPop && !empty($customPop->popup_pre_free_domain) ? trim($customPop->popup_pre_free_domain) : '';
+    if (empty($adminFreeDomain) || stripos($adminFreeDomain, '.com') !== false || stripos($adminFreeDomain, '.in') !== false) {
+        $freeDomainText = 'Free Domain';
+    } else {
+        $freeDomainText = $adminFreeDomain;
+    }
+@endphp
+
 {{-- Year-End Growth Deal Popup v2 - Pixel Perfect Match --}}
 <div class="gd-overlay" id="gdOverlay" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Year-End Growth Deal">
     <div class="gd-backdrop" id="gdBackdrop"></div>
@@ -102,10 +170,10 @@
                            🎉 Great Value
                         </div>
                         <div class="gd-price-row">
-                            <span class="gd-original-price">₹14,283/year</span>
-                            <span class="gd-save-tag">Save ₹9,284</span>
+                            <span class="gd-original-price">{{ $stdOrigPrice }}</span>
+                            <span class="gd-save-tag">{{ $stdSaveTag }}</span>
                         </div>
-                        <div class="gd-price-big">₹3,999<span class="gd-per">/year</span></div>
+                        <div class="gd-price-big">{{ $stdPriceDisplay }}<span class="gd-per">/year</span></div>
                         <p class="gd-billed">Billed annually</p>
                         <ul class="gd-feats">
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>Custom Domain </li>
@@ -150,13 +218,13 @@
                             😍 Most Popular
                         </div>
                         <div class="gd-price-row" style="margin-top:16px;">
-                            <span class="gd-original-price">₹28,569/year</span>
-                            <span class="gd-save-tag">Save ₹18,570</span>
+                            <span class="gd-original-price">{{ $premOrigPrice }}</span>
+                            <span class="gd-save-tag">{{ $premSaveTag }}</span>
                         </div>
-                        <div class="gd-price-big">₹8,999<span class="gd-per">/year</span></div>
+                        <div class="gd-price-big">{{ $premPriceDisplay }}<span class="gd-per">/year</span></div>
                         <p class="gd-billed">Billed annually</p>
                         <ul class="gd-feats">
-                            <li class="gd-feat-green-highlight"><span class="gd-check-circle gd-check-green"><i class="fas fa-check"></i></span>Free .com Domain</li>
+                            <li class="gd-feat-green-highlight"><span class="gd-check-circle gd-check-green"><i class="fas fa-check"></i></span>{{ $freeDomainText }}</li>
                             <li><span class="gd-check-circle"><i class="fas fa-check"></i></span>All Standard Features</li>
 
                             

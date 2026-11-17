@@ -352,19 +352,19 @@
               <div class="col-md-3">
                 <div class="form-group mb-3">
                   <label class="font-weight-bold">{{ __('Savings Badge') }}</label>
-                  <input type="text" name="popup_pre_save_tag" class="form-control" value="{{ @$customPopup->popup_pre_save_tag ?? 'Save ₹18,570' }}" placeholder="Save ₹18,570">
+                  <input type="text" name="popup_pre_save_tag" class="form-control" value="{{ (!empty(@$customPopup->popup_pre_save_tag) && @$customPopup->popup_pre_save_tag !== 'Save ₹18,570') ? $customPopup->popup_pre_save_tag : 'Save ₹20,570' }}" placeholder="Save ₹20,570">
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="form-group mb-3">
                   <label class="font-weight-bold">{{ __('Offer Price') }}</label>
-                  <input type="text" name="popup_pre_price" class="form-control" value="{{ @$customPopup->popup_pre_price ?? '₹8,999' }}" placeholder="₹8,999">
+                  <input type="text" name="popup_pre_price" class="form-control" value="{{ (!empty(@$customPopup->popup_pre_price) && @$customPopup->popup_pre_price !== '₹8,999' && @$customPopup->popup_pre_price !== '8999') ? $customPopup->popup_pre_price : '₹7,999' }}" placeholder="₹7,999">
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="form-group mb-3">
                   <label class="font-weight-bold">{{ __('Free Domain Highlight Text') }}</label>
-                  <input type="text" name="popup_pre_free_domain" class="form-control" value="{{ @$customPopup->popup_pre_free_domain ?? 'Free .com Domain' }}" placeholder="Free .com Domain">
+                  <input type="text" name="popup_pre_free_domain" class="form-control" value="{{ (!empty(@$customPopup->popup_pre_free_domain) && stripos(@$customPopup->popup_pre_free_domain, '.com') === false) ? $customPopup->popup_pre_free_domain : 'Free Domain' }}" placeholder="Free Domain">
                 </div>
               </div>
 

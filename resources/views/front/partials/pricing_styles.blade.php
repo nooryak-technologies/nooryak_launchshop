@@ -297,7 +297,7 @@
     background: #ffffff;
     border: 1.5px solid #cbd5e1;
     border-radius: 20px;
-    padding: 28px 22px 24px;
+    padding: 28px 18px 24px;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -374,34 +374,68 @@
   .badge-recommended { background: #ff5a2c; color: #fff; }
   .badge-best-value   { background: #f59e0b; color: #fff; }
 
-  /* Plan icon area */
-  .plan-v2-icon {
-    text-align: center;
-    margin: 0 auto 12px;
-    width: 56px;
-    height: 56px;
+  /* Plan Card Header: Left Icon, Right Title on Top & Description Below */
+  .plan-v2-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    text-align: left;
+    width: 100%;
+  }
+
+  .plan-v2-header .plan-v2-icon {
+    margin: 0;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
     background: #fff3f0;
     color: #ff5a2c;
     border-radius: 50%;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+    font-size: 18px;
+    box-shadow: 0 2px 8px rgba(255, 90, 44, 0.12);
   }
 
-  /* Plan title */
-  .plan-v2-title {
-    font-size: 22px;
-    font-weight: 800;
-    margin: 8px 0 4px;
-    color: #0f172a;
-    text-align: center;
+  .card-best-value .plan-v2-header .plan-v2-icon,
+  .plan-premium .plan-v2-header .plan-v2-icon {
+    background: #fffceb;
+    color: #f59e0b;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.12);
   }
+
+  .plan-v2-header-text {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .plan-v2-header-text .plan-v2-title,
+  .plan-v2-title {
+    font-size: 19px;
+    font-weight: 800;
+    margin: 0 0 2px 0;
+    color: #0f172a;
+    text-align: left;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .plan-v2-header-text .plan-v2-subtitle,
   .plan-v2-subtitle {
-    font-size: 12px;
+    font-size: 10px;
     color: #64748b;
-    text-align: center;
-    margin-bottom: 14px;
+    text-align: left;
+    margin: 0;
+    line-height: 1.3;
+    white-space: nowrap;
+    letter-spacing: -0.2px;
   }
 
   /* Price block */
@@ -875,16 +909,38 @@
       letter-spacing: 0.5px !important;
     }
 
+    .plan-v2-header {
+      display: block !important;
+      margin-bottom: 4px !important;
+    }
+
+    .plan-v2-header .plan-v2-icon {
+      display: none !important;
+    }
+
+    .plan-v2-header-text {
+      text-align: center !important;
+      display: block !important;
+      width: 100% !important;
+    }
+
+    .plan-v2-header-text .plan-v2-title,
     .plan-v2-title {
       font-size: 15px !important;
       margin: 2px 0 3px !important;
       line-height: 1.2 !important;
+      text-align: center !important;
     }
 
+    .plan-v2-header-text .plan-v2-subtitle,
     .plan-v2-subtitle {
       font-size: 10.5px !important;
       line-height: 1.3 !important;
       margin-bottom: 8px !important;
+      text-align: center !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
     }
 
     .plan-v2-price-block {

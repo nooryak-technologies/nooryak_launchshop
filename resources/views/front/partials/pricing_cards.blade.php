@@ -350,18 +350,20 @@
                 <span class="plan-top-badge badge-best-value">BEST VALUE</span>
               @endif
 
-              {{-- Icon --}}
-              <div class="plan-v2-icon">
-                @if($titleKey == 'basic') <i class="fas fa-paper-plane"></i>
-                @elseif($titleKey == 'standard') <i class="fas fa-rocket"></i>
-                @elseif($titleKey == 'premium') <i class="fas fa-crown"></i>
-                @else <i class="fas fa-building"></i>
-                @endif
+              {{-- Plan Card Header: Left Icon, Right Title on Top & Description Below --}}
+              <div class="plan-v2-header">
+                <div class="plan-v2-icon">
+                  @if($titleKey == 'basic') <i class="fas fa-paper-plane"></i>
+                  @elseif($titleKey == 'standard') <i class="fas fa-rocket"></i>
+                  @elseif($titleKey == 'premium') <i class="fas fa-crown"></i>
+                  @else <i class="fas fa-building"></i>
+                  @endif
+                </div>
+                <div class="plan-v2-header-text">
+                  <h3 class="plan-v2-title">Ecom {{ __($package->title) }}</h3>
+                  <p class="plan-v2-subtitle">{{ $planSubtitle }}</p>
+                </div>
               </div>
-
-              {{-- Title --}}
-              <h3 class="plan-v2-title">Ecom {{ __($package->title) }}</h3>
-              <p class="plan-v2-subtitle">{{ $planSubtitle }}</p>
 
               {{-- Price --}}
               <div class="plan-v2-price-block">
@@ -528,9 +530,16 @@
                   </svg>
                 </div>
               </div>
-              <div class="plan-v2-icon" style="color:#ff5a2c;"><i class="fas fa-building"></i></div>
-              <h3 class="plan-v2-title">Enterprise</h3>
-              <p class="plan-v2-subtitle">Kickstart Your E-commerce Business.</p>
+              {{-- Plan Card Header: Left Icon, Right Title on Top & Description Below --}}
+              <div class="plan-v2-header">
+                <div class="plan-v2-icon" style="color:#ff5a2c;">
+                  <i class="fas fa-building"></i>
+                </div>
+                <div class="plan-v2-header-text">
+                  <h3 class="plan-v2-title">Enterprise</h3>
+                  <p class="plan-v2-subtitle">Kickstart Your E-commerce Business.</p>
+                </div>
+              </div>
               <div class="plan-v2-price-block">
                 <span class="plan-v2-amount" style="font-size:34px;color:#0f172a;">Custom</span>
               </div>
