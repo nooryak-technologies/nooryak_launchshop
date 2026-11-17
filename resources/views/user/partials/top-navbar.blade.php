@@ -106,6 +106,7 @@
     margin-bottom: 0 !important;
     list-style: none !important;
     width: auto !important;
+    gap: 12px !important;
   }
   .navbar-nav.topbar-nav-left .nav-item,
   .navbar-nav.topbar-nav-right .nav-item {
@@ -188,8 +189,8 @@
   <!-- Navbar Header -->
   <nav class="navbar navbar-header navbar-expand-lg"
     @if (request()->cookie('user-theme') == 'dark') data-background-color="dark" @endif>
-    <div class="container-fluid d-flex align-items-center justify-content-between">
-      <ul class="navbar-nav topbar-nav-left align-items-center">
+    <div class="container-fluid d-flex align-items-center justify-content-end">
+      <ul class="navbar-nav topbar-nav-right ml-auto align-items-center d-flex flex-row">
         <li class="nav-item" id="limitDiv">
           <a class="btn btn-{{ $infoIcon == true ? 'danger' : 'primary' }} whitespace-nowrap btn-sm font-weight-bold"
             style="border-radius: 8px; padding: 6px 14px; box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);"
@@ -229,8 +230,6 @@
             <i class="fas fa-eye" style="font-size: 13px;"></i>
           </a>
         </li>
-      </ul>
-      <ul class="navbar-nav topbar-nav-right ml-auto align-items-center">
         <li class="nav-item dropdown hidden-caret">
           <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
             <div class="avatar-sm" style="width: 36px; height: 36px;">

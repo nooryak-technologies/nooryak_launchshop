@@ -1004,6 +1004,50 @@
     border: 2px solid #FF9A70 !important;
     box-shadow: 0 5px 18px rgba(255, 90, 44, 0.4);
 }
+
+/* BLINKING LIMITED TIME OFFER BADGE */
+.gd-ribbon {
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    padding: 6px 20px !important;
+    letter-spacing: 1.2px !important;
+    animation: gdBlinkOffer 1.1s ease-in-out infinite !important;
+}
+
+@keyframes gdBlinkOffer {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 4px 14px rgba(255, 90, 44, 0.4);
+        filter: brightness(1);
+    }
+    50% {
+        transform: scale(1.14);
+        box-shadow: 0 0 25px rgba(255, 90, 44, 0.9), 0 0 10px rgba(255, 61, 31, 0.8);
+        filter: brightness(1.15);
+    }
+}
+
+/* FASTER GIFT BOX ANIMATION */
+.gd-giftbox {
+    width: 120px !important;
+    animation: gdGiftFastFloat 1.2s ease-in-out infinite !important;
+    filter: drop-shadow(0 14px 24px rgba(255, 90, 30, 0.35)) !important;
+}
+
+@keyframes gdGiftFastFloat {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg) scale(1);
+    }
+    30% {
+        transform: translateY(-14px) rotate(-4deg) scale(1.06);
+    }
+    60% {
+        transform: translateY(-4px) rotate(3deg) scale(1.02);
+    }
+    80% {
+        transform: translateY(-12px) rotate(-2deg) scale(1.05);
+    }
+}
 </style>
 
 {{-- ============================

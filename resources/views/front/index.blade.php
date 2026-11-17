@@ -8,6 +8,55 @@
 @section('styles')
 @include('front.partials.pricing_styles')
 <style>
+  /* ── Hero Get Started CTA Button Highlight & Clicking Hand ── */
+  .btn-hero-cta {
+      position: relative !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      background: linear-gradient(135deg, #FF5A2C 0%, #FF7A54 100%) !important;
+      color: #ffffff !important;
+      border: none !important;
+      font-weight: 700 !important;
+      box-shadow: 0 4px 18px rgba(255, 90, 44, 0.45);
+      animation: heroBtnHighlight 1.8s ease-in-out infinite !important;
+      transition: all 0.25s ease !important;
+  }
+  .btn-hero-cta:hover {
+      background: linear-gradient(135deg, #FF4513 0%, #FF6840 100%) !important;
+      transform: translateY(-3px) scale(1.02) !important;
+      box-shadow: 0 8px 25px rgba(255, 90, 44, 0.6) !important;
+  }
+  @keyframes heroBtnHighlight {
+      0%, 100% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(255, 90, 44, 0.7), 0 4px 18px rgba(255, 90, 44, 0.4);
+      }
+      50% {
+          transform: scale(1.03);
+          box-shadow: 0 0 0 12px rgba(255, 90, 44, 0), 0 8px 24px rgba(255, 90, 44, 0.55);
+      }
+  }
+  .hero-click-hand {
+      display: inline-block;
+      font-size: 22px;
+      line-height: 1;
+      animation: heroHandClick 1s ease-in-out infinite;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+      transform-origin: bottom center;
+  }
+  @keyframes heroHandClick {
+      0%, 100% {
+          transform: translateY(0) scale(1) rotate(-8deg);
+      }
+      35% {
+          transform: translateY(4px) scale(0.9) rotate(0deg);
+      }
+      70% {
+          transform: translateY(-6px) scale(1.18) rotate(-4deg);
+      }
+  }
+
   /* Give longer thumbnail preview */
   .card-image-wrap {
       height: 380px !important;
@@ -348,11 +397,9 @@
               <p class="hero-text">{{ !empty($homeSec->hero_section_text) ? $homeSec->hero_section_text : __('Manage products, payments, and sales effortlessly. Everything you need to grow your business is just a click away. Start today and simplify your e-commerce journey.') }}</p>
               
               <div class="d-flex align-items-center gap-3 hero-btns">
-                <a href="{{ !empty($homeSec->hero_section_button_url) ? $homeSec->hero_section_button_url : route('front.pricing') }}" class="btn-ls-primary">
-                  {{ !empty($homeSec->hero_section_button_text) ? $homeSec->hero_section_button_text : __('Get Started Now') }}
-                  <svg class="ms-2" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
-                    <path d="M10 6V2.5a1.5 1.5 0 0 1 3 0v8.5a.5.5 0 0 0 .5.5.5.5 0 0 0 .5-.5V8.5a1.5 1.5 0 0 1 3 0v2.5a.5.5 0 0 0 .5.5.5.5 0 0 0 .5-.5V9.5a1.5 1.5 0 0 1 3 0v3.5a6 6 0 0 1-6 6h-2a6 6 0 0 1-6-6V11a2 2 0 0 1 2-2 1.5 1.5 0 0 1 1.5 1.5v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
+                <a href="{{ !empty($homeSec->hero_section_button_url) ? $homeSec->hero_section_button_url : route('front.pricing') }}" class="btn-ls-primary btn-hero-cta">
+                  <span>{{ !empty($homeSec->hero_section_button_text) ? $homeSec->hero_section_button_text : __('Get Started Now') }}</span>
+                  <span class="hero-click-hand ms-2" aria-hidden="true">👆</span>
                 </a>
 
                 <a href="{{ route('front.templates.view') }}" class="btn-ls-outline">

@@ -60,11 +60,11 @@
                         $numbers[] = $cleaned;
                     }
                 }
-                if (!in_array('72007 70351', $numbers) && !in_array('7200770351', $numbers)) {
-                    array_unshift($numbers, '72007 70351');
+                if (!in_array('7200770351', $numbers) && !in_array('7200770351', $numbers)) {
+                    array_unshift($numbers, '7200770351');
                 }
-                if (!in_array('63749 13298', $numbers) && !in_array('6374913298', $numbers)) {
-                    $numbers[] = '63749 13298';
+                if (!in_array('6374913298', $numbers) && !in_array('6374913298', $numbers)) {
+                    $numbers[] = '6374913298';
                 }
 
                 $rawMails = !empty($be->contact_mails) ? explode(',', $be->contact_mails) : ['contact@launchshop.in', 'support@launchshop.in'];
@@ -84,7 +84,7 @@
               @endphp
               <li>
                 <i class="fal fa-phone" style="transform: scaleX(-1); display: inline-block;"></i>
-                <a href="tel:7200770351">72007 70351</a>, <a href="tel:6374913298">63749 13298</a>
+                <a href="tel:7200770351">7200770351</a>, <a href="tel:6374913298">6374913298</a>
               </li>
               <li>
                 <i class="fal fa-envelope"></i>
