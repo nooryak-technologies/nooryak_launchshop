@@ -1431,8 +1431,13 @@ class ItemController extends Controller
                         $optContent = ProductVariantOptionContent::where('product_variant_option_id', $pOpt->id)->first();
                         $optName = 'Option';
                         if ($optContent) {
-                            $vOC = VariantOptionContent::where('id', $optContent->option_name)->pluck('option_name')->first();
-                            if ($vOC) $optName = $vOC;
+                            $vOC = VariantOptionContent::where('id', $optContent->option_name)->first();
+                            if ($vOC) {
+                                $optName = $vOC->option_name;
+                                if (!empty($vOC->color_code) && !str_contains($optName, '#')) {
+                                    $optName .= " ({$vOC->color_code})";
+                                }
+                            }
                         }
                         $variantList[] = "{$varName}:{$optName}={$pOpt->price}:{$pOpt->stock}";
                     }
@@ -1512,7 +1517,7 @@ class ItemController extends Controller
                 'IPHONE16-256',
                 'iphone16.jpg',
                 'iphone16.jpg',
-                'Color:Red=999:20 | Color:Green=1049:15 | Color:Blue=1099:15',
+                'Color:Red (#ef4444)=999:20 | Color:Green (#16a34a)=1049:15 | Color:Blue (#2563eb)=1099:15 | Size:Small=999:25 | Size:Large=1049:25',
                 '',
                 '',
                 '1',
@@ -1524,23 +1529,23 @@ class ItemController extends Controller
 
             fputcsv($file, [
                 'physical',
-                'iPhone 17 Pro Max 512GB',
-                'Mobile Phones',
-                'Smartphones',
-                '1199.00',
-                '1299.00',
-                '35',
-                'IPHONE17-512',
-                'iphone17.jpg',
-                'iphone17slide1.jpg,iphone17slide2.jpg',
-                'Color:Natural Titanium=1199:15 | Color:Desert Titanium=1249:20 | Weight:16g=250:50',
+                'Kids Cotton Casual T-Shirt',
+                'Clothing',
+                'Kids Wear',
+                '499.00',
+                '599.00',
+                '40',
+                'KID-TSHIRT-01',
+                'tshirt.jpg',
+                'tshirt1.jpg,tshirt2.jpg',
+                'Color:Chocolate Brown (#3d1c02)=499:20 | Color:Navy Blue (#1e3a8a)=499:20 | Size:11 Years=499:20 | Size:13 Years=499:20',
                 '',
                 '',
                 '1',
-                'Next-generation iPhone 17 Pro Max with ultra zoom camera.',
-                'Revolutionary mobile performance featuring titanium body, advanced optical zoom, and ceramic shield protection.',
-                'iphone 17, apple, smartphone, pro max',
-                'Order iPhone 17 Pro Max online with full warranty.'
+                'Comfortable soft summer kids casual t-shirt.',
+                '100% pure organic cotton fabric, gentle on skin and durable for daily wear.',
+                'kids tshirt, cotton tshirt, kids clothing',
+                'Order comfortable cotton kids t-shirts online.'
             ]);
 
             fclose($file);
@@ -2078,10 +2083,23 @@ class ItemController extends Controller
             $existingOptionCount = VariantOption::where('variant_id', $variant->id)->count();
 
             foreach ($options as $optLocalIndex => $opt) {
-                $optName  = trim($opt['option_name']);
+                $rawOptName = trim($opt['option_name']);
                 $optPrice = floatval($opt['price']);
                 $optStock = intval($opt['stock']);
                 $globalIndex = $existingOptionCount + $optLocalIndex;
+
+                // Check if option contains a hex code, e.g. "Red (#ef4444)" or "#ef4444"
+                $colorCode = null;
+                $optName = $rawOptName;
+                if (preg_match('/#([a-f0-9]{6}|[a-f0-9]{3})\b/i', $rawOptName, $matches)) {
+                    $colorCode = strtolower($matches[0]);
+                    $cleanName = trim(preg_replace('/\s*\(?#([a-f0-9]{6}|[a-f0-9]{3})\)?/i', '', $rawOptName));
+                    if (!empty($cleanName)) {
+                        $optName = $cleanName;
+                    }
+                } elseif (function_exists('getColorHex')) {
+                    $colorCode = getColorHex($rawOptName);
+                }
 
                 // Find the master VariantOption by name — scoped to this variant (case-insensitive)
                 $masterOptContent = VariantOptionContent::where('variant_id', $variant->id)
@@ -2089,8 +2107,6 @@ class ItemController extends Controller
                     ->first();
 
                 $variantOptionId = null;
-
-                $colorCode = function_exists('getColorHex') ? getColorHex($optName) : null;
 
                 if (!$masterOptContent) {
                     // Create the master VariantOption and its contents for all languages
