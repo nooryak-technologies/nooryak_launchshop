@@ -2387,4 +2387,94 @@ if (!function_exists('templatePreviewFilename')) {
     }
 }
 
+if (!function_exists('getColorHex')) {
+    /**
+     * Resolves a CSS hex/rgb color from an option name or string.
+     *
+     * @param string|null $name
+     * @return string|null
+     */
+    function getColorHex(?string $name): ?string
+    {
+        if (empty($name)) {
+            return null;
+        }
+
+        $clean = strtolower(trim($name));
+
+        // Hex code check (e.g. #fff, #ffffff, #000000)
+        if (preg_match('/^#([a-f0-9]{3}|[a-f0-9]{6})$/i', $clean)) {
+            return $clean;
+        }
+
+        $colors = [
+            'black' => '#000000',
+            'white' => '#ffffff',
+            'red' => '#ef4444',
+            'blue' => '#2563eb',
+            'green' => '#16a34a',
+            'yellow' => '#eab308',
+            'orange' => '#ea580c',
+            'purple' => '#9333ea',
+            'pink' => '#ec4899',
+            'brown' => '#451a03',
+            'dark brown' => '#361b0d',
+            'coffee' => '#4a2c11',
+            'chocolate' => '#3d1c02',
+            'gray' => '#6b7280',
+            'grey' => '#6b7280',
+            'light gray' => '#d1d5db',
+            'light grey' => '#d1d5db',
+            'dark gray' => '#374151',
+            'dark grey' => '#374151',
+            'navy' => '#1e3a8a',
+            'navy blue' => '#1e3a8a',
+            'sky blue' => '#38bdf8',
+            'royal blue' => '#1d4ed8',
+            'light blue' => '#93c5fd',
+            'dark blue' => '#1e3a8a',
+            'teal' => '#0d9488',
+            'cyan' => '#06b6d4',
+            'maroon' => '#800000',
+            'olive' => '#65a30d',
+            'lime' => '#84cc16',
+            'aqua' => '#06b6d4',
+            'silver' => '#c0c0c0',
+            'gold' => '#ffd700',
+            'golden' => '#ffd700',
+            'beige' => '#f5f5dc',
+            'ivory' => '#fffff0',
+            'coral' => '#f87171',
+            'khaki' => '#f0e68c',
+            'indigo' => '#4f46e5',
+            'violet' => '#7c3aed',
+            'magenta' => '#c026d3',
+            'turquoise' => '#14b8a6',
+            'burgundy' => '#800020',
+            'wine' => '#722f37',
+            'cream' => '#fdfbf7',
+            'tan' => '#d2b48c',
+            'mustard' => '#e1ad01',
+            'charcoal' => '#36454f',
+            'peach' => '#fed7aa',
+            'rust' => '#b45309',
+            'mint' => '#86efac',
+            'lavender' => '#e9d5ff',
+            'rose' => '#f43f5e',
+            'camel' => '#c19a6b',
+            'salmon' => '#fb7185',
+            'plum' => '#86198f',
+            'amber' => '#d97706',
+            'emerald' => '#059669',
+            'fuchsia' => '#d946ef',
+            'copper' => '#b87333',
+            'bronze' => '#cd7f32',
+            'denim' => '#1560bd',
+        ];
+
+        return $colors[$clean] ?? null;
+    }
+}
+
+
 

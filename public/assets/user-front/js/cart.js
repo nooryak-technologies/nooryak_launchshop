@@ -600,16 +600,18 @@ $(document).ready(function () {
 });
 
 $('body').on('click', '.product-variant', function () {
-    var price = parseFloat($('#new-price').attr('data-base_price'));
+    var base_price = parseFloat($('#new-price').attr('data-base_price')) || (parseFloat($('#details_new-price').text()) || 0);
+    var price = base_price;
     if ($('#details_old-price').length > 0) {
-        var old_price = $('#details_old-price').attr('data-old_price');
+        var old_price = $('#details_old-price').attr('data-old_price') || $('#details_old-price').text();
     }
-    var quantity = $("input[name='cart-amount']").val();
+    var quantity = $("input[name='cart-amount']").val() || 1;
     let errorCount = 0;
     let errMessage = [];
 
     var $ul_parent = $('#variantListULDetails');
     var $li_parent = $ul_parent.find('.list-item');
+    var hasVariantPrice = false;
     $li_parent.each(function () {
         var $ul_child = $(this).find('.variantUL');
         var $li_child_input = $ul_child.find('li input:checked');
@@ -620,13 +622,21 @@ $('body').on('click', '.product-variant', function () {
             if (parseFloat(values[2]) < quantity) {
                 return false;
             } else {
-                price = parseFloat(values[1]);
-                if ($('#details_old-price').length > 0) {
-                    old_price = parseFloat(values[1]);
+                var vPrice = parseFloat(values[1]);
+                if (vPrice > 0) {
+                    price = vPrice;
+                    hasVariantPrice = true;
+                    if ($('#details_old-price').length > 0) {
+                        old_price = vPrice;
+                    }
                 }
             }
         });
     });
+
+    if (!hasVariantPrice && base_price > 0) {
+        price = base_price;
+    }
 
     var total_price = price * quantity;
     total_price = total_price.toFixed(2);
@@ -636,9 +646,11 @@ $('body').on('click', '.product-variant', function () {
     if ($('#new-price').length > 0) {
         $('#new-price').text(total_price);
     }
+    if ($('#details_new-price').length > 0) {
+        $('#details_new-price').text(total_price);
+    }
 
     //show total old price
-
     if ($('#details_old-price').length > 0) {
         var total_old_price = old_price * quantity;
         $('#details_old-price').text(total_old_price.toFixed(2));
@@ -690,12 +702,12 @@ function totalPriceDetails(qty) {
         variant_flag++;
     });
 
-    var total = variant_price.length > 0 ? 0 : new_price;
-    var old_total_base = variant_price.length > 0 ? 0 : (($('#old-price').length > 0) ? old_price : 0);
+    var varSum = 0;
     for (var i = 0; i < variant_price.length; i++) {
-        total += variant_price[i];
-        old_total_base += variant_price[i];
+        varSum += variant_price[i];
     }
+    var total = varSum > 0 ? varSum : new_price;
+    var old_total_base = varSum > 0 ? varSum : (($('#old-price').length > 0) ? old_price : 0);
     if ($('#old-price').length > 0) {
         old_price = old_total_base;
     }
@@ -873,12 +885,12 @@ function totalPriceDetails2(qty) {
         variant_flag++;
     });
 
-    var total = variant_price.length > 0 ? 0 : detail_new_price;
-    var old_total = variant_price.length > 0 ? 0 : detail_old_price;
+    var varSum = 0;
     for (var i = 0; i < variant_price.length; i++) {
-        total += variant_price[i];
-        old_total += variant_price[i];
+        varSum += variant_price[i];
     }
+    var total = varSum > 0 ? varSum : detail_new_price;
+    var old_total = varSum > 0 ? varSum : detail_old_price;
     total = total.toFixed(2) * parseInt(qty);
     total = total.toFixed(2);
     $('#details_final-price').val(total);

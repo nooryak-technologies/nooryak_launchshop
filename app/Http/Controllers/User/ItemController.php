@@ -865,9 +865,8 @@ class ItemController extends Controller
         $messages["*variation_name.*.required"] = __('The variation name is required.');
         $messages["*option_name.*.required"] = __('The variation name is required.');
 
-        // Rules for price and stock
-        $rules['*_price.*'] = 'required|numeric';
-        $messages['*_price.*.required'] = __('The price is required');
+        // Rules for price (optional) and stock
+        $rules['*_price.*'] = 'nullable|numeric';
         $messages['*_price.*.numeric'] = __('The price must be a number');
 
         $rules['*_stock.*'] = 'required|numeric';
@@ -952,9 +951,10 @@ class ItemController extends Controller
 
                     $stock = $stocks[$option_index] ?? null;
                     $option_id = $option_ids[$option_index] ?? null;
+                    $parsedPrice = (isset($price) && is_numeric($price)) ? floatval($price) : 0;
+                    $parsedStock = (isset($stock) && is_numeric($stock)) ? intval($stock) : 0;
 
-
-                    if ($price !== null && $stock !== null) {
+                    if ($stock !== null || $price !== null) {
                         if ($option_id == 'new') {
                             $variantOption = new ProductVariantOption();
                         } else {
@@ -968,8 +968,8 @@ class ItemController extends Controller
                         $variantOption->unique_id = $variation->unique_id;
                         $variantOption->user_id = $user_id;
                         $variantOption->item_id = $item_id;
-                        $variantOption->price = $price ?? 0;
-                        $variantOption->stock = $stock ?? 0;
+                        $variantOption->price = $parsedPrice;
+                        $variantOption->stock = $parsedStock;
                         $variantOption->save();
 
                         $option_name_key = "{$unique_id}_option_name";

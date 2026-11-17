@@ -256,11 +256,22 @@
               @endphp
 
               @if ($product_variation_content && count($variant_content_options) > 0)
+                @php
+                  $isColor = in_array(strtolower(trim($variantLabel)), ['color', 'colors', 'colour', 'colours']) 
+                          || str_contains(strtolower($variantLabel), 'color') 
+                          || str_contains(strtolower($variantLabel), 'colour');
+                  $displayHeading = ucfirst($variantLabel);
+                  if (!str_starts_with(strtolower($displayHeading), 'select')) {
+                      $displayHeading = __('Select') . ' ' . $displayHeading;
+                  }
+                @endphp
                 <li class="list-item" data-variant_name="{{ $variantLabel }}">
                   @if ($variantLabel !== '')
-                    <h4 class="list-item-title color-primary mb-1">{{ $variantLabel }}:</h4>
+                    <h4 class="list-item-title color-primary mb-2" style="font-weight: 700; font-size: 15px; color: #1e293b;">
+                      {{ $displayHeading }}:
+                    </h4>
                   @endif
-                  <ul class="list-group custom-radio variantUL" id="variantUL">
+                  <ul class="custom-radio variantUL d-flex flex-wrap align-items-center gap-2 mb-3" id="variantUL" style="padding-left:0; list-style:none;">
                     @foreach ($variant_content_options as $variant_content_option)
                       @php
                         $variant_option_contents = App\Models\User\ProductVariantOptionContent::where([
@@ -285,18 +296,22 @@
                         $sup_option_content = make_input_name($opt_name);
                         $id_name = make_input_name($opt_name);
                         $main_id = $sup_option_content . '_' . $id_name . '_' . $variant_content_option->id;
+                        $colorHex = ($isColor || !empty(getColorHex($opt_name))) ? getColorHex($opt_name) : null;
                       @endphp
-                      <li>
+                      <li class="variant-item-wrap">
                         <input id="radio_{{ $main_id }}" type="radio"
                           name="{{ make_input_name($variantLabel !== '' ? $variantLabel : ('option_' . $product_variation->id)) }}[]"
-                          class="{{ $main_id }} product-variant"
+                          class="{{ $main_id }} product-variant custom-variant-radio"
                           value="{{ $opt_name }}:{{ currency_converter($variant_content_option->price) }}:{{ $variant_content_option->stock }}:{{ $variant_content_option->id }}:{{ $product_variation->id }}">
-                        <label class="" for="radio_{{ $main_id }}">
-                          <span
-                            class="quick_view_variants_price">{{ $opt_name }}
-                            ({{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, currency_converter($variant_content_option->price)) }})
-                          </span>
-                        </label>
+                        @if ($isColor && $colorHex)
+                          <label class="variant-color-swatch" for="radio_{{ $main_id }}" title="{{ $opt_name }}" data-bs-toggle="tooltip">
+                            <span class="color-circle" style="background-color: {{ $colorHex }};"></span>
+                          </label>
+                        @else
+                          <label class="variant-pill-btn" for="radio_{{ $main_id }}">
+                            <span class="variant-text">{{ $opt_name }}</span>
+                          </label>
+                        @endif
                       </li>
                     @endforeach
                   </ul>

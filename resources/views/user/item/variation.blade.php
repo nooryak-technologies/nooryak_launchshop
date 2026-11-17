@@ -262,10 +262,9 @@
                           <div class="col-md-3">
                             <div class="form-group">
                               <label for="">{{ __('Price') }}
-                                ({{ $currency->symbol }})
-                                <span class="text-danger">**</span></label>
+                                ({{ $currency->symbol }})</label>
                               <input type="number" name="{{ $variation->unique_id }}_price[]" step="any"
-                                value="{{ $product_variation_option->price }}" class="form-control">
+                                value="{{ $product_variation_option->price }}" class="form-control" placeholder="{{ __('Optional') }}">
                               <p class="mb-0 text-danger em err{{ $variation->unique_id }}_price">
                             </div>
                           </div>
@@ -348,10 +347,9 @@
 
                       <div class="col-md-3">
                         <div class="form-group">
-                          <label for="">{{ __('Price') }} ({{ $currency->symbol }})<span
-                              class="text-danger">**</span></label>
+                          <label for="">{{ __('Price') }} ({{ $currency->symbol }})</label>
                           <input type="number" name="{{ $unique_id }}_price[]" class="form-control"
-                            step="any" value="0">
+                            step="any" value="0" placeholder="{{ __('Optional') }}">
                           <p class="mb-0 text-danger em err{{ $unique_id }}_price">
                           </p>
 

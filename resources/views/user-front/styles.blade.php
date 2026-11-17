@@ -2889,4 +2889,123 @@ html[dir="rtl"] .header-middle .header-right {
   color: #c5a982 !important;
 }
 
+/* =========================================================
+   MODERN VARIANT STYLES: COLOR SWATCHES & SIZE PILLS
+   ========================================================= */
+.variantUL {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 0 0 16px 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+.variant-item-wrap {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+.custom-variant-radio {
+  position: absolute !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+}
+
+/* Hide legacy price indicators next to variant options */
+.details_view_variants_price,
+.quick_view_variants_price,
+.variants_price {
+  display: none !important;
+}
+
+/* 1. COLOR SWATCHES (Circular, with active border ring) */
+.variant-color-swatch {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  margin: 0 !important;
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  border-radius: 50% !important;
+  border: 2px solid transparent !important;
+  padding: 2px !important;
+  background: transparent !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-sizing: border-box !important;
+}
+
+.variant-color-swatch .color-circle {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+  transition: transform 0.2s ease !important;
+}
+
+.variant-color-swatch:hover {
+  transform: scale(1.06) !important;
+}
+
+/* Selected Color Swatch (white gap + theme color ring) */
+.custom-variant-radio:checked + .variant-color-swatch {
+  border-color: #ec4899 !important;
+  border-color: var(--color-primary, #ec4899) !important;
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--color-primary, #ec4899) !important;
+  transform: scale(1.02) !important;
+}
+
+/* 2. PILL / BOX BUTTONS (Size, Pack, Age, etc.) */
+.variant-pill-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  margin: 0 !important;
+  min-width: 68px !important;
+  padding: 8px 18px !important;
+  border-radius: 8px !important;
+  border: 1.5px solid #d1d5db !important;
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+  text-align: center !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  user-select: none !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+
+.variant-pill-btn:hover {
+  border-color: #9ca3af !important;
+  background-color: #f9fafb !important;
+  color: #111827 !important;
+}
+
+/* Selected Pill Button (Solid Pink/Primary background with crisp white text) */
+.custom-variant-radio:checked + .variant-pill-btn {
+  background-color: var(--color-primary, #ec4899) !important;
+  border-color: var(--color-primary, #ec4899) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.custom-variant-radio:checked + .variant-pill-btn .variant-text {
+  color: #ffffff !important;
+}
+
 </style>
