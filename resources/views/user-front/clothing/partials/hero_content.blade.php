@@ -7,8 +7,7 @@
         <h1>Elevate Your<br>Everyday Style</h1>
         <p>Timeless designs. Premium fabrics.<br>Made for the modern you.</p>
         <div class="clothing-hero-actions">
-          <a href="{{ route('front.user.shop', getParam()) }}" class="clothing-btn-dark">SHOP MEN</a>
-          <a href="{{ route('front.user.shop', getParam()) }}" class="clothing-btn-light">SHOP WOMEN</a>
+          <a href="{{ route('front.user.shop', getParam()) }}" class="clothing-btn-dark">{{ __('SHOP NOW') }} <i class="fal fa-arrow-right"></i></a>
         </div>
       </div>
 
