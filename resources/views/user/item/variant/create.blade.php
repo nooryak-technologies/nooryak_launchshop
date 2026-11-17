@@ -134,7 +134,8 @@
                   </div>
                 </div>
 
-                <div class="col-lg-12 pl-0 mt-2">
+                <div class="col-lg-12 pl-0 mt-3 mb-2">
+                  <label class="font-weight-bold d-block mb-2">{{ __('Variant Options / Values (e.g. Small, Medium, Large / 500g, 1kg)') }} <span class="text-muted font-weight-normal" style="font-size: 13px;">({{ __('Optional') }})</span></label>
                   <button type="button" class="btn btn-secondary btn-sm add-option"><i class="fas fa-plus"></i>
                     {{ __('Add Option') }}</button>
                 </div>
@@ -166,7 +167,7 @@
                         @foreach ($userLanguages as $language)
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="">{{ __('Option Name') }} ({{ $language->code }}) <span class="text-danger">**</span></label>
+                                    <label for="">{{ __('Option Name') }} ({{ $language->code }})</label>
                                     <input name="option_names[{{ $language->code }}][${option.uniqid}][]" type="text" class="form-control {{ $language->rtl == 1 ? 'rtl' : '' }}" placeholder="{{ __('e.g., m, xl, black, red etc.') }}">
                                       <p class="mb-0 text-danger em erroption_names.{{ $language->code }}.${option.uniqid}"></p>
                                 </div>
@@ -183,6 +184,12 @@
     }
 
     var get_subcategory_url = "{{ route('user.variant.get-subcategory') }}";
+
+    $(document).ready(function() {
+      if ($('.options-container .option-box').length === 0) {
+        $('.add-option').trigger('click');
+      }
+    });
   </script>
   <script src="{{ asset('assets/user/js/create-variant.js') }}"></script>
 @endsection

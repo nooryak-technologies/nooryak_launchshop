@@ -186,7 +186,6 @@
                                 <div class="form-group">
                                   <label for="">{{ __('Option Name') }}
                                     ({{ $language->code }})
-                                    <span class="text-danger">**</span>
                                   </label>
                                   <input
                                     name="option_names[{{ $language->code }}][{{ @$variant_option_content->index_key }}][]"
@@ -210,7 +209,7 @@
                               <div class="col-lg-6">
                                 <div class="form-group">
                                   <label for="">{{ __('Option Name') }}
-                                    ({{ $language->code }}) <span class="text-danger">**</span></label>
+                                    ({{ $language->code }})</label>
                                   <input
                                     name="option_names[{{ $language->code }}][{{ $variant_option_content1->index_key ??$variant_option_content->index_key }}][]"
                                     type="text" class="form-control {{ $language->rtl == 1 ? 'rtl' : '' }}"
@@ -257,7 +256,7 @@
                         @foreach ($userLanguages as $language)
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="">{{ __('Option Name') }} ({{ $language->code }}) <span class="text-danger">**</span></label>
+                                    <label for="">{{ __('Option Name') }} ({{ $language->code }})</label>
                                     <input name="option_names[{{ $language->code }}][${option.uniqid}][]" type="text" class="form-control {{ $language->rtl == 1 ? 'rtl' : '' }}" placeholder="{{ __('e.g., m, xl, black, red etc.') }}">
                                     <p class="mb-0 text-danger em erroption_names.{{ $language->code }}.${option.uniqid}"></p>
                                 </div>

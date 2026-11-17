@@ -49,19 +49,68 @@ class VariantController extends Controller
     {
         $user_id = Auth::guard('web')->user()->id;
         $user_languages = Language::where('user_id', $user_id)->get();
+        $defaultLang = Language::where('user_id', $user_id)->where('is_default', 1)->first()
+            ?? Language::where('user_id', $user_id)->first();
+        $defCode = $defaultLang ? $defaultLang->code : 'en';
 
-        //validation logic here
-        $validator =  $this->getValidation($user_languages, $request);
+        // Preprocess: Filter empty option names and auto-fill secondary languages from default language
+        $reqData = $request->all();
+
+        // Auto-fill variant names for secondary languages if empty
+        if (!empty($reqData['variant_names'][$defCode])) {
+            foreach ($user_languages as $lang) {
+                if ($lang->code !== $defCode) {
+                    if (empty($reqData['variant_names'][$lang->code]) || empty(array_filter((array)$reqData['variant_names'][$lang->code], 'strlen'))) {
+                        $reqData['variant_names'][$lang->code] = $reqData['variant_names'][$defCode];
+                    }
+                }
+            }
+        }
+
+        // Clean option names and auto-fill secondary languages
+        if (!empty($reqData['option_names']) && is_array($reqData['option_names'])) {
+            $cleanedOptions = [];
+            $hasAnyOption = false;
+            foreach ($reqData['option_names'] as $lCode => $groups) {
+                if (is_array($groups)) {
+                    foreach ($groups as $gKey => $vals) {
+                        $filteredVals = array_filter((array)$vals, function($v) {
+                            return !is_null($v) && trim($v) !== '';
+                        });
+                        if (!empty($filteredVals)) {
+                            $hasAnyOption = true;
+                            $cleanedOptions[$lCode][$gKey] = array_values($filteredVals);
+                        }
+                    }
+                }
+            }
+            if ($hasAnyOption) {
+                if (!empty($cleanedOptions[$defCode])) {
+                    foreach ($user_languages as $lang) {
+                        if ($lang->code !== $defCode) {
+                            foreach ($cleanedOptions[$defCode] as $gKey => $vals) {
+                                if (empty($cleanedOptions[$lang->code][$gKey])) {
+                                    $cleanedOptions[$lang->code][$gKey] = $vals;
+                                }
+                            }
+                        }
+                    }
+                }
+                $reqData['option_names'] = $cleanedOptions;
+            } else {
+                unset($reqData['option_names']);
+            }
+        } else {
+            unset($reqData['option_names']);
+        }
+
+        $request->replace($reqData);
+
+        // Validation logic
+        $validator = $this->getValidation($user_languages, $request);
         if ($validator->fails()) {
             return Response::json([
                 'errors' => $validator->getMessageBag()->toArray()
-            ], 400);
-        }
-        if (is_null($request->option_names) || empty($request->option_names)) {
-            return Response::json([
-                'errors' => [
-                    'option_names' => [__('Please click "+ Add Option" and enter at least one option (e.g. Red, Green, 16g).')]
-                ]
             ], 400);
         }
 
@@ -142,18 +191,67 @@ class VariantController extends Controller
     {
         $user_id = Auth::guard('web')->user()->id;
         $user_languages = Language::where('user_id', $user_id)->get();
+        $defaultLang = Language::where('user_id', $user_id)->where('is_default', 1)->first()
+            ?? Language::where('user_id', $user_id)->first();
+        $defCode = $defaultLang ? $defaultLang->code : 'en';
 
-        //validation logic here
-        $validator =  $this->getValidation($user_languages, $request);
+        // Preprocess: Filter empty option names and auto-fill secondary languages from default language
+        $reqData = $request->all();
+
+        if (!empty($reqData['variant_names'][$defCode])) {
+            foreach ($user_languages as $lang) {
+                if ($lang->code !== $defCode) {
+                    if (empty($reqData['variant_names'][$lang->code]) || empty(array_filter((array)$reqData['variant_names'][$lang->code], 'strlen'))) {
+                        $reqData['variant_names'][$lang->code] = $reqData['variant_names'][$defCode];
+                    }
+                }
+            }
+        }
+
+        if (!empty($reqData['option_names']) && is_array($reqData['option_names'])) {
+            $cleanedOptions = [];
+            $hasAnyOption = false;
+            foreach ($reqData['option_names'] as $lCode => $groups) {
+                if (is_array($groups)) {
+                    foreach ($groups as $gKey => $vals) {
+                        $filteredVals = array_filter((array)$vals, function($v) {
+                            return !is_null($v) && trim($v) !== '';
+                        });
+                        if (!empty($filteredVals)) {
+                            $hasAnyOption = true;
+                            $cleanedOptions[$lCode][$gKey] = array_values($filteredVals);
+                        }
+                    }
+                }
+            }
+            if ($hasAnyOption) {
+                if (!empty($cleanedOptions[$defCode])) {
+                    foreach ($user_languages as $lang) {
+                        if ($lang->code !== $defCode) {
+                            foreach ($cleanedOptions[$defCode] as $gKey => $vals) {
+                                if (empty($cleanedOptions[$lang->code][$gKey])) {
+                                    $cleanedOptions[$lang->code][$gKey] = $vals;
+                                }
+                            }
+                        }
+                    }
+                }
+                $reqData['option_names'] = $cleanedOptions;
+            } else {
+                unset($reqData['option_names']);
+            }
+        } else {
+            unset($reqData['option_names']);
+        }
+
+        $request->replace($reqData);
+
+        // Validation logic
+        $validator = $this->getValidation($user_languages, $request);
         if ($validator->fails()) {
             return Response::json([
                 'errors' => $validator->getMessageBag()->toArray()
             ], 400);
-        }
-
-        if (is_null($request->option_names)) {
-            session()->flash('warning', 'You need to add at least one option.');
-            return "success";
         }
         // Step 1: Update the Variant
         $variant = Variant::where('id', $id)->where('user_id', $user_id)->firstOrFail();
@@ -321,44 +419,33 @@ class VariantController extends Controller
 
     public function getValidation($user_languages, $request)
     {
-        $rules = [
-            'category_id' => 'nullable',
-        ];
-        foreach ($user_languages as $user_language) {
-            $code = $user_language->code;
-            $langName = ' ' . $user_language->name . ' ' . __('language');
-            if ($user_language->is_default == 1) {
-                $rules["variant_names.{$code}"] = 'required|array|min:1';
-                $rules["variant_names.{$code}.*"] = 'required';
-                $messages["variant_names.{$code}.*.required"] = __('The variant name is required for') . $langName;
-
-                $rules["option_names.{$code}"] = 'required|array|min:1';
-                $rules["option_names.{$code}.*.*"] = 'required';
-                $messages["option_names.{$code}.*.*.required"] = __('The option name is required for') . $langName;
-            } else {
-                // Only require options if variants exist for this language
-                if (
-                    $request->has("variant_names.{$code}") &&
-                    is_array($request->input("variant_names.{$code}")) &&
-                    !empty(array_filter($request->input("variant_names.{$code}")))
-                ) {
-                    $rules["variant_names.{$code}"] = 'required|array|min:1';
-                    $rules["variant_names.{$code}.*"] = 'required';
-                    $messages["variant_names.{$code}.*.required"] = __('The variant name is required for') . $langName;
-
-                    $rules["option_names.{$code}"] = 'required|array|min:1';
-                    $rules["option_names.{$code}.*.*"] = 'required';
-                    $messages["option_names.{$code}.*.*.required"] = __('The option name is required for') . $langName;
-                }
-                // if no variant names are provided, skip the option name storing
-                if (!empty($request->input("option_names.{$code}.*.*"))) {
-                    if (!empty(array_filter($request->input("option_names.{$code}.*.*")))) {
-                        $rules["variant_names.{$code}.*"] = 'required';
-                        $messages["variant_names.{$code}.*.required"] = __('The variant name is required for') . $langName;
-                    }
-                }
+        $defaultLang = null;
+        foreach ($user_languages as $ul) {
+            if ($ul->is_default == 1) {
+                $defaultLang = $ul;
+                break;
             }
         }
+        if (!$defaultLang && count($user_languages) > 0) {
+            $defaultLang = $user_languages[0];
+        }
+        $defCode = $defaultLang ? $defaultLang->code : 'en';
+
+        $rules = [
+            'category_id' => 'nullable',
+            "variant_names.{$defCode}" => 'required|array|min:1',
+            "variant_names.{$defCode}.*" => 'required',
+        ];
+        $messages = [
+            "variant_names.{$defCode}.*.required" => __('The variant name is required.'),
+            "variant_names.{$defCode}.required" => __('The variant name is required.'),
+        ];
+
+        // Options are optional. If option rows exist, only require them if non-empty
+        if ($request->has("option_names.{$defCode}") && is_array($request->input("option_names.{$defCode}"))) {
+            $rules["option_names.{$defCode}.*.*"] = 'nullable';
+        }
+
         $validator = Validator::make($request->all(), $rules, $messages);
         return $validator;
     }
