@@ -38,10 +38,19 @@
             <h5 class="lc-1 product-title mb-1"><a target="_blank"
                 href="{{ route('front.user.productDetails', [getParam(), 'slug' => $content->slug]) }}">{{ convertUtf8($content->title) }}</a>
             </h5>
+            @php
+              $displayItemPrice = $item['product_price'];
+              if (!empty($item['variations'])) {
+                  $varTotal = collect($item['variations'])->sum('price');
+                  if ($varTotal > 0) {
+                      $displayItemPrice = $varTotal;
+                  }
+              }
+            @endphp
             <span class="mb-1 d-inline-block">
-              <span class="fw-medium me-1">{{ $keywords['Item Price'] ?? __('Item Price') }}:</span>
-              <span class="m-0">
-                {{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, $item['product_price']) }}
+              <span class="fw-medium me-1">{{ $keywords['Price'] ?? __('Price') }}:</span>
+              <span class="m-0 fw-bold">
+                {{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, $displayItemPrice) }}
               </span>
             </span>
             <br>
@@ -52,56 +61,43 @@
               </span>
             </span>
 
-            @php
-              $variation_total = 0;
-            @endphp
             @if (!empty($item['variations']))
-              @foreach ($item['variations'] as $k => $itm)
-                @php
-                  $variation_total = $variation_total + $itm['price'];
+              @php
+                $variationParts = [];
+                foreach ($item['variations'] as $k => $itm) {
+                    $vNameId = App\Models\User\ProductVariationContent::where(
+                        'product_variation_id',
+                        $itm['variation_id'],
+                    )->pluck('variation_name')->first();
 
-                  //show variations name
-                  $vNameId = App\Models\User\ProductVariationContent::where(
-                      'product_variation_id',
-                      $itm['variation_id'],
-                  )
-                      ->pluck('variation_name')
-                      ->first();
+                    $variant_id = App\Models\VariantContent::where('id', $vNameId)->pluck('variant_id')->first();
+                    $variation_name = App\Models\VariantContent::where([
+                        ['variant_id', $variant_id],
+                        ['language_id', $userCurrentLang->id],
+                    ])->pluck('name')->first();
 
-                  $variant_id = App\Models\VariantContent::where('id', $vNameId)->pluck('variant_id')->first();
-                  $variation_name = App\Models\VariantContent::where([
-                      ['variant_id', $variant_id],
-                      ['language_id', $userCurrentLang->id],
-                  ])
-                      ->pluck('name')
-                      ->first();
+                    $vOptionId = App\Models\User\ProductVariantOptionContent::where([
+                        ['language_id', $userCurrentLang->id],
+                        ['product_variant_option_id', $itm['option_id']],
+                    ])->pluck('option_name')->first();
 
-                  //show variation options name
-                  $vOptionId = App\Models\User\ProductVariantOptionContent::where([
-                      ['language_id', $userCurrentLang->id],
-                      ['product_variant_option_id', $itm['option_id']],
-                  ])
-                      ->pluck('option_name')
-                      ->first();
-                  $vOptionName = App\Models\VariantOptionContent::where([
-                      ['language_id', $userCurrentLang->id],
-                      ['id', $vOptionId],
-                  ])
-                      ->pluck('option_name')
-                      ->first();
-                @endphp
-                <table class="variation-table mb-1">
-                  <tr>
-                    <td class="">
-                      <span class="fw-medium me-1">{{ $variation_name }}:</span>
-                    </td>
-                    <td class="cart_variants_price">
-                      <small>{{ $vOptionName }}</small>
-                      -({{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, $itm['price']) }})
-                    </td>
-                  </tr>
-                </table>
-              @endforeach
+                    $vOptionName = App\Models\VariantOptionContent::where([
+                        ['language_id', $userCurrentLang->id],
+                        ['id', $vOptionId],
+                    ])->pluck('option_name')->first();
+
+                    if ($variation_name && $vOptionName) {
+                        $variationParts[] = '<span class="text-secondary fw-semibold">' . e($variation_name) . ':</span> <span class="text-dark fw-bold">' . e($vOptionName) . '</span>';
+                    } elseif ($vOptionName) {
+                        $variationParts[] = '<span class="text-dark fw-bold">' . e($vOptionName) . '</span>';
+                    }
+                }
+              @endphp
+              @if (!empty($variationParts))
+                <div class="variation-summary mb-1 text-muted" style="font-size: 12px; line-height: 1.3;">
+                  {!! implode(' <span class="mx-1 text-muted">|</span> ', $variationParts) !!}
+                </div>
+              @endif
             @endif
 
 

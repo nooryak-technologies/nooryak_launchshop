@@ -55,12 +55,23 @@
             }
 
             $opt_name = '';
+            $colorHex = null;
             if ($variant_option_contents) {
                 if ($variant_option_contents->option_content) {
                     $opt_name = $variant_option_contents->option_content->option_name;
+                    if (!empty($variant_option_contents->option_content->color_code)) {
+                        $colorHex = $variant_option_contents->option_content->color_code;
+                    }
                 } elseif (!empty($variant_option_contents->option_name)) {
                     $vContent = App\Models\VariantOptionContent::find($variant_option_contents->option_name);
-                    $opt_name = $vContent ? $vContent->option_name : $variant_option_contents->option_name;
+                    if ($vContent) {
+                        $opt_name = $vContent->option_name;
+                        if (!empty($vContent->color_code)) {
+                            $colorHex = $vContent->color_code;
+                        }
+                    } else {
+                        $opt_name = $variant_option_contents->option_name;
+                    }
                 }
             }
 
@@ -68,7 +79,9 @@
             $id_name = make_input_name($opt_name);
             $main_id = $sup_option_content . '_' . $id_name . '_' . $variant_content_option->id;
             $opt_group_name = !empty($variant_content->name) ? $variant_content->name : 'Option ' . $product_variation->id;
-            $colorHex = ($isColor || !empty(getColorHex($opt_name))) ? getColorHex($opt_name) : null;
+            if (empty($colorHex)) {
+                $colorHex = ($isColor || !empty(getColorHex($opt_name))) ? getColorHex($opt_name) : null;
+            }
           @endphp
           <div class="variant-item-wrap">
             <input class="voptions custom-variant-radio" data-option_id="{{ $variant_content_option->id }}"

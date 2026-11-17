@@ -2958,16 +2958,26 @@ input.custom-variant-radio {
 /* Eliminate ANY theme radio circle pseudo-elements */
 .variantUL label::before,
 .variantUL label::after,
+.variantUL input:checked + label::before,
+.variantUL input:checked + label::after,
 .variantUL .form-radio-label::before,
 .variantUL .form-radio-label::after,
 .variant-item-wrap label::before,
 .variant-item-wrap label::after,
+.variant-item-wrap input:checked + label::before,
+.variant-item-wrap input:checked + label::after,
 .variant-pill-btn::before,
 .variant-pill-btn::after,
+.custom-variant-radio:checked + .variant-pill-btn::before,
+.custom-variant-radio:checked + .variant-pill-btn::after,
 .variant-color-swatch::before,
-.variant-color-swatch::after {
+.variant-color-swatch::after,
+.custom-variant-radio:checked + .variant-color-swatch::before,
+.custom-variant-radio:checked + .variant-color-swatch::after {
   content: none !important;
   display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
   width: 0 !important;
   height: 0 !important;
   border: none !important;
@@ -2978,8 +2988,8 @@ input.custom-variant-radio {
 .variantUL label,
 .variantUL .form-radio-label,
 .variant-item-wrap label {
-  padding-inline-start: 0 !important;
-  -webkit-padding-start: 0 !important;
+  margin: 0 !important;
+  text-align: center !important;
 }
 
 /* Hide legacy price indicators next to variant options */
@@ -3037,6 +3047,10 @@ input.custom-variant-radio {
   margin: 0 !important;
   min-width: 64px !important;
   padding: 8px 18px !important;
+  padding-left: 18px !important;
+  padding-right: 18px !important;
+  padding-inline-start: 18px !important;
+  padding-inline-end: 18px !important;
   border-radius: 8px !important;
   border: 1.5px solid #d1d5db !important;
   background-color: #ffffff !important;
@@ -3066,8 +3080,28 @@ input.custom-variant-radio {
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15) !important;
 }
 
+.variant-pill-btn .variant-text {
+  display: inline-block !important;
+  text-align: center !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  line-height: 1.25 !important;
+  letter-spacing: normal !important;
+}
+
 .custom-variant-radio:checked + .variant-pill-btn .variant-text {
   color: #ffffff !important;
+}
+
+/* Checkout Variations Area & Summary (always visible, no toggle) */
+.variation-area,
+.variation-summary {
+  display: block !important;
+}
+
+.show-variation {
+  display: none !important;
 }
 
 /* =========================================================

@@ -292,26 +292,10 @@
                             @endif
                           </h5>
 
-                          <div class="product-price">
+                          @if (!empty($item['variations']))
                             @php
-                              // If item has variations, show the total variant price instead of base price
-                              $displayItemPrice = $item['product_price'];
-                              if (!empty($item['variations'])) {
-                                  $varTotal = collect($item['variations'])->sum('price');
-                                  if ($varTotal > 0) {
-                                      $displayItemPrice = $varTotal;
-                                  }
-                              }
-                            @endphp
-                            <span class="text-dark fw-medium">{{ $keywords['Item Price'] ?? __('Item Price') }} :</span>
-                            <span>{{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, $displayItemPrice) }}</span>
-                          </div>
-
-                          @if ($item['variations'])
-                            <div class="variation-area">
-                              <h5 class="text-dark fw-bold mb-0">{{ $keywords['Variations'] ?? __('Variations') }}:</h5>
-                              @foreach ($item['variations'] as $key => $variation)
-                                @php
+                              $variationParts = [];
+                              foreach ($item['variations'] as $key => $variation) {
                                   //show variations name
                                   $vNameId = App\Models\User\ProductVariationContent::where(
                                       'product_variation_id',
@@ -343,19 +327,36 @@
                                   ])
                                       ->pluck('option_name')
                                       ->first();
-                                @endphp
 
-                                <div class="variation-item">
-                                  <span class="text-dark fw-medium">{{ $variation_name }} :</span>
-                                  <span class="cart_variants_price"> {{ $vOptionName }}
-                                    ({{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, $variation['price']) }})
-                                  </span>
-                                </div>
-                              @endforeach
-                            </div>
-                            <span
-                              class="show-variation">{{ $keywords['View Variations'] ?? __('View Variations') }}</span>
+                                  if ($variation_name && $vOptionName) {
+                                      $variationParts[] = '<span class="text-secondary fw-semibold">' . e($variation_name) . ':</span> <span class="text-dark fw-bold">' . e($vOptionName) . '</span>';
+                                  } elseif ($vOptionName) {
+                                      $variationParts[] = '<span class="text-dark fw-bold">' . e($vOptionName) . '</span>';
+                                  }
+                              }
+                            @endphp
+
+                            @if (!empty($variationParts))
+                              <div class="variation-summary mt-1 mb-1" style="font-size: 13px; line-height: 1.4;">
+                                {!! implode(' <span class="mx-1 text-muted">|</span> ', $variationParts) !!}
+                              </div>
+                            @endif
                           @endif
+
+                          <div class="product-price mt-1">
+                            @php
+                              // If item has variations, show the total variant price instead of base price
+                              $displayItemPrice = $item['product_price'];
+                              if (!empty($item['variations'])) {
+                                  $varTotal = collect($item['variations'])->sum('price');
+                                  if ($varTotal > 0) {
+                                      $displayItemPrice = $varTotal;
+                                  }
+                              }
+                            @endphp
+                            <span class="text-dark fw-medium">{{ $keywords['Price'] ?? __('Price') }} :</span>
+                            <span class="fw-bold text-dark">{{ symbolPrice($userCurrentCurr->symbol_position, $userCurrentCurr->symbol, $displayItemPrice) }}</span>
+                          </div>
 
                         </div>
                       </div>

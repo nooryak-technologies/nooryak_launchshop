@@ -157,8 +157,11 @@ class VariantController extends Controller
                     'variant_id' => $variant->id
                 ]);
 
+                $optionColors = $request->input('option_colors', []);
+
                 foreach ($request->option_names[$languageCode] as $key => $optionName) {
                     $options = is_array($optionName) ? $optionName : [$optionName];
+                    $colorVal = $optionColors[$key] ?? null;
                     foreach ($options as $singleOption) {
                         if (empty($singleOption)) continue;
                         $this->saveVariantOptionContent(
@@ -167,7 +170,8 @@ class VariantController extends Controller
                             $user_id,
                             $languageCode,
                             $singleOption,
-                            $key
+                            $key,
+                            $colorVal
                         );
                     }
                 }
@@ -296,6 +300,7 @@ class VariantController extends Controller
 
         // Step 3: Update or Create Variant Options and Contents
         $variantOptions = $request->input('option_names');
+        $optionColors = $request->input('option_colors', []);
         foreach ($variantOptions as $languageCode => $optionGroups) {
             foreach ($optionGroups as $key => $optionValues) {
                 // Ensure $optionValues is an array
@@ -306,6 +311,8 @@ class VariantController extends Controller
                     'user_id' => $user_id,
                 ]);
 
+                $colorVal = $optionColors[$key] ?? null;
+
                 foreach ($options as $optionName) {
                     if (empty($optionName)) continue;
                     $this->saveVariantOptionContent(
@@ -314,7 +321,8 @@ class VariantController extends Controller
                         $user_id,
                         $languageCode,
                         $optionName,
-                        $key
+                        $key,
+                        $colorVal
                     );
                 }
             }
@@ -324,7 +332,7 @@ class VariantController extends Controller
         return "success";
     }
 
-    private function saveVariantOptionContent($variant_id, $variantOptionId = null, $userId = null, $languageCode = null, $optionName = null, $key = null)
+    private function saveVariantOptionContent($variant_id, $variantOptionId = null, $userId = null, $languageCode = null, $optionName = null, $key = null, $colorVal = null)
     {
         $lang = \App\Models\User\Language::where([['code', $languageCode], ['user_id', $userId]])->first();
         if (!$lang) return;
@@ -341,7 +349,32 @@ class VariantController extends Controller
         }
         $variantOptionContent = VariantOptionContent::firstOrNew($conditions);
         $variantOptionContent->option_name = $optionName;
-        $variantOptionContent->save();
+
+        // Resolve color code: use explicit colorVal or infer from optionName
+        $finalColor = !empty($colorVal) ? trim($colorVal) : null;
+        if (empty($finalColor) && function_exists('getColorHex')) {
+            $finalColor = getColorHex($optionName);
+        }
+        if (!empty($finalColor)) {
+            $variantOptionContent->color_code = $finalColor;
+        }
+
+        try {
+            $variantOptionContent->save();
+        } catch (\Exception $e) {
+            unset($variantOptionContent->color_code);
+            $variantOptionContent->save();
+        }
+
+        if (!empty($finalColor) && $variantOptionId != null) {
+            try {
+                $variantOpt = VariantOption::find($variantOptionId);
+                if ($variantOpt) {
+                    $variantOpt->color_code = $finalColor;
+                    $variantOpt->save();
+                }
+            } catch (\Exception $e) {}
+        }
     }
 
     public function delete($id)

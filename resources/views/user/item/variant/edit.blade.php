@@ -179,10 +179,13 @@
                       data-oindex="{{ $variant_option_content->index_key }}">
                       <div class="col-lg-11">
                         <div class="row">
+                          @php
+                            $colClass = count($userLanguages) >= 2 ? 'col-lg-4 col-md-6' : 'col-lg-6';
+                          @endphp
                           @foreach ($userLanguages as $language)
 
                             @if ($language->id == $selLang->id)
-                              <div class="col-lg-6">
+                              <div class="{{ $colClass }}">
                                 <div class="form-group">
                                   <label for="">{{ __('Option Name') }}
                                     ({{ $language->code }})
@@ -206,7 +209,7 @@
                                 ])->first();
                                 // dump($language->id);
                               @endphp
-                              <div class="col-lg-6">
+                              <div class="{{ $colClass }}">
                                 <div class="form-group">
                                   <label for="">{{ __('Option Name') }}
                                     ({{ $language->code }})</label>
@@ -222,6 +225,26 @@
                               </div>
                             @endif
                           @endforeach
+                          <div class="{{ count($userLanguages) >= 2 ? 'col-lg-4 col-md-12' : 'col-lg-6' }}">
+                            <div class="form-group">
+                              <label for="">{{ __('Color Code (optional)') }}</label>
+                              <div class="input-group">
+                                @php
+                                  $existingColor = $variant_option_content->color_code ?? '';
+                                  if (empty($existingColor) && function_exists('getColorHex')) {
+                                    $existingColor = getColorHex($variant_option_content->option_name ?? '') ?? '';
+                                  }
+                                  $pickerVal = (preg_match('/^#[a-f0-9]{6}$/i', $existingColor) || preg_match('/^#[a-f0-9]{3}$/i', $existingColor)) ? $existingColor : '#000000';
+                                @endphp
+                                <input type="color" class="form-control form-control-color" style="max-width: 46px; height: 38px; padding: 2px;"
+                                  value="{{ $pickerVal }}"
+                                  onchange="$(this).next().val(this.value)">
+                                <input name="option_colors[{{ @$variant_option_content->index_key }}]" type="text"
+                                  class="form-control" value="{{ $existingColor }}" placeholder="#000000"
+                                  oninput="if(this.value.match(/^#[0-9A-Fa-f]{6}$/)) { $(this).prev().val(this.value); }">
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <button type="button" class="btn btn-danger btn-sm text-white ml-2 delete-option"
@@ -254,7 +277,7 @@
                 <div class="col-lg-11">
                     <div class="row">
                         @foreach ($userLanguages as $language)
-                            <div class="col-lg-6">
+                            <div class="{{ count($userLanguages) >= 2 ? 'col-lg-4 col-md-6' : 'col-lg-6' }}">
                                 <div class="form-group">
                                     <label for="">{{ __('Option Name') }} ({{ $language->code }})</label>
                                     <input name="option_names[{{ $language->code }}][${option.uniqid}][]" type="text" class="form-control {{ $language->rtl == 1 ? 'rtl' : '' }}" placeholder="{{ __('e.g., m, xl, black, red etc.') }}">
@@ -262,6 +285,15 @@
                                 </div>
                             </div>
                         @endforeach
+                        <div class="{{ count($userLanguages) >= 2 ? 'col-lg-4 col-md-12' : 'col-lg-6' }}">
+                            <div class="form-group">
+                                <label for="">{{ __('Color Code (optional)') }}</label>
+                                <div class="input-group">
+                                    <input type="color" class="form-control form-control-color" style="max-width: 46px; height: 38px; padding: 2px;" value="#000000" onchange="$(this).next().val(this.value)">
+                                    <input name="option_colors[${option.uniqid}]" type="text" class="form-control" placeholder="#000000" oninput="if(this.value.match(/^#[0-9A-Fa-f]{6}$/)) { $(this).prev().val(this.value); }">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <button type="button" class="btn btn-danger btn-sm text-white ml-2 remove-option">

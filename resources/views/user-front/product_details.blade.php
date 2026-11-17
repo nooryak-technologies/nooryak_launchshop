@@ -313,19 +313,32 @@
                                 }
 
                                 $opt_name = '';
+                                $colorHex = null;
                                 if ($variant_option_contents) {
                                     if ($variant_option_contents->option_content) {
                                         $opt_name = $variant_option_contents->option_content->option_name;
+                                        if (!empty($variant_option_contents->option_content->color_code)) {
+                                            $colorHex = $variant_option_contents->option_content->color_code;
+                                        }
                                     } elseif (!empty($variant_option_contents->option_name)) {
                                         $vContent = App\Models\VariantOptionContent::find($variant_option_contents->option_name);
-                                        $opt_name = $vContent ? $vContent->option_name : $variant_option_contents->option_name;
+                                        if ($vContent) {
+                                            $opt_name = $vContent->option_name;
+                                            if (!empty($vContent->color_code)) {
+                                                $colorHex = $vContent->color_code;
+                                            }
+                                        } else {
+                                            $opt_name = $variant_option_contents->option_name;
+                                        }
                                     }
                                 }
 
                                 $sup_option_content = make_input_name($opt_name);
                                 $id_name = make_input_name($opt_name);
                                 $main_id = 'detail_' . $sup_option_content . '_' . $id_name . '_' . $variant_content_option->id;
-                                $colorHex = ($isColor || !empty(getColorHex($opt_name))) ? getColorHex($opt_name) : null;
+                                if (empty($colorHex)) {
+                                    $colorHex = ($isColor || !empty(getColorHex($opt_name))) ? getColorHex($opt_name) : null;
+                                }
                               @endphp
                               <li class="variant-item-wrap">
                                 <input id="radio_{{ $main_id }}" type="radio"

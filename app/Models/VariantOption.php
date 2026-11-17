@@ -12,6 +12,7 @@ class VariantOption extends Model
     protected $fillable = [
         'user_id',
         'variant_id',
+        'color_code',
     ];
 
     public function variant_options_content()

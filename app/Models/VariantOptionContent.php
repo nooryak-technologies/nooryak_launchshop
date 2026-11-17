@@ -16,5 +16,6 @@ class VariantOptionContent extends Model
         'index_key',
         'user_id',
         'option_name',
+        'color_code',
     ];
 }

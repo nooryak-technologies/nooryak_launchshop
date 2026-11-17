@@ -162,10 +162,10 @@
     function renderOption(option, vIndex) {
       var optionHtml = `
             <div class="row option-box" data-vindex="${vIndex}" data-oindex="${option.uniqid}">
-                <div class="col-lg-12">
+                <div class="col-lg-11">
                     <div class="row">
                         @foreach ($userLanguages as $language)
-                            <div class="col-lg-6">
+                            <div class="{{ count($userLanguages) >= 2 ? 'col-lg-4 col-md-6' : 'col-lg-6' }}">
                                 <div class="form-group">
                                     <label for="">{{ __('Option Name') }} ({{ $language->code }})</label>
                                     <input name="option_names[{{ $language->code }}][${option.uniqid}][]" type="text" class="form-control {{ $language->rtl == 1 ? 'rtl' : '' }}" placeholder="{{ __('e.g., m, xl, black, red etc.') }}">
@@ -173,11 +173,20 @@
                                 </div>
                             </div>
                         @endforeach
+                        <div class="{{ count($userLanguages) >= 2 ? 'col-lg-4 col-md-12' : 'col-lg-6' }}">
+                            <div class="form-group">
+                                <label for="">{{ __('Color Code (optional)') }}</label>
+                                <div class="input-group">
+                                    <input type="color" class="form-control form-control-color" style="max-width: 46px; height: 38px; padding: 2px;" value="#000000" onchange="$(this).next().val(this.value)">
+                                    <input name="option_colors[${option.uniqid}]" type="text" class="form-control" placeholder="#000000" oninput="if(this.value.match(/^#[0-9A-Fa-f]{6}$/)) { $(this).prev().val(this.value); }">
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <button type="button" class="btn btn-danger btn-sm text-white ml-2 remove-option">
-                        <i class="fas fa-times"></i>
-                    </button>
                 </div>
+                <button type="button" class="btn btn-danger btn-sm text-white ml-2 remove-option">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
         `;
       $(`[data-index="${vIndex}"] .options-container`).append(optionHtml);
