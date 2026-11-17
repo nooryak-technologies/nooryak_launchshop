@@ -285,7 +285,7 @@
   .pricing-cards-row {
     display: flex;
     gap: 20px;
-    align-items: flex-start;
+    align-items: stretch;
     flex-wrap: wrap;
     justify-content: center;
     position: relative;
@@ -1271,17 +1271,18 @@
 
   /* Equal height of pricing cards on desktop */
   @media (min-width: 992px) {
-    .pricing-card-v2.package-1, .pricing-card-v2.plan-basic {
-      min-height: 670px;
+    .pricing-cards-row {
+      align-items: stretch !important;
     }
-    .pricing-card-v2.package-2, .pricing-card-v2.plan-standard {
-      min-height: 670px;
+    .pricing-card-v2 {
+      height: 100%;
+      min-height: auto !important;
     }
-    .pricing-card-v2.package-3, .pricing-card-v2.plan-premium {
-      min-height: 670px;
-    }
+    .pricing-card-v2.package-1, .pricing-card-v2.plan-basic,
+    .pricing-card-v2.package-2, .pricing-card-v2.plan-standard,
+    .pricing-card-v2.package-3, .pricing-card-v2.plan-premium,
     .pricing-card-v2.package-enterprise, .pricing-card-v2.card-enterprise {
-      min-height: 670px;
+      min-height: auto !important;
     }
   }
 
@@ -1303,6 +1304,7 @@
       box-shadow: 0 0 16px 4px rgba(255, 90, 44, 0.45);
       transform: scale(1.03);
     }
+  }
   /* Animated clicking hand icon */
   .animated-click-hand {
     display: inline-block !important;
