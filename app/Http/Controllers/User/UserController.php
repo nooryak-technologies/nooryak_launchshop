@@ -96,12 +96,20 @@ class UserController extends Controller
             ['user_id', $user->id],
             ['expire_date', '>=', Carbon::now()->toDateString()]
         ])->whereYear('start_date', '<>', '9999')->where('status', '<>', 2)->count();
-        //current package
+        // current membership (active or pending UPI)
         $data['current_membership'] = Membership::query()->where([
             ['user_id', $user->id],
             ['start_date', '<=', Carbon::now()->toDateString()],
             ['expire_date', '>=', Carbon::now()->toDateString()]
         ])->where('status', 1)->whereYear('start_date', '<>', '9999')->first();
+
+        if (!$data['current_membership']) {
+            $data['current_membership'] = Membership::query()->where([
+                ['user_id', $user->id],
+                ['status', 0]
+            ])->whereYear('start_date', '<>', '9999')->orderBy('id', 'DESC')->first();
+        }
+
         if ($data['current_membership']) {
             $countCurrMem = Membership::query()->where([
                 ['user_id', $user->id],
@@ -122,7 +130,7 @@ class UserController extends Controller
             }
             $data['next_package'] = $data['next_membership'] ? Package::query()->where('id', $data['next_membership']->package_id)->first() : null;
         }
-        $data['current_package'] = $data['current_membership'] ? \App\Http\Helpers\UserPermissionHelper::currentPackagePermission($user->id) : null;
+        $data['current_package'] = \App\Http\Helpers\UserPermissionHelper::currentPackagePermission($user->id);
         $data['package_count'] = $nextPackageCount;
 
         $user_currency = UserCurrency::where('is_default', 1)->where('user_id', $user->id)->first();

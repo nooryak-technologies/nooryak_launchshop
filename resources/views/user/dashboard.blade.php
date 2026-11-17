@@ -722,37 +722,30 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
     <p style="font-size:14px;color:#6B7280;margin:0;">{{ __("Here's what's happening with your store today.") }}</p>
   </div>
 
-  @if (is_null($package))
-    @php
-      $pendingMemb = \App\Models\Membership::query()
-          ->where([['user_id', '=', Auth::id()], ['status', 0]])
-          ->whereYear('start_date', '<>', '9999')
-          ->orderBy('id', 'DESC')->first();
-      $pendingPackage = isset($pendingMemb) ? \App\Models\Package::query()->findOrFail($pendingMemb->package_id) : null;
-    @endphp
-    @if ($pendingPackage)
-      <div class="alert alert-warning">{{ __('You have requested a package which needs an action (Approval / Rejection) by Admin.') }}</div>
-      <div class="alert alert-warning">
-        <strong>{{ __('Pending Package:') }}</strong> {{ $pendingPackage->title }}
-        <span class="badge badge-secondary">{{ $pendingPackage->term }}</span>
-        <span class="badge badge-warning">{{ __('Decision Pending') }}</span>
-      </div>
-    @else
-      <div class="alert alert-warning">{{ __('Your membership is expired. Please purchase a new package / extend the current package.') }}</div>
-    @endif
+  @php
+    $current_package = $current_package ?? $package ?? \App\Http\Helpers\UserPermissionHelper::currPackageOrPending($user->id);
+    if (empty($current_membership)) {
+        $current_membership = \App\Models\Membership::where('user_id', $user->id)
+            ->whereYear('start_date', '<>', '9999')
+            ->orderBy('id', 'DESC')->first();
+    }
+  @endphp
+
+  @if (is_null($current_package))
+    <div class="alert alert-warning mb-4">{{ __('Your membership is expired. Please purchase a new package / extend the current package.') }}</div>
   @else
     @php
-      $pLimitVal      = $current_package->product_limit;
-      $oLimitVal      = $current_package->order_limit;
+      $pLimitVal      = $current_package?->product_limit ?? 999999;
+      $oLimitVal      = $current_package?->order_limit ?? 999999;
       $prodLimitLabel = $pLimitVal == 999999
           ? __('Unlimited Products')
           : __('Up to :count Products', ['count' => number_format($pLimitVal)]);
       $orderLimitLabel = $oLimitVal == 999999
           ? __('Unlimited Orders')
           : __('Up to :count Orders', ['count' => number_format($oLimitVal)]);
-      $packageFeatures = json_decode($current_package->features, true) ?? [];
+      $packageFeatures = json_decode($current_package?->features ?? '[]', true) ?? [];
       $isUnlimitedOrders = ($oLimitVal == 999999);
-      $orderPercent = $isUnlimitedOrders ? 0 : min(($total_orders / $oLimitVal) * 100, 100);
+      $orderPercent = $isUnlimitedOrders ? 0 : min(($total_orders / max(1, $oLimitVal)) * 100, 100);
     @endphp
 
     {{-- ===== PLAN BANNER ===== --}}
@@ -774,7 +767,7 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
           </div>
           <div class="plan-expire">
             {{ __('Expires on') }}
-            {{ $current_package->term === 'lifetime' ? __('Lifetime') : \Carbon\Carbon::parse($current_membership->expire_date)->format('d M, Y') }}
+            {{ $current_package->term === 'lifetime' ? __('Lifetime') : (!empty($current_membership?->expire_date) ? \Carbon\Carbon::parse($current_membership->expire_date)->format('d M, Y') : __('Pending Activation')) }}
           </div>
           <a href="{{ route('user.plan.extend.index') }}" class="plan-manage-btn">{{ __('Manage Plan') }}</a>
         </div>
@@ -804,11 +797,11 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
           } else {
               foreach ($allFeatures as $feature) {
                   if ($feature->type === 'limit') {
-                      $limitVal = $current_package->{$feature->limit_key} ?? 0;
+                      $limitVal = $current_package?->{$feature->limit_key} ?? 0;
                       if ($limitVal > 0 || $limitVal == 999999) {
                           $formattedVal = ($limitVal == 999999) ? __('Unlimited') : $limitVal;
                           if ($feature->limit_key === 'order_limit' && $limitVal != 999999) {
-                              $formattedVal .= '/' . ($current_package->term == 'monthly' ? 'm' : 'yr');
+                              $formattedVal .= '/' . (($current_package?->term == 'monthly') ? 'm' : 'yr');
                           }
                           $activeFeatureLabels[] = str_replace('{limit}', $formattedVal, $feature->name);
                       }
@@ -816,7 +809,7 @@ body[data-background-color="dark"] .c-indigo .trend-neutral {
                       if (is_array($packageFeatures) && in_array($feature->keyword, $packageFeatures)) {
                           $text = $feature->name;
                           if (!empty($feature->limit_key)) {
-                              $limitVal = $current_package->{$feature->limit_key} ?? 0;
+                              $limitVal = $current_package?->{$feature->limit_key} ?? 0;
                               $formattedVal = ($limitVal == 999999) ? __('Unlimited') : $limitVal;
                               $text = str_replace('{limit}', $formattedVal, $text);
                           }

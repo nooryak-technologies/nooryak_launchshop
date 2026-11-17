@@ -402,7 +402,8 @@ class CheckoutController extends Controller
                 'phone' => $request['phone'],
                 'username' => $request['username'],
                 'password' => bcrypt($password),
-                'status' => $request["status"],
+                'status' => 1,
+                'online_status' => 1,
                 'address' => $request["address"] ? $request["address"] : null,
                 'city' => $request["city"] ? $request["city"] : null,
                 'state' => $request["district"] ? $request["district"] : null,
@@ -412,6 +413,8 @@ class CheckoutController extends Controller
             ]);
             
             $user->email_verified = 1;
+            $user->status = 1;
+            $user->online_status = 1;
             $user->save();
 
             //customize

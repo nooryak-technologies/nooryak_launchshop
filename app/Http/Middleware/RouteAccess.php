@@ -22,8 +22,8 @@ class RouteAccess
         $user = getUser();
         $currentPackage = UserPermissionHelper::userPackage($user->id);
         $preferences = UserPermission::where([
-            ['user_id',$user->id],
-            ['package_id',$currentPackage->package_id]
+            ['user_id', $user->id],
+            ['package_id', $currentPackage ? $currentPackage->package_id : null]
         ])->first();
         $userPermissions = isset($preferences) ? json_decode($preferences->permissions, true) : [];
         $packagePermissions = UserPermissionHelper::packagePermission($user->id);

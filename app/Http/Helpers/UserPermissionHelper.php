@@ -198,12 +198,21 @@ class UserPermissionHelper
 
     public static function userPackage(int $userId)
     {
-        return Membership::query()->where([
+        $currentPackage = Membership::query()->where([
             ['user_id', '=', $userId],
             ['status', '=', 1],
             ['start_date', '<=', Carbon::now()->format('Y-m-d')],
             ['expire_date', '>=', Carbon::now()->format('Y-m-d')]
         ])->first();
+
+        if (!$currentPackage) {
+            $currentPackage = Membership::query()->where([
+                ['user_id', '=', $userId],
+                ['status', '=', 0]
+            ])->whereYear('start_date', '<>', '9999')->orderBy('id', 'DESC')->first();
+        }
+
+        return $currentPackage;
     }
 
     public static function nextMembership(int $userId)
