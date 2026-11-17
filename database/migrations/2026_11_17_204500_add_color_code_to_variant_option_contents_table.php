@@ -54,3 +54,4 @@ class AddColorCodeToVariantOptionContentsTable extends Migration
         }
     }
 }
+

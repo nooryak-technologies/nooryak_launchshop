@@ -2090,26 +2090,52 @@ class ItemController extends Controller
 
                 $variantOptionId = null;
 
+                $colorCode = function_exists('getColorHex') ? getColorHex($optName) : null;
+
                 if (!$masterOptContent) {
                     // Create the master VariantOption and its contents for all languages
-                    $variantOption = VariantOption::create([
+                    $vOptionData = [
                         'user_id'    => $userId,
                         'variant_id' => $variant->id,
-                    ]);
+                    ];
+                    if (!empty($colorCode)) {
+                        $vOptionData['color_code'] = $colorCode;
+                    }
+                    try {
+                        $variantOption = VariantOption::create($vOptionData);
+                    } catch (\Throwable $e) {
+                        unset($vOptionData['color_code']);
+                        $variantOption = VariantOption::create($vOptionData);
+                    }
                     $variantOptionId = $variantOption->id;
 
                     foreach ($languages as $lang) {
-                        VariantOptionContent::create([
+                        $vOptContentData = [
                             'user_id'           => $userId,
                             'variant_id'        => $variant->id,
                             'variant_option_id' => $variantOptionId,
                             'language_id'       => $lang->id,
                             'option_name'       => $optName,
                             'index_key'         => $globalIndex,
-                        ]);
+                        ];
+                        if (!empty($colorCode)) {
+                            $vOptContentData['color_code'] = $colorCode;
+                        }
+                        try {
+                            VariantOptionContent::create($vOptContentData);
+                        } catch (\Throwable $e) {
+                            unset($vOptContentData['color_code']);
+                            VariantOptionContent::create($vOptContentData);
+                        }
                     }
                 } else {
                     $variantOptionId = $masterOptContent->variant_option_id;
+                    if (!empty($colorCode) && empty($masterOptContent->color_code)) {
+                        try {
+                            $masterOptContent->color_code = $colorCode;
+                            $masterOptContent->save();
+                        } catch (\Throwable $e) {}
+                    }
                 }
 
                 // Create the ProductVariantOption (price + stock for this product)

@@ -2402,10 +2402,12 @@ if (!function_exists('getColorHex')) {
 
         $clean = strtolower(trim($name));
 
-        // Hex code check (e.g. #fff, #ffffff, #000000)
-        if (preg_match('/^#([a-f0-9]{3}|[a-f0-9]{6})$/i', $clean)) {
-            return $clean;
+        // Hex code check anywhere in string (e.g. #fff, #ffffff, #000000, "Red (#ef4444)")
+        if (preg_match('/#([a-f0-9]{6}|[a-f0-9]{3})\b/i', $clean, $matches)) {
+            return strtolower($matches[0]);
         }
+
+        $clean = str_replace(['-', '_'], ' ', $clean);
 
         $colors = [
             'black' => '#000000',
