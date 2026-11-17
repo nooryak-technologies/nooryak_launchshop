@@ -14,6 +14,7 @@ class BasicSetting extends Model
         'preloader',
         'preloader_status',
         'logo',
+        'dark_logo',
         'web_app_image',
         'cv',
         'base_color',

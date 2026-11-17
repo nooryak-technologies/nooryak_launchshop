@@ -100,10 +100,26 @@ class BuyPlanController extends Controller
                 ->first();
         }
         $be = $currentLang->basic_extended;
-        $online = PaymentGateway::query()->where('status', 1)->get();
-        $offline = OfflineGateway::all();
+        $online = PaymentGateway::query()->where('status', 1)->get()->filter(function($gateway) {
+            return strtolower($gateway->name) !== 'upi' && strtolower($gateway->keyword ?? '') !== 'upi';
+        });
+
+        // Ensure Razorpay is present if configured or active
+        $razorpayGateway = PaymentGateway::where('keyword', 'razorpay')->first();
+        if ($razorpayGateway && ($razorpayGateway->status == 1 || !empty(json_decode($razorpayGateway->information, true)['key']))) {
+            if (!$online->contains('keyword', 'razorpay') && !$online->contains('name', 'Razorpay')) {
+                $online->push($razorpayGateway);
+            }
+        }
+
+        $offline = OfflineGateway::where('status', 1)->get();
+        if ($offline->isEmpty()) {
+            $offline = OfflineGateway::all();
+        }
         $data['offline'] = $offline;
-        $data['payment_methods'] = $online->merge($offline);
+        $data['payment_methods'] = $online->toBase()->merge($offline->toBase())->unique(function ($item) {
+            return strtolower($item->keyword ?? $item->name);
+        });
         $data['checkout_package'] = Package::query()->findOrFail($package_id);
         $data['membership'] = Membership::query()->where([
             ['user_id', $user_id],

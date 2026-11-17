@@ -500,7 +500,6 @@
                         <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
                       @enderror
                     </div>
-                    <div id="phone-feedback" class="small mt-2" style="font-weight: 600; text-align: left;"></div>
                   </div>
 
                   <!-- Email Input -->
@@ -515,6 +514,7 @@
                     @error('email')
                       <p class="text-danger small mb-1 mt-1">{{ $message }}</p>
                     @enderror
+                    <div id="phone-feedback" class="small mt-2" style="font-weight: 600; text-align: left;"></div>
                   </div>
 
                   <!-- Get OTP Button -->

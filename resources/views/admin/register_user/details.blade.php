@@ -220,6 +220,81 @@
                 </span>
               </div>
 
+              @php
+                $activeOrPendingMemb = $currMemb ?: \App\Models\Membership::where('user_id', $user->id)->orderBy('id', 'DESC')->first();
+              @endphp
+              <div class="user-info-row">
+                <span class="lbl">{{ __('Payment Type') }}</span>
+                <span class="val">
+                  @if ($activeOrPendingMemb)
+                    <div class="d-inline-flex align-items-center flex-wrap" style="gap: 6px;">
+                      <span class="btn-primary-purple py-1 px-3" style="font-size:0.75rem; border-radius:8px;">
+                        {{ $activeOrPendingMemb->payment_method ?? __('Offline') }}
+                      </span>
+                      @if ($activeOrPendingMemb->status == 1)
+                        <span class="badge badge-success py-1 px-2 font-weight-bold" style="border-radius:6px; font-size:12px;">
+                          {{ __('Approved') }}
+                        </span>
+                      @elseif ($activeOrPendingMemb->status == 0)
+                        <span class="badge badge-warning py-1 px-2 font-weight-bold" style="border-radius:6px; font-size:12px;">
+                          {{ __('Pending') }}
+                        </span>
+                        <form action="{{ route('admin.payment-log.update') }}" method="POST" class="d-inline-block m-0">
+                          @csrf
+                          <input type="hidden" name="id" value="{{ $activeOrPendingMemb->id }}">
+                          <input type="hidden" name="status" value="1">
+                          <button type="submit" class="btn btn-success btn-xs py-1 px-2" style="border-radius:6px; font-weight:600;" onclick="return confirm('{{ __('Approve this payment and activate the package?') }}')">
+                            <i class="fas fa-check mr-1"></i>{{ __('Approve') }}
+                          </button>
+                        </form>
+                        <form action="{{ route('admin.payment-log.update') }}" method="POST" class="d-inline-block m-0">
+                          @csrf
+                          <input type="hidden" name="id" value="{{ $activeOrPendingMemb->id }}">
+                          <input type="hidden" name="status" value="2">
+                          <button type="submit" class="btn btn-danger btn-xs py-1 px-2" style="border-radius:6px; font-weight:600;" onclick="return confirm('{{ __('Reject this payment?') }}')">
+                            <i class="fas fa-times mr-1"></i>{{ __('Reject') }}
+                          </button>
+                        </form>
+                      @elseif ($activeOrPendingMemb->status == 2)
+                        <span class="badge badge-danger py-1 px-2 font-weight-bold" style="border-radius:6px; font-size:12px;">
+                          {{ __('Rejected') }}
+                        </span>
+                        <form action="{{ route('admin.payment-log.update') }}" method="POST" class="d-inline-block m-0">
+                          @csrf
+                          <input type="hidden" name="id" value="{{ $activeOrPendingMemb->id }}">
+                          <input type="hidden" name="status" value="1">
+                          <button type="submit" class="btn btn-success btn-xs py-1 px-2" style="border-radius:6px; font-weight:600;">
+                            <i class="fas fa-check mr-1"></i>{{ __('Approve') }}
+                          </button>
+                        </form>
+                      @endif
+                    </div>
+                  @else
+                    -
+                  @endif
+                </span>
+              </div>
+
+              <div class="user-info-row">
+                <span class="lbl">{{ __('Payment Proof & UTR') }}</span>
+                <span class="val">
+                  @if (!empty($activeOrPendingMemb?->transaction_id))
+                    <span class="badge badge-light border text-dark font-weight-bold py-1 px-2 mr-1" style="border-radius:6px; font-size:12px;">
+                      UTR: {{ $activeOrPendingMemb->transaction_id }}
+                    </span>
+                  @endif
+                  @if (!empty($activeOrPendingMemb?->receipt))
+                    <a href="{{ asset('assets/front/img/membership/receipt/' . $activeOrPendingMemb->receipt) }}" target="_blank" class="btn btn-outline-primary btn-xs py-1 px-2" style="border-radius:6px; font-size:12px;" data-toggle="modal" data-target="#receiptProofModal">
+                      <i class="fas fa-receipt mr-1"></i>{{ __('View Proof') }}
+                    </a>
+                  @else
+                    @if (empty($activeOrPendingMemb?->transaction_id))
+                      -
+                    @endif
+                  @endif
+                </span>
+              </div>
+
               <div class="user-info-row">
                 <span class="lbl">{{ __('Shop Name') }}</span>
                 <span class="val font-weight-bold">{{ $user->shop_name ?? '-' }}</span>
@@ -293,7 +368,13 @@
               <div class="user-info-row">
                 <span class="lbl">{{ __('Plan Status') }}</span>
                 <span class="val">
-                  <span class="status-pill-warning"><i class="fas fa-exclamation-triangle"></i> {{ __('Not Purchased') }}</span>
+                  @if (!empty($activeOrPendingMemb) && $activeOrPendingMemb->status == 1)
+                    <span class="status-pill-active"><i class="fas fa-check-circle"></i> {{ __('Purchased / Active') }}</span>
+                  @elseif (!empty($activeOrPendingMemb) && $activeOrPendingMemb->status == 0)
+                    <span class="status-pill-warning"><i class="fas fa-clock"></i> {{ __('Pending Approval') }}</span>
+                  @else
+                    <span class="status-pill-deactive"><i class="fas fa-exclamation-triangle"></i> {{ __('Not Purchased') }}</span>
+                  @endif
                 </span>
               </div>
 
@@ -307,6 +388,30 @@
       </div>
     </div>
   </div>
+
+    @if (!empty($activeOrPendingMemb?->receipt))
+    <div class="modal fade" id="receiptProofModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title font-weight-bold"><i class="fas fa-receipt text-primary mr-2"></i>{{ __('Payment Proof Receipt') }}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body text-center p-3 bg-light">
+            <img src="{{ asset('assets/front/img/membership/receipt/' . $activeOrPendingMemb->receipt) }}" alt="Receipt" class="img-fluid rounded shadow-sm" style="max-height: 500px; object-fit: contain;">
+          </div>
+          <div class="modal-footer justify-content-between">
+            <a href="{{ asset('assets/front/img/membership/receipt/' . $activeOrPendingMemb->receipt) }}" download class="btn btn-sm btn-primary">
+              <i class="fas fa-download mr-1"></i>{{ __('Download') }}
+            </a>
+            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">{{ __('Close') }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  @endif
 
   @includeIf('admin.register_user.edit-current-package')
   @includeIf('admin.register_user.add-current-package')

@@ -228,9 +228,13 @@
           </div>
           <div class="info-text">
             <strong>{{ $language_keywords['Payment Status'] ?? __('Payment Status') }}:</strong> 
-            <span style="color: {{ $status == 2 ? '#ef4444' : '#10b981' }}; font-weight: bold;">
-              {{ $status == 2 ? ($language_keywords['Rejected'] ?? __('Rejected')) : ($language_keywords['Completed'] ?? __('Completed')) }}
-            </span>
+            @if ($status == 1)
+              <span style="color: #10b981; font-weight: bold;">{{ $language_keywords['Completed'] ?? __('Completed') }}</span>
+            @elseif ($status == 2)
+              <span style="color: #ef4444; font-weight: bold;">{{ $language_keywords['Rejected'] ?? __('Rejected') }}</span>
+            @else
+              <span style="color: #f59e0b; font-weight: bold;">{{ $language_keywords['Pending'] ?? __('Pending') }}</span>
+            @endif
           </div>
         </td>
       </tr>

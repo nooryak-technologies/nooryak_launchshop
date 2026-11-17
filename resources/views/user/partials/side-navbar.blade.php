@@ -71,14 +71,14 @@
   <div class="sidebar-wrapper scrollbar scrollbar-inner">
     <div class="sidebar-content">
       <div class="user">
-        <div class="avatar-sm float-left mr-2">
+        <div class="avatar-sm float-left mr-2" style="width: auto; max-width: 48px; height: 40px; display: flex; align-items: center;">
           @if (Session::has('staff_id'))
-            <img src="{{ asset('assets/admin/img/propics/blank_user.jpg') }}" alt="..." class="avatar-img rounded">
+            <img src="{{ asset('assets/admin/img/propics/blank_user.jpg') }}" alt="..." class="avatar-img rounded" style="border-radius: 6px !important; max-height: 40px; width: auto; object-fit: contain;">
           @elseif (!empty(Auth::user()->photo))
             <img src="{{ asset('assets/front/img/user/' . Auth::user()->photo) }}" alt="..."
-              class="avatar-img rounded">
+              class="avatar-img rounded" style="border-radius: 6px !important; max-height: 40px; width: auto; object-fit: contain;">
           @else
-            <img src="{{ asset('assets/admin/img/propics/blank_user.jpg') }}" alt="..." class="avatar-img rounded">
+            <img src="{{ asset('assets/admin/img/propics/blank_user.jpg') }}" alt="..." class="avatar-img rounded" style="border-radius: 6px !important; max-height: 40px; width: auto; object-fit: contain;">
           @endif
         </div>
         <div class="info">

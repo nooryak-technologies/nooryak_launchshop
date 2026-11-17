@@ -79,17 +79,29 @@
   .navbar-header {
     padding: 0 15px !important;
   }
-  .navbar-nav.topbar-nav {
+  .navbar-nav.topbar-nav-left {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 12px !important;
+    margin-right: auto !important;
+    padding: 0 !important;
+    margin-bottom: 0 !important;
+    list-style: none !important;
+  }
+  .navbar-nav.topbar-nav-right {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
     justify-content: flex-end !important;
-    gap: 12px !important;
     margin-left: auto !important;
     padding: 0 !important;
     margin-bottom: 0 !important;
+    list-style: none !important;
   }
-  .navbar-nav.topbar-nav .nav-item {
+  .navbar-nav.topbar-nav-left .nav-item,
+  .navbar-nav.topbar-nav-right .nav-item {
     display: flex !important;
     align-items: center !important;
     margin: 0 !important;
@@ -99,11 +111,17 @@
     align-items: center !important;
     white-space: nowrap !important;
   }
+  .logo-header .navbar-brand {
+    max-height: 42px;
+    width: auto;
+    max-width: 160px;
+    object-fit: contain;
+    border-radius: 4px;
+  }
   @media (max-width: 991px) {
-    .navbar-nav.topbar-nav {
+    .navbar-nav.topbar-nav-left {
       gap: 8px !important;
       flex-wrap: wrap !important;
-      justify-content: flex-end !important;
     }
     .navbar-header {
       padding: 0 8px !important;
@@ -114,7 +132,7 @@
     }
   }
   @media (max-width: 576px) {
-    .navbar-nav.topbar-nav {
+    .navbar-nav.topbar-nav-left {
       gap: 6px !important;
     }
     #limitBtn {
@@ -127,10 +145,25 @@
 <div class="main-header">
   <!-- Logo Header -->
   <div class="logo-header" data-background-color="dark2">
+    @php
+      $isDarkTheme = request()->cookie('user-theme') == 'dark';
+      $dashLogo = null;
+      if ($isDarkTheme && !empty($userBs->dark_logo) && file_exists(public_path('assets/front/img/user/' . $userBs->dark_logo))) {
+          $dashLogo = asset('assets/front/img/user/' . $userBs->dark_logo);
+      } elseif (!empty($userBs->logo) && file_exists(public_path('assets/front/img/user/' . $userBs->logo))) {
+          $dashLogo = asset('assets/front/img/user/' . $userBs->logo);
+      } elseif (file_exists(public_path('assets/front/img/logo.png'))) {
+          $dashLogo = asset('assets/front/img/logo.png');
+      }
+    @endphp
     <a href="{{ Route::has('front.index') ? route('front.index') : url('/') }}" class="logo" target="_blank">
-      <img
-        src="{{ !empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png') }}"
-        alt="Logo" class="navbar-brand">
+      @if ($dashLogo)
+        <img
+          src="{{ $dashLogo }}"
+          alt="Logo" class="navbar-brand">
+      @else
+        <span class="navbar-brand font-weight-bold text-white">{{ Auth::user()->shop_name ?? Auth::user()->username }}</span>
+      @endif
     </a>
     <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse"
       aria-expanded="false" aria-label="Toggle navigation">
@@ -149,8 +182,8 @@
   <!-- Navbar Header -->
   <nav class="navbar navbar-header navbar-expand-lg"
     @if (request()->cookie('user-theme') == 'dark') data-background-color="dark" @endif>
-    <div class="container-fluid">
-      <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+      <ul class="navbar-nav topbar-nav-left align-items-center">
         <li class="nav-item" id="limitDiv">
           <a class="btn btn-{{ $infoIcon == true ? 'danger' : 'primary' }} whitespace-nowrap btn-sm font-weight-bold"
             style="border-radius: 8px; padding: 6px 14px; box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);"
@@ -190,34 +223,20 @@
             <i class="fas fa-eye" style="font-size: 13px;"></i>
           </a>
         </li>
-        <li class="nav-item d-flex align-items-center">
-          <label class="switch mb-0">
-            <input type="checkbox" name="online_status" id="toggle-btn" data-toggle="toggle" data-on="1"
-              data-off="0" @if (Auth::user()->online_status == 1) checked @endif>
-            <span class="slider round"></span>
-          </label>
-          @if (Auth::user()->online_status == 1)
-            <h5 class="mb-0 ml-1 font-weight-bold d-none d-sm-inline-block @if (request()->cookie('user-theme') == 'dark') text-white @endif">
-              {{ __('Active') }}
-            </h5>
-          @else
-            <h5 class="mb-0 ml-1 font-weight-bold d-none d-sm-inline-block @if (request()->cookie('user-theme') == 'dark') text-white @endif">
-              {{ __('Deactive') }}
-            </h5>
-          @endif
-        </li>
+      </ul>
+      <ul class="navbar-nav topbar-nav-right ml-auto align-items-center">
         <li class="nav-item dropdown hidden-caret">
           <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
-            <div class="avatar-sm">
+            <div class="avatar-sm" style="width: 36px; height: 36px;">
               @if (Session::has('staff_id'))
                 <img src="{{ asset('assets/admin/img/propics/blank_user.jpg') }}" alt="..."
-                  class="avatar-img rounded-circle">
+                  class="avatar-img" style="border-radius: 6px; width: 100%; height: 100%; object-fit: cover;">
               @elseif (!empty(Auth::user()->photo))
                 <img src="{{ asset('assets/front/img/user/' . Auth::user()->photo) }}" alt="..."
-                  class="avatar-img rounded-circle">
+                  class="avatar-img" style="border-radius: 6px; width: 100%; height: 100%; object-fit: cover;">
               @else
                 <img src="{{ asset('assets/admin/img/propics/blank_user.jpg') }}" alt="..."
-                  class="avatar-img rounded-circle">
+                  class="avatar-img" style="border-radius: 6px; width: 100%; height: 100%; object-fit: cover;">
               @endif
             </div>
           </a>

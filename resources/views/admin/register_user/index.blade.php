@@ -214,7 +214,6 @@
                               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item" href="{{ route('register.user.view', $user->id) }}"><i class="fas fa-info-circle mr-2"></i>{{ __('Details') }}</a>
                                 <a class="dropdown-item" href="{{ route('register.user.changePass', $user->id) }}"><i class="fas fa-key mr-2"></i>{{ __('Change Password') }}</a>
-                                <button class="dropdown-item editbtn editBtn" data-toggle="modal" data-target="#mailModal" data-email="{{ $user->email }}"><i class="fas fa-envelope mr-2"></i>{{ __('Mail') }}</button>
                                 <form class="deleteform d-block" action="{{ route('register.user.delete') }}" method="post">
                                   @csrf
                                   <input type="hidden" name="user_id" value="{{ $user->id }}">

@@ -144,7 +144,13 @@ class GatewayController extends Controller
 
     public function razorpayUpdate(Request $request)
     {
-        $razorpay = PaymentGateway::find(9);
+        $razorpay = PaymentGateway::where('keyword', 'razorpay')->first() ?? PaymentGateway::find(9);
+        if (!$razorpay) {
+            $razorpay = new PaymentGateway();
+            $razorpay->name = 'Razorpay';
+            $razorpay->keyword = 'razorpay';
+            $razorpay->type = 'automatic';
+        }
         $razorpay->status = $request->status;
         $information = [];
         $information['key'] = $request->key;

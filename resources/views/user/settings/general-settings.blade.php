@@ -97,6 +97,32 @@
                   <div class="col-md-3">
                     <div class="form-group">
                       <div class="col-12 mb-2 pl-0">
+                        <label for="imageDarkLogo"><strong>{{ __('Dark Theme Logo') }} </strong></label>
+                      </div>
+                      <div class="col-md-12 showDarkLogo showImage-sm-2 mb-3 pl-0 pr-0">
+                        <img
+                          src="{{ !empty($data->dark_logo) ? asset('assets/front/img/user/' . $data->dark_logo) : asset('assets/admin/img/noimage.jpg') }}"
+                          alt="..." class="img-thumbnail" style="background: #1e293b;">
+                        @if (!empty($data->dark_logo))
+                          <x-remove-button url="{{ route('user.basic_settings.removeImage') }}" name="dark_logo"
+                            type="logo" />
+                        @endif
+                      </div>
+                      <div role="button" class="btn btn-primary btn-sm upload-btn" id="imageDarkLogo">
+                        {{ __('Choose Image') }}
+                        <input type="file" class="img-input" name="dark_logo">
+                      </div>
+                      <p class="text-warning">
+                        {{ __('Only JPG, JPEG, PNG, WEBP images are allowed') }}
+                      </p>
+                      @if ($errors->has('dark_logo'))
+                        <p id="errdark_logo" class="mb-0 text-danger em">{{ $errors->first('dark_logo') }}</p>
+                      @endif
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <div class="col-12 mb-2 pl-0">
                         <label for="image"><strong>{{ __('Preloader') }} </strong></label>
                       </div>
                       <div class="col-md-12 showImage3 showImage-sm-3 mb-3 pl-0 pr-0">
@@ -244,4 +270,16 @@
 @endsection
 @section('scripts')
   <script src="{{ asset('assets/user/js/image-text.js') }}"></script>
+  <script>
+    $(document).on('change', '#imageDarkLogo input', function (event) {
+      var file = event.target.files[0];
+      if (file) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          $('.showDarkLogo img').attr('src', e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
 @endsection

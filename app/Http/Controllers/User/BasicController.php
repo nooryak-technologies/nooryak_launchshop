@@ -145,6 +145,7 @@ class BasicController extends Controller
     public function updateInfo(Request $request)
     {
         $logo = $request->file('logo');
+        $dark_logo = $request->file('dark_logo');
         $favicon = $request->file('favicon');
         $preloader = $request->file('preloader');
         $webAppImage = $request->file('web_app_image');
@@ -156,6 +157,16 @@ class BasicController extends Controller
                 function ($attribute, $value, $fail) use ($logo, $allowedExts) {
                     if (!empty($logo)) {
                         $ext = strtolower($logo->getClientOriginalExtension());
+                        if (!in_array($ext, $allowedExts)) {
+                            return $fail(__("Only png, jpg, jpeg, webp image is allowed"));
+                        }
+                    }
+                },
+            ],
+            'dark_logo' => [
+                function ($attribute, $value, $fail) use ($dark_logo, $allowedExts) {
+                    if (!empty($dark_logo)) {
+                        $ext = strtolower($dark_logo->getClientOriginalExtension());
                         if (!in_array($ext, $allowedExts)) {
                             return $fail(__("Only png, jpg, jpeg, webp image is allowed"));
                         }
@@ -213,6 +224,12 @@ class BasicController extends Controller
         } else {
             $filename = $bss->logo;
         }
+        if ($request->hasFile('dark_logo')) {
+            @unlink($dir . $bss->dark_logo);
+            $dark_logo_filename = Uploader::upload_picture($dir, $dark_logo);
+        } else {
+            $dark_logo_filename = $bss->dark_logo ?? null;
+        }
         if ($request->hasFile('favicon')) {
             @unlink($dir . $bss->favicon);
             $favicon_name = Uploader::upload_picture($dir, $favicon);
@@ -237,6 +254,7 @@ class BasicController extends Controller
         BasicSetting::where('user_id', Auth::guard('web')->user()->id)->update([
             'base_currency_symbol_position' => $request->base_currency_symbol_position,
             'logo' => $filename,
+            'dark_logo' => $dark_logo_filename,
             'web_app_image' => $web_app_image_filename,
             'favicon' => $favicon_name,
             'preloader' => $preloader_filename,
@@ -269,6 +287,11 @@ class BasicController extends Controller
                 Auth::guard('web')->user()->update([
                     'photo' => null
                 ]);
+                break;
+
+            case 'dark_logo':
+                @unlink(public_path("assets/front/img/user/") . $data->dark_logo);
+                $data->dark_logo = null;
                 break;
 
             case 'preloader':
