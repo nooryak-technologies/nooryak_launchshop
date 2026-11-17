@@ -34,7 +34,7 @@
           }'>
               @if (count($sliders) > 0)
                 @foreach ($sliders->where('is_static', 0) as $slider)
-                  <div class="slider-item ratio">
+                  <div class="slider-item ratio radius-lg">
                     <img class="bg-img" src="{{ asset('assets/front/images/placeholder.png') }}"
                       data-src="{{ asset('assets/front/img/hero_slider/' . $slider->img) }}" alt="Banner">
                     <div class="d-flex align-items-center">
@@ -57,7 +57,7 @@
                   </div>
                 @endforeach
               @else
-                <div class="slider-item ratio">
+                <div class="slider-item ratio radius-lg">
                   <img class="lazyload bg-img blur-up" src="{{ asset('assets/user-front/images/electri/hero.jpg') }}"
                     alt="Banner">
                   <div class="d-flex align-items-center">
@@ -90,7 +90,7 @@
                   @for ($i = 0; $i < count($banners); $i++)
                     @if ($banners[$i]->position == 'top_right')
                       <div class="col-xl-12 col-lg-12 col-md-6">
-                        <div class="banner-sm mb-20 ratio ratio-21-9">
+                        <div class="banner-sm radius-lg mb-20 ratio ratio-21-9">
                           <img class="bg-img" src="{{ asset('assets/front/images/placeholder.png') }}"
                             data-src="{{ asset('assets/front/img/user/banners/' . $banners[$i]->banner_img) }}"
                             alt="Banner">
@@ -123,7 +123,7 @@
                   <div class="banner-slider-mobile" id="banner-slider-mobile-electronics">
                     @foreach ($topRightBanners as $banner)
                       <div class="px-2">
-                        <div class="banner-sm ratio ratio-21-9">
+                        <div class="banner-sm radius-lg ratio ratio-21-9">
                           <img class="bg-img" src="{{ asset('assets/front/images/placeholder.png') }}"
                             data-src="{{ asset('assets/front/img/user/banners/' . $banner->banner_img) }}"
                             alt="Banner">

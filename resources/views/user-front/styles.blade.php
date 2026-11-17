@@ -2892,12 +2892,42 @@ html[dir="rtl"] .header-middle .header-right {
 /* =========================================================
    MODERN VARIANT STYLES: COLOR SWATCHES & SIZE PILLS
    ========================================================= */
+
+/* Variant Containers: Force vertical stacking for variant groups (Size, Color, etc.) */
+#variantListULDetails,
+#variantListUL,
+.product-single-default .product-single-details .product-action .product-list-group,
+.product-action .product-list-group,
+.variant-groups-container {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  width: 100% !important;
+  gap: 16px !important;
+  margin: 0 0 20px 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+#variantListULDetails .list-item,
+#variantListUL .list-item,
+.product-single-default .product-single-details .product-action .product-list-group .list-item,
+.variant-group-row {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 0 6px 0 !important;
+}
+
+#variantListULDetails .variantUL,
+#variantListUL .variantUL,
+.product-single-default .product-single-details .product-action .product-list-group .list-item .variantUL,
 .variantUL {
   display: flex !important;
+  flex-direction: row !important;
   flex-wrap: wrap !important;
   align-items: center !important;
   gap: 10px !important;
-  margin: 0 0 16px 0 !important;
+  margin: 6px 0 0 0 !important;
   padding: 0 !important;
   list-style: none !important;
 }
@@ -2911,13 +2941,45 @@ html[dir="rtl"] .header-middle .header-right {
   list-style: none !important;
 }
 
-.custom-variant-radio {
+/* Hide native radio inputs completely */
+.custom-variant-radio,
+.custom-variant-radio input,
+input.custom-variant-radio {
+  display: none !important;
   position: absolute !important;
   opacity: 0 !important;
   width: 0 !important;
   height: 0 !important;
-  pointer-events: none !important;
   margin: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+/* Eliminate ANY theme radio circle pseudo-elements */
+.variantUL label::before,
+.variantUL label::after,
+.variantUL .form-radio-label::before,
+.variantUL .form-radio-label::after,
+.variant-item-wrap label::before,
+.variant-item-wrap label::after,
+.variant-pill-btn::before,
+.variant-pill-btn::after,
+.variant-color-swatch::before,
+.variant-color-swatch::after {
+  content: none !important;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  border: none !important;
+  background: none !important;
+}
+
+/* Reset default label indent */
+.variantUL label,
+.variantUL .form-radio-label,
+.variant-item-wrap label {
+  padding-inline-start: 0 !important;
+  -webkit-padding-start: 0 !important;
 }
 
 /* Hide legacy price indicators next to variant options */
@@ -2956,15 +3018,14 @@ html[dir="rtl"] .header-middle .header-right {
 }
 
 .variant-color-swatch:hover {
-  transform: scale(1.06) !important;
+  transform: scale(1.08) !important;
 }
 
-/* Selected Color Swatch (white gap + theme color ring) */
+/* Selected Color Swatch (white gap + theme color ring - exact match to Reference Image) */
 .custom-variant-radio:checked + .variant-color-swatch {
-  border-color: #ec4899 !important;
-  border-color: var(--color-primary, #ec4899) !important;
+  border-color: transparent !important;
   box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--color-primary, #ec4899) !important;
-  transform: scale(1.02) !important;
+  transform: scale(1.04) !important;
 }
 
 /* 2. PILL / BOX BUTTONS (Size, Pack, Age, etc.) */
@@ -2974,7 +3035,7 @@ html[dir="rtl"] .header-middle .header-right {
   justify-content: center !important;
   cursor: pointer !important;
   margin: 0 !important;
-  min-width: 68px !important;
+  min-width: 64px !important;
   padding: 8px 18px !important;
   border-radius: 8px !important;
   border: 1.5px solid #d1d5db !important;
@@ -2987,6 +3048,7 @@ html[dir="rtl"] .header-middle .header-right {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
   user-select: none !important;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+  box-sizing: border-box !important;
 }
 
 .variant-pill-btn:hover {
@@ -2995,7 +3057,7 @@ html[dir="rtl"] .header-middle .header-right {
   color: #111827 !important;
 }
 
-/* Selected Pill Button (Solid Pink/Primary background with crisp white text) */
+/* Selected Pill Button (Solid Theme/Pink background with crisp white text) */
 .custom-variant-radio:checked + .variant-pill-btn {
   background-color: var(--color-primary, #ec4899) !important;
   border-color: var(--color-primary, #ec4899) !important;
@@ -3006,6 +3068,89 @@ html[dir="rtl"] .header-middle .header-right {
 
 .custom-variant-radio:checked + .variant-pill-btn .variant-text {
   color: #ffffff !important;
+}
+
+/* =========================================================
+   GLOBAL IMAGE BORDER RADIUS (Sliders, Banners, Product Cards, Galleries)
+   ========================================================= */
+
+/* Hero Sliders & Banner Cards */
+.home-slider .slider-item,
+.animated-slider .slider-item,
+#home-slider-4 .slider-item,
+.home-slider .slider-item.ratio,
+.banner-sm,
+.banner-sm.ratio,
+.banner-sm-style-2,
+.banner-sm-style-3,
+.banner-sm-style-4 {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+
+.home-slider .slider-item img.bg-img,
+.animated-slider .slider-item img.bg-img,
+#home-slider-4 .slider-item img.bg-img,
+.banner-sm img.bg-img,
+.home-slider-4 .banner-sm img.bg-img {
+  border-radius: 16px !important;
+}
+
+/* Product Detail Main Gallery & Thumbnails */
+.product-single-gallery .product-single-slider,
+.product-single-gallery .product-single-slider2,
+.product-single-gallery .product-single-single-item,
+.product-single-gallery .product-zoom-figure,
+.product-single-gallery figure,
+.product-single-gallery .ratio {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+
+.product-single-gallery .product-zoom-img,
+.product-single-gallery .product-single-single-item img,
+.product-single-gallery figure img {
+  border-radius: 16px !important;
+  object-fit: cover !important;
+}
+
+.product-single-gallery .slider-thumbnails2 .thumbnail-img,
+.product-single-gallery .slider-thumbnails .thumbnail-img {
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  border: 1.5px solid #e5e7eb !important;
+}
+
+.product-single-gallery .slider-thumbnails2 .thumbnail-img.slick-current,
+.product-single-gallery .slider-thumbnails .thumbnail-img.slick-current {
+  border-color: var(--color-primary, #000) !important;
+}
+
+.product-single-gallery .slider-thumbnails2 .thumbnail-img img,
+.product-single-gallery .slider-thumbnails .thumbnail-img img {
+  border-radius: 8px !important;
+}
+
+/* Product Cards in Shop, Home, Related, Flash Sale */
+.product-default,
+.product-card,
+.product-item,
+.card-product {
+  border-radius: 14px !important;
+  overflow: hidden !important;
+}
+
+.product-default .product-img,
+.product-card .product-img,
+.product-item .product-img {
+  border-radius: 14px 14px 0 0 !important;
+  overflow: hidden !important;
+}
+
+.product-default .product-img img,
+.product-card .product-img img,
+.product-item .product-img img {
+  border-radius: 14px 14px 0 0 !important;
 }
 
 </style>

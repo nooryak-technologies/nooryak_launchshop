@@ -222,7 +222,7 @@
           @php
             $seen_qv_variations = [];
           @endphp
-          <ul class="product-list-group mb-20" id="variantListUL">
+          <div class="product-list-group mb-20 variant-groups-container" id="variantListUL" style="display: flex !important; flex-direction: column !important; gap: 18px !important; width: 100% !important;">
             @foreach ($product_variations as $product_variation)
               @php
                 $product_variation_content = App\Models\User\ProductVariationContent::where([
@@ -265,13 +265,13 @@
                       $displayHeading = __('Select') . ' ' . $displayHeading;
                   }
                 @endphp
-                <li class="list-item" data-variant_name="{{ $variantLabel }}">
+                <div class="list-item variant-group-row" data-variant_name="{{ $variantLabel }}" style="display: block !important; width: 100% !important;">
                   @if ($variantLabel !== '')
                     <h4 class="list-item-title color-primary mb-2" style="font-weight: 700; font-size: 15px; color: #1e293b;">
                       {{ $displayHeading }}:
                     </h4>
                   @endif
-                  <ul class="custom-radio variantUL d-flex flex-wrap align-items-center gap-2 mb-3" id="variantUL" style="padding-left:0; list-style:none;">
+                  <ul class="variantUL d-flex flex-wrap align-items-center gap-2 mb-2" id="variantUL" style="padding-left:0 !important; list-style:none !important; margin:0 !important;">
                     @foreach ($variant_content_options as $variant_content_option)
                       @php
                         $variant_option_contents = App\Models\User\ProductVariantOptionContent::where([
@@ -315,10 +315,10 @@
                       </li>
                     @endforeach
                   </ul>
-                </li>
+                </div>
               @endif
             @endforeach
-          </ul>
+          </div>
         @endif
         @if ($shop_settings->catalog_mode != 1)
           <input type="hidden" name="final-price" id="final-price" class="form-control final-price">
