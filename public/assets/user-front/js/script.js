@@ -224,13 +224,17 @@ document.addEventListener("DOMContentLoaded", () => {
         $(sliderId).slick({
             rtl: $('html').attr('dir') === 'rtl',
             autoplay: true,
-            speed: 300,
+            speed: 600,
             autoplaySpeed: 3000,
             slidesToShow: 1,
             slidesToScroll: 1,
             fade: true,
             dots: false,
             arrows: false,
+            swipeToSlide: true,
+            touchThreshold: 25,
+            touchMove: true,
+            cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)'
         })
 
         $(sliderId).on('init', function (e, slick) {
@@ -284,6 +288,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 slidesToShow: 5,
                 loop: true,
                 infinite: false,
+                swipeToSlide: true,
+                touchThreshold: 25,
+                touchMove: true,
+                cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)',
                 rtl: $('html').attr('dir') === 'rtl',
                 responsive: [{
                     breakpoint: 1200,
@@ -334,6 +342,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 slidesToShow: 5,
                 loop: true,
                 infinite: false,
+                swipeToSlide: true,
+                touchThreshold: 25,
+                touchMove: true,
+                cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)',
                 rtl: $('html').attr('dir') === 'rtl',
                 responsive: [{
                     breakpoint: 1200,
@@ -379,6 +391,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 arrows: false,
                 autoplay: false,
                 infinite: false,
+                swipeToSlide: true,
+                touchThreshold: 25,
+                touchMove: true,
+                cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)',
                 rtl: $('html').attr('dir') === 'rtl',
                 responsive: [{
                     breakpoint: 1200,
@@ -424,6 +440,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 autoplay: true,
                 autoplaySpeed: 4000,
                 infinite: false,
+                swipeToSlide: true,
+                touchThreshold: 25,
+                touchMove: true,
+                cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)',
                 rtl: $('html').attr('dir') === 'rtl',
                 responsive: [{
                     breakpoint: 1200,
@@ -464,6 +484,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 autoplay: true,
                 loop: true,
                 speed: 600,
+                swipeToSlide: true,
+                touchThreshold: 25,
+                touchMove: true,
+                cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)',
                 rtl: $('html').attr('dir') === 'rtl',
                 prevArrow: '<span class="btn-icon slider-btn slider-prev"><i class="fal fa-angle-left"></i></span>',
                 nextArrow: '<span class="btn-icon slider-btn slider-next"><i class="fal fa-angle-right"></i></span>',
@@ -718,6 +742,10 @@ document.addEventListener("DOMContentLoaded", () => {
                         autoplay: false,
                         slidesToShow: 5,
                         infinite: false,
+                        swipeToSlide: true,
+                        touchThreshold: 25,
+                        touchMove: true,
+                        cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)',
                         rtl: $('html').attr('dir') === 'rtl',
                         responsive: [{
                             breakpoint: 1200,
@@ -803,6 +831,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 draggable: true,
                 slidesToShow: 5,
                 infinite: false,
+                swipeToSlide: true,
+                touchThreshold: 25,
+                touchMove: true,
+                cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)', 
                 responsive: [{
                     breakpoint: 1400,
                     settings: {
@@ -921,6 +953,11 @@ document.addEventListener("DOMContentLoaded", () => {
         infinite: true,
         slidesToScroll: 1,
         dots: true,
+        speed: 600,
+        swipeToSlide: true,
+        touchThreshold: 25,
+        touchMove: true,
+        cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)',
         rtl: $('html').attr('dir') === 'rtl',
         responsive: [
             {
@@ -1260,6 +1297,10 @@ document.addEventListener("DOMContentLoaded", () => {
             loop: true,
             dots: false,
             speed: 600,
+            swipeToSlide: true,
+            touchThreshold: 25,
+            touchMove: true,
+            cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)',
             prevArrow: '<span class="btn-icon slider-btn slider-prev"><i class="fal fa-angle-left"></i></span>',
             nextArrow: '<span class="btn-icon slider-btn slider-next"><i class="fal fa-angle-right"></i></span>',
             appendArrows: appendArrowsClassName
@@ -1279,6 +1320,10 @@ document.addEventListener("DOMContentLoaded", () => {
             loop: true,
             dots: false,
             speed: 600,
+            swipeToSlide: true,
+            touchThreshold: 25,
+            touchMove: true,
+            cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)',
             prevArrow: '<span class="btn-icon slider-btn slider-prev"><i class="fal fa-angle-left"></i></span>',
             nextArrow: '<span class="btn-icon slider-btn slider-next"><i class="fal fa-angle-right"></i></span>',
             appendArrows: appendArrowsClassName

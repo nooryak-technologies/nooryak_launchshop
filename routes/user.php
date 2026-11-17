@@ -24,6 +24,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'userstatus', 'Demo',
     Route::get('/rtlcheck2/{langid}', 'User\LanguageController@rtlcheck2')->name('user.rtlcheck2');
 
     Route::get('/dashboard', 'User\UserController@index')->name('user-dashboard');
+    Route::post('/membership/upload-proof', 'User\UserController@uploadPaymentProof')->name('user.membership.upload-proof');
     Route::get('/profile', 'User\UserController@profile')->name('user-profile');
     Route::post('/profile', 'User\UserController@profileupdate')->name('user-profile-update')->middleware('limitCheck:items,update');
     Route::get('/logout', 'User\Auth\LoginController@logout')->name('user-logout');

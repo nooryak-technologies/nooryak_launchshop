@@ -225,7 +225,7 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col-md-4 text-center text-md-start mb-2 mb-md-0">
-          <span class="text-muted" style="font-size: 13px;">{!! replaceBaseUrl($copyright_text) !!}</span>
+          <span class="text-muted" style="font-size: 13px;">{!! replaceBaseUrl($copyright_text) !!} <span class="powered-by-link"> | Powered by <a href="https://launchshop.in/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; font-weight: 600;">launchshop.in</a> | <a href="javascript:void(0)" class="launchshop-disclaimer-trigger" style="color: inherit; text-decoration: underline; font-weight: 600;">Disclaimer</a></span></span>
         </div>
         <div class="col-md-4 text-center mb-2 mb-md-0">
           <ul class="copyright-links list-inline m-0 p-0" style="font-size: 13px;">

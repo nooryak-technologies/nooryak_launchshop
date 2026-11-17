@@ -134,7 +134,8 @@
   <div class="copy-right-area border-top">
     <div class="container">
       <div class="copy-right-content">
-        <span>{!! replaceBaseUrl(@$footer->copyright_text ?? null) ?: ('Copyright &copy; ' . date('Y') . ' ' . ($userBs->website_title ?? 'Metroshop') . '. All Rights Reserved.') !!} <span class="powered-by-link"> | Powered by <a href="https://launchshop.in/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; font-weight: 600;">Launchshop</a></span></span>
+        <span>{!! replaceBaseUrl(@$footer->copyright_text ?? null) ?: ('Copyright &copy; ' . date('Y') . ' ' . ($userBs->website_title ?? 'Metroshop') . '. All Rights Reserved.') !!}
+              <span class="powered-by-link"> | Powered by <a href="https://launchshop.in/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; font-weight: 600;">launchshop.in</a> | <a href="javascript:void(0)" class="launchshop-disclaimer-trigger" style="color: inherit; text-decoration: underline; font-weight: 600;">Disclaimer</a></span> </span>
       </div>
     </div>
   </div>

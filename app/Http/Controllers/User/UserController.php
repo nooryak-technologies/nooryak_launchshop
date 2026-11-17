@@ -651,4 +651,34 @@ class UserController extends Controller
             ]);
         }
     }
+
+    public function uploadPaymentProof(Request $request)
+    {
+        $request->validate([
+            'membership_id' => 'required',
+            'transaction_id' => 'nullable|string|max:100',
+            'receipt' => 'nullable|mimes:jpeg,jpg,png,webp,pdf|max:10240',
+        ]);
+
+        $membership = Membership::where('id', $request->membership_id)
+            ->where('user_id', Auth::guard('web')->user()->id)
+            ->firstOrFail();
+
+        if ($request->filled('transaction_id')) {
+            $membership->transaction_id = $request->transaction_id;
+        }
+
+        if ($request->hasFile('receipt')) {
+            $directory = public_path("assets/front/img/membership/receipt");
+            if (!empty($membership->receipt) && file_exists($directory . '/' . $membership->receipt)) {
+                @unlink($directory . '/' . $membership->receipt);
+            }
+            $membership->receipt = Uploader::upload_picture($directory, $request->file('receipt'));
+        }
+
+        $membership->save();
+
+        Session::flash('success', __('Payment proof and UTR details submitted successfully! Our team will verify and approve your account shortly.'));
+        return back();
+    }
 }

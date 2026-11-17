@@ -18,12 +18,10 @@ class UserStatus
      */
     public function handle($request, Closure $next)
     {
-        if (Session::get('secrect_login') != true) {
-            if (Auth::user()->status != 1) {
-                Auth::guard('web')->logout();
-                Session::flash('error', 'Your account has been banned!');
-                return redirect(Route::has('front.index') ? route('front.index') : url('/'));
-            }
+        if (Auth::check() && Auth::user()->status != 1) {
+            Auth::guard('web')->logout();
+            Session::forget('secrect_login');
+            abort(404);
         }
         return $next($request);
     }

@@ -24,7 +24,10 @@ class UserVisibilityCheck
             if (!$user) {
                 abort(404);
             }
-            if ($user->status == 0 && $user->online_status != 1 && $user->preview_template != 1) {
+            if ($user->status != 1) {
+                abort(404);
+            }
+            if ($user->online_status != 1 && $user->preview_template != 1) {
                 if (!Auth::check() || Auth::user()->id != $user->id) {
                     abort(404);
                 }
@@ -35,6 +38,11 @@ class UserVisibilityCheck
 
         $user = getUser();
         if (empty($user) || !is_object($user) || !isset($user->id)) {
+            abort(404);
+        }
+
+        // If user account is deactivated/banned by admin, abort 404
+        if ($user->status != 1) {
             abort(404);
         }
 

@@ -36,6 +36,7 @@
         <div class="main-panel">
             <div class="content">
                 <div class="page-inner">
+                    @includeIf('user.partials.pending-payment-banner')
                     @yield('content')
                 </div>
             </div>

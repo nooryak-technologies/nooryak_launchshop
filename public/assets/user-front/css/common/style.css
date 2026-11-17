@@ -7635,3 +7635,35 @@ html[dir="rtl"] #product-details-slider .slick-track {
         padding-top: 15px !important;
     }
 }
+/* ========================================================
+   Smooth Manual & Automatic Scrolling for All Theme Sliders
+   ======================================================== */
+.slick-slider {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    user-select: none;
+}
+
+.slick-list {
+    touch-action: pan-y pinch-zoom;
+    -webkit-overflow-scrolling: touch;
+}
+
+.slick-track {
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    perspective: 1000;
+}
+
+.slick-slide {
+    outline: none !important;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.slick-slide img {
+    -webkit-user-drag: none;
+    user-drag: none;
+}

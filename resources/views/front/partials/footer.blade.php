@@ -48,22 +48,53 @@
             <ul class="info-list">
               <li>
                 <i class="fal fa-map-marker-alt"></i>
-                <span>{{ $be->contact_addresses }}</span>
+                <span>{{ !empty($be->contact_addresses) && stripos($be->contact_addresses, 'triplicane') === false ? $be->contact_addresses : 'Shafi Tower, Floor 1, Door, Khana Bagh Street, Police Quarters Lane, Chennai, Tamil Nadu 600001' }}</span>
               </li>
 
               @php
-                $numbers = explode(',', str_replace('6374913298', '72007 70351', $be->contact_numbers ?? '72007 70351'));
+                $rawNumbers = !empty($be->contact_numbers) ? explode(',', $be->contact_numbers) : ['72007 70351', '63749 13298'];
+                $numbers = [];
+                foreach ($rawNumbers as $n) {
+                    $cleaned = trim($n);
+                    if (!empty($cleaned) && !in_array($cleaned, $numbers)) {
+                        $numbers[] = $cleaned;
+                    }
+                }
+                if (!in_array('72007 70351', $numbers) && !in_array('7200770351', $numbers)) {
+                    array_unshift($numbers, '72007 70351');
+                }
+                if (!in_array('63749 13298', $numbers) && !in_array('6374913298', $numbers)) {
+                    $numbers[] = '63749 13298';
+                }
+
+                $rawMails = !empty($be->contact_mails) ? explode(',', $be->contact_mails) : ['contact@launchshop.in', 'support@launchshop.in'];
+                $emails = [];
+                foreach ($rawMails as $m) {
+                    $cleanedM = trim($m);
+                    if (!empty($cleanedM) && !in_array($cleanedM, $emails) && $cleanedM != 'suppot@launchshop.in') {
+                        $emails[] = $cleanedM;
+                    }
+                }
+                if (!in_array('contact@launchshop.in', $emails)) {
+                    array_unshift($emails, 'contact@launchshop.in');
+                }
+                if (!in_array('support@launchshop.in', $emails)) {
+                    $emails[] = 'support@launchshop.in';
+                }
               @endphp
               <li>
                 <i class="fal fa-phone" style="transform: scaleX(-1); display: inline-block;"></i>
                 {!! implode(
                     '<br>',
-                    array_map(fn($num) => '<a href="tel:' . trim($num) . '" class="me-1">' . trim($num) . '</a>', $numbers),
+                    array_map(fn($num) => '<a href="tel:' . str_replace(' ', '', trim($num)) . '" class="me-1">' . trim($num) . '</a>', $numbers),
                 ) !!}
               </li>
               <li>
                 <i class="fal fa-envelope"></i>
-                <a href="mailto:{{ $be->contact_mails }}">{{ $be->contact_mails }}</a>
+                {!! implode(
+                    '<br>',
+                    array_map(fn($mail) => '<a href="mailto:' . trim($mail) . '" class="me-1">' . trim($mail) . '</a>', $emails),
+                ) !!}
               </li>
 
             </ul>

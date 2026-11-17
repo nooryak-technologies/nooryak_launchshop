@@ -217,10 +217,50 @@
   <div class="cart-dropdown" id="cart-dropdown-mobile"></div>
   <div class="cart-sidebar-overlay"></div>
 
+  <!-- Platform Disclaimer Modal -->
+  <div class="modal fade" id="launchshopDisclaimerModal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 999999;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 520px;">
+      <div class="modal-content shadow-lg" style="border-radius: 14px; border: none; overflow: hidden;">
+        <div class="modal-header py-3 px-4" style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between;">
+          <h5 class="modal-title font-weight-bold d-flex align-items-center mb-0" style="font-size: 15px; color: #1e293b;">
+            <i class="fas fa-shield-alt text-primary mr-2" style="font-size: 16px;"></i> {{ __('Platform Disclaimer') }}
+          </h5>
+          <button type="button" class="close text-secondary" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close" style="font-size: 20px; outline: none; border: none; background: transparent; cursor: pointer;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body p-4" style="font-size: 13.5px; line-height: 1.65; color: #475569; background: #ffffff;">
+          <p class="mb-0">
+            launchshop.in, a brand of Nooryak Technologies, is not liable for the sale of products or materials. We provide complete DIY platform which is used to connect Merchant &amp; buyers, but any transactions or purchases made through our platform are the sole responsibility of the respective sellers and buyers. Please exercise caution and conduct due when engaging in any transactions on our website.
+          </p>
+        </div>
+        <div class="modal-footer py-2 px-4" style="background: #f8fafc; border-top: 1px solid #e2e8f0;">
+          <button type="button" class="btn btn-sm btn-secondary px-3" data-dismiss="modal" data-bs-dismiss="modal" style="border-radius: 6px;">{{ __('Close') }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   @includeif('user-front.scripts')
   @yield('scripts')
   @includeIf('user-front.partials.plugins')
   @includeIf('user-front.partials.pwa-banner')
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.jQuery) {
+        var $ = window.jQuery;
+        $(document).on('click', '.launchshop-disclaimer-trigger', function (e) {
+          e.preventDefault();
+          if (typeof $('#launchshopDisclaimerModal').modal === 'function') {
+            $('#launchshopDisclaimerModal').modal('show');
+          } else {
+            alert("launchshop.in, a brand of Nooryak Technologies, is not liable for the sale of products or materials. We provide complete DIY platform which is used to connect Merchant & buyers, but any transactions or purchases made through our platform are the sole responsibility of the respective sellers and buyers. Please exercise caution and conduct due when engaging in any transactions on our website.");
+          }
+        });
+      }
+    });
+  </script>
 </body>
 
 </html>
