@@ -2395,14 +2395,15 @@ input[type="radio"]:checked+.form-check-label::after {
 
 .mobile-menu:not(.mobile-menu-v10) .header-search-form .search-input input {
     padding: 10px 15px;
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-    caret-color: #ffffff !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    caret-color: #0f172a !important;
     background: transparent !important;
 }
 
 .mobile-menu:not(.mobile-menu-v10) .header-search-form .search-input input::placeholder {
-    color: rgba(255, 255, 255, 0.65) !important;
+    color: #64748b !important;
+    -webkit-text-fill-color: #64748b !important;
     opacity: 1 !important;
 }
 
@@ -2410,13 +2411,13 @@ input[type="radio"]:checked+.form-check-label::after {
 .mobile-menu:not(.mobile-menu-v10) .header-search-form .btn-icon,
 .mobile-menu:not(.mobile-menu-v10) .header-search-form button {
     right: 10px;
-    color: #ffffff !important;
+    color: #475569 !important;
 }
 
 .mobile-menu:not(.mobile-menu-v10) .header-search-form .btn i,
 .mobile-menu:not(.mobile-menu-v10) .header-search-form .btn-icon i,
 .mobile-menu:not(.mobile-menu-v10) .header-search-form button i {
-    color: #ffffff !important;
+    color: #475569 !important;
 }
 
 .mobile-menu ul li {

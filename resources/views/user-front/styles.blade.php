@@ -2755,9 +2755,11 @@ html[dir="rtl"] .mobile-menu .mobile-menu-top .logo img {
     box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb, 37, 99, 235), 0.12) !important;
 }
 
-.mobile-menu .header-search-form .search-input input,
-.mobile-menu .header-search-form input[type="text"],
-.mobile-menu .header-search-form input[type="search"] {
+body .mobile-menu .header-search-form .search-input input,
+body .mobile-menu:not(.mobile-menu-v10) .header-search-form .search-input input,
+body .mobile-menu .header-search-form input[type="text"],
+body .mobile-menu .header-search-form input[type="search"],
+body .mobile-menu .mobile-search input {
     color: #0f172a !important;
     -webkit-text-fill-color: #0f172a !important;
     caret-color: var(--color-primary, #2563eb) !important;
@@ -2769,15 +2771,21 @@ html[dir="rtl"] .mobile-menu .mobile-menu-top .logo img {
     width: 100% !important;
 }
 
-.mobile-menu .header-search-form .search-input input::placeholder,
-.mobile-menu .header-search-form input::placeholder {
+body .mobile-menu .header-search-form .search-input input::placeholder,
+body .mobile-menu:not(.mobile-menu-v10) .header-search-form .search-input input::placeholder,
+body .mobile-menu .header-search-form input::placeholder,
+body .mobile-menu .mobile-search input::placeholder {
     color: #64748b !important;
+    -webkit-text-fill-color: #64748b !important;
     opacity: 1 !important;
 }
 
-.mobile-menu .header-search-form .btn,
-.mobile-menu .header-search-form .btn-icon,
-.mobile-menu .header-search-form button {
+body .mobile-menu .header-search-form .btn,
+body .mobile-menu:not(.mobile-menu-v10) .header-search-form .btn,
+body .mobile-menu .header-search-form .btn-icon,
+body .mobile-menu:not(.mobile-menu-v10) .header-search-form .btn-icon,
+body .mobile-menu .header-search-form button,
+body .mobile-menu:not(.mobile-menu-v10) .header-search-form button {
     background: transparent !important;
     border: none !important;
     color: #475569 !important;
@@ -2791,9 +2799,12 @@ html[dir="rtl"] .mobile-menu .mobile-menu-top .logo img {
     flex-shrink: 0 !important;
 }
 
-.mobile-menu .header-search-form .btn i,
-.mobile-menu .header-search-form .btn-icon i,
-.mobile-menu .header-search-form button i {
+body .mobile-menu .header-search-form .btn i,
+body .mobile-menu:not(.mobile-menu-v10) .header-search-form .btn i,
+body .mobile-menu .header-search-form .btn-icon i,
+body .mobile-menu:not(.mobile-menu-v10) .header-search-form .btn-icon i,
+body .mobile-menu .header-search-form button i,
+body .mobile-menu:not(.mobile-menu-v10) .header-search-form button i {
     color: #475569 !important;
     font-size: 15px !important;
 }
