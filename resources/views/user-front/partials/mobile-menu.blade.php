@@ -3,7 +3,7 @@
     <li class="menu-action-item">
       @if ($userCurrentLang->id)
         <a href="javascript:void(0)">
-          <span class="icon"><i class="fal fa-globe"></span></i>{{ convertUtf8($userCurrentLang->name) }}
+          <span class="icon"><i class="fal fa-globe"></i></span>{{ convertUtf8($userCurrentLang->name) }}
           <span class="plus-icon"><i class="fal fa-plus"></i></span>
         </a>
       @endif

@@ -168,9 +168,38 @@
               </div>
 
               <div class="col-lg-10 mx-auto">
-                <h3 class="text-warning">{{ __('PWA Mobile App / Install App Logo') }}</h3>
+                <h3 class="text-warning">{{ __('Mobile Sidebar & PWA App Logos') }}</h3>
                 <hr class="divider">
                 <div class="row">
+                  <div class="col-md-5">
+                    <div class="form-group">
+                      <div class="mb-2">
+                        <label for="mobileLogoInput"><strong>{{ __('Mobile Sidebar Logo') }}</strong></label>
+                      </div>
+                      <div class="showMobileLogo showImage-sm mb-3">
+                        <img
+                          src="{{ !empty($data->mobile_logo) ? asset('assets/front/img/user/' . $data->mobile_logo) : (!empty($data->logo) ? asset('assets/front/img/user/' . $data->logo) : asset('assets/admin/img/noimage.jpg')) }}"
+                          alt="..." class="img-thumbnail" style="max-height: 120px; object-fit: contain; background: #f4f6f9; padding: 10px;">
+                        @if (!empty($data->mobile_logo))
+                          <x-remove-button url="{{ route('user.basic_settings.removeImage') }}" name="mobile_logo"
+                            type="logo" />
+                        @endif
+                      </div>
+                      <div role="button" class="btn btn-primary btn-sm upload-btn" id="imageMobileLogo">
+                        {{ __('Choose Mobile Sidebar Logo') }}
+                        <input type="file" class="img-input" name="mobile_logo" id="mobileLogoInput">
+                      </div>
+                      <p class="text-muted mb-1 mt-2" style="font-size:12px;">
+                        {{ __('Displayed at the top of the mobile navigation sidebar.') }}
+                      </p>
+                      <p class="text-info mb-0" style="font-size:12px;">
+                        {{ __('Supports JPG, JPEG, PNG, WEBP. Falls back to your main Logo if left empty.') }}
+                      </p>
+                      @if ($errors->has('mobile_logo'))
+                        <p id="errmobile_logo" class="mb-0 text-danger em">{{ $errors->first('mobile_logo') }}</p>
+                      @endif
+                    </div>
+                  </div>
                   <div class="col-md-5">
                     <div class="form-group">
                       <div class="mb-2">
@@ -277,6 +306,16 @@
         var reader = new FileReader();
         reader.onload = function (e) {
           $('.showDarkLogo img').attr('src', e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+    $(document).on('change', '#imageMobileLogo input', function (event) {
+      var file = event.target.files[0];
+      if (file) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          $('.showMobileLogo img').attr('src', e.target.result);
         };
         reader.readAsDataURL(file);
       }

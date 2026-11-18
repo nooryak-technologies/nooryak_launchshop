@@ -6,7 +6,7 @@
       <div class="logo">
         <a href="{{ route('front.user.detail.view', getParam()) }}" class="logo">
           <img
-            src="{{ !empty(@$userBs->logo) ? asset('assets/front/img/user/' . @$userBs->logo) : asset('assets/front/img/logo.png') }}"
+            src="{{ !empty(@$userBs->mobile_logo) ? asset('assets/front/img/user/' . @$userBs->mobile_logo) : (!empty(@$userBs->logo) ? asset('assets/front/img/user/' . @$userBs->logo) : asset('assets/front/img/logo.png')) }}"
             alt="logo">
         </a>
       </div>

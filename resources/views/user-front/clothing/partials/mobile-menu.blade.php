@@ -6,7 +6,7 @@
       <div class="logo">
         <a href="{{ route('front.user.detail.view', getParam()) }}">
           <img
-            src="{{ !empty(@$userBs->logo) ? asset('assets/front/img/user/' . @$userBs->logo) : asset('assets/front/img/logo.png') }}"
+            src="{{ !empty(@$userBs->mobile_logo) ? asset('assets/front/img/user/' . @$userBs->mobile_logo) : (!empty(@$userBs->logo) ? asset('assets/front/img/user/' . @$userBs->logo) : asset('assets/front/img/logo.png')) }}"
             alt="logo">
         </a>
       </div>
@@ -14,12 +14,13 @@
     </div>
 
     <!-- mobile search -->
-    <div class="header-search mobile-search" style="padding:16px;">
-      <form action="{{ route('front.user.shop', getParam()) }}" autocomplete="off"
-        style="display:flex;border:1px solid rgba(255,255,255,0.15);">
-        <input type="text" style="flex:1;background:rgba(255,255,255,0.07);border:none;padding:10px 14px;color:#fff;font-size:13px;"
-          placeholder="{{ $keywords['Search...'] ?? __('Search...') }}" name="keyword">
-        <button type="submit" style="background:rgba(255,255,255,0.1);border:none;padding:0 14px;color:rgba(255,255,255,0.7);cursor:pointer;">
+    <div class="header-search mobile-search">
+      <form action="{{ route('front.user.shop', getParam()) }}" class="header-search-form rounded-pill" autocomplete="off">
+        <div class="search-input">
+          <input type="text" class="form-control" value=""
+            placeholder="{{ $keywords['Search...'] ?? __('Search...') }}" name="keyword">
+        </div>
+        <button class="btn btn-icon btn-icon-2" type="submit">
           <i class="fal fa-search"></i>
         </button>
       </form>

@@ -270,7 +270,9 @@
     <div class="mobile-menu-top">
       <div class="logo">
         <a href="{{ route('front.user.detail.view', getParam()) }}" class="logo">
-          @if(!empty(@$userBs->logo))
+          @if(!empty(@$userBs->mobile_logo))
+            <img src="{{ asset('assets/front/img/user/' . $userBs->mobile_logo) }}" alt="logo">
+          @elseif(!empty(@$userBs->logo))
             <img src="{{ asset('assets/front/img/user/' . $userBs->logo) }}" alt="logo">
           @else
             <span>Easen</span>

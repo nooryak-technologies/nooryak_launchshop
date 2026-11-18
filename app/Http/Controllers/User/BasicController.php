@@ -146,6 +146,7 @@ class BasicController extends Controller
     {
         $logo = $request->file('logo');
         $dark_logo = $request->file('dark_logo');
+        $mobile_logo = $request->file('mobile_logo');
         $favicon = $request->file('favicon');
         $preloader = $request->file('preloader');
         $webAppImage = $request->file('web_app_image');
@@ -167,6 +168,16 @@ class BasicController extends Controller
                 function ($attribute, $value, $fail) use ($dark_logo, $allowedExts) {
                     if (!empty($dark_logo)) {
                         $ext = strtolower($dark_logo->getClientOriginalExtension());
+                        if (!in_array($ext, $allowedExts)) {
+                            return $fail(__("Only png, jpg, jpeg, webp image is allowed"));
+                        }
+                    }
+                },
+            ],
+            'mobile_logo' => [
+                function ($attribute, $value, $fail) use ($mobile_logo, $allowedExts) {
+                    if (!empty($mobile_logo)) {
+                        $ext = strtolower($mobile_logo->getClientOriginalExtension());
                         if (!in_array($ext, $allowedExts)) {
                             return $fail(__("Only png, jpg, jpeg, webp image is allowed"));
                         }
@@ -230,6 +241,12 @@ class BasicController extends Controller
         } else {
             $dark_logo_filename = $bss->dark_logo ?? null;
         }
+        if ($request->hasFile('mobile_logo')) {
+            @unlink($dir . ($bss->mobile_logo ?? ''));
+            $mobile_logo_filename = Uploader::upload_picture($dir, $mobile_logo);
+        } else {
+            $mobile_logo_filename = $bss->mobile_logo ?? null;
+        }
         if ($request->hasFile('favicon')) {
             @unlink($dir . $bss->favicon);
             $favicon_name = Uploader::upload_picture($dir, $favicon);
@@ -251,7 +268,7 @@ class BasicController extends Controller
             $web_app_image_filename = $bss->web_app_image;
         }
 
-        BasicSetting::where('user_id', Auth::guard('web')->user()->id)->update([
+        $updateData = [
             'base_currency_symbol_position' => $request->base_currency_symbol_position,
             'logo' => $filename,
             'dark_logo' => $dark_logo_filename,
@@ -261,7 +278,12 @@ class BasicController extends Controller
             'preloader_status' => $request->preloader_status,
             'base_color' => $request->base_color,
             'timezone' => $request->timezone
-        ]);
+        ];
+        if (\Illuminate\Support\Facades\Schema::hasColumn('user_basic_settings', 'mobile_logo')) {
+            $updateData['mobile_logo'] = $mobile_logo_filename;
+        }
+
+        BasicSetting::where('user_id', Auth::guard('web')->user()->id)->update($updateData);
         Session::flash('success', __('Updated Successfully'));
         return 'success';
     }
@@ -286,6 +308,13 @@ class BasicController extends Controller
             case 'dark_logo':
                 @unlink(public_path("assets/front/img/user/") . $data->dark_logo);
                 $data->dark_logo = null;
+                break;
+
+            case 'mobile_logo':
+                @unlink(public_path("assets/front/img/user/") . ($data->mobile_logo ?? ''));
+                if (\Illuminate\Support\Facades\Schema::hasColumn('user_basic_settings', 'mobile_logo')) {
+                    $data->mobile_logo = null;
+                }
                 break;
 
             case 'preloader':
