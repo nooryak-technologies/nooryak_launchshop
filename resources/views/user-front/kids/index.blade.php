@@ -107,7 +107,7 @@
               </h5>
             @else
               <div class="position-relative">
-                <div class="category-slider" id="cat-slider-kid" data-slick='{"arrows": true, "autoplay": false, "infinite": true, "slidesToShow": 5, "slidesToScroll": 1, "swipeToSlide": true, "touchMove": true, "draggable": true, "touchThreshold": 20, "waitForAnimate": false, "speed": 550, "cssEase": "cubic-bezier(0.16, 1, 0.3, 1)", "responsive": [{"breakpoint": 1200, "settings": {"slidesToShow": 4, "infinite": true, "swipeToSlide": true}}, {"breakpoint": 992, "settings": {"slidesToShow": 3, "infinite": true, "swipeToSlide": true}}, {"breakpoint": 768, "settings": {"slidesToShow": 2, "infinite": true, "swipeToSlide": true}}, {"breakpoint": 576, "settings": {"slidesToShow": 2, "infinite": true, "swipeToSlide": true}}]}'>
+                <div class="category-slider" id="cat-slider-kid" data-slick='{"arrows": true, "autoplay": false, "infinite": true, "slidesToShow": 5, "slidesToScroll": 1, "swipeToSlide": false, "touchMove": true, "draggable": true, "touchThreshold": 10, "waitForAnimate": true, "speed": 800, "cssEase": "cubic-bezier(0.25, 1, 0.5, 1)", "responsive": [{"breakpoint": 1200, "settings": {"slidesToShow": 4, "infinite": true}}, {"breakpoint": 992, "settings": {"slidesToShow": 3, "infinite": true}}, {"breakpoint": 768, "settings": {"slidesToShow": 2, "infinite": true}}, {"breakpoint": 576, "settings": {"slidesToShow": 2, "infinite": true}}]}'>
                   @foreach ($item_categories as $category)
                     <div class="category-item color-1">
                       <div class="category-icon mb-20">

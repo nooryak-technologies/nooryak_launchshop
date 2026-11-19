@@ -540,18 +540,18 @@
         dots: false,
         arrows: false,
         autoplay: true,
-        autoplaySpeed: 3500,
-        speed: 700,
+        autoplaySpeed: 4000,
+        speed: 850,
         slidesToShow: 1,
         slidesToScroll: 1,
-        swipeToSlide: true,
-        touchThreshold: 20,
+        swipeToSlide: false,
+        touchThreshold: 10,
         touchMove: true,
         draggable: true,
-        waitForAnimate: false,
+        waitForAnimate: true,
         useTransform: true,
         useCSS: true,
-        cssEase: 'cubic-bezier(0.16, 1, 0.3, 1)',
+        cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)',
         infinite: true,
         rtl: $('html').attr('dir') === 'rtl'
       });
@@ -573,14 +573,14 @@
         } catch(e) {}
 
         $(sliderId).slick({
-          speed: 550,
-          waitForAnimate: false,
-          touchThreshold: 20,
-          swipeToSlide: true,
+          speed: 800,
+          waitForAnimate: true,
+          touchThreshold: 10,
+          swipeToSlide: false,
           touchMove: true,
           useTransform: true,
           useCSS: true,
-          cssEase: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)',
           arrows: true,
           dots: false,
           autoplay: false,
@@ -593,7 +593,6 @@
               settings: {
                 slidesToShow: desktopSlides >= 4 ? 4 : desktopSlides,
                 slidesToScroll: 1,
-                swipeToSlide: true,
                 infinite: true
               }
             },
@@ -602,7 +601,6 @@
               settings: {
                 slidesToShow: desktopSlides >= 3 ? 3 : 2,
                 slidesToScroll: 1,
-                swipeToSlide: true,
                 infinite: true
               }
             },
@@ -611,7 +609,6 @@
               settings: {
                 slidesToShow: 2,
                 slidesToScroll: 1,
-                swipeToSlide: true,
                 infinite: true
               }
             },
@@ -620,7 +617,6 @@
               settings: {
                 slidesToShow: 2,
                 slidesToScroll: 1,
-                swipeToSlide: true,
                 infinite: true
               }
             },
@@ -629,7 +625,6 @@
               settings: {
                 slidesToShow: 2,
                 slidesToScroll: 1,
-                swipeToSlide: true,
                 infinite: true
               }
             }
