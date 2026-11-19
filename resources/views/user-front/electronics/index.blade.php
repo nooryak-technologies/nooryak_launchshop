@@ -236,14 +236,14 @@
             @else
               {{-- Slick slider: links straight to shop filtered by category --}}
               <div class="category-slider mx-auto" id="cat-slider-electronics" style="width: 100%;"
-                data-slick='{"dots": false, "arrows": true, "autoplay": true, "autoplaySpeed": 3000, "slidesToShow": 7, "slidesToScroll": 1,
+                data-slick='{"dots": false, "arrows": true, "autoplay": true, "autoplaySpeed": 3500, "pauseOnHover": true, "pauseOnFocus": true, "swipeToSlide": true, "waitForAnimate": false, "touchThreshold": 15, "speed": 380, "cssEase": "cubic-bezier(0.22, 1, 0.36, 1)", "slidesToShow": 7, "slidesToScroll": 1,
                   "responsive": [
-                    {"breakpoint": 1400, "settings": {"slidesToShow": 7}},
-                    {"breakpoint": 1200, "settings": {"slidesToShow": 6}},
-                    {"breakpoint": 992,  "settings": {"slidesToShow": 5}},
-                    {"breakpoint": 768,  "settings": {"slidesToShow": 4}},
-                    {"breakpoint": 576,  "settings": {"slidesToShow": 3}},
-                    {"breakpoint": 480,  "settings": {"slidesToShow": 2}}
+                    {"breakpoint": 1400, "settings": {"slidesToShow": 7, "swipeToSlide": true}},
+                    {"breakpoint": 1200, "settings": {"slidesToShow": 6, "swipeToSlide": true}},
+                    {"breakpoint": 992,  "settings": {"slidesToShow": 5, "swipeToSlide": true}},
+                    {"breakpoint": 768,  "settings": {"slidesToShow": 4, "swipeToSlide": true}},
+                    {"breakpoint": 576,  "settings": {"slidesToShow": 3, "swipeToSlide": true}},
+                    {"breakpoint": 480,  "settings": {"slidesToShow": 2, "swipeToSlide": true}}
                   ]
                 }'>
                 @foreach ($item_categories as $cat)
@@ -575,7 +575,14 @@
         } catch(e) {}
 
         $(sliderId).slick({
-          speed: 600,
+          speed: 380,
+          waitForAnimate: false,
+          touchThreshold: 15,
+          swipeToSlide: true,
+          touchMove: true,
+          useTransform: true,
+          useCSS: true,
+          cssEase: 'cubic-bezier(0.22, 1, 0.36, 1)',
           arrows: true,
           dots: false,
           autoplay: false,

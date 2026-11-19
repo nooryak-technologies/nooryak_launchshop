@@ -71,7 +71,7 @@
                   <div class="col-md-3">
                     <div class="form-group">
                       <div class="col-12 mb-2 pl-0">
-                        <label for="image"><strong>{{ __('Logo') }} </strong></label>
+                        <label for="image"><strong>{{ __('Website Logo') }} </strong></label>
                       </div>
                       <div class="col-md-12 showImage showImage-sm-2 mb-3 pl-0 pr-0">
                         <img
@@ -97,7 +97,7 @@
                   <div class="col-md-3">
                     <div class="form-group">
                       <div class="col-12 mb-2 pl-0">
-                        <label for="imageDarkLogo"><strong>{{ __('Dark Theme Logo') }} </strong></label>
+                        <label for="imageDarkLogo"><strong>{{ __('Dashboard Logo') }} </strong></label>
                       </div>
                       <div class="col-md-12 showDarkLogo showImage-sm-2 mb-3 pl-0 pr-0">
                         <img

@@ -1180,6 +1180,10 @@ class RegisterUserController extends Controller
     public function delete(Request $request)
     {
         $user = User::findOrFail($request->user_id);
+        if ($user->preview_template == 1) {
+            Session::flash('warning', __('Demo theme template stores are protected and cannot be deleted.'));
+            return back();
+        }
         $banners = Banner::where('user_id', $user->id)->get();
         foreach ($banners as $banner) {
             @unlink(public_path('assets/front/img/user/banners/') . $banner->banner_img);
@@ -1513,6 +1517,9 @@ class RegisterUserController extends Controller
 
         foreach ($ids as $id) {
             $user = User::findOrFail($id);
+            if ($user->preview_template == 1) {
+                continue; // Protect demo theme template stores
+            }
 
             $banners = Banner::where('user_id', $id)->get();
             foreach ($banners as $banner) {

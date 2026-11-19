@@ -113,7 +113,13 @@
                         @endphp
                         <tr>
                           <td>
-                            <input type="checkbox" class="bulk-check" data-val="{{ $user->id }}">
+                            @if ($user->preview_template != 1)
+                              <input type="checkbox" class="bulk-check" data-val="{{ $user->id }}">
+                            @else
+                              <span class="badge badge-light text-muted px-2 py-1" style="font-size: 0.72rem; border-radius: 4px;" title="{{ __('Demo Theme Store (Protected)') }}">
+                                <i class="fas fa-shield-alt text-success mr-1"></i>Demo
+                              </span>
+                            @endif
                           </td>
                           <td>
                             <div class="d-flex align-items-center">
@@ -217,13 +223,15 @@
                               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item" href="{{ route('register.user.view', $user->id) }}"><i class="fas fa-info-circle mr-2"></i>{{ __('Details') }}</a>
                                 <a class="dropdown-item" href="{{ route('register.user.changePass', $user->id) }}"><i class="fas fa-key mr-2"></i>{{ __('Change Password') }}</a>
-                                <form class="deleteform d-block" action="{{ route('register.user.delete') }}" method="post">
-                                  @csrf
-                                  <input type="hidden" name="user_id" value="{{ $user->id }}">
-                                  <button type="submit" class="dropdown-item text-danger">
-                                    <i class="fas fa-trash mr-2"></i>{{ __('Delete') }}
-                                  </button>
-                                </form>
+                                @if ($user->preview_template != 1)
+                                  <form class="deleteform d-block" action="{{ route('register.user.delete') }}" method="post">
+                                    @csrf
+                                    <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                    <button type="submit" class="dropdown-item text-danger">
+                                      <i class="fas fa-trash mr-2"></i>{{ __('Delete') }}
+                                    </button>
+                                  </form>
+                                @endif
                                 <a target="_blank" class="dropdown-item" href="{{ route('register.user.secret_login', $user->id) }}"><i class="fas fa-sign-in-alt mr-2"></i>{{ __('Secret Login') }}</a>
                               </div>
                             </div>

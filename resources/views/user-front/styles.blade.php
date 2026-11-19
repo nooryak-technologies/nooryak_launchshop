@@ -2363,19 +2363,165 @@ footer {
     }
 }
 
-/* Specific Spacing for Electronics Theme - Deal Of The Week & Laptops/Computers */
+/* =========================================================================
+   Unified, Even Section Spacing (Multipurpose, Electronics & All Themes)
+   ========================================================================= */
+/* Electronics Theme Spacing */
+.category.pb-100 {
+    padding-bottom: 40px !important;
+}
+
+.category .category-item {
+    margin-bottom: 12px !important;
+}
+
+.category .text-center.mt-20 {
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+}
+
 .product-with-border.actual-content {
-    margin-top: 45px !important;
-    padding-top: 25px !important;
+    margin-top: 24px !important;
+    padding-top: 16px !important;
+    padding-bottom: 50px !important;
 }
 
 .product-with-border.actual-content .product-inner {
-    margin-top: 15px !important;
+    margin-top: 10px !important;
 }
 
 section.products.actual-content {
-    margin-top: 45px !important;
+    margin-top: 24px !important;
+    padding-top: 16px !important;
+    padding-bottom: 50px !important;
+}
+
+/* Multipurpose (Manti) Theme Spacing */
+.theme-manti section.category.category-6,
+section.category.category-6 {
     padding-top: 25px !important;
+    padding-bottom: 25px !important;
+    margin-bottom: 0 !important;
+}
+
+.theme-manti .category-6 .category-item .category-img,
+.category-6 .category-item .category-img {
+    margin-bottom: 14px !important;
+}
+
+.theme-manti section.section.actual-content,
+.theme-manti section.product-area.actual-content,
+.theme-manti section.rated-area.actual-content {
+    padding-top: 16px !important;
+    padding-bottom: 45px !important;
+    margin-top: 16px !important;
+}
+
+/* Mobile Spacing Fixes (< 992px) */
+@media only screen and (max-width: 991.98px) {
+    .category.pb-100 {
+        padding-bottom: 20px !important;
+    }
+
+    .category .section-title.title-center {
+        margin-bottom: 20px !important;
+    }
+
+    .category .section-title.title-center .title {
+        margin-bottom: 8px !important;
+        font-size: 24px !important;
+    }
+
+    .category .category-slider {
+        margin-bottom: 8px !important;
+    }
+
+    .category .category-item {
+        margin-bottom: 8px !important;
+    }
+
+    .category .text-center.mt-20 {
+        margin-top: 8px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .product-with-border.actual-content,
+    .product-with-border.lazy {
+        margin-top: 12px !important;
+        padding-top: 10px !important;
+        padding-bottom: 30px !important;
+    }
+
+    .product-with-border.actual-content .product-inner {
+        margin-top: 0 !important;
+    }
+
+    section.products.actual-content,
+    section.products.lazy {
+        margin-top: 14px !important;
+        padding-top: 10px !important;
+        padding-bottom: 30px !important;
+    }
+
+    .theme-manti section.category.category-6,
+    section.category.category-6 {
+        padding-top: 18px !important;
+        padding-bottom: 18px !important;
+    }
+
+    .theme-manti section.section.actual-content,
+    .theme-manti section.product-area.actual-content,
+    .theme-manti section.rated-area.actual-content {
+        padding-top: 10px !important;
+        padding-bottom: 28px !important;
+        margin-top: 12px !important;
+    }
+}
+
+/* =========================================================================
+   Ultra-Smooth 60FPS Slick Slider Acceleration (All Themes)
+   ========================================================================= */
+.slick-slider {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    user-select: none !important;
+}
+
+.slick-list {
+    touch-action: pan-y pinch-zoom !important;
+    -webkit-overflow-scrolling: touch !important;
+    overflow: hidden !important;
+    transform: translate3d(0, 0, 0);
+}
+
+.slick-track {
+    will-change: transform !important;
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    transform: translate3d(0, 0, 0) !important;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+    -webkit-perspective: 1000 !important;
+    perspective: 1000 !important;
+}
+
+.slick-slide {
+    outline: none !important;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    transform: translate3d(0, 0, 0) !important;
+}
+
+.slick-slide a,
+.slick-slide a:focus,
+.slick-slide:focus {
+    outline: none !important;
+}
+
+.slick-slide img {
+    -webkit-user-drag: none !important;
+    user-drag: none !important;
+    pointer-events: auto;
 }
 
 /* Specific Spacing for Kids Theme - Favorite Categories & Sections */

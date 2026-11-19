@@ -6,6 +6,22 @@ $(window).on("load", function () {
     }
 });
 
+// Global Ultra-Smooth Slider Optimization (All Themes)
+if (typeof $ !== 'undefined' && $.fn && $.fn.slick) {
+    if ($.fn.slick.initials) {
+        $.extend($.fn.slick.initials, {
+            speed: 380,
+            waitForAnimate: false,
+            touchThreshold: 15,
+            swipeToSlide: true,
+            touchMove: true,
+            useTransform: true,
+            useCSS: true,
+            cssEase: 'cubic-bezier(0.22, 1, 0.36, 1)'
+        });
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
 
     const skeletonSections = document.querySelectorAll('.lazy');
@@ -288,44 +304,51 @@ document.addEventListener("DOMContentLoaded", () => {
             var appendArrowsClassName = "#" + id + "-arrows";
 
             $(sliderId).slick({
-                speed: 600,
+                speed: 380,
+                waitForAnimate: false,
+                touchThreshold: 15,
+                swipeToSlide: true,
+                touchMove: true,
+                useTransform: true,
+                useCSS: true,
+                cssEase: 'cubic-bezier(0.22, 1, 0.36, 1)',
                 arrows: true,
                 dots: false,
                 autoplay: false,
                 slidesToShow: 5,
                 loop: true,
                 infinite: false,
-                swipeToSlide: true,
-                touchThreshold: 25,
-                touchMove: true,
-                cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)',
                 rtl: $('html').attr('dir') === 'rtl',
                 responsive: [{
                     breakpoint: 1200,
                     settings: {
                         slidesToShow: 4,
-                        slidesToScroll: 1
+                        slidesToScroll: 1,
+                        swipeToSlide: true
                     }
                 },
                 {
                     breakpoint: 992,
                     settings: {
                         slidesToShow: 3,
-                        slidesToScroll: 1
+                        slidesToScroll: 1,
+                        swipeToSlide: true
                     }
                 },
                 {
                     breakpoint: 767,
                     settings: {
                         slidesToShow: 2,
-                        slidesToScroll: 1
+                        slidesToScroll: 1,
+                        swipeToSlide: true
                     }
                 },
                 {
                     breakpoint: 575,
                     settings: {
                         slidesToShow: 2,
-                        slidesToScroll: 1
+                        slidesToScroll: 1,
+                        swipeToSlide: true
                     }
                 }
                 ],
@@ -743,16 +766,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     var appendArrowsClassName = "#" + id + "-arrows";
 
                     $(sliderId).slick({
-                        speed: 600,
+                        speed: 380,
+                        waitForAnimate: false,
+                        touchThreshold: 15,
+                        swipeToSlide: true,
+                        touchMove: true,
+                        useTransform: true,
+                        useCSS: true,
+                        cssEase: 'cubic-bezier(0.22, 1, 0.36, 1)',
                         arrows: true,
                         dots: false,
                         autoplay: false,
                         slidesToShow: 5,
                         infinite: false,
-                        swipeToSlide: true,
-                        touchThreshold: 25,
-                        touchMove: true,
-                        cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)',
                         rtl: $('html').attr('dir') === 'rtl',
                         responsive: [{
                             breakpoint: 1200,
