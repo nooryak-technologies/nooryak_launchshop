@@ -2374,6 +2374,24 @@ footer {
     margin-bottom: 0 !important;
 }
 
+.category-slider:not(.slick-initialized) {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    justify-content: center !important;
+    gap: 15px !important;
+}
+
+.category-slider:not(.slick-initialized) > * {
+    flex: 0 0 auto !important;
+    max-width: 165px !important;
+}
+
+.category-slider .slick-slide {
+    display: block !important;
+    float: left !important;
+}
+
 .category .category-item {
     margin-bottom: 12px !important;
 }

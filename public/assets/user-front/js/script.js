@@ -257,11 +257,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // Category Slider
     if ($('.category-slider').length > 0) {
         $(".category-slider").each(function () {
-            if ($(this).hasClass('slick-initialized') || $(this).attr('data-slick')) return;
+            if ($(this).hasClass('slick-initialized')) return;
             var id = $(this).attr("id");
-            var sliderId = "#" + id;
-            var appendArrowsClassName = "#" + id + "-arrows";
-            var hasCustomArrows = $(appendArrowsClassName).length > 0;
+            var sliderId = id ? "#" + id : this;
+            var appendArrowsClassName = id ? "#" + id + "-arrows" : "";
+            var hasCustomArrows = appendArrowsClassName && $(appendArrowsClassName).length > 0;
 
             var config = {
                 speed: 350,
@@ -275,14 +275,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 arrows: true,
                 dots: false,
                 autoplay: false,
-                slidesToShow: 5,
+                slidesToShow: 6,
+                slidesToScroll: 1,
                 loop: true,
                 infinite: true,
                 rtl: $('html').attr('dir') === 'rtl',
                 responsive: [{
+                    breakpoint: 1400,
+                    settings: {
+                        slidesToShow: 6,
+                        slidesToScroll: 1,
+                        swipeToSlide: true,
+                        infinite: true
+                    }
+                },
+                {
                     breakpoint: 1200,
                     settings: {
-                        slidesToShow: 4,
+                        slidesToShow: 5,
                         slidesToScroll: 1,
                         swipeToSlide: true,
                         infinite: true
@@ -291,6 +301,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     breakpoint: 992,
                     settings: {
+                        slidesToShow: 4,
+                        slidesToScroll: 1,
+                        swipeToSlide: true,
+                        infinite: true
+                    }
+                },
+                {
+                    breakpoint: 768,
+                    settings: {
                         slidesToShow: 3,
                         slidesToScroll: 1,
                         swipeToSlide: true,
@@ -298,16 +317,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 },
                 {
-                    breakpoint: 767,
-                    settings: {
-                        slidesToShow: 2,
-                        slidesToScroll: 1,
-                        swipeToSlide: true,
-                        infinite: true
-                    }
-                },
-                {
-                    breakpoint: 575,
+                    breakpoint: 480,
                     settings: {
                         slidesToShow: 2,
                         slidesToScroll: 1,
@@ -324,7 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 config.appendArrows = appendArrowsClassName;
             }
 
-            $(sliderId).slick(config);
+            $(this).slick(config);
         });
     }
 

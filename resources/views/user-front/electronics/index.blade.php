@@ -235,16 +235,7 @@
               </h5>
             @else
               {{-- Slick slider: links straight to shop filtered by category --}}
-              <div class="category-slider mx-auto" id="cat-slider-electronics" style="width: 100%;"
-                data-slick='{"dots": false, "arrows": true, "autoplay": false, "infinite": true, "slidesToShow": 6, "slidesToScroll": 1, "swipeToSlide": true, "touchMove": true, "draggable": true, "touchThreshold": 25, "speed": 350,
-                  "responsive": [
-                    {"breakpoint": 1400, "settings": {"slidesToShow": 6, "infinite": true, "swipeToSlide": true}},
-                    {"breakpoint": 1200, "settings": {"slidesToShow": 5, "infinite": true, "swipeToSlide": true}},
-                    {"breakpoint": 992,  "settings": {"slidesToShow": 4, "infinite": true, "swipeToSlide": true}},
-                    {"breakpoint": 768,  "settings": {"slidesToShow": 3, "infinite": true, "swipeToSlide": true, "arrows": false}},
-                    {"breakpoint": 480,  "settings": {"slidesToShow": 2, "infinite": true, "swipeToSlide": true, "arrows": false}}
-                  ]
-                }'>
+              <div class="category-slider mx-auto" id="cat-slider-electronics" style="width: 100%;">
                 @foreach ($item_categories as $cat)
                   <div class="px-1">
                     <a href="{{ route('front.user.shop', [getParam(), 'category=' . $cat->slug]) }}"
