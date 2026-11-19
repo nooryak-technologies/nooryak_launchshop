@@ -6,22 +6,6 @@ $(window).on("load", function () {
     }
 });
 
-// Global Ultra-Smooth Slider Optimization (All Themes)
-if (typeof $ !== 'undefined' && $.fn && $.fn.slick) {
-    if ($.fn.slick.initials) {
-        $.extend($.fn.slick.initials, {
-            speed: 380,
-            waitForAnimate: false,
-            touchThreshold: 15,
-            swipeToSlide: true,
-            touchMove: true,
-            useTransform: true,
-            useCSS: true,
-            cssEase: 'cubic-bezier(0.22, 1, 0.36, 1)'
-        });
-    }
-}
-
 document.addEventListener("DOMContentLoaded", () => {
 
     const skeletonSections = document.querySelectorAll('.lazy');
@@ -57,38 +41,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         actualContent.classList.add('visible'); // Apply fade-in effect
                     }, 50);
 
-                    // Handle Slick slider position reset
-                    if (productSlider4 && productSlider4.classList.contains('slick-initialized')) {
-                        $(productSlider4).slick('setPosition');
-                    }
-
-                    if (productSlider && productSlider.classList.contains('slick-initialized')) {
-                        $(productSlider).slick('setPosition');
-                    }
-                    if (productSlider2 && productSlider2.classList.contains('slick-initialized')) {
-                        $(productSlider2).slick('setPosition');
-                    }
-                    if (productSlider3 && productSlider3.classList.contains('slick-initialized')) {
-                        $(productSlider3).slick('setPosition');
-                    }
-                    if (productSlider4 && productSlider4.classList.contains('slick-initialized')) {
-                        $(productSlider4).slick('setPosition');
-                    }
-                    if (productSlider4 && productSlider4.classList.contains('slick-initialized')) {
-                        $(productSlider4).slick('setPosition');
-                    }
-                    if (productSlider4 && productSlider4.classList.contains('slick-initialized')) {
-                        $(productSlider4).slick('setPosition');
-                    }
-                    if (productSlider5 && productSlider5.classList.contains('slick-initialized')) {
-                        $(productSlider5).slick('setPosition');
-                    }
-                    if (productSlider6 && productSlider6.classList.contains('slick-initialized')) {
-                        $(productSlider6).slick('setPosition');
-                    }
-                    if (productSlider7 && productSlider7.classList.contains('slick-initialized')) {
-                        $(productSlider7).slick('setPosition');
-                    }
+                    // Handle Slick slider position reset for any slider in revealed content
+                    $(actualContent).find('.slick-initialized').each(function () {
+                        try {
+                            $(this).slick('setPosition');
+                        } catch (e) {}
+                    });
 
                     // Hide skeleton after content is fully visible
                     setTimeout(() => {
@@ -299,32 +257,35 @@ document.addEventListener("DOMContentLoaded", () => {
     // Category Slider
     if ($('.category-slider').length > 0) {
         $(".category-slider").each(function () {
+            if ($(this).hasClass('slick-initialized') || $(this).attr('data-slick')) return;
             var id = $(this).attr("id");
             var sliderId = "#" + id;
             var appendArrowsClassName = "#" + id + "-arrows";
+            var hasCustomArrows = $(appendArrowsClassName).length > 0;
 
-            $(sliderId).slick({
-                speed: 380,
+            var config = {
+                speed: 350,
                 waitForAnimate: false,
-                touchThreshold: 15,
+                touchThreshold: 25,
                 swipeToSlide: true,
                 touchMove: true,
+                draggable: true,
                 useTransform: true,
                 useCSS: true,
-                cssEase: 'cubic-bezier(0.22, 1, 0.36, 1)',
                 arrows: true,
                 dots: false,
                 autoplay: false,
                 slidesToShow: 5,
                 loop: true,
-                infinite: false,
+                infinite: true,
                 rtl: $('html').attr('dir') === 'rtl',
                 responsive: [{
                     breakpoint: 1200,
                     settings: {
                         slidesToShow: 4,
                         slidesToScroll: 1,
-                        swipeToSlide: true
+                        swipeToSlide: true,
+                        infinite: true
                     }
                 },
                 {
@@ -332,7 +293,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     settings: {
                         slidesToShow: 3,
                         slidesToScroll: 1,
-                        swipeToSlide: true
+                        swipeToSlide: true,
+                        infinite: true
                     }
                 },
                 {
@@ -340,7 +302,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     settings: {
                         slidesToShow: 2,
                         slidesToScroll: 1,
-                        swipeToSlide: true
+                        swipeToSlide: true,
+                        infinite: true
                     }
                 },
                 {
@@ -348,14 +311,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     settings: {
                         slidesToShow: 2,
                         slidesToScroll: 1,
-                        swipeToSlide: true
+                        swipeToSlide: true,
+                        infinite: true
                     }
                 }
                 ],
                 prevArrow: '<button type="button" class="btn-icon slider-btn slider-prev"><i class="fal fa-angle-left"></i></button>',
-                nextArrow: '<button type="button" class="btn-icon slider-btn slider-next"><i class="fal fa-angle-right"></i></button>',
-                appendArrows: appendArrowsClassName
-            });
+                nextArrow: '<button type="button" class="btn-icon slider-btn slider-next"><i class="fal fa-angle-right"></i></button>'
+            };
+
+            if (hasCustomArrows) {
+                config.appendArrows = appendArrowsClassName;
+            }
+
+            $(sliderId).slick(config);
         });
     }
 
@@ -371,7 +340,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 autoplay: false,
                 slidesToShow: 5,
                 loop: true,
-                infinite: false,
+                infinite: true,
                 swipeToSlide: true,
                 touchThreshold: 25,
                 touchMove: true,
@@ -420,7 +389,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 slidesToScroll: 1,
                 arrows: false,
                 autoplay: false,
-                infinite: false,
+                infinite: true,
                 swipeToSlide: true,
                 touchThreshold: 25,
                 touchMove: true,
@@ -469,7 +438,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 arrows: false,
                 autoplay: true,
                 autoplaySpeed: 4000,
-                infinite: false,
+                infinite: true,
                 swipeToSlide: true,
                 touchThreshold: 25,
                 touchMove: true,
@@ -778,7 +747,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         dots: false,
                         autoplay: false,
                         slidesToShow: 5,
-                        infinite: false,
+                        infinite: true,
                         rtl: $('html').attr('dir') === 'rtl',
                         responsive: [{
                             breakpoint: 1200,
@@ -863,7 +832,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 autoplay: false,
                 draggable: true,
                 slidesToShow: 5,
-                infinite: false,
+                infinite: true,
                 swipeToSlide: true,
                 touchThreshold: 25,
                 touchMove: true,
@@ -1087,7 +1056,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 autoplay: false,
                 draggable: true,
                 slidesToShow: 2,
-                infinite: false,
+                infinite: true,
 
                 responsive: [{
                     breakpoint: 992,

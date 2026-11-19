@@ -2367,8 +2367,11 @@ footer {
    Unified, Even Section Spacing (Multipurpose, Electronics & All Themes)
    ========================================================================= */
 /* Electronics Theme Spacing */
-.category.pb-100 {
-    padding-bottom: 40px !important;
+.category.pb-100,
+.electronics-category-section {
+    padding-top: 25px !important;
+    padding-bottom: 25px !important;
+    margin-bottom: 0 !important;
 }
 
 .category .category-item {
@@ -2419,41 +2422,50 @@ section.category.category-6 {
 
 /* Mobile Spacing Fixes (< 992px) */
 @media only screen and (max-width: 991.98px) {
-    .category.pb-100 {
-        padding-bottom: 20px !important;
+    section.featured.featured-2.pb-70 {
+        padding-bottom: 15px !important;
+    }
+
+    .category.pb-100,
+    .electronics-category-section {
+        padding-top: 15px !important;
+        padding-bottom: 12px !important;
+        margin-bottom: 0 !important;
     }
 
     .category .section-title.title-center {
-        margin-bottom: 20px !important;
+        margin-bottom: 16px !important;
     }
 
     .category .section-title.title-center .title {
-        margin-bottom: 8px !important;
-        font-size: 24px !important;
+        margin-bottom: 6px !important;
+        font-size: 22px !important;
     }
 
     .category .category-slider {
-        margin-bottom: 8px !important;
+        margin-bottom: 6px !important;
     }
 
     .category .category-item {
-        margin-bottom: 8px !important;
+        margin-bottom: 6px !important;
     }
 
     .category .text-center.mt-20 {
-        margin-top: 8px !important;
-        margin-bottom: 12px !important;
+        margin-top: 6px !important;
+        margin-bottom: 0 !important;
     }
 
     .product-with-border.actual-content,
     .product-with-border.lazy {
-        margin-top: 12px !important;
-        padding-top: 10px !important;
-        padding-bottom: 30px !important;
+        margin-top: 20px !important;
+        padding-top: 0 !important;
+        padding-bottom: 25px !important;
     }
 
+    .product-with-border .product-inner,
     .product-with-border.actual-content .product-inner {
         margin-top: 0 !important;
+        padding: 45px 15px 20px !important;
     }
 
     section.products.actual-content,
@@ -2482,34 +2494,17 @@ section.category.category-6 {
    Ultra-Smooth 60FPS Slick Slider Acceleration (All Themes)
    ========================================================================= */
 .slick-slider {
-    -webkit-tap-highlight-color: transparent !important;
-    -webkit-touch-callout: none !important;
-    user-select: none !important;
-}
-
-.slick-list {
-    touch-action: pan-y pinch-zoom !important;
-    -webkit-overflow-scrolling: touch !important;
-    overflow: hidden !important;
-    transform: translate3d(0, 0, 0);
+    -webkit-tap-highlight-color: transparent;
 }
 
 .slick-track {
-    will-change: transform !important;
-    -webkit-transform: translate3d(0, 0, 0) !important;
-    transform: translate3d(0, 0, 0) !important;
-    -webkit-backface-visibility: hidden !important;
-    backface-visibility: hidden !important;
-    -webkit-perspective: 1000 !important;
-    perspective: 1000 !important;
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .slick-slide {
     outline: none !important;
-    -webkit-backface-visibility: hidden !important;
-    backface-visibility: hidden !important;
-    -webkit-transform: translate3d(0, 0, 0) !important;
-    transform: translate3d(0, 0, 0) !important;
 }
 
 .slick-slide a,
@@ -2519,9 +2514,8 @@ section.category.category-6 {
 }
 
 .slick-slide img {
-    -webkit-user-drag: none !important;
-    user-drag: none !important;
-    pointer-events: auto;
+    -webkit-user-drag: none;
+    user-drag: none;
 }
 
 /* Specific Spacing for Kids Theme - Favorite Categories & Sections */

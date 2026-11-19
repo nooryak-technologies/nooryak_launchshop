@@ -36,51 +36,6 @@
 <!-- Jquery JS -->
 <script src="{{ asset('assets/user-front/js/plugins.js') }}"></script>
 
-<!-- Global Ultra-Smooth Slider Optimization (All Themes) -->
-<script>
-  if (window.jQuery && jQuery.fn && jQuery.fn.slick) {
-    if (jQuery.fn.slick.initials) {
-      jQuery.extend(jQuery.fn.slick.initials, {
-        speed: 380,
-        waitForAnimate: false,
-        touchThreshold: 15,
-        swipeToSlide: true,
-        touchMove: true,
-        useTransform: true,
-        useCSS: true,
-        cssEase: 'cubic-bezier(0.22, 1, 0.36, 1)'
-      });
-    }
-
-    var originalSlick = jQuery.fn.slick;
-    jQuery.fn.slick = function() {
-      if (arguments.length === 0 || (arguments.length === 1 && typeof arguments[0] === 'object')) {
-        var options = arguments[0] || {};
-        var smoothDefaults = {
-          speed: 380,
-          waitForAnimate: false,
-          touchThreshold: 15,
-          swipeToSlide: true,
-          touchMove: true,
-          useTransform: true,
-          useCSS: true,
-          cssEase: 'cubic-bezier(0.22, 1, 0.36, 1)'
-        };
-        arguments[0] = jQuery.extend({}, smoothDefaults, options);
-        if (arguments[0].responsive && Array.isArray(arguments[0].responsive)) {
-          arguments[0].responsive.forEach(function(item) {
-            if (item.settings && typeof item.settings === 'object') {
-              item.settings.swipeToSlide = true;
-              item.settings.waitForAnimate = false;
-            }
-          });
-        }
-      }
-      return originalSlick.apply(this, arguments);
-    };
-  }
-</script>
-
 {{-- aos.min.js --}}
 <script src="{{ asset('assets/user-front/js/aos.min.js') }}"></script>
 
