@@ -342,7 +342,9 @@ class CustomerController extends Controller
                     'smtp_username' => (!empty($info->smtp_username) && !str_contains($info->smtp_username, 'metroshop.in')) ? $info->smtp_username : env('MAIL_USERNAME', 'infosaasreselling@nooryak.in'),
                     'smtp_password' => $info->smtp_password ?? env('MAIL_PASSWORD', 'Admin@nooryak'),
                     'from_mail'     => ($info && !empty($info->from_mail) && !str_contains($info->from_mail, 'metroshop.in')) ? $info->from_mail : (config('mail.from.address') ?: 'infosaasreselling@nooryak.in'),
-                    'from_name'     => ($info && !empty($info->from_name)) ? $info->from_name : $website_title,
+                    'from_name'     => !empty($website_title) ? $website_title : (($info && !empty($info->from_name)) ? $info->from_name : 'Store'),
+                    'reply_to'      => !empty($rootUser->email) ? $rootUser->email : null,
+                    'reply_to_name' => $website_title,
                     'recipient'     => $user->email,
                     'subject'       => $mailSubject,
                     'body'          => $mailBody,
@@ -359,9 +361,10 @@ class CustomerController extends Controller
                     $headers  = "MIME-Version: 1.0\r\n";
                     $headers .= "Content-type: text/html; charset=UTF-8\r\n";
                     $fromMail = ($info && !empty($info->from_mail) && !str_contains($info->from_mail, 'metroshop.in')) ? $info->from_mail : (config('mail.from.address') ?: 'infosaasreselling@nooryak.in');
-                    $fromName = ($info && !empty($info->from_name)) ? $info->from_name : $website_title;
+                    $fromName = !empty($website_title) ? $website_title : (($info && !empty($info->from_name)) ? $info->from_name : 'Store');
+                    $replyToMail = !empty($rootUser->email) ? $rootUser->email : $fromMail;
                     $headers .= "From: {$fromName} <{$fromMail}>\r\n";
-                    $headers .= "Reply-To: {$fromMail}\r\n";
+                    $headers .= "Reply-To: {$fromName} <{$replyToMail}>\r\n";
                     $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
                     if (@mail($user->email, $mailSubject, $mailBody, $headers)) {
                         $mailSent = true;
@@ -589,7 +592,10 @@ class CustomerController extends Controller
         $data['smtp_password'] = $info->smtp_password;
 
         //mail info in array
-        $data['from_mail'] = $info->from_mail;
+        $data['from_mail'] = $info->from_mail ?? env('MAIL_FROM_ADDRESS');
+        $data['from_name'] = !empty($website_title) ? $website_title : 'Store';
+        $data['reply_to'] = !empty($user->email) ? $user->email : null;
+        $data['reply_to_name'] = !empty($website_title) ? $website_title : 'Store';
         $data['recipient'] = $request->email;
         $data['subject'] = $mailSubject;
         $data['body'] = $mailBody;

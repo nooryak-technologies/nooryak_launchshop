@@ -275,12 +275,67 @@
           @elseif(!empty(@$userBs->logo))
             <img src="{{ asset('assets/front/img/user/' . $userBs->logo) }}" alt="logo">
           @else
-            <span>Easen</span>
+            <span>{{ $userBs->website_title ?? $user->shop_name ?? 'Logo' }}</span>
           @endif
         </a>
       </div>
       <span class="mobile-menu-close"><i class="fal fa-times"></i></span>
     </div>
+
+    <!-- mobile-search -->
+    <div class="header-search mobile-search">
+      <form action="{{ route('front.user.shop', getParam()) }}" class="header-search-form rounded-pill" autocomplete="off">
+        <div class="search-input">
+          <input type="text" class="form-control" value="{{ request()->input('keyword') }}"
+            placeholder="{{ $keywords['Im searching for'] ?? ($keywords['Search...'] ?? __('Search...')) }}..." name="keyword">
+        </div>
+        <button class="btn btn-icon btn-icon-2" type="submit"><i class="fal fa-search"></i></button>
+      </form>
+    </div>
+
+    <!-- mobile navigation links -->
+    <nav class="menu mobile-nav">
+      <ul class="menu-right me-auto">
+        @php
+          $links = json_decode($userMenus, true) ?? [];
+        @endphp
+        @foreach ($links as $link)
+          @php
+            $href = getUserHref($link, $userCurrentLang->id);
+          @endphp
+          @if (!array_key_exists('children', $link))
+            <li class="nav-item">
+              <a class="nav-link {{ url()->current() == $href ? 'active' : '' }}" target="{{ $link['target'] }}"
+                href="{{ $href }}">{{ $link['text'] }}</a>
+            </li>
+          @else
+            <li class="nav-item has-submenu">
+              <a href="{{ $href }}" target="{{ $link['target'] }}"
+                class="nav-link {{ url()->current() == $href ? 'active' : '' }}">{{ $link['text'] }}<i class="fal fa-plus"></i></a>
+              <ul class="submenu">
+                @foreach ($link['children'] as $level2)
+                  @php
+                    $l2Href = getUserHref($level2, $userCurrentLang->id);
+                  @endphp
+                  @if (trim($level2['text']) != 'Privacy Policy')
+                    <li class="nav-item">
+                      <a class="nav-link" href="{{ $l2Href }}"
+                        target="{{ $level2['target'] }}">{{ $level2['text'] }}</a>
+                    </li>
+                  @endif
+                @endforeach
+                @if (strtolower(trim($link['text'])) == 'pages')
+                  <li><a class="nav-link" href="{{ route('front.user.privacy_policy', getParam()) }}">{{ $keywords['Privacy Policy'] ?? __('Privacy Policy') }}</a></li>
+                  <li><a class="nav-link" href="{{ route('front.user.terms_conditions', getParam()) }}">{{ $keywords['Terms & Conditions'] ?? __('Terms & Conditions') }}</a></li>
+                  <li><a class="nav-link" href="{{ route('front.user.refund_policy', getParam()) }}">{{ $keywords['Refund Policy'] ?? __('Refund Policy') }}</a></li>
+                  <li><a class="nav-link" href="{{ route('front.user.shipping_policy', getParam()) }}">{{ $keywords['Shipping Policy'] ?? __('Shipping Policy') }}</a></li>
+                @endif
+              </ul>
+            </li>
+          @endif
+        @endforeach
+      </ul>
+    </nav>
   </div>
   @includeIf('user-front.partials.mobile-menu')
 </div>

@@ -32,6 +32,9 @@ class BasicMailer
     $fromMail = !empty($data['from_mail']) ? $data['from_mail'] : (!empty($be->from_mail) ? $be->from_mail : (env('MAIL_FROM_ADDRESS') ?: 'infosaasreselling@nooryak.in'));
     $fromName = !empty($data['from_name']) ? $data['from_name'] : (!empty($be->from_name) ? $be->from_name : (env('MAIL_FROM_NAME') ?: 'LaunchShop'));
 
+    $replyToEmail = !empty($data['reply_to']) ? $data['reply_to'] : $fromMail;
+    $replyToName  = !empty($data['reply_to_name']) ? $data['reply_to_name'] : $fromName;
+
     $recipient = $data['recipient'] ?? ($data['to'] ?? ($data['toMail'] ?? null));
     if (empty($recipient)) {
       Log::warning('BasicMailer: No recipient specified.');
@@ -59,15 +62,33 @@ class BasicMailer
         Config::set('mail.default', 'smtp');
         Mail::purge('smtp');
 
-        Mail::send([], [], function (Message $message) use ($recipient, $fromMail, $fromName, $subject, $body, $data) {
+        Mail::send([], [], function (Message $message) use ($recipient, $fromMail, $fromName, $replyToEmail, $replyToName, $subject, $body, $data) {
           $message->to($recipient)
             ->from($fromMail, $fromName)
-            ->replyTo($fromMail, $fromName)
+            ->replyTo($replyToEmail, $replyToName)
             ->subject($subject)
             ->html($body, 'text/html');
 
+          // Generate clean text/plain alternative to satisfy anti-spam MIME multipart requirements
+          try {
+            $plainText = trim(strip_tags(preg_replace('/<(head|title|style|script)[^>]*>.*?<\/\\1>/si', '', $body)));
+            if (!empty($plainText)) {
+              $message->text($plainText);
+            }
+          } catch (\Throwable $e) {}
+
+          // Standard RFC transactional headers (Gmail and Outlook recognize these as valid transactional receipts)
+          try {
+            $message->getHeaders()->addTextHeader('Auto-Submitted', 'auto-generated');
+            $message->getHeaders()->addTextHeader('X-Auto-Response-Suppress', 'All');
+          } catch (\Throwable $e) {}
+
           if (array_key_exists('invoice', $data) && !empty($data['invoice']) && file_exists($data['invoice'])) {
-            $message->attach($data['invoice']);
+            $orderNum = !empty($data['order_number']) ? $data['order_number'] : 'invoice';
+            $message->attach($data['invoice'], [
+              'as' => 'Invoice-' . $orderNum . '.pdf',
+              'mime' => 'application/pdf',
+            ]);
           }
         });
         $sent = true;
@@ -82,7 +103,9 @@ class BasicMailer
         $headers  = "MIME-Version: 1.0\r\n";
         $headers .= "Content-type: text/html; charset=UTF-8\r\n";
         $headers .= "From: {$fromName} <{$fromMail}>\r\n";
-        $headers .= "Reply-To: {$fromMail}\r\n";
+        $headers .= "Reply-To: {$replyToName} <{$replyToEmail}>\r\n";
+        $headers .= "Auto-Submitted: auto-generated\r\n";
+        $headers .= "X-Auto-Response-Suppress: All\r\n";
         $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
         if (@mail($recipient, $subject, $body, $headers)) {
           $sent = true;

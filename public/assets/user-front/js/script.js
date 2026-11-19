@@ -196,7 +196,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Adding main nav into mobile nav
     var mobileMenu = $(".mobile-menu .mobile-menu-wrapper");
-    $(".header").find(".mobile-search, .mobile-nav").clone(!0).appendTo(mobileMenu);
+    if (mobileMenu.length) {
+        if (mobileMenu.find(".mobile-search").length === 0) {
+            $(".header, .grocery2-header").find(".mobile-search").clone(!0).appendTo(mobileMenu);
+        }
+        if (mobileMenu.find(".mobile-nav").length === 0) {
+            $(".header, .grocery2-header").find(".mobile-nav").clone(!0).appendTo(mobileMenu);
+        }
+    }
 
     $(".mobile-nav li, .category-toggle").on("click", function (t) {
         var i = $(this).closest("li"),

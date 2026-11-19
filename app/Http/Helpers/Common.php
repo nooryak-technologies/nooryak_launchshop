@@ -473,13 +473,22 @@ class Common
         }
 
         $userBs = BasicSetting::where('user_id', $user->id)->first();
-        $websiteTitle = $userBs->website_title ?? $user->shop_name ?? $user->username ?? 'Store';
+        // Priority for Store Name: user_basic_settings.from_name -> website_title -> shop_name -> username
+        $websiteTitle = !empty($userBs->from_name) ? trim($userBs->from_name) : (!empty($userBs->website_title) ? trim($userBs->website_title) : (!empty($user->shop_name) ? trim($user->shop_name) : (!empty($user->username) ? trim($user->username) : 'Store')));
 
         // Check if custom template exists in db
         $mailTemplate = UserEmailTemplate::where([['email_type', 'product_order'], ['user_id', $user->id]])->first();
-        $subject = ($mailTemplate && !empty($mailTemplate->email_subject))
-            ? str_replace(['{order_number}', '{customer_name}', '{website_title}'], [$order->order_number, $customerName, $websiteTitle], $mailTemplate->email_subject)
-            : "Order Confirmation - #{$order->order_number} | {$websiteTitle}";
+        if ($mailTemplate && !empty($mailTemplate->email_subject)) {
+            $subject = str_replace(['{order_number}', '{customer_name}', '{website_title}'], [$order->order_number, $customerName, $websiteTitle], $mailTemplate->email_subject);
+            // If the template has generic subject "Product Order Confirmation", augment with order number & store name to avoid spam filtering
+            if (trim($subject) === 'Product Order Confirmation') {
+                $subject = "Order Confirmed #{$order->order_number} - {$websiteTitle}";
+            } elseif (stripos($subject, $websiteTitle) === false) {
+                $subject = "{$subject} - {$websiteTitle}";
+            }
+        } else {
+            $subject = "Order Confirmed #{$order->order_number} - {$websiteTitle}";
+        }
 
         // Render dedicated order confirmation & invoice email view
         $htmlBody = view('mail.order_confirmation', [
@@ -495,6 +504,9 @@ class Common
             ->select('is_smtp', 'smtp_host', 'smtp_port', 'encryption', 'smtp_username', 'smtp_password', 'from_mail', 'from_name')
             ->first();
 
+        // Resolve vendor store contact email for Reply-To
+        $replyToEmail = !empty($userBs->email) ? trim($userBs->email) : (!empty($user->email) ? trim($user->email) : null);
+
         $data = [
             'smtp_status'   => $info->is_smtp ?? 1,
             'smtp_host'     => $info->smtp_host ?? env('MAIL_HOST'),
@@ -503,7 +515,10 @@ class Common
             'smtp_username' => $info->smtp_username ?? env('MAIL_USERNAME'),
             'smtp_password' => $info->smtp_password ?? env('MAIL_PASSWORD'),
             'from_mail'     => $info->from_mail ?? env('MAIL_FROM_ADDRESS'),
-            'from_name'     => $info->from_name ?? $websiteTitle,
+            'from_name'     => $websiteTitle, // Customer receives Store Name, NOT LaunchShop platform name
+            'reply_to'      => $replyToEmail,
+            'reply_to_name' => $websiteTitle,
+            'order_number'  => $order->order_number,
             'recipient'     => $buyerEmail,
             'subject'       => $subject,
             'body'          => $htmlBody,
@@ -802,6 +817,8 @@ class Common
                 ->select('is_smtp', 'smtp_host', 'smtp_port', 'encryption', 'smtp_username', 'smtp_password', 'from_mail', 'from_name')
                 ->first();
 
+            $replyToEmail = !empty($userBs->email) ? trim($userBs->email) : (!empty($root_user->email) ? trim($root_user->email) : null);
+
             $data = [
                 'smtp_status'   => $info ? $info->is_smtp : 1,
                 'smtp_host'     => $info->smtp_host ?? env('MAIL_HOST'),
@@ -811,6 +828,9 @@ class Common
                 'smtp_password' => $info->smtp_password ?? env('MAIL_PASSWORD'),
                 'from_mail'     => $info->from_mail ?? env('MAIL_FROM_ADDRESS', 'admin@saasreselling.com'),
                 'from_name'     => $storeTitle,
+                'reply_to'      => $replyToEmail,
+                'reply_to_name' => $storeTitle,
+                'order_number'  => $po->order_number,
                 'recipient'     => $billingEmail,
                 'subject'       => $subject,
                 'body'          => $bodyHtml,
