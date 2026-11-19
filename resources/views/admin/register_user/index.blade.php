@@ -71,6 +71,9 @@
               <input type="text" name="term" class="form-control" value="{{ request()->input('term') }}"
                 placeholder="{{ __('Search by Username / Email') }}" style="min-width: 260px;">
             </form>
+            <a href="{{ route('admin.restore_ecom_grocery') }}" class="btn btn-sm btn-outline-success m-0 font-weight-bold" onclick="return confirm('Restore and activate Ecom Grocery demo theme?');" title="Restore Ecom Grocery Demo Theme">
+              <i class="fas fa-undo mr-1"></i> {{ __('Restore Ecom Grocery') }}
+            </a>
             <button class="btn-primary-purple m-0" data-toggle="modal" data-target="#addUserModal">
               <i class="fas fa-plus"></i> {{ __('Add User') }}
             </button>

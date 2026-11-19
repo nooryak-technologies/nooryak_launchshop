@@ -286,6 +286,7 @@ Route::group(['prefix' => 'X9_AdMiN-Portal_V7', 'middleware' => ['auth:admin', '
             Route::post('register/user/updatePassword', 'Admin\RegisterUserController@updatePassword')->name('register.user.updatePassword');
             Route::get('register/users/secret-login/{id}', 'Admin\RegisterUserController@secret_login')->name('register.user.secret_login');
             Route::post('register/users/reseed-store', 'Admin\RegisterUserController@reseedStore')->name('register.user.reseed_store');
+            Route::get('register/users/restore-ecom-grocery', 'Admin\RegisterUserController@restoreEcomGroceryTemplate')->name('admin.restore_ecom_grocery');
 
             
             // Admin Subscriber Routes

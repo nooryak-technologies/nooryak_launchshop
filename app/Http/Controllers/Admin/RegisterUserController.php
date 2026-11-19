@@ -2375,4 +2375,68 @@ class RegisterUserController extends Controller
             'message' => __('Lead deleted successfully!')
         ]);
     }
+
+    public function restoreEcomGroceryTemplate()
+    {
+        $sqlPath = base_path('database/restore_ecomgrocery.sql');
+        $user = User::where('username', 'ecomgrocery')->first();
+
+        if (!$user) {
+            if (\Illuminate\Support\Facades\File::exists($sqlPath)) {
+                $sql = \Illuminate\Support\Facades\File::get($sqlPath);
+                DB::unprepared($sql);
+                $user = User::where('username', 'ecomgrocery')->first();
+            }
+        }
+
+        if ($user) {
+            $user->preview_template = 1;
+            $user->status = 1;
+            $user->online_status = 1;
+            $user->featured = 1;
+            $user->template_img = 'grocery2.png';
+            $user->template_serial_number = 3;
+            $user->save();
+
+            $membership = Membership::where('user_id', $user->id)->first();
+            if ($membership) {
+                $membership->status = 1;
+                $membership->start_date = Carbon::now()->subDay()->format('Y-m-d');
+                $membership->expire_date = '2036-12-31';
+                $membership->save();
+            } else {
+                Membership::create([
+                    'user_id' => $user->id,
+                    'package_id' => 10,
+                    'status' => 1,
+                    'start_date' => Carbon::now()->subDay()->format('Y-m-d'),
+                    'expire_date' => '2036-12-31',
+                    'price' => 0,
+                    'currency' => 'INR',
+                    'currency_symbol' => '₹',
+                    'payment_method' => 'Offline',
+                    'transaction_id' => 'template_ecomgrocery',
+                ]);
+            }
+
+            $ubs = UserBasicSetting::where('user_id', $user->id)->first();
+            if ($ubs) {
+                $ubs->theme = 'grocery2';
+                $ubs->save();
+            } else {
+                UserBasicSetting::create([
+                    'user_id' => $user->id,
+                    'theme' => 'grocery2',
+                    'website_title' => 'Ecom Grocery',
+                    'base_color' => '253D4E',
+                ]);
+            }
+
+            Session::flash('success', __('Ecom Grocery demo theme restored successfully!'));
+            return redirect()->route('admin.register.user');
+        }
+
+        Session::flash('warning', __('Unable to restore Ecom Grocery template. File database/restore_ecomgrocery.sql not found.'));
+        return redirect()->route('admin.register.user');
+    }
 }
