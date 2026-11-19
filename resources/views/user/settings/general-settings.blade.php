@@ -140,7 +140,7 @@
                       </div>
 
                       <p class="text-warning">
-                        {{ __('Only JPG, JPEG, PNG, GIF images are allowed') }}
+                        {{ __('Only JPG, JPEG, PNG, GIF, WEBP, SVG images are allowed') }}
                       </p>
                       @if ($errors->has('preloader'))
                         <p id="errpreloader" class="mb-0 text-danger em">{{ $errors->first('preloader') }}</p>

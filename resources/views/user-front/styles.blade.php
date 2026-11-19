@@ -2374,12 +2374,62 @@ footer {
     margin-bottom: 0 !important;
 }
 
+/* Universal Preloader styling across all themes */
+.preloader {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: #ffffff !important;
+    z-index: 9999999 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: opacity 0.4s ease, visibility 0.4s ease !important;
+}
+
+.preloader.hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+.preloader .preloader-wrapper {
+    position: relative !important;
+    width: 110px !important;
+    height: 110px !important;
+    max-width: 80vw !important;
+    max-height: 80vh !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+}
+
+.preloader .preloader-wrapper::before,
+.preloader .preloader-wrapper::after {
+    display: none !important;
+}
+
+.preloader .preloader-wrapper img {
+    display: block !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+}
+
 .category-slider:not(.slick-initialized) {
     display: flex !important;
     flex-wrap: nowrap !important;
     overflow-x: auto !important;
     justify-content: center !important;
     gap: 15px !important;
+    width: 100% !important;
 }
 
 .category-slider:not(.slick-initialized) > * {
@@ -2387,9 +2437,15 @@ footer {
     max-width: 165px !important;
 }
 
+.category-slider .slick-track {
+    display: flex !important;
+    align-items: center !important;
+}
+
 .category-slider .slick-slide {
     display: block !important;
-    float: left !important;
+    float: none !important;
+    height: auto !important;
 }
 
 .category .category-item {

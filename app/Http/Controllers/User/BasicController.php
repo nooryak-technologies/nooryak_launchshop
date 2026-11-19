@@ -150,7 +150,7 @@ class BasicController extends Controller
         $favicon = $request->file('favicon');
         $preloader = $request->file('preloader');
         $webAppImage = $request->file('web_app_image');
-        $allowedExts = array('jpg', 'png', 'jpeg', 'gif', 'webp');
+        $allowedExts = array('jpg', 'png', 'jpeg', 'gif', 'webp', 'svg');
 
         $rules = [
             'base_currency_symbol_position' => 'required',
@@ -158,8 +158,8 @@ class BasicController extends Controller
                 function ($attribute, $value, $fail) use ($logo, $allowedExts) {
                     if (!empty($logo)) {
                         $ext = strtolower($logo->getClientOriginalExtension());
-                        if (!in_array($ext, $allowedExts)) {
-                            return $fail(__("Only png, jpg, jpeg, webp image is allowed"));
+                        if (!in_array($ext, array('jpg', 'png', 'jpeg', 'webp', 'svg'))) {
+                            return $fail(__("Only png, jpg, jpeg, webp, svg image is allowed"));
                         }
                     }
                 },
@@ -168,8 +168,8 @@ class BasicController extends Controller
                 function ($attribute, $value, $fail) use ($dark_logo, $allowedExts) {
                     if (!empty($dark_logo)) {
                         $ext = strtolower($dark_logo->getClientOriginalExtension());
-                        if (!in_array($ext, $allowedExts)) {
-                            return $fail(__("Only png, jpg, jpeg, webp image is allowed"));
+                        if (!in_array($ext, array('jpg', 'png', 'jpeg', 'webp', 'svg'))) {
+                            return $fail(__("Only png, jpg, jpeg, webp, svg image is allowed"));
                         }
                     }
                 },
@@ -178,8 +178,8 @@ class BasicController extends Controller
                 function ($attribute, $value, $fail) use ($mobile_logo, $allowedExts) {
                     if (!empty($mobile_logo)) {
                         $ext = strtolower($mobile_logo->getClientOriginalExtension());
-                        if (!in_array($ext, $allowedExts)) {
-                            return $fail(__("Only png, jpg, jpeg, webp image is allowed"));
+                        if (!in_array($ext, array('jpg', 'png', 'jpeg', 'webp', 'svg'))) {
+                            return $fail(__("Only png, jpg, jpeg, webp, svg image is allowed"));
                         }
                     }
                 },
@@ -188,8 +188,8 @@ class BasicController extends Controller
                 function ($attribute, $value, $fail) use ($favicon, $allowedExts) {
                     if (!empty($favicon)) {
                         $ext = strtolower($favicon->getClientOriginalExtension());
-                        if (!in_array($ext, $allowedExts)) {
-                            return $fail(__("Only png, jpg, jpeg, webp image is allowed"));
+                        if (!in_array($ext, array('jpg', 'png', 'jpeg', 'webp', 'ico', 'svg'))) {
+                            return $fail(__("Only png, jpg, jpeg, webp, ico, svg image is allowed"));
                         }
                     }
                 },
@@ -198,8 +198,8 @@ class BasicController extends Controller
                 function ($attribute, $value, $fail) use ($preloader, $allowedExts) {
                     if (!empty($preloader)) {
                         $ext = strtolower($preloader->getClientOriginalExtension());
-                        if (!in_array($ext, $allowedExts)) {
-                            return $fail(__("Only png, jpg, jpeg, gif, webp image is allowed"));
+                        if (!in_array($ext, array('jpg', 'png', 'jpeg', 'gif', 'webp', 'svg'))) {
+                            return $fail(__("Only png, jpg, jpeg, gif, webp, svg image is allowed"));
                         }
                     }
                 },
@@ -318,7 +318,7 @@ class BasicController extends Controller
                 break;
 
             case 'preloader':
-                @unlink(public_path("assets/front/img/footer/") . $data->preloader);
+                @unlink(public_path("assets/front/img/user/") . $data->preloader);
                 $data->preloader = null;
                 break;
 

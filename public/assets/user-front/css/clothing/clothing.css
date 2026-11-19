@@ -3193,9 +3193,14 @@ body {
   background: #fff !important;
 }
 
-/* Hide the GIF image; we draw a CSS spinner instead */
+/* Page preloader image */
 .preloader .preloader-wrapper img {
-  display: none !important;
+  display: block !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
 }
 
 /* Inject the orange ring via ::before */

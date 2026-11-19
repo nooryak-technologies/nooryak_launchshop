@@ -100,12 +100,15 @@
   {{-- Loader --}}
 
   <!-- Preloader Start -->
-  @if ($userBs->preloader_status == 1)
+  @if (!empty($userBs->preloader_status) && $userBs->preloader_status == 1)
     <div class="preloader">
       <div class="preloader-wrapper">
-        <img class="lazyload" src="{{ asset('assets/front/images/placeholder.png') }}"
-          data-src="{{ !is_null($userBs->preloader) ? asset('assets/front/img/user/' . $userBs->preloader) : asset('assets/user-front/images/preloader.gif') }}"
-          alt="preloder-image">
+        @php
+          $preloaderFile = !empty($userBs->preloader) && file_exists(public_path('assets/front/img/user/' . $userBs->preloader))
+              ? asset('assets/front/img/user/' . $userBs->preloader)
+              : asset('assets/user-front/images/preloader.gif');
+        @endphp
+        <img src="{{ $preloaderFile }}" alt="preloader" fetchpriority="high">
       </div>
     </div>
   @endif

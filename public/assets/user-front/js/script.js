@@ -1,10 +1,26 @@
 // ====== preloader =====
-$(window).on("load", function () {
-    const preloader = document.querySelector('.preloader');
-    if (preloader) {
-        preloader.classList.add('hidden');
+(function () {
+    function hidePreloader() {
+        var preloader = document.querySelector('.preloader');
+        if (preloader && !preloader.classList.contains('hidden')) {
+            setTimeout(function () {
+                preloader.classList.add('hidden');
+                setTimeout(function () {
+                    if (preloader && preloader.parentNode) {
+                        preloader.style.display = 'none';
+                    }
+                }, 400);
+            }, 250);
+        }
     }
-});
+
+    if (document.readyState === 'complete') {
+        hidePreloader();
+    } else {
+        window.addEventListener('load', hidePreloader);
+        setTimeout(hidePreloader, 3500);
+    }
+})();
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -268,11 +284,12 @@ document.addEventListener("DOMContentLoaded", () => {
             var appendArrowsClassName = id ? "#" + id + "-arrows" : "";
             var hasCustomArrows = appendArrowsClassName && $(appendArrowsClassName).length > 0;
 
+            var childCount = $(this).children().length;
             var config = {
-                speed: 800,
-                waitForAnimate: true,
-                touchThreshold: 10,
-                swipeToSlide: false,
+                speed: 550,
+                waitForAnimate: false,
+                touchThreshold: 20,
+                swipeToSlide: true,
                 touchMove: true,
                 draggable: true,
                 useTransform: true,
@@ -283,15 +300,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 autoplay: false,
                 slidesToShow: 6,
                 slidesToScroll: 1,
-                loop: true,
-                infinite: true,
+                loop: false,
+                infinite: childCount > 6,
                 rtl: $('html').attr('dir') === 'rtl',
                 responsive: [{
                     breakpoint: 1400,
                     settings: {
                         slidesToShow: 6,
                         slidesToScroll: 1,
-                        infinite: true
+                        swipeToSlide: true,
+                        infinite: childCount > 6
                     }
                 },
                 {
@@ -299,7 +317,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     settings: {
                         slidesToShow: 5,
                         slidesToScroll: 1,
-                        infinite: true
+                        swipeToSlide: true,
+                        infinite: childCount > 5
                     }
                 },
                 {
@@ -307,7 +326,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     settings: {
                         slidesToShow: 4,
                         slidesToScroll: 1,
-                        infinite: true
+                        swipeToSlide: true,
+                        infinite: childCount > 4
                     }
                 },
                 {
@@ -315,7 +335,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     settings: {
                         slidesToShow: 3,
                         slidesToScroll: 1,
-                        infinite: true,
+                        swipeToSlide: true,
+                        infinite: childCount > 3,
                         arrows: false
                     }
                 },
@@ -324,7 +345,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     settings: {
                         slidesToShow: 2,
                         slidesToScroll: 1,
-                        infinite: true,
+                        swipeToSlide: true,
+                        infinite: childCount > 2,
                         arrows: false
                     }
                 }
@@ -345,20 +367,21 @@ document.addEventListener("DOMContentLoaded", () => {
         $(".cat-slider-skinflow").each(function () {
             var id = $(this).attr("id");
             var sliderId = "#" + id;
+            var childCount = $(this).children().length;
 
             $(sliderId).slick({
-                speed: 800,
+                speed: 550,
                 arrows: true,
                 dots: false,
                 autoplay: false,
                 slidesToShow: 5,
-                loop: true,
-                infinite: true,
-                swipeToSlide: false,
-                touchThreshold: 10,
+                loop: false,
+                infinite: childCount > 5,
+                swipeToSlide: true,
+                touchThreshold: 20,
                 touchMove: true,
                 draggable: true,
-                waitForAnimate: true,
+                waitForAnimate: false,
                 useTransform: true,
                 useCSS: true,
                 cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)',
@@ -368,7 +391,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     settings: {
                         slidesToShow: 4,
                         slidesToScroll: 1,
-                        infinite: true
+                        swipeToSlide: true,
+                        infinite: childCount > 4
                     }
                 },
                 {
@@ -376,7 +400,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     settings: {
                         slidesToShow: 3,
                         slidesToScroll: 1,
-                        infinite: true
+                        swipeToSlide: true,
+                        infinite: childCount > 3
                     }
                 },
                 {
@@ -384,7 +409,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     settings: {
                         slidesToShow: 2,
                         slidesToScroll: 1,
-                        infinite: true
+                        swipeToSlide: true,
+                        infinite: childCount > 2
                     }
                 },
                 {
@@ -392,7 +418,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     settings: {
                         slidesToShow: 2,
                         slidesToScroll: 1,
-                        infinite: true
+                        swipeToSlide: true,
+                        infinite: childCount > 2
                     }
                 }
                 ]
@@ -404,21 +431,22 @@ document.addEventListener("DOMContentLoaded", () => {
         $(".cat-slider-clothing").each(function () {
             var id = $(this).attr("id");
             var sliderId = "#" + id;
+            var childCount = $(this).children().length;
             $(sliderId).slick({
                 dots: true,
                 slidesToShow: 5,
                 slidesToScroll: 1,
                 arrows: false,
                 autoplay: false,
-                infinite: true,
-                swipeToSlide: false,
-                touchThreshold: 10,
+                infinite: childCount > 5,
+                swipeToSlide: true,
+                touchThreshold: 20,
                 touchMove: true,
                 draggable: true,
-                waitForAnimate: true,
+                waitForAnimate: false,
                 useTransform: true,
                 useCSS: true,
-                speed: 800,
+                speed: 550,
                 cssEase: 'cubic-bezier(0.25, 1, 0.5, 1)',
                 rtl: $('html').attr('dir') === 'rtl',
                 responsive: [{
@@ -426,7 +454,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     settings: {
                         slidesToShow: 4,
                         slidesToScroll: 1,
-                        infinite: true
+                        swipeToSlide: true,
+                        infinite: childCount > 4
                     }
                 },
                 {
@@ -434,7 +463,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     settings: {
                         slidesToShow: 3,
                         slidesToScroll: 1,
-                        infinite: true
+                        swipeToSlide: true,
+                        infinite: childCount > 3
                     }
                 },
                 {
@@ -442,7 +472,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     settings: {
                         slidesToShow: 2,
                         slidesToScroll: 1,
-                        infinite: true
+                        swipeToSlide: true,
+                        infinite: childCount > 2
                     }
                 },
                 {
@@ -450,7 +481,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     settings: {
                         slidesToShow: 2,
                         slidesToScroll: 1,
-                        infinite: true
+                        swipeToSlide: true,
+                        infinite: childCount > 2
                     }
                 }]
             });

@@ -424,13 +424,12 @@
     });
 
     // Preloader auto-hide fallback
-    $('.preloader').addClass('hidden').fadeOut(300);
     $(window).on('load', function() {
       $('.preloader').addClass('hidden').fadeOut(300);
     });
     setTimeout(function() {
       $('.preloader').addClass('hidden').fadeOut(300);
-    }, 1200);
+    }, 2500);
 
     // Main Hero Slider Carousel
     if ($('#g2-main-slider').length > 0) {
