@@ -442,14 +442,21 @@
         nextArrow: '<button type="button" class="slick-next g2-slider-arrow"><i class="fal fa-chevron-right"></i></button>',
         autoplay: true,
         autoplaySpeed: 3500,
-        speed: 700,
+        speed: 750,
         slidesToShow: 1,
         slidesToScroll: 1,
+        swipeToSlide: true,
+        touchThreshold: 20,
+        touchMove: true,
+        draggable: true,
+        waitForAnimate: false,
+        useTransform: true,
+        useCSS: true,
         infinite: true,
         pauseOnHover: false,
         fade: !isMobileHero,
         adaptiveHeight: false,
-        cssEase: isMobileHero ? 'cubic-bezier(0.25, 0.1, 0.25, 1)' : 'ease-in-out',
+        cssEase: 'cubic-bezier(0.16, 1, 0.3, 1)',
         rtl: $('html').attr('dir') === 'rtl',
         responsive: [
           {
@@ -458,6 +465,7 @@
               fade: false,
               arrows: false,
               dots: true,
+              swipeToSlide: true,
               adaptiveHeight: false
             }
           }

@@ -160,7 +160,7 @@
                 {{ $keywords['NO CATEGORIES FOUND'] ?? __('NO CATEGORIES FOUND') }}
               </h5>
             @else
-              <div class="category-slider" id="cat-slider-grocery" data-slick='{"arrows": true, "autoplay": false, "infinite": true, "slidesToShow": 7, "slidesToScroll": 1, "swipeToSlide": true, "touchMove": true, "draggable": true, "touchThreshold": 25, "speed": 350, "responsive": [{"breakpoint": 1200, "settings": {"slidesToShow": 6, "infinite": true, "swipeToSlide": true}}, {"breakpoint": 992, "settings": {"slidesToShow": 5, "infinite": true, "swipeToSlide": true}}, {"breakpoint": 768, "settings": {"slidesToShow": 4, "infinite": true, "swipeToSlide": true}}, {"breakpoint": 576, "settings": {"slidesToShow": 2, "infinite": true, "swipeToSlide": true}}]}'>
+              <div class="category-slider" id="cat-slider-grocery" data-slick='{"arrows": true, "autoplay": false, "infinite": true, "slidesToShow": 7, "slidesToScroll": 1, "swipeToSlide": true, "touchMove": true, "draggable": true, "touchThreshold": 20, "waitForAnimate": false, "speed": 550, "cssEase": "cubic-bezier(0.16, 1, 0.3, 1)", "responsive": [{"breakpoint": 1200, "settings": {"slidesToShow": 6, "infinite": true, "swipeToSlide": true}}, {"breakpoint": 992, "settings": {"slidesToShow": 5, "infinite": true, "swipeToSlide": true}}, {"breakpoint": 768, "settings": {"slidesToShow": 4, "infinite": true, "swipeToSlide": true}}, {"breakpoint": 576, "settings": {"slidesToShow": 2, "infinite": true, "swipeToSlide": true}}]}'>
                 @foreach ($item_categories as $category)
                   <div class="category-item">
                     <a href="{{ route('front.user.shop', [getParam(), 'category=' . $category->slug]) }}">

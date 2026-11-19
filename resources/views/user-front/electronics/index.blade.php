@@ -540,10 +540,18 @@
         dots: false,
         arrows: false,
         autoplay: true,
-        autoplaySpeed: 3000,
-        speed: 600,
+        autoplaySpeed: 3500,
+        speed: 700,
         slidesToShow: 1,
         slidesToScroll: 1,
+        swipeToSlide: true,
+        touchThreshold: 20,
+        touchMove: true,
+        draggable: true,
+        waitForAnimate: false,
+        useTransform: true,
+        useCSS: true,
+        cssEase: 'cubic-bezier(0.16, 1, 0.3, 1)',
         infinite: true,
         rtl: $('html').attr('dir') === 'rtl'
       });
@@ -565,54 +573,64 @@
         } catch(e) {}
 
         $(sliderId).slick({
-          speed: 380,
+          speed: 550,
           waitForAnimate: false,
-          touchThreshold: 15,
+          touchThreshold: 20,
           swipeToSlide: true,
           touchMove: true,
           useTransform: true,
           useCSS: true,
-          cssEase: 'cubic-bezier(0.22, 1, 0.36, 1)',
+          cssEase: 'cubic-bezier(0.16, 1, 0.3, 1)',
           arrows: true,
           dots: false,
           autoplay: false,
           slidesToShow: desktopSlides,
-          infinite: false,
+          infinite: true,
           rtl: $('html').attr('dir') === 'rtl',
           responsive: [
             {
               breakpoint: 1200,
               settings: {
                 slidesToShow: desktopSlides >= 4 ? 4 : desktopSlides,
-                slidesToScroll: 1
+                slidesToScroll: 1,
+                swipeToSlide: true,
+                infinite: true
               }
             },
             {
               breakpoint: 992,
               settings: {
                 slidesToShow: desktopSlides >= 3 ? 3 : 2,
-                slidesToScroll: 1
+                slidesToScroll: 1,
+                swipeToSlide: true,
+                infinite: true
               }
             },
             {
               breakpoint: 768,
               settings: {
                 slidesToShow: 2,
-                slidesToScroll: 1
+                slidesToScroll: 1,
+                swipeToSlide: true,
+                infinite: true
               }
             },
             {
               breakpoint: 575,
               settings: {
                 slidesToShow: 2,
-                slidesToScroll: 1
+                slidesToScroll: 1,
+                swipeToSlide: true,
+                infinite: true
               }
             },
             {
               breakpoint: 480,
               settings: {
                 slidesToShow: 2,
-                slidesToScroll: 1
+                slidesToScroll: 1,
+                swipeToSlide: true,
+                infinite: true
               }
             }
           ],

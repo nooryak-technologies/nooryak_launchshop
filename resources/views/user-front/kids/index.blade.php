@@ -107,7 +107,7 @@
               </h5>
             @else
               <div class="position-relative">
-                <div class="category-slider" id="cat-slider-kid" data-slick='{"arrows": true, "autoplay": true, "autoplaySpeed": 3000, "slidesToShow": 5, "slidesToScroll": 1, "responsive": [{"breakpoint": 1200, "settings": {"slidesToShow": 4}}, {"breakpoint": 992, "settings": {"slidesToShow": 3}}, {"breakpoint": 768, "settings": {"slidesToShow": 2}}, {"breakpoint": 576, "settings": {"slidesToShow": 2}}]}'>
+                <div class="category-slider" id="cat-slider-kid" data-slick='{"arrows": true, "autoplay": false, "infinite": true, "slidesToShow": 5, "slidesToScroll": 1, "swipeToSlide": true, "touchMove": true, "draggable": true, "touchThreshold": 20, "waitForAnimate": false, "speed": 550, "cssEase": "cubic-bezier(0.16, 1, 0.3, 1)", "responsive": [{"breakpoint": 1200, "settings": {"slidesToShow": 4, "infinite": true, "swipeToSlide": true}}, {"breakpoint": 992, "settings": {"slidesToShow": 3, "infinite": true, "swipeToSlide": true}}, {"breakpoint": 768, "settings": {"slidesToShow": 2, "infinite": true, "swipeToSlide": true}}, {"breakpoint": 576, "settings": {"slidesToShow": 2, "infinite": true, "swipeToSlide": true}}]}'>
                   @foreach ($item_categories as $category)
                     <div class="category-item color-1">
                       <div class="category-icon mb-20">

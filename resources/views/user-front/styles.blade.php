@@ -2519,6 +2519,8 @@ section.category.category-6 {
     will-change: transform;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+    -webkit-perspective: 1000px;
+    perspective: 1000px;
 }
 
 .slick-slide {
@@ -2531,8 +2533,13 @@ section.category.category-6 {
     outline: none !important;
 }
 
-.slick-slide img {
+.slick-slide img,
+.category-slider img,
+.animated-slider img {
     -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
     user-drag: none;
 }
 

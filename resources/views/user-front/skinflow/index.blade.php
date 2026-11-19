@@ -104,7 +104,7 @@
             </h5>
           @else
             <div class="category-slider-wrapper">
-              <div class="cat-slider-skinflow" id="cat-slider-skinflow" data-slick='{"dots": true, "autoplay": true, "autoplaySpeed": 3000, "slidesToShow": 8, "slidesToScroll": 1, "responsive": [{"breakpoint": 1200, "settings": {"slidesToShow": 6}}, {"breakpoint": 992, "settings": {"slidesToShow": 5}}, {"breakpoint": 768, "settings": {"slidesToShow": 4}}, {"breakpoint": 576, "settings": {"slidesToShow": 3}}]}'>
+              <div class="cat-slider-skinflow" id="cat-slider-skinflow" data-slick='{"dots": true, "arrows": true, "autoplay": false, "infinite": true, "slidesToShow": 8, "slidesToScroll": 1, "swipeToSlide": true, "touchMove": true, "draggable": true, "touchThreshold": 20, "waitForAnimate": false, "speed": 550, "cssEase": "cubic-bezier(0.16, 1, 0.3, 1)", "responsive": [{"breakpoint": 1200, "settings": {"slidesToShow": 6, "infinite": true, "swipeToSlide": true}}, {"breakpoint": 992, "settings": {"slidesToShow": 5, "infinite": true, "swipeToSlide": true}}, {"breakpoint": 768, "settings": {"slidesToShow": 4, "infinite": true, "swipeToSlide": true}}, {"breakpoint": 576, "settings": {"slidesToShow": 3, "infinite": true, "swipeToSlide": true}}]}'>
                 @foreach ($item_categories as $category)
                   <!-- category-item -->
                   <div class="category-item">
