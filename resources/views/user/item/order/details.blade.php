@@ -220,13 +220,16 @@
     <!-- Shipping Details Card -->
     <div class="col-md-4">
       <div class="card card-premium">
-        <div class="card-header">
+        <div class="card-header d-flex align-items-center justify-content-between">
           <div class="d-flex align-items-center">
             <div class="card-icon-wrap" style="background: #eff6ff; color: #2563eb;">
               <i class="fas fa-map-marker-alt"></i>
             </div>
             <div class="card-title mb-0" style="font-size: 16px; font-weight: 600; color: #1e293b;">{{ __('Shipping Details') }}</div>
           </div>
+          <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#editAddressModal" style="border-radius: 6px; font-size: 12px; padding: 4px 10px; font-weight: 600;">
+            <i class="fas fa-edit mr-1"></i> {{ __('Edit Address') }}
+          </button>
         </div>
         <div class="card-body">
           <div class="payment-information">
@@ -585,6 +588,53 @@
             </table>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Address Modal -->
+  <div class="modal fade" id="editAddressModal" tabindex="-1" role="dialog" aria-labelledby="editAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content" style="border-radius: 12px; overflow: hidden; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+        <div class="modal-header" style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 16px 20px;">
+          <h5 class="modal-title" id="editAddressModalLabel" style="font-weight: 600; color: #1e293b; font-size: 16px;">
+            <i class="fas fa-map-marker-alt text-primary mr-2"></i>{{ __('Edit Order Address & Pincode') }}
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="{{ route('user.item.order.address_update') }}" method="POST">
+          @csrf
+          <input type="hidden" name="order_id" value="{{ $order->id }}">
+          <div class="modal-body" style="padding: 20px;">
+            <div class="alert alert-info py-2 px-3 mb-3" style="font-size: 12px; border-radius: 6px; background-color: #eff6ff; border-color: #bfdbfe; color: #1d4ed8;">
+              <i class="fas fa-info-circle mr-1"></i> {{ __('Make sure to include a valid 6-digit Pincode (e.g. 622001) in the address. Shiprocket strictly requires a pincode to create shipments.') }}
+            </div>
+            <div class="form-group pt-0 px-0">
+              <label style="font-weight: 600; font-size: 13px; color: #475569;">{{ __('Shipping Address') }} <span class="text-danger">*</span></label>
+              <textarea name="shipping_address" class="form-control" rows="3" required placeholder="Street address, house no, landmark, and 6-digit pincode">{{ $order->shipping_address }}</textarea>
+            </div>
+            <div class="row">
+              <div class="col-md-6 form-group px-0 pr-md-2">
+                <label style="font-weight: 600; font-size: 13px; color: #475569;">{{ __('City') }}</label>
+                <input type="text" name="shipping_city" class="form-control" value="{{ $order->shipping_city }}">
+              </div>
+              <div class="col-md-6 form-group px-0 pl-md-2">
+                <label style="font-weight: 600; font-size: 13px; color: #475569;">{{ __('State') }}</label>
+                <input type="text" name="shipping_state" class="form-control" value="{{ $order->shipping_state }}">
+              </div>
+            </div>
+            <div class="form-group pt-0 px-0 mb-0">
+              <label style="font-weight: 600; font-size: 13px; color: #475569;">{{ __('Billing Address (Optional)') }}</label>
+              <textarea name="billing_address" class="form-control" rows="2" placeholder="Billing address if different">{{ $order->billing_address }}</textarea>
+            </div>
+          </div>
+          <div class="modal-footer" style="background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 12px 20px;">
+            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">{{ __('Cancel') }}</button>
+            <button type="submit" class="btn btn-primary btn-sm px-3" style="font-weight: 600;">{{ __('Save Address') }}</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

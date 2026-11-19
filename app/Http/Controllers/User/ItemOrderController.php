@@ -173,6 +173,44 @@ class ItemOrderController extends Controller
         return view('user.item.order.details', compact('order', 'itemLang'));
     }
 
+    public function updateAddress(Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required',
+            'shipping_address' => 'required',
+        ]);
+
+        $user_id = Auth::guard('web')->user()->id;
+        $order = UserOrder::where('id', $request->order_id)->where('user_id', $user_id)->firstOrFail();
+
+        $order->shipping_address = $request->shipping_address;
+        if ($request->filled('shipping_city')) {
+            $order->shipping_city = $request->shipping_city;
+        }
+        if ($request->filled('shipping_state')) {
+            $order->shipping_state = $request->shipping_state;
+        }
+        if ($request->filled('billing_address')) {
+            $order->billing_address = $request->billing_address;
+        }
+        if ($request->filled('billing_city')) {
+            $order->billing_city = $request->billing_city;
+        }
+        if ($request->filled('billing_state')) {
+            $order->billing_state = $request->billing_state;
+        }
+        $order->save();
+
+        if ($order->order_status == 'processing') {
+            \App\Http\Controllers\User\ShippingGatewayController::createShiprocketOrder($order, $user_id);
+        }
+
+        if (!Session::has('warning')) {
+            Session::flash('success', __('Order address updated successfully!'));
+        }
+        return back();
+    }
+
 
     public function bulkOrderDelete(Request $request)
     {

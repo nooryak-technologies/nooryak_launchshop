@@ -123,7 +123,7 @@
                   <div class="form-group mb-3">
                     <label for="country">{{ $keywords['Address'] ?? __('Address') }} *</label>
                     <textarea name="billing_address" class="form-control max_height_100"
-                      placeholder="{{ $keywords['Address'] ?? __('Address') }}">{{ Auth::guard('customer')->user() ? convertUtf8(Auth::guard('customer')->user()->billing_address) : old('billing_address') }}</textarea>
+                      placeholder="{{ $keywords['Address'] ?? __('Street address, landmark, and 6-digit pincode (e.g. 622001)') }}">{{ Auth::guard('customer')->user() ? convertUtf8(Auth::guard('customer')->user()->billing_address) : old('billing_address') }}</textarea>
                     @error('billing_address')
                       <p class="text-danger mt-2">{{ convertUtf8($message) }}</p>
                     @enderror
@@ -229,7 +229,7 @@
                     <div class="form-group mb-3">
                       <label for="shipping_address">{{ $keywords['Address'] ?? __('Address') }} *</label>
                       <textarea name="shipping_address" class="form-control max_height_100"
-                        placeholder="{{ $keywords['Address'] ?? __('Address') }}">{{ Auth::guard('customer')->user() ? convertUtf8(Auth::guard('customer')->user()->shipping_address) : old('shipping_address') }}</textarea>
+                        placeholder="{{ $keywords['Address'] ?? __('Street address, landmark, and 6-digit pincode (e.g. 622001)') }}">{{ Auth::guard('customer')->user() ? convertUtf8(Auth::guard('customer')->user()->shipping_address) : old('shipping_address') }}</textarea>
                       @error('shipping_address')
                         <p class="text-danger mt-2">{{ convertUtf8($message) }}</p>
                       @enderror
