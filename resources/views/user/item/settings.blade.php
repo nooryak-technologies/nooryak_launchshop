@@ -103,32 +103,7 @@
               </div>
             </div>
 
-            <!-- Disqus Comment System -->
-            <div class="py-4 border-bottom" style="border-color: rgba(0,0,0,0.05) !important;">
-              <div class="row align-items-center">
-                <div class="col-lg-5 mb-3 mb-lg-0 d-flex align-items-start">
-                  <span class="d-inline-flex align-items-center justify-content-center mr-3 mt-1" style="width: 44px; height: 44px; border-radius: 50%; background: rgba(40, 167, 69, 0.1); flex-shrink: 0;">
-                    <i class="fas fa-comments text-success" style="font-size: 18px;"></i>
-                  </span>
-                  <div>
-                    <h5 class="font-weight-bold mb-1" style="font-size: 15px; color: #212529;">{{ __('Disqus Comment System') }} <span class="text-danger">*</span></h5>
-                    <p class="text-muted mb-0" style="font-size: 13px;">{{ __('Enable or disable Disqus comment system.') }}</p>
-                  </div>
-                </div>
-                <div class="col-lg-7">
-                  <div class="selectgroup w-100 mb-0 shadow-sm" style="border-radius: 8px; overflow: hidden; border: 1px solid rgba(0,0,0,0.1);">
-                    <label class="selectgroup-item mb-0">
-                      <input type="radio" name="disqus_comment_system" value="1" class="selectgroup-input" @if ($shopsettings) {{ $shopsettings->disqus_comment_system == 1 ? 'checked' : '' }} @endif>
-                      <span class="selectgroup-button font-weight-bold py-2" style="border-radius: 0; border: none;">{{ __('Active') }}</span>
-                    </label>
-                    <label class="selectgroup-item mb-0">
-                      <input type="radio" name="disqus_comment_system" value="0" class="selectgroup-input" @if ($shopsettings) {{ $shopsettings->disqus_comment_system == 0 ? 'checked' : '' }} @endif>
-                      <span class="selectgroup-button font-weight-bold py-2" style="border-radius: 0; border: none;">{{ __('Deactivate') }}</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
+
 
             <!-- Time Format -->
             <div class="py-4 border-bottom" style="border-color: rgba(0,0,0,0.05) !important;">

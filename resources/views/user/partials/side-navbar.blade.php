@@ -852,38 +852,7 @@
                           </a>
                         </li>
 
-                        <!-- additional sections -->
-                        <li class="submenu">
-                          <a data-toggle="collapse" href="#hoem-addi-section"
-                            aria-expanded="{{ request()->routeIs('user.additional_sections') ||
-                            request()->routeIs('user.additional_section.create') ||
-                            request()->routeIs('user.additional_section.edit')
-                                ? 'true'
-                                : 'false' }}">
-                            <span class="sub-item">{{ __('Additional Sections') }}</span>
-                            <span class="caret"></span>
-                          </a>
-                          <div id="hoem-addi-section"
-                            class="collapse
-                            @if (request()->routeIs('user.additional_sections') ||
-                                    request()->routeIs('user.additional_section.create') ||
-                                    request()->routeIs('user.additional_section.edit')) show @endif pl-3">
-                            <ul class="nav nav-collapse subnav">
-                              <li class="{{ request()->routeIs('user.additional_section.create') ? 'active' : '' }}">
-                                <a href="{{ route('user.additional_section.create') }}">
-                                  <span class="sub-item">{{ __('Add Section') }}</span>
-                                </a>
-                              </li>
-                              <li
-                                class="{{ request()->routeIs('user.additional_sections') || request()->routeIs('user.additional_section.edit') ? 'active' : '' }}">
-                                <a href="{{ route('user.additional_sections', ['language' => $defaultLang]) }}">
-                                  <span class="sub-item">{{ __('Sections') }}
-                                  </span>
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                        </li>
+
 
                         <li class="
                           @if (request()->routeIs('user.sections.index')) active @endif">
@@ -986,41 +955,7 @@
                           </a>
                         </li>
 
-                        <!-- additional sections -->
-                        <li class="submenu">
-                          <a data-toggle="collapse" href="#about-additional-section"
-                            aria-expanded="{{ request()->routeIs('user.about.additional_sections') ||
-                            request()->routeIs('user.about.additional_section.create') ||
-                            request()->routeIs('user.about.additional_section.edit')
-                                ? 'true'
-                                : 'false' }}">
-                            <span class="sub-item">{{ __('Additional Sections') }}</span>
-                            <span class="caret"></span>
-                          </a>
-                          <div id="about-additional-section"
-                            class="collapse
-                            @if (request()->routeIs('user.about.additional_sections') ||
-                                    request()->routeIs('user.about.additional_section.create') ||
-                                    request()->routeIs('user.about.additional_section.edit')) show @endif pl-3">
-                            <ul class="nav nav-collapse subnav">
 
-                              <li
-                                class="{{ request()->routeIs('user.about.additional_section.create') ? 'active' : '' }}">
-                                <a href="{{ route('user.about.additional_section.create') }}">
-                                  <span class="sub-item">{{ __('Add Section') }}</span>
-                                </a>
-                              </li>
-                              <li
-                                class="{{ request()->routeIs('user.about.additional_sections') || request()->routeIs('user.about.additional_section.edit') ? 'active' : '' }}">
-                                <a
-                                  href="{{ route('user.about.additional_sections', ['language' => $defaultLang]) }}">
-                                  <span class="sub-item">{{ __('Sections') }}
-                                  </span>
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                        </li>
 
 
                         <li class="@if (request()->routeIs('user.about.sections.index')) active @endif">

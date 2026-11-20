@@ -111,7 +111,7 @@
                   <label class="dark-label mb-2" style="font-weight: 600; font-size: 13px;">{{ __('Phone') }} <span class="text-danger">*</span></label>
                   <div class="d-flex align-items-center">
                     <div class="stat-card-icon-box mr-2" style="width: 42px; height: 42px; border-radius: 8px; background: rgba(13, 110, 253, 0.08); color: #0d6efd; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
-                      <i class="fas fa-phone-alt"></i>
+                      <i class="fas fa-phone"></i>
                     </div>
                     <input type="text" class="form-control dark-input" style="border-radius: 8px; height: 42px; font-size: 14px;" name="phone" value="{{ $user->phone }}" placeholder="{{ __('Enter phone') }}">
                   </div>

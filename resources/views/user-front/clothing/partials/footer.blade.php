@@ -98,10 +98,13 @@
             @endphp
             <ul class="footer-links" style="list-style:none;padding-left:0;line-height:2.2;font-size:13px;color:#555;">
               @if(count($phone_numbers) > 0)
-                <li>
+                <li style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px;">
                   <i class="fal fa-phone" style="margin-right:8px;"></i>
                   @foreach($phone_numbers as $pn)
-                    <a href="tel:{{ trim($pn) }}">{{ trim($pn) }}</a>{{ !$loop->last ? ', ' : '' }}
+                    @php $pTrim = trim($pn); @endphp
+                    @if (!empty($pTrim))
+                      <a href="tel:{{ $pTrim }}" style="display: inline-block; white-space: nowrap;">{{ $pTrim }}</a>@if(!$loop->last)<span>,</span>@endif
+                    @endif
                   @endforeach
                 </li>
               @endif
@@ -109,7 +112,10 @@
                 <li>
                   <i class="fal fa-envelope" style="margin-right:8px;"></i>
                   @foreach($emails as $em)
-                    <a href="mailto:{{ trim($em) }}">{{ trim($em) }}</a>{{ !$loop->last ? ', ' : '' }}
+                    @php $eTrim = trim($em); @endphp
+                    @if (!empty($eTrim))
+                      <a href="mailto:{{ $eTrim }}" style="display: block; margin-left: 20px; word-break: break-all;">{{ $eTrim }}</a>
+                    @endif
                   @endforeach
                 </li>
               @endif

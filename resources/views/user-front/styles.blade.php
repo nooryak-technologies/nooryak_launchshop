@@ -1889,6 +1889,24 @@ footer {
   }
 }
 
+/* --- Global Footer Contact Us Clean Single-Line Phone & Email Formatting --- */
+.footer-widget-number {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.footer-widget-number a {
+  display: inline-block !important;
+  white-space: nowrap !important;
+}
+
+.footer-widget-email a {
+  display: block !important;
+  word-break: break-all !important;
+}
+
 /* =========================================================
    UNIVERSAL PIXEL-PERFECT QUICK VIEW MODAL (ALL THEMES)
    ========================================================= */

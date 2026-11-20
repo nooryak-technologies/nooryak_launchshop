@@ -233,6 +233,43 @@ $(function ($) {
         return false;
     });
 
+    // Sidebar Scroll Position Persistence & Active Item Centering
+    $(function () {
+        const $sidebarWrapper = $('.sidebar-wrapper');
+        if ($sidebarWrapper.length > 0) {
+            function restoreSidebarScroll() {
+                const $activeItem = $('.sidebar .nav-item.active, .sidebar li.active, .sidebar .subnav li.active, .sidebar .nav-collapse li.active').filter(':visible').last();
+                
+                if ($activeItem.length > 0) {
+                    const wrapperOffset = $sidebarWrapper.offset().top;
+                    const wrapperHeight = $sidebarWrapper.height();
+                    const itemOffset = $activeItem.offset().top;
+                    const currentScroll = $sidebarWrapper.scrollTop();
+                    
+                    const targetScroll = currentScroll + (itemOffset - wrapperOffset) - (wrapperHeight / 2) + ($activeItem.outerHeight() / 2);
+                    $sidebarWrapper.scrollTop(Math.max(0, targetScroll));
+                } else {
+                    const savedScroll = sessionStorage.getItem('userSidebarScroll');
+                    if (savedScroll !== null) {
+                        $sidebarWrapper.scrollTop(parseInt(savedScroll, 10));
+                    }
+                }
+            }
+
+            $('.sidebar a').on('click', function () {
+                sessionStorage.setItem('userSidebarScroll', $sidebarWrapper.scrollTop());
+            });
+
+            $sidebarWrapper.on('scroll', function () {
+                sessionStorage.setItem('userSidebarScroll', $(this).scrollTop());
+            });
+
+            setTimeout(restoreSidebarScroll, 100);
+            setTimeout(restoreSidebarScroll, 300);
+            setTimeout(restoreSidebarScroll, 600);
+        }
+    });
+
     /* ***************************************************
     ==========fontawesome icon picker start==========
     ******************************************************/

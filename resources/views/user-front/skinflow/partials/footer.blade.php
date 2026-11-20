@@ -76,9 +76,12 @@
             <ul class="footer-links">
               @if (count($phone_numbers) > 0)
                 <li>
-                  <div class="footer-widget-number">
+                  <div class="footer-widget-number" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px;">
                     @foreach ($phone_numbers as $phone_number)
-                      <a href="tel: {{ $phone_number }}">{{ $phone_number }}</a>
+                      @php $pTrim = trim($phone_number); @endphp
+                      @if (!empty($pTrim))
+                        <a href="tel:{{ $pTrim }}" style="display: inline-block; white-space: nowrap;">{{ $pTrim }}</a>@if(!$loop->last)<span class="mr-1">,</span>@endif
+                      @endif
                     @endforeach
                   </div>
                 </li>

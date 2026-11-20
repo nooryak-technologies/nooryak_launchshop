@@ -1115,7 +1115,7 @@ class ItemController extends Controller
         }
         $shopsettings->user_id = Auth::guard('web')->user()->id;
         $shopsettings->item_rating_system = $request->item_rating_system;
-        $shopsettings->disqus_comment_system = $request->disqus_comment_system;
+        $shopsettings->disqus_comment_system = $request->has('disqus_comment_system') ? $request->disqus_comment_system : ($shopsettings->disqus_comment_system ?? 0);
         $shopsettings->catalog_mode = $request->catalog_mode;
         $shopsettings->time_format = $request->time_format;
         $user_id = Auth::guard('web')->user()->id;
