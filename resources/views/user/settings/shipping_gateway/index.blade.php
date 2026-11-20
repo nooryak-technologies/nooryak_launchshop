@@ -115,9 +115,11 @@
               }
             @endphp
 
-            <div class="alert alert-info py-2 px-3 mb-3" style="font-size: 12px; border-radius: 8px; background-color: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af;">
-              <i class="fas fa-info-circle mr-1"></i> <strong>Important:</strong> Enter your dedicated <strong>Shiprocket API User</strong> email & password here (not your main website login, which causes <em>"Access forbidden"</em> errors). 
-              <a href="javascript:void(0);" data-toggle="modal" data-target="#shiprocketGuideModal" class="text-primary font-weight-bold ml-1"><u>View Guide</u></a>
+            <div class="alert alert-info py-2 px-3 mb-3 d-flex align-items-center justify-content-between" style="font-size: 12px; border-radius: 8px; background-color: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af;">
+              <div>
+                <i class="fas fa-info-circle mr-1"></i> <strong>Note:</strong> Connect your store using your Shiprocket dedicated <strong>API User</strong> credentials.
+              </div>
+              <a href="javascript:void(0);" data-toggle="modal" data-target="#shiprocketGuideModal" class="text-primary font-weight-bold ml-2 text-nowrap"><u>View Step-by-Step Guide</u></a>
             </div>
             <div class="form-group pt-0">
               <label style="font-weight: 600; color: #475569; font-size: 13px; margin-bottom: 8px;">{{ __('Status') }}</label>
@@ -224,8 +226,8 @@
               <i class="fas fa-shipping-fast text-primary" style="font-size: 18px;"></i>
             </div>
             <div>
-              <h5 class="modal-title font-weight-bold mb-0" id="shiprocketGuideModalLabel" style="color: #ffffff;">{{ __('How to Get Shiprocket API Credentials') }}</h5>
-              <small style="color: rgba(255,255,255,0.85);">{{ __('Step-by-step guide to connect Shiprocket with your store') }}</small>
+              <h5 class="modal-title font-weight-bold mb-0" id="shiprocketGuideModalLabel" style="color: #ffffff;">{{ __('How to Create & Connect Shiprocket') }}</h5>
+              <small style="color: rgba(255,255,255,0.85);">{{ __('Step-by-step setup guide for your store') }}</small>
             </div>
           </div>
           <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" style="opacity: 0.9;">
@@ -233,24 +235,15 @@
           </button>
         </div>
         <div class="modal-body" style="padding: 24px; max-height: 70vh; overflow-y: auto;">
-          <!-- Warning box explaining Access Forbidden -->
-          <div class="alert alert-warning d-flex align-items-start mb-4" style="border-radius: 8px; border-left: 4px solid #f59e0b; background-color: #fffbeb;">
-            <i class="fas fa-exclamation-triangle mr-3 mt-1 text-warning" style="font-size: 20px;"></i>
-            <div style="font-size: 13px; color: #92400e;">
-              <strong>{{ __('Why does "Shiprocket Error: Access forbidden" happen?') }}</strong><br>
-              {{ __('Shiprocket prohibits using your main account login credentials for external API sync. You must create a dedicated') }} <strong>{{ __('API User') }}</strong> {{ __('inside Shiprocket. Follow the 4 simple steps below:') }}
-            </div>
-          </div>
-
           <!-- Step 1 -->
           <div class="d-flex mb-4">
             <div class="mr-3">
               <span class="badge badge-primary rounded-circle" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 14px; background: #2563eb;">1</span>
             </div>
             <div>
-              <h6 class="font-weight-bold mb-1" style="color: #1e293b;">{{ __('Log in to Shiprocket') }}</h6>
+              <h6 class="font-weight-bold mb-1" style="color: #1e293b;">{{ __('Create or Sign In to Your Shiprocket Account') }}</h6>
               <p class="text-muted mb-0" style="font-size: 13px;">
-                {{ __('Open') }} <a href="https://app.shiprocket.in" target="_blank" class="text-primary font-weight-bold">app.shiprocket.in <i class="fas fa-external-link-alt fa-xs"></i></a> {{ __('and sign in to your Shiprocket account.') }}
+                {{ __('If you are new to Shiprocket, sign up for free at') }} <a href="https://www.shiprocket.in" target="_blank" class="text-primary font-weight-bold">shiprocket.in <i class="fas fa-external-link-alt fa-xs"></i></a>. {{ __('If you already have an account, log in at') }} <a href="https://app.shiprocket.in" target="_blank" class="text-primary font-weight-bold">app.shiprocket.in <i class="fas fa-external-link-alt fa-xs"></i></a>.
               </p>
             </div>
           </div>
