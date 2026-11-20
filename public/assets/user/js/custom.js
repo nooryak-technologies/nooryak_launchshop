@@ -347,15 +347,41 @@ $(function ($) {
                 },
                 success: function (response) {
                     try {
-                        const $temp = $('<div>').append($.parseHTML(response, document, true));
-                        const newTitle = $temp.find('title').text();
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(response, 'text/html');
+
+                        const newTitle = doc.querySelector('title') ? doc.querySelector('title').innerText : '';
                         if (newTitle) {
                             document.title = newTitle;
                         }
 
+                        // Remove previous AJAX injected styles
+                        $('head .ajax-page-style').remove();
+
+                        // Extract and inject page <style> tags from <head>
+                        doc.querySelectorAll('head style, style').forEach(function (styleEl) {
+                            const newStyle = document.createElement('style');
+                            newStyle.className = 'ajax-page-style';
+                            newStyle.textContent = styleEl.textContent;
+                            document.head.appendChild(newStyle);
+                        });
+
+                        // Extract and inject page <link rel="stylesheet"> tags if not already in <head>
+                        doc.querySelectorAll('link[rel="stylesheet"]').forEach(function (linkEl) {
+                            const href = linkEl.getAttribute('href');
+                            if (href && !document.querySelector('head link[href="' + href + '"]')) {
+                                const newLink = document.createElement('link');
+                                newLink.rel = 'stylesheet';
+                                newLink.className = 'ajax-page-style';
+                                newLink.href = href;
+                                document.head.appendChild(newLink);
+                            }
+                        });
+
                         // Extract main content
-                        const $newContent = $temp.find('.main-panel .content');
-                        if ($newContent.length > 0) {
+                        const newContentEl = doc.querySelector('.main-panel .content');
+                        if (newContentEl) {
+                            const $newContent = $(newContentEl);
                             $('.main-panel .content').replaceWith($newContent);
                             if (pushState) {
                                 window.history.pushState({ dashboardAjaxUrl: url }, '', url);

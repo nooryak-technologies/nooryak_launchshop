@@ -1,5 +1,11 @@
 @extends('user.layout')
-@section('styles')
+
+@php
+  $user = Auth::guard('web')->user();
+  $package = \App\Http\Helpers\UserPermissionHelper::currentPackagePermission($user->id);
+@endphp
+
+@section('content')
   <style>
     :root {
       --color-green: #22c55e;
@@ -239,13 +245,6 @@
       }
     }
   </style>
-@endsection
-@php
-  $user = Auth::guard('web')->user();
-  $package = \App\Http\Helpers\UserPermissionHelper::currentPackagePermission($user->id);
-@endphp
-
-@section('content')
   @if (is_null($package))
     @php
       $pendingMemb = \App\Models\Membership::query()

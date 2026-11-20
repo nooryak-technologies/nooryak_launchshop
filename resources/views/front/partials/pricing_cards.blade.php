@@ -270,10 +270,48 @@
                   // If it doesn't exist, append it
                   $packageFormattedFeatures[] = ['text' => $customText, 'has' => $customHas];
               }
- 
+
+              // Append all active package features from $pFeatures (from package settings)
+              $knownFeatures = [];
+              foreach ($packageFormattedFeatures as $pff) {
+                  $cleanKey = strtolower(trim(preg_replace('/[^a-z0-9]/i', '', $pff['text'])));
+                  $knownFeatures[$cleanKey] = true;
+              }
+
+              $featureDisplayMap = [
+                  'Coupon code' => 'Coupon code',
+                  'Advanced Report Admin Panel' => 'Advanced Report Admin Panel',
+                  'Mail Notifications' => 'Mail Notifications',
+                  'Wishlist Features' => 'Wishlist Features',
+                  'Themes' => 'Themes',
+                  'Offline Payment Options' => 'Offline Payment Options',
+                  'Inventory management' => 'Inventory management',
+                  'Product Individual Reports' => 'Product Individual Reports',
+                  'Orders Individual Reports' => 'Orders Individual Reports',
+              ];
+
+              if (!empty($pFeatures) && is_array($pFeatures)) {
+                  foreach ($pFeatures as $pf) {
+                      if (in_array($pf, ['AI Content & Image Generator', 'Tawk to', 'Tawk.to']) || stripos($pf, 'tawk') !== false) {
+                          continue;
+                      }
+                      $labelText = $featureDisplayMap[$pf] ?? $pf;
+                      $cleanLabelKey = strtolower(trim(preg_replace('/[^a-z0-9]/i', '', $labelText)));
+                      if (!isset($knownFeatures[$cleanLabelKey])) {
+                          $packageFormattedFeatures[] = ['text' => $labelText, 'has' => true];
+                          $knownFeatures[$cleanLabelKey] = true;
+                      }
+                  }
+              }
+
               $visibleCount = 7;
               $visibleFeats = array_slice($packageFormattedFeatures, 0, $visibleCount);
-              $extraFeats   = array_slice($packageFormattedFeatures, $visibleCount);
+
+              // In Extra Features (shown when clicking "More Features"), ONLY show actual included positive features (filter out disabled/unwanted items)
+              $rawExtra = array_slice($packageFormattedFeatures, $visibleCount);
+              $extraFeats = array_values(array_filter($rawExtra, function($feat) {
+                  return !empty($feat['has']) && $feat['has'] === true;
+              }));
 
               // CTA href
               if ($package->is_trial === '1' && $package->price != 0) {
@@ -717,7 +755,16 @@
       ctaEl.setAttribute('href', btn.getAttribute('data-plan-href') || '#');
 
       var extraUl = extraWrap.querySelector('ul.plan-v2-features');
-      listEl.innerHTML = extraUl ? extraUl.innerHTML : '';
+      if (extraUl) {
+        listEl.innerHTML = extraUl.innerHTML;
+        // Strip any disabled/crossed-out items from the mobile popup so only included features are shown
+        listEl.querySelectorAll('li.feat-disabled, li .fa-times, li .fi-times').forEach(function(icon) {
+          var li = icon.closest('li');
+          if (li) li.remove();
+        });
+      } else {
+        listEl.innerHTML = '';
+      }
 
       overlay.classList.add('open');
       overlay.setAttribute('aria-hidden', 'false');
