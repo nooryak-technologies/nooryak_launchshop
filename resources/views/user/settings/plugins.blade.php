@@ -136,68 +136,7 @@
           </div>
         @endif
 
-        @if (in_array('Tawk to', $features))
-          {{-- tawk.to --}}
-          <div class="col-lg-4">
-            <div class="card">
-              <div class="card-header">
-                <div class="row">
-                  <div class="col-lg-12">
-                    <div class="card-title">{{ __('Tawk.to') }}</div>
-                  </div>
-                </div>
-              </div>
-              <div class="card-body">
-                <form action="{{ route('user.tawk.update') }}" id="tawkForm" method="POST">
-                  @csrf
-                  <div class="row">
-                    <div class="col-lg-12">
-                      <div class="form-group">
-                        <label>{{ __('Tawk.to Status') }}</label>
-                        <div class="selectgroup w-100">
-                          <label class="selectgroup-item">
-                            <input type="radio" name="is_tawkto" value="1" class="selectgroup-input"
-                              {{ $userBs->is_tawkto == 1 ? 'checked' : '' }}>
-                            <span class="selectgroup-button">{{ __('Active') }}</span>
-                          </label>
-                          <label class="selectgroup-item">
-                            <input type="radio" name="is_tawkto" value="0" class="selectgroup-input"
-                              {{ $userBs->is_tawkto == 0 ? 'checked' : '' }}>
-                            <span class="selectgroup-button">{{ __('Deactive') }}</span>
-                          </label>
-                        </div>
-                        <p class="mb-0 text-warning">
-                          {{ __('If you enable Tawk.to, then WhatsApp must be disabled.') }}
-                        </p>
-                        @if ($errors->has('is_tawkto'))
-                          <p class="mb-0 text-danger">{{ $errors->first('is_tawkto') }}</p>
-                        @endif
-                      </div>
-                      <div class="form-group">
-                        <label>{{ __('Tawk.to Property Id') }}*</label>
-                        <input class="form-control" name="tak_to_property_id"
-                          value="{{ $userBs->tak_to_property_id }}">
-                        @if ($errors->has('tak_to_property_id'))
-                          <p class="mb-0 text-danger">{{ $errors->first('tak_to_property_id') }}</p>
-                        @endif
-                      </div>
-                      <div class="form-group">
-                        <label>{{ __('Tawk.to Widget Id') }}*</label>
-                        <input class="form-control" name="tak_to_widget_id" value="{{ $userBs->tak_to_widget_id }}">
-                        @if ($errors->has('tak_to_widget_id'))
-                          <p class="mb-0 text-danger">{{ $errors->first('tak_to_widget_id') }}</p>
-                        @endif
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
-              <div class="card-footer text-center">
-                <button class="btn btn-success" form="tawkForm" type="submit">{{ __('Update') }}</button>
-              </div>
-            </div>
-          </div>
-        @endif
+
 
         @if (in_array('Google Login', $features))
           {{-- Google Login --}}
@@ -408,9 +347,7 @@
                         <span class="selectgroup-button">{{ __('Deactive') }}</span>
                       </label>
                     </div>
-                    <p class="text-warning mb-0">
-                      {{ __('If you enable WhatsApp, then Tawk.to must be disabled.') }}
-                    </p>
+
                   </div>
                   <div class="form-group">
                     <label>{{ __('WhatsApp Number') }}</label>
