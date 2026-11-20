@@ -62,16 +62,8 @@
                       <ul class="submenu">
                         @foreach($link['children'] as $level2)
                           @php $l2Href = getUserHref($level2, $userCurrentLang->id); @endphp
-                          @if(trim($level2['text']) != 'Privacy Policy')
-                            <li><a href="{{ $l2Href }}" target="{{ $level2['target'] }}">{{ $level2['text'] }}</a></li>
-                          @endif
+                          <li><a href="{{ $l2Href }}" target="{{ $level2['target'] }}">{{ $level2['text'] }}</a></li>
                         @endforeach
-                        @if(strtolower(trim($link['text'])) == 'pages')
-                          <li><a href="{{ route('front.user.privacy_policy', getParam()) }}">{{ $keywords['Privacy Policy'] ?? __('Privacy Policy') }}</a></li>
-                          <li><a href="{{ route('front.user.terms_conditions', getParam()) }}">{{ $keywords['Terms & Conditions'] ?? __('Terms & Conditions') }}</a></li>
-                          <li><a href="{{ route('front.user.refund_policy', getParam()) }}">{{ $keywords['Refund Policy'] ?? __('Refund Policy') }}</a></li>
-                          <li><a href="{{ route('front.user.shipping_policy', getParam()) }}">{{ $keywords['Shipping Policy'] ?? __('Shipping Policy') }}</a></li>
-                        @endif
                       </ul>
                     </li>
                   @endif

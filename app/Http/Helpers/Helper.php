@@ -567,8 +567,21 @@ if (!function_exists('getUserHref')) {
         } else {
             $pageid = (int)$link["type"];
             $page = UserPageContent::where([['page_id', $pageid], ['language_id', $lang_id]])->first();
-            if (!empty($page)) {
-                $href = route('front.user.custom.page', [getParam(), $page->slug]);
+            if (!empty($page) && !empty($page->slug)) {
+                $params = ['slug' => $page->slug];
+                $userParam = getParam();
+                if (!empty($userParam)) {
+                    $params['username'] = $userParam;
+                }
+                try {
+                    $href = route('front.user.custom.page', $params);
+                } catch (\Throwable $e) {
+                    try {
+                        $href = route('front.dynamicPage', $params);
+                    } catch (\Throwable $e2) {
+                        $href = url('/page/' . $page->slug);
+                    }
+                }
             } else {
                 $href = "#";
             }
