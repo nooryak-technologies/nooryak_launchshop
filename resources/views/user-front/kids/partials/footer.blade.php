@@ -69,11 +69,13 @@
               @if (count($phone_numbers) > 0)
                 <li><i class="far fa-phone mr-0"></i>
                   <div class="footer-widget-number" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px;">
-                    @foreach ($phone_numbers as $phone_number)
-                      @php $pTrim = trim($phone_number); @endphp
-                      @if (!empty($pTrim))
-                        <a href="tel:{{ $pTrim }}" style="display: inline-block; white-space: nowrap;">{{ $pTrim }}</a>@if(!$loop->last)<span class="mr-1">,</span>@endif
-                      @endif
+                    @php
+                      $cleanPhones = array_values(array_filter(array_map('trim', $phone_numbers)));
+                    @endphp
+                    @foreach ($cleanPhones as $phone)
+                      <span class="phone-item" style="display: inline-flex; align-items: center; white-space: nowrap;">
+                        <a href="tel:{{ $phone }}">{{ $phone }}</a>@if(!$loop->last)<span class="mr-1">,</span>@endif
+                      </span>
                     @endforeach
                   </div>
                 </li>

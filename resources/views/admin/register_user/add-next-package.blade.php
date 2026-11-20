@@ -20,7 +20,7 @@
               @foreach ($packages as $package)
                 <option value="{{ $package->id }}"
                   {{ !empty($nextPackage) && $nextPackage->id == $package->id ? 'selected' : '' }}>{{ __($package->title) }}
-                  ({{ __($package->term) }})
+                  ({{ __($package->term) }}){{ $package->status == 0 ? ' [' . __('Deactivated') . ']' : '' }}
                 </option>
               @endforeach
             </select>

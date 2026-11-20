@@ -40,14 +40,26 @@
       padding-top: 135px !important;
       padding-bottom: 45px !important;
     }
-    .theme-grocery .page-title-area.header-next,
-    .theme-grocery2 .page-title-area.header-next,
-    .theme-vegetables .page-title-area.header-next,
     .theme-manti .page-title-area.header-next,
     .theme-electronics .page-title-area.header-next,
     .theme-kids .page-title-area.header-next {
+      margin-top: 215px !important;
       padding-top: 50px !important;
       padding-bottom: 40px !important;
+    }
+    .theme-grocery .page-title-area.header-next,
+    .theme-grocery2 .page-title-area.header-next,
+    .theme-vegetables .page-title-area.header-next {
+      padding-top: 50px !important;
+      padding-bottom: 40px !important;
+    }
+  }
+
+  @media (max-width: 1199.98px) {
+    .theme-manti .page-title-area.header-next,
+    .theme-electronics .page-title-area.header-next,
+    .theme-kids .page-title-area.header-next {
+      margin-top: 80px !important;
     }
   }
 

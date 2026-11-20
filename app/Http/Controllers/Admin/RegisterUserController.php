@@ -105,7 +105,8 @@ class RegisterUserController extends Controller
         $gateways = $online->merge($offline)->unique(function ($item) {
             return strtolower($item->keyword ?? $item->name);
         });
-        $packages = Package::query()->where('status', '1')->get();
+        // Include both active and deactivated packages so admin can manually assign any plan
+        $packages = Package::query()->orderBy('status', 'DESC')->orderBy('id', 'DESC')->get();
 
         $categories = UserCategory::where('language_id', $language->id)->get();
 
@@ -135,7 +136,8 @@ class RegisterUserController extends Controller
         }
 
         $user = User::findOrFail($id);
-        $packages = Package::query()->where('status', '1')->get();
+        // Include both active and deactivated packages so admin can manually assign any plan
+        $packages = Package::query()->orderBy('status', 'DESC')->orderBy('id', 'DESC')->get();
         $online = PaymentGateway::query()->where('status', 1)->get()->unique(function ($item) {
             return strtolower($item->keyword ?? $item->name);
         });

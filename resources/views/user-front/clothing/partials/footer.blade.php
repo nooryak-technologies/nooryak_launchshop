@@ -100,11 +100,13 @@
               @if(count($phone_numbers) > 0)
                 <li style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px;">
                   <i class="fal fa-phone" style="margin-right:8px;"></i>
-                  @foreach($phone_numbers as $pn)
-                    @php $pTrim = trim($pn); @endphp
-                    @if (!empty($pTrim))
-                      <a href="tel:{{ $pTrim }}" style="display: inline-block; white-space: nowrap;">{{ $pTrim }}</a>@if(!$loop->last)<span>,</span>@endif
-                    @endif
+                  @php
+                    $cleanPhones = array_values(array_filter(array_map('trim', $phone_numbers)));
+                  @endphp
+                  @foreach($cleanPhones as $phone)
+                    <span class="phone-item" style="display: inline-flex; align-items: center; white-space: nowrap;">
+                      <a href="tel:{{ $phone }}">{{ $phone }}</a>@if(!$loop->last)<span>,</span>@endif
+                    </span>
                   @endforeach
                 </li>
               @endif

@@ -8,6 +8,15 @@
 @section('content')
 
 
+  <style>
+    /* Ensure contact-area clears the absolute header when breadcrumb is absent */
+    .theme-manti .contact-area:first-of-type,
+    .theme-electronics .contact-area:first-of-type,
+    .theme-kids .contact-area:first-of-type {
+      position: relative;
+    }
+  </style>
+
   <!--====== Start contacts-section ======-->
   <div class="contact-area ptb-100">
     <div class="container">
@@ -156,16 +165,21 @@
                 </div>
               </form>
             </div>
-            @if (!empty($contact->latitude) && !empty($contact->longitude) && floatval($contact->latitude) != 0)
+            @php
+              $lat = !empty($contact->latitude) ? trim($contact->latitude) : '';
+              $lng = !empty($contact->longitude) ? trim($contact->longitude) : '';
+              $hasCoords = (!empty($lat) && !empty($lng) && is_numeric($lat) && is_numeric($lng) && floatval($lat) != 0);
+            @endphp
+            @if ($hasCoords)
               <div class="col-lg-6 mb-30" data-aos="fade-up" data-aos-delay="200">
                 <iframe width="100%" height="450" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-                  src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q={{ $contact->latitude }},{{ $contact->longitude }}+({{ urlencode(@$userBs->website_title) }})&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
+                  src="https://maps.google.com/maps?q={{ $lat }},{{ $lng }}&amp;hl=en&amp;z=15&amp;output=embed"></iframe>
               </div>
             @elseif(!empty($addresses))
               @php $mapQuery = implode(', ', array_map('trim', $addresses)); @endphp
               <div class="col-lg-6 mb-30" data-aos="fade-up" data-aos-delay="200">
                 <iframe width="100%" height="450" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-                  src="https://maps.google.com/maps?width=100%25&amp;height=450&amp;hl=en&amp;q={{ urlencode($mapQuery) }}&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
+                  src="https://maps.google.com/maps?q={{ urlencode($mapQuery) }}&amp;hl=en&amp;z=15&amp;output=embed"></iframe>
               </div>
             @endif
           </div>

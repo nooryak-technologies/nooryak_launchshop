@@ -1953,6 +1953,12 @@ footer {
   gap: 4px !important;
 }
 
+.footer-widget-number .phone-item {
+  display: inline-flex !important;
+  align-items: center !important;
+  white-space: nowrap !important;
+}
+
 .footer-widget-number a {
   display: inline-block !important;
   white-space: nowrap !important;

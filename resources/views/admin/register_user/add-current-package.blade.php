@@ -18,7 +18,7 @@
             <select name="package_id" id="" class="form-control" required>
               <option value="" selected disabled>{{ __('Select a Package') }}</option>
               @foreach ($packages as $package)
-                <option value="{{ $package->id }}">{{ __($package->title) }} ({{ __($package->term) }})</option>
+                <option value="{{ $package->id }}">{{ __($package->title) }} ({{ __($package->term) }}){{ $package->status == 0 ? ' [' . __('Deactivated') . ']' : '' }}</option>
               @endforeach
             </select>
           </div>

@@ -233,41 +233,227 @@ $(function ($) {
         return false;
     });
 
-    // Sidebar Scroll Position Persistence & Active Item Centering
+    // =========================================================================
+    // User Dashboard Sidebar Scroll Persistence, Centering & AJAX Navigation
+    // =========================================================================
     $(function () {
         const $sidebarWrapper = $('.sidebar-wrapper');
-        if ($sidebarWrapper.length > 0) {
-            function restoreSidebarScroll() {
-                const $activeItem = $('.sidebar .nav-item.active, .sidebar li.active, .sidebar .subnav li.active, .sidebar .nav-collapse li.active').filter(':visible').last();
-                
-                if ($activeItem.length > 0) {
-                    const wrapperOffset = $sidebarWrapper.offset().top;
-                    const wrapperHeight = $sidebarWrapper.height();
-                    const itemOffset = $activeItem.offset().top;
-                    const currentScroll = $sidebarWrapper.scrollTop();
-                    
-                    const targetScroll = currentScroll + (itemOffset - wrapperOffset) - (wrapperHeight / 2) + ($activeItem.outerHeight() / 2);
-                    $sidebarWrapper.scrollTop(Math.max(0, targetScroll));
-                } else {
-                    const savedScroll = sessionStorage.getItem('userSidebarScroll');
-                    if (savedScroll !== null) {
-                        $sidebarWrapper.scrollTop(parseInt(savedScroll, 10));
-                    }
+
+        function restoreSidebarScroll($targetEl) {
+            if (!$sidebarWrapper.length) return;
+            const $activeItem = ($targetEl && $targetEl.length)
+                ? $targetEl
+                : $('.sidebar .nav-item.active, .sidebar li.active, .sidebar .subnav li.active, .sidebar .nav-collapse li.active').filter(':visible').last();
+
+            if ($activeItem.length > 0) {
+                const wrapperOffset = $sidebarWrapper.offset().top;
+                const wrapperHeight = $sidebarWrapper.height();
+                const itemOffset = $activeItem.offset().top;
+                const currentScroll = $sidebarWrapper.scrollTop();
+
+                const targetScroll = currentScroll + (itemOffset - wrapperOffset) - (wrapperHeight / 2) + ($activeItem.outerHeight() / 2);
+                $sidebarWrapper.stop(true, false).animate({
+                    scrollTop: Math.max(0, targetScroll)
+                }, 200);
+            } else {
+                const savedScroll = sessionStorage.getItem('userSidebarScroll');
+                if (savedScroll !== null) {
+                    $sidebarWrapper.scrollTop(parseInt(savedScroll, 10));
                 }
             }
-
-            $('.sidebar a').on('click', function () {
-                sessionStorage.setItem('userSidebarScroll', $sidebarWrapper.scrollTop());
-            });
-
-            $sidebarWrapper.on('scroll', function () {
-                sessionStorage.setItem('userSidebarScroll', $(this).scrollTop());
-            });
-
-            setTimeout(restoreSidebarScroll, 100);
-            setTimeout(restoreSidebarScroll, 300);
-            setTimeout(restoreSidebarScroll, 600);
         }
+
+        function reinitializePlugins($container) {
+            // 1. Tagsinput
+            if ($.fn.tagsinput) {
+                $container.find('input[data-role="tagsinput"]').each(function () {
+                    if (!$(this).data('tagsinput')) {
+                        $(this).tagsinput();
+                    }
+                });
+            }
+
+            // 2. Select2 & NiceSelect
+            if ($.fn.select2) {
+                $container.find('.select2').each(function () {
+                    $(this).select2();
+                });
+            }
+            if ($.fn.niceSelect) {
+                $container.find('select.nice-select, select.header-nice-select').each(function () {
+                    $(this).niceSelect();
+                });
+            }
+
+            // 3. Flatpickr / Datepicker
+            if (window.flatpickr) {
+                $container.find('.datepicker, .flatpickr').each(function () {
+                    flatpickr(this);
+                });
+            }
+
+            // 4. JSColor
+            if (typeof jscolor !== 'undefined' && jscolor.installByClassName) {
+                jscolor.installByClassName("jscolor");
+            }
+
+            // 5. Iconpicker
+            if ($.fn.iconpicker) {
+                $container.find('.icp-dd').each(function () {
+                    $(this).iconpicker();
+                });
+            }
+
+            // 6. DataTables
+            if ($.fn.DataTable) {
+                $container.find('#basic-datatables').each(function () {
+                    if (!$.fn.DataTable.isDataTable(this)) {
+                        $(this).DataTable({
+                            responsive: true
+                        });
+                    }
+                });
+            }
+
+            // 7. Re-execute inline scripts within the loaded content
+            $container.find('script').each(function () {
+                const scriptSrc = $(this).attr('src');
+                if (!scriptSrc) {
+                    try {
+                        $.globalEval($(this).text() || this.textContent || this.innerHTML || '');
+                    } catch (e) {
+                        console.warn('AJAX script eval warning:', e);
+                    }
+                }
+            });
+        }
+
+        function loadDashboardPage(url, pushState = true) {
+            if (!url || url.indexOf('javascript:') === 0 || url === '#') return;
+
+            $('.request-loader').addClass('show');
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                dataType: 'html',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function (response) {
+                    try {
+                        const $temp = $('<div>').append($.parseHTML(response, document, true));
+                        const newTitle = $temp.find('title').text();
+                        if (newTitle) {
+                            document.title = newTitle;
+                        }
+
+                        // Extract main content
+                        const $newContent = $temp.find('.main-panel .content');
+                        if ($newContent.length > 0) {
+                            $('.main-panel .content').replaceWith($newContent);
+                            if (pushState) {
+                                window.history.pushState({ dashboardAjaxUrl: url }, '', url);
+                            }
+
+                            // Smooth scroll content to top
+                            $('html, body').animate({ scrollTop: 0 }, 150);
+
+                            // Re-initialize dynamic components
+                            reinitializePlugins($('.main-panel .content'));
+                        } else {
+                            // Fallback if structural layout differs
+                            window.location.href = url;
+                            return;
+                        }
+                    } catch (err) {
+                        console.error('AJAX page parse error, falling back to full load:', err);
+                        window.location.href = url;
+                        return;
+                    }
+                },
+                error: function (xhr) {
+                    console.warn('AJAX page fetch error, falling back to full reload:', xhr.status);
+                    window.location.href = url;
+                },
+                complete: function () {
+                    $('.request-loader').removeClass('show');
+                }
+            });
+        }
+
+        // Intercept sidebar navigation clicks
+        $(document).on('click', '.sidebar a[href]', function (e) {
+            const href = $(this).attr('href');
+            const target = $(this).attr('target');
+            const hasDataToggle = $(this).attr('data-toggle') === 'collapse';
+
+            // Skip dropdown toggles, external links, anchor hashes, or non-GET links
+            if (hasDataToggle || target === '_blank' || !href || href === '#' || href.indexOf('javascript:') === 0) {
+                return;
+            }
+
+            // Check if internal user dashboard URL
+            try {
+                const targetUrl = new URL(href, window.location.origin);
+                if (targetUrl.origin !== window.location.origin) {
+                    return; // External URL -> normal navigation
+                }
+                if (targetUrl.pathname.indexOf('/user/logout') > -1) {
+                    return; // Logout -> normal navigation
+                }
+            } catch (err) {
+                return;
+            }
+
+            e.preventDefault();
+
+            // Set active states on sidebar
+            $('.sidebar li, .sidebar .nav-item').removeClass('active');
+            const $clickedLi = $(this).closest('li').addClass('active');
+            const $parentNavItem = $(this).closest('.nav-item').addClass('active');
+
+            // Keep parent collapse open
+            $(this).closest('.collapse').addClass('show');
+
+            // Center active item in sidebar
+            restoreSidebarScroll($clickedLi);
+
+            // Load page via AJAX
+            loadDashboardPage(href, true);
+        });
+
+        // Handle Browser Back / Forward buttons
+        window.addEventListener('popstate', function (e) {
+            if (e.state && e.state.dashboardAjaxUrl) {
+                loadDashboardPage(e.state.dashboardAjaxUrl, false);
+                // Also update sidebar active link
+                const currentPath = window.location.pathname;
+                $('.sidebar a[href]').each(function () {
+                    const linkHref = $(this).attr('href');
+                    if (linkHref && linkHref.indexOf(currentPath) > -1) {
+                        $('.sidebar li, .sidebar .nav-item').removeClass('active');
+                        $(this).closest('li').addClass('active');
+                        $(this).closest('.nav-item').addClass('active');
+                        $(this).closest('.collapse').addClass('show');
+                        restoreSidebarScroll($(this).closest('li'));
+                        return false;
+                    }
+                });
+            }
+        });
+
+        $('.sidebar a').on('click', function () {
+            sessionStorage.setItem('userSidebarScroll', $sidebarWrapper.scrollTop());
+        });
+
+        $sidebarWrapper.on('scroll', function () {
+            sessionStorage.setItem('userSidebarScroll', $(this).scrollTop());
+        });
+
+        setTimeout(restoreSidebarScroll, 100);
+        setTimeout(restoreSidebarScroll, 300);
+        setTimeout(restoreSidebarScroll, 600);
     });
 
     /* ***************************************************

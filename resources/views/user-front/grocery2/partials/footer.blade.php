@@ -135,7 +135,14 @@
               @if(!empty($phone))
                 <li class="d-flex align-items-start gap-2 mb-2">
                   <i class="fas fa-phone-alt mt-1" style="color: #3bb77e;"></i>
-                  <span><strong>Need help? Call Us:</strong> <a href="tel:{{ $phone }}" class="text-decoration-none text-muted">{{ $phone }}</a></span>
+                  <span><strong>Need help? Call Us:</strong>
+                    @php $g2Phones = array_values(array_filter(array_map('trim', explode(',', $phone)))); @endphp
+                    @foreach($g2Phones as $gp)
+                      <span class="phone-item" style="display: inline-flex; align-items: center; white-space: nowrap;">
+                        <a href="tel:{{ $gp }}" class="text-decoration-none text-muted">{{ $gp }}</a>@if(!$loop->last)<span class="mr-1">,</span>@endif
+                      </span>
+                    @endforeach
+                  </span>
                 </li>
               @endif
               @if(!empty($email))
