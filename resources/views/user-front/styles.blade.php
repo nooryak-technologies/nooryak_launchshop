@@ -1808,6 +1808,35 @@ footer {
   }
 }
 
+/* --- Global Footer Logo Display & Visibility Fix (All Themes & Breakpoints) --- */
+.footer-widget .navbar-brand,
+.footer-area .navbar-brand,
+.footer-logo {
+  display: inline-block !important;
+  max-width: 100% !important;
+}
+
+.footer-widget .navbar-brand a,
+.footer-area .navbar-brand a,
+.footer-logo a {
+  display: inline-block !important;
+}
+
+.footer-widget .navbar-brand img,
+.footer-area .navbar-brand img,
+.footer-widget .footer-logo img,
+.footer-area .footer-logo img,
+.footer-logo img {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  max-height: 65px !important;
+  max-width: 240px !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+
 /* --- Global Mobile Copyright Display & Bottom Clearance Fix (All Themes) --- */
 @media only screen and (max-width: 991.98px) {
   footer, .footer-area, .copy-right-area, .copy-right-content, .footer-bottom {

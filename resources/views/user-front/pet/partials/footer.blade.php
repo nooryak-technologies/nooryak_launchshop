@@ -11,9 +11,9 @@
           <div class="footer-widget">
             <div class="navbar-brand">
               <a href="{{ route('front.user.detail.view', getParam()) }}">
-                <img
-                  src="{{ !empty($footer->footer_logo) ? asset('assets/front/img/footer/' . $footer->footer_logo) : (!empty($userBs->dark_logo) ? asset('assets/front/img/user/' . $userBs->dark_logo) : (!empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png'))) }}"
-                  alt="Logo">
+                <img src="{{ !empty($footer->footer_logo) ? asset('assets/front/img/footer/' . $footer->footer_logo) : (!empty($userBs->dark_logo) ? asset('assets/front/img/user/' . $userBs->dark_logo) : (!empty($userBs->logo) ? asset('assets/front/img/user/' . $userBs->logo) : asset('assets/front/img/logo.png'))) }}"
+                  alt="{{ $userBs->website_title ?? 'Logo' }}"
+                  style="max-height: 60px; max-width: 220px; width: auto; height: auto; object-fit: contain; display: block !important;">
               </a>
             </div>
             <p class="text fw-medium footer_description">

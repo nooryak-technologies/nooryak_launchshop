@@ -680,6 +680,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll(".bg-img").forEach(function (el) {
+            // Guard: Never apply background replacement or hide logo images
+            if (el.closest('.navbar-brand') || el.closest('.brand-logo') || el.closest('.footer-logo') || el.closest('.site-logo') || el.closest('.footer-widget .navbar-brand')) {
+                return;
+            }
             var parent = el.parentElement;
 
             // Add classes for blur effect and lazy loading
