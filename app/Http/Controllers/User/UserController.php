@@ -15,10 +15,14 @@ use App\Models\User\UserItem;
 use App\Models\User\UserNewsletterSubscriber;
 use App\Models\User\UserOrder;
 use App\Models\User\UserPage;
+use App\Models\User\UserContact;
+use App\Models\User\BasicSetting;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 use Session;
 use Validator;
 
@@ -33,6 +37,49 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $user = Auth::guard('web')->user();
+
+        // Handle sidebar search submission fallback if sent via query param
+        if ($request->filled('term')) {
+            $term = strtolower(trim($request->term));
+            $defaultLang = Language::where('is_default', 1)->first()->code ?? 'en';
+            $termMap = [
+                'page' => ['name' => 'user.page.index', 'params' => ['language' => $defaultLang]],
+                'pages' => ['name' => 'user.page.index', 'params' => ['language' => $defaultLang]],
+                'additional page' => ['name' => 'user.page.index', 'params' => ['language' => $defaultLang]],
+                'order' => ['name' => 'user.all.item.orders', 'params' => []],
+                'orders' => ['name' => 'user.all.item.orders', 'params' => []],
+                'product' => ['name' => 'user.item.index', 'params' => ['language' => $defaultLang]],
+                'products' => ['name' => 'user.item.index', 'params' => ['language' => $defaultLang]],
+                'item' => ['name' => 'user.item.index', 'params' => ['language' => $defaultLang]],
+                'category' => ['name' => 'user.itemcategory.index', 'params' => ['language' => $defaultLang]],
+                'categories' => ['name' => 'user.itemcategory.index', 'params' => ['language' => $defaultLang]],
+                'shipping' => ['name' => 'user.shipping_gateway.index', 'params' => []],
+                'gateway' => ['name' => 'user.shipping_gateway.index', 'params' => []],
+                'gateways' => ['name' => 'user.shipping_gateway.index', 'params' => []],
+                'shiprocket' => ['name' => 'user.shipping_gateway.index', 'params' => []],
+                'contact' => ['name' => 'user.contact.index', 'params' => []],
+                'contact us' => ['name' => 'user.contact.index', 'params' => []],
+                'profile' => ['name' => 'user-profile', 'params' => []],
+                'coupon' => ['name' => 'user.coupon.index', 'params' => []],
+                'coupons' => ['name' => 'user.coupon.index', 'params' => []],
+                'customer' => ['name' => 'user.register.user', 'params' => []],
+                'customers' => ['name' => 'user.register.user', 'params' => []],
+                'registered customer' => ['name' => 'user.register.user', 'params' => []],
+                'domain' => ['name' => 'user-domains', 'params' => []],
+                'domains' => ['name' => 'user-domains', 'params' => []],
+                'theme' => ['name' => 'user.theme.index', 'params' => []],
+                'footer' => ['name' => 'user.footer.ulink.index', 'params' => ['language' => $defaultLang]],
+                'dashboard' => ['name' => 'user-dashboard', 'params' => []],
+            ];
+
+            foreach ($termMap as $keyword => $routeInfo) {
+                if ($term === $keyword || str_contains($term, $keyword) || str_contains($keyword, $term)) {
+                    if (Route::has($routeInfo['name'])) {
+                        return redirect()->route($routeInfo['name'], $routeInfo['params']);
+                    }
+                }
+            }
+        }
 
         if (Session::has('staff_id')) {
             $perms = Session::get('staff_permissions', []);
@@ -253,6 +300,57 @@ class UserController extends Controller
             $input['photo'] = Uploader::update_picture($directory, $request->file('photo'), $data->photo);
         }
         $data->update($input);
+
+        // Synchronize with UserContact (Contact Us page)
+        if (Schema::hasTable('user_contacts')) {
+            $contacts = UserContact::where('user_id', $data->id)->get();
+            if ($contacts->isEmpty()) {
+                $defaultLang = Language::where('is_default', 1)->first() ?? Language::first();
+                if ($defaultLang) {
+                    $contacts = collect([new UserContact(['user_id' => $data->id, 'language_id' => $defaultLang->id])]);
+                }
+            }
+
+            foreach ($contacts as $contact) {
+                // If there are existing comma-separated extra numbers, preserve them and update primary phone
+                if (!empty($contact->contact_numbers)) {
+                    $nums = array_map('trim', explode(',', $contact->contact_numbers));
+                    $nums[0] = $data->phone;
+                    $contact->contact_numbers = implode(', ', array_unique(array_filter($nums)));
+                } else {
+                    $contact->contact_numbers = $data->phone;
+                }
+
+                // If there are existing comma-separated extra emails, preserve them and ensure primary email is first
+                if (!empty($contact->contact_mails)) {
+                    $emails = array_map('trim', explode(',', $contact->contact_mails));
+                    $emails[0] = $data->email;
+                    $contact->contact_mails = implode(', ', array_unique(array_filter($emails)));
+                } else {
+                    $contact->contact_mails = $data->email;
+                }
+
+                $contact->contact_addresses = $data->address;
+                $contact->save();
+            }
+        }
+
+        // Synchronize with User Basic Settings
+        if (Schema::hasTable('user_basic_settings')) {
+            $userBs = BasicSetting::where('user_id', $data->id)->first();
+            if ($userBs) {
+                if (Schema::hasColumn('user_basic_settings', 'contact_number')) {
+                    $userBs->contact_number = $data->phone;
+                }
+                if (Schema::hasColumn('user_basic_settings', 'address')) {
+                    $userBs->address = $data->address;
+                }
+                if (Schema::hasColumn('user_basic_settings', 'email')) {
+                    $userBs->email = $data->email;
+                }
+                $userBs->save();
+            }
+        }
 
         Session::flash('success', __('Updated Successfully'));
         return "success";

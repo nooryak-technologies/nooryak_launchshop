@@ -95,11 +95,16 @@
               </div>
               <div class="card-title mb-0" style="font-size: 16px; font-weight: 600; color: #1e293b;">{{ __('Shiprocket') }}</div>
             </div>
-            @if($shiprocket && $shiprocket->status == 1)
-              <span class="badge" style="background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; border-radius: 20px; font-size: 12px; padding: 4px 12px; display: inline-flex; align-items: center; gap: 4px;">
-                <i class="fas fa-check" style="font-size: 10px;"></i> Active
-              </span>
-            @endif
+            <div class="d-flex align-items-center" style="gap: 8px;">
+              <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#shiprocketGuideModal" style="border-radius: 20px; font-size: 12px; font-weight: 600; padding: 4px 12px; border: 1px solid #7c3aed; color: #7c3aed; background: #faf5ff;">
+                <i class="fas fa-question-circle mr-1"></i> {{ __('Setup Guide') }}
+              </button>
+              @if($shiprocket && $shiprocket->status == 1)
+                <span class="badge" style="background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; border-radius: 20px; font-size: 12px; padding: 4px 12px; display: inline-flex; align-items: center; gap: 4px;">
+                  <i class="fas fa-check" style="font-size: 10px;"></i> Active
+                </span>
+              @endif
+            </div>
           </div>
           <div class="card-body">
             @php
@@ -109,6 +114,11 @@
                   $shiprocketInfo = [];
               }
             @endphp
+
+            <div class="alert alert-info py-2 px-3 mb-3" style="font-size: 12px; border-radius: 8px; background-color: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af;">
+              <i class="fas fa-info-circle mr-1"></i> <strong>Important:</strong> Enter your dedicated <strong>Shiprocket API User</strong> email & password here (not your main website login, which causes <em>"Access forbidden"</em> errors). 
+              <a href="javascript:void(0);" data-toggle="modal" data-target="#shiprocketGuideModal" class="text-primary font-weight-bold ml-1"><u>View Guide</u></a>
+            </div>
             <div class="form-group pt-0">
               <label style="font-weight: 600; color: #475569; font-size: 13px; margin-bottom: 8px;">{{ __('Status') }}</label>
               <div class="status-toggle-wrapper">
@@ -199,6 +209,106 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{-- Shiprocket Guide Modal --}}
+  <div class="modal fade" id="shiprocketGuideModal" tabindex="-1" role="dialog" aria-labelledby="shiprocketGuideModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+        <div class="modal-header" style="background: linear-gradient(135deg, #2563eb, #7c3aed); color: #fff; border-top-left-radius: 12px; border-top-right-radius: 12px; padding: 18px 24px;">
+          <div class="d-flex align-items-center">
+            <div style="background: #fff; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+              <i class="fas fa-shipping-fast text-primary" style="font-size: 18px;"></i>
+            </div>
+            <div>
+              <h5 class="modal-title font-weight-bold mb-0" id="shiprocketGuideModalLabel" style="color: #ffffff;">{{ __('How to Get Shiprocket API Credentials') }}</h5>
+              <small style="color: rgba(255,255,255,0.85);">{{ __('Step-by-step guide to connect Shiprocket with your store') }}</small>
+            </div>
+          </div>
+          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" style="opacity: 0.9;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding: 24px; max-height: 70vh; overflow-y: auto;">
+          <!-- Warning box explaining Access Forbidden -->
+          <div class="alert alert-warning d-flex align-items-start mb-4" style="border-radius: 8px; border-left: 4px solid #f59e0b; background-color: #fffbeb;">
+            <i class="fas fa-exclamation-triangle mr-3 mt-1 text-warning" style="font-size: 20px;"></i>
+            <div style="font-size: 13px; color: #92400e;">
+              <strong>{{ __('Why does "Shiprocket Error: Access forbidden" happen?') }}</strong><br>
+              {{ __('Shiprocket prohibits using your main account login credentials for external API sync. You must create a dedicated') }} <strong>{{ __('API User') }}</strong> {{ __('inside Shiprocket. Follow the 4 simple steps below:') }}
+            </div>
+          </div>
+
+          <!-- Step 1 -->
+          <div class="d-flex mb-4">
+            <div class="mr-3">
+              <span class="badge badge-primary rounded-circle" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 14px; background: #2563eb;">1</span>
+            </div>
+            <div>
+              <h6 class="font-weight-bold mb-1" style="color: #1e293b;">{{ __('Log in to Shiprocket') }}</h6>
+              <p class="text-muted mb-0" style="font-size: 13px;">
+                {{ __('Open') }} <a href="https://app.shiprocket.in" target="_blank" class="text-primary font-weight-bold">app.shiprocket.in <i class="fas fa-external-link-alt fa-xs"></i></a> {{ __('and sign in to your Shiprocket account.') }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="d-flex mb-4">
+            <div class="mr-3">
+              <span class="badge badge-primary rounded-circle" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 14px; background: #7c3aed;">2</span>
+            </div>
+            <div>
+              <h6 class="font-weight-bold mb-1" style="color: #1e293b;">{{ __('Create a Dedicated API User') }}</h6>
+              <p class="text-muted mb-2" style="font-size: 13px;">
+                {{ __('In the left navigation bar, go to:') }} <strong>{{ __('Settings (Gear Icon)') }} &rarr; {{ __('API') }} &rarr; {{ __('Configure') }}</strong> (or <em>API Users</em>).
+              </p>
+              <ul class="text-muted mb-0 pl-3" style="font-size: 13px; line-height: 1.6;">
+                <li>{{ __('Click the') }} <strong>"{{ __('Create API User') }}"</strong> {{ __('button in the top-right corner.') }}</li>
+                <li>{{ __('Enter an email address (e.g.') }} <code>api@yourdomain.com</code> {{ __('or any alternate active email).') }}</li>
+                <li>{{ __('Create a strong password and click') }} <strong>{{ __('Generate / Save') }}</strong>.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="d-flex mb-4">
+            <div class="mr-3">
+              <span class="badge badge-primary rounded-circle" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 14px; background: #059669;">3</span>
+            </div>
+            <div>
+              <h6 class="font-weight-bold mb-1" style="color: #1e293b;">{{ __('Paste Credentials into LaunchShop') }}</h6>
+              <p class="text-muted mb-0" style="font-size: 13px;">
+                {{ __('Return to this page in LaunchShop, enter the') }} <strong>{{ __('API User Email') }}</strong> {{ __('and') }} <strong>{{ __('API Password') }}</strong> {{ __('you just created, select') }} <strong>{{ __('Status: Active') }}</strong>, {{ __('and click') }} <strong>{{ __('Update') }}</strong>.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="d-flex mb-2">
+            <div class="mr-3">
+              <span class="badge badge-primary rounded-circle" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 14px; background: #ea580c;">4</span>
+            </div>
+            <div>
+              <h6 class="font-weight-bold mb-1" style="color: #1e293b;">{{ __('Configure Store Pickup Address (Essential)') }}</h6>
+              <p class="text-muted mb-1" style="font-size: 13px;">
+                {{ __('In Shiprocket, navigate to') }} <strong>{{ __('Settings') }} &rarr; {{ __('Pickup Addresses') }}</strong>.
+              </p>
+              <ul class="text-muted mb-0 pl-3" style="font-size: 13px; line-height: 1.6;">
+                <li>{{ __('Add your store/warehouse address and a valid 6-digit Indian Pincode.') }}</li>
+                <li>{{ __('Verify the contact number via OTP. Without a verified pickup location, Shiprocket will reject shipment creation.') }}</li>
+                <li>{{ __('Complete your KYC and ensure your Shiprocket shipping wallet has balance (minimum ₹200–₹500).') }}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border-top: 1px solid #f1f5f9; padding: 14px 24px;">
+          <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" style="border-radius: 6px;">{{ __('Got it, Close') }}</button>
+          <a href="https://app.shiprocket.in/seller/settings/api" target="_blank" class="btn btn-primary btn-sm" style="background: linear-gradient(135deg, #2563eb, #7c3aed); border: none; border-radius: 6px;">
+            <i class="fas fa-external-link-alt mr-1"></i> {{ __('Open Shiprocket Settings') }}
+          </a>
         </div>
       </div>
     </div>

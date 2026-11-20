@@ -170,6 +170,31 @@ class AppServiceProvider extends ServiceProvider
             $ulinks = UserUlink::where('language_id', $userCurrentLang->id)
                 ->where('user_id', $user->id)
                 ->get();
+
+            if ($ulinks->isEmpty()) {
+                // Dynamically fallback to merchant's active policy / custom pages
+                $pages = \App\Models\User\UserPage::join('user_page_contents', 'user_page_contents.page_id', 'user_pages.id')
+                    ->where('user_pages.user_id', $user->id)
+                    ->where('user_pages.status', 1)
+                    ->where('user_page_contents.language_id', $userCurrentLang->id)
+                    ->select('user_page_contents.title', 'user_page_contents.slug')
+                    ->orderBy('user_pages.serial_number', 'asc')
+                    ->get();
+
+                $dynamicLinks = collect([]);
+                foreach ($pages as $p) {
+                    $linkObj = new \stdClass();
+                    $linkObj->name = $p->title;
+                    if (empty($user->custom_domain) || $user->custom_domain_status != 1) {
+                        $linkObj->url = url('/' . $user->username . '/page/' . $p->slug);
+                    } else {
+                        $linkObj->url = url('/page/' . $p->slug);
+                    }
+                    $dynamicLinks->push($linkObj);
+                }
+                return $dynamicLinks;
+            }
+
             return $ulinks;
         });
         //user footer content
@@ -225,6 +250,39 @@ class AppServiceProvider extends ServiceProvider
                 ['user_id', $user->id],
                 ['language_id', $userCurrentLang->id]
             ])->first();
+
+            // Check for dummy template values that may have been seeded by old demo migrations
+            $dummyPhones = ['72007 70351', '7200770351', '6374913298', '1234567890'];
+            $dummyEmails = ['nooryaktechnologies@gmail.com', 'admin@launchshop.in'];
+            $dummyAddresses = ['Triplicane, Chennai, IND', 'Triplicane, Chennai'];
+
+            if (!$userContact) {
+                // First-time store launch: dynamically initialize contact from user profile
+                $userContact = new UserContact();
+                $userContact->user_id = $user->id;
+                $userContact->language_id = $userCurrentLang->id;
+                $userContact->contact_numbers = $user->phone;
+                $userContact->contact_mails = $user->email;
+                $userContact->contact_addresses = $user->address;
+            } else {
+                // If contact numbers/mails/addresses are blank or holding old demo template data, fallback to real merchant profile
+                if (empty(trim((string)$userContact->contact_numbers)) || in_array(trim((string)$userContact->contact_numbers), $dummyPhones)) {
+                    if (!empty($user->phone)) {
+                        $userContact->contact_numbers = $user->phone;
+                    }
+                }
+                if (empty(trim((string)$userContact->contact_mails)) || in_array(trim((string)$userContact->contact_mails), $dummyEmails)) {
+                    if (!empty($user->email)) {
+                        $userContact->contact_mails = $user->email;
+                    }
+                }
+                if (empty(trim((string)$userContact->contact_addresses)) || in_array(trim((string)$userContact->contact_addresses), $dummyAddresses)) {
+                    if (!empty($user->address)) {
+                        $userContact->contact_addresses = $user->address;
+                    }
+                }
+            }
+
             return $userContact;
         });
         //user shoping settings

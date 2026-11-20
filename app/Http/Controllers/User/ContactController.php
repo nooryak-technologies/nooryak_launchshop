@@ -5,8 +5,10 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\User\Language;
 use App\Models\User\UserContact;
+use App\Models\User\BasicSetting;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Session;
 
@@ -14,23 +16,72 @@ class ContactController extends Controller
 {
     public function index(Request $request)
     {
-        // first, get the language info from db
-        $language = Language::where('code', $request->language)->where('user_id', Auth::guard('web')->user()->id)->first();
-        // then, get the service section heading info of that language from db
-        $information['data'] = UserContact::where('language_id', $language->id)->where('user_id', Auth::guard('web')->user()->id)->first();
-        // get all the languages from db
+        $user = Auth::guard('web')->user();
+        $language = null;
+        if ($request->filled('language')) {
+            $language = Language::where('code', $request->language)->where('user_id', $user->id)->first();
+        }
+        if (empty($language)) {
+            $language = Language::where('is_default', 1)->where('user_id', $user->id)->first()
+                ?? Language::where('user_id', $user->id)->first();
+        }
+
+        $dummyPhones = ['72007 70351', '7200770351', '6374913298', '1234567890'];
+        $dummyEmails = ['nooryaktechnologies@gmail.com', 'admin@launchshop.in'];
+        $dummyAddresses = ['Triplicane, Chennai, IND', 'Triplicane, Chennai'];
+
+        $contact = null;
+        if ($language) {
+            $contact = UserContact::where('language_id', $language->id)->where('user_id', $user->id)->first();
+        }
+
+        // Auto-initialize with user's real profile data if missing or holding old demo template data
+        if (empty($contact)) {
+            $contact = new UserContact();
+            $contact->user_id = $user->id;
+            $contact->language_id = $language ? $language->id : 0;
+            $contact->contact_numbers = $user->phone;
+            $contact->contact_mails = $user->email;
+            $contact->contact_addresses = $user->address;
+            if ($language) {
+                $contact->save();
+            }
+        } else {
+            $needsSave = false;
+            if (empty(trim((string)$contact->contact_numbers)) || in_array(trim((string)$contact->contact_numbers), $dummyPhones)) {
+                if (!empty($user->phone)) {
+                    $contact->contact_numbers = $user->phone;
+                    $needsSave = true;
+                }
+            }
+            if (empty(trim((string)$contact->contact_mails)) || in_array(trim((string)$contact->contact_mails), $dummyEmails)) {
+                if (!empty($user->email)) {
+                    $contact->contact_mails = $user->email;
+                    $needsSave = true;
+                }
+            }
+            if (empty(trim((string)$contact->contact_addresses)) || in_array(trim((string)$contact->contact_addresses), $dummyAddresses)) {
+                if (!empty($user->address)) {
+                    $contact->contact_addresses = $user->address;
+                    $needsSave = true;
+                }
+            }
+            if ($needsSave) {
+                $contact->save();
+            }
+        }
+
+        $information['data'] = $contact;
         return view('user.contact', $information);
     }
 
     public function update(Request $request, $language)
     {
-        $lang = Language::where('code', $language)->where('user_id', Auth::guard('web')->user()->id)->first();
-        $data = UserContact::where([
-            ['user_id', Auth::guard('web')->user()->id],
-            ['language_id', $lang->id]
-        ])->first();
-        if (is_null($data)) {
-            $data = new UserContact;
+        $user = Auth::guard('web')->user();
+        $lang = Language::where('code', $language)->where('user_id', $user->id)->first();
+        if (empty($lang)) {
+            $lang = Language::where('is_default', 1)->where('user_id', $user->id)->first()
+                ?? Language::where('user_id', $user->id)->first();
         }
 
         $rules = [
@@ -48,16 +99,76 @@ class ContactController extends Controller
             return redirect()->back()->withErrors($validator);
         }
 
-        $data->contact_form_title = $request->contact_form_title;
-        $data->contact_form_subtitle = $request->contact_form_subtitle;
-        $data->contact_addresses = clean($request->contact_addresses);
-        $data->contact_numbers = $request->contact_numbers;
-        $data->contact_mails = $request->contact_mails;
-        $data->latitude = $request->latitude;
-        $data->longitude = $request->longitude;
-        $data->language_id = $lang->id;
-        $data->user_id = Auth::guard('web')->user()->id;
-        $data->save();
+        $cleanAddress = clean($request->contact_addresses);
+        $cleanPhone = $request->contact_numbers;
+        $cleanEmail = $request->contact_mails;
+
+        // 1. Update/Save UserContact for all languages of this merchant to keep them unified
+        $languages = Language::where('user_id', $user->id)->get();
+        if ($languages->isEmpty() && $lang) {
+            $languages = collect([$lang]);
+        }
+
+        foreach ($languages as $l) {
+            $item = UserContact::where([
+                ['user_id', $user->id],
+                ['language_id', $l->id]
+            ])->first();
+
+            if (is_null($item)) {
+                $item = new UserContact();
+                $item->user_id = $user->id;
+                $item->language_id = $l->id;
+            }
+
+            $item->contact_form_title = $request->contact_form_title;
+            $item->contact_form_subtitle = $request->contact_form_subtitle;
+            $item->contact_addresses = $cleanAddress;
+            $item->contact_numbers = $cleanPhone;
+            $item->contact_mails = $cleanEmail;
+            $item->latitude = $request->latitude;
+            $item->longitude = $request->longitude;
+            $item->save();
+        }
+
+        // 2. Synchronize to User Profile (primary phone & address)
+        $primaryPhone = null;
+        if (!empty($cleanPhone)) {
+            $phoneParts = explode(',', $cleanPhone);
+            $primaryPhone = trim($phoneParts[0]);
+        }
+        $primaryAddress = null;
+        if (!empty($cleanAddress)) {
+            $addrLines = preg_split('/\r\n|\r|\n/', trim(strip_tags($cleanAddress)));
+            $primaryAddress = !empty($addrLines[0]) ? trim($addrLines[0]) : trim(strip_tags($cleanAddress));
+        }
+
+        if ($primaryPhone) {
+            $user->phone = $primaryPhone;
+        }
+        if (!empty($cleanAddress)) {
+            $user->address = trim(strip_tags($cleanAddress));
+        }
+        $user->save();
+
+        // 3. Synchronize to User Basic Settings
+        if (Schema::hasTable('user_basic_settings')) {
+            $userBs = BasicSetting::where('user_id', $user->id)->first();
+            if ($userBs) {
+                if (Schema::hasColumn('user_basic_settings', 'contact_number') && $primaryPhone) {
+                    $userBs->contact_number = $primaryPhone;
+                }
+                if (Schema::hasColumn('user_basic_settings', 'address') && !empty($cleanAddress)) {
+                    $userBs->address = trim(strip_tags($cleanAddress));
+                }
+                if (Schema::hasColumn('user_basic_settings', 'email') && !empty($cleanEmail)) {
+                    $emailParts = explode(',', $cleanEmail);
+                    $userBs->email = trim($emailParts[0]);
+                }
+                $userBs->save();
+            }
+        }
+
         Session::flash('success', __('Updated Successfully'));
         return back();
     }

@@ -121,10 +121,10 @@
       <ul class="nav nav-primary">
         <div class="row mb-2">
           <div class="col-12">
-            <form action="">
+            <form action="" onsubmit="return false;" id="sidebarSearchForm">
               <div class="form-group py-0">
                 <input name="term" type="text" class="form-control sidebar-search ltr" value=""
-                  placeholder="{{ __('Search Menu Here') . '...' }}">
+                  placeholder="{{ __('Search Menu Here') . '...' }}" autocomplete="off">
               </div>
             </form>
           </div>
@@ -1546,3 +1546,33 @@
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var searchForm = document.getElementById('sidebarSearchForm');
+    var searchInput = document.querySelector('.sidebar-search');
+    if (searchForm) {
+        searchForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            return false;
+        });
+    }
+    if (searchInput) {
+        searchInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.keyCode === 13) {
+                e.preventDefault();
+                e.stopPropagation();
+                // Find first visible matched link
+                var visibleLinks = document.querySelectorAll('.sidebar ul li:not(.d-none) a[href]:not([href="#"]):not([data-toggle="collapse"])');
+                for (var i = 0; i < visibleLinks.length; i++) {
+                    var href = visibleLinks[i].getAttribute('href');
+                    if (href && href !== '#' && href !== 'javascript:void(0);') {
+                        window.location.href = href;
+                        return false;
+                    }
+                }
+            }
+        });
+    }
+});
+</script>

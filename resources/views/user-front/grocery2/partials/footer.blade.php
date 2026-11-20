@@ -90,11 +90,11 @@
         <div class="col-lg-3 col-md-6 col-12">
           <div class="grocery2-footer-widget about-widget">
             @php
-              $phone = !empty(@$userBs->contact_number) ? @$userBs->contact_number : (!empty(@$user->phone) ? @$user->phone : (!empty(@$userFooter->phone) ? @$userFooter->phone : '+1800900122'));
-              $email = !empty(@$userBs->email) ? @$userBs->email : (!empty(@$user->email) ? @$user->email : (!empty(@$userFooter->email) ? @$userFooter->email : 'support@gmail.com'));
-              $address = !empty(@$userBs->address) ? @$userBs->address : (!empty(@$user->address) ? @$user->address : (!empty(@$userFooter->address) ? @$userFooter->address : 'H-34, R-03, S-11'));
-              $about_company = !empty(@$userFooter->footer_text) ? @$userFooter->footer_text : 'Awesome grocery store website template';
-              $copyright_text = !empty(@$userFooter->copyright_text) ? @$userFooter->copyright_text : 'Copyright © ' . date('Y') . ' ' . ($user->shop_name ?? 'Ecom Grocery') . '. All rights reserved.';
+              $phone = !empty(@$userContact->contact_numbers) ? @$userContact->contact_numbers : (!empty(@$user->phone) ? @$user->phone : (!empty(@$userBs->contact_number) ? @$userBs->contact_number : (!empty(@$userFooter->phone) ? @$userFooter->phone : '')));
+              $email = !empty(@$userContact->contact_mails) ? @$userContact->contact_mails : (!empty(@$user->email) ? @$user->email : (!empty(@$userBs->email) ? @$userBs->email : (!empty(@$userFooter->email) ? @$userFooter->email : '')));
+              $address = !empty(@$userContact->contact_addresses) ? @$userContact->contact_addresses : (!empty(@$user->address) ? @$user->address : (!empty(@$userBs->address) ? @$userBs->address : (!empty(@$userFooter->address) ? @$userFooter->address : '')));
+              $about_company = !empty(@$userFooter->footer_text) ? @$userFooter->footer_text : '';
+              $copyright_text = !empty(@$userFooter->copyright_text) ? @$userFooter->copyright_text : 'Copyright © ' . date('Y') . ' ' . ($user->shop_name ?? 'Store') . '. All rights reserved.';
 
               $userPages = \App\Models\User\UserPage::join('user_page_contents', 'user_pages.id', '=', 'user_page_contents.page_id')
                   ->where('user_pages.user_id', $user->id)

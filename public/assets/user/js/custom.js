@@ -166,43 +166,71 @@ $(function ($) {
     // Sidebar Search
 
     $(".sidebar-search").on('input', function () {
-        let term = $(this).val().toLowerCase();
+        let term = $(this).val().toLowerCase().trim();
 
         if (term.length > 0) {
             $(".sidebar ul li.nav-item").each(function (i) {
-                let menuName = $(this).find("p").text().toLowerCase();
                 let $mainMenu = $(this);
+                let menuName = $mainMenu.find("> a p, > a span").text().toLowerCase();
 
-                // if any main menu is matched
+                // if any main menu text is matched
                 if (menuName.indexOf(term) > -1) {
-                    $mainMenu.removeClass('d-none');
-                    $mainMenu.addClass('d-block');
+                    $mainMenu.removeClass('d-none').addClass('d-block');
                 } else {
                     let matched = 0;
-                    let count = 0;
-                    // search sub-items of the current main menu (which is not matched)
-                    $mainMenu.find('span.sub-item').each(function (i) {
-                        // if any sub-item is matched  of the current main menu, set the flag
+                    // search sub-items of the current main menu
+                    $mainMenu.find('span.sub-item').each(function () {
                         if ($(this).text().toLowerCase().indexOf(term) > -1) {
-                            count++;
                             matched = 1;
+                            $(this).closest('li').removeClass('d-none').addClass('d-block');
+                        } else {
+                            $(this).closest('li').removeClass('d-block').addClass('d-none');
                         }
                     });
 
-
-                    // if any sub-item is matched  of the current main menu (which is not matched)
+                    // if any sub-item is matched
                     if (matched == 1) {
-                        $mainMenu.removeClass('d-none');
-                        $mainMenu.addClass('d-block');
+                        $mainMenu.removeClass('d-none').addClass('d-block');
+                        // Auto-expand the dropdown so user sees the matched items
+                        $mainMenu.find('.collapse').addClass('show');
+                        $mainMenu.find('[data-toggle="collapse"]').attr('aria-expanded', 'true');
                     } else {
-                        $mainMenu.removeClass('d-block');
-                        $mainMenu.addClass('d-none');
+                        $mainMenu.removeClass('d-block').addClass('d-none');
                     }
                 }
             });
         } else {
-            $(".sidebar ul li.nav-item").addClass('d-block');
+            $(".sidebar ul li.nav-item").removeClass('d-none').addClass('d-block');
+            $(".sidebar ul li.nav-item .collapse li").removeClass('d-none').addClass('d-block');
         }
+    });
+
+    $(".sidebar-search").on('keydown', function (e) {
+        if (e.key === 'Enter' || e.keyCode === 13) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            let $firstLink = $(".sidebar ul li.nav-item:not(.d-none) .collapse li:not(.d-none) a[href]").first();
+            if ($firstLink.length === 0) {
+                $firstLink = $(".sidebar ul li.nav-item:not(.d-none) > a[href]:not([data-toggle='collapse'])").first();
+            }
+            if ($firstLink.length === 0) {
+                $firstLink = $(".sidebar ul li.nav-item:not(.d-none) .collapse a[href]").first();
+            }
+
+            if ($firstLink.length > 0) {
+                let href = $firstLink.attr('href');
+                if (href && href !== '#' && href !== 'javascript:void(0);') {
+                    window.location.href = href;
+                }
+            }
+            return false;
+        }
+    });
+
+    $("#sidebarSearchForm").on('submit', function (e) {
+        e.preventDefault();
+        return false;
     });
 
     /* ***************************************************

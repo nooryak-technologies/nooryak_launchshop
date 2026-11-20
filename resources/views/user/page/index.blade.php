@@ -98,12 +98,38 @@
                       </tr>
                     </thead>
                     <tbody>
+                      @php
+                        $protectedSlugs = [
+                            'privacy-policy',
+                            'terms-and-conditions',
+                            'terms-conditions',
+                            'shipping-policy',
+                            'shipping-and-delivery-policy',
+                            'return-policy',
+                            'refund-policy',
+                            'return-and-refund-policy'
+                        ];
+                      @endphp
                       @foreach ($apages as $key => $apage)
+                        @php
+                          $isPolicy = in_array(strtolower(trim($apage->slug)), $protectedSlugs);
+                        @endphp
                         <tr>
                           <td>
-                            <input type="checkbox" class="bulk-check" data-val="{{ $apage->id }}">
+                            @if ($isPolicy)
+                              <span title="{{ __('Default policy page cannot be deleted') }}">
+                                <i class="fas fa-lock text-muted" style="opacity: 0.5; font-size: 13px;"></i>
+                              </span>
+                            @else
+                              <input type="checkbox" class="bulk-check" data-val="{{ $apage->id }}">
+                            @endif
                           </td>
-                          <td>{{ $apage->title }}</td>
+                          <td>
+                            {{ $apage->title }}
+                            @if ($isPolicy)
+                              <span class="badge badge-light border text-primary ml-1" style="font-size: 10px;">{{ __('Policy') }}</span>
+                            @endif
+                          </td>
                           <td><a
                               href="{{ asset('/') . Auth::guard('web')->user()->username . '/page' . '/' . $apage->slug }}"
                               target="_blank">{{ asset('/') . Auth::guard('web')->user()->username . '/page' . '/' . $apage->slug }}</a>
@@ -116,17 +142,23 @@
                             @endif
                           </td>
                           <td>
-                            <a class="btn btn-secondary btn-sm mb-1" href="{{ route('user.page.edit', $apage->id) }}">
+                            <a class="btn btn-secondary btn-sm mb-1" href="{{ route('user.page.edit', $apage->id) }}" title="{{ __('Edit') }}">
                               <i class="fas fa-edit"></i>
                             </a>
-                            <form class="d-inline-block deleteform  " action="{{ route('user.page.delete') }}"
-                              method="post">
-                              @csrf
-                              <input type="hidden" name="pageid" value="{{ $apage->id }}">
-                              <button type="submit" class="btn btn-danger btn-sm deletebtn mb-1">
-                                <i class="fas fa-trash"></i>
-                              </button>
-                            </form>
+                            @if ($isPolicy)
+                              <span class="badge badge-light border text-muted py-2 px-2 mb-1" title="{{ __('Default payment gateway policy page (Protected from deletion)') }}">
+                                <i class="fas fa-lock text-warning mr-1"></i> {{ __('Default') }}
+                              </span>
+                            @else
+                              <form class="d-inline-block deleteform" action="{{ route('user.page.delete') }}"
+                                method="post">
+                                @csrf
+                                <input type="hidden" name="pageid" value="{{ $apage->id }}">
+                                <button type="submit" class="btn btn-danger btn-sm deletebtn mb-1" title="{{ __('Delete') }}">
+                                  <i class="fas fa-trash"></i>
+                                </button>
+                              </form>
+                            @endif
                           </td>
                         </tr>
                       @endforeach

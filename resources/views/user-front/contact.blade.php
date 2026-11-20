@@ -15,15 +15,20 @@
         <div class="col-12">
           <div class="row justify-content-center mb-20">
             @php
-              $phones = !empty(@$userBs->contact_number) 
-                ? explode(',', $userBs->contact_number) 
-                : (!empty(@$user->phone) ? [$user->phone] : (!empty(@$contact->contact_numbers) ? explode(',', $contact->contact_numbers) : []));
-              $mails = !empty(@$userBs->email) 
-                ? explode(',', $userBs->email) 
-                : (!empty(@$user->email) ? [$user->email] : (!empty(@$contact->contact_mails) ? explode(',', $contact->contact_mails) : []));
-              $addresses = !empty(@$userBs->address) 
-                ? explode(PHP_EOL, $userBs->address) 
-                : (!empty(@$user->address) ? [$user->address] : (!empty(@$contact->contact_addresses) ? explode(PHP_EOL, $contact->contact_addresses) : []));
+              // Priority: UserContact (Contact Page with extra numbers/mails) -> User (Profile) -> BasicSetting
+              $phoneRaw = !empty(@$contact->contact_numbers) 
+                ? $contact->contact_numbers 
+                : (!empty(@$user->phone) ? $user->phone : @$userBs->contact_number);
+              $mailRaw = !empty(@$contact->contact_mails) 
+                ? $contact->contact_mails 
+                : (!empty(@$user->email) ? $user->email : @$userBs->email);
+              $addrRaw = !empty(@$contact->contact_addresses) 
+                ? $contact->contact_addresses 
+                : (!empty(@$user->address) ? $user->address : @$userBs->address);
+
+              $phones = !empty($phoneRaw) ? explode(',', $phoneRaw) : [];
+              $mails = !empty($mailRaw) ? explode(',', $mailRaw) : [];
+              $addresses = !empty($addrRaw) ? preg_split('/\r\n|\r|\n/', $addrRaw) : [];
             @endphp
 
             @if (!empty($phones))
