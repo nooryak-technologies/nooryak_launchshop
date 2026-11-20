@@ -31,14 +31,14 @@
                       if ($type === 'home' || $text === 'home') {
                           $item['text'] = 'Home';
                           $item['_sort'] = 0;
-                      } elseif ($type === 'pricing' || str_contains($text, 'pricing')) {
-                          $item['text'] = 'Pricing Plans';
+                      } elseif ($type === 'shops' || $type === 'profiles' || $type === 'listings' || str_contains($text, 'store') || str_contains($text, 'shop')) {
+                          $item['text'] = 'Stores Launched';
                           $item['_sort'] = 1;
                       } elseif ($type === 'templates' || str_contains($text, 'theme') || str_contains($text, 'template') || str_contains($text, 'design')) {
                           $item['text'] = 'Select Theme';
                           $item['_sort'] = 2;
-                      } elseif ($type === 'shops' || $type === 'profiles' || $type === 'listings' || str_contains($text, 'store') || str_contains($text, 'shop')) {
-                          $item['text'] = 'Stores Launched';
+                      } elseif ($type === 'pricing' || str_contains($text, 'pricing')) {
+                          $item['text'] = 'Pricing Plans';
                           $item['_sort'] = 3;
                       } elseif ($type === 'about' || str_contains($text, 'about')) {
                           $item['text'] = 'About Us';

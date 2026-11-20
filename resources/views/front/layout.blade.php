@@ -84,9 +84,9 @@
           {
             "@type": "SiteNavigationElement",
             "position": 1,
-            "name": "Pricing Plans",
-            "description": "Affordable ecommerce plans starting at ₹199/month. Transparent pricing, no hidden costs, 0% transaction fees, and free domain with yearly plans on Launchshop.",
-            "url": "{{ Route::has('front.pricing') ? route('front.pricing') : url('/pricing') }}"
+            "name": "Stores Launched",
+            "description": "Discover successful online stores built with Launchshop. Real merchants, real success stories across fashion, grocery, beauty, and retail.",
+            "url": "{{ Route::has('front.user.view') ? route('front.user.view') : url('/shops') }}"
           },
           {
             "@type": "SiteNavigationElement",
@@ -98,9 +98,9 @@
           {
             "@type": "SiteNavigationElement",
             "position": 3,
-            "name": "Stores Launched",
-            "description": "Discover successful online stores built with Launchshop. Real merchants, real success stories across fashion, grocery, beauty, and retail.",
-            "url": "{{ Route::has('front.user.view') ? route('front.user.view') : url('/shops') }}"
+            "name": "Pricing Plans",
+            "description": "Affordable ecommerce plans starting at ₹199/month. Transparent pricing, no hidden costs, 0% transaction fees, and free domain with yearly plans on Launchshop.",
+            "url": "{{ Route::has('front.pricing') ? route('front.pricing') : url('/pricing') }}"
           },
           {
             "@type": "SiteNavigationElement",
