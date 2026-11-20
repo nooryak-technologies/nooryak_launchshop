@@ -38,7 +38,7 @@
         <div class="card-body pt-5 pb-5">
           <div class="row">
             <div class="col-lg-6 m-auto">
-              <form id="ajaxForm" action="{{ route('user.theme.update') }}" method="post">
+              <form id="themeAjaxForm" action="{{ route('user.theme.update') }}" method="post">
                 @csrf
 
                 <div class="form-group">
@@ -191,7 +191,7 @@
         <div class="card-footer">
           <div class="row">
             <div class="col-12 text-center">
-              <button type="submit" id="submitBtn" class="btn btn-success">
+              <button type="button" id="themeSubmitBtn" class="btn btn-success">
                 {{ __('Update') }}
               </button>
             </div>
@@ -200,4 +200,40 @@
       </div>
     </div>
   </div>
+@endsection
+
+@section('scripts')
+<script>
+$(document).ready(function() {
+  $('#themeSubmitBtn').on('click', function(e) {
+    e.preventDefault();
+    $('.request-loader').addClass('show');
+    var $btn = $(this);
+    $btn.prop('disabled', true);
+    var form = document.getElementById('themeAjaxForm');
+    var fd = new FormData(form);
+
+    $.ajax({
+      url: $(form).attr('action'),
+      method: 'POST',
+      data: fd,
+      processData: false,
+      contentType: false,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      success: function(res) {
+        $('.request-loader').removeClass('show');
+        $btn.prop('disabled', false);
+        bootnotify("{{ __('Theme updated successfully!') }}", 'Success', 'success');
+      },
+      error: function(xhr) {
+        $('.request-loader').removeClass('show');
+        $btn.prop('disabled', false);
+        bootnotify("{{ __('Something went wrong') }}", 'Warning', 'warning');
+      }
+    });
+  });
+});
+</script>
 @endsection

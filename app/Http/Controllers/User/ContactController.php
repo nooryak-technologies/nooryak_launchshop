@@ -71,8 +71,21 @@ class ContactController extends Controller
             }
         }
 
+        \App\Models\User\ContactMessage::ensureTableExists();
+        $information['contact_messages'] = \App\Models\User\ContactMessage::where('user_id', $user->id)
+            ->orderBy('id', 'DESC')
+            ->get();
         $information['data'] = $contact;
         return view('user.contact', $information);
+    }
+
+    public function deleteMessage($id)
+    {
+        $user = Auth::guard('web')->user();
+        \App\Models\User\ContactMessage::ensureTableExists();
+        \App\Models\User\ContactMessage::where('user_id', $user->id)->where('id', $id)->delete();
+        Session::flash('success', __('Message deleted successfully'));
+        return back();
     }
 
     public function update(Request $request, $language)

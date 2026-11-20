@@ -132,4 +132,101 @@
       </div>
     </div>
   </div>
+
+  {{-- Customer Messages / Inquiries Section --}}
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col-8">
+              <div class="card-title font-weight-bold">
+                <i class="fas fa-inbox text-primary mr-2"></i>{{ __('Customer Inquiries & Messages') }}
+                @if(!empty($contact_messages) && $contact_messages->count() > 0)
+                  <span class="badge badge-primary badge-pill ml-2">{{ $contact_messages->count() }}</span>
+                @endif
+              </div>
+            </div>
+            <div class="col-4 text-right">
+              <span class="text-muted small"><i class="fas fa-info-circle mr-1"></i>{{ __('Messages sent via Contact Us form') }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          @if(empty($contact_messages) || $contact_messages->isEmpty())
+            <div class="text-center py-4">
+              <i class="fal fa-envelope-open text-muted fa-3x mb-3"></i>
+              <h5 class="text-muted">{{ __('No messages received yet') }}</h5>
+              <p class="text-muted small mb-0">{{ __('When customers send messages through your store contact page, they will appear here.') }}</p>
+            </div>
+          @else
+            <div class="table-responsive">
+              <table class="table table-striped mt-2" id="basic-datatables">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">{{ __('Date') }}</th>
+                    <th scope="col">{{ __('Name') }}</th>
+                    <th scope="col">{{ __('Email') }}</th>
+                    <th scope="col">{{ __('Subject') }}</th>
+                    <th scope="col">{{ __('Message') }}</th>
+                    <th scope="col">{{ __('Action') }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach ($contact_messages as $key => $msg)
+                    <tr>
+                      <td>{{ $loop->iteration }}</td>
+                      <td>
+                        <span class="small font-weight-bold">{{ $msg->created_at ? $msg->created_at->format('d M, Y') : '-' }}</span><br>
+                        <span class="text-muted small">{{ $msg->created_at ? $msg->created_at->format('h:i A') : '' }}</span>
+                      </td>
+                      <td>{{ $msg->fullname }}</td>
+                      <td><a href="mailto:{{ $msg->email }}">{{ $msg->email }}</a></td>
+                      <td>{{ $msg->subject }}</td>
+                      <td>
+                        <button type="button" class="btn btn-sm btn-info py-1 px-2" data-toggle="modal" data-target="#msgModal{{ $msg->id }}">
+                          <i class="fas fa-eye mr-1"></i>{{ __('View') }}
+                        </button>
+                        {{-- Modal for full message --}}
+                        <div class="modal fade" id="msgModal{{ $msg->id }}" tabindex="-1" role="dialog" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title font-weight-bold">{{ $msg->subject }}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <p class="mb-1"><strong>{{ __('From') }}:</strong> {{ $msg->fullname }} (&lt;<a href="mailto:{{ $msg->email }}">{{ $msg->email }}</a>&gt;)</p>
+                                <p class="mb-3 text-muted small"><strong>{{ __('Date') }}:</strong> {{ $msg->created_at ? $msg->created_at->format('d M Y, h:i A') : '' }}</p>
+                                <div class="p-3 bg-light rounded text-dark" style="white-space: pre-wrap; font-size: 14px; line-height: 1.6;">{{ $msg->message }}</div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">{{ __('Close') }}</button>
+                                <a href="mailto:{{ $msg->email }}?subject={{ urlencode('Re: ' . $msg->subject) }}" class="btn btn-primary btn-sm"><i class="fas fa-reply mr-1"></i>{{ __('Reply') }}</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <form class="d-inline-block deleteform" action="{{ route('user.contact_message.delete', $msg->id) }}" method="post" onsubmit="return confirm('{{ __('Are you sure you want to delete this message?') }}');">
+                          @csrf
+                          <button type="submit" class="btn btn-danger btn-sm py-1 px-2" title="{{ __('Delete') }}">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </form>
+                      </td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
+          @endif
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection

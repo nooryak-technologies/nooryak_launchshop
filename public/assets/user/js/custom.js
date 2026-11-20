@@ -241,6 +241,7 @@ $(function ($) {
 
         function restoreSidebarScroll($targetEl) {
             if (!$sidebarWrapper.length) return;
+            const $scrollElem = $sidebarWrapper.find('.scroll-content').length ? $sidebarWrapper.find('.scroll-content') : $sidebarWrapper;
             const $activeItem = ($targetEl && $targetEl.length)
                 ? $targetEl
                 : $('.sidebar .nav-item.active, .sidebar li.active, .sidebar .subnav li.active, .sidebar .nav-collapse li.active').filter(':visible').last();
@@ -249,15 +250,19 @@ $(function ($) {
                 const wrapperOffset = $sidebarWrapper.offset().top;
                 const wrapperHeight = $sidebarWrapper.height();
                 const itemOffset = $activeItem.offset().top;
-                const currentScroll = $sidebarWrapper.scrollTop();
+                const currentScroll = $scrollElem.scrollTop() || $sidebarWrapper.scrollTop();
 
                 const targetScroll = currentScroll + (itemOffset - wrapperOffset) - (wrapperHeight / 2) + ($activeItem.outerHeight() / 2);
+                $scrollElem.stop(true, false).animate({
+                    scrollTop: Math.max(0, targetScroll)
+                }, 200);
                 $sidebarWrapper.stop(true, false).animate({
                     scrollTop: Math.max(0, targetScroll)
                 }, 200);
             } else {
                 const savedScroll = sessionStorage.getItem('userSidebarScroll');
                 if (savedScroll !== null) {
+                    $scrollElem.scrollTop(parseInt(savedScroll, 10));
                     $sidebarWrapper.scrollTop(parseInt(savedScroll, 10));
                 }
             }
@@ -443,17 +448,23 @@ $(function ($) {
             }
         });
 
+        let isInitialScroll = true;
+        setTimeout(function() { isInitialScroll = false; }, 1000);
+
         $('.sidebar a').on('click', function () {
-            sessionStorage.setItem('userSidebarScroll', $sidebarWrapper.scrollTop());
+            const $scrollElem = $sidebarWrapper.find('.scroll-content').length ? $sidebarWrapper.find('.scroll-content') : $sidebarWrapper;
+            sessionStorage.setItem('userSidebarScroll', $scrollElem.scrollTop() || $sidebarWrapper.scrollTop());
         });
 
-        $sidebarWrapper.on('scroll', function () {
-            sessionStorage.setItem('userSidebarScroll', $(this).scrollTop());
+        $(document).on('scroll', '.sidebar-wrapper, .sidebar-wrapper .scroll-content', function () {
+            if (!isInitialScroll) {
+                sessionStorage.setItem('userSidebarScroll', $(this).scrollTop());
+            }
         });
 
         setTimeout(restoreSidebarScroll, 100);
-        setTimeout(restoreSidebarScroll, 300);
-        setTimeout(restoreSidebarScroll, 600);
+        setTimeout(restoreSidebarScroll, 350);
+        setTimeout(restoreSidebarScroll, 700);
     });
 
     /* ***************************************************

@@ -586,6 +586,21 @@ class HomeController extends Controller
         ];
         $request->validate($rules, $messages);
 
+        // 1. Store the submitted contact message in database
+        try {
+            \App\Models\User\ContactMessage::ensureTableExists();
+            \App\Models\User\ContactMessage::create([
+                'user_id' => $user->id,
+                'fullname' => $request->name,
+                'email' => $request->email,
+                'subject' => $request->subject,
+                'message' => $request->message,
+            ]);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Contact message save failed: ' . $e->getMessage());
+        }
+
+        // 2. Dispatch email notification to merchant
         if (!is_null($user->email)) {
             $be =  BE::firstOrFail();
             if ($be->is_smtp == 1 && !is_null($use_bs->email ?? null)) {

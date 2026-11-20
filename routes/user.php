@@ -359,6 +359,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'userstatus', 'Demo',
     //user contact page route
     Route::get('/contact-page', 'User\ContactController@index')->name('user.contact');
     Route::post('/contact-page/update/{language}', 'User\ContactController@update')->name('user.contact.update');
+    Route::post('/contact-message/delete/{id}', 'User\ContactController@deleteMessage')->name('user.contact_message.delete');
 
     //user 404 page route
     Route::get('/404-page', 'User\BasicController@userNotFoundPage')->name('user.not_found_page');
