@@ -31,13 +31,13 @@
                       if ($type === 'home' || $text === 'home') {
                           $item['text'] = 'Home';
                           $item['_sort'] = 0;
-                      } elseif ($type === 'shops' || $type === 'profiles' || $type === 'listings' || str_contains($text, 'store') || str_contains($text, 'shop')) {
-                          $item['text'] = 'Stores Launched';
-                          $item['_sort'] = 1;
-                      } elseif ($type === 'templates' || str_contains($text, 'theme') || str_contains($text, 'template') || str_contains($text, 'design')) {
+                      } elseif ($type === 'templates' || $type === 'template' || $type === 'theme' || $type === 'themes' || str_contains($text, 'theme') || str_contains($text, 'template') || str_contains($text, 'design')) {
                           $item['text'] = 'Select Theme';
                           $item['_sort'] = 2;
-                      } elseif ($type === 'pricing' || str_contains($text, 'pricing')) {
+                      } elseif (($type === 'shops' || $type === 'profiles' || $type === 'listings' || $type === 'stores' || str_contains($text, 'store') || str_contains($text, 'shop') || str_contains($text, 'merchant')) && !str_contains($text, 'theme') && !str_contains($text, 'template')) {
+                          $item['text'] = 'Stores Launched';
+                          $item['_sort'] = 1;
+                      } elseif ($type === 'pricing' || str_contains($text, 'pricing') || str_contains($text, 'plan')) {
                           $item['text'] = 'Pricing Plans';
                           $item['_sort'] = 3;
                       } elseif ($type === 'about' || str_contains($text, 'about')) {
@@ -55,6 +55,20 @@
                   usort($links, function($a, $b) {
                       return ($a['_sort'] ?? 10) <=> ($b['_sort'] ?? 10);
                   });
+
+                  $seenSort = [];
+                  $uniqueLinks = [];
+                  foreach ($links as $l) {
+                      $sortKey = $l['_sort'] ?? 10;
+                      if ($sortKey < 10) {
+                          if (isset($seenSort[$sortKey])) {
+                              continue;
+                          }
+                          $seenSort[$sortKey] = true;
+                      }
+                      $uniqueLinks[] = $l;
+                  }
+                  $links = $uniqueLinks;
               }
             @endphp
             @foreach ($links as $link)
