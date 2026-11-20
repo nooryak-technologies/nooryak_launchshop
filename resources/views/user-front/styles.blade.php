@@ -1889,6 +1889,62 @@ footer {
   }
 }
 
+/* --- Global Order Success Page Clearances & Alignment Fix (All Themes) --- */
+.purchase-message {
+  padding-top: 240px !important;
+  padding-bottom: 90px !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+@media only screen and (max-width: 1199.98px) {
+  .purchase-message {
+    padding-top: 140px !important;
+    padding-bottom: 70px !important;
+  }
+}
+
+@media only screen and (max-width: 767.98px) {
+  .purchase-message {
+    padding-top: 110px !important;
+    padding-bottom: 50px !important;
+  }
+}
+
+/* For themes with in-flow sticky headers such as Grocery2 */
+.theme-grocery2 .purchase-message {
+  padding-top: 60px !important;
+  padding-bottom: 70px !important;
+}
+
+@media only screen and (max-width: 767.98px) {
+  .theme-grocery2 .purchase-message {
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+  }
+}
+
+.purchase-success {
+  max-width: 520px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+}
+
+.success-icon-area {
+  max-width: 250px !important;
+  margin: 0 auto 25px auto !important;
+}
+
+.success-icon-area svg {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 240px !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
 /* --- Global Footer Contact Us Clean Single-Line Phone & Email Formatting --- */
 .footer-widget-number {
   display: flex !important;
