@@ -328,7 +328,8 @@
                   @endif
                 </div>
                 @php
-                  $displayTitle = ($titleKey == 'basic' || $titleKey == 'welcome') ? __('Welcome Plan') : 'Ecom ' . __($package->title);
+                  $isWelcomePlan = ($titleKey == 'basic' || $titleKey == 'welcome' || str_contains(strtolower($package->title), 'welcome'));
+                  $displayTitle = $isWelcomePlan ? __('Welcome Plan') : 'Ecom ' . __($package->title);
                 @endphp
                 <div class="plan-v2-header-text">
                   <h3 class="plan-v2-title">{{ $displayTitle }}</h3>
@@ -342,13 +343,20 @@
                   <span class="plan-v2-amount">{{ __('Free') }}</span>
                 @else
                   <span class="plan-v2-currency">{{ $be->base_currency_symbol }}</span><span class="plan-v2-amount">{{ number_format($package->price, 0) }}</span>
-                  <span class="plan-v2-period"> / {{ $periodLabel }}</span>
+                  <span class="plan-v2-period"> / {{ $isWelcomePlan ? __('1st Month') : $periodLabel }}</span>
                 @endif
               </div>
 
               {{-- Term / Savings Badge --}}
               <div class="plan-terms-badge-group text-center">
-                @if(!empty($package->is_fallback_term))
+                @if($isWelcomePlan)
+                  <span class="plan-monthly-badge" style="background:#eff6ff; color:#2563eb; border-color:#bfdbfe; font-weight:700;">
+                    <i class="fas fa-sparkles mr-1"></i> {{ __('Trial Plan for 1st Month') }}
+                  </span>
+                  <span class="plan-counterpart-badge" style="background:#fef2f2; color:#dc2626; border-color:#fecaca; font-weight:600; text-decoration:none; display:inline-block; margin-top:4px;">
+                    <i class="fas fa-info-circle mr-1"></i> {{ __('Billed yearly after trial ends') }}
+                  </span>
+                @elseif(!empty($package->is_fallback_term))
                   @if(strtolower($package->term) == 'yearly')
                     <span class="plan-monthly-badge" style="background:#e0f2fe; color:#0284c7; border-color:#bae6fd; font-weight:700;">
                       <i class="fas fa-calendar-check mr-1"></i> {{ __('Yearly Plan') }}
@@ -453,7 +461,7 @@
                 @endphp
                 <button type="button" class="plan-v2-see-more"
                         data-plan-title="{{ $displayTitle }}"
-                        data-plan-price="{{ $package->price == 0 ? __('Free') : $be->base_currency_symbol . number_format($package->price, 0) . ' / ' . $periodLabel }}"
+                        data-plan-price="{{ $package->price == 0 ? __('Free') : $be->base_currency_symbol . number_format($package->price, 0) . ' / ' . ($isWelcomePlan ? __('1st Month') : $periodLabel) }}"
                         data-plan-href="{{ $ctaHref }}"
                         data-plan-cta="Select {{ $displayTitle }}"
                         data-plan-tone="{{ $modalTone }}"

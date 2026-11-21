@@ -1245,7 +1245,10 @@ body {
 }
 
 .mobile-menu.mobile-menu-v10 .mobile-menu-top .logo img {
-  filter: brightness(0) invert(1);
+  filter: none !important;
+  max-height: 42px;
+  width: auto;
+  object-fit: contain;
 }
 
 .mobile-menu.mobile-menu-v10 .mobile-menu-close {

@@ -227,6 +227,24 @@
                 </div>
               </button>
             </div>
+
+            <!-- Social Links below Our Mobile App button -->
+            <div class="social-links-widget mt-3">
+              <span class="d-block text-muted small font-weight-bold text-uppercase mb-2" style="letter-spacing: 1px; font-size: 11px; color: #888;">{{ __('FOLLOW US') }}</span>
+              <div class="social-links d-flex flex-wrap gap-2">
+                @if(isset($userSocials) && count($userSocials) > 0)
+                  @foreach($userSocials as $social)
+                    <a href="{{ $social->url }}" target="_blank" class="btn btn-sm btn-light rounded-circle text-secondary d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="{{ $social->icon }}"></i></a>
+                  @endforeach
+                @else
+                  <a href="#" class="btn btn-sm btn-light rounded-circle text-secondary d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fab fa-facebook-f"></i></a>
+                  <a href="#" class="btn btn-sm btn-light rounded-circle text-secondary d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fab fa-instagram"></i></a>
+                  <a href="#" class="btn btn-sm btn-light rounded-circle text-secondary d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fab fa-linkedin-in"></i></a>
+                  <a href="#" class="btn btn-sm btn-light rounded-circle text-secondary d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fab fa-twitter"></i></a>
+                  <a href="#" class="btn btn-sm btn-light rounded-circle text-secondary d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fab fa-youtube"></i></a>
+                @endif
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -234,40 +252,16 @@
   </div>
 
   <!-- Copyright Bar -->
-  <div class="grocery2-copyright-bar py-3" style="border-top: 1px solid #e9ecef; background-color: #ffffff;">
+  <div class="grocery2-copyright-bar py-3" style="border-top: 1px solid #e9ecef; background-color: #ffffff; position: relative;">
     <div class="container">
-      <div class="row align-items-center">
-        <div class="col-md-4 text-center text-md-start mb-2 mb-md-0">
+      <div class="row align-items-center justify-content-center">
+        <div class="col-12 text-center">
           <span class="text-muted" style="font-size: 13px;">{!! replaceBaseUrl($copyright_text) !!} <span class="powered-by-link"> | Powered by <a href="https://launchshop.in/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; font-weight: 600;">launchshop.in</a> | <a href="javascript:void(0)" class="launchshop-disclaimer-trigger" style="color: inherit; text-decoration: underline; font-weight: 600; font-size: 13.5px;"><i class="fal fa-shield-alt mr-1"></i> Disclaimer</a></span></span>
-        </div>
-        <div class="col-md-4 text-center mb-2 mb-md-0">
-          <ul class="copyright-links list-inline m-0 p-0" style="font-size: 13px;">
-            <li class="list-inline-item"><a href="{{ route('front.user.terms_conditions', getParam()) }}" class="text-decoration-none text-muted">Conditions of Use</a></li>
-            <li class="list-inline-item text-muted">|</li>
-            <li class="list-inline-item"><a href="{{ route('front.user.privacy_policy', getParam()) }}" class="text-decoration-none text-muted">Privacy Notice</a></li>
-            <li class="list-inline-item text-muted">|</li>
-            <li class="list-inline-item"><a href="#" class="text-decoration-none text-muted">Interest-Based Ads</a></li>
-          </ul>
-        </div>
-        <div class="col-md-4 text-center text-md-end d-flex align-items-center justify-content-center justify-content-md-end gap-3">
-          <div class="social-links d-flex gap-2">
-            @if(isset($userSocials) && count($userSocials) > 0)
-              @foreach($userSocials as $social)
-                <a href="{{ $social->url }}" target="_blank" class="btn btn-sm btn-light rounded-circle text-secondary d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="{{ $social->icon }}"></i></a>
-              @endforeach
-            @else
-              <a href="#" class="btn btn-sm btn-light rounded-circle text-secondary d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fab fa-facebook-f"></i></a>
-              <a href="#" class="btn btn-sm btn-light rounded-circle text-secondary d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fab fa-instagram"></i></a>
-              <a href="#" class="btn btn-sm btn-light rounded-circle text-secondary d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fab fa-linkedin-in"></i></a>
-              <a href="#" class="btn btn-sm btn-light rounded-circle text-secondary d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fab fa-twitter"></i></a>
-              <a href="#" class="btn btn-sm btn-light rounded-circle text-secondary d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fab fa-youtube"></i></a>
-            @endif
-          </div>
-          <!-- Scroll to top button -->
-          <a href="#" class="btn btn-primary rounded-circle text-white d-inline-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background-color: #3b5998; border: none;" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;"><i class="fas fa-arrow-up"></i></a>
         </div>
       </div>
     </div>
+    <!-- Scroll to top button -->
+    <a href="#" class="btn btn-primary rounded-circle text-white d-inline-flex align-items-center justify-content-center" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; background-color: #3b5998; border: none;" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;"><i class="fas fa-arrow-up"></i></a>
   </div>
 </footer>
 

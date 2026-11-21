@@ -32,7 +32,22 @@ class Demo
             return redirect()->back();
         }
 
-        // Allow CRUD operations on demo user dashboard
+        // Block writes / CRUD operations for template-preview / demo theme users
+        $isTemplateDemoUser = (Auth::guard('web')->check() && (Auth::guard('web')->user()->preview_template == 1 || Session::get('secrect_login')));
+        if ($isWriteMethod && !$request->is('X9_AdMiN-Portal_V7') && !$request->is('X9_AdMiN-Portal_V7/*') && $isTemplateDemoUser) {
+            // Don't block store-front customer ordering, cart or checkout requests
+            if ($request->is('*/add-to-cart') || $request->is('*/cart') || $request->is('*/cart/*') || $request->is('*/checkout') || $request->is('*/checkout/*') || $request->is('*/order/*') || $request->is('*/itemcheckout/*') || $request->is('add-to-cart') || $request->is('checkout')) {
+                return $next($request);
+            }
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 'warning',
+                    'message' => __('This is a demo store. CRUD operations are disabled in demo mode.')
+                ]);
+            }
+            session()->flash('warning', __('This is a demo store. CRUD operations are disabled in demo mode.'));
+            return redirect()->back();
+        }
 
         return $next($request);
     }

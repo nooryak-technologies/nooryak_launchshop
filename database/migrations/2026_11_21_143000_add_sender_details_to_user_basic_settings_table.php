@@ -71,3 +71,4 @@ class AddSenderDetailsToUserBasicSettingsTable extends Migration
         }
     }
 }
+

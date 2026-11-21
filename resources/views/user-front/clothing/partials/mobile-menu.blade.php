@@ -7,7 +7,7 @@
         <a href="{{ route('front.user.detail.view', getParam()) }}">
           <img
             src="{{ !empty(@$userBs->mobile_logo) ? asset('assets/front/img/user/' . @$userBs->mobile_logo) : (!empty(@$userBs->logo) ? asset('assets/front/img/user/' . @$userBs->logo) : asset('assets/front/img/logo.png')) }}"
-            alt="logo">
+            alt="logo" style="filter: none !important; max-height: 42px; width: auto; object-fit: contain;">
         </a>
       </div>
       <span class="mobile-menu-close"><i class="fal fa-times"></i></span>

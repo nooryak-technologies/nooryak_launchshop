@@ -581,7 +581,7 @@ $(function ($) {
     ==========Form Submit with AJAX Request Start==========
     ******************************************************/
 
-    $(document).on('click', '#submitBtn', function (e) {
+    $("#submitBtn").on('click', function (e) {
         $(e.target).attr('disabled', true);
 
         $(".request-loader").addClass("show");
@@ -625,10 +625,17 @@ $(function ($) {
                     $(this).html('');
                 })
 
-                if (data.status == 'fail') {
+                if (data.status == 'fail' || data.status == 'warning') {
                     $('.modal').modal('hide');
                     bootnotify(data.message, 'Warning', 'warning');
+                    return;
                 }
+                if (data && (data.status == 'fail' || data.status == 'warning')) {
+                    $('.modal').modal('hide');
+                    bootnotify(data.message, 'Warning', 'warning');
+                    return;
+                }
+
                 if (data == "success" || (data && data.status == "success")) {
                     $('.modal').modal('hide');
                     if (data && data.redirect) {
@@ -666,24 +673,16 @@ $(function ($) {
                         if (x == 'error') {
                             continue;
                         }
-                        let errEl = document.getElementById('err' + x) || document.getElementById('eerr' + x);
-                        if (errEl) {
-                            errEl.innerHTML = data[x][0];
-                        }
+                        document.getElementById('err' + x).innerHTML = data[x][0];
                     }
                 }
             },
             error: function (error) {
                 $(".em").each(function () {
                     $(this).html('');
-                });
-                if (error && error.responseJSON && error.responseJSON.errors) {
-                    for (let x in error.responseJSON.errors) {
-                        let errEl = document.getElementById('err' + x) || document.getElementById('eerr' + x);
-                        if (errEl) {
-                            errEl.innerHTML = error.responseJSON.errors[x][0];
-                        }
-                    }
+                })
+                for (let x in error.responseJSON.errors) {
+                    document.getElementById('err' + x).innerHTML = error.responseJSON.errors[x][0];
                 }
                 $(".request-loader").removeClass("show");
                 $(e.target).attr('disabled', false);
@@ -727,6 +726,12 @@ $(function ($) {
                 $(".em").each(function () {
                     $(this).html('');
                 })
+
+                if (data && (data.status == 'fail' || data.status == 'warning')) {
+                    $('.modal').modal('hide');
+                    bootnotify(data.message, 'Warning', 'warning');
+                    return;
+                }
 
                 if (data == "success" || (data && data.status == "success")) {
                     $('.modal').modal('hide');
@@ -1001,9 +1006,6 @@ $(function ($) {
             }
             else {
                 $("#in" + x).val(datas[x]);
-                if ($("#in" + x).is('select')) {
-                    $("#in" + x).trigger('change');
-                }
                 if ($('#inicon').length > 0) {
                     $('#inicon').attr('class', datas['icon']);
                 }
@@ -1022,7 +1024,7 @@ $(function ($) {
     /* ***************************************************
     ==========Form Update with AJAX Request Start==========
     ******************************************************/
-    $(document).on('click', '#updateBtn', function (e) {
+    $("#updateBtn").on('click', function (e) {
 
         $(".request-loader").addClass("show");
 
@@ -1062,6 +1064,12 @@ $(function ($) {
                     $(this).html('');
                 })
 
+                if (data && (data.status == 'fail' || data.status == 'warning')) {
+                    $('.modal').modal('hide');
+                    bootnotify(data.message, 'Warning', 'warning');
+                    return;
+                }
+
                 if (data == "success" || (data && data.status == "success")) {
                     $('.modal').modal('hide');
                     if (data && data.redirect) {
@@ -1079,93 +1087,75 @@ $(function ($) {
                         if (x == 'error') {
                             continue;
                         }
-                        let targetEl = document.getElementById('eerr' + x) || document.getElementById('err' + x);
-                        if (targetEl) {
-                            targetEl.innerHTML = data[x][0];
-                        }
-                    }
-                }
-            },
-            error: function (error) {
-                $(".request-loader").removeClass("show");
-                $(".em").each(function () {
-                    $(this).html('');
-                });
-                if (error && error.responseJSON && error.responseJSON.errors) {
-                    for (let x in error.responseJSON.errors) {
-                        let targetEl = document.getElementById('eerr' + x) || document.getElementById('err' + x);
-                        if (targetEl) {
-                            targetEl.innerHTML = error.responseJSON.errors[x][0];
-                        }
+                        document.getElementById('eerr' + x).innerHTML = data[x][0];
                     }
                 }
             }
         });
     });
 
-    $(document).on('click', '.update-btn', function (e) {
-        let $this = $(this);
+    $(".update-btn").each(function () {
+        $(this).on('click', function (e) {
+            let $this = $(this);
 
-        $(".request-loader").addClass("show");
+            $(".request-loader").addClass("show");
 
-        let formId = $(this).data('form_id');
-        let ajaxEditForm = document.getElementById(formId);
-        let fd = new FormData(ajaxEditForm);
-        let url = $("#" + formId).attr('action');
-        let method = $("#" + formId).attr('method');
+            let formId = $(this).data('form_id');
+            let ajaxEditForm = document.getElementById(formId);
+            let fd = new FormData(ajaxEditForm);
+            let url = $("#" + formId).attr('action');
+            let method = $("#" + formId).attr('method');
 
-        $("#" + formId + " .form-control").each(function (i) {
-            let index = i;
-            let $toInput = $('.form-control').eq(index);
-            if ($(this).hasClass('summernote')) {
-                let tmcId = $toInput.attr('id');
-                let content = tinyMCE.get(tmcId).getContent();
+            $("#" + formId + " .form-control").each(function (i) {
+                let index = i;
+                let $toInput = $('.form-control').eq(index);
+                if ($(this).hasClass('summernote')) {
+                    let tmcId = $toInput.attr('id');
+                    let content = tinyMCE.get(tmcId).getContent();
 
-                fd.delete($(this).attr('name'));
-                fd.append($(this).attr('name'), content);
-            }
-        });
-
-        $.ajax({
-            url: url,
-            method: method,
-            data: fd,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-                let parentCount = $this.parents('.modal').length;
-                let parentId;
-                // if the form is in modal
-                if (parentCount > 0) {
-                    parentId = $this.parents('.modal').attr('id');
+                    fd.delete($(this).attr('name'));
+                    fd.append($(this).attr('name'), content);
                 }
-                // if the form is not in modal
-                else {
-                    parentId = formId;
-                }
-                $(".request-loader").removeClass("show");
+            });
 
-                $("#" + parentId).children(".em").each(function () {
-                    $(this).html('');
-                })
+            $.ajax({
+                url: url,
+                method: method,
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    let parentCount = $this.parents('.modal').length;
+                    let parentId;
+                    // if the form is in modal
+                    if (parentCount > 0) {
+                        parentId = $this.parents('.modal').attr('id');
+                    }
+                    // if the form is not in modal
+                    else {
+                        parentId = formId;
+                    }
+                    $(".request-loader").removeClass("show");
 
-                if (data == "success") {
-                    location.reload();
-                }
+                    $("#" + parentId).children(".em").each(function () {
+                        $(this).html('');
+                    })
 
-                // if error occurs
-                else if (typeof data.error != 'undefined') {
-                    for (let x in data) {
-                        if (x == 'error') {
-                            continue;
+                    if (data == "success") {
+                        location.reload();
+                    }
+
+                    // if error occurs
+                    else if (typeof data.error != 'undefined') {
+                        for (let x in data) {
+                            if (x == 'error') {
+                                continue;
+                            }
+                            $("#" + parentId + " .eerr" + x).html(data[x][0]);
                         }
-                        $("#" + parentId + " .eerr" + x).html(data[x][0]);
                     }
                 }
-            },
-            error: function (error) {
-                $(".request-loader").removeClass("show");
-            }
+            });
         });
     });
     /* ***************************************************
@@ -1177,7 +1167,7 @@ $(function ($) {
     /* ***************************************************
     ==========Delete Using AJAX Request Start==========
     ******************************************************/
-    $(document).on('click', '.deletebtn', function (e) {
+    $('.deletebtn').on('click', function (e) {
         e.preventDefault();
 
         $(".request-loader").addClass("show");
