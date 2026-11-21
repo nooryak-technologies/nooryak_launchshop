@@ -227,24 +227,6 @@
                 </div>
               </button>
             </div>
-
-            <!-- Social Links below Our Mobile App button -->
-            <div class="social-links-widget mt-3">
-              <span class="d-block text-muted small font-weight-bold text-uppercase mb-2" style="letter-spacing: 1px; font-size: 11px; color: #888;">{{ __('FOLLOW US') }}</span>
-              <div class="social-links d-flex flex-wrap gap-2">
-                @if(isset($userSocials) && count($userSocials) > 0)
-                  @foreach($userSocials as $social)
-                    <a href="{{ $social->url }}" target="_blank" class="btn btn-sm btn-light rounded-circle text-secondary d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="{{ $social->icon }}"></i></a>
-                  @endforeach
-                @else
-                  <a href="#" class="btn btn-sm btn-light rounded-circle text-secondary d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fab fa-facebook-f"></i></a>
-                  <a href="#" class="btn btn-sm btn-light rounded-circle text-secondary d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fab fa-instagram"></i></a>
-                  <a href="#" class="btn btn-sm btn-light rounded-circle text-secondary d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fab fa-linkedin-in"></i></a>
-                  <a href="#" class="btn btn-sm btn-light rounded-circle text-secondary d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fab fa-twitter"></i></a>
-                  <a href="#" class="btn btn-sm btn-light rounded-circle text-secondary d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fab fa-youtube"></i></a>
-                @endif
-              </div>
-            </div>
           </div>
         </div>
       </div>
