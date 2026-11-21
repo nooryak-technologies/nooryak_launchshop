@@ -245,7 +245,7 @@
       }
     }
   </style>
-  @if (is_null($package))
+  @if (empty($current_package) || empty($current_membership))
     @php
       $pendingMemb = \App\Models\Membership::query()
           ->where([['user_id', '=', Auth::id()], ['status', 0]])
@@ -271,7 +271,7 @@
     @endif
   @else
     <div class="alert d-flex flex-column p-4 mb-4" style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; font-weight: 500;">
-      @if ($package_count >= 2)
+      @if ($package_count >= 2 && !empty($next_membership))
         @if ($next_membership->status == 0)
           <div class="alert alert-danger mb-3" style="border-radius: 8px;">
             {{ __('You have requested a package which needs an action (Approval / Rejection) by Admin. You will be notified via mail once an action is taken.') }}
@@ -289,25 +289,25 @@
             <i class="fas fa-crown"></i>
           </div>
           <div style="font-size: 15px; color: #1E3A8A; line-height: 1.5;">
-            <span style="font-weight: 700;">{{ __('Current Package') }}:</span> {{ $current_package->title }}
-            <span class="badge badge-secondary ml-1" style="background: #2563EB; color: white; font-size: 11px; font-weight: 700;">{{ __($current_package->term) }}</span>
+            <span style="font-weight: 700;">{{ __('Current Package') }}:</span> {{ $current_package->title ?? '' }}
+            <span class="badge badge-secondary ml-1" style="background: #2563EB; color: white; font-size: 11px; font-weight: 700;">{{ __($current_package->term ?? '') }}</span>
             <span style="margin: 0 10px; color: #93C5FD;">|</span>
             <span style="font-weight: 700;">{{ __('Expire Date') }}:</span>
-            @if ($current_membership->is_trial == 1)
+            @if (!empty($current_membership) && $current_membership->is_trial == 1)
               {{ Carbon\Carbon::parse($current_membership->expire_date)->format('M-d-Y') }} <span class="badge badge-primary">{{ __('Trial') }}</span>
-            @else
-              {{ $current_package->term === 'lifetime' ? __('Lifetime') : Carbon\Carbon::parse($current_membership->expire_date)->format('M-d-Y') }}
+            @elseif(!empty($current_membership))
+              {{ ($current_package->term ?? '') === 'lifetime' ? __('Lifetime') : Carbon\Carbon::parse($current_membership->expire_date)->format('M-d-Y') }}
             @endif
           </div>
         </div>
       </div>
 
-      @if ($package_count >= 2)
+      @if ($package_count >= 2 && !empty($next_package) && !empty($next_membership))
         <div class="mt-3 pt-3 border-top" style="font-size: 13.5px; color: #475569; border-color: #BFDBFE !important;">
           <span style="font-weight: 700; color: #1E293B;">{{ __('Next Package To Activate') }}:</span>
           {{ $next_package->title }}
           <span class="badge badge-secondary ml-1">{{ __($next_package->term) }}</span>
-          @if ($current_package->term != 'lifetime' && $current_membership->is_trial != 1)
+          @if (($current_package->term ?? '') != 'lifetime' && (!empty($current_membership) && $current_membership->is_trial != 1))
             (
             {{ __('Activation Date') . ':' }}
             {{ Carbon\Carbon::parse($next_membership->start_date)->format('M-d-Y') }},
@@ -327,7 +327,7 @@
       @php
         $colorClass = 'theme-color-' . ($key % 4);
         $isCurrent = isset($current_package->id) && $current_package->id === $package->id;
-        $isNext = $package_count >= 2 && $next_package->id == $package->id && $next_membership->status == 1;
+        $isNext = $package_count >= 2 && !empty($next_package) && $next_package->id == $package->id && !empty($next_membership) && $next_membership->status == 1;
         $isWelcomePackage = (stripos($package->title, 'basic') !== false || stripos($package->title, 'welcome') !== false);
         $hasUsedWelcome = $isWelcomePackage && \App\Models\Membership::where('user_id', Auth::id())
             ->where(function($q) use ($package) {
@@ -439,7 +439,7 @@
                 <i class="fas fa-lock mr-1"></i> {{ __('Trial Used - Upgrade Required') }}
               </button>
             @elseif ($isCurrent)
-              @if ($package->term != 'lifetime' || $current_membership->is_trial == 1)
+              @if ($package->term != 'lifetime' || (!empty($current_membership) && $current_membership->is_trial == 1))
                 <a href="{{ route('user.plan.extend.checkout', $package->id) }}"
                   class="btn-plan-action btn-plan-action-current">
                   <i class="fas fa-crown"></i> {{ __('Extend') }}
