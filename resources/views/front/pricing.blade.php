@@ -88,12 +88,6 @@
             ];
             $compareRows[] = [
                 'type' => 'limit',
-                'label' => 'Additional Languages',
-                'key' => 'language_limit',
-                'ent_val' => 'Unlimited'
-            ];
-            $compareRows[] = [
-                'type' => 'limit',
                 'label' => 'Posts Limit',
                 'key' => 'post_limit',
                 'ent_val' => 'Unlimited'

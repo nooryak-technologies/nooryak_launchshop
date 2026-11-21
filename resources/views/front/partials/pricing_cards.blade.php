@@ -123,7 +123,8 @@
 
               // Subtitle
               $subtitles = [
-                  'basic' => 'Start your own online store',
+                  'basic' => 'Store evaluation and preview setup',
+                  'welcome' => 'Store evaluation and preview setup',
                   'standard' => 'Elevate Your E-commerce Journey',
                   'premium' => 'Best for Small Business Owners.'
               ];
@@ -148,10 +149,6 @@
                   $limitVal = $package->order_limit ?? 0;
                   if ($limitVal > 0 || $limitVal == 999999) {
                       $packageFormattedFeatures[] = ['text' => 'Orders Limit : '.($limitVal==999999?'Unlimited':$limitVal), 'has' => true];
-                  }
-                  $limitVal = $package->language_limit ?? 0;
-                  if ($limitVal > 0 || $limitVal == 999999) {
-                      $packageFormattedFeatures[] = ['text' => 'Additional Languages : '.($limitVal==999999?'Unlimited':$limitVal), 'has' => true];
                   }
                   $limitVal = $package->post_limit ?? 0;
                   if ($limitVal > 0 || $limitVal == 999999) {
@@ -193,7 +190,9 @@
                       if ($feature->keyword === 'AI Content & Image Generator' 
                           || $feature->name === 'AI Content & Image Generator'
                           || stripos($feature->name, 'tawk') !== false 
-                          || stripos($feature->keyword, 'tawk') !== false) {
+                          || stripos($feature->keyword, 'tawk') !== false
+                          || stripos($feature->name, 'language') !== false
+                          || stripos($feature->keyword, 'language') !== false) {
                           continue;
                       }
                       $has = false;
@@ -234,43 +233,12 @@
                   }
               }
 
-              // Filter out any Tawk.to features completely from frontend display
+              // Filter out any Tawk.to and Language features completely from frontend display
               $packageFormattedFeatures = array_values(array_filter($packageFormattedFeatures, function($feat) {
-                  return stripos($feat['text'] ?? '', 'tawk') === false;
+                  $txt = $feat['text'] ?? '';
+                  return stripos($txt, 'tawk') === false && stripos($txt, 'language') === false;
               }));
- 
-              // Post-process features to customize "Additional Languages" dynamically based on plan title key
-              // Basic: strikeout, Standard: 1 Additional Language, Premium: 3 Additional Languages
-              
-              // Find if "Additional Languages" already exists in the formatted features
-              $foundLangKey = false;
-              foreach ($packageFormattedFeatures as $key => $feat) {
-                  if (stripos($feat['text'], 'Additional Languages') !== false || stripos($feat['text'], 'languages') !== false) {
-                      $foundLangKey = $key;
-                      break;
-                  }
-              }
-              
-              $customText = 'Additional Languages';
-              $customHas = false;
-              
-              if ($titleKey === 'standard') {
-                  $customText = '1 Additional Language';
-                  $customHas = true;
-              } elseif ($titleKey === 'premium') {
-                  $customText = '3 Additional Languages';
-                  $customHas = true;
-              }
-              
-              if ($foundLangKey !== false) {
-                  // Override the existing feature
-                  $packageFormattedFeatures[$foundLangKey]['text'] = $customText;
-                  $packageFormattedFeatures[$foundLangKey]['has'] = $customHas;
-              } else {
-                  // If it doesn't exist, append it
-                  $packageFormattedFeatures[] = ['text' => $customText, 'has' => $customHas];
-              }
- 
+
               $visibleCount = 7;
               $visibleFeats = array_slice($packageFormattedFeatures, 0, $visibleCount);
               $extraFeats   = array_slice($packageFormattedFeatures, $visibleCount);
@@ -359,8 +327,11 @@
                   @else <i class="fas fa-building"></i>
                   @endif
                 </div>
+                @php
+                  $displayTitle = ($titleKey == 'basic' || $titleKey == 'welcome') ? __('Welcome Plan') : 'Ecom ' . __($package->title);
+                @endphp
                 <div class="plan-v2-header-text">
-                  <h3 class="plan-v2-title">Ecom {{ __($package->title) }}</h3>
+                  <h3 class="plan-v2-title">{{ $displayTitle }}</h3>
                   <p class="plan-v2-subtitle">{{ $planSubtitle }}</p>
                 </div>
               </div>
@@ -481,10 +452,10 @@
                           : ($modalTone === 'best-value' ? 'BEST VALUE' : ''));
                 @endphp
                 <button type="button" class="plan-v2-see-more"
-                        data-plan-title="Ecom {{ __($package->title) }}"
+                        data-plan-title="{{ $displayTitle }}"
                         data-plan-price="{{ $package->price == 0 ? __('Free') : $be->base_currency_symbol . number_format($package->price, 0) . ' / ' . $periodLabel }}"
                         data-plan-href="{{ $ctaHref }}"
-                        data-plan-cta="Select Ecom {{ __($package->title) }}"
+                        data-plan-cta="Select {{ $displayTitle }}"
                         data-plan-tone="{{ $modalTone }}"
                         data-plan-badge="{{ $modalBadge }}"
                         onclick="togglePlanFeatures('{{ strtolower($term) }}-{{ $package->id }}', this)">
@@ -499,7 +470,7 @@
 
               {{-- CTA Button with correct name --}}
               <a href="{{ $ctaHref }}" class="plan-v2-btn {{ ($isRecommended || $isBestValue) ? '' : 'btn-v2-outline' }}">
-                Select Ecom {{ __($package->title) }}
+                Select {{ $displayTitle }}
               </a>
 
             </div><!-- /.pricing-card-v2 -->

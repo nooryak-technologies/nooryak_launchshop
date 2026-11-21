@@ -501,8 +501,8 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'userstatus', 'Demo',
 
         Route::prefix('label')->group(function () {
             Route::get('/', 'User\ItemLabelController@index')->name('user.product.label.index');
-            Route::post('/store', 'User\ItemLabelController@store')->name('user.product.label.store')->middleware('limitCheck:items,update');
-            Route::post('/update', 'User\ItemLabelController@update')->name('user.product.label.update')->middleware('limitCheck:items,update');
+            Route::post('/store', 'User\ItemLabelController@store')->name('user.product.label.store');
+            Route::post('/update', 'User\ItemLabelController@update')->name('user.product.label.update');
             Route::post('/delete', 'User\ItemLabelController@delete')->name('user.product.label.delete');
         });
 

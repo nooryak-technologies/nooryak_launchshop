@@ -50,6 +50,24 @@ class CheckoutController extends Controller
 {
     public function checkout(CheckoutRequest $request)
     {
+        $targetPackage = Package::find($request['package_id']);
+        if ($targetPackage && (stripos($targetPackage->title, 'basic') !== false || stripos($targetPackage->title, 'welcome') !== false)) {
+            $userCheck = Auth::check() ? Auth::user() : User::where('email', $request->email)->first();
+            if ($userCheck) {
+                $hasUsedWelcome = Membership::where('user_id', $userCheck->id)
+                    ->where(function($q) use ($targetPackage) {
+                        $q->where('package_id', $targetPackage->id)
+                          ->orWhereHas('package', function($pq) {
+                              $pq->where('title', 'LIKE', '%basic%')->orWhere('title', 'LIKE', '%welcome%');
+                          });
+                    })->exists();
+                if ($hasUsedWelcome) {
+                    Session::flash('error', __('The Welcome Plan is for one-time evaluation only. This account has already used the Welcome Plan. Please select Standard or Premium to continue.'));
+                    return back()->withInput();
+                }
+            }
+        }
+
         $offline_payment_gateways = OfflineGateway::all()->pluck('name')->toArray();
         $currentLang = session()->has('lang') ?
             (Language::where('code', session()->get('lang'))->first())

@@ -145,10 +145,9 @@
             <div class="form-group">
               <label for="">{{ __('Language') }} <span class="text-danger">**</span></label>
               <select id="language" name="user_language_id" class="form-control">
-                <option value="" selected disabled>{{ __('Select a language') }}
-                </option>
+                <option value="" disabled>{{ __('Select a language') }}</option>
                 @foreach ($userLanguages as $lang)
-                  <option value="{{ $lang->id }}">{{ $lang->name }}</option>
+                  <option value="{{ $lang->id }}" {{ (!empty($userDefaultLang) && $userDefaultLang->id == $lang->id) ? 'selected' : '' }}>{{ $lang->name }}</option>
                 @endforeach
               </select>
               <p id="erruser_language_id" class="mb-0 text-danger em"></p>

@@ -226,9 +226,22 @@
       $senderPhone = !empty($userBs->phone) ? $userBs->phone : ($user->phone ?? '');
       $senderEmail = !empty($userBs->email) ? $userBs->email : ($user->email ?? '');
 
-      $logoPath = null;
-      if (!empty($userBs->logo) && file_exists(public_path('assets/front/img/user/' . $userBs->logo))) {
-          $logoPath = public_path('assets/front/img/user/' . $userBs->logo);
+      $logoDataUri = null;
+      if (!empty($userBs->logo)) {
+          $possiblePaths = [
+              public_path('assets/front/img/user/' . $userBs->logo),
+              public_path('assets/user/img/' . $userBs->logo),
+              public_path('assets/front/img/' . $userBs->logo),
+              public_path($userBs->logo),
+          ];
+          foreach ($possiblePaths as $path) {
+              if (file_exists($path) && is_file($path)) {
+                  $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+                  $mime = ($ext === 'svg') ? 'image/svg+xml' : (($ext === 'png') ? 'image/png' : (($ext === 'jpg' || $ext === 'jpeg') ? 'image/jpeg' : 'image/' . $ext));
+                  $logoDataUri = 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($path));
+                  break;
+              }
+          }
       }
     @endphp
 
@@ -237,8 +250,8 @@
       <table class="header-table">
         <tr>
           <td style="width: 50%; vertical-align: middle;">
-            @if (!empty($logoPath))
-              <img src="{{ $logoPath }}" style="max-height: 44px; max-width: 180px; display: block; margin-bottom: 4px;" alt="Logo">
+            @if (!empty($logoDataUri))
+              <img src="{{ $logoDataUri }}" style="max-height: 44px; max-width: 180px; display: block; margin-bottom: 4px;" alt="Logo">
             @else
               <div class="store-brand">{{ $senderName }}</div>
             @endif

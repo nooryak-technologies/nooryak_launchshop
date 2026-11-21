@@ -74,6 +74,22 @@ class BuyPlanController extends Controller
     public function checkout($package_id)
     {
         $user_id = Auth::guard('web')->user()->id;
+
+        $targetPackage = Package::find($package_id);
+        if ($targetPackage && (stripos($targetPackage->title, 'basic') !== false || stripos($targetPackage->title, 'welcome') !== false)) {
+            $hasUsedWelcome = Membership::where('user_id', $user_id)
+                ->where(function($q) use ($targetPackage) {
+                    $q->where('package_id', $targetPackage->id)
+                      ->orWhereHas('package', function($pq) {
+                          $pq->where('title', 'LIKE', '%basic%')->orWhere('title', 'LIKE', '%welcome%');
+                      });
+                })->exists();
+            if ($hasUsedWelcome) {
+                Session::flash('warning', __('The Welcome Plan is for one-time evaluation only. Please upgrade to Standard or Premium to continue.'));
+                return redirect()->route('user.plan.extend.index');
+            }
+        }
+
         $packageCount = Membership::query()->where([
             ['user_id', $user_id],
             ['expire_date', '>=', Carbon::now()->toDateString()]

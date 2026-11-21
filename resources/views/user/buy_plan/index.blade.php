@@ -328,11 +328,20 @@
         $colorClass = 'theme-color-' . ($key % 4);
         $isCurrent = isset($current_package->id) && $current_package->id === $package->id;
         $isNext = $package_count >= 2 && $next_package->id == $package->id && $next_membership->status == 1;
+        $isWelcomePackage = (stripos($package->title, 'basic') !== false || stripos($package->title, 'welcome') !== false);
+        $hasUsedWelcome = $isWelcomePackage && \App\Models\Membership::where('user_id', Auth::id())
+            ->where(function($q) use ($package) {
+                $q->where('package_id', $package->id)
+                  ->orWhereHas('package', function($pq) {
+                      $pq->where('title', 'LIKE', '%basic%')->orWhere('title', 'LIKE', '%welcome%');
+                  });
+            })->exists();
+        $planDisplayTitle = $isWelcomePackage ? __('Welcome Plan') : __($package->title);
       @endphp
       <div class="card-premium-plan {{ $colorClass }} {{ $isCurrent ? 'is-current' : '' }}">
         <div class="plan-header">
           <h3 class="plan-title">
-            {{ __($package->title) }}
+            {{ $planDisplayTitle }}
           </h3>
           @if ($isCurrent)
             <span class="plan-badge plan-badge-current">{{ __('Current') }}</span>
@@ -362,10 +371,6 @@
           <li class="feature-item">
             <span class="feature-icon"><i class="fas fa-check"></i></span>
             <span>{{ __('Orders Limit') }} : {{ $package->order_limit != '999999' ? $package->order_limit : __('Unlimited') }}</span>
-          </li>
-          <li class="feature-item">
-            <span class="feature-icon"><i class="fas fa-check"></i></span>
-            <span>{{ __('Additional Languages') }} : {{ $package->language_limit != '999999' ? $package->language_limit : __('Unlimited') }}</span>
           </li>
           @php
             $features = json_decode($package->features, true);
@@ -429,7 +434,11 @@
         @endphp
         @if ($package_count < 2 && !$hasPendingMemb)
           <div class="mt-auto">
-            @if ($isCurrent)
+            @if ($hasUsedWelcome)
+              <button type="button" class="btn-plan-action" style="background: #e2e8f0; color: #64748b; cursor: not-allowed; border: none; font-size: 13px;" disabled>
+                <i class="fas fa-lock mr-1"></i> {{ __('Trial Used - Upgrade Required') }}
+              </button>
+            @elseif ($isCurrent)
               @if ($package->term != 'lifetime' || $current_membership->is_trial == 1)
                 <a href="{{ route('user.plan.extend.checkout', $package->id) }}"
                   class="btn-plan-action btn-plan-action-current">

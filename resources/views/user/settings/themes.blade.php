@@ -44,143 +44,62 @@
                 <div class="form-group">
                   <label class="form-label">{{ __('Theme') }} <span class="text-danger">**</span></label>
                   <div class="row">
+                    @php
+                      $currentTheme = !empty($data->theme) ? $data->theme : 'clothing';
+                      $themes = [
+                        ['key' => 'electronics', 'name' => 'Electronics', 'img' => 'electronics.PNG'],
+                        ['key' => 'fashion', 'name' => 'Fashion', 'img' => 'fashion.PNG'],
+                        ['key' => 'furniture', 'name' => 'Furniture', 'img' => 'furniture.PNG'],
+                        ['key' => 'kids', 'name' => 'Kids', 'img' => 'kids.PNG'],
+                        ['key' => 'vegetables', 'name' => 'Grocery', 'img' => 'vegetables.PNG'],
+                        ['key' => 'manti', 'name' => 'Multipurpose', 'img' => 'manti.png'],
+                        ['key' => 'pet', 'name' => 'Pet', 'img' => 'pet.png'],
+                        ['key' => 'skinflow', 'name' => 'Skinflow', 'img' => 'skinflow.png'],
+                        ['key' => 'jewellery', 'name' => 'Jewellery', 'img' => 'jewellery.png'],
+                        ['key' => 'clothing', 'name' => 'Clothing', 'img' => 'clothing.png'],
+                        ['key' => 'grocery2', 'name' => 'Ecom Grocery', 'img' => 'grocery2.png'],
+                      ];
+                    @endphp
 
-                    <div class="col-6 col-sm-4 mb-2">
-                      <label class="imagecheck mb-2">
-                        <input name="theme" type="radio" value="electronics" class="imagecheck-input"
-                          {{ !empty($data->theme) && $data->theme == 'electronics' ? 'checked' : '' }}>
-                        <figure class="imagecheck-figure">
-                          <img src="{{ asset('assets/front/img/user/themes/electronics.PNG') }}" alt="title"
-                            class="imagecheck-image">
-                        </figure>
-                      </label>
-                      <h5 class="text-center">{{ __('Electronics') }} </h5>
-                    </div>
-                    <div class="col-6 col-sm-4 mb-2">
-                      <label class="imagecheck mb-2">
-                        <input name="theme" type="radio" value="fashion" class="imagecheck-input"
-                          {{ !empty($data->theme) && $data->theme == 'fashion' ? 'checked' : '' }}>
-                        <figure class="imagecheck-figure">
-                          <img src="{{ asset('assets/front/img/user/themes/fashion.PNG') }}" alt="title"
-                            class="imagecheck-image">
-                        </figure>
-                      </label>
-                      <h5 class="text-center">{{ __('Fashion') }} </h5>
-                    </div>
-
-                    <div class="col-6 col-sm-4 mb-2">
-                      <label class="imagecheck mb-2">
-                        <input name="theme" type="radio" value="furniture" class="imagecheck-input"
-                          {{ !empty($data->theme) && $data->theme == 'furniture' ? 'checked' : '' }}>
-                        <figure class="imagecheck-figure">
-                          <img src="{{ asset('assets/front/img/user/themes/furniture.PNG') }}" alt="title"
-                            class="imagecheck-image">
-                        </figure>
-                      </label>
-                      <h5 class="text-center">{{ __('Furniture') }} </h5>
-                    </div>
-                    <div class="col-6 col-sm-4 mb-2">
-                      <label class="imagecheck mb-2">
-                        <input name="theme" type="radio" value="kids" class="imagecheck-input"
-                          {{ !empty($data->theme) && $data->theme == 'kids' ? 'checked' : '' }}>
-                        <figure class="imagecheck-figure">
-                          <img src="{{ asset('assets/front/img/user/themes/kids.PNG') }}" alt="title"
-                            class="imagecheck-image">
-                        </figure>
-                      </label>
-                      <h5 class="text-center">{{ __('Kids') }} </h5>
-                    </div>
-
-                    <div class="col-6 col-sm-4 mb-2">
-                      <label class="imagecheck mb-2">
-                        <input name="theme" type="radio" value="vegetables" class="imagecheck-input"
-                          {{ !empty($data->theme) && $data->theme == 'vegetables' ? 'checked' : '' }}>
-                        <figure class="imagecheck-figure">
-                          <img src="{{ asset('assets/front/img/user/themes/vegetables.PNG') }}" alt="title"
-                            class="imagecheck-image">
-                        </figure>
-                      </label>
-                      <h5 class="text-center">{{ __('Grocery') }} </h5>
-                    </div>
-
-                    <div class="col-6 col-sm-4 mb-2">
-                      <label class="imagecheck mb-2">
-                        <input name="theme" type="radio" value="manti" class="imagecheck-input"
-                          {{ !empty($data->theme) && $data->theme == 'manti' ? 'checked' : '' }}>
-                        <figure class="imagecheck-figure">
-                          <img src="{{ asset('assets/front/img/user/themes/manti.png') }}" alt="title"
-                            class="imagecheck-image">
-                        </figure>
-                      </label>
-                      <h5 class="text-center">{{ __('Multipurpose') }} </h5>
-                    </div>
-                    <div class="col-6 col-sm-4 mb-2">
-                      <label class="imagecheck mb-2">
-                        <input name="theme" type="radio" value="pet" class="imagecheck-input"
-                          {{ !empty($data->theme) && $data->theme == 'pet' ? 'checked' : '' }}>
-                        <figure class="imagecheck-figure">
-                          <img src="{{ asset('assets/front/img/user/themes/pet.png') }}" alt="title"
-                            class="imagecheck-image">
-                        </figure>
-                      </label>
-                      <h5 class="text-center">{{ __('Pet') }} </h5>
-                    </div>
-
-                    <div class="col-6 col-sm-4 mb-2">
-                      <label class="imagecheck mb-2">
-                        <input name="theme" type="radio" value="skinflow" class="imagecheck-input"
-                          {{ !empty($data->theme) && $data->theme == 'skinflow' ? 'checked' : '' }}>
-                        <figure class="imagecheck-figure">
-                          <img src="{{ asset('assets/front/img/user/themes/skinflow.png') }}" alt="title"
-                            class="imagecheck-image">
-                        </figure>
-                      </label>
-                      <h5 class="text-center">{{ __('Skinflow') }} </h5>
-                    </div>
-                    <div class="col-6 col-sm-4 mb-2">
-                      <label class="imagecheck mb-2">
-                        <input name="theme" type="radio" value="jewellery" class="imagecheck-input"
-                          {{ !empty($data->theme) && $data->theme == 'jewellery' ? 'checked' : '' }}>
-                        <figure class="imagecheck-figure">
-                          <img src="{{ asset('assets/front/img/user/themes/jewellery.png') }}" alt="title"
-                            class="imagecheck-image">
-                        </figure>
-                      </label>
-                      <h5 class="text-center">{{ __('Jewellery') }} </h5>
-                    </div>
-
-                    <div class="col-6 col-sm-4 mb-2">
-                      <label class="imagecheck mb-2">
-                        <input name="theme" type="radio" value="clothing" class="imagecheck-input"
-                          {{ !empty($data->theme) && $data->theme == 'clothing' ? 'checked' : '' }}>
-                        <figure class="imagecheck-figure">
-                          <img src="{{ asset('assets/front/img/user/themes/clothing.png') }}" alt="title"
-                            class="imagecheck-image">
-                        </figure>
-                      </label>
-                      <h5 class="text-center">{{ __('Clothing') }} </h5>
-                    </div>
-
-                    <div class="col-6 col-sm-4 mb-2">
-                      <label class="imagecheck mb-2">
-                        <input name="theme" type="radio" value="grocery2" class="imagecheck-input"
-                          {{ !empty($data->theme) && $data->theme == 'grocery2' ? 'checked' : '' }}>
-                        <figure class="imagecheck-figure">
-                          <img src="{{ asset('assets/front/img/user/themes/grocery2.png') }}" alt="title"
-                            class="imagecheck-image">
-                        </figure>
-                      </label>
-                      <h5 class="text-center">{{ __('Ecom Grocery') }} </h5>
-                      <div class="text-center">
-                        @php
-                          $grocery2PreviewUrl = detailsUrl(Auth::user('web'));
-                          $grocery2PreviewUrl .= (str_contains($grocery2PreviewUrl, '?') ? '&' : '?') . 'preview_theme=grocery2';
-                        @endphp
-                        <a href="{{ $grocery2PreviewUrl }}" target="_blank" class="btn btn-primary btn-sm mt-1 py-1 px-2" style="font-size: 11px;">
-                          <i class="fas fa-eye mr-1"></i>{{ __('Preview') }}
-                        </a>
+                    @foreach ($themes as $thm)
+                      @php
+                        $isSelected = ($thm['key'] == $currentTheme);
+                      @endphp
+                      <div class="col-6 col-sm-4 mb-4">
+                        <div style="position: relative;">
+                          <label class="imagecheck mb-2" style="{{ $isSelected ? 'border: 2px solid #22c55e; border-radius: 8px; box-shadow: 0 4px 12px rgba(34,197,94,0.25); cursor: pointer;' : 'opacity: 0.65; filter: grayscale(40%); cursor: not-allowed; pointer-events: none;' }}">
+                            <input name="theme" type="radio" value="{{ $thm['key'] }}" class="imagecheck-input"
+                              {{ $isSelected ? 'checked' : 'disabled' }}>
+                            <figure class="imagecheck-figure" style="position: relative; overflow: hidden; margin-bottom: 0; border-radius: 6px;">
+                              <img src="{{ asset('assets/front/img/user/themes/' . $thm['img']) }}" alt="{{ $thm['name'] }}"
+                                class="imagecheck-image">
+                              @if(!$isSelected)
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.45); display: flex; align-items: center; justify-content: center; z-index: 2;">
+                                  <span class="badge badge-warning" style="font-size: 11px; font-weight: 700; padding: 5px 10px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">{{ __('Coming Soon') }}</span>
+                                </div>
+                              @endif
+                            </figure>
+                          </label>
+                          <h5 class="text-center mb-1" style="font-weight: 600; font-size: 14px;">
+                            {{ __($thm['name']) }}
+                            @if($isSelected)
+                              <span class="badge badge-success ml-1" style="font-size: 10px; vertical-align: middle;">{{ __('Active') }}</span>
+                            @endif
+                          </h5>
+                          @if($thm['key'] == 'grocery2' && $isSelected)
+                            <div class="text-center">
+                              @php
+                                $grocery2PreviewUrl = detailsUrl(Auth::user('web'));
+                                $grocery2PreviewUrl .= (str_contains($grocery2PreviewUrl, '?') ? '&' : '?') . 'preview_theme=grocery2';
+                              @endphp
+                              <a href="{{ $grocery2PreviewUrl }}" target="_blank" class="btn btn-primary btn-sm mt-1 py-1 px-2" style="font-size: 11px;">
+                                <i class="fas fa-eye mr-1"></i>{{ __('Preview') }}
+                              </a>
+                            </div>
+                          @endif
+                        </div>
                       </div>
-                    </div>
+                    @endforeach
                   </div>
                 </div>
               </form>

@@ -48,6 +48,10 @@
                                 <span class="processing">
                                   {{ $keywords[ucfirst($order->order_status)] ?? __('Processing') }}
                                 </span>
+                              @elseif ($order->order_status == 'out for delivery')
+                                <span class="badge" style="background: #8b5cf6; color: #fff; font-size: 11px; padding: 4px 8px; border-radius: 4px; font-weight: 600;">
+                                  {{ $keywords['Out for Delivery'] ?? __('Out for Delivery') }}
+                                </span>
                               @elseif ($order->order_status == 'completed')
                                 <span class="completed">
                                   {{ $keywords[ucfirst($order->order_status)] ?? __('Completed') }}

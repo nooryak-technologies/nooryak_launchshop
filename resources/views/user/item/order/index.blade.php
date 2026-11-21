@@ -290,12 +290,15 @@
                               "
                                   name="order_status"
                                   onchange="document.getElementById('statusForm{{ $order->id }}').submit();"
-                                  style="border-radius: 30px !important; font-weight: 600; padding: 4px 20px 4px 10px !important; height: auto !important; border: 1px solid transparent !important; cursor: pointer; color: #ffffff !important;">
+                                  style="border-radius: 30px !important; font-weight: 600; padding: 4px 20px 4px 10px !important; height: auto !important; border: 1px solid transparent !important; cursor: pointer; color: #ffffff !important; {{ $order->order_status == 'out for delivery' ? 'background-color: #8b5cf6 !important;' : '' }}">
                                   <option value="pending" {{ $order->order_status == 'pending' ? 'selected' : '' }} style="color: #333;">
                                     {{ __('Pending') }}</option>
                                   <option value="processing"
                                     {{ $order->order_status == 'processing' ? 'selected' : '' }} style="color: #333;">
                                     {{ __('Processing') }}</option>
+                                  <option value="out for delivery"
+                                    {{ $order->order_status == 'out for delivery' ? 'selected' : '' }} style="color: #333;">
+                                    {{ __('Out for Delivery') }}</option>
                                   <option value="completed" {{ $order->order_status == 'completed' ? 'selected' : '' }} style="color: #333;">
                                     {{ __('Completed') }}</option>
                                   <option value="rejected" {{ $order->order_status == 'rejected' ? 'selected' : '' }} style="color: #333;">

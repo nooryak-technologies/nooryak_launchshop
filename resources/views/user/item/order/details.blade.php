@@ -89,6 +89,8 @@
                   <span class="badge-status-pill order-pending" style="background: #f59e0b !important; color: #ffffff !important; border: none !important; border-radius: 30px !important; padding: 4px 12px !important; font-size: 12px !important; font-weight: 600 !important; display: inline-flex !important; align-items: center; gap: 4px;"><i class="fas fa-clock"></i> {{ ucfirst($order->order_status) }} </span>
                 @elseif ($order->order_status == 'processing')
                   <span class="badge-status-pill order-processing" style="background: #3b82f6 !important; color: #ffffff !important; border: none !important; border-radius: 30px !important; padding: 4px 12px !important; font-size: 12px !important; font-weight: 600 !important; display: inline-flex !important; align-items: center; gap: 4px;"><i class="fas fa-sync-alt"></i> {{ ucfirst($order->order_status) }} </span>
+                @elseif ($order->order_status == 'out for delivery')
+                  <span class="badge-status-pill order-outfordelivery" style="background: #8b5cf6 !important; color: #ffffff !important; border: none !important; border-radius: 30px !important; padding: 4px 12px !important; font-size: 12px !important; font-weight: 600 !important; display: inline-flex !important; align-items: center; gap: 4px;"><i class="fas fa-shipping-fast"></i> {{ __('Out for Delivery') }} </span>
                 @elseif ($order->order_status == 'completed')
                   <span class="badge-status-pill order-completed" style="background: #22c55e !important; color: #ffffff !important; border: none !important; border-radius: 30px !important; padding: 4px 12px !important; font-size: 12px !important; font-weight: 600 !important; display: inline-flex !important; align-items: center; gap: 4px;"><i class="fas fa-check-circle"></i> {{ ucfirst($order->order_status) }} </span>
                 @elseif ($order->order_status == 'rejected')
@@ -368,53 +370,8 @@
     @endphp
 
     @if (is_array($permissions) && in_array('Order Tracking Feature', $permissions))
-    <!-- Shipment Tracking (col-md-5) -->
-    <div class="col-md-5">
-      <div class="card card-premium">
-        <div class="card-header d-flex align-items-center justify-content-between">
-          <div class="d-flex align-items-center">
-            <div class="card-icon-wrap" style="background: #eff6ff; color: #2563eb;">
-              <i class="fas fa-truck"></i>
-            </div>
-            <div class="card-title mb-0" style="font-size: 16px; font-weight: 600; color: #1e293b;">{{ __('Shipment Tracking') }}</div>
-          </div>
-        </div>
-        <form action="{{ route('user.item.order.tracking_update') }}" method="POST">
-          @csrf
-          <input type="hidden" name="order_id" value="{{ $order->id }}">
-          <div class="card-body">
-            <div class="form-group pt-0">
-              <label style="font-weight: 600; color: #475569; font-size: 13px; margin-bottom: 8px;">{{ __('Shipping Gateway / Method') }}</label>
-              <select name="shipping_gateway_keyword" class="form-control">
-                <option value="">{{ __('Manual (No API)') }}</option>
-                @foreach($shipping_gateways as $gateway)
-                  <option value="{{ $gateway->keyword }}" @selected($order->shipping_gateway_keyword == $gateway->keyword)>{{ $gateway->name }}</option>
-                @endforeach
-              </select>
-            </div>
-            <div class="form-group pt-0">
-              <label style="font-weight: 600; color: #475569; font-size: 13px; margin-bottom: 8px;">{{ __('Courier Partner') }}</label>
-              <input type="text" name="courier_name" class="form-control" value="{{ $order->courier_name }}" placeholder="e.g. DHL, FedEx, Delhivery">
-            </div>
-            <div class="form-group pt-0">
-              <label style="font-weight: 600; color: #475569; font-size: 13px; margin-bottom: 8px;">{{ __('Tracking Number') }}</label>
-              <input type="text" name="tracking_number" class="form-control" value="{{ $order->tracking_number }}" placeholder="Tracking Number">
-            </div>
-            @if($order->tracking_url)
-            <div class="form-group pt-0 pb-0">
-              <a href="{{ $order->tracking_url }}" target="_blank" class="btn btn-sm btn-link text-primary p-0">{{ __('View Tracking on Carrier Site') }}</a>
-            </div>
-            @endif
-          </div>
-          <div class="card-footer text-right" style="background: transparent; border-top: none; padding-top: 0;">
-            <button type="submit" class="btn btn-premium-primary">{{ __('Save Tracking') }}</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- Tracking Progress (col-md-7) -->
-    <div class="col-md-7">
+    <!-- Tracking Progress (col-md-12) -->
+    <div class="col-md-12">
       <div class="card card-premium">
         <div class="card-header d-flex align-items-center justify-content-between">
           <div class="d-flex align-items-center">
@@ -426,7 +383,7 @@
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-12">
               <div class="timeline-container">
                 <div class="timeline-item">
                   <div class="timeline-marker completed">
@@ -440,40 +397,28 @@
                 </div>
                 
                 <div class="timeline-item">
-                  <div class="timeline-marker {{ $order->order_status != 'pending' ? 'completed' : 'active' }}">
-                    @if($order->order_status != 'pending')
+                  <div class="timeline-marker {{ in_array($order->order_status, ['processing', 'out for delivery', 'completed']) ? 'completed' : 'active' }}">
+                    @if(in_array($order->order_status, ['processing', 'out for delivery', 'completed']))
                       <i class="fas fa-check"></i>
                     @endif
                   </div>
                   <div class="timeline-content">
                     <div class="timeline-title">{{ __('Processing') }}</div>
-                    <div class="timeline-time">{{ $order->order_status != 'pending' ? $order->updated_at->format('d M Y, h:i A') : '-' }}</div>
+                    <div class="timeline-time">{{ in_array($order->order_status, ['processing', 'out for delivery', 'completed']) ? $order->updated_at->format('d M Y, h:i A') : '-' }}</div>
                     <div class="timeline-desc">{{ __('Your order is being prepared.') }}</div>
                   </div>
                 </div>
                 
                 <div class="timeline-item">
-                  <div class="timeline-marker {{ !empty($order->tracking_number) ? 'completed' : '' }}">
-                    @if(!empty($order->tracking_number))
-                      <i class="fas fa-check"></i>
-                    @endif
-                  </div>
-                  <div class="timeline-content">
-                    <div class="timeline-title">{{ __('In Transit') }}</div>
-                    <div class="timeline-time">{{ !empty($order->tracking_number) ? $order->updated_at->format('d M Y, h:i A') : '-' }}</div>
-                    <div class="timeline-desc">{{ !empty($order->tracking_number) ? __('Your order is on the way.') : __('Awaiting dispatch.') }}</div>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-marker {{ (!empty($order->tracking_number) && $order->order_status == 'completed') ? 'completed' : '' }}">
-                    @if(!empty($order->tracking_number) && $order->order_status == 'completed')
+                  <div class="timeline-marker {{ in_array($order->order_status, ['out for delivery', 'completed']) ? 'completed' : ($order->order_status == 'out for delivery' ? 'active' : '') }}">
+                    @if(in_array($order->order_status, ['out for delivery', 'completed']))
                       <i class="fas fa-check"></i>
                     @endif
                   </div>
                   <div class="timeline-content">
                     <div class="timeline-title">{{ __('Out for Delivery') }}</div>
-                    <div class="timeline-desc">{{ __('Out for delivery soon.') }}</div>
+                    <div class="timeline-time">{{ in_array($order->order_status, ['out for delivery', 'completed']) ? $order->updated_at->format('d M Y, h:i A') : '-' }}</div>
+                    <div class="timeline-desc">{{ $order->order_status == 'out for delivery' ? __('Your package is out for delivery.') : ($order->order_status == 'completed' ? __('Package was out for delivery.') : __('Awaiting dispatch.')) }}</div>
                   </div>
                 </div>
                 
@@ -489,26 +434,6 @@
                     <div class="timeline-desc">{{ $order->order_status == 'completed' ? __('Package delivered to destination.') : __('Pending delivery.') }}</div>
                   </div>
                 </div>
-              </div>
-            </div>
-            
-            <div class="col-lg-6 d-flex align-items-center justify-content-center">
-              <div class="map-mockup-wrapper">
-                <div class="expected-delivery-badge">
-                  {{ __('Expected Delivery:') }} {{ $order->created_at->addDays(3)->format('d M Y') }}
-                </div>
-                <svg class="map-svg" viewBox="0 0 200 150">
-                  <path d="M 0,20 Q 80,40 120,20 T 200,40" fill="none" stroke="#e2e8f0" stroke-width="4"/>
-                  <path d="M 30,0 Q 40,80 20,150" fill="none" stroke="#e2e8f0" stroke-width="4"/>
-                  <path d="M 150,0 Q 140,80 170,150" fill="none" stroke="#e2e8f0" stroke-width="4"/>
-                  <path d="M 40,90 Q 95,50 140,110" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-dasharray="3 3"/>
-                  <circle cx="40" cy="90" r="5" fill="#10b981"/>
-                  <circle cx="40" cy="90" r="9" fill="none" stroke="#10b981" stroke-width="1.5" opacity="0.4"/>
-                  <g transform="translate(140, 110)">
-                    <circle cx="0" cy="0" r="8" fill="#2563eb"/>
-                    <path d="M -4,-2 L -1,-2 L 1,-4 L 4,-4 L 4,-1 L 3,1 L -4,1 Z" fill="#fff"/>
-                  </g>
-                </svg>
               </div>
             </div>
           </div>

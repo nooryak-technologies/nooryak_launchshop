@@ -15,15 +15,33 @@ class ItemLabelController extends Controller
     public function index(Request $request)
     {
         $user_id = Auth::guard('web')->user()->id;
-        $language = Language::where([['user_id', $user_id], ['code', $request->language]])->firstOrFail();
+        $langCode = $request->language;
+        $language = null;
+        if (!empty($langCode)) {
+            $language = Language::where([['user_id', $user_id], ['code', $langCode]])->first();
+        }
+        if (empty($language)) {
+            $language = Language::where([['user_id', $user_id], ['is_default', 1]])->first() 
+                ?? Language::where('user_id', $user_id)->first();
+        }
         $data['userLanguages'] = Language::where('user_id', $user_id)->get();
-        $data['labels'] = Label::where([['user_id', $user_id], ['language_id', $language->id]])->orderBy('created_at','DESC')->get();
+        $data['labels'] = $language 
+            ? Label::where([['user_id', $user_id], ['language_id', $language->id]])->orderBy('created_at','DESC')->get()
+            : collect([]);
         $data['user_id'] = $user_id;
         return view('user.item.label.index', $data);
     }
 
     public function store(Request $request)
     {
+        $user_id = Auth::guard('web')->user()->id;
+        if (!$request->filled('user_language_id')) {
+            $defaultLang = Language::where([['user_id', $user_id], ['is_default', 1]])->first()
+                ?? Language::where('user_id', $user_id)->first();
+            if ($defaultLang) {
+                $request->merge(['user_language_id' => $defaultLang->id]);
+            }
+        }
         $rules = [
             'user_language_id' => 'required',
             'name' => 'required',
@@ -37,7 +55,7 @@ class ItemLabelController extends Controller
         }
         $in = $request->all();
         $in['language_id'] = $request->user_language_id;
-        $in['user_id'] = Auth::guard('web')->user()->id;
+        $in['user_id'] = $user_id;
         Label::create($in);
         Session::flash('success', __('Created successfully'));
         return 'success';

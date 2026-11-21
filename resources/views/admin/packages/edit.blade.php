@@ -314,7 +314,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6" id="language_limit" style="display: {{ $d_block }}">
+                                    <div class="col-md-6" id="language_limit" style="display: none !important;">
                                         <div class="form-group">
                                             <label for="language_limit">{{ __('Additional Language Limit') }} <span
                                                     class="text-danger">**</span>
