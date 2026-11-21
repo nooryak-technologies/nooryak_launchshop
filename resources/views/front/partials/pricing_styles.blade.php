@@ -489,6 +489,7 @@
     border-radius: 20px;
     border: 1px solid #bbf7d0;
     line-height: 1.4;
+    white-space: nowrap !important;
   }
   /* Counterpart yearly price badge on monthly cards */
   .plan-counterpart-badge {
@@ -504,6 +505,7 @@
     border: 1px solid #ffd5c8;
     line-height: 1.4;
     letter-spacing: 0.2px;
+    white-space: nowrap !important;
   }
   /* Attractive Free 2 Months for Yearly Plan Badge */
   .plan-yearly-free-badge {
@@ -520,6 +522,7 @@
     border-radius: 20px;
     letter-spacing: 0.2px;
     line-height: 1.4;
+    white-space: nowrap !important;
     box-shadow: 0 2px 6px rgba(245, 158, 11, 0.12);
     transition: all 0.2s ease;
   }
@@ -980,18 +983,21 @@
       font-size: 9.5px !important;
       padding: 2px 8px !important;
       margin-bottom: 0 !important;
+      white-space: nowrap !important;
     }
 
     .plan-counterpart-badge {
       font-size: 9.5px !important;
       padding: 2px 8px !important;
       margin-bottom: 0 !important;
+      white-space: nowrap !important;
     }
 
     .plan-yearly-free-badge {
       font-size: 9.5px !important;
       padding: 2px 8px !important;
       margin-bottom: 0 !important;
+      white-space: nowrap !important;
     }
 
     .plan-v2-divider {

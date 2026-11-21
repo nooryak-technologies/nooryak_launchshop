@@ -508,6 +508,7 @@ class CustomerController extends Controller
         }
         $customer = new Customer;
         $customer->username = $request->username;
+        $customer->first_name = $request->first_name ?? $request->username;
         $customer->email = $request->email;
         $customer->user_id = $user->id;
         $customer->password = Hash::make($request->password);

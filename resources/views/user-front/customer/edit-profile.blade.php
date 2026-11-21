@@ -39,7 +39,7 @@
                           <div class="form-group mb-30">
                             <input type="text" class="form-control"
                               placeholder="{{ $keywords['First_Name'] ?? __('First Name') }}" name="first_name"
-                              value="{{ $authUser->first_name }}" required>
+                              value="{{ $authUser->first_name ?: $authUser->username }}" required>
                             @error('first_name')
                               <p class="mb-3 text-danger">{{ $message }}</p>
                             @enderror

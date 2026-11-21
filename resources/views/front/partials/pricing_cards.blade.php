@@ -17,7 +17,7 @@
     <div class="pricing-toggle-wrap">
       @if(in_array('yearly', array_map('strtolower', (array)$terms)) && in_array('monthly', array_map('strtolower', (array)$terms)) && empty($hidePill))
         <div class="pricing-save-pill">
-          ⚡ Free 2 Months for Yearly Plan
+          ⚡ Free 2 Months - Yearly Billing
         </div>
       @endif
       <ul class="pricing-pill-tabs nav" id="pricing-tabs" role="tablist">
@@ -359,25 +359,25 @@
                 @elseif(!empty($package->is_fallback_term))
                   @if(strtolower($package->term) == 'yearly')
                     <span class="plan-monthly-badge" style="background:#e0f2fe; color:#0284c7; border-color:#bae6fd; font-weight:700;">
-                      <i class="fas fa-calendar-check mr-1"></i> {{ __('Yearly Plan') }}
+                      <i class="fas fa-calendar-check mr-1"></i> {{ __('Yearly Billing') }}
                     </span>
                     <span class="plan-yearly-free-badge">
-                      <i class="fas fa-gift mr-1 text-warning"></i> {{ __('Free 2 Months for Yearly Plan') }}
+                      <i class="fas fa-gift mr-1 text-warning"></i> {{ __('Free 2 Months - Yearly Billing') }}
                     </span>
                   @elseif(strtolower($package->term) == 'monthly')
                     <span class="plan-monthly-badge" style="background:#f0fdf4; color:#16a34a; border-color:#bbf7d0;">
                       <i class="fas fa-check-circle mr-1"></i> {{ __('Billed Monthly') }}
                     </span>
                     <span class="plan-yearly-free-badge">
-                      <i class="fas fa-gift mr-1 text-warning"></i> {{ __('Free 2 Months for Yearly Plan') }}
+                      <i class="fas fa-gift mr-1 text-warning"></i> {{ __('Free 2 Months - Yearly Billing') }}
                     </span>
                   @endif
                 @elseif(strtolower($package->term) == 'yearly')
                   <span class="plan-monthly-badge" style="background:#f0fdf4; color:#16a34a; border-color:#bbf7d0;">
-                    <i class="fas fa-check-circle mr-1"></i> {{ __('Billed Yearly') }}
+                    <i class="fas fa-check-circle mr-1"></i> {{ __('Yearly Billing') }}
                   </span>
                   <span class="plan-yearly-free-badge">
-                    <i class="fas fa-gift mr-1 text-warning"></i> {{ __('Free 2 Months for Yearly Plan') }}
+                    <i class="fas fa-gift mr-1 text-warning"></i> {{ __('Free 2 Months - Yearly Billing') }}
                   </span>
                 @elseif(strtolower($package->term) == 'monthly')
                   <span class="plan-monthly-badge" style="background:#f0fdf4; color:#16a34a; border-color:#bbf7d0;">
@@ -389,7 +389,7 @@
                     </span>
                   @endif
                   <span class="plan-yearly-free-badge">
-                    <i class="fas fa-gift mr-1 text-warning"></i> {{ __('Free 2 Months for Yearly Plan') }}
+                    <i class="fas fa-gift mr-1 text-warning"></i> {{ __('Free 2 Months - Yearly Billing') }}
                   </span>
                 @endif
               </div>
