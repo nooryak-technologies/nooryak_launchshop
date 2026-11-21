@@ -41,11 +41,11 @@ class PorductOrderExport implements FromCollection, WithHeadings, WithMapping
             $orders->shipping_method ? $orders->shipping_method : '-',
             $orders->payment_status,
             $orders->order_status,
-            round($orders->cart_total, 2) . ' ' . $orders->currency_code,
-            round($orders->discount, 2) . ' ' . $orders->currency_code,
-            round($orders->tax, 2) . ' ' . $orders->currency_code,
-            round($orders->shipping_charge, 2) . ' ' . $orders->currency_code,
-            round($orders->total, 2) . ' ' . $orders->currency_code,
+            '₹' . number_format($orders->cart_total, 2) . ' INR',
+            '₹' . number_format($orders->discount, 2) . ' INR',
+            '₹' . number_format($orders->tax, 2) . ' INR',
+            '₹' . number_format($orders->shipping_charge, 2) . ' INR',
+            '₹' . number_format($orders->total, 2) . ' INR',
             $orders->created_at,
         ];
     }

@@ -57,6 +57,8 @@
     <div class="container">
       <div class="header-left">
         <ul class="menu sf-js-enabled" style="touch-action: pan-y;">
+          {{-- Language Switcher hidden --}}
+          {{--
           <li class="menu-item">
             @if ($userCurrentLang->id)
               <a href="javascript:void(0)" class="sf-with-ul"><i
@@ -73,6 +75,7 @@
               @endforeach
             </ul>
           </li>
+          --}}
           {{-- Currency Switcher hidden --}}
           {{-- <li class="menu-item">
             @if ($userCurrentCurr->id)

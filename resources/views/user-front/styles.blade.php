@@ -13,6 +13,15 @@
 <link rel="stylesheet" href="{{ asset('assets/user-front/css/common/header-1.css?v=' . time()) }}">
 <link rel="stylesheet" href="{{ asset('assets/user-front/css/common/zoom-fix.css?v=' . time()) }}">
 <link rel="stylesheet" href="{{ asset('assets/user-front/css/tinymce-content.css?v=' . time()) }}">
+<style>
+  /* Force hide frontend language & currency switchers across all themes on mobile & laptop */
+  .menu-action-item:has(a[href*="changeUserLanguage"]),
+  .menu-action-item:has(a[href*="changeUserCurrency"]),
+  .menu-item:has(a[href*="changeUserLanguage"]),
+  .menu-item:has(a[href*="changeUserCurrency"]) {
+    display: none !important;
+  }
+</style>
 
 @if ($userBs->theme == 'vegetables' || $userBs->theme == 'grocery')
   <link rel="stylesheet" href="{{ asset('assets/user-front/css/grocery/home-1.css?v=' . time()) }}">

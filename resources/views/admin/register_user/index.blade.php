@@ -199,11 +199,6 @@
                               <input type="hidden" name="user_id" value="{{ $user->id }}">
                             </form>
                           </td>
-                                <option value="0" {{ $user->status == 0 ? 'selected' : '' }}>{{ __('Deactive') }}</option>
-                              </select>
-                              <input type="hidden" name="user_id" value="{{ $user->id }}">
-                            </form>
-                          </td>
                           <td class="text-right">
                             <div class="dropdown d-inline-block">
                               <button class="btn btn-primary-purple btn-sm dropdown-toggle" type="button"

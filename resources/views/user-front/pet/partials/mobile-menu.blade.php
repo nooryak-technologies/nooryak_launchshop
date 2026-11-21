@@ -28,6 +28,8 @@
   <!-- menu-action-item-area -->
   <div class="menu-action-item-area">
     <ul class="menu-action-item-wrapper">
+      {{-- Language and Currency Switcher hidden on frontend --}}
+      {{--
       <li class="menu-action-item">
         <a href="javascript:void(0)">
           <span class="icon"><i class="fal fa-globe"></i></span>{{ convertUtf8($userCurrentLang->name) }}
@@ -58,6 +60,7 @@
           @endforeach
         </ul>
       </li>
+      --}}
       <li class="menu-action-item">
         <a href="javascript:void(0)">
           <span class="icon"><i class="fal fa-user"></i></span>

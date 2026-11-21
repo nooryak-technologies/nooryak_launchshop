@@ -343,6 +343,28 @@ class Common
         $order->updated_at = $now;
         $order->save();
 
+        // Auto-subscribe customer (guest or registered) to store subscriber list
+        if (!empty($order->billing_email) && !empty($order->user_id)) {
+            try {
+                $subEmail = trim($order->billing_email);
+                if (filter_var($subEmail, FILTER_VALIDATE_EMAIL)) {
+                    $subData = [
+                        'user_id' => $order->user_id,
+                        'email' => $subEmail,
+                    ];
+                    if (\Illuminate\Support\Facades\Schema::hasColumn('user_newsletter_subscribers', 'phone')) {
+                        $subData['phone'] = !empty($order->billing_number) ? $order->billing_number : null;
+                    }
+                    \App\Models\User\UserNewsletterSubscriber::firstOrCreate(
+                        ['user_id' => $order->user_id, 'email' => $subEmail],
+                        $subData
+                    );
+                }
+            } catch (\Exception $e) {
+                \Log::warning('Auto-subscribe on order error: ' . $e->getMessage());
+            }
+        }
+
         return $order;
     }
 

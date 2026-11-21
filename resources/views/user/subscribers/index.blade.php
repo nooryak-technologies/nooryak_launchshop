@@ -38,7 +38,7 @@
                 {{ __('Delete') }}</button>
               <form action="{{ url()->full() }}" class="float-right">
                 <input type="text" name="term" class="form-control" value="{{ request()->input('term') }}"
-                  placeholder="{{ __('Search by Email') }}">
+                  placeholder="{{ __('Search by Email / Phone') }}">
               </form>
             </div>
           </div>
@@ -56,7 +56,9 @@
                         <th scope="col">
                           <input type="checkbox" class="bulk-check" data-val="all">
                         </th>
-                        <th scope="col">{{ __('email') }}</th>
+                        <th scope="col">{{ __('Email') }}</th>
+                        <th scope="col">{{ __('Phone') }}</th>
+                        <th scope="col">{{ __('Subscribed Date') }}</th>
                         <th scope="col">{{ __('Action') }}</th>
                       </tr>
                     </thead>
@@ -66,7 +68,9 @@
                           <td>
                             <input type="checkbox" class="bulk-check" data-val="{{ $subsc->id }}">
                           </td>
-                          <td>{{ $subsc->email }}</td>
+                          <td><strong>{{ $subsc->email }}</strong></td>
+                          <td>{{ !empty($subsc->phone) ? $subsc->phone : '-' }}</td>
+                          <td>{{ !empty($subsc->created_at) ? \Carbon\Carbon::parse($subsc->created_at)->format('d M Y, h:i A') : '-' }}</td>
                           <td>
                             <form class="deleteform d-inline-block" action="{{ route('user.subscriber.delete') }}"
                               method="post">

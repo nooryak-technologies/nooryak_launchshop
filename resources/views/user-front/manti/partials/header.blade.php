@@ -44,6 +44,8 @@
         <div class="col-xl-3 col-lg-3 text-end">
           <div class="header-right">
             <ul class="menu ">
+              {{-- Language Switcher hidden --}}
+              {{--
               <li class="menu-item">
                 @if ($userCurrentLang->id)
                   <a href="javascript:void(0)"><i class="fal fa-globe"></i>{{ convertUtf8($userCurrentLang->name) }}</a>
@@ -58,6 +60,7 @@
                   </ul>
                 @endif
               </li>
+              --}}
 
               {{-- Currency Switcher hidden --}}
               {{-- <li class="menu-item">

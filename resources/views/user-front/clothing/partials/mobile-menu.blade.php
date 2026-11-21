@@ -29,6 +29,8 @@
     <!-- Account actions -->
     <div class="menu-action-item-area">
       <ul class="menu-action-item-wrapper">
+        {{-- Language and Currency Switcher hidden on frontend --}}
+        {{--
         <!-- Language -->
         <li class="menu-action-item">
           <a href="javascript:void(0)">
@@ -63,6 +65,7 @@
             @endforeach
           </ul>
         </li>
+        --}}
         <!-- Account -->
         <li class="menu-action-item">
           <a href="javascript:void(0)">

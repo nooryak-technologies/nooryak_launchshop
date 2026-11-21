@@ -286,14 +286,57 @@ class ItemOrderController extends Controller
         return view('user.item.order.report', $data);
     }
 
-    public function exportReport()
+    public function exportReport(Request $request)
     {
+        $userId = Auth::guard('web')->user()->id;
         $orders = Session::get('item_orders_report');
+
+        if (empty($orders) || count($orders) == 0) {
+            $orders = UserOrder::where('user_id', $userId)
+                ->orderBy('id', 'DESC')
+                ->get();
+        }
+
         if (empty($orders) || count($orders) == 0) {
             Session::flash('warning', __('There are no orders available to export'));
             return back();
         }
-        return Excel::download(new PorductOrderExport($orders), 'product-orders.csv');
+
+        $format = strtolower($request->get('format', 'csv'));
+
+        if ($format === 'pdf') {
+            $user = Auth::guard('web')->user();
+            $userBs = BasicSetting::where('user_id', $userId)->first();
+            $fromDate = $request->get('from_date');
+            $toDate = $request->get('to_date');
+            $rangeLabel = (!empty($fromDate) && !empty($toDate)) ? ($fromDate . ' to ' . $toDate) : 'All Orders';
+
+            $data = [
+                'orders' => $orders,
+                'user' => $user,
+                'userBs' => $userBs,
+                'rangeLabel' => $rangeLabel,
+                'totalRevenue' => $orders->sum('total'),
+                'totalCart' => $orders->sum('cart_total'),
+                'totalTax' => $orders->sum('tax'),
+                'totalShipping' => $orders->sum('shipping_charge'),
+                'totalDiscount' => $orders->sum('discount'),
+                'generatedAt' => Carbon::now()->format('d M Y, h:i A'),
+            ];
+
+            $pdf = PDF::setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'defaultFont' => 'DejaVu Sans',
+                'isFontSubsettingEnabled' => true,
+                'logOutputFile' => storage_path('logs/log.htm'),
+                'tempDir' => storage_path('logs/')
+            ])->loadView('pdf.sales_report', $data)->setPaper('a4', 'landscape');
+
+            return $pdf->download('sales-report-' . Carbon::now()->format('Y-m-d') . '.pdf');
+        }
+
+        return Excel::download(new PorductOrderExport($orders), 'sales-report-' . Carbon::now()->format('Y-m-d') . '.csv');
     }
 
     public function completedOrdersPdf(Request $request)
@@ -381,9 +424,9 @@ class ItemOrderController extends Controller
             'isFontSubsettingEnabled' => true,
             'logOutputFile' => storage_path('logs/log.htm'),
             'tempDir' => storage_path('logs/')
-        ])->loadView('pdf.completed_orders_history', $data)->setPaper('a4', 'landscape');
+        ])->loadView('pdf.completed_orders_history', $data)->setPaper('a4', 'portrait');
 
-        return $pdf->download('completed-orders-history-' . Carbon::now()->format('Y-m-d') . '.pdf');
+        return $pdf->download('shipping-labels-' . Carbon::now()->format('Y-m-d') . '.pdf');
     }
 
     public function bulkOrderProcessing(Request $request)

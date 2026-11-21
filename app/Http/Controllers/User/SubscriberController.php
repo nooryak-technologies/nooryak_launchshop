@@ -17,11 +17,52 @@ class SubscriberController extends Controller
 {
     public function index(Request $request)
     {
+        $userId = Auth::guard('web')->user()->id;
+
+        // Auto-sync buyers from past orders into subscriber list
+        try {
+            $pastBuyers = \App\Models\User\UserOrder::where('user_id', $userId)
+                ->whereNotNull('billing_email')
+                ->where('billing_email', '!=', '')
+                ->select('billing_email', 'billing_number')
+                ->distinct()
+                ->get();
+
+            $hasPhoneCol = \Illuminate\Support\Facades\Schema::hasColumn('user_newsletter_subscribers', 'phone');
+
+            foreach ($pastBuyers as $buyer) {
+                $bEmail = trim($buyer->billing_email);
+                if (!empty($bEmail) && filter_var($bEmail, FILTER_VALIDATE_EMAIL)) {
+                    $subData = [
+                        'user_id' => $userId,
+                        'email' => $bEmail,
+                    ];
+                    if ($hasPhoneCol) {
+                        $subData['phone'] = !empty($buyer->billing_number) ? $buyer->billing_number : null;
+                    }
+                    UserNewsletterSubscriber::firstOrCreate(
+                        ['user_id' => $userId, 'email' => $bEmail],
+                        $subData
+                    );
+                }
+            }
+        } catch (\Exception $e) {
+            \Log::warning('Subscriber index sync warning: ' . $e->getMessage());
+        }
+
         $term = $request->term;
-        $data['subscs'] = UserNewsletterSubscriber::where('user_id', Auth::guard('web')->user()->id)
-            ->when($term, function ($query, $term) {
-                return $query->where('email', 'LIKE', '%' . $term . '%');
+        $hasPhone = \Illuminate\Support\Facades\Schema::hasColumn('user_newsletter_subscribers', 'phone');
+
+        $data['subscs'] = UserNewsletterSubscriber::where('user_id', $userId)
+            ->when($term, function ($query, $term) use ($hasPhone) {
+                return $query->where(function ($q) use ($term, $hasPhone) {
+                    $q->where('email', 'LIKE', '%' . $term . '%');
+                    if ($hasPhone) {
+                        $q->orWhere('phone', 'LIKE', '%' . $term . '%');
+                    }
+                });
             })->orderBy('id', 'DESC')->paginate(10);
+
         return view('user.subscribers.index', $data);
     }
 

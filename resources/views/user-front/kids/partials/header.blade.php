@@ -47,6 +47,8 @@
         <div class="col-xl-3 col-lg-3 text-end">
           <div class="header-right">
             <ul class="menu ">
+              {{-- Language Switcher hidden --}}
+              {{--
               <li class="menu-item">
 
                 @if ($userCurrentLang->id)
@@ -64,6 +66,7 @@
                   @endforeach
                 </ul>
               </li>
+              --}}
 
               {{-- Currency Switcher hidden --}}
               {{-- <li class="menu-item">

@@ -45,12 +45,13 @@
             </div>
             <div class="card-title mb-0" style="font-size: 16px; font-weight: 600; color: #1e293b;">{{ __('Filter Report') }}</div>
           </div>
-          <div>
-            <form action="{{ route('user.orders.export') }}" class="d-inline-block">
-              <button type="submit" class="btn btn-premium-success">
-                <i class="fas fa-file-download mr-1"></i> {{ __('Export Report') }}
-              </button>
-            </form>
+          <div class="d-flex align-items-center" style="gap: 8px;">
+            <a href="{{ route('user.orders.export', array_merge(request()->query(), ['format' => 'csv'])) }}" class="btn btn-premium-success" style="height: 38px; display: inline-flex; align-items: center; border-radius: 8px; font-weight: 600; padding: 0 14px;">
+              <i class="fas fa-file-csv mr-1"></i> {{ __('Export CSV') }}
+            </a>
+            <a href="{{ route('user.orders.export', array_merge(request()->query(), ['format' => 'pdf'])) }}" class="btn btn-danger" style="height: 38px; border-radius: 8px; display: inline-flex; align-items: center; font-weight: 600; padding: 0 14px; background: #ef4444; border-color: #ef4444;">
+              <i class="fas fa-file-pdf mr-1"></i> {{ __('Export PDF') }}
+            </a>
           </div>
         </div>
         <div class="card-body">
@@ -166,7 +167,7 @@
                 <div class="content">
                   <div class="label">{{ __('Total Revenue') }}</div>
                   <div class="value">
-                    {{ $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}{{ number_format($total, 2) }}{{ $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
+                    ₹{{ number_format($total, 2) }}
                   </div>
 
                 </div>
@@ -182,7 +183,7 @@
                 <div class="content">
                   <div class="label">{{ __('Average Order Value') }}</div>
                   <div class="value">
-                    {{ $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}{{ $orders->total() > 0 ? number_format($total / $orders->total(), 2) : '0.00' }}{{ $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
+                    ₹{{ $orders->total() > 0 ? number_format($total / $orders->total(), 2) : '0.00' }}
                   </div>
 
                 </div>
@@ -198,7 +199,7 @@
                 <div class="content">
                   <div class="label">{{ __('Refunds') }}</div>
                   <div class="value">
-                    {{ $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}{{ number_format($total * 0.02, 2) }}{{ $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
+                    ₹{{ number_format($total * 0.02, 2) }}
                   </div>
 
                 </div>
@@ -283,21 +284,19 @@
                             @endif
                           </td>
                           <td>
-                            {{ $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}{{ round($order->cart_total, 2) }}{{ $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
+                            ₹{{ number_format($order->cart_total, 2) }}
                           </td>
                           <td>
-                            {{ $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}{{ round($order->discount, 2) }}{{ $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
+                            ₹{{ number_format($order->discount, 2) }}
                           </td>
                           <td>
-                            {{ $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}{{ round($order->tax, 2) }}{{ $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
+                            ₹{{ number_format($order->tax, 2) }}
                           </td>
                           <td>
-                            {{ $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}
-                            {{ round($order->shipping_charge, 2) }}
-                            {{ $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
+                            ₹{{ number_format($order->shipping_charge, 2) }}
                           </td>
                           <td>
-                            {{ $userBs->base_currency_symbol_position == 'left' ? $userBs->base_currency_symbol : '' }}{{ round($order->total, 2) }}{{ $userBs->base_currency_symbol_position == 'right' ? $userBs->base_currency_symbol : '' }}
+                            ₹{{ number_format($order->total, 2) }}
                           </td>
                           <td>
                             {{ $order->created_at }}
