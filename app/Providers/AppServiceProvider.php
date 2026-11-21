@@ -521,17 +521,13 @@ class AppServiceProvider extends ServiceProvider
                     }
 
                     //for translate tenant dashboard start
-                    $cookieName = 'userDashboardLang_' . $userId;
                     $userDashboardLang = null;
 
-                    if (Cookie::has($cookieName)) {
-                        $userDashboardLang = UserLanguage::where('code', Cookie::get($cookieName))->where('user_id', $userId)->first();
+                    if (session()->has('userDashboardLang')) {
+                        $userDashboardLang = UserLanguage::where('code', session()->get('userDashboardLang'))->where('user_id', $userId)->first();
                     }
                     if (empty($userDashboardLang) && Cookie::has('userDashboardLang')) {
                         $userDashboardLang = UserLanguage::where('code', Cookie::get('userDashboardLang'))->where('user_id', $userId)->first();
-                    }
-                    if (empty($userDashboardLang) && session()->has('userDashboardLang')) {
-                        $userDashboardLang = UserLanguage::where('code', session()->get('userDashboardLang'))->where('user_id', $userId)->first();
                     }
                     if (empty($userDashboardLang)) {
                         $hasDashColUser = \Illuminate\Support\Facades\Schema::hasColumn('user_languages', 'dashboard_default');
@@ -558,12 +554,15 @@ class AppServiceProvider extends ServiceProvider
                     }
 
                     if ($userDashboardLang && isset($userDashboardLang->code)) {
-                        Cookie::queue($cookieName, $userDashboardLang->code, 60 * 24 * 30);
-                        Cookie::queue('userDashboardLang', $userDashboardLang->code, 60 * 24 * 30);
                         Session::put('user_lang', 'user_' . $userDashboardLang->code);
                         Session::put('user_lang_' . Auth::guard('web')->user()->username, $userDashboardLang->code);
                         Session::put('userDashboardLang', $userDashboardLang->code);
                         app()->setLocale('user_' . $userDashboardLang->code);
+                    }
+
+                    // Clean up any bloated legacy per-user cookies to prevent Apache 400 Bad Request
+                    if (request()->hasCookie('userDashboardLang_' . $userId)) {
+                        Cookie::queue(Cookie::forget('userDashboardLang_' . $userId));
                     }
 
                     $uLang = null;
