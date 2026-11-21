@@ -16,12 +16,14 @@ class ItemCategoryController extends Controller
 {
     public function index(Request $request)
     {
-        $lang = Language::where('code', $request->language)->where('user_id', Auth::guard('web')->user()->id)->first();
+        $reqLang = $request->language;
+        if ($reqLang === 'ar') { $reqLang = 'en'; }
+        $lang = Language::where('code', $reqLang)->where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
         if (empty($lang)) {
-            $lang = Language::where([['user_id', Auth::guard('web')->user()->id], ['is_default', 1]])->first();
+            $lang = Language::where([['user_id', Auth::guard('web')->user()->id], ['is_default', 1]])->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
         }
         if (empty($lang)) {
-            $lang = Language::where('user_id', Auth::guard('web')->user()->id)->first();
+            $lang = Language::where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
         }
 
         $lang_id = $lang ? $lang->id : null;
@@ -29,7 +31,7 @@ class ItemCategoryController extends Controller
         $data['categories_limit'] = $current_package->categories_limit;
         $data['total_categories'] = $lang_id ? UserItemCategory::where('language_id', $lang_id)->where('user_id', Auth::guard('web')->user()->id)->count() : 0;
 
-        $data['itemcategories'] = $lang_id ? UserItemCategory::where('language_id', $lang_id)->where('user_id', Auth::guard('web')->user()->id)->orderBy('created_at', 'DESC')->paginate(10) : collect();
+        $data['itemcategories'] = $lang_id ? UserItemCategory::where('language_id', $lang_id)->where('user_id', Auth::guard('web')->user()->id)->withCount('items')->orderBy('created_at', 'DESC')->paginate(10) : collect();
 
         $data['lang_id'] = $lang_id;
         return view('user.item.category.index', $data);
@@ -64,7 +66,7 @@ class ItemCategoryController extends Controller
             // 'image' => 'required'
             // 'image' => 'required_without:ai_generated_image',
         ];
-        $languages = Language::where('user_id', Auth::guard('web')->user()->id)->get();
+        $languages = Language::where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->get();
         $defaulLang = Language::where([['user_id', Auth::guard('web')->user()->id], ['is_default', 1]])->first();
         $rules[$defaulLang->code . '_name'] = 'required|max:255';
         $messages[$defaulLang->code . '_name.required'] = __('The category name field is required for') . ' ' . $defaulLang->name . ' ' . __('language');
@@ -176,7 +178,7 @@ class ItemCategoryController extends Controller
     public function edit(Request $request, $id)
     {
         $user_id = Auth::guard('web')->user()->id;
-        $data['languages'] = Language::where('user_id', $user_id)->get();
+        $data['languages'] = Language::where('user_id', $user_id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->get();
         $data['data'] = UserItemCategory::findOrFail($id);
 
         $current_package = UserPermissionHelper::currentPackagePermission($user_id);
@@ -194,7 +196,7 @@ class ItemCategoryController extends Controller
     public function update(Request $request)
     {
         $user_id = Auth::guard('web')->user()->id;
-        $languages = Language::where('user_id', $user_id)->get();
+        $languages = Language::where('user_id', $user_id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->get();
         $messages = [];
         $rules = [
             'status' => 'required',

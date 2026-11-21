@@ -4,11 +4,11 @@
     $userDefaultLang = \App\Models\User\Language::where([
         ['user_id', \Illuminate\Support\Facades\Auth::guard('web')->user()->id],
         ['is_default', 1],
-    ])->first();
+    ])->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
     $userLanguages = \App\Models\User\Language::where(
         'user_id',
         \Illuminate\Support\Facades\Auth::guard('web')->user()->id,
-    )->get();
+    )->where('code', '!=', 'ar')->where('rtl', '!=', 1)->get();
 @endphp
 
 @section('content')
@@ -101,6 +101,7 @@
                                                 </th>
                                                 <th scope="col" class="border-top-0 border-bottom-0 font-weight-bold">{{ __('Name') }}</th>
                                                 <th scope="col" class="border-top-0 border-bottom-0 font-weight-bold">{{ __('Image') }}</th>
+                                                <th scope="col" class="border-top-0 border-bottom-0 font-weight-bold">{{ __('Products Count') }}</th>
                                                 @if (in_array($userBs->theme, $allow_featured_theme))
                                                     <th scope="col" class="border-top-0 border-bottom-0 font-weight-bold">{{ __('Featured') }}</th>
                                                 @endif
@@ -111,17 +112,14 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($itemcategories as $key => $category)
-                                                @php
-                                                    $iconStyle = $icons[$key % count($icons)];
-                                                @endphp
                                                 <tr style="background: #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.02); border-radius: 8px;">
                                                     <td class="align-middle" style="border-top: 1px solid rgba(0,0,0,0.04); border-bottom: 1px solid rgba(0,0,0,0.04); border-left: 1px solid rgba(0,0,0,0.04); border-radius: 8px 0 0 8px;">
                                                         <input type="checkbox" class="bulk-check" data-val="{{ $category->id }}">
                                                     </td>
                                                     <td class="align-middle font-weight-bold" style="border-top: 1px solid rgba(0,0,0,0.04); border-bottom: 1px solid rgba(0,0,0,0.04);">
                                                         <div class="d-flex align-items-center">
-                                                            <span class="d-inline-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px; border-radius: 10px; background: {{ $iconStyle['bg'] }}; color: {{ $iconStyle['color'] }}; flex-shrink: 0;">
-                                                                <i class="{{ $iconStyle['icon'] }}" style="font-size: 16px;"></i>
+                                                            <span class="d-inline-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px; border-radius: 10px; background: rgba(13, 110, 253, 0.1); color: #0d6efd; flex-shrink: 0;">
+                                                                <i class="fas fa-th-large" style="font-size: 16px;"></i>
                                                             </span>
                                                             <span style="font-size: 14px;">{{ convertUtf8($category->name) }}</span>
                                                         </div>
@@ -129,6 +127,12 @@
                                                     <td class="align-middle" style="border-top: 1px solid rgba(0,0,0,0.04); border-bottom: 1px solid rgba(0,0,0,0.04);">
                                                         <img src="{{ $category->image ? asset('assets/front/img/user/items/categories/' . $category->image) : asset('assets/admin/img/noimage.jpg') }}"
                                                             alt="..." class="img-thumbnail" style="width: 48px; height: 48px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(0,0,0,0.08); padding: 2px;">
+                                                    </td>
+                                                    <td class="align-middle" style="border-top: 1px solid rgba(0,0,0,0.04); border-bottom: 1px solid rgba(0,0,0,0.04);">
+                                                        <a href="{{ route('user.item.index', ['category_id' => $category->id, 'language' => request()->input('language')]) }}" class="btn btn-outline-primary btn-sm font-weight-bold d-inline-flex align-items-center" style="border-radius: 20px; padding: 4px 12px; font-size: 12px; text-decoration: none;" title="{{ __('View items under this category') }}">
+                                                            <i class="fas fa-boxes mr-1" style="font-size: 11px;"></i>
+                                                            {{ $category->items_count ?? 0 }} {{ __('Items') }}
+                                                        </a>
                                                     </td>
                                                     @if (in_array($userBs->theme, $allow_featured_theme))
                                                         <td class="align-middle" style="border-top: 1px solid rgba(0,0,0,0.04); border-bottom: 1px solid rgba(0,0,0,0.04);">

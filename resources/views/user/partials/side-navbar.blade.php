@@ -422,7 +422,7 @@
             </a>
           </li>
           @endif
-          @if (hasStaffPerm('Currencies'))
+          @if (false && hasStaffPerm('Currencies'))
           <li class="nav-item @if (request()->routeIs('user-currency-index')) active @endif">
             <a href="{{ route('user-currency-index') }}">
               <i class="fas fa-money-bill-wave"></i>
@@ -1029,11 +1029,7 @@
                     </a>
                   </li>
 
-                  <li class="@if (request()->routeIs('user.not_found_page')) active @endif">
-                    <a href="{{ route('user.not_found_page', ['language' => $defaultLang]) }}">
-                      <span class="sub-item">{{ __('404 Page') }}</span>
-                    </a>
-                  </li>
+
 
                   <li class="@if (request()->routeIs('user.header.index')) active @endif">
                     <a href="{{ route('user.header.index') . '?language=' . $defaultLang }}">
@@ -1394,15 +1390,7 @@
                   </div>
                 </li>
 
-                <li
-                  class="
-                  @if (request()->routeIs('user.language.index')) active
-                        @elseif(request()->routeIs('user.language.edit')) active
-                        @elseif(request()->routeIs('user.language.editKeyword')) active @endif">
-                  <a href="{{ route('user.language.index') }}">
-                    <span class="sub-item">{{ __('Languages') }}</span>
-                  </a>
-                </li>
+
 
                 @if (!is_null($package))
                   {{-- Start Payment getway --}}

@@ -1,20 +1,22 @@
 @extends('user.layout')
 
 @php
+  $reqLang = request()->input('language');
+  if ($reqLang === 'ar') { $reqLang = 'en'; }
   $selLang = \App\Models\User\Language::where([
-      ['code', request()->input('language')],
+      ['code', $reqLang],
       ['user_id', Auth::guard('web')->user()->id],
-  ])->first();
+  ])->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
   if (empty($selLang)) {
       $selLang = \App\Models\User\Language::where([
           ['user_id', Auth::guard('web')->user()->id],
           ['is_default', 1],
-      ])->first();
+      ])->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
   }
   if (empty($selLang)) {
-      $selLang = \App\Models\User\Language::where('user_id', Auth::guard('web')->user()->id)->first();
+      $selLang = \App\Models\User\Language::where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
   }
-  $userLanguages = \App\Models\User\Language::where('user_id', Auth::guard('web')->user()->id)->get();
+  $userLanguages = \App\Models\User\Language::where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->get();
 @endphp
 @includeIf('user.partials.rtl-style')
 

@@ -4,8 +4,8 @@
     $userDefaultLang = \App\Models\User\Language::where([
         ['user_id', \Illuminate\Support\Facades\Auth::id()],
         ['is_default', 1],
-    ])->first();
-    $userLanguages = \App\Models\User\Language::where('user_id', \Illuminate\Support\Facades\Auth::id())->get();
+    ])->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
+    $userLanguages = \App\Models\User\Language::where('user_id', \Illuminate\Support\Facades\Auth::id())->where('code', '!=', 'ar')->where('rtl', '!=', 1)->get();
 @endphp
 @includeIf('user.partials.rtl-style')
 

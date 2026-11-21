@@ -1,20 +1,22 @@
 @extends('user.layout')
 
 @php
+  $reqLang = request()->input('language');
+  if ($reqLang === 'ar') { $reqLang = 'en'; }
   $selLang = \App\Models\User\Language::where([
       ['user_id', Auth::guard('web')->user()->id],
-      ['code', request()->input('language')],
-  ])->first();
+      ['code', $reqLang],
+  ])->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
   if (empty($selLang)) {
       $selLang = \App\Models\User\Language::where([
           ['user_id', Auth::guard('web')->user()->id],
           ['is_default', 1],
-      ])->first();
+      ])->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
   }
   if (empty($selLang)) {
-      $selLang = \App\Models\User\Language::where('user_id', Auth::guard('web')->user()->id)->first();
+      $selLang = \App\Models\User\Language::where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
   }
-  $userLanguages = \App\Models\User\Language::where('user_id', Auth::guard('web')->user()->id)->get();
+  $userLanguages = \App\Models\User\Language::where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->get();
 @endphp
 @includeIf('user.partials.rtl-style')
 
@@ -111,16 +113,6 @@
                       </tr>
                     </thead>
                     <tbody>
-                      @php
-                        $pastelBoxes = [
-                          ['bg' => 'rgba(111, 66, 193, 0.12)', 'color' => '#6f42c1', 'icon' => 'fa-tags'],
-                          ['bg' => 'rgba(25, 135, 84, 0.12)', 'color' => '#198754', 'icon' => 'fa-cube'],
-                          ['bg' => 'rgba(220, 53, 69, 0.12)', 'color' => '#dc3545', 'icon' => 'fa-layer-group'],
-                          ['bg' => 'rgba(253, 126, 20, 0.12)', 'color' => '#fd7e14', 'icon' => 'fa-shapes'],
-                          ['bg' => 'rgba(13, 202, 240, 0.12)', 'color' => '#0dcaf0', 'icon' => 'fa-adjust'],
-                          ['bg' => 'rgba(13, 110, 253, 0.12)', 'color' => '#0d6efd', 'icon' => 'fa-sliders-h'],
-                        ];
-                      @endphp
                       @foreach ($variants as $key => $item)
                         @php
                           $options = DB::table('variant_option_contents')
@@ -130,7 +122,6 @@
                               ->select('option_name')
                               ->distinct()
                               ->get();
-                          $style = $pastelBoxes[$key % count($pastelBoxes)];
                         @endphp
                         <tr class="dark-border" style="transition: all 0.2s ease;">
                           <td style="padding: 15px; vertical-align: middle; border-top: 1px solid rgba(0,0,0,0.05);">
@@ -138,8 +129,8 @@
                           </td>
                           <td style="padding: 15px; vertical-align: middle; font-weight: 600; border-top: 1px solid rgba(0,0,0,0.05);" class="dark-label">
                             <div class="d-flex align-items-center">
-                              <div style="width: 34px; height: 34px; border-radius: 50%; background: {{ $style['bg'] }}; color: {{ $style['color'] }}; display: inline-flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0; font-size: 14px;">
-                                <i class="fas {{ $style['icon'] }}"></i>
+                              <div style="width: 34px; height: 34px; border-radius: 8px; background: rgba(13, 110, 253, 0.12); color: #0d6efd; display: inline-flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0; font-size: 14px;">
+                                <i class="fas fa-sliders-h"></i>
                               </div>
                               <span>{{ $item->name }}</span>
                             </div>

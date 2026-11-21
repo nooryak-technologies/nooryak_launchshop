@@ -16,12 +16,14 @@ class ItemSubCategoryController extends Controller
 {
     public function index(Request $request)
     {
-        $lang = Language::where('code', $request->language)->where('user_id', Auth::guard('web')->user()->id)->first();
+        $reqLang = $request->language;
+        if ($reqLang === 'ar') { $reqLang = 'en'; }
+        $lang = Language::where('code', $reqLang)->where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
         if (empty($lang)) {
-            $lang = Language::where([['user_id', Auth::guard('web')->user()->id], ['is_default', 1]])->first();
+            $lang = Language::where([['user_id', Auth::guard('web')->user()->id], ['is_default', 1]])->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
         }
         if (empty($lang)) {
-            $lang = Language::where('user_id', Auth::guard('web')->user()->id)->first();
+            $lang = Language::where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
         }
         $lang_id = $lang ? $lang->id : null;
 
@@ -45,7 +47,7 @@ class ItemSubCategoryController extends Controller
     public function store(Request $request)
     {
         $user_id = Auth::guard('web')->user()->id;
-        $languages = Language::where('user_id', $user_id)->get();
+        $languages = Language::where('user_id', $user_id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->get();
 
         $current_package = UserPermissionHelper::currentPackagePermission($user_id);
         $subcategories_limit = $current_package->subcategories_limit;
@@ -119,7 +121,7 @@ class ItemSubCategoryController extends Controller
             return redirect()->back();
         }
         $data['categories'] = UserItemCategory::where('language_id', $lang_id)->where('user_id', $user_id)->orderBy('name', 'ASC')->get();
-        $data['languages'] = Language::where('user_id', $user_id)->get();
+        $data['languages'] = Language::where('user_id', $user_id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->get();
 
         return view('user.item.subcategory.edit', $data);
     }
@@ -127,7 +129,7 @@ class ItemSubCategoryController extends Controller
     public function update(Request $request)
     {
         $user_id = Auth::guard('web')->user()->id;
-        $languages = Language::where('user_id', $user_id)->get();
+        $languages = Language::where('user_id', $user_id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->get();
         $defaulLang = Language::where([['user_id', Auth::guard('web')->user()->id], ['is_default', 1]])->first();
         $rules = [
             'status' => 'required',

@@ -41,12 +41,14 @@ class ItemController extends Controller
 {
     public function index(Request $request)
     {
-        $lang = Language::where('code', $request->language)->where('user_id', Auth::guard('web')->user()->id)->first();
+        $reqLang = $request->language;
+        if ($reqLang === 'ar') { $reqLang = 'en'; }
+        $lang = Language::where('code', $reqLang)->where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
         if (empty($lang)) {
-            $lang = Language::where([['user_id', Auth::guard('web')->user()->id], ['is_default', 1]])->first();
+            $lang = Language::where([['user_id', Auth::guard('web')->user()->id], ['is_default', 1]])->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
         }
         if (empty($lang)) {
-            $lang = Language::where('user_id', Auth::guard('web')->user()->id)->first();
+            $lang = Language::where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
         }
         $lang_id = $lang ? $lang->id : null;
         $current_package = UserPermissionHelper::currentPackagePermission(Auth::guard('web')->user()->id);
@@ -55,6 +57,16 @@ class ItemController extends Controller
         $title = null;
         if ($request->filled('title')) {
             $title = $request->title;
+        }
+
+        $matchingCatIds = [];
+        if ($request->filled('category_id')) {
+            $selCat = UserItemCategory::find($request->category_id);
+            if ($selCat && !empty($selCat->unique_id)) {
+                $matchingCatIds = UserItemCategory::where('unique_id', $selCat->unique_id)->pluck('id')->toArray();
+            } else {
+                $matchingCatIds = [$request->category_id];
+            }
         }
 
         $data['items'] = $lang_id ? DB::table('user_items')->where('user_items.user_id', Auth::guard('web')->user()->id)
@@ -66,6 +78,9 @@ class ItemController extends Controller
             ->where('user_item_categories.language_id', '=', $lang_id)
             ->when($title, function ($query) use ($title) {
                 return $query->where('user_item_contents.title', 'LIKE', '%' . $title . '%');
+            })
+            ->when(!empty($matchingCatIds), function ($query) use ($matchingCatIds) {
+                return $query->whereIn('user_item_contents.category_id', $matchingCatIds);
             })
             ->paginate(10) : new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
         $data['lang_id'] = $lang_id;
@@ -84,8 +99,14 @@ class ItemController extends Controller
 
     public function create(Request $request)
     {
-        $data['lang'] = Language::where('code', $request->language)->where('user_id', Auth::guard('web')->user()->id)->first();
-        $data['languages'] = Language::where('user_id', Auth::guard('web')->user()->id)->get();
+        $reqLang = $request->language;
+        if ($reqLang === 'ar') { $reqLang = 'en'; }
+        $data['lang'] = Language::where('code', $reqLang)->where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
+        if (empty($data['lang'])) {
+            $data['lang'] = Language::where([['user_id', Auth::guard('web')->user()->id], ['is_default', 1]])->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first()
+                ?? Language::where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
+        }
+        $data['languages'] = Language::where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->get();
         $data['currency'] = UserCurrency::where('user_id', Auth::guard('web')->user()->id)->where('is_default', 1)->first();
 
         $data['categories'] = UserItemCategory::where('language_id', $data['lang']->id)
@@ -148,8 +169,9 @@ class ItemController extends Controller
             return 'success';
         }
 
-        $languages = Language::where('user_id', Auth::guard('web')->user()->id)->get();
-        $defaulLang = Language::where([['user_id', Auth::guard('web')->user()->id], ['is_default', 1]])->first();
+        $languages = Language::where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->get();
+        $defaulLang = Language::where([['user_id', Auth::guard('web')->user()->id], ['is_default', 1]])->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first()
+            ?? Language::where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
         $messages = [];
         $rules = [];
         $allowedExtensions = array('jpg', 'jpeg', 'png', 'svg', 'webp');
@@ -403,16 +425,22 @@ class ItemController extends Controller
     }
     public function edit(Request $request, $id)
     {
-        $currentLang = Language::where('code', $request->language)->pluck('id')->firstOrFail();
         $user_id = Auth::guard('web')->user()->id;
-        $data['languages'] = Language::where('user_id', $user_id)->get();
+        $reqLang = $request->language;
+        if ($reqLang === 'ar') { $reqLang = 'en'; }
+        $lang = Language::where('code', $reqLang)->where('user_id', $user_id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
+        if (empty($lang)) {
+            $lang = Language::where([['user_id', $user_id], ['is_default', 1]])->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first()
+                ?? Language::where('user_id', $user_id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
+        }
+        $currentLang = $lang ? $lang->id : 0;
+        $data['languages'] = Language::where('user_id', $user_id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->get();
         $data['item'] = UserItem::where([['id', $id], ['user_id', $user_id]])->firstOrFail();
 
         $data['title'] = UserItemContent::where([['item_id', $data['item']->id], ['language_id', $currentLang]])->pluck('title')->first();
 
         $current_package = UserPermissionHelper::currentPackagePermission($user_id);
         $item_limit = $current_package->product_limit;
-        $lang = Language::where('code', $request->language)->where('user_id', $user_id)->first();
         $data['lang'] = $lang;
         $total_item = UserItem::where('user_id', $user_id)->count();
         if ($total_item > $item_limit) {
@@ -459,7 +487,7 @@ class ItemController extends Controller
                 }
             };
         }
-        $languages = Language::where('user_id', Auth::guard('web')->user()->id)->get();
+        $languages = Language::where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->get();
         $messages = [];
         $rules['current_price'] = 'required|numeric|min:0.01';
         $rules['previous_price'] = 'nullable|numeric|min:0.01';

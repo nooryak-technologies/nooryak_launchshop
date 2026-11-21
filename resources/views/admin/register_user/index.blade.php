@@ -93,13 +93,12 @@
                         <th scope="col" style="width: 40px;">
                           <input type="checkbox" class="bulk-check" data-val="all">
                         </th>
+                        <th scope="col">{{ __('Shop Name') }}</th>
                         <th scope="col">{{ __('Username') }}</th>
                         <th scope="col">{{ __('Email') }}</th>
-                        <th scope="col">{{ __('Product') }}</th>
-                        <th scope="col">{{ __('Featured') }}</th>
+                        <th scope="col">{{ __('Package Plan') }}</th>
                         <th scope="col">{{ __('Preview Template') }}</th>
                         <th scope="col">{{ __('WhatsApp') }}</th>
-                        <th scope="col">{{ __('Email Status') }}</th>
                         <th scope="col">{{ __('Account') }}</th>
                         <th scope="col" class="text-right">{{ __('Action') }}</th>
                       </tr>
@@ -122,6 +121,9 @@
                             @endif
                           </td>
                           <td>
+                            <span class="font-weight-bold text-dark">{{ $user->shop_name ?? '-' }}</span>
+                          </td>
+                          <td>
                             <div class="d-flex align-items-center">
                               <span class="user-avatar-initials {{ $avatarClass }}">
                                 {{ $uInitials }}
@@ -130,25 +132,24 @@
                             </div>
                           </td>
                           <td>{{ $user->email }}</td>
+                          @php
+                            $currMemb = \App\Http\Helpers\UserPermissionHelper::currMembOrPending($user->id);
+                            $userPackage = $currMemb ? \App\Models\Package::find($currMemb->package_id) : null;
+                          @endphp
                           <td>
-                            <span class="product-tag-pill">
-                              <i class="fas fa-shopping-bag"></i> Launchshop
-                            </span>
-                          </td>
-
-                          <td>
-                            <form id="userFrom{{ $user->id }}" class="d-inline-block"
-                              action="{{ route('register.user.featured') }}" method="post">
-                              @csrf
-                              <select
-                                class="form-control form-control-sm {{ $user->featured == 1 ? 'status-pill-active' : 'status-pill-deactive' }}"
-                                name="featured"
-                                onchange="document.getElementById('userFrom{{ $user->id }}').submit();" style="height:32px;">
-                                <option value="1" {{ $user->featured == 1 ? 'selected' : '' }}>{{ __('Yes') }}</option>
-                                <option value="0" {{ $user->featured == 0 ? 'selected' : '' }}>{{ __('No') }}</option>
-                              </select>
-                              <input type="hidden" name="user_id" value="{{ $user->id }}">
-                            </form>
+                            @if (!empty($userPackage))
+                              <span class="badge badge-primary px-2 py-1 font-weight-bold" style="background-color: #2563eb; color: #fff; font-size: 11px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;">
+                                <i class="fas fa-crown" style="font-size: 9px;"></i> {{ $userPackage->title }}
+                              </span>
+                              @if (!empty($currMemb->payment_method))
+                                <br>
+                                <span class="badge badge-info px-2 py-1 mt-1 font-weight-bold" style="background-color: #0284c7; color: #fff; font-size: 10px; border-radius: 4px;">
+                                  {{ ucfirst($currMemb->payment_method) }}
+                                </span>
+                              @endif
+                            @else
+                              <span class="badge badge-secondary px-2 py-1" style="font-size: 11px; border-radius: 4px;">{{ __('No Plan') }}</span>
+                            @endif
                           </td>
 
                           <td>
@@ -185,21 +186,6 @@
                           </td>
 
                           <td>
-                            <form id="emailForm{{ $user->id }}" class="d-inline-block"
-                              action="{{ route('register.user.email') }}" method="post">
-                              @csrf
-                              <select
-                                class="form-control form-control-sm {{ strtolower($user->email_verified) == 1 ? 'status-pill-active' : 'status-pill-deactive' }}"
-                                name="email_verified"
-                                onchange="document.getElementById('emailForm{{ $user->id }}').submit();" style="height:32px;">
-                                <option value="1" {{ strtolower($user->email_verified) == 1 ? 'selected' : '' }}>{{ __('Verified') }}</option>
-                                <option value="0" {{ strtolower($user->email_verified) == 0 ? 'selected' : '' }}>{{ __('Unverified') }}</option>
-                              </select>
-                              <input type="hidden" name="user_id" value="{{ $user->id }}">
-                            </form>
-                          </td>
-
-                          <td>
                             <form id="statusForm{{ $user->id }}" class="d-inline-block"
                               action="{{ route('register.user.ban') }}" method="post">
                               @csrf
@@ -208,6 +194,11 @@
                                 name="status"
                                 onchange="document.getElementById('statusForm{{ $user->id }}').submit();" style="height:32px;">
                                 <option value="1" {{ $user->status == 1 ? 'selected' : '' }}>{{ __('Active') }}</option>
+                                <option value="0" {{ $user->status == 0 ? 'selected' : '' }}>{{ __('Deactive') }}</option>
+                              </select>
+                              <input type="hidden" name="user_id" value="{{ $user->id }}">
+                            </form>
+                          </td>
                                 <option value="0" {{ $user->status == 0 ? 'selected' : '' }}>{{ __('Deactive') }}</option>
                               </select>
                               <input type="hidden" name="user_id" value="{{ $user->id }}">

@@ -263,6 +263,9 @@
                                 </div>
 
                                 <div id="accordion" class="mt-3">
+                                    @php
+                                        $languages = $languages->where('code', '!=', 'ar')->where('rtl', '!=', 1);
+                                    @endphp
                                     @foreach ($languages as $language)
                                         <div class="version">
                                             <div class="version-header" id="heading{{ $language->id }}">

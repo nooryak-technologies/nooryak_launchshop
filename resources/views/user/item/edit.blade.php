@@ -293,6 +293,9 @@
 
                 </div>
                 <div id="accordion" class="mt-3">
+                  @php
+                    $languages = $languages->where('code', '!=', 'ar')->where('rtl', '!=', 1);
+                  @endphp
                   @foreach ($languages as $language)
                     @php
                       $postData = $language->itemInfo()->where('item_id', $item->id)->first();

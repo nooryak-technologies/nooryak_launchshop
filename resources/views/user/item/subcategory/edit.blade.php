@@ -76,6 +76,9 @@
                     </div>
                   </div>
 
+                  @php
+                    $languages = $languages->where('code', '!=', 'ar')->where('rtl', '!=', 1);
+                  @endphp
                   @foreach ($languages as $lang)
                     @php
                       $subcategory = App\Models\User\UserItemSubCategory::where([

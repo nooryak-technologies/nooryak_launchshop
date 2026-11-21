@@ -127,6 +127,9 @@
                     </div>
                   </div>
 
+                  @php
+                    $languages = $languages->where('code', '!=', 'ar')->where('rtl', '!=', 1);
+                  @endphp
                   @foreach ($languages as $language)
                     <div class="col-md-6 mb-3">
                       @php

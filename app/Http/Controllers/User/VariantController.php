@@ -21,14 +21,16 @@ class VariantController extends Controller
     public function index(Request $request)
     {
         $user_id = Auth::guard('web')->user()->id;
-        $language = Language::where([['code', $request->language], ['user_id', $user_id]])->first();
+        $reqLang = $request->language;
+        if ($reqLang === 'ar') { $reqLang = 'en'; }
+        $language = Language::where([['code', $reqLang], ['user_id', $user_id]])->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
         if (empty($language)) {
-            $language = Language::where([['user_id', $user_id], ['is_default', 1]])->first();
+            $language = Language::where([['user_id', $user_id], ['is_default', 1]])->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
         }
         if (empty($language)) {
-            $language = Language::where('user_id', $user_id)->first();
+            $language = Language::where('user_id', $user_id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
         }
-        $data['languages'] = Language::where('user_id', $user_id)->get();
+        $data['languages'] = Language::where('user_id', $user_id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->get();
         $data['variants'] = $language ? VariantContent::where([['user_id', $user_id], ['language_id', $language->id]])->orderBy('created_at', 'DESC')->get() : collect();
 
         return view('user.item.variant.index', $data);
@@ -48,9 +50,9 @@ class VariantController extends Controller
     public function store(Request $request)
     {
         $user_id = Auth::guard('web')->user()->id;
-        $user_languages = Language::where('user_id', $user_id)->get();
-        $defaultLang = Language::where('user_id', $user_id)->where('is_default', 1)->first()
-            ?? Language::where('user_id', $user_id)->first();
+        $user_languages = Language::where('user_id', $user_id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->get();
+        $defaultLang = Language::where('user_id', $user_id)->where('is_default', 1)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first()
+            ?? Language::where('user_id', $user_id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
         $defCode = $defaultLang ? $defaultLang->code : 'en';
 
         // Preprocess: Filter empty option names and auto-fill secondary languages from default language
@@ -194,9 +196,9 @@ class VariantController extends Controller
     public function update(Request $request, $id)
     {
         $user_id = Auth::guard('web')->user()->id;
-        $user_languages = Language::where('user_id', $user_id)->get();
-        $defaultLang = Language::where('user_id', $user_id)->where('is_default', 1)->first()
-            ?? Language::where('user_id', $user_id)->first();
+        $user_languages = Language::where('user_id', $user_id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->get();
+        $defaultLang = Language::where('user_id', $user_id)->where('is_default', 1)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first()
+            ?? Language::where('user_id', $user_id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
         $defCode = $defaultLang ? $defaultLang->code : 'en';
 
         // Preprocess: Filter empty option names and auto-fill secondary languages from default language

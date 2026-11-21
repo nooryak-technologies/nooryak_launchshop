@@ -1,14 +1,16 @@
 @extends('user.layout')
 
 @php
-  $selLang = \App\Models\User\Language::where('code', request()->input('language'))->where('user_id', Auth::guard('web')->user()->id)->first();
+  $reqLang = request()->input('language');
+  if ($reqLang === 'ar') { $reqLang = 'en'; }
+  $selLang = \App\Models\User\Language::where('code', $reqLang)->where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
   if (empty($selLang)) {
-      $selLang = \App\Models\User\Language::where([['user_id', Auth::guard('web')->user()->id], ['is_default', 1]])->first();
+      $selLang = \App\Models\User\Language::where([['user_id', Auth::guard('web')->user()->id], ['is_default', 1]])->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
   }
   if (empty($selLang)) {
-      $selLang = \App\Models\User\Language::where('user_id', Auth::guard('web')->user()->id)->first();
+      $selLang = \App\Models\User\Language::where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->first();
   }
-  $userLanguages = \App\Models\User\Language::where('user_id', Auth::guard('web')->user()->id)->get();
+  $userLanguages = \App\Models\User\Language::where('user_id', Auth::guard('web')->user()->id)->where('code', '!=', 'ar')->where('rtl', '!=', 1)->get();
   $csvBatchLimit = \App\Http\Helpers\UserPermissionHelper::getCsvBatchLimit(Auth::guard('web')->user()->id);
 @endphp
 @includeIf('user.partials.rtl-style')
@@ -117,6 +119,17 @@
         @endphp
 
         <div class="card-body px-4 pt-3 pb-4">
+          @if(request()->filled('category_id'))
+            @php
+              $filteredCategory = \App\Models\User\UserItemCategory::find(request()->category_id);
+            @endphp
+            <div class="alert alert-light border py-2 px-3 mb-3 d-flex align-items-center justify-content-between" style="border-radius: 8px; background: rgba(13, 110, 253, 0.05); border-color: rgba(13, 110, 253, 0.2) !important;">
+              <span class="text-primary font-weight-bold"><i class="fas fa-filter mr-1"></i> {{ __('Filtering by Category') }}: <span class="text-dark">{{ $filteredCategory->name ?? __('Selected Category') }}</span></span>
+              <a href="{{ route('user.item.index', ['language' => request()->input('language')]) }}" class="btn btn-sm btn-outline-danger font-weight-bold" style="border-radius: 6px; padding: 2px 10px; font-size: 11px;">
+                <i class="fas fa-times mr-1"></i> {{ __('Clear Filter') }}
+              </a>
+            </div>
+          @endif
           <div class="row">
             <div class="col-lg-12">
               @if (count($items) == 0)
