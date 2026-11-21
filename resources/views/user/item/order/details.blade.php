@@ -453,20 +453,24 @@
                 </div>
                 
                 <div class="timeline-item">
-                  <div class="timeline-marker {{ $order->order_status == 'completed' ? 'completed' : ($order->order_status == 'processing' ? 'active' : '') }}">
-                    @if($order->order_status == 'completed')
+                  <div class="timeline-marker {{ !empty($order->tracking_number) ? 'completed' : '' }}">
+                    @if(!empty($order->tracking_number))
                       <i class="fas fa-check"></i>
                     @endif
                   </div>
                   <div class="timeline-content">
                     <div class="timeline-title">{{ __('In Transit') }}</div>
-                    <div class="timeline-time">{{ $order->order_status == 'completed' ? $order->updated_at->format('d M Y, h:i A') : ($order->order_status == 'processing' ? __('On the way') : '-') }}</div>
-                    <div class="timeline-desc">{{ __('Your order is on the way.') }}</div>
+                    <div class="timeline-time">{{ !empty($order->tracking_number) ? $order->updated_at->format('d M Y, h:i A') : '-' }}</div>
+                    <div class="timeline-desc">{{ !empty($order->tracking_number) ? __('Your order is on the way.') : __('Awaiting dispatch.') }}</div>
                   </div>
                 </div>
                 
                 <div class="timeline-item">
-                  <div class="timeline-marker"></div>
+                  <div class="timeline-marker {{ (!empty($order->tracking_number) && $order->order_status == 'completed') ? 'completed' : '' }}">
+                    @if(!empty($order->tracking_number) && $order->order_status == 'completed')
+                      <i class="fas fa-check"></i>
+                    @endif
+                  </div>
                   <div class="timeline-content">
                     <div class="timeline-title">{{ __('Out for Delivery') }}</div>
                     <div class="timeline-desc">{{ __('Out for delivery soon.') }}</div>
@@ -474,10 +478,15 @@
                 </div>
                 
                 <div class="timeline-item">
-                  <div class="timeline-marker"></div>
+                  <div class="timeline-marker {{ $order->order_status == 'completed' ? 'completed' : '' }}">
+                    @if($order->order_status == 'completed')
+                      <i class="fas fa-check"></i>
+                    @endif
+                  </div>
                   <div class="timeline-content">
                     <div class="timeline-title">{{ __('Delivered') }}</div>
-                    <div class="timeline-desc">{{ __('Package delivered to destination.') }}</div>
+                    <div class="timeline-time">{{ $order->order_status == 'completed' ? $order->updated_at->format('d M Y, h:i A') : '-' }}</div>
+                    <div class="timeline-desc">{{ $order->order_status == 'completed' ? __('Package delivered to destination.') : __('Pending delivery.') }}</div>
                   </div>
                 </div>
               </div>

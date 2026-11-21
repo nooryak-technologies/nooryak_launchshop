@@ -246,42 +246,66 @@ class ItemOrderController extends Controller
 
     public function report(Request $request)
     {
+        $userId = Auth::guard('web')->user()->id;
+        $range = $request->get('range', '');
         $fromDate = $request->from_date;
         $toDate = $request->to_date;
         $paymentStatus = $request->payment_status;
         $orderStatus = $request->order_status;
         $paymentMethod = $request->payment_method;
 
-        if (!empty($fromDate) && !empty($toDate)) {
-            $orders = UserOrder::when($fromDate, function ($query, $fromDate) {
-                return $query->whereDate('created_at', '>=', Carbon::parse($fromDate));
-            })->when($toDate, function ($query, $toDate) {
-                return $query->whereDate('created_at', '<=', Carbon::parse($toDate));
-            })->when($paymentMethod, function ($query, $paymentMethod) {
-                return $query->where('method', $paymentMethod);
-            })->when($paymentStatus, function ($query, $paymentStatus) {
-                return $query->where('payment_status', $paymentStatus);
-            })->when($orderStatus, function ($query, $orderStatus) {
-                return $query->where('order_status', $orderStatus);
-            })->where('user_id', Auth::guard('web')->user()->id)
-                ->select('id', 'order_number', 'billing_fname', 'billing_email', 'billing_number', 'billing_city', 'billing_country', 'shipping_fname', 'shipping_email', 'shipping_number', 'shipping_city', 'shipping_country', 'method', 'shipping_method', 'cart_total', 'discount', 'tax', 'shipping_charge', 'total', 'created_at', 'payment_status', 'order_status')
-                ->orderBy('id', 'DESC');
-
-            Session::put('item_orders_report', $orders->get());
-            $data['total'] = $orders->sum('total') + $orders->sum('shipping_charge');
-            $data['discount'] = $orders->sum('discount');
-            $data['shipping_charge'] = $orders->sum('shipping_charge');
-            $data['tax'] = $orders->sum('tax');
-
-            $data['orders'] = $orders->paginate(10);
-        } else {
-            Session::put('item_orders_report', []);
-            $data['orders'] = [];
+        if ($range === 'today') {
+            $fromDate = Carbon::today()->format('Y-m-d');
+            $toDate = Carbon::today()->format('Y-m-d');
+        } elseif ($range === 'yesterday') {
+            $fromDate = Carbon::yesterday()->format('Y-m-d');
+            $toDate = Carbon::yesterday()->format('Y-m-d');
+        } elseif ($range === '7') {
+            $fromDate = Carbon::now()->subDays(6)->format('Y-m-d');
+            $toDate = Carbon::now()->format('Y-m-d');
+        } elseif ($range === '30') {
+            $fromDate = Carbon::now()->subDays(29)->format('Y-m-d');
+            $toDate = Carbon::now()->format('Y-m-d');
+        } elseif ($range === 'all') {
+            $fromDate = null;
+            $toDate = null;
         }
 
-        $data['onPms'] = UserPaymentGeteway::where('status', 1)->where('user_id', Auth::guard('web')->user()->id)->get();
-        $data['offPms'] = UserOfflineGateway::where('user_id', Auth::guard('web')->user()->id)->get();
+        $query = UserOrder::where('user_id', $userId);
 
+        if (!empty($fromDate)) {
+            $query->whereDate('created_at', '>=', Carbon::parse($fromDate));
+        }
+        if (!empty($toDate)) {
+            $query->whereDate('created_at', '<=', Carbon::parse($toDate));
+        }
+        if (!empty($paymentMethod)) {
+            $query->where('method', $paymentMethod);
+        }
+        if (!empty($paymentStatus)) {
+            $query->where('payment_status', $paymentStatus);
+        }
+        if (!empty($orderStatus)) {
+            $query->where('order_status', $orderStatus);
+        }
+
+        $query->select('id', 'order_number', 'billing_fname', 'billing_email', 'billing_number', 'billing_city', 'billing_country', 'shipping_fname', 'shipping_email', 'shipping_number', 'shipping_city', 'shipping_country', 'method', 'shipping_method', 'cart_total', 'discount', 'tax', 'shipping_charge', 'total', 'created_at', 'payment_status', 'order_status')
+            ->orderBy('id', 'DESC');
+
+        // Cache filtered orders in session for instant CSV/PDF export
+        Session::put('item_orders_report', (clone $query)->get());
+
+        $data['total'] = (clone $query)->sum('total') + (clone $query)->sum('shipping_charge');
+        $data['discount'] = (clone $query)->sum('discount');
+        $data['shipping_charge'] = (clone $query)->sum('shipping_charge');
+        $data['tax'] = (clone $query)->sum('tax');
+        $data['orders'] = $query->paginate(10);
+        $data['range'] = $range;
+        $data['fromDate'] = $fromDate;
+        $data['toDate'] = $toDate;
+
+        $data['onPms'] = UserPaymentGeteway::where('status', 1)->where('user_id', $userId)->get();
+        $data['offPms'] = UserOfflineGateway::where('user_id', $userId)->get();
 
         return view('user.item.order.report', $data);
     }
@@ -309,7 +333,22 @@ class ItemOrderController extends Controller
             $userBs = BasicSetting::where('user_id', $userId)->first();
             $fromDate = $request->get('from_date');
             $toDate = $request->get('to_date');
-            $rangeLabel = (!empty($fromDate) && !empty($toDate)) ? ($fromDate . ' to ' . $toDate) : 'All Orders';
+            $range = $request->get('range');
+            if ($range === 'today') {
+                $rangeLabel = 'Today (' . Carbon::today()->format('d M Y') . ')';
+            } elseif ($range === 'yesterday') {
+                $rangeLabel = 'Yesterday (' . Carbon::yesterday()->format('d M Y') . ')';
+            } elseif ($range === '7') {
+                $rangeLabel = 'Last 7 Days';
+            } elseif ($range === '30') {
+                $rangeLabel = 'Last 30 Days';
+            } elseif ($range === 'all') {
+                $rangeLabel = 'All Time';
+            } elseif (!empty($fromDate) && !empty($toDate)) {
+                $rangeLabel = $fromDate . ' to ' . $toDate;
+            } else {
+                $rangeLabel = 'All Orders';
+            }
 
             $data = [
                 'orders' => $orders,

@@ -53,6 +53,11 @@
                                   {{ $keywords[ucfirst($order->order_status)] ?? __('Completed') }}
                                 </span>
                               @endif
+                              @if (!empty($order->tracking_number))
+                                <div class="mt-1">
+                                  <a href="{{ !empty($order->tracking_url) ? $order->tracking_url : '#' }}" target="_blank" style="font-size: 11px; color: #16a34a; font-weight: 600; text-decoration: underline;"><i class="fas fa-truck mr-1"></i>{{ $order->tracking_number }}</a>
+                                </div>
+                              @endif
                             </td>
                             <td><a target="_blank"
                                 href="{{ route('customer.orders-details', ['id' => $order->id, getParam()]) }}"

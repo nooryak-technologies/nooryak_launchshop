@@ -225,40 +225,43 @@
       $senderAddr = !empty($userBs->address) ? $userBs->address : 'Store Warehouse & Fulfillment Center';
       $senderPhone = !empty($userBs->phone) ? $userBs->phone : ($user->phone ?? '');
       $senderEmail = !empty($userBs->email) ? $userBs->email : ($user->email ?? '');
+
+      $logoPath = null;
+      if (!empty($userBs->logo) && file_exists(public_path('assets/front/img/user/' . $userBs->logo))) {
+          $logoPath = public_path('assets/front/img/user/' . $userBs->logo);
+      }
     @endphp
 
     <div class="sticker-container">
       <!-- Header -->
       <table class="header-table">
         <tr>
-          <td style="width: 58%; vertical-align: middle;">
-            <div class="store-brand">{{ $senderName }}</div>
+          <td style="width: 50%; vertical-align: middle;">
+            @if (!empty($logoPath))
+              <img src="{{ $logoPath }}" style="max-height: 44px; max-width: 180px; display: block; margin-bottom: 4px;" alt="Logo">
+            @else
+              <div class="store-brand">{{ $senderName }}</div>
+            @endif
             <div class="label-tag">E-Commerce Shipping Package Label & Packing Slip</div>
           </td>
-          <td style="width: 42%; vertical-align: middle;" class="text-right">
+          <td style="width: 50%; vertical-align: middle;" class="text-right">
             @if ($isCod)
               <div class="badge-box badge-cod">
                 <div style="font-size: 11px; font-weight: bold; letter-spacing: 0.5px;">CASH ON DELIVERY (COD)</div>
                 <div style="font-size: 13px; font-weight: bold; margin-top: 1px;">COLLECT: {{ fmtInr($order->total) }}</div>
-              </div>
-            @else
-              <div class="badge-box badge-prepaid">
-                <div style="font-size: 11px; font-weight: bold; letter-spacing: 0.5px;">PREPAID PACKAGE</div>
-                <div style="font-size: 11px; font-weight: bold; margin-top: 1px;">DO NOT COLLECT CASH</div>
               </div>
             @endif
           </td>
         </tr>
       </table>
 
-      <!-- Order Metadata & Barcode Box -->
+      <!-- Order Metadata Box -->
       <div class="meta-box">
         <table style="width: 100%;">
           <tr>
             <td style="width: 35%;">
               <div style="font-size: 9px; color: #64748b; text-transform: uppercase;">Order Number</div>
               <div style="font-size: 13px; font-weight: bold; color: #0f172a;">#{{ $order->order_number }}</div>
-              <div class="order-barcode">||| | |||| | ||||| ||</div>
             </td>
             <td style="width: 35%; padding-left: 10px;">
               <div style="font-size: 9px; color: #64748b; text-transform: uppercase;">Order Date & Time</div>

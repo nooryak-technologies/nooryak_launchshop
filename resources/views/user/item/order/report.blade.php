@@ -55,20 +55,40 @@
           </div>
         </div>
         <div class="card-body">
-          <form action="{{ url()->full() }}" method="GET">
+          <!-- Quick Filter Buttons -->
+          <div class="d-flex align-items-center flex-wrap mb-3 pb-3 border-bottom" style="gap: 8px;">
+            <span style="font-size: 13px; font-weight: 600; color: #475569; margin-right: 4px;"><i class="fas fa-bolt text-warning mr-1"></i>{{ __('Quick Filter:') }}</span>
+            <a href="{{ route('user.orders.report', array_merge(request()->except(['from_date', 'to_date', 'page']), ['range' => 'today'])) }}" class="btn btn-sm {{ request()->input('range') == 'today' ? 'btn-primary' : 'btn-outline-secondary' }}" style="border-radius: 6px; font-weight: 600; padding: 5px 14px;">
+              <i class="fas fa-sun mr-1"></i> {{ __('Today') }}
+            </a>
+            <a href="{{ route('user.orders.report', array_merge(request()->except(['from_date', 'to_date', 'page']), ['range' => 'yesterday'])) }}" class="btn btn-sm {{ request()->input('range') == 'yesterday' ? 'btn-primary' : 'btn-outline-secondary' }}" style="border-radius: 6px; font-weight: 600; padding: 5px 14px;">
+              <i class="fas fa-history mr-1"></i> {{ __('Yesterday') }}
+            </a>
+            <a href="{{ route('user.orders.report', array_merge(request()->except(['from_date', 'to_date', 'page']), ['range' => '7'])) }}" class="btn btn-sm {{ request()->input('range') == '7' ? 'btn-primary' : 'btn-outline-secondary' }}" style="border-radius: 6px; font-weight: 600; padding: 5px 14px;">
+              <i class="fas fa-calendar-week mr-1"></i> {{ __('Last 7 Days') }}
+            </a>
+            <a href="{{ route('user.orders.report', array_merge(request()->except(['from_date', 'to_date', 'page']), ['range' => '30'])) }}" class="btn btn-sm {{ request()->input('range') == '30' ? 'btn-primary' : 'btn-outline-secondary' }}" style="border-radius: 6px; font-weight: 600; padding: 5px 14px;">
+              <i class="fas fa-calendar mr-1"></i> {{ __('Last 30 Days') }}
+            </a>
+            <a href="{{ route('user.orders.report', array_merge(request()->except(['from_date', 'to_date', 'page']), ['range' => 'all'])) }}" class="btn btn-sm {{ (request()->input('range') == 'all' || (!request()->filled('range') && !request()->filled('from_date'))) ? 'btn-primary' : 'btn-outline-secondary' }}" style="border-radius: 6px; font-weight: 600; padding: 5px 14px;">
+              <i class="fas fa-calendar-alt mr-1"></i> {{ __('All Time') }}
+            </a>
+          </div>
+
+          <form action="{{ route('user.orders.report') }}" method="GET">
             <div class="row">
               <div class="col-md-2-4 col-sm-6">
                 <div class="form-group pt-0 pb-2">
                   <label style="font-weight: 600; color: #475569; font-size: 13px; margin-bottom: 8px;">{{ __('From') }}</label>
                   <input class="form-control datepicker" type="text" name="from_date" placeholder="{{ __('From') }}"
-                    value="{{ request()->input('from_date') ? request()->input('from_date') : '' }}" required autocomplete="off">
+                    value="{{ $fromDate ?? request()->input('from_date', '') }}" autocomplete="off">
                 </div>
               </div>
               <div class="col-md-2-4 col-sm-6">
                 <div class="form-group pt-0 pb-2">
                   <label style="font-weight: 600; color: #475569; font-size: 13px; margin-bottom: 8px;">{{ __('To') }}</label>
                   <input class="form-control datepicker" type="text" name="to_date" placeholder="{{ __('To') }}"
-                    value="{{ request()->input('to_date') ? request()->input('to_date') : '' }}" required autocomplete="off">
+                    value="{{ $toDate ?? request()->input('to_date', '') }}" autocomplete="off">
                 </div>
               </div>
               <div class="col-md-2-4 col-sm-6">
@@ -117,6 +137,7 @@
             <div class="row mt-2">
               <div class="col-12">
                 <button type="submit" class="btn btn-premium-primary"><i class="fas fa-filter mr-1"></i> {{ __('Submit') }}</button>
+                <a href="{{ route('user.orders.report') }}" class="btn btn-outline-secondary ml-2" style="border-radius: 8px; font-weight: 600;"><i class="fas fa-redo-alt mr-1"></i> {{ __('Reset') }}</a>
               </div>
             </div>
           </form>

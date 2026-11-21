@@ -22,23 +22,30 @@
                 <div class="order-details radius-md">
                   <div class="progress-area-step">
                     <ul class="progress-steps">
-                      <li class="{{ $data->order_status == 'pending' ? 'active' : '' }}">
-                        <div class="icon">{{ __('1') }}</div>
-                        <div class="progress-title">{{ $keywords['Pending'] ?? __('Pending') }} </div>
+                      <li class="{{ in_array($data->order_status, ['pending', 'processing', 'completed']) ? 'active' : '' }}">
+                        <div class="icon"><i class="fas fa-check" style="font-size: 11px;"></i></div>
+                        <div class="progress-title">{{ $keywords['Order Placed'] ?? __('Order Placed') }} </div>
                       </li>
-                      <li class="{{ $data->order_status == 'processing' ? 'active' : '' }}">
-                        <div class="icon">{{ __('2') }}</div>
+                      <li class="{{ in_array($data->order_status, ['processing', 'completed']) ? 'active' : '' }}">
+                        <div class="icon">{{ in_array($data->order_status, ['processing', 'completed']) ? '✓' : '2' }}</div>
                         <div class="progress-title">{{ $keywords['Processing'] ?? __('Processing') }} </div>
                       </li>
 
+                      @if (!empty($data->tracking_number))
+                      <li class="active">
+                        <div class="icon"><i class="fas fa-truck" style="font-size: 11px;"></i></div>
+                        <div class="progress-title">{{ $keywords['In Transit'] ?? __('In Transit') }} </div>
+                      </li>
+                      @endif
+
                       @if ($data->order_status != 'rejected')
                         <li class="{{ $data->order_status == 'completed' ? 'active' : '' }}">
-                          <div class="icon">{{ __('3') }}</div>
-                          <div class="progress-title">{{ $keywords['Completed'] ?? __('Completed') }} </div>
+                          <div class="icon">{{ $data->order_status == 'completed' ? '✓' : '3' }}</div>
+                          <div class="progress-title">{{ $keywords['Delivered'] ?? __('Delivered') }} </div>
                         </li>
                       @else
-                        <li class="{{ $data->order_status == 'rejected' ? 'active' : '' }}">
-                          <div class="icon">{{ __('3') }}</div>
+                        <li class="active" style="color: #ef4444;">
+                          <div class="icon" style="background: #ef4444; color: #fff;">✕</div>
                           <div class="progress-title">{{ $keywords['Rejected'] ?? __('Rejected') }} </div>
                         </li>
                       @endif
