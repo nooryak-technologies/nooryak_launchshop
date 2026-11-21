@@ -224,7 +224,10 @@ class BasicController extends Controller
 
         if ($validator->fails()) {
             $validator->getMessageBag()->add('error', 'true');
-            return response()->json($validator->errors());
+            if ($request->ajax()) {
+                return response()->json($validator->errors());
+            }
+            return back()->withErrors($validator)->withInput();
         }
 
         $bss = BasicSetting::where('user_id', Auth::guard('web')->user()->id)->first();
@@ -301,7 +304,10 @@ class BasicController extends Controller
 
         BasicSetting::where('user_id', Auth::guard('web')->user()->id)->update($updateData);
         Session::flash('success', __('Updated Successfully'));
-        return 'success';
+        if ($request->ajax()) {
+            return 'success';
+        }
+        return back();
     }
 
     public function removeImage(Request $request)
@@ -451,7 +457,10 @@ class BasicController extends Controller
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             $validator->getMessageBag()->add('error', 'true');
-            return response()->json($validator->errors());
+            if ($request->ajax()) {
+                return response()->json($validator->errors());
+            }
+            return back()->withErrors($validator)->withInput();
         }
 
         $faq = Faq::findOrFail($request->faq_id);

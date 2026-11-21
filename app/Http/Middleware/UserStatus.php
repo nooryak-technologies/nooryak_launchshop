@@ -23,6 +23,19 @@ class UserStatus
             Session::forget('secrect_login');
             abort(404);
         }
-        return $next($request);
+
+        $response = $next($request);
+
+        // Safeguard: if a non-AJAX form submission in user dashboard receives raw "success",
+        // redirect back so the browser displays the page with the flashed success message
+        // instead of a raw white screen with the word "success".
+        if (!$request->ajax() && !$request->wantsJson() && is_a($response, \Illuminate\Http\Response::class)) {
+            $content = trim($response->getContent());
+            if ($content === 'success') {
+                return redirect()->back();
+            }
+        }
+
+        return $response;
     }
 }

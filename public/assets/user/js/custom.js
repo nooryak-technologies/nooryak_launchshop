@@ -121,6 +121,23 @@ $(function ($) {
     *****************************************************************/
     $("#ajaxEditForm").attr('onsubmit', 'return false');
     $("#ajaxForm").attr('onsubmit', 'return false');
+    $("#ajaxForm2").attr('onsubmit', 'return false');
+
+    $(document).on('submit', '#ajaxForm', function (e) {
+        if (e && e.preventDefault) e.preventDefault();
+        $('#submitBtn').trigger('click');
+        return false;
+    });
+    $(document).on('submit', '#ajaxForm2', function (e) {
+        if (e && e.preventDefault) e.preventDefault();
+        $('#submitBtn2').trigger('click');
+        return false;
+    });
+    $(document).on('submit', '#ajaxEditForm', function (e) {
+        if (e && e.preventDefault) e.preventDefault();
+        $('#updateBtn').trigger('click');
+        return false;
+    });
     /* *************************************************************
     ==========disabling default behave of form submits end==========
     ***************************************************************/
@@ -582,6 +599,7 @@ $(function ($) {
     ******************************************************/
 
     $("#submitBtn").on('click', function (e) {
+        if (e && e.preventDefault) e.preventDefault();
         $(e.target).attr('disabled', true);
 
         $(".request-loader").addClass("show");
@@ -691,6 +709,7 @@ $(function ($) {
     });
 
     $("#submitBtn2").on('click', function (e) {
+        if (e && e.preventDefault) e.preventDefault();
         $(e.target).attr('disabled', true);
 
         $(".request-loader").addClass("show");
@@ -1025,6 +1044,7 @@ $(function ($) {
     ==========Form Update with AJAX Request Start==========
     ******************************************************/
     $("#updateBtn").on('click', function (e) {
+        if (e && e.preventDefault) e.preventDefault();
 
         $(".request-loader").addClass("show");
 
