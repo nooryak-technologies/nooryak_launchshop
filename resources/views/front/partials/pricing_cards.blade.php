@@ -618,7 +618,7 @@
         <h4 id="planFeatsModalTitle" class="plan-feats-mobile-title"></h4>
         <div id="planFeatsModalPrice" class="plan-feats-mobile-price"></div>
       </div>
-      <div class="plan-feats-mobile-subtitle">More Features Included</div>
+      <div class="plan-feats-mobile-subtitle">{{ __('All Features Included') }}</div>
       <ul id="planFeatsModalList" class="plan-v2-features plan-feats-mobile-list"></ul>
       <a href="#" id="planFeatsModalCta" class="plan-v2-btn plan-feats-mobile-cta"></a>
     </div>
@@ -687,8 +687,16 @@
       ctaEl.textContent   = btn.getAttribute('data-plan-cta') || 'Select Plan';
       ctaEl.setAttribute('href', btn.getAttribute('data-plan-href') || '#');
 
+      var mainUl = cardEl ? (cardEl.querySelector(':scope > ul.plan-v2-features') || cardEl.querySelector('ul.plan-v2-features')) : null;
       var extraUl = extraWrap.querySelector('ul.plan-v2-features');
-      listEl.innerHTML = extraUl ? extraUl.innerHTML : '';
+      var combinedHtml = '';
+      if (mainUl) {
+        combinedHtml += mainUl.innerHTML;
+      }
+      if (extraUl) {
+        combinedHtml += extraUl.innerHTML;
+      }
+      listEl.innerHTML = combinedHtml || (extraUl ? extraUl.innerHTML : '');
 
       overlay.classList.add('open');
       overlay.setAttribute('aria-hidden', 'false');

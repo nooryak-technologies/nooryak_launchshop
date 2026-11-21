@@ -1,7 +1,7 @@
 "use strict";
 
 $(document).ready(function () {
-    $(".bannerEditBtn").on('click', function () {
+    $(document).on('click', '.bannerEditBtn', function () {
         let datas = $(this).data();
         delete datas['toggle'];
 

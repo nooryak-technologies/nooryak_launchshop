@@ -221,10 +221,14 @@
       $deliveryState = !empty($order->shipping_state) ? $order->shipping_state : $order->billing_state;
       $deliveryCountry = !empty($order->shipping_country) ? $order->shipping_country : $order->billing_country;
       
-      $senderName = $userBs->website_title ?? ($user->username ?? 'LaunchShop Store');
-      $senderAddr = !empty($userBs->address) ? $userBs->address : 'Store Warehouse & Fulfillment Center';
-      $senderPhone = !empty($userBs->phone) ? $userBs->phone : ($user->phone ?? '');
-      $senderEmail = !empty($userBs->email) ? $userBs->email : ($user->email ?? '');
+      $senderName = !empty($userBs->sender_name) ? $userBs->sender_name : (!empty($user->shop_name) ? $user->shop_name : ($user->username ?? 'LaunchShop Store'));
+      $senderAddr = !empty($userBs->sender_address) ? $userBs->sender_address : (!empty($user->address) ? $user->address : (!empty($userBs->address) ? $userBs->address : 'Store Warehouse & Fulfillment Center'));
+      $senderCity = !empty($userBs->sender_city) ? $userBs->sender_city : ($user->city ?? '');
+      $senderState = !empty($userBs->sender_state) ? $userBs->sender_state : ($user->state ?? '');
+      $senderZip = !empty($userBs->sender_zipcode) ? $userBs->sender_zipcode : '';
+      $senderCountry = !empty($userBs->sender_country) ? $userBs->sender_country : ($user->country ?? 'India');
+      $senderPhone = !empty($userBs->sender_phone) ? $userBs->sender_phone : (!empty($userBs->phone) ? $userBs->phone : ($user->phone ?? ''));
+      $senderEmail = !empty($userBs->sender_email) ? $userBs->sender_email : (!empty($userBs->email) ? $userBs->email : ($user->email ?? ''));
 
       $logoDataUri = null;
       if (!empty($userBs->logo)) {
@@ -320,10 +324,10 @@
             <div class="addr-name" style="font-size: 11px;">{{ $senderName }}</div>
             <div style="line-height: 1.4; color: #475569;">
               {{ $senderAddr }}<br>
-              @if (!empty($userBs->city) || !empty($userBs->state))
-                {{ $userBs->city ?? '' }}{{ !empty($userBs->state) ? (', ' . $userBs->state) : '' }}<br>
+              @if (!empty($senderCity) || !empty($senderState) || !empty($senderZip))
+                {{ $senderCity }}{{ (!empty($senderCity) && !empty($senderState)) ? ', ' : '' }}{{ $senderState }}{{ !empty($senderZip) ? (' - ' . $senderZip) : '' }}<br>
               @endif
-              India
+              {{ $senderCountry }}
             </div>
             @if (!empty($senderPhone))
               <div style="margin-top: 4px; font-weight: bold; font-size: 9px; color: #0f172a;">

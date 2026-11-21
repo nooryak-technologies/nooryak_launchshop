@@ -279,6 +279,98 @@
                   </div>
                 </div>
               </div>
+
+              @php
+                $authUser = Auth::guard('web')->user();
+                $curSenderName = $data->sender_name ?? ($authUser->shop_name ?? ($authUser->username ?? ''));
+                $curSenderEmail = $data->sender_email ?? ($authUser->email ?? '');
+                $curSenderPhone = $data->sender_phone ?? ($authUser->phone ?? '');
+                $curSenderAddress = $data->sender_address ?? ($authUser->address ?? '');
+                $curSenderCity = $data->sender_city ?? ($authUser->city ?? '');
+                $curSenderState = $data->sender_state ?? ($authUser->state ?? '');
+                $curSenderZip = $data->sender_zipcode ?? '';
+                $curSenderCountry = $data->sender_country ?? ($authUser->country ?? 'India');
+              @endphp
+
+              <div class="col-lg-10 mx-auto">
+                <h3 class="text-warning">{{ __('Shipped From (Sender / Warehouse) Information') }}</h3>
+                <p class="text-muted" style="font-size: 13px;">
+                  {{ __('Configure your store sender details printed on Shipping Parcel Stickers and Package Slips (Order History PDFs).') }}
+                </p>
+                <hr class="divider">
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label><strong>{{ __('Sender / Brand Name') }}</strong></label>
+                      <input type="text" class="form-control" name="sender_name"
+                        value="{{ $curSenderName }}" placeholder="{{ __('e.g. My Store Name') }}">
+                      <p id="errsender_name" class="em text-danger mb-0"></p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label><strong>{{ __('Shipper / Support Email') }}</strong></label>
+                      <input type="email" class="form-control" name="sender_email"
+                        value="{{ $curSenderEmail }}" placeholder="{{ __('e.g. support@store.com') }}">
+                      <p id="errsender_email" class="em text-danger mb-0"></p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label><strong>{{ __('Shipper / Support Phone') }}</strong></label>
+                      <input type="text" class="form-control" name="sender_phone"
+                        value="{{ $curSenderPhone }}" placeholder="{{ __('e.g. +91 9876543210') }}">
+                      <p id="errsender_phone" class="em text-danger mb-0"></p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label><strong>{{ __('Warehouse / Dispatch Address') }}</strong></label>
+                      <textarea class="form-control" name="sender_address" rows="2"
+                        placeholder="{{ __('Building / Street / Area / Warehouse address') }}">{{ $curSenderAddress }}</textarea>
+                      <p id="errsender_address" class="em text-danger mb-0"></p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>{{ __('City') }}</label>
+                      <input type="text" class="form-control" name="sender_city"
+                        value="{{ $curSenderCity }}" placeholder="{{ __('City') }}">
+                      <p id="errsender_city" class="em text-danger mb-0"></p>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>{{ __('State') }}</label>
+                      <input type="text" class="form-control" name="sender_state"
+                        value="{{ $curSenderState }}" placeholder="{{ __('State') }}">
+                      <p id="errsender_state" class="em text-danger mb-0"></p>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>{{ __('PIN / Postal Code') }}</label>
+                      <input type="text" class="form-control" name="sender_zipcode"
+                        value="{{ $curSenderZip }}" placeholder="{{ __('e.g. 600001') }}">
+                      <p id="errsender_zipcode" class="em text-danger mb-0"></p>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>{{ __('Country') }}</label>
+                      <input type="text" class="form-control" name="sender_country"
+                        value="{{ $curSenderCountry }}" placeholder="{{ __('Country') }}">
+                      <p id="errsender_country" class="em text-danger mb-0"></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
           </div>

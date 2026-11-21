@@ -287,6 +287,7 @@ class UserController extends Controller
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:5120',
             'shop_name' => 'required',
             'username' => 'required|unique:users,username,' . Auth::guard('web')->user()->id,
+            'email' => 'nullable|email|unique:users,email,' . Auth::guard('web')->user()->id,
             'phone' => 'required',
             'city' => 'required',
             'country' => 'required',

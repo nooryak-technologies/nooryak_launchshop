@@ -283,6 +283,22 @@ class BasicController extends Controller
             $updateData['mobile_logo'] = $mobile_logo_filename;
         }
 
+        // Shipped From (Sender / Warehouse) Information
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasColumn('user_basic_settings', 'sender_name')) {
+                $updateData['sender_name'] = $request->sender_name;
+                $updateData['sender_email'] = $request->sender_email;
+                $updateData['sender_phone'] = $request->sender_phone;
+                $updateData['sender_address'] = $request->sender_address;
+                $updateData['sender_city'] = $request->sender_city;
+                $updateData['sender_state'] = $request->sender_state;
+                $updateData['sender_zipcode'] = $request->sender_zipcode;
+                $updateData['sender_country'] = $request->sender_country;
+            }
+        } catch (\Throwable $e) {
+            // column check fallback
+        }
+
         BasicSetting::where('user_id', Auth::guard('web')->user()->id)->update($updateData);
         Session::flash('success', __('Updated Successfully'));
         return 'success';

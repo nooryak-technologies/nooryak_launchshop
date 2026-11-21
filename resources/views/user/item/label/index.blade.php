@@ -233,3 +233,23 @@
     </div>
   </div>
 @endsection
+
+@section('scripts')
+<script>
+  $(document).on('click', '.editbtn', function() {
+    var id = $(this).attr('data-id') || $(this).data('id');
+    var name = $(this).attr('data-name') || $(this).data('name');
+    var color = $(this).attr('data-color') || $(this).data('color');
+    var status = $(this).attr('data-status') || $(this).data('status');
+
+    $('#inid').val(id);
+    $('#inname').val(name);
+    $('#incolor').val(color);
+    var colorInput = document.getElementById("incolor");
+    if (colorInput && colorInput.jscolor) {
+      colorInput.jscolor.fromString(color);
+    }
+    $('#instatus').val(status);
+  });
+</script>
+@endsection

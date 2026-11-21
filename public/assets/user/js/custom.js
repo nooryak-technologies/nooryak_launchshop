@@ -581,7 +581,7 @@ $(function ($) {
     ==========Form Submit with AJAX Request Start==========
     ******************************************************/
 
-    $("#submitBtn").on('click', function (e) {
+    $(document).on('click', '#submitBtn', function (e) {
         $(e.target).attr('disabled', true);
 
         $(".request-loader").addClass("show");
@@ -666,16 +666,24 @@ $(function ($) {
                         if (x == 'error') {
                             continue;
                         }
-                        document.getElementById('err' + x).innerHTML = data[x][0];
+                        let errEl = document.getElementById('err' + x) || document.getElementById('eerr' + x);
+                        if (errEl) {
+                            errEl.innerHTML = data[x][0];
+                        }
                     }
                 }
             },
             error: function (error) {
                 $(".em").each(function () {
                     $(this).html('');
-                })
-                for (let x in error.responseJSON.errors) {
-                    document.getElementById('err' + x).innerHTML = error.responseJSON.errors[x][0];
+                });
+                if (error && error.responseJSON && error.responseJSON.errors) {
+                    for (let x in error.responseJSON.errors) {
+                        let errEl = document.getElementById('err' + x) || document.getElementById('eerr' + x);
+                        if (errEl) {
+                            errEl.innerHTML = error.responseJSON.errors[x][0];
+                        }
+                    }
                 }
                 $(".request-loader").removeClass("show");
                 $(e.target).attr('disabled', false);
@@ -954,26 +962,28 @@ $(function ($) {
     /* ***************************************************
     ==========Form Prepopulate After Clicking Edit Button Start==========
     ******************************************************/
-    $(".editbtn").on('click', function () {
+    $(document).on('click', '.editbtn', function () {
         let datas = $(this).data();
         delete datas['toggle'];
 
         for (let x in datas) {
             if ($("#in" + x).hasClass('summernote')) {
-                tinyMCE.activeEditor.setContent(datas[x])
+                if (typeof tinyMCE !== 'undefined' && tinyMCE.activeEditor) {
+                    tinyMCE.activeEditor.setContent(datas[x]);
+                }
             } else if ($("#in" + x).hasClass('image')) {
                 $("#in" + x).attr('src', datas[x]);
             } else if ($("#in" + x).hasClass('jscolor')) {
                 $("#in" + x).val(datas[x]);
                 // Explicitly reinitialize jscolor
                 const colorInput = document.getElementById("in" + x);
-                if (colorInput.jscolor) {
+                if (colorInput && colorInput.jscolor) {
                     colorInput.jscolor.fromString(datas[x]); // Update color picker value
-                } else {
+                } else if (colorInput && typeof jscolor !== 'undefined') {
                     colorInput.jscolor = new jscolor(colorInput); // Initialize jscolor
                 }
             } else if ($("#in" + x).data('role') == 'tagsinput') {
-                if (datas[x].length > 0) {
+                if (datas[x] && datas[x].length > 0) {
                     let arr = datas[x].split(" ");
                     for (let i = 0; i < arr.length; i++) {
                         $("#in" + x).tagsinput('add', arr[i]);
@@ -991,6 +1001,9 @@ $(function ($) {
             }
             else {
                 $("#in" + x).val(datas[x]);
+                if ($("#in" + x).is('select')) {
+                    $("#in" + x).trigger('change');
+                }
                 if ($('#inicon').length > 0) {
                     $('#inicon').attr('class', datas['icon']);
                 }
@@ -1009,7 +1022,7 @@ $(function ($) {
     /* ***************************************************
     ==========Form Update with AJAX Request Start==========
     ******************************************************/
-    $("#updateBtn").on('click', function (e) {
+    $(document).on('click', '#updateBtn', function (e) {
 
         $(".request-loader").addClass("show");
 
@@ -1066,75 +1079,93 @@ $(function ($) {
                         if (x == 'error') {
                             continue;
                         }
-                        document.getElementById('eerr' + x).innerHTML = data[x][0];
+                        let targetEl = document.getElementById('eerr' + x) || document.getElementById('err' + x);
+                        if (targetEl) {
+                            targetEl.innerHTML = data[x][0];
+                        }
+                    }
+                }
+            },
+            error: function (error) {
+                $(".request-loader").removeClass("show");
+                $(".em").each(function () {
+                    $(this).html('');
+                });
+                if (error && error.responseJSON && error.responseJSON.errors) {
+                    for (let x in error.responseJSON.errors) {
+                        let targetEl = document.getElementById('eerr' + x) || document.getElementById('err' + x);
+                        if (targetEl) {
+                            targetEl.innerHTML = error.responseJSON.errors[x][0];
+                        }
                     }
                 }
             }
         });
     });
 
-    $(".update-btn").each(function () {
-        $(this).on('click', function (e) {
-            let $this = $(this);
+    $(document).on('click', '.update-btn', function (e) {
+        let $this = $(this);
 
-            $(".request-loader").addClass("show");
+        $(".request-loader").addClass("show");
 
-            let formId = $(this).data('form_id');
-            let ajaxEditForm = document.getElementById(formId);
-            let fd = new FormData(ajaxEditForm);
-            let url = $("#" + formId).attr('action');
-            let method = $("#" + formId).attr('method');
+        let formId = $(this).data('form_id');
+        let ajaxEditForm = document.getElementById(formId);
+        let fd = new FormData(ajaxEditForm);
+        let url = $("#" + formId).attr('action');
+        let method = $("#" + formId).attr('method');
 
-            $("#" + formId + " .form-control").each(function (i) {
-                let index = i;
-                let $toInput = $('.form-control').eq(index);
-                if ($(this).hasClass('summernote')) {
-                    let tmcId = $toInput.attr('id');
-                    let content = tinyMCE.get(tmcId).getContent();
+        $("#" + formId + " .form-control").each(function (i) {
+            let index = i;
+            let $toInput = $('.form-control').eq(index);
+            if ($(this).hasClass('summernote')) {
+                let tmcId = $toInput.attr('id');
+                let content = tinyMCE.get(tmcId).getContent();
 
-                    fd.delete($(this).attr('name'));
-                    fd.append($(this).attr('name'), content);
+                fd.delete($(this).attr('name'));
+                fd.append($(this).attr('name'), content);
+            }
+        });
+
+        $.ajax({
+            url: url,
+            method: method,
+            data: fd,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                let parentCount = $this.parents('.modal').length;
+                let parentId;
+                // if the form is in modal
+                if (parentCount > 0) {
+                    parentId = $this.parents('.modal').attr('id');
                 }
-            });
+                // if the form is not in modal
+                else {
+                    parentId = formId;
+                }
+                $(".request-loader").removeClass("show");
 
-            $.ajax({
-                url: url,
-                method: method,
-                data: fd,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    let parentCount = $this.parents('.modal').length;
-                    let parentId;
-                    // if the form is in modal
-                    if (parentCount > 0) {
-                        parentId = $this.parents('.modal').attr('id');
-                    }
-                    // if the form is not in modal
-                    else {
-                        parentId = formId;
-                    }
-                    $(".request-loader").removeClass("show");
+                $("#" + parentId).children(".em").each(function () {
+                    $(this).html('');
+                })
 
-                    $("#" + parentId).children(".em").each(function () {
-                        $(this).html('');
-                    })
+                if (data == "success") {
+                    location.reload();
+                }
 
-                    if (data == "success") {
-                        location.reload();
-                    }
-
-                    // if error occurs
-                    else if (typeof data.error != 'undefined') {
-                        for (let x in data) {
-                            if (x == 'error') {
-                                continue;
-                            }
-                            $("#" + parentId + " .eerr" + x).html(data[x][0]);
+                // if error occurs
+                else if (typeof data.error != 'undefined') {
+                    for (let x in data) {
+                        if (x == 'error') {
+                            continue;
                         }
+                        $("#" + parentId + " .eerr" + x).html(data[x][0]);
                     }
                 }
-            });
+            },
+            error: function (error) {
+                $(".request-loader").removeClass("show");
+            }
         });
     });
     /* ***************************************************
@@ -1146,7 +1177,7 @@ $(function ($) {
     /* ***************************************************
     ==========Delete Using AJAX Request Start==========
     ******************************************************/
-    $('.deletebtn').on('click', function (e) {
+    $(document).on('click', '.deletebtn', function (e) {
         e.preventDefault();
 
         $(".request-loader").addClass("show");
