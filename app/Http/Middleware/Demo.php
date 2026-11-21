@@ -32,8 +32,8 @@ class Demo
             return redirect()->back();
         }
 
-        // Block writes / CRUD operations for template-preview / demo theme users
-        $isTemplateDemoUser = (Auth::guard('web')->check() && (Auth::guard('web')->user()->preview_template == 1 || Session::get('secrect_login')));
+        // Block writes / CRUD operations ONLY for demo theme template users (preview_template == 1)
+        $isTemplateDemoUser = Auth::guard('web')->check() && ((int) Auth::guard('web')->user()->preview_template === 1);
         if ($isWriteMethod && !$request->is('X9_AdMiN-Portal_V7') && !$request->is('X9_AdMiN-Portal_V7/*') && $isTemplateDemoUser) {
             // Don't block store-front customer ordering, cart or checkout requests
             if ($request->is('*/add-to-cart') || $request->is('*/cart') || $request->is('*/cart/*') || $request->is('*/checkout') || $request->is('*/checkout/*') || $request->is('*/order/*') || $request->is('*/itemcheckout/*') || $request->is('add-to-cart') || $request->is('checkout')) {
